@@ -71,6 +71,34 @@ file. Tests also pass the same bytes through
 preserve all four source facts exactly. Its additional `artifact_hash` is the
 core record identity, not a replacement for the source content digest.
 
+## Core compiler and population boundary
+
+The fixture suite now exercises OCR through the public `malleus.compiler`
+facade. It supplies the exact OCR, root Malleus, and LinkML type sources and
+compiles them into a validated contract view. The adopter test imports no Core
+private pipeline module.
+
+That connection has two deliberate outcomes:
+
+- The packaged `registration-is-not-a-reading` fixture has no attempts or
+  review corrections. Its SourceClass, SourceRepresentation, and
+  EvidenceBundle can therefore compile structurally into three
+  `CREATE_ENTITY` operations. The test labels its history profile
+  `ocr-domain-history-not-selected` and does not prepare or admit the change.
+  This proves the record shapes meet the compiled contract. It does not prove
+  a reading, an accepted OCR adapter, or OCR history semantics.
+- Every concrete corpus bundle is a `FINISHED_READING` and retains one or more
+  OCRAttempt or ReviewCorrection records. Those records are Events. Core's
+  governed population path currently admits Entities and Relations only, so
+  each plan refuses with `FAMILY_NOT_ADMITTED` before any ledger write. The
+  projection does not coerce Events into Entities, discard them, or treat
+  `AUDIT_ONLY` verification as admission.
+
+The next connection is therefore a contract decision, not another adapter
+shortcut. OCR needs a domain-history profile and Event operations for
+OCRAttempt and ReviewCorrection before a finished evidence bundle can enter
+governed history.
+
 ## Enforced behavior and pending decisions
 
 The corpus asserts behavior already implemented by the v0 verifier:

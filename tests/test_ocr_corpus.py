@@ -9,6 +9,7 @@ import subprocess
 import sys
 import zlib
 from io import BytesIO
+from importlib.resources import files
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterator
 
@@ -20,8 +21,9 @@ from PIL import Image
 from pypdf import PdfReader
 
 import malleus
+import malleus.compiler as compiler
 from malleus.ocr.bundle import PROFILE_ID, PROFILE_VERSION, Bundle
-from malleus.ocr.verify import VerificationResult, profile_registry, verify_bundle
+from malleus.ocr.verify import PLANES, VerificationResult, profile_registry, verify_bundle
 from malleus.source import source_artifact_fields
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,6 +31,11 @@ CORPUS = ROOT / "conformance" / "ocr" / "v0" / "corpus"
 MANIFEST = CORPUS / "corpus.json"
 CHECKSUMS = CORPUS / "checksums.json"
 GENERATOR = CORPUS / "generate.py"
+OCR_ONTOLOGY = ROOT / "ontology" / "domains" / "ocr.yaml"
+ROOT_ONTOLOGY = ROOT / "ontology" / "malleus.yaml"
+REGISTRATION_CASE = (
+    ROOT / "src" / "malleus" / "ocr" / "cases" / "registration-is-not-a-reading.json"
+)
 CONTROL_FILES = {"README.md", "checksums.json", "generate.py"}
 
 REFERENCE_READER = {
@@ -146,6 +153,176 @@ def _artifact_path(relative: str) -> Path:
 
 def _digest(payload: bytes) -> str:
     return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def _canonical(value: object) -> bytes:
+    return json.dumps(
+        value,
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+def _public_ocr_compilation() -> compiler.ValidatedContractCompilation:
+    return compiler.compile_linkml_contract(
+        root_locator="ocr",
+        sources={
+            "ocr": OCR_ONTOLOGY.read_bytes(),
+            "malleus": ROOT_ONTOLOGY.read_bytes(),
+            "linkml:types": files("linkml_runtime")
+            .joinpath("linkml_model", "model", "schema", "types.yaml")
+            .read_bytes(),
+        },
+    )
+
+
+def _structural_partial_contract(
+    compiled: compiler.ValidatedContractCompilation,
+) -> compiler.PartialEffectiveContract:
+    machine = compiler.ProtocolMachineProgram.from_bytes(
+        _canonical(
+            {
+                "capabilities": [],
+                "events": {
+                    "ARTIFACT_REGISTERED": {
+                        "instructions": [
+                            {
+                                "id_field": "artifact_id",
+                                "opcode": "REQUIRE_GLOBAL_ID_ABSENT",
+                                "refusal": "GLOBAL_RECORD_ID_EXISTS",
+                            },
+                            {
+                                "opcode": "STORE_EVENT_RECORD",
+                                "record_type": "ArtifactRecord",
+                            },
+                        ],
+                        "record_type": "ArtifactRecord",
+                    }
+                },
+                "grammar": "malleus.protocol-machine/private-v0",
+                "indexes": {},
+                "record_schemas": {
+                    "ArtifactRecord": {
+                        "fields": {
+                            "artifact_id": "STRING",
+                            "artifact_identity": "DIGEST",
+                        },
+                        "id_field": "artifact_id",
+                        "input_fields": ["artifact_id", "artifact_identity"],
+                    }
+                },
+            }
+        )
+    )
+    normative = compiler.compose_normative_profile(
+        protocol_machine_program=machine,
+        policy_programs={},
+        capability_refs=(),
+    )
+    return compiler.compose_partial_effective_contract(
+        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256,
+        normative_profile=normative,
+    )
+
+
+@pytest.fixture(scope="module")
+def public_ocr_contract() -> tuple[
+    compiler.ValidatedContractCompilation,
+    compiler.PartialEffectiveContract,
+]:
+    compiled = _public_ocr_compilation()
+    return compiled, _structural_partial_contract(compiled)
+
+
+def _population_projection(
+    bundle: Bundle,
+    *,
+    source_id: str,
+    source_locator: str,
+    bundle_pointer: str,
+) -> tuple[dict[str, list[dict[str, object]]], list[dict[str, object]]]:
+    records: dict[str, list[dict[str, object]]] = {
+        "entities": [],
+        "events": [],
+    }
+    derivations: list[dict[str, object]] = []
+    families = {"entity": "entities", "event": "events"}
+    for attribute, type_name, family in PLANES:
+        if attribute == "bundle":
+            values = (bundle,)
+            pointers = (bundle_pointer,)
+        elif attribute == "source_class":
+            values = (bundle.source_class,)
+            pointers = (f"{bundle_pointer}/source_class",)
+        else:
+            values = getattr(bundle, attribute)
+            pointers = tuple(
+                f"{bundle_pointer}/{attribute}/{index}"
+                for index in range(len(values))
+            )
+        for value, pointer in zip(values, pointers, strict=True):
+            flat = value.record()
+            record_id = flat["id"]
+            properties = {key: item for key, item in flat.items() if key != "id"}
+            records[families[family]].append(
+                {"id": record_id, "properties": properties, "type": type_name}
+            )
+            derivations.extend(
+                {
+                    "locator": f"{source_locator}#{pointer}/{key}",
+                    "path": ["properties", key],
+                    "record_id": record_id,
+                    "source_id": source_id,
+                }
+                for key in properties
+            )
+    return records, derivations
+
+
+def _population_plan(
+    *,
+    bundle: Bundle,
+    bundle_pointer: str,
+    bundle_source: bytes,
+    bundle_source_id: str,
+    bundle_source_locator: str,
+    evidence: tuple[tuple[str, bytes], ...],
+    partial_contract: compiler.PartialEffectiveContract,
+    plan_id: str,
+) -> dict[str, object]:
+    records, derivations = _population_projection(
+        bundle,
+        source_id=bundle_source_id,
+        source_locator=bundle_source_locator,
+        bundle_pointer=bundle_pointer,
+    )
+    return {
+        "adapter": {
+            "adapter_id": "malleus.ocr.test-structural-projection",
+            "version": "0",
+        },
+        "contract_identity": partial_contract.identity,
+        "derivations": derivations,
+        "evidence": [
+            {"evidence_id": evidence_id, "sha256": _digest(payload)}
+            for evidence_id, payload in evidence
+        ],
+        "gaps": [],
+        "grammar": "malleus.population-plan/private-v0",
+        "history_profile": {
+            "profile_id": "ocr-domain-history-not-selected",
+            "sha256": "sha256:" + "0" * 64,
+        },
+        "plan_id": plan_id,
+        "records": records,
+        "sources": [
+            {"source_id": bundle_source_id, "sha256": _digest(bundle_source)}
+        ],
+        "supersessions": [],
+        "valid_time": {"kind": "ORDER_ONLY", "value": plan_id},
+    }
 
 
 def _case_paths(case: dict[str, Any]) -> Iterator[str]:
@@ -762,3 +939,109 @@ def test_mutations_recompute_to_declared_current_outcomes() -> None:
             ), label
             declared[case["id"]][mutation["id"]] = (codes, expected_outcomes)
     assert declared == IMPLEMENTED_MUTATIONS
+
+
+def test_public_compiler_structurally_compiles_registration_without_claiming_a_reading(
+    public_ocr_contract: tuple[
+        compiler.ValidatedContractCompilation,
+        compiler.PartialEffectiveContract,
+    ],
+) -> None:
+    compiled, partial = public_ocr_contract
+    case = _load(REGISTRATION_CASE)
+    bundle = Bundle.from_document(case["document"])
+    verification = verify_bundle(bundle)
+    plan_id = "plan:ocr-fixture:registration-only"
+    plan = _population_plan(
+        bundle=bundle,
+        bundle_pointer="/document/bundle",
+        bundle_source=REGISTRATION_CASE.read_bytes(),
+        bundle_source_id="source:ocr-fixture:registration-case",
+        bundle_source_locator=REGISTRATION_CASE.relative_to(ROOT).as_posix(),
+        evidence=(),
+        partial_contract=partial,
+        plan_id=plan_id,
+    )
+
+    assert isinstance(compiled.view, compiler.ContractView)
+    assert verification.capability == "AUDIT_ONLY"
+    assert verification.conforms
+    assert not verification.account.complete
+    assert bundle.kind == "REGISTRATION"
+    assert plan["history_profile"] == {
+        "profile_id": "ocr-domain-history-not-selected",
+        "sha256": "sha256:" + "0" * 64,
+    }
+    assert plan["records"]["events"] == []
+
+    population = compiler.compile_population_plan(
+        plan,
+        partial_contract=partial,
+        contract_view=compiled.view,
+        base_state=compiler.PopulationBaseState.empty(),
+    )
+
+    assert isinstance(population, compiler.PopulationPlanCompilation)
+    assert population.status is compiler.PopulationPlanStatus.CHANGE_SET
+    assert population.source_record_ids == ("source:ocr-fixture:registration-case",)
+    assert population.evidence_record_ids == (
+        "profile:ocr-domain-history-not-selected",
+        plan_id,
+    )
+    assert tuple(operation.operation_type for operation in population.operations) == (
+        "CREATE_ENTITY",
+        "CREATE_ENTITY",
+        "CREATE_ENTITY",
+    )
+    assert tuple(operation.record_type for operation in population.operations) == (
+        "SourceClass",
+        "SourceRepresentation",
+        "EvidenceBundle",
+    )
+
+
+@pytest.mark.parametrize("case", _manifest()["cases"], ids=lambda case: case["id"])
+def test_public_compiler_refuses_finished_ocr_event_population(
+    case: dict[str, Any],
+    public_ocr_contract: tuple[
+        compiler.ValidatedContractCompilation,
+        compiler.PartialEffectiveContract,
+    ],
+) -> None:
+    compiled, partial = public_ocr_contract
+    bundle_path = _artifact_path(case["bundle"])
+    bundle = Bundle.from_document(_load(bundle_path))
+    verification = verify_bundle(bundle)
+    source_path = _artifact_path(case["source"])
+    plan = _population_plan(
+        bundle=bundle,
+        bundle_pointer="/bundle",
+        bundle_source=bundle_path.read_bytes(),
+        bundle_source_id=f"source:ocr-fixture:{case['id']}:bundle",
+        bundle_source_locator=bundle_path.relative_to(ROOT).as_posix(),
+        evidence=((f"evidence:ocr-fixture:{case['id']}:document", source_path.read_bytes()),),
+        partial_contract=partial,
+        plan_id=f"plan:ocr-fixture:{case['id']}",
+    )
+
+    assert verification.capability == "AUDIT_ONLY"
+    assert verification.conforms
+    assert bundle.kind == "FINISHED_READING"
+    assert bundle.attempts
+    assert len(plan["records"]["events"]) == len(bundle.attempts) + len(
+        bundle.corrections
+    )
+
+    with pytest.raises(compiler.PopulationPlanRefusal) as refusal:
+        compiler.compile_population_plan(
+            plan,
+            partial_contract=partial,
+            contract_view=compiled.view,
+            base_state=compiler.PopulationBaseState.empty(),
+        )
+
+    assert (
+        refusal.value.reason
+        is compiler.PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED
+    )
+    assert refusal.value.detail == "events cannot be admitted by the governed path"
