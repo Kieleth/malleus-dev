@@ -3,6 +3,7 @@ from __future__ import annotations
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 import subprocess
 
 
@@ -11,6 +12,7 @@ ROOT = HERE.parents[2]
 CONTRACT_PATH = HERE / "run-contract.json"
 PRODUCER_MANIFEST = HERE / "producer-input-manifest.json"
 SPAWN_MESSAGE = HERE / "spawn-message.md"
+SELECTED_READING = ROOT / "private" / "paper-v4-text-layer" / "selected-reading.json"
 RUN_01 = HERE.parent
 RUN_02 = HERE.parent / "run-02"
 ACTIVE_TEST_MANIFEST = ROOT / "paper-v4" / "active-test-manifest.json"
@@ -29,6 +31,51 @@ DECLARED_SOURCES = {
     "CHRONOLOGY_PACK": "ontology/packs/chronology.yaml",
     "RESEARCH_PACK": "ontology/packs/research.yaml",
     "SOURCE_ASSERTION_PROFILE": "src/malleus/profiles/source-assertion.json",
+}
+
+# The exact bytes this run leaves in the repository. Run-03 refused at the
+# ontology stage, so the set is the three attempts, the three diagnostics that
+# refused them, the refused-run record and the launch log. A file added, removed
+# or rewritten later is a different run.
+FROZEN_ARTIFACTS = {
+    "ontology-run/attempt-01-diagnostic.json": (
+        "sha256:e100f86c846b28979d58aade4ea1649e8034be8775a85db002494694c059d853"
+    ),
+    "ontology-run/attempt-02-diagnostic.json": (
+        "sha256:524445a86b61debe0bd2682559842b2c1a4bbc1df4be6542d53f0ca2013f167b"
+    ),
+    "ontology-run/attempt-03-diagnostic.json": (
+        "sha256:c7707ee50f8ff827f12bf8b0267e879f8fe7cd6565ac7ef4d0944322653f9344"
+    ),
+    "ontology-run/ontology-01.yaml": (
+        "sha256:8d68c97f1cb574a760c4eccddc56d71c9911d670e9eef2dbcd2fdd7ae9e1c16e"
+    ),
+    "ontology-run/ontology-02.yaml": (
+        "sha256:7dc8442438cbd9e9de971b3004c36234c8635062e61f23bfa09a76b328710729"
+    ),
+    "ontology-run/ontology-03.yaml": (
+        "sha256:d7f29d83b38d873855545401a87bdb4288ac0a7931766fd227ac387504727903"
+    ),
+    "ontology-run/result.json": (
+        "sha256:7c0f120927c6db2450400f70131a61a453a2abaeaa0705da06d0101a29484b64"
+    ),
+    "results/launch-log.json": (
+        "sha256:41c814adf8a7655b3dee3a2457f6f3e0f2da530c12d66e9ddb89c33208b79861"
+    ),
+}
+
+# Nothing public may reproduce a sentence of the reading. Sixty normalized
+# characters is the threshold; a shared run that long is a statement unless it
+# is a reference string. The producer put the reading's own title and twelve
+# entries of its bibliography inside grounding vocabularies, so the count of
+# shared runs per file is pinned here and every one of them must resolve to the
+# article header or the numbered reference list.
+LEAK_WINDOW = 60
+
+SHARED_CITATION_RUNS = {
+    "ontology-run/ontology-01.yaml": 1,
+    "ontology-run/ontology-02.yaml": 12,
+    "ontology-run/ontology-03.yaml": 12,
 }
 
 # The first cell of the matrix is closed. Run-03 changes the producer model and
@@ -100,6 +147,62 @@ def _frozen_digest(source: str) -> str:
 
 def _plain(text: str) -> str:
     return " ".join(text.split())
+
+
+def _reading_blocks() -> list[tuple[str, str]]:
+    reading = json.loads(SELECTED_READING.read_bytes())
+    return [
+        (block["id"], _plain(block["text"]))
+        for page in reading["pages"]
+        for block in page["blocks"]
+    ]
+
+
+def _reading_windows(width: int) -> set[str]:
+    windows: set[str] = set()
+    for _, text in _reading_blocks():
+        for start in range(0, max(1, len(text) - width + 1)):
+            piece = text[start : start + width]
+            if len(piece) == width:
+                windows.add(piece)
+    return windows
+
+
+def _citation_block_ids() -> set[str]:
+    """Reading blocks that carry a reference string rather than a statement.
+
+    The first block of page one is the article header: the reading's own title
+    and its DOI. The numbered reference list holds the titles of cited works,
+    and the extractor splits some entries across blocks, so a block that follows
+    a numbered one on the same page is that entry's continuation.
+    """
+    numbered = re.compile(r"^\d+\.\s")
+    identifiers = {"page:1:block:001"}
+    reading = json.loads(SELECTED_READING.read_bytes())
+    for page in reading["pages"]:
+        in_list = False
+        for block in page["blocks"]:
+            if numbered.match(_plain(block["text"])):
+                in_list = True
+            if in_list:
+                identifiers.add(block["id"])
+    return identifiers
+
+
+def _shared_runs(text: str, windows: set[str]) -> list[str]:
+    """Every maximal run this text shares with the reading, at LEAK_WINDOW."""
+    hits = [
+        start
+        for start in range(0, max(1, len(text) - LEAK_WINDOW + 1))
+        if text[start : start + LEAK_WINDOW] in windows
+    ]
+    runs: list[list[int]] = []
+    for start in hits:
+        if runs and start == runs[-1][1] + 1:
+            runs[-1][1] = start
+        else:
+            runs.append([start, start])
+    return list(dict.fromkeys(text[first : last + LEAK_WINDOW] for first, last in runs))
 
 
 def test_run_03_is_the_second_matrix_cell_with_the_model_as_the_only_variable() -> None:
@@ -420,8 +523,151 @@ def test_the_paper_ledger_records_the_second_cell() -> None:
     assert "Claude Sonnet 5" in ledger
 
 
-def test_the_run_output_directories_exist_and_hold_no_result() -> None:
+def test_the_frozen_artifact_set_is_exact_and_digest_pinned() -> None:
     for name in ("ontology-run", "results"):
         directory = HERE / name
         assert directory.is_dir()
-        assert [path.name for path in directory.iterdir()] == [".gitkeep"]
+        observed = sorted(
+            f"{name}/{path.name}"
+            for path in directory.iterdir()
+            if path.is_file() and path.suffix != ".pyc"
+        )
+        expected = sorted(
+            relative for relative in FROZEN_ARTIFACTS if relative.startswith(f"{name}/")
+        )
+        assert observed == expected
+    # The run never reached population, so the only result it produced is the
+    # record of how it was launched and where it stopped.
+    assert [path.name for path in (HERE / "results").iterdir()] == ["launch-log.json"]
+    for relative, digest in FROZEN_ARTIFACTS.items():
+        assert _digest(HERE / relative) == digest, relative
+
+
+def test_no_frozen_artifact_reproduces_a_reading_statement() -> None:
+    windows = _reading_windows(LEAK_WINDOW)
+    citations = _citation_block_ids()
+    blocks = _reading_blocks()
+
+    for relative in FROZEN_ARTIFACTS:
+        text = _plain((HERE / relative).read_text(encoding="utf-8"))
+        runs = _shared_runs(text, windows)
+        assert len(runs) == SHARED_CITATION_RUNS.get(relative, 0), (relative, runs[:1])
+        for run in runs:
+            located = {block for block, source in blocks if run in source}
+            assert located, (relative, run)
+            assert located <= citations, (relative, run, sorted(located))
+
+
+def test_the_ontology_run_result_records_three_refusals_and_two_returns() -> None:
+    result = json.loads((HERE / "ontology-run/result.json").read_bytes())
+    contract = _contract()["producer"]
+    producer = result["producer"]
+    attempts = result["attempts"]
+
+    assert result["schema"] == "malleus.paper-v4.ontology-run-result/v1"
+    assert result["status"] == "REFUSED_AFTER_DIAGNOSTIC_BUDGET"
+    assert result["run_id"] == "run-03"
+    assert result["core"] == {"commit": CORE_COMMIT, "tree": CORE_TREE}
+    assert result["producer_input_manifest_sha256"] == _digest(PRODUCER_MANIFEST)
+    assert producer["kind"] == "CLAUDE_CODE_FRESH_SUBAGENT"
+    assert producer["harness"] == contract["harness"]
+    assert producer["requested_model"] == "sonnet"
+    assert producer["model_family"] == "Claude Sonnet 5"
+    assert producer["reasoning_effort"] == contract["reasoning_effort"]
+    assert producer["boundary"] == contract["boundary"]
+    assert producer["session"] == "FRESH_SINGLE_SESSION"
+    assert producer["questions_visible"] is False
+    assert producer["diagnostic_returns"] == 2
+    assert producer["diagnostic_return_limit"] == 2
+    assert producer["fallback_used"] is False
+    assert producer["hand_repair_used"] is False
+
+    assert [item["status"] for item in attempts] == ["REFUSED", "REFUSED", "REFUSED"]
+    assert [item["reason"] for item in attempts] == [
+        "DIRECT_ROOT_GROUNDING_REQUIRED",
+        "GROUNDING_NOT_CLOSED",
+        "GROUNDING_INCOMPLETE",
+    ]
+    assert [item["subjects"] for item in attempts] == [10, 1, 1]
+    for item in attempts:
+        assert item["stage"] == "PACK_GROUNDING"
+        assert _digest(ROOT / item["ontology_path"]) == item["ontology_sha256"]
+        assert _digest(ROOT / item["diagnostic_path"]) == item["diagnostic_sha256"]
+        diagnostic = json.loads((ROOT / item["diagnostic_path"]).read_bytes())
+        assert diagnostic["status"] == "REFUSED"
+        assert diagnostic["stage"] == "PACK_GROUNDING"
+        assert diagnostic["reason"] == item["reason"]
+        assert diagnostic["ontology_sha256"] == item["ontology_sha256"]
+
+    assert result["terminal_diagnostic"] == {
+        "stage": "PACK_GROUNDING",
+        "error_type": "PackGroundingRefusal",
+        "reason": "GROUNDING_INCOMPLETE",
+        "detail": (
+            "GROUNDING_INCOMPLETE: RidgeAxisSection must pair invented terms"
+            " with invention_search"
+        ),
+    }
+    assert result["terminal_diagnostic"]["detail"] == json.loads(
+        (HERE / "ontology-run/attempt-03-diagnostic.json").read_bytes()
+    )["detail"]
+    assert result["accepted_ontology_sha256"] is None
+    assert result["population_started"] is False
+    assert result["reading_reproduction"]["shared_runs"] == {
+        Path(relative).name: count
+        for relative, count in SHARED_CITATION_RUNS.items()
+    }
+
+
+def test_the_launch_log_records_sonnet_and_every_refusal() -> None:
+    log = json.loads((HERE / "results/launch-log.json").read_bytes())
+    result = json.loads((HERE / "ontology-run/result.json").read_bytes())
+    launch = log["launches"][0]
+    gate = log["gate"]
+
+    assert log["schema"] == "malleus.paper-v4.producer-launch-log/v1"
+    assert log["run"] == "run-03"
+    assert len(log["launches"]) == 1
+    assert launch["phase"] == "ONTOLOGY"
+    assert launch["harness"] == _contract()["producer"]["harness"]
+    assert launch["requested_model"] == "sonnet"
+    assert launch["model_family"] == "Claude Sonnet 5"
+
+    assert [item["status"] for item in gate] == ["REFUSED", "REFUSED", "REFUSED"]
+    assert [item["reason"] for item in gate] == [
+        item["reason"] for item in result["attempts"]
+    ]
+    assert [item["ontology_sha256"] for item in gate] == [
+        item["ontology_sha256"] for item in result["attempts"]
+    ]
+    assert [item["diagnostic_return_ordinal"] for item in gate[:2]] == [1, 2]
+    assert all(item["diagnostic_return_limit"] == 2 for item in gate[:2])
+    terminal = gate[2]
+    assert terminal["terminal"] is True
+    assert terminal["run_status"] == result["status"]
+    assert terminal["population_started"] is False
+    assert terminal["fallback_used"] is False
+    assert terminal["hand_repair_used"] is False
+
+
+def test_the_paper_ledger_records_the_refused_second_cell() -> None:
+    ledger = PAPER_LEDGER.read_text(encoding="utf-8")
+    entry = ledger.split("### E-0124,")[-1]
+
+    assert "### E-0124," in ledger
+    for phrase in (
+        "run-03",
+        "Claude Sonnet 5",
+        "DIRECT_ROOT_GROUNDING_REQUIRED",
+        "GROUNDING_NOT_CLOSED",
+        "GROUNDING_INCOMPLETE",
+        "invention_search",
+    ):
+        assert phrase in entry
+
+
+def test_the_master_plan_records_the_refused_second_cell() -> None:
+    plain = _plain(MASTER_PLAN.read_text(encoding="utf-8"))
+
+    assert "run-03 refused at the ontology stage" in plain
+    assert "GROUNDING_INCOMPLETE" in plain
