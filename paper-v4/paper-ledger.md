@@ -2024,3 +2024,43 @@ typed gaps and modality-preserving trace, because they recorded losses around
 ranges, aggregate counts, and hypotheses. They predate packs, the full history
 profile, and whole-reading capture, and their population prompts saw the four
 questions. They therefore motivate v4 but cannot validate it.
+
+### E-0119, provisional Core corrections pass a paper-shaped semantic audit
+
+Date: 2026-09-04
+
+Coordinate audited read-only: Core commit
+`bcc7d7be3a67a8da7093f60b20d65ac5b569f661`, tree
+`585765939ef58d2e88bdbe74ea85825b0d014834`, extracted with `git archive`
+outside both working trees. This is a provisional coordinate, not a paper
+rebind.
+
+Observation: The actual attempt-1 ontology now produces one typed grounding
+diagnostic that lists the complete missing set in sorted order: `EarthMaterial
+extends Entity; GeologicFeature extends Entity; GeologicOccurrence extends
+Event`. The rite still requires class-local grounding. The public neutral
+history bundle has identity
+`sha256:0ef377d965638263810edbac1047102facb2b2367c77498aba43b50ec32a884f`.
+Its admission helper accepts a history, preparation, transaction time, and actor
+only; callers cannot pass check outcomes or protocol events.
+
+Downstream check: A public-only synthetic document execution used
+`source-assertion`, the document adapter, neutral history creation, preparation,
+structural admission, reopen, query, and trace. It replayed one record through a
+13-event history and reproduced receipt
+`sha256:14586746f78a0a6e49da5aeeffae0c3df82ec67758feb9e6c2f9f3f90752715a`.
+The two directly relevant Core test files passed 46 tests; four installed-skill
+route tests also passed.
+
+Harness failure and guard: The first downstream assertion assumed
+`trace.evidence[0]` was the capture. The trace correctly contained the history
+profile, population plan, and capture as evidence, so list position was not a
+capture contract. The corrected check indexes retained evidence by
+`record_id`, requires the exact expected set, and then compares the capture
+bytes at its declared capture id. The active paper runner must carry this hard
+rule.
+
+Boundary: Semantic audit is PASS with no paper capability blocker. Full Core
+tests, packaging, governance, immutable review, and an exact final coordinate
+remain pending. The failed first run and P8 identity stay unchanged until that
+packet arrives.
