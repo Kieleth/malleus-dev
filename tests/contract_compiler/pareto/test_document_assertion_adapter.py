@@ -7,6 +7,7 @@ from hashlib import sha256
 from importlib import import_module
 import json
 from pathlib import Path
+import tomllib
 
 import pytest
 
@@ -82,6 +83,11 @@ def test_document_adapter_is_public_and_emits_the_exact_neutral_plan() -> None:
         "adapt_document_assertions",
     }
     assert required <= set(api.__all__)
+    package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    assert (
+        "/src/malleus/_contract_pipeline/document.py"
+        in package["tool"]["hatch"]["build"]["include"]
+    )
 
     reading, capture, expected_plan, expected_census = _inputs()
     capture_bytes = _canonical(capture)
@@ -94,7 +100,9 @@ def test_document_adapter_is_public_and_emits_the_exact_neutral_plan() -> None:
     assert result.reading_identity == _digest(_canonical(reading))
     assert result.canonical_plan_bytes == _canonical(expected_plan)
     assert result.canonical_census_bytes == _canonical(expected_census)
-    assert json.loads(result.canonical_plan_bytes)["records"] == expected_plan["records"]
+    assert (
+        json.loads(result.canonical_plan_bytes)["records"] == expected_plan["records"]
+    )
     assert not any(
         record["type"].endswith("Assertion")
         for records in expected_plan["records"].values()
@@ -146,9 +154,7 @@ def test_document_adapter_accepts_verbatim_text_after_whitespace_normalisation()
     None
 ):
     reading, capture, _, _ = _inputs()
-    capture["assertions"][0]["statement"] = (
-        "Pump  P-7 was\ninspected on 2026-03-02."
-    )
+    capture["assertions"][0]["statement"] = "Pump  P-7 was\ninspected on 2026-03-02."
 
     result = _adapt(reading=reading, capture=capture)
 

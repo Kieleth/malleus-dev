@@ -35,6 +35,14 @@ from malleus._contract_pipeline import (
     compile_binding,
     load_validated_contract_artifact,
 )
+from malleus._contract_pipeline.document import (
+    DOCUMENT_ASSERTION_ADAPTER,
+    DOCUMENT_CAPTURE_GRAMMAR,
+    DocumentAssertionCompilation,
+    DocumentAssertionRefusal,
+    DocumentAssertionRefusalReason,
+    adapt_document_assertions,
+)
 from malleus._contract_pipeline.knowledge import (
     KnowledgeAnchorInput,
     KnowledgeAnchorResult,
@@ -199,6 +207,11 @@ __all__ = (
     "BindingRefusalReason",
     "ContractView",
     "DomainHistoryProfile",
+    "DOCUMENT_ASSERTION_ADAPTER",
+    "DOCUMENT_CAPTURE_GRAMMAR",
+    "DocumentAssertionCompilation",
+    "DocumentAssertionRefusal",
+    "DocumentAssertionRefusalReason",
     "ElaborationRefusal",
     "ElaborationRefusalReason",
     "KnowledgeAnchorInput",
@@ -240,6 +253,7 @@ __all__ = (
     "SourceRefusalReason",
     "ValidatedContractArtifact",
     "ValidatedContractCompilation",
+    "adapt_document_assertions",
     "compile_linkml_contract",
     "compile_population_plan",
     "compose_normative_profile",

@@ -82,6 +82,7 @@ include = [
     "/src/malleus/_contract_linkml_adapter.py",
     "/src/malleus/_contract_source.py",
     "/src/malleus/_contract_pipeline/__init__.py",
+    "/src/malleus/_contract_pipeline/document.py",
     "/src/malleus/_contract_pipeline/elaborate.py",
     "/src/malleus/_contract_pipeline/knowledge.py",
     "/src/malleus/_contract_pipeline/machine.py",
