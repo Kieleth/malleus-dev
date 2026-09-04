@@ -1909,3 +1909,90 @@ Boundary: This consumes the first of at most two typed diagnostic returns. It
 does not accept the ontology, create a contract identity, start document
 population, or add a paper identity group. Attempt 1 and its refusal remain
 unchanged.
+
+### E-0115, ontology attempt 2 receives the final allowed diagnostic
+
+Date: 2026-09-04
+
+Sources: the ignored producer output `ontology-attempt-02.yaml` at
+`sha256:18e9b3022b28e6a09b5accbd683c000998a23de057876149f52ef87b2bcd8b42`
+and the ignored parent diagnostic at
+`sha256:bbdc19501f71ae309082c740fe826498c979648fde8cf69e4a27e869394ba576`.
+Attempt 1 remains byte-identical at its E-0114 digest.
+
+Observation: The unchanged gate again refused at `PACK_GROUNDING`, with error
+type `PackGroundingRefusal`, reason `DIRECT_ROOT_GROUNDING_REQUIRED`, and
+detail `DIRECT_ROOT_GROUNDING_REQUIRED: project class EarthMaterial extends
+Entity directly`. Attempt 2 had changed only the class named in diagnostic 1.
+
+Action: Return diagnostic 2 to the same question-blind producer as the second
+and final compiler diagnostic. It may inspect its own attempts and the installed
+generic skill, then write one final immutable ontology attempt. The parent does
+not enumerate other possible failures or prescribe an ontology edit.
+
+Boundary: If the next candidate refuses, ontology construction terminates as a
+structural failure. There is no hand repair, alternate producer, or extension
+of the diagnostic budget.
+
+### E-0116, the first no-brief ontology run terminates structurally
+
+Date: 2026-09-04
+
+Sources: ontology attempt 3 at
+`sha256:d80d515f530659858dbac3c57c3bdc1c381d7b2acca7f3b11a9e82041e39d8cf`;
+its diagnostic at
+`sha256:f4d448f96daa71822c7129c44d9912cc9ef340d74c192edd5bb87fb1f83731ae`;
+and `paper-v4/experiment-v4/ontology-run/result.json` with the three immutable
+diagnostics it binds.
+
+Observation: The final candidate refused at `PACK_GROUNDING` with reason
+`DIRECT_ROOT_GROUNDING_REQUIRED` and detail
+`DIRECT_ROOT_GROUNDING_REQUIRED: project class GeologicOccurrence extends
+Event directly`. The same session had used the two permitted diagnostic returns
+to add grounding only to the class named by each earlier fail-fast diagnostic.
+It never saw a question, expected answer, prior population, result, or
+manuscript. Population did not start and no ontology was accepted.
+
+Decision: End this producer run exactly as preregistered. Preserve its three
+candidates privately and its three diagnostics publicly. Do not enumerate or
+repair remaining roots, start a second producer under the same contract, or
+reinterpret the failure as a domain-quality judgment. A hard test binds the
+attempt count to the frozen diagnostic budget, verifies every public diagnostic
+digest, and requires no fallback, hand repair, acceptance, or population.
+
+Learning: The public grounding rite reports only the first missing direct-root
+grounding subject. A source-grounded ontology with several direct roots can
+therefore consume a bounded correction budget through serial instances of one
+mechanically discoverable error class. This run tests the gate as shipped, not
+the producer's ability to respond to an aggregate diagnostic.
+
+### E-0117, two generic Core adopter gaps gate a separate rerun
+
+Date: 2026-09-04
+
+Core coordinate inspected:
+`6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
+`6fc5e585e5058e7376ea1aef96fcb49b59107e5e`.
+
+Facts: First, the public governed-history path requires caller-supplied bytes
+for `ProtocolMachineProgram`, `PolicyProgram`, and
+`KnowledgeChangeHistoryBinding`. Core ships the three history profiles but no
+neutral machine, binding, admission composition, or executor that derives
+required check outcomes. The executable examples use fixture-local Small Shop
+artifacts and caller-authored `SATISFIED` outcomes. Second,
+`validate_pack_grounding` raises at the first ungrounded direct-root class, as
+the three-run sequence in E-0114 through E-0116 demonstrates.
+
+Core classification: Both are generic adopter gaps. A domain adopter owns
+domain-specific policy and check implementations, but should not copy a fixture
+machine or binding, hand-assemble generic lifecycle events, or assert a check
+outcome. Core accepted a narrow correction: a content-addressed neutral bundle,
+Core-executed mechanical source/evidence and replayability checks, one public
+admission helper, and an aggregate missing-root grounding diagnostic. These
+mechanics make no source-truth or domain-adequacy judgment.
+
+Paper boundary: Keep the failed run and P8 coordinate unchanged. Do not copy
+Small Shop admission bytes. A later successful run requires a new frozen paper
+contract bound to the corrected immutable Core coordinate after independent
+audit. Questions, ontology semantics, capture, query binding, and human
+inspection remain paper-owned.

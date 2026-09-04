@@ -1,0 +1,1 @@
+{"attempt":3,"detail":"DIRECT_ROOT_GROUNDING_REQUIRED: project class GeologicOccurrence extends Event directly","error_type":"PackGroundingRefusal","ontology_sha256":"sha256:d80d515f530659858dbac3c57c3bdc1c381d7b2acca7f3b11a9e82041e39d8cf","reason":"DIRECT_ROOT_GROUNDING_REQUIRED","schema":"malleus.paper-v4.ontology-compile-attempt/v1","stage":"PACK_GROUNDING","status":"REFUSED"}

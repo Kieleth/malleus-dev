@@ -12,6 +12,7 @@ ARXIV_README = ROOT / "paper-v4" / "arxiv" / "README.md"
 MASTER_PLAN = ROOT / "paper-v4" / "paper-master-plan.md"
 PRODUCER_MANIFEST = ROOT / "paper-v4" / "experiment-v4" / "producer-input-manifest.json"
 SPAWN_MESSAGE = ROOT / "paper-v4" / "experiment-v4" / "spawn-message.md"
+ONTOLOGY_RESULT = ROOT / "paper-v4" / "experiment-v4" / "ontology-run" / "result.json"
 
 
 def _contract() -> dict[str, object]:
@@ -248,6 +249,36 @@ def test_producer_message_stages_one_closed_no_fallback_session() -> None:
     }
     for phrase in forbidden:
         assert phrase not in message
+
+
+def test_refused_ontology_run_stops_at_the_frozen_diagnostic_budget() -> None:
+    contract = _contract()
+    result = json.loads(ONTOLOGY_RESULT.read_bytes())
+    attempts = result["attempts"]
+
+    assert result["status"] == "REFUSED_AFTER_DIAGNOSTIC_BUDGET"
+    assert result["core"] == {
+        "commit": contract["core_gate"]["execution_baseline"]["core_commit"],
+        "tree": contract["core_gate"]["execution_baseline"]["core_tree"],
+    }
+    assert (
+        result["producer"]["diagnostic_returns"]
+        == (contract["producer"]["max_compiler_diagnostic_returns"])
+    )
+    assert len(attempts) == result["producer"]["diagnostic_returns"] + 1
+    assert [item["attempt"] for item in attempts] == [1, 2, 3]
+    assert result["producer"]["questions_visible"] is False
+    assert result["producer"]["fallback_used"] is False
+    assert result["producer"]["hand_repair_used"] is False
+    assert result["accepted_ontology_sha256"] is None
+    assert result["population_started"] is False
+    for item in attempts:
+        diagnostic_path = ROOT / item["diagnostic_path"]
+        diagnostic = json.loads(diagnostic_path.read_bytes())
+        assert item["diagnostic_sha256"] == _digest(diagnostic_path)
+        assert diagnostic["attempt"] == item["attempt"]
+        assert diagnostic["ontology_sha256"] == item["ontology_sha256"]
+        assert diagnostic["reason"] == "DIRECT_ROOT_GROUNDING_REQUIRED"
 
 
 def test_publication_instructions_do_not_name_an_ephemeral_host_environment() -> None:

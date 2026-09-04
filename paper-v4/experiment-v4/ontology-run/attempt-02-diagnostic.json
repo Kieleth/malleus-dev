@@ -1,0 +1,1 @@
+{"attempt":2,"detail":"DIRECT_ROOT_GROUNDING_REQUIRED: project class EarthMaterial extends Entity directly","error_type":"PackGroundingRefusal","ontology_sha256":"sha256:18e9b3022b28e6a09b5accbd683c000998a23de057876149f52ef87b2bcd8b42","reason":"DIRECT_ROOT_GROUNDING_REQUIRED","schema":"malleus.paper-v4.ontology-compile-attempt/v1","stage":"PACK_GROUNDING","status":"REFUSED"}

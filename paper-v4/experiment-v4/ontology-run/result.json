@@ -1,0 +1,48 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "REFUSED_AFTER_DIAGNOSTIC_BUDGET",
+  "core": {
+    "commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+    "tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e"
+  },
+  "producer_input_manifest_sha256": "sha256:b00762dc84efa371a1d600c4eb9144e48182eb9d83e5e3f02f6b04248122a86d",
+  "producer": {
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 2,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:1ad5c0e516af9366abcdd9d1c315322c9b8320e92e4a2b138cb478a5e4862276",
+    "final_status_sha256": "sha256:9387da363b66b15c384f5ef5f1a601e1eba917a942d1c013548d36732384f028"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:19ea02de255c8e2d57f1daf34c140b072bf70d6dcaf31f8e9a963058d0b39571",
+      "diagnostic_path": "paper-v4/experiment-v4/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:7bacc39a8223e3e0fc1bca50bd613eb925e4f6b8d0660ef8db9d229cec61da5f"
+    },
+    {
+      "attempt": 2,
+      "ontology_sha256": "sha256:18e9b3022b28e6a09b5accbd683c000998a23de057876149f52ef87b2bcd8b42",
+      "diagnostic_path": "paper-v4/experiment-v4/ontology-run/attempt-02-diagnostic.json",
+      "diagnostic_sha256": "sha256:bbdc19501f71ae309082c740fe826498c979648fde8cf69e4a27e869394ba576"
+    },
+    {
+      "attempt": 3,
+      "ontology_sha256": "sha256:d80d515f530659858dbac3c57c3bdc1c381d7b2acca7f3b11a9e82041e39d8cf",
+      "diagnostic_path": "paper-v4/experiment-v4/ontology-run/attempt-03-diagnostic.json",
+      "diagnostic_sha256": "sha256:f4d448f96daa71822c7129c44d9912cc9ef340d74c192edd5bb87fb1f83731ae"
+    }
+  ],
+  "terminal_diagnostic": {
+    "stage": "PACK_GROUNDING",
+    "error_type": "PackGroundingRefusal",
+    "reason": "DIRECT_ROOT_GROUNDING_REQUIRED",
+    "detail": "DIRECT_ROOT_GROUNDING_REQUIRED: project class GeologicOccurrence extends Event directly"
+  },
+  "accepted_ontology_sha256": null,
+  "population_started": false,
+  "next_boundary": "A separate rerun requires a new frozen contract after the diagnostic and governed-history bootstrap classes are resolved."
+}
