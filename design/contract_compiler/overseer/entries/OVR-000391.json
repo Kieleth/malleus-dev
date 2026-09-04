@@ -1,0 +1,139 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:7a50a3fe05ea52c3d5f3664a83c83378cabee3159ce0f3c2b34788f42133dacd",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/README.md"
+      },
+      {
+        "after_digest": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-capture.json"
+      },
+      {
+        "after_digest": "sha256:4897c36c485224bede030e7605a18b43bfeb11780aaea747fb91e153ad138304",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-census.json"
+      },
+      {
+        "after_digest": "sha256:ac48ac4917f12541ed87dbff5b7bb7bd7ae31d6958b41ba58c6a833e5ecd9184",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-change.json"
+      },
+      {
+        "after_digest": "sha256:4cfe4dd1d232b53d5062b053cdbbadda43d0c435e4a7059c69f7f49669bb715d",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-plan.json"
+      },
+      {
+        "after_digest": "sha256:c91cc11a8368ae98fc7e1c4058464393405d0f9c5c6eb49a59292bfbae3feec5",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/inspection-note.yaml"
+      },
+      {
+        "after_digest": "sha256:d58e940ad6ca219aaeb61c8aed44e50423f8bcce139895863cf064266fc8c2e8",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/profile-source-assertion.json"
+      },
+      {
+        "after_digest": "sha256:2205605234ea2654b7c5a0efd442a24762825dac99b5ab34a573cd2949b03c80",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/profile-state-version.json"
+      },
+      {
+        "after_digest": "sha256:7dbc2661468cfcd93b4ac43f77206f68e8a521ef95cf3865937333ebc1259745",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/reading.json"
+      },
+      {
+        "after_digest": "sha256:5a4105bd2f04a14b10c8e3b95c7ad746014436c34ceb285579b677b3ed2e8dfe",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/small-shop-change-e7.json"
+      },
+      {
+        "after_digest": "sha256:426154de1461fcccca53ad3716a2b632c3de9d8f202409e194c5f755822b3c32",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/small-shop-plan-e4.json"
+      },
+      {
+        "after_digest": "sha256:e186797a12f1a3ed380d71f3612ce390d1da2f4196de97742c67d20171e8e763",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/small-shop-plan-e7.json"
+      },
+      {
+        "after_digest": "sha256:ae7006d24cf0b183f674043034fb6f9b304818b815c7c552000f452e2b93227a",
+        "before_digest": "sha256:f3bb217657455f02e14fe7f3483c54c6db4d9b4723a01a756f6718c2b68e331b",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-v2.md"
+      },
+      {
+        "after_digest": "sha256:ab0c956e5556138fdb756e189be19bbf52dbe8762a631c26c2e0ad7c479cc518",
+        "before_digest": "sha256:75afbd79e0d266fd27320630b6d6d0121f75a0025cac4a1009b3b20eb1f65b92",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-v2/validate_examples.py"
+      },
+      {
+        "after_digest": "sha256:6ecf429d70715a3340584c11c8c1e78e9e4b84e29f7d234cd85e86939b2e3870",
+        "before_digest": "sha256:4219efc84367ed6dc3f0d52ce6d922ab0d8916edfe782d6923ff2385880d9e7c",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:6b31dd321d114e6cebc654651ef47ebc93c57224ad67b2a41bec286bf6ec44d2",
+        "before_digest": "sha256:e2070318ad034f40f2a663f5556c715979755fb12780414e404e85b77f074e5f",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_trace.py"
+      },
+      {
+        "after_digest": "sha256:598ec27595a79fadbdfa68a7b7308e22b26b9943e87bd6d33c460368e8b10218",
+        "before_digest": "sha256:2d59051150012dd686d59d1afc133f56071788647dc4fa139905538c7504a28e",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:986bf3dabda9964d7f07a001fa6bfd5e228305ee1d7426b22200a567348c9e69",
+  "entry_id": "OVR-000391",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f314dcc07584e08a4e57a2633fcdd69c11288e3b038439dfa7e659f822cb2c3b",
+  "recorded_at": "2026-09-04T16:20:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7397e5c33eb86e342c1e9154bfe09ba5bda4f776",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000378",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 391,
+  "subject": {
+    "id": "core-owned-population-fixture",
+    "type": "DOCUMENT"
+  },
+  "summary": "Move the population examples into a Core-owned fixture and state the profile rule in the seed.",
+  "why": "Three pareto tests read handover/2026-09-03-core-population-v2/examples in place, so a handover directory pinned by OVR-000378 had become a Core fixture; docs/PRINCIPLES.md keeps fixtures inside Core and gives an archived spec no authority over tests. The eleven files are copied byte for byte to research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1 with a manifest and a README, the tests point there, and nothing under tests/ or src/ names the handover directory. The pinned examples themselves are untouched. validate_examples.py's check_profile had become a wrapper over DomainHistoryProfile.from_data, asserting the profile rule by running the implementation against itself; it now states the private-v1 rule and calls from_data afterwards only as a cross-check. The handover's profile section now states the shipped contract with its population.py line numbers instead of noting that P6 superseded the five-field shape."
+}
