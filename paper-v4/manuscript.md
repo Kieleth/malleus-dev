@@ -30,7 +30,7 @@ The paper makes three bounded contributions.
 
 1. It states a compact protocol separating model proposal, deterministic compilation, recorded acceptance, immutable change, ledger admission, replay, and query, and it runs that protocol to completion.
 2. It connects an ontology and a finite construction grammar to a typed change set with per-value source locators, atomic admission, and typed gaps for what the vocabulary cannot carry.
-3. It reports one calibrated fixture and four document runs from retained artifacts, including compiler refusals, incomplete query coverage, replay equality, and guarded query execution.
+3. It reports one calibrated fixture, four document runs, and one document run refused at the ontology stage, all from retained artifacts, including compiler refusals, incomplete query coverage, replay equality, and guarded query execution.
 
 The paper does not claim that Malleus discovers true knowledge, induces generally adequate ontologies, answers arbitrary questions, or replaces retrieval-augmented generation. It reports an engineering property of identified executions. Source-grounded human review of the current run's rows is preliminary.
 
@@ -159,11 +159,13 @@ Three earlier runs used the question-primed protocol: a byte-identical ontology 
 | v3 | Claude Sonnet 5 | question-primed | 1 | 1,738 | 1, 1, 2, 1 | 2 | 2 entities, 0 relations | 0, 0, 0, 0 |
 | v3 | Claude Opus 5 | question-primed | 2 | 3,869 | 1, 2, 3, 2 | 6 | 5 entities, 1 relation | 0, 0, 0, 1 |
 | run-02 | Claude Opus 5 | skill, no brief | 3 | 3,515 | 5, 4, 5, 7 | 589 | 419 entities, 170 relations | 4, 32, 34, 3 |
-| run-03 | Claude Sonnet 5 | skill, no brief | in progress | in progress | in progress | in progress | in progress | in progress |
+| run-03 | Claude Sonnet 5 | skill, no brief | 3 | none | none | none | none | none, refused at ontology stage |
 
 The first producer was gpt-5.6-sol at reasoning effort ultra under Codex; the three Claude producers ran under Claude Code at the harness default effort, which the experiment cannot pin or observe. Facts are the compiled fact count of the accepted ontology including its import closure. Binding cases are per question, CQ1 to CQ4. Population records for run-02 are the admitted records; for the question-primed runs they are the records the producer proposed, all of which were admitted.
 
-Run-03 changes only the producer model relative to run-02. When this revision was written its ontology phase had used all three permitted attempts and been refused at the pack-grounding rite each time, so no ontology was accepted, population never started, and there is no query result. That is the state on disk and not a verdict on the cell; no count is pinned for it.
+Run-03 changes only the producer model relative to run-02, and it is final rather than open. All three permitted ontology attempts were refused at the pack-grounding rite, both diagnostic returns were used, no ontology was accepted, and population never started, so the cell has no population, no graph and no query result.
+
+The two cells of the current protocol hit the same first two grounding gates in the same order: all ten root extensions ungrounded, then one unclosed vocabulary entry. Both spent their two diagnostic returns there. Sonnet then met a third rule Opus never saw, that invented terms must be paired with an invention search, and had no return left. Two runs measure neither model. What the pair shows is that each of these gates reports one entry at a time, so a fresh producer spends its whole correction budget discovering the shape of the grounding block rather than the domain. That is a harness defect, not a producer result: the block's shape is being moved into the skill the producer copies, and the rite should aggregate shape defects the way it already aggregates missing roots.
 
 Every run admitted atomically, reproduced its graph and receipt after disposal and replay, and recorded zero guarded file, network or embedding-import attempts. The pipeline behaved identically across all four. What varied was whether the proposed vocabulary could hold what the source says, and that was decided before any fact was proposed.
 
@@ -183,7 +185,7 @@ Five things differ between the question-primed protocol of Section 4.3 and the c
 
 ### 4.5 Limitations
 
-**One document, one producer per cell.** One document and four questions cannot establish general ontology induction quality, domain robustness, or statistical performance. Each cell is one session; it shows what one producer produced once under one protocol, not what it produces typically. The second cell of the current protocol was still running when this revision was written.
+**One document, one producer per cell.** One document and four questions cannot establish general ontology induction quality, domain robustness, or statistical performance. Each cell is one session; it shows what one producer produced once under one protocol, not what it produces typically. The current protocol has one populated document run and not two, because its second cell was refused at the ontology stage by a grounding rite that reports one defect at a time, so no comparison between the two cells is available.
 
 **Answer quality is not established.** An accepted change is conformant under identified checks and a recorded decision. It may still be incomplete, misleading, or false. Per-value locators aid inspection but do not authenticate the publisher, model provider, evaluator, runtime host, or storage owner. The current run's human review is preliminary, so even the nonempty rows are not yet evidence of answer support.
 
@@ -323,6 +325,16 @@ Two structural refusals preceded admission. The document adapter refused `READIN
 Every admission step is a call on the public `malleus.compiler` facade and its shipped structural history, not the paper-local composer of Section 2.4. One change set entered a 14-event ledger. After the in-memory handles were discarded, ledger reopen and replay reproduced the admitted receipt and the admitted export.
 
 The public record of this run is `paper-v4/experiment-v4/run-02/`, holding the run contract, the producer input manifest and isolation message, the three ontology candidates with their three diagnostics, the grounding receipt, the validated contract and fact set, the population surface, the census, the launch log, the recorded acceptance event, the record and query trace summaries, the post-replay query binding, the transaction time, and the digest of every withheld file. Retained privately are the producer's capture, the population plan, the typed gaps, the ledger, the replay receipt, the exported records, and the query rows. Reopen and replay are reproduced from the retained ledger, so the repository carries their identities and the counts of Section 4.2, not their contents.
+
+### B.4 The refused second cell
+
+Run-03 is the second cell of the current protocol. It changes the producer model and nothing else: one fresh Claude Sonnet 5 session under the same harness, the same eight declared inputs at run-02's digests, the same isolation message, no question in view. Its three ontology attempts, their three diagnostics and its acquisition record are frozen under `paper-v4/experiment-v4/run-03/ontology-run/`.
+
+All three attempts were refused at the pack-grounding rite, each on a different rule, and both permitted diagnostic returns were used. Attempt one refused with `DIRECT_ROOT_GROUNDING_REQUIRED`, naming all ten ungrounded project classes in one sorted set. Attempt two refused with `GROUNDING_NOT_CLOSED` on one vocabulary entry, `RidgeAxisSection.grounding.vocabularies[0]`. Attempt three refused with `GROUNDING_INCOMPLETE`, `RidgeAxisSection must pair invented terms with invention_search`. Status is `REFUSED_AFTER_DIAGNOSTIC_BUDGET`, no ontology was accepted, population never started, and there was no fallback or hand repair.
+
+The first two refusals are the same rules in the same order that the run of [Appendix B.3](#b3-the-current-run) met, and both runs spent both returns on them. The third rule is one that run never saw. Each of the three reports a single subject: the aggregate diagnostic that Core added after an earlier run fixed the missing-root case only, so `GROUNDING_NOT_CLOSED` still names one entry without listing the field set it requires, and `GROUNDING_INCOMPLETE` names one class and one missing pairing. That is the same failure class as the plan compiler's one-field-per-refusal behaviour, one layer up. It is recorded as the finding of paper-ledger entry E-0124, with the grounding block's shape going into the skill and the rite to aggregate shape defects. The rerun happens at a new coordinate under the revised skill and rite and opens a new cell; run-03 stays frozen as what this harness produced with this producer.
+
+The three attempt files are frozen whole rather than by digest. They share thirteen 60-character normalized runs with the selected reading: the article title and twelve entries of its bibliography, all inside `grounding.vocabularies` and `invention_search` citation strings, each located in the reading's header or numbered reference list. The diagnostics, the acquisition record and the launch log share nothing.
 
 ## Appendix C. Reproduction and artifact index
 

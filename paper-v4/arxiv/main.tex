@@ -50,7 +50,7 @@ The second is one document. The source is a 2025 \emph{Nature Communications} ar
 
 The absence of question conditioning matters in both. An ontology tailored to known questions can make an end-to-end demonstration look stronger than the ontology acquisition method warrants. Here, missing concepts stay missing and the uneven result was frozen, not repaired after inspection.
 
-The paper makes three bounded contributions. First, it states a compact protocol separating model proposal, deterministic compilation, recorded acceptance, immutable change, ledger admission, replay, and query, and it runs that protocol to completion. Second, it connects an ontology and a finite construction grammar to a typed change set with per-value source locators, atomic admission, and typed gaps for what the vocabulary cannot carry. Third, it reports one calibrated fixture and four document runs from retained artifacts, including compiler refusals, incomplete query coverage, replay equality, and guarded query execution.
+The paper makes three bounded contributions. First, it states a compact protocol separating model proposal, deterministic compilation, recorded acceptance, immutable change, ledger admission, replay, and query, and it runs that protocol to completion. Second, it connects an ontology and a finite construction grammar to a typed change set with per-value source locators, atomic admission, and typed gaps for what the vocabulary cannot carry. Third, it reports one calibrated fixture, four document runs, and one document run refused at the ontology stage, all from retained artifacts, including compiler refusals, incomplete query coverage, replay equality, and guarded query execution.
 
 The paper does not claim that \malleus{} discovers true knowledge, induces generally adequate ontologies, answers arbitrary questions, or replaces retrieval-augmented generation. It reports an engineering property of identified executions. Source-grounded human review of the current run's rows is preliminary.
 
@@ -196,14 +196,16 @@ v2 & gpt-5.6-sol & question-primed & 2 & 4,146 & 1, 2, 4, 6 & 13 & 7 ent., 6 rel
 v3 & Claude Sonnet~5 & question-primed & 1 & 1,738 & 1, 1, 2, 1 & 2 & 2 ent., 0 rel. & 0, 0, 0, 0 \\
 v3 & Claude Opus~5 & question-primed & 2 & 3,869 & 1, 2, 3, 2 & 6 & 5 ent., 1 rel. & 0, 0, 0, 1 \\
 run-02 & Claude Opus~5 & skill, no brief & 3 & 3,515 & 5, 4, 5, 7 & 589 & 419 ent., 170 rel. & 4, 32, 34, 3 \\
-run-03 & Claude Sonnet~5 & skill, no brief & \multicolumn{6}{l}{in progress} \\
+run-03 & Claude Sonnet~5 & skill, no brief & 3 & \multicolumn{5}{l}{none; refused at ontology stage} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 The first producer was gpt-5.6-sol at reasoning effort ultra under Codex; the three Claude producers ran under Claude Code at the harness default effort, which the experiment cannot pin or observe. Facts are the compiled fact count of the accepted ontology including its import closure. Binding cases are per question, CQ1 to CQ4. Population records for run-02 are the admitted records; for the question-primed runs they are the records the producer proposed, all of which were admitted.
 
-Run-03 changes only the producer model relative to run-02. When this revision was written its ontology phase had used all three permitted attempts and been refused at the pack-grounding rite each time, so no ontology was accepted, population never started, and there is no query result. That is the state on disk and not a verdict on the cell; no count is pinned for it.
+Run-03 changes only the producer model relative to run-02, and it is final rather than open. All three permitted ontology attempts were refused at the pack-grounding rite, both diagnostic returns were used, no ontology was accepted, and population never started, so the cell has no population, no graph and no query result.
+
+The two cells of the current protocol hit the same first two grounding gates in the same order: all ten root extensions ungrounded, then one unclosed vocabulary entry. Both spent their two diagnostic returns there. Sonnet then met a third rule Opus never saw, that invented terms must be paired with an invention search, and had no return left. Two runs measure neither model. What the pair shows is that each of these gates reports one entry at a time, so a fresh producer spends its whole correction budget discovering the shape of the grounding block rather than the domain. That is a harness defect, not a producer result: the block's shape is being moved into the skill the producer copies, and the rite should aggregate shape defects the way it already aggregates missing roots.
 
 Every run admitted atomically, reproduced its graph and receipt after disposal and replay, and recorded zero guarded file, network or embedding-import attempts. The pipeline behaved identically across all four. What varied was whether the proposed vocabulary could hold what the source says, and that was decided before any fact was proposed.
 
@@ -227,7 +229,7 @@ Five things differ between the question-primed protocol of Section~\ref{sec:earl
 \subsection{Limitations}
 \label{sec:limitations}
 
-\paragraph{One document, one producer per cell.} One document and four questions cannot establish general ontology induction quality, domain robustness, or statistical performance. Each cell is one session; it shows what one producer produced once under one protocol, not what it produces typically. The second cell of the current protocol was still running when this revision was written.
+\paragraph{One document, one producer per cell.} One document and four questions cannot establish general ontology induction quality, domain robustness, or statistical performance. Each cell is one session; it shows what one producer produced once under one protocol, not what it produces typically. The current protocol has one populated document run and not two, because its second cell was refused at the ontology stage by a grounding rite that reports one defect at a time, so no comparison between the two cells is available.
 
 \paragraph{Answer quality is not established.} An accepted change is conformant under identified checks and a recorded decision. It may still be incomplete, misleading, or false. Per-value locators aid inspection but do not authenticate the publisher, model provider, evaluator, runtime host, or storage owner. The current run's human review is preliminary, so even the nonempty rows are not yet evidence of answer support.
 
@@ -382,6 +384,17 @@ Two structural refusals preceded admission. The document adapter refused \code{R
 Every admission step is a call on the public \code{malleus.compiler} facade and its shipped structural history, not the paper-local composer of Section~\ref{sec:commitment}. One change set entered a 14-event ledger. After the in-memory handles were discarded, ledger reopen and replay reproduced the admitted receipt and the admitted export.
 
 The public record of this run is \code{paper-v4/experiment-v4/run-02/}, holding the run contract, the producer input manifest and isolation message, the three ontology candidates with their three diagnostics, the grounding receipt, the validated contract and fact set, the population surface, the census, the launch log, the recorded acceptance event, the record and query trace summaries, the post-replay query binding, the transaction time, and the digest of every withheld file. Retained privately are the producer's capture, the population plan, the typed gaps, the ledger, the replay receipt, the exported records, and the query rows. Reopen and replay are reproduced from the retained ledger, so the repository carries their identities and the counts of Section~\ref{sec:current}, not their contents.
+
+\subsection{The refused second cell}
+\label{app:b4}
+
+Run-03 is the second cell of the current protocol. It changes the producer model and nothing else: one fresh Claude Sonnet~5 session under the same harness, the same eight declared inputs at run-02's digests, the same isolation message, no question in view. Its three ontology attempts, their three diagnostics and its acquisition record are frozen under \code{paper-v4/experiment-v4/run-03/ontology-run/}.
+
+All three attempts were refused at the pack-grounding rite, each on a different rule, and both permitted diagnostic returns were used. Attempt one refused with \code{DIRECT\_ROOT\_GROUNDING\_REQUIRED}, naming all ten ungrounded project classes in one sorted set. Attempt two refused with \code{GROUNDING\_NOT\_CLOSED} on one vocabulary entry, \code{RidgeAxisSection.grounding.vocabularies[0]}. Attempt three refused with \code{GROUNDING\_INCOMPLETE}, \code{RidgeAxisSection must pair invented terms with invention\_search}. Status is \code{REFUSED\_AFTER\_DIAGNOSTIC\_BUDGET}, no ontology was accepted, population never started, and there was no fallback or hand repair.
+
+The first two refusals are the same rules in the same order that the run of Appendix~\ref{app:b3} met, and both runs spent both returns on them. The third rule is one that run never saw. Each of the three reports a single subject: the aggregate diagnostic that Core added after an earlier run fixed the missing-root case only, so \code{GROUNDING\_NOT\_CLOSED} still names one entry without listing the field set it requires, and \code{GROUNDING\_INCOMPLETE} names one class and one missing pairing. That is the same failure class as the plan compiler's one-field-per-refusal behaviour, one layer up. It is recorded as the finding of paper-ledger entry E-0124, with the grounding block's shape going into the skill and the rite to aggregate shape defects. The rerun happens at a new coordinate under the revised skill and rite and opens a new cell; run-03 stays frozen as what this harness produced with this producer.
+
+The three attempt files are frozen whole rather than by digest. They share thirteen 60-character normalized runs with the selected reading: the article title and twelve entries of its bibliography, all inside \code{grounding.vocabularies} and \code{invention\_search} citation strings, each located in the reading's header or numbered reference list. The diagnostics, the acquisition record and the launch log share nothing.
 
 \section{Reproduction and artifact index}
 \label{app:repro}

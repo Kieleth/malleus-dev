@@ -145,8 +145,8 @@ def test_publication_claims_match_the_calibration_fixture() -> None:
         assert "five source files" in body
 
 
-def test_run_03_has_no_result_and_the_publications_say_what_it_has() -> None:
-    """The reserved row and the sentence under it must match run-03 on disk."""
+def test_publications_match_the_refused_run_03_cell() -> None:
+    """The run-03 row and its narrative must match the frozen refusal record."""
 
     assert not (RUN03 / "results/run-result.json").exists()
 
@@ -156,16 +156,39 @@ def test_run_03_has_no_result_and_the_publications_say_what_it_has() -> None:
     assert ontology["accepted_ontology_sha256"] is None
     assert [item["status"] for item in ontology["attempts"]] == ["REFUSED"] * 3
     assert {item["stage"] for item in ontology["attempts"]} == {"PACK_GROUNDING"}
+    assert [item["reason"] for item in ontology["attempts"]] == [
+        "DIRECT_ROOT_GROUNDING_REQUIRED",
+        "GROUNDING_NOT_CLOSED",
+        "GROUNDING_INCOMPLETE",
+    ]
+    assert ontology["attempts"][0]["subjects"] == 10
+    assert ontology["terminal_diagnostic"]["reason"] == "GROUNDING_INCOMPLETE"
+
+    # The first two gates are the ones run-02 met, in the same order.
+    run02 = json.loads((RUN02 / "ontology-run/result.json").read_bytes())
+    assert [item.get("reason") for item in run02["attempts"][:2]] == [
+        item["reason"] for item in ontology["attempts"][:2]
+    ]
 
     for publication in (MANUSCRIPT, TEX):
         body = _text(publication)
-        assert "run-03" in body
-        assert "in progress" in body
+        assert "in progress" not in body
+        assert "refused at ontology stage" in body
         assert (
-            "its ontology phase had used all three permitted attempts and been "
-            "refused at the pack-grounding rite each time"
+            "All three permitted ontology attempts were refused at the "
+            "pack-grounding rite, both diagnostic returns were used, no "
+            "ontology was accepted, and population never started"
         ) in body
-        assert "no count is pinned for it" in body
+        assert (
+            "The two cells of the current protocol hit the same first two "
+            "grounding gates in the same order"
+        ) in body
+        assert "each of these gates reports one entry at a time" in body
+        assert (
+            "its second cell was refused at the ontology stage by a grounding "
+            "rite that reports one defect at a time"
+        ) in body
+        assert "paper-v4/experiment-v4/run-03/ontology-run/" in body
 
 
 def test_publication_claims_match_frozen_v4_run_02_results() -> None:
