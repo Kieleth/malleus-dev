@@ -1,0 +1,67 @@
+{
+  "case_id": "unavailable-attempt",
+  "expected_verification": {
+    "capability": "AUDIT_ONLY",
+    "complete": false,
+    "conforms": true,
+    "diagnostic_codes": [],
+    "metrics": {
+      "coverage": {
+        "denominator": "declared_units",
+        "threshold": 1.0,
+        "value": 0.0,
+        "verdict": "UNMET"
+      }
+    },
+    "units": {
+      "image:1": {
+        "disposition": "CHECK_FAILED",
+        "outcome": "UNAVAILABLE"
+      }
+    }
+  },
+  "fixture_kind": "single_image_unavailable_attempt",
+  "mutations": [
+    {
+      "bundle": "cases/unavailable-attempt/mutations/missing-unavailable-reason.bundle.json",
+      "expected_diagnostic_codes": [
+        "OCR-D015"
+      ],
+      "id": "missing-unavailable-reason",
+      "purpose": "An unavailable attempt must state why the call could not be made.",
+      "verification": "cases/unavailable-attempt/mutations/missing-unavailable-reason.verification.json"
+    }
+  ],
+  "purpose": "Retain an unavailable control-reader call without inventing a response or reading.",
+  "reference_reader": {
+    "description": "Fixed readings for self-authored fixtures. No recognition engine is invoked.",
+    "id": "malleus.fixture.control_reader@1",
+    "kind": "deterministic_control_reader",
+    "production_ocr": false
+  },
+  "regions": [
+    {
+      "attempt_status": "UNAVAILABLE",
+      "id": "fixture:unavailable-attempt:region:main",
+      "request": "cases/unavailable-attempt/requests/main.json",
+      "selector": {
+        "type": "FragmentSelector",
+        "value": "xywh=100,180,800,390"
+      },
+      "unavailable_reason": "fixture reader disabled before invocation",
+      "unit": "image:1"
+    }
+  ],
+  "source": {
+    "byte_length": 30201,
+    "digest": "sha256:c0414363a293fd3080aca7970fe50d1d508ec45f479da72ededb1d506215ef42",
+    "license": "Apache-2.0",
+    "media_type": "image/png",
+    "origin": "generated from self-authored literals in conformance/ocr/v0/corpus/generate.py",
+    "path": "cases/unavailable-attempt/source/unavailable-attempt.png",
+    "pixel_dimensions": {
+      "height": 700,
+      "width": 1000
+    }
+  }
+}

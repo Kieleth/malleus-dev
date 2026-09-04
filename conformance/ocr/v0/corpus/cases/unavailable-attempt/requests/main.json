@@ -1,0 +1,13 @@
+{
+  "contract": "malleus.fixture.control_request.v1",
+  "production_ocr": false,
+  "raster_digest": "sha256:c0414363a293fd3080aca7970fe50d1d508ec45f479da72ededb1d506215ef42",
+  "reader_id": "malleus.fixture.control_reader@1",
+  "reader_kind": "deterministic_control_reader",
+  "region_id": "fixture:unavailable-attempt:region:main",
+  "selector": {
+    "type": "FragmentSelector",
+    "value": "xywh=100,180,800,390"
+  },
+  "task": "record the fixed unavailable control-reader call"
+}

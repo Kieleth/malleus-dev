@@ -215,30 +215,43 @@ def _region_control_png() -> bytes:
     return _png_bytes(image)
 
 
-def _failed_attempt_png() -> bytes:
+def _attempt_control_png(kind: str, target: str, footer: str, fill: str) -> bytes:
     image = Image.new("RGB", (1000, 700), "#f7f5ef")
     draw = ImageDraw.Draw(image)
     draw.rectangle((0, 0, 1000, 112), fill="#152238")
     _centered_text(
-        draw, (0, 0, 1000, 112), "MALLEUS OCR FIXTURE | FAILED ATTEMPT", _font(38),
+        draw, (0, 0, 1000, 112), f"MALLEUS OCR FIXTURE | {kind}", _font(38),
         fill="#ffffff",
     )
     box = (100, 180, 900, 570)
-    draw.rounded_rectangle(box, radius=24, fill="#f8e1dd", outline="#152238", width=6)
-    _centered_text(
-        draw,
-        box,
-        "CONTROL TARGET\nTHIS REGION WILL NOT BE READ",
-        _font(48),
-    )
+    draw.rounded_rectangle(box, radius=24, fill=fill, outline="#152238", width=6)
+    _centered_text(draw, box, target, _font(48))
     _centered_text(
         draw,
         (100, 610, 900, 675),
-        "The failed call remains evidence, not a reading.",
+        footer,
         _font(26),
         fill="#39465b",
     )
     return _png_bytes(image)
+
+
+def _failed_attempt_png() -> bytes:
+    return _attempt_control_png(
+        "FAILED ATTEMPT",
+        "CONTROL TARGET\nTHIS REGION WILL NOT BE READ",
+        "The failed call remains evidence, not a reading.",
+        "#f8e1dd",
+    )
+
+
+def _unavailable_attempt_png() -> bytes:
+    return _attempt_control_png(
+        "UNAVAILABLE ATTEMPT",
+        "CONTROL TARGET\nTHE CALL WILL NOT START",
+        "No response is evidence that no call was made.",
+        "#fff1cc",
+    )
 
 
 def _document_page(
@@ -649,6 +662,43 @@ class Case:
         self.oracle_regions.append(oracle)
         return {"region": region, "exchange": exchange, "attempt": attempt, "oracle": oracle}
 
+    def add_unavailable_attempt(
+        self, name: str, raster: Mapping[str, Any], xywh: tuple[int, int, int, int]
+    ) -> dict[str, Any]:
+        region = self._add_region(name, raster, xywh)
+        request_path, request_digest = self._request(
+            name,
+            raster,
+            region,
+            task="record the fixed unavailable control-reader call",
+        )
+        exchange = {
+            "request_path": request_path,
+            "request_digest": request_digest,
+        }
+        self.exchanges.append(exchange)
+        reason = "fixture reader disabled before invocation"
+        attempt = {
+            "id": _id(self.id, "attempt", name),
+            "region_id": region["id"],
+            "request_digest": request_digest,
+            "config_identity": CONFIG_IDENTITY,
+            "status": "UNAVAILABLE",
+            "response_digest": None,
+            "unavailable_reason": reason,
+        }
+        self.bundle["attempts"].append(attempt)
+        oracle = {
+            "id": region["id"],
+            "unit": raster["unit"],
+            "selector": region["selector"],
+            "request": request_path,
+            "attempt_status": "UNAVAILABLE",
+            "unavailable_reason": reason,
+        }
+        self.oracle_regions.append(oracle)
+        return {"region": region, "exchange": exchange, "attempt": attempt, "oracle": oracle}
+
     def _add_region(
         self, name: str, raster: Mapping[str, Any], xywh: tuple[int, int, int, int]
     ) -> dict[str, Any]:
@@ -792,7 +842,11 @@ class Case:
             "oracle": oracle_path, "bundle": self.bundle_path,
             "verification": self.verification_path, "rasters": self.raster_manifest,
             "requests": [item["request_path"] for item in self.exchanges],
-            "responses": [item["response_path"] for item in self.exchanges],
+            "responses": [
+                item["response_path"]
+                for item in self.exchanges
+                if "response_path" in item
+            ],
             "selected_texts": [
                 item["selected_text_path"]
                 for item in self.exchanges
@@ -877,6 +931,47 @@ def _failed_attempt(artifacts: Artifacts) -> dict[str, Any]:
         fixture_kind="single_image_failed_attempt",
         expected=expected,
         mutations=[],
+    )
+
+
+def _unavailable_attempt(artifacts: Artifacts) -> dict[str, Any]:
+    source = _unavailable_attempt_png()
+    purpose = (
+        "Retain an unavailable control-reader call without inventing a response or reading."
+    )
+    case = Case(
+        artifacts,
+        case_id="unavailable-attempt",
+        purpose=purpose,
+        source_name="unavailable-attempt.png",
+        source=source,
+        media_type="image/png",
+        required_units=["image:1"],
+        observed_units=["image:1"],
+        source_details={"pixel_dimensions": {"width": 1000, "height": 700}},
+    )
+    raster = case.add_raster("image-1", "image:1", source, width=1000, height=700)
+    case.add_unavailable_attempt("main", raster, (100, 180, 800, 390))
+    expected = _expected(
+        complete=False,
+        units={"image:1": ("UNAVAILABLE", "CHECK_FAILED")},
+        metric_value=0.0,
+        metric_verdict="UNMET",
+    )
+    document = case.write_reference(expected)
+    missing_reason = copy.deepcopy(document)
+    missing_reason["bundle"]["attempts"][0]["unavailable_reason"] = None
+    mutations = [case.write_mutation(
+        mutation_id="missing-unavailable-reason",
+        purpose="An unavailable attempt must state why the call could not be made.",
+        document=missing_reason,
+        expected=_refusal(expected, "OCR-D015"),
+        expected_diagnostics=(("OCR-D015", _id(case.id, "attempt", "main")),),
+    )]
+    return case.finish(
+        fixture_kind="single_image_unavailable_attempt",
+        expected=expected,
+        mutations=mutations,
     )
 
 
@@ -1017,7 +1112,13 @@ def _incomplete_sequence(artifacts: Artifacts) -> dict[str, Any]:
 def build_artifacts() -> dict[str, bytes]:
     _assert_generator_runtime()
     artifacts = Artifacts()
-    builders = (_region_control, _multipage_control, _incomplete_sequence, _failed_attempt)
+    builders = (
+        _region_control,
+        _multipage_control,
+        _incomplete_sequence,
+        _failed_attempt,
+        _unavailable_attempt,
+    )
     cases = [builder(artifacts) for builder in builders]
     root_ontology = ROOT / "ontology" / "malleus.yaml"
     ocr_ontology = ROOT / "ontology" / "domains" / "ocr.yaml"

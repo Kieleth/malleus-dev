@@ -12,7 +12,7 @@ fixed readings or a fixed controlled failure for self-authored regions so tests
 can inspect the evidence boundary without depending on a provider, model,
 network, or native OCR stack.
 
-The four cases separate different questions:
+The five cases separate different questions:
 
 * `region-control` has two visible regions in one PNG. Its mutations cross the
   attempt and selection lineage between the regions.
@@ -25,6 +25,9 @@ The four cases separate different questions:
 * `failed-attempt` retains a request and controlled failure response over one
   rasterized region. The attempt remains `FAILED / CHECK_FAILED`, and no
   hypothesis, selection, or selected text is invented.
+* `unavailable-attempt` retains the intended request and the reason the call
+  could not start. It carries no response artifact or digest, and removing the
+  reason triggers `OCR-D015`.
 
 `generate.py` owns every file below `cases/`, plus `corpus.json` and
 `checksums.json`. It writes invariant PDF metadata, fixed timestamps, canonical

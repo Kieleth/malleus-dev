@@ -156,6 +156,37 @@
       "selected_texts": [],
       "source": "cases/failed-attempt/source/failed-attempt.png",
       "verification": "cases/failed-attempt/verification.json"
+    },
+    {
+      "bundle": "cases/unavailable-attempt/bundle.json",
+      "id": "unavailable-attempt",
+      "mutations": [
+        {
+          "bundle": "cases/unavailable-attempt/mutations/missing-unavailable-reason.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D015"
+          ],
+          "id": "missing-unavailable-reason",
+          "purpose": "An unavailable attempt must state why the call could not be made.",
+          "verification": "cases/unavailable-attempt/mutations/missing-unavailable-reason.verification.json"
+        }
+      ],
+      "oracle": "cases/unavailable-attempt/oracle.json",
+      "purpose": "Retain an unavailable control-reader call without inventing a response or reading.",
+      "rasters": [
+        {
+          "height": 700,
+          "path": "cases/unavailable-attempt/rasters/image-1.png",
+          "width": 1000
+        }
+      ],
+      "requests": [
+        "cases/unavailable-attempt/requests/main.json"
+      ],
+      "responses": [],
+      "selected_texts": [],
+      "source": "cases/unavailable-attempt/source/unavailable-attempt.png",
+      "verification": "cases/unavailable-attempt/verification.json"
     }
   ],
   "corpus_id": "malleus.ocr.fixture_corpus",
