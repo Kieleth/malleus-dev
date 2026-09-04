@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/packs/research
 name: malleus_research
-version: 0.1.0
+version: 0.2.0
 title: Malleus Research Knowledge Pack
 description: >-
   Optional reusable vocabulary for attributed claims, observations, methods,
@@ -57,6 +57,10 @@ annotations:
             - Evidence
             - support
             - challenge
+        - vocabulary: DCMI Metadata Terms
+          vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+          borrowed_terms:
+            - license
       invented_terms:
         - Campaign
         - Instrument
@@ -92,16 +96,26 @@ enums:
 classes:
   SourceAsserted:
     mixin: true
-    description: Source-level modality and optional confidence on a domain record.
+    description: >-
+      Source-level modality, optional confidence, and the route and digest that
+      reach the retained assertion behind a record. Worn by every claim-bearing
+      record, so the route travels with the claim rather than with a copy of
+      its text.
     slots:
       - assertion_modality
       - assertion_confidence
+      - assertion_locator
+      - statement_sha256
 
   Claim:
     is_a: Entity
     mixins:
       - SourceAsserted
-    description: An attributed statement represented as a graph entity.
+    description: >-
+      An attributed statement represented as a graph entity. statement is
+      optional and stays empty unless the record's Source declares a licence
+      that permits reproducing the sentence; assertion_locator and
+      statement_sha256 carry the assertion either way.
     slots:
       - statement
       - claim_kind
@@ -136,6 +150,8 @@ classes:
   Source:
     is_a: Entity
     description: A work or document that reports domain assertions.
+    slots:
+      - licence
 
   Evidence:
     is_a: Entity
@@ -163,6 +179,24 @@ slots:
   claim_kind:
     range: string
     description: Project-defined refinement of a claim.
+  assertion_locator:
+    range: string
+    description: >-
+      Opaque route back to the retained assertion this record formalizes: an
+      assertion id, a block id, a byte range, a time span in a recording. The
+      pack does not interpret it and never assumes the source is a document.
+  statement_sha256:
+    range: string
+    description: >-
+      Digest of the exact retained assertion text, sha256: followed by 64
+      lowercase hexadecimal characters. It compares two records against one
+      assertion without the graph carrying the sentence.
+  licence:
+    range: string
+    description: >-
+      Licence the source declares for its own text, as the source declares it.
+      Reproducing a source sentence in statement requires one that permits it;
+      absent a licence, the sentence stays out of graph state.
   source_digest:
     range: string
     description: Digest of exact retained source bytes.
