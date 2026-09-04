@@ -279,6 +279,77 @@ def test_research_grounding_assigns_only_supported_term_groups() -> None:
     assert grounding["invention_search"]
 
 
+def test_research_carries_a_locator_and_a_digest_rather_than_source_text() -> None:
+    """Verbatim source sentences in Claim.statement put copyrighted prose into
+    graph state and forced one run's query rows out of the public repository.
+
+    The graph carries a route back to the retained assertion and the digest of
+    the exact text. Both sit on the SourceAsserted mixin, which reaches every
+    claim-bearing record, and Source declares the licence that decides whether
+    the sentence itself may be reproduced.
+    """
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
+    asserted = source["classes"]["SourceAsserted"]["slots"]
+    dcmi = next(
+        item
+        for item in source["annotations"]["grounding"]["value"]["vocabularies"]
+        if item["vocabulary"] == "DCMI Metadata Terms"
+    )
+
+    assert asserted[-2:] == ["assertion_locator", "statement_sha256"]
+    assert source["slots"]["assertion_locator"]["range"] == "string"
+    assert source["slots"]["statement_sha256"]["range"] == "string"
+    assert source["classes"]["Source"]["slots"] == ["licence"]
+    assert source["slots"]["licence"]["range"] == "string"
+    assert dcmi["borrowed_terms"] == ["license"]
+    assert dcmi["vocabulary_url"] == (
+        "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"
+    )
+    assert source["version"] == "0.2.0"
+
+
+def test_compiled_claim_keeps_statement_optional_beside_locator_and_digest() -> None:
+    view = _compiler().compile_linkml_contract(
+        root_locator="research",
+        sources=_pack_sources(),
+    ).view
+
+    for holder in ("Claim", "Observation"):
+        carried = view.effective_slots(holder)
+        assert {"assertion_locator", "statement_sha256"} <= set(carried)
+    for name in ("statement", "assertion_locator", "statement_sha256"):
+        assert view.get_slot_constraint("Claim", name).required is False
+    assert view.get_slot_constraint("Source", "licence").required is False
+
+
+def test_project_claim_subclass_reaches_the_locator_and_digest() -> None:
+    """Run-02's MechanismHypothesis is ``is_a: Claim``, so a project declaring
+    nothing new must still reach both slots."""
+    sources = _pack_sources()
+    sources["project"] = b"""\
+id: https://example.org/claim-bearing-project
+name: claim_bearing_project
+imports:
+  - linkml:types
+  - malleus
+  - research
+classes:
+  MechanismHypothesis:
+    is_a: Claim
+"""
+
+    compiled = _compiler().compile_linkml_contract(
+        root_locator="project",
+        sources=sources,
+    )
+
+    assert {"assertion_locator", "statement_sha256"} <= set(
+        compiled.view.effective_slots("MechanismHypothesis")
+    )
+
+
 def test_research_pack_matches_the_accepted_campaign_surface() -> None:
     source = yaml.safe_load(
         bundled_ontology_path("packs", "research.yaml").read_bytes()
