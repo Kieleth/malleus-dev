@@ -2581,3 +2581,56 @@ per model is one observation per model. A model difference observed across two
 single sessions is not a measurement of either model, and the v4 pair run-02 and
 run-03 is not evidence about what run-04 and run-05 will do under the revised
 skill and packs.
+
+### E-0127, run-06 opens the third v4.1 cell on Haiku 4.5
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-06/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `test_contract.py`,
+`test_pipeline.py`, and the receipt at
+`private/paper-v4-v4-run-06/producer-input-receipt.json`.
+
+Cell: run-06 is the third cell of the v4.1 iteration and the same construction
+as run-05. One fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `haiku`, model family
+Claude Haiku 4.5, model id `claude-haiku-4-5-20251001`, reasoning effort the
+harness default and neither pinned nor observed. Every other key of the producer
+block is run-04's, and `run-06/test_contract.py` compares the two blocks key by
+key so only `requested_model`, `model_family` and `model_id` may differ. The
+scope block: `matrix_cell` THIRD_OF_V4_1, `first_cell_of_v4_1` run-04,
+`v4_1_cells_preceding` run-04 and run-05, `variable` PRODUCER_MODEL_ONLY,
+`harness` IDENTICAL_TO_RUN_04. `model_matched_cell` names no cell, because no
+earlier run used this family; it records
+NONE_NO_EARLIER_CELL_USED_HAIKU rather than leaving the key out. Run-06
+supersedes nothing. The three v4.1 cells differ from each other in the producer
+model and in nothing else, which is the shape run-02 and run-03 had at v4 with
+one more cell.
+
+Coordinates: the same Core commit run-04 and run-05 record,
+`8b806f7411e11b84e1156cea84b4b641d701db19`, tree
+`1da402a610c6e38f2b7d7abcd059133d66aa3cbe`, governance head `OVR-000396` at
+`sha256:51a62e70dc8b80d3d14079f9b919d1aa45c519e66a22316938015d7c51a437f2`. No
+declared input moved. All eight digests were recomputed, the seven tracked ones
+with `git show 8b806f7:<path>` and the untracked reading from its private path,
+and each equals run-04's and run-05's: the skill `sha256:0909026f…`, the reading
+`sha256:f3885c7b…`, the Malleus root `sha256:5b737c21…`, the LinkML types
+`sha256:1c79b264…`, metrology `sha256:c6c205d1…` at 0.2.0, chronology
+`sha256:6fbd3b49…` at 0.1.0, research `sha256:5ca437c5…` at 0.2.0, and the
+packaged source-assertion profile `sha256:e7451aaf…`. The interface coordinates
+are new: `capture:paper-v4:yu-2025:v4:6` and `plan:paper-v4:yu-2025:v4:6`. The
+private workspace is `private/paper-v4-v4-run-06/producer`.
+
+Harness: `native_query.py` is byte identical to run-05's, run-04's, run-03's and
+run-02's. `run.py`, `compile_ontology_candidate.py` and `prepare_producer.py` are
+run-04's with the run id and the result schema string substituted, and the spawn
+message is run-04's with the run id substituted. The population surface stays at
+`malleus.paper-v4.population-surface/v2` with Event types.
+
+Non-claim: no producer has run at this coordinate, and none of run-04, run-05 or
+run-06 has reached a result. Nothing here compares models. Three cells at one
+session each are three observations, not a measurement of three model families,
+and Haiku 4.5 is a different generation from the Opus 5 and Sonnet 5 cells
+beside it, so a difference between it and them would not isolate model capacity
+even after all three have run. What the design fixes is that the producer model
+is the only declared difference between the three.
