@@ -79,6 +79,7 @@ def _source(
     annotations: dict[str, object] | None = None,
     class_annotations: dict[str, object] | None = None,
     parent: str = "Entity",
+    prefixes: dict[str, str] | None = None,
 ) -> bytes:
     value: dict[str, object] = {
         "id": "https://example.org/project",
@@ -90,6 +91,8 @@ def _source(
         value["annotations"] = annotations
     if class_annotations is not None:
         value["classes"]["ProjectThing"]["annotations"] = class_annotations
+    if prefixes is not None:
+        value["prefixes"] = prefixes
     return yaml.safe_dump(value, sort_keys=False).encode()
 
 
@@ -459,6 +462,52 @@ def test_project_direct_root_extension_requires_its_own_grounding() -> None:
         caught.value.reason
         is api.PackGroundingRefusalReason.DIRECT_ROOT_GROUNDING_REQUIRED
     )
+
+
+@pytest.mark.parametrize("prefix", ["malleus", "root"])
+def test_project_malleus_curie_root_extension_requires_its_own_grounding(
+    prefix: str,
+) -> None:
+    api = _inquisition()
+    source = _source(
+        parent=f"{prefix}:Entity",
+        prefixes={prefix: "https://malleus.dev/schema/"},
+    )
+    sources = _pack_sources()
+    sources["project"] = source
+
+    compiled = _compiler().compile_linkml_contract(
+        root_locator="project",
+        sources=sources,
+    )
+    assert compiled.view.is_subtype_of("ProjectThing", "Entity")
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(source, role="PROJECT")
+
+    assert (
+        caught.value.reason
+        is api.PackGroundingRefusalReason.DIRECT_ROOT_GROUNDING_REQUIRED
+    )
+
+
+@pytest.mark.parametrize(
+    "parent,prefixes",
+    [
+        ("foreign:Entity", {"foreign": "https://example.org/foreign/"}),
+        ("https://malleus.dev/schema/Entity", None),
+    ],
+)
+def test_project_grounding_ignores_noncompiler_root_spellings(
+    parent: str,
+    prefixes: dict[str, str] | None,
+) -> None:
+    receipt = _inquisition().validate_pack_grounding(
+        _source(parent=parent, prefixes=prefixes),
+        role="PROJECT",
+    )
+
+    assert receipt.grounded_subjects == ()
 
 
 def test_project_may_record_a_bounded_none_found_search() -> None:
