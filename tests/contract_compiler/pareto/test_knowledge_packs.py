@@ -96,9 +96,11 @@ def _source(
 def test_public_grounding_rite_surface_is_explicit() -> None:
     api = _inquisition()
     assert {
+        "PackConformanceReceipt",
         "PackGroundingReceipt",
         "PackGroundingRefusal",
         "PackGroundingRefusalReason",
+        "validate_pack_conformance",
         "validate_pack_grounding",
     } <= set(api.__all__)
 
@@ -223,6 +225,48 @@ classes:
 
     assert compiled.view.is_subtype_of("StudyObservation", "Entity")
     assert compiled.view.has_enum("AssertionModality")
+
+
+def test_edited_pack_conformance_refuses_a_deleted_reference_surface() -> None:
+    api = _inquisition()
+    reference = bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    edited = yaml.safe_load(reference)
+    edited["id"] = "https://example.org/packs/local-metrology"
+    edited["name"] = "local_metrology"
+    del edited["classes"]
+    del edited["slots"]
+    del edited["enums"]
+    candidate = yaml.safe_dump(edited, sort_keys=False).encode()
+
+    assert api.validate_pack_grounding(candidate, role="PACK")
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_conformance(candidate, reference=reference)
+
+    assert (
+        caught.value.reason is api.PackGroundingRefusalReason.PACK_SURFACE_NOT_PRESERVED
+    )
+    assert "classes.Counted" in caught.value.detail
+    assert "enums.Determination" in caught.value.detail
+    assert "slots.quantity_kind" in caught.value.detail
+
+
+def test_edited_pack_conformance_allows_documentation_and_additive_changes() -> None:
+    api = _inquisition()
+    reference = bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    edited = yaml.safe_load(reference)
+    edited["id"] = "https://example.org/packs/local-metrology"
+    edited["name"] = "local_metrology"
+    edited["description"] = "A locally documented compatible copy."
+    edited["classes"]["LocalReading"] = {"is_a": "QuantityValue"}
+    edited["enums"]["Determination"]["permissible_values"]["CALIBRATED"] = None
+    candidate = yaml.safe_dump(edited, sort_keys=False).encode()
+
+    receipt = api.validate_pack_conformance(candidate, reference=reference)
+
+    assert receipt.source_id == "https://example.org/packs/local-metrology"
+    assert receipt.reference_id == "https://malleus.dev/schema/packs/metrology"
+    assert receipt.source_sha256 == "sha256:" + sha256(candidate).hexdigest()
+    assert receipt.reference_sha256 == "sha256:" + sha256(reference).hexdigest()
 
 
 def test_pack_without_grounding_refuses_with_typed_reason() -> None:
@@ -394,4 +438,37 @@ def test_pack_grounding_cli_reports_duplicate_key_as_typed_refusal(
     assert result.returncode == 1
     assert "MALFORMED_SOURCE" in result.stderr
     assert "Duplicate YAML key 'id'" in result.stderr
+    assert "Traceback" not in result.stderr
+
+
+def test_pack_conformance_cli_refuses_a_deleted_reference_surface(
+    tmp_path: Path,
+) -> None:
+    reference = bundled_ontology_path("packs", "metrology.yaml")
+    edited = yaml.safe_load(reference.read_bytes())
+    edited["id"] = "https://example.org/packs/local-metrology"
+    edited["name"] = "local_metrology"
+    del edited["classes"]
+    del edited["slots"]
+    del edited["enums"]
+    candidate = tmp_path / "local-metrology.yaml"
+    candidate.write_text(yaml.safe_dump(edited, sort_keys=False), encoding="utf-8")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "malleus.inquisition.cli",
+            "pack-conformance",
+            str(candidate),
+            "--against",
+            str(reference),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "PACK_SURFACE_NOT_PRESERVED" in result.stderr
     assert "Traceback" not in result.stderr
