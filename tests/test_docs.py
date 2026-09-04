@@ -2194,6 +2194,8 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "Anyone could write those records by hand. That is not the achievement.",
         "The graph is the current view produced from that history, not a second source of truth.",
         "No LLM is needed to compile, decide, or replay this path.",
+        "The public `malleus.compiler` facade exposes the reusable executor",
+        "`malleus-compiler contract` compiles exact named LinkML source files.",
         "one immutable `KnowledgeChangeSet`",
         "One JSONL history records 20 bootstrap retention and registration events",
         "two fixture-supplied check receipts, and the final verdict. That is 25 events.",
@@ -2211,7 +2213,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         assert claim in normalized
 
     for boundary in (
-        "not yet a stable public API",
+        "Public here means an import path and installed command, not stable wire formats.",
         "This does not mean the general Malleus compiler is finished.",
         "not a release gate",
         "general mapping contract",
@@ -2295,7 +2297,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17"
     )
     assert receipt["ledger_head"] == (
-        "sha256:3d055403ccbe39266e89c44cd49b63f14a909d1c6ca4eb65fe7afa38b7912bad"
+        "sha256:3e07988bafd28a481c5eece5bfdad533ddbb63c93e862b9192944e04c8af3574"
     )
     assert receipt["queries"] == {
         "entities": [
@@ -2366,9 +2368,15 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof"
     )
     assert milestone_link in normalized_readme
-    assert "not yet a stable public compiler API or release" in normalized_readme
+    assert (
+        "Public here means a supported import path and installed command in packages "
+        "built from this source, not a stable wire format or release."
+        in normalized_readme
+    )
     for current_readme_claim in (
         "warehouse record plus a separate inventory lookup",
+        "from malleus.compiler import compile_linkml_contract",
+        "malleus-compiler contract",
         "graph-to-Prolog fact compiler",
         "Quick start: structural validation",
         "The fingerprint grammar is reported separately",
@@ -2448,7 +2456,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "`PREPROVISIONED_BOOTSTRAP`",
         "Source, mapping, or graph-shape drift refuses before mutation.",
         "replay from the ledger alone, not recompilation from the ledger alone",
-        "ABox mapping is fixture-specific Python, not a public population compiler.",
+        "The public population compiler accepts an already-authored plan; it does not invent this mapping.",
         "`CHANGE_LEVEL_NOT_PER_OPERATION_CAUSALITY`",
         "does not yet identify the query program or its dependency closure",
         "Operation-level causality",
@@ -2499,20 +2507,20 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         },
         "history": {
             "acceptance_head": (
-                "sha256:f7937650a84876bf3c930c327920b771a363e7a3d5a8ddb20a8690b9b640785e"
+                "sha256:7d3dbe526a75bdea348ec150f7253ce5d8cdb1e0e288a799d0ad158025c7c06a"
             ),
             "binding_identity": (
-                "sha256:da5131f69e67628761bda781c8ab0af730cfddf4aaf97c9a52505667230b47a2"
+                "sha256:87d653d38f56f771a91668b05f99ec80ffcc2e5e8bbe841c7e6b978db6b89e5e"
             ),
             "event_count": 74,
             "ledger_head": (
-                "sha256:f7937650a84876bf3c930c327920b771a363e7a3d5a8ddb20a8690b9b640785e"
+                "sha256:7d3dbe526a75bdea348ec150f7253ce5d8cdb1e0e288a799d0ad158025c7c06a"
             ),
             "materialization_head": (
-                "sha256:f82106a444c86f65fa62daac8e27adc11754aaf6b415b2ad432040cd5cce218d"
+                "sha256:d3c0351a8b84e27f9a5cf3e505b4532677cc02bac5554de42b6e64f54951a808"
             ),
             "receipt_identity": (
-                "sha256:edfc193e2ba5a17e15e702980e30e7391696e99255ec88b83c0752e2dcdffca4"
+                "sha256:c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701"
             ),
         },
     }
@@ -2531,16 +2539,16 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         for name, source in evidence_bytes.items()
     } == {
         "explanation.json": (
-            "2f529922b1b88f4f0f43feed3dcdf71b578e2fa2b0ad37fb295013d61341f4b9"
+            "7dd3f9280562d786cc222e22473b88a3631a4cd401cfa2e9c67801de2fd79fb6"
         ),
         "graph.json": (
             "b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
         ),
         "queries.json": (
-            "e5dc8bb1be295ef9ebeae9582689d4f876036859b2739447dc60188f9bb8ba5c"
+            "4ec19541f38348c99dd5bd28cc7f498568234a713da6b843d4d2b9ffc21627b2"
         ),
         "receipt.json": (
-            "edfc193e2ba5a17e15e702980e30e7391696e99255ec88b83c0752e2dcdffca4"
+            "c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701"
         ),
     }
     assert coordinates["history"]["receipt_identity"] == (
@@ -2552,7 +2560,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
     assert receipt["ledger_head"] == coordinates["history"]["ledger_head"]
     assert receipt["graph_state_digest"] == coordinates["graph"]["state_digest"]
     assert explanation["run_program"]["identity"] == (
-        "sha256:766581ea6ca384cb325a05f235978bdbe849e8970304fe089b7a0509594a4835"
+        "sha256:7096c3f82e3f96aa7e1efa6f11a120bb2b3a6c441520d66589408fd8895885c6"
     )
     assert explanation["run_program"]["decisions"] == program["decisions"]
     assert explanation["run_program"]["limitations"] == program["limitations"]
@@ -2580,7 +2588,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         ),
         "ledger_event_count": 49,
         "ledger_head": (
-            "sha256:907dfa8af3c6968d3e1882d6dd41858c87b397e9fa309b9a5f9aa2cc4e96d3cf"
+            "sha256:22cedecec7dd1b87f588b70f195f02859342dedd8d004b693ed5688f17e90a40"
         ),
         "materialization_head": "GENESIS",
     }
