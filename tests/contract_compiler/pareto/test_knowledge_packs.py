@@ -506,6 +506,133 @@ def test_grounding_shape_refuses_unknown_or_missing_meaning(
     assert caught.value.reason.name == reason
 
 
+ROOT_FORMS = (
+    "closed forms: area+taxonomy+vocabularies+invented_terms "
+    "| area+taxonomy+vocabularies+invented_terms+invention_search "
+    "| area+taxonomy+none_found+search+invented_terms"
+)
+ENTRY_FORM = "closed form: vocabulary+vocabulary_url+borrowed_terms"
+
+
+def _classes(**bodies: dict[str, object]) -> bytes:
+    value = yaml.safe_load(_source())
+    value["classes"] = dict(bodies)
+    return yaml.safe_dump(value, sort_keys=False).encode()
+
+
+def _grounded_class(grounding: dict[str, object]) -> dict[str, object]:
+    return {"is_a": "Entity", "annotations": _annotation(grounding)}
+
+
+def _unclosed_entry() -> dict[str, object]:
+    grounding = _cited_grounding()
+    grounding["vocabularies"][0]["surprise"] = "not declared"
+    return grounding
+
+
+def test_project_grounding_reports_every_unclosed_entry_at_once() -> None:
+    api = _inquisition()
+    source = _classes(
+        BetaThing=_grounded_class(_unclosed_entry()),
+        AlphaThing=_grounded_class(_unclosed_entry()),
+    )
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(source, role="PROJECT")
+
+    assert caught.value.reason is api.PackGroundingRefusalReason.GROUNDING_NOT_CLOSED
+    assert caught.value.detail == (
+        "grounding blocks are not accepted: "
+        f"AlphaThing.grounding.vocabularies[0] fields are not closed "
+        f"[GROUNDING_NOT_CLOSED] {ENTRY_FORM}; "
+        f"BetaThing.grounding.vocabularies[0] fields are not closed "
+        f"[GROUNDING_NOT_CLOSED] {ENTRY_FORM}"
+    )
+
+
+def test_project_grounding_reports_defects_of_different_reasons_together() -> None:
+    api = _inquisition()
+    unpaired = _cited_grounding()
+    unpaired["invented_terms"] = ["LocalRidge"]
+    source = _classes(
+        AlphaThing=_grounded_class(_unclosed_entry()),
+        BetaThing=_grounded_class(unpaired),
+    )
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(source, role="PROJECT")
+
+    assert caught.value.reason is api.PackGroundingRefusalReason.GROUNDING_NOT_CLOSED
+    assert caught.value.detail == (
+        "grounding blocks are not accepted: "
+        f"AlphaThing.grounding.vocabularies[0] fields are not closed "
+        f"[GROUNDING_NOT_CLOSED] {ENTRY_FORM}; "
+        f"BetaThing must pair invented terms with invention_search "
+        f"[GROUNDING_INCOMPLETE] {ROOT_FORMS}"
+    )
+
+
+def test_pack_grounding_reports_every_entry_defect_in_one_block() -> None:
+    api = _inquisition()
+    grounding = _cited_grounding()
+    grounding["vocabularies"][0]["vocabulary_url"] = "not-absolute"
+    grounding["vocabularies"].append(
+        {
+            "vocabulary": "ISO 8601",
+            "vocabulary_url": "https://www.iso.org/iso-8601-date-and-time-format.html",
+            "borrowed_terms": [],
+        }
+    )
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(
+            _source(annotations=_annotation(grounding)),
+            role="PACK",
+        )
+
+    assert caught.value.reason is api.PackGroundingRefusalReason.GROUNDING_INCOMPLETE
+    assert caught.value.detail == (
+        "grounding blocks are not accepted: "
+        "https://example.org/project.grounding.vocabularies[0].vocabulary_url "
+        f"must be an absolute locator [GROUNDING_INCOMPLETE] {ENTRY_FORM}; "
+        "https://example.org/project.grounding.vocabularies[1].borrowed_terms "
+        f"must be a nonempty unique string list [GROUNDING_INCOMPLETE] {ENTRY_FORM}"
+    )
+
+
+def test_unsupported_grounding_form_states_all_three_closed_forms() -> None:
+    api = _inquisition()
+    grounding = _cited_grounding()
+    grounding.pop("invented_terms")
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(
+            _source(annotations=_annotation(grounding)),
+            role="PACK",
+        )
+
+    assert caught.value.reason is api.PackGroundingRefusalReason.GROUNDING_NOT_CLOSED
+    assert caught.value.detail == (
+        "grounding blocks are not accepted: "
+        "https://example.org/project grounding fields are not one supported "
+        f"closed form [GROUNDING_NOT_CLOSED] {ROOT_FORMS}"
+    )
+
+
+def test_shape_defect_keeps_precedence_over_the_missing_root_report() -> None:
+    api = _inquisition()
+    source = _classes(
+        AlphaThing={"is_a": "Entity"},
+        BetaThing=_grounded_class(_unclosed_entry()),
+    )
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(source, role="PROJECT")
+
+    assert caught.value.reason is api.PackGroundingRefusalReason.GROUNDING_NOT_CLOSED
+    assert "AlphaThing" not in caught.value.detail
+
+
 def test_project_direct_root_extension_requires_its_own_grounding() -> None:
     api = _inquisition()
     with pytest.raises(api.PackGroundingRefusal) as caught:
