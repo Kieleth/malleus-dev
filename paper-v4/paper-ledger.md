@@ -1857,3 +1857,28 @@ diagnostic, at most twice.
 Impact: The first ontology proposal can now be evaluated without changing the
 gate in response to its content. This supporting harness is not a sixth paper
 identity.
+
+### E-0113, first gate invocation refuses in the parent CLI binding
+
+Date: 2026-09-04
+
+Source: the first invocation of the frozen E-0112 harness against producer
+ontology attempt 1.
+
+Failure: Argument parsing exposed `--ontology` as `ontology`, but
+`compile_candidate` requires `ontology_path`. Expanding the parser namespace
+directly into the callable raised `TypeError` before reading, grounding, or
+compiling the candidate. No gate output directory or candidate diagnostic was
+created. The producer proposal remains byte-identical.
+
+Root cause: Unit tests exercised the callable but not the command-line binding
+used by the actual run.
+
+Guard: `main` now binds each parsed field explicitly. A CLI-level test replaces
+the compiler callable with an observer and proves all four argument names,
+values, and integer conversion reach the correct parameters. The existing
+typed-refusal and successful-compilation tests remain.
+
+Impact: Rerun the same ontology attempt through the corrected parent harness.
+This was a harness failure, not a compiler diagnostic and does not consume one
+of the producer's two diagnostic returns.

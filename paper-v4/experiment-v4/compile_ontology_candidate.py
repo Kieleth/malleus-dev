@@ -152,14 +152,20 @@ def compile_candidate(
     return True
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--ontology", type=Path, required=True)
     parser.add_argument("--producer-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--attempt", type=int, required=True)
-    args = parser.parse_args()
-    return 0 if compile_candidate(**vars(args)) else 1
+    args = parser.parse_args(argv)
+    accepted = compile_candidate(
+        ontology_path=args.ontology,
+        producer_root=args.producer_root,
+        output=args.output,
+        attempt=args.attempt,
+    )
+    return 0 if accepted else 1
 
 
 if __name__ == "__main__":

@@ -104,3 +104,41 @@ classes:
         "population-surface.json",
         "validated-contract.json",
     }
+
+
+def test_cli_binds_ontology_argument_to_ontology_path(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    observed = {}
+
+    def fake_compile_candidate(**values) -> bool:
+        observed.update(values)
+        return True
+
+    monkeypatch.setattr(SUBJECT, "compile_candidate", fake_compile_candidate)
+    ontology = tmp_path / "ontology.yaml"
+    producer = tmp_path / "producer"
+    output = tmp_path / "gate"
+
+    assert (
+        SUBJECT.main(
+            [
+                "--ontology",
+                str(ontology),
+                "--producer-root",
+                str(producer),
+                "--output",
+                str(output),
+                "--attempt",
+                "3",
+            ]
+        )
+        == 0
+    )
+    assert observed == {
+        "ontology_path": ontology,
+        "producer_root": producer,
+        "output": output,
+        "attempt": 3,
+    }
