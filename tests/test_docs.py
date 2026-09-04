@@ -271,6 +271,10 @@ APPROVED_REFERENCE_SOURCE = (
     "neutral population-plan grammar. Captured assertions remain evidence rather\n"
     "than graph records.\n"
     "\n"
+    "`KnowledgeChangeHistory.compose_contract_revision` derives an additive\n"
+    "contract revision from two compiled contracts. The current policy admits added\n"
+    "classes, slots, and enum values and refuses added imports.\n"
+    "\n"
     "```{eval-rst}\n"
     ".. autosummary::\n"
     "\n"
@@ -287,7 +291,11 @@ APPROVED_REFERENCE_SOURCE = (
     "   malleus.compiler.compile_population_plan\n"
     "   malleus.compiler.prepare_population_change\n"
     "   malleus.compiler.adapt_document_assertions\n"
+    "   malleus.compiler.compile_contract_revision\n"
     "   malleus.compiler.KnowledgeChangeHistory\n"
+    "   malleus.compiler.ContractRevision\n"
+    "   malleus.compiler.ContractRevisionRefusal\n"
+    "   malleus.compiler.ContractRevisionRefusalReason\n"
     "   malleus.compiler.PopulationPlanRefusal\n"
     "   malleus.compiler.PopulationPlanRefusalReason\n"
     "   malleus.compiler.DocumentAssertionCompilation\n"
@@ -326,7 +334,16 @@ APPROVED_REFERENCE_SOURCE = (
     "\n"
     ".. autofunction:: malleus.compiler.adapt_document_assertions\n"
     "\n"
+    ".. autofunction:: malleus.compiler.compile_contract_revision\n"
+    "\n"
     ".. autoclass:: malleus.compiler.KnowledgeChangeHistory\n"
+    "   :members: compose_contract_revision, record_contract_revision\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.ContractRevision\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.ContractRevisionRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.ContractRevisionRefusalReason\n"
     "\n"
     ".. autoclass:: malleus.compiler.PopulationPlanRefusal\n"
     "\n"
@@ -1236,6 +1253,9 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
     )
     compiler_class_ids = (
         "malleus.compiler.KnowledgeChangeHistory",
+        "malleus.compiler.ContractRevision",
+        "malleus.compiler.ContractRevisionRefusal",
+        "malleus.compiler.ContractRevisionRefusalReason",
         "malleus.compiler.PopulationPlanRefusal",
         "malleus.compiler.PopulationPlanRefusalReason",
         "malleus.compiler.DocumentAssertionCompilation",
@@ -1248,11 +1268,14 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.compile_population_plan",
         "malleus.compiler.prepare_population_change",
         "malleus.compiler.adapt_document_assertions",
+        "malleus.compiler.compile_contract_revision",
     )
     method_ids = (
         "malleus.OntologyRegistry.source_closure",
         "malleus.migration.MigrationVerifier.verify",
         "malleus.migration.MigrationAwareJsonlLedger.read_verified",
+        "malleus.compiler.KnowledgeChangeHistory.compose_contract_revision",
+        "malleus.compiler.KnowledgeChangeHistory.record_contract_revision",
     )
     aliases = {
         f"malleus.ontology.{name.removeprefix('malleus.')}": name
@@ -1277,6 +1300,15 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
             ),
             "malleus._contract_pipeline.document.DocumentAssertionRefusalReason": (
                 "malleus.compiler.DocumentAssertionRefusalReason"
+            ),
+            "malleus._contract_pipeline.revision.ContractRevision": (
+                "malleus.compiler.ContractRevision"
+            ),
+            "malleus._contract_pipeline.revision.ContractRevisionRefusal": (
+                "malleus.compiler.ContractRevisionRefusal"
+            ),
+            "malleus._contract_pipeline.revision.ContractRevisionRefusalReason": (
+                "malleus.compiler.ContractRevisionRefusalReason"
             ),
         }
     )
@@ -1335,7 +1367,13 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.compile_population_plan",
         "malleus.compiler.prepare_population_change",
         "malleus.compiler.adapt_document_assertions",
+        "malleus.compiler.compile_contract_revision",
         "malleus.compiler.KnowledgeChangeHistory",
+        "malleus.compiler.KnowledgeChangeHistory.compose_contract_revision",
+        "malleus.compiler.KnowledgeChangeHistory.record_contract_revision",
+        "malleus.compiler.ContractRevision",
+        "malleus.compiler.ContractRevisionRefusal",
+        "malleus.compiler.ContractRevisionRefusalReason",
         "malleus.compiler.PopulationPlanRefusal",
         "malleus.compiler.PopulationPlanRefusalReason",
         "malleus.compiler.DocumentAssertionCompilation",

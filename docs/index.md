@@ -155,6 +155,63 @@ history-profile contract must either require that qualification, reify the
 claim, or provide a typed provenance join. Until then, do not present an
 unqualified projected edge as proof that a source asserted it as fact.
 
+### Grow the ontology without starting a new history
+
+A useful ontology will change. Starting a second ledger every time a project
+adds a field would hide the connection between old and new knowledge. Malleus
+can now record one narrow kind of ontology revision inside the same history.
+
+The caller compiles the revised ontology, keeps the protocol machine and policy
+unchanged, then asks the history to derive the revision:
+
+```python
+from malleus.compiler import (
+    compile_linkml_contract,
+    compose_partial_effective_contract,
+)
+
+current = history.replay()
+revised = compile_linkml_contract(
+    root_locator="my-domain",
+    sources={
+        "my-domain": revised_ontology_bytes,
+        "linkml:types": linkml_types_bytes,
+    },
+)
+revised_partial = compose_partial_effective_contract(
+    validated_fact_set_sha256=revised.artifact.validated_fact_set_sha256,
+    normative_profile=current.partial_contract.normative_profile,
+)
+revision = history.compose_contract_revision(
+    revision_id="revision:catalog-v2",
+    target_validated_contract_bytes=revised.artifact.artifact_bytes,
+    target_partial_contract_bytes=revised_partial.canonical_bytes,
+    reason="add the product category needed by retained gaps",
+    issued_at="2026-09-03T00:00:00Z",
+)
+history.record_contract_revision(
+    revision=revision,
+    transaction_time="2026-09-03T00:00:00Z",
+    actor_id="actor:maintainer",
+)
+```
+
+The executor does not trust a label saying what changed. It compares the two
+compiled fact sets and derives `ADD_CLASS`, `ADD_SLOT`, or `ADD_ENUM_VALUE`.
+Those additions are admitted by the public `CONTRACT_REVISION_POLICY`. An
+`ADD_IMPORT` remains a legal grammar term but the current policy refuses it.
+Removing or changing an existing semantic fact also refuses.
+
+The recorded revision contains the target contract, the exact ledger and graph
+coordinates it follows, the derived changes, and a migration receipt. Replay
+loads the old contract, reaches that event, validates the accepted graph under
+the new contract, and continues. Later knowledge changes name the new contract
+identity. Earlier records and change sets remain in the same ledger.
+
+This is an additive revision path, not a general migration engine. It does not
+rewrite old records, change the protocol machine, admit new imports, or decide
+how an adopter should model domain history.
+
 ### Follow one fact through the system
 
 The source material is deliberately ordinary. The warehouse scenario is a

@@ -250,6 +250,10 @@ def test_public_module_exposes_the_executable_pipeline_without_private_imports()
 ):
     api = _api()
     required = {
+        "CONTRACT_REVISION_POLICY",
+        "ContractRevision",
+        "ContractRevisionRefusal",
+        "ContractRevisionRefusalReason",
         "KnowledgeChangeHistory",
         "KnowledgeChangeHistoryBinding",
         "PopulationBaseState",
@@ -259,6 +263,7 @@ def test_public_module_exposes_the_executable_pipeline_without_private_imports()
         "PolicyProgram",
         "STATE_VERSION_PROFILE",
         "compile_linkml_contract",
+        "compile_contract_revision",
         "compile_population_plan",
         "compose_normative_profile",
         "compose_partial_effective_contract",

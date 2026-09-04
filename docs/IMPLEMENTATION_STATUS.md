@@ -44,6 +44,15 @@ typed representation gaps. It emits the same neutral population-plan grammar
 as structured-source adapters plus a two-axis review/formalisation census.
 Assertions remain retained evidence and are not added to the graph.
 
+The same knowledge history can now cross one explicit additive ontology
+revision. The revision artifact embeds the next validated and partial contract,
+derives its change kinds from compiled facts, binds the exact prior history
+coordinates, and carries a migration receipt. The shipped policy admits added
+classes, slots, and enum values. It refuses an added import while retaining
+`ADD_IMPORT` in the policy grammar. Replay rebuilds the current graph under the
+new contract and later change sets bind the new contract identity; earlier
+records and change sets remain in the same ledger.
+
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one
@@ -51,7 +60,9 @@ controlled record correction. General correction semantics, mapping syntax,
 stable change-set wire, Event population, external effects, Semantic Re-entry,
 cross-language parity, and release work remain outside this cut. The minimal
 `source-assertion` profile retains modality but does not yet require a
-queryable modality projection. See `contract_compiler/index.md`.
+queryable modality projection. Contract revision is additive only; it is not a
+general ontology migration or import-admission mechanism. See
+`contract_compiler/index.md`.
 
 ## Implemented
 

@@ -12,6 +12,10 @@ signal records.
 neutral population-plan grammar. Captured assertions remain evidence rather
 than graph records.
 
+`KnowledgeChangeHistory.compose_contract_revision` derives an additive
+contract revision from two compiled contracts. The current policy admits added
+classes, slots, and enum values and refuses added imports.
+
 ```{eval-rst}
 .. autosummary::
 
@@ -28,7 +32,11 @@ than graph records.
    malleus.compiler.compile_population_plan
    malleus.compiler.prepare_population_change
    malleus.compiler.adapt_document_assertions
+   malleus.compiler.compile_contract_revision
    malleus.compiler.KnowledgeChangeHistory
+   malleus.compiler.ContractRevision
+   malleus.compiler.ContractRevisionRefusal
+   malleus.compiler.ContractRevisionRefusalReason
    malleus.compiler.PopulationPlanRefusal
    malleus.compiler.PopulationPlanRefusalReason
    malleus.compiler.DocumentAssertionCompilation
@@ -67,7 +75,16 @@ than graph records.
 
 .. autofunction:: malleus.compiler.adapt_document_assertions
 
+.. autofunction:: malleus.compiler.compile_contract_revision
+
 .. autoclass:: malleus.compiler.KnowledgeChangeHistory
+   :members: compose_contract_revision, record_contract_revision
+
+.. autoclass:: malleus.compiler.ContractRevision
+
+.. autoclass:: malleus.compiler.ContractRevisionRefusal
+
+.. autoclass:: malleus.compiler.ContractRevisionRefusalReason
 
 .. autoclass:: malleus.compiler.PopulationPlanRefusal
 
