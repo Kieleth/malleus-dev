@@ -53,11 +53,16 @@ At this level, select a domain-history profile explicitly. The public compiler
 exports `STATE_VERSION_PROFILE`, `SOURCE_ASSERTION_PROFILE`, and
 `OBJECT_EVENT_PROFILE`. A profile records the origin and completeness boundary,
 semantic unit, time and change semantics, ontology roles, projection family,
-and grounding. `OBJECT_EVENT_PROFILE` is currently a declaration only: the
-governed population path refuses Event records until Event materialization has
-its own accepted contract. A project may supply another closed profile, but it
-must bind that exact profile into each population plan rather than leaving its
-history semantics implicit.
+and grounding. Event admissibility follows the profile's declared Event role,
+not whether one change is an occurrence, assertion batch, or another semantic
+unit. A profile with a nonempty Event role admits Event records. The optional
+object-event vocabulary adds separately identified, qualified Event-to-Entity
+participation records. Import it through
+`bundled_ontology_path("profiles", "object-event.yaml")`. Ordinary Relation
+endpoints remain Entity-to-Entity, and Event-to-Event ordering remains outside
+this cut. A project may supply another closed profile, but it must bind that
+exact profile into each population plan rather than leaving its history
+semantics implicit.
 
 This target does not make levels 1 through 4 invalid or incomplete. A project
 may persist and materialize structural candidates without selecting semantic

@@ -151,11 +151,15 @@ records as successive versions and powers the Small Shop proof.
 optional per-assertion assertion and domain times, plus modality, stay in
 evidence and are reachable by the public provenance trace. Missing times remain
 absent, and their lexical values are not normalized by Core. `object-event`
-declares event-history semantics,
-but the governed population path still refuses Event records, so that profile
-is not yet executable. Adopters may define another closed profile. Merely
-naming a projection-rule family does not make Core an interpreter for arbitrary
-projection programs.
+declares event-history semantics and is executable for Event records plus
+qualified Event-to-Entity participation records. Participation is a separately
+identified graph record, queried with `query_event_participations`; it is not an
+ordinary Relation, so Relation endpoints remain Entity-to-Entity. Event-to-Event
+ordering is not represented. Event record admissibility follows the selected
+profile's declared Event role, not its semantic unit. A source-assertion capture
+batch may therefore describe an Event without becoming an occurrence change.
+Adopters may define another closed profile. Merely naming a projection-rule
+family does not make Core an interpreter for arbitrary projection programs.
 
 ### 3. A constructed graph does not swap registries in place
 

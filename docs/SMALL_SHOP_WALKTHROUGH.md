@@ -139,9 +139,13 @@ that the first change is complete, or create a Small Shop-specific ledger.
 Another adopter may choose source-attributed assertions, business events, REA
 commitments, or another history model. Core now supplies closed, hashed profile
 artifacts so that choice is explicit and retained. It validates and binds the
-chosen declaration; it does not yet execute arbitrary projection rules from
-profile text. The shipped `object-event` profile is therefore declarative until
-Event population is supported.
+chosen declaration; it does not yet execute arbitrary projection rules from profile
+text. The `object-event` profile now admits Event records and qualified
+Event-to-Entity participation records through the same change-set, admission,
+ledger, and replay path. That support is selected explicitly and does not
+reinterpret this state-version history. Record-family admission follows the
+profile's declared ontology roles, not its semantic-unit label, so another
+profile may describe Events without claiming that each change is an occurrence.
 
 Each change's source closure is bundle-wide: eight baseline members, six
 settlement members, or five correction members. The retained check receipt's
@@ -290,6 +294,41 @@ revision, ten historical records, and nine current records. Its committed
 binds the exact ledger bytes and contains the graph, selected queries, and a
 verified record-level provenance trace for every accepted record.
 
+### Run the packing occurrence as an event
+
+The state-version run answers, "What is the current shop state, and what did it
+replace?" The object-event run answers a different question, "What happened,
+and which enduring objects participated?" Keeping these as separate histories
+makes the adopter's semantic choice visible instead of hiding it in Python.
+
+The controlled `e27` source row says actor `R4` packed order `O1` with items
+`X1`, `X2`, and `Y1`. The sibling fixture imports the optional
+`object-event.yaml` vocabulary, compiles its project ontology, and admits one
+change containing five Entities, one `PackShipmentEvent`, and five qualified
+`EventParticipation` records. An `ORDER`, `ACTOR`, or `ITEM` qualifier says how
+each Entity participated. These records are not ordinary Relations, and the
+ordinary relation query remains empty.
+
+```bash
+python -m research.ontology_driven_kg_realization.experiments.small_shop.object_event.run \
+  --output build/small-shop-object-event
+python -m pytest -q \
+  research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py
+```
+
+The [recorded object-event evidence](../research/ontology_driven_kg_realization/experiments/small_shop/object_event/evidence.json)
+matches an independently hand-authored fixture oracle. It records one accepted
+change in a 14-event ledger, reopen and replay, a graph digest of
+`sha256:1e9a8d5ec12b349f13f6322a051a0d7ed7153565de8c15c31900a61e3be699ba`,
+ledger bytes digest
+`sha256:2db22588e3b06f331006bd2f8c1bf149ec917c1a7174506d069e9e042f35c620`,
+contract identity
+`sha256:90c8bc3e02e34d12a6b1c3c8d9cd8a5dcba3927c42922f15eb34b8aea30efd47`,
+and source identity
+`sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e`.
+It does not claim Event-to-Event ordering, infer product codes absent from the
+source row, or make the fixture ontology part of the Malleus protocol.
+
 The committed evidence is
 [explanation.json](../research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/explanation.json),
 [graph.json](../research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/graph.json),
@@ -317,7 +356,7 @@ does not invent this mapping.
 
 This showcase does not yet identify the query program or its dependency
 closure. Operation-level causality, arbitrary transaction-prefix queries,
-Cypher, generic collection fan-out, scoring and evaluation, effects, Event
-projection, and Semantic Re-entry are deferred. The fixed two-invoice mapping
+Cypher, generic collection fan-out, scoring and evaluation, effects,
+Event-to-Event ordering, and Semantic Re-entry are deferred. The fixed two-invoice mapping
 proves only this declared case. The graph-at-change query addresses a named
 accepted change, not an arbitrary ledger prefix or general valid-time query.

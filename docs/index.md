@@ -22,6 +22,14 @@ ontology revision, and traces every current and superseded record back to its
 retained population plan, field derivations, source bytes, and mapping bytes.
 It keeps the earlier research evidence unchanged.
 
+A separate
+[object-event evidence record](../research/ontology_driven_kg_realization/experiments/small_shop/object_event/evidence.json)
+uses the same public compiler, admission, ledger, reopen, replay, and query
+boundaries for packing occurrence `e27`. It creates five enduring objects, one
+Event, and five qualified Event-to-Entity participation records. This is a
+second explicit history choice, not an attempt to mix event semantics into the
+state-version run.
+
 ## First compiler-to-ledger-to-knowledge-graph proof
 
 > **Status:** Working research milestone, 3 September 2026.
@@ -608,8 +616,8 @@ compilation has an installed command. Still missing are stable wire contracts,
 a general mapping contract, broad ontology support, a supported interface for
 executed and retained check implementations, general update and correction
 behavior, external effects and observation, public bitemporal queries,
-Semantic Re-entry, and a second-language interpreter proving cross-language
-parity.
+Event-to-Event ordering, Semantic Re-entry, and a second-language interpreter
+proving cross-language parity.
 
 See the [technical compiler notes](contract_compiler/index.md) and
 [implementation status](IMPLEMENTATION_STATUS.md) for the exact boundary.

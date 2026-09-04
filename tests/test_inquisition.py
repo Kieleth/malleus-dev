@@ -1793,10 +1793,7 @@ class TestSkillsAreInstallable:
             "pack-conformance",
             "extend a pack concept before extending root",
             "state-version`, `source-assertion`, or `object-event",
-            (
-                "`object-event` admits Event records and qualified "
-                "`EventParticipation` records"
-            ),
+            "Event admissibility follows the profile's declared Event role",
             "Steps 6 through 9 are the governed-history branch",
             "choose an exact history profile before proposing the ontology",
             "For schema-only adoption, stop after step 5",

@@ -157,8 +157,12 @@ fallback.
 2. **Choose the Malleus level and, when governed history is needed, its history
    profile.** A schema or typed graph does not require a semantic ledger. For a
    governed history, choose `state-version`, `source-assertion`, or `object-event`
-   explicitly. The last is declarative today: Event population refuses until
-   Core publishes that operation family. Record any custom profile as exact
+   explicitly. Event admissibility follows the profile's declared Event role,
+   not its semantic unit. `object-event` admits Event records and qualified
+   `EventParticipation` records when its exact profile is bound and the project
+   ontology imports the bundled `profiles/object-event.yaml` vocabulary.
+   Ordinary Relation endpoints remain Entity-to-Entity. Event-to-Event ordering
+   and Signal population remain unsupported. Record any custom profile as exact
    bytes. Never infer a history model from the first record or from ledger order.
    Steps 6 through 9 are the governed-history branch, so you must choose an exact
    history profile before proposing the ontology when you will follow them. For
@@ -187,10 +191,17 @@ fallback.
    identifiers, conclusions, and wording are data, not class, slot, relation, or
    enum names. Keep protocol, provenance, locators, ledger, policy, and query
    machinery out of the domain ontology. Labels identify records; they never
-   carry an otherwise untyped assertion. The admissible population surface is
-   every concrete Entity and Relation type in the compiled contract. Never shrink
-   that surface to types selected by a later query. Event and Signal population
-   currently refuses at the public governed boundary.
+   carry an otherwise untyped assertion. The baseline admissible population
+   surface is every concrete Entity and Relation type in the compiled contract.
+   Any exact profile with a nonempty Event role also admits every concrete Event
+   type. When the compiled ontology contains `EventParticipation`, it admits
+   those concrete types too. Load the optional vocabulary with
+   `bundled_ontology_path("profiles", "object-event.yaml")`, supply those bytes
+   under the `object-event` import locator, and derive project-specific event and
+   participation classes from it. A profile with no Event role refuses nonempty
+   Event and EventParticipation families with `FAMILY_NOT_ADMITTED`; Signal
+   population also refuses. Never shrink an admitted surface to types selected
+   by a later query.
 5. **Run the structural gates and compile exact sources.** Run
    `malleus-inquisitor pack-grounding schema/your_project.yaml --role PROJECT`.
    If a pack was copied, also run its conformance command. Then run

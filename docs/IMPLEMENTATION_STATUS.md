@@ -64,8 +64,8 @@ This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one
 controlled record correction. General correction semantics, mapping syntax,
-stable change-set wire, Event population, external effects, Semantic Re-entry,
-cross-language parity, and release work remain outside this cut.
+stable change-set wire, Event-to-Event ordering, external effects, Semantic
+Re-entry, cross-language parity, and release work remain outside this cut.
 
 Three full, content-addressed domain-history profile artifacts now ship through
 `malleus.compiler`: `state-version`, `source-assertion`, and `object-event`.
@@ -74,11 +74,17 @@ semantics, ontology roles, projection-rule family, and grounding. Small Shop
 executes the `state-version` profile. The document adapter executes a
 capture-batch `source-assertion` profile whose assertion modality and domain
 time remain reachable through retained evidence and the public trace. The
-`object-event` profile is declarative only because Event population remains
-unsupported. The runtime validates and binds these declarations but does not
-yet interpret arbitrary projection programs from them. Contract revision is
-additive only; it is not a general ontology migration or import-admission
-mechanism. See `contract_compiler/index.md`.
+`object-event` profile now executes one controlled Small Shop occurrence. Its
+single accepted change creates five Entities, one Event, and five qualified
+EventParticipation records, then survives reopen and replay. The participation
+records keep Event-to-Entity roles out of ordinary Entity-to-Entity Relations.
+Event admissibility follows the selected profile's declared Event role rather
+than its semantic-unit label, so a source-assertion batch may describe an Event
+without itself becoming an occurrence.
+The runtime validates and binds these declarations but does not interpret
+arbitrary projection programs from them. Contract revision is additive only;
+it is not a general ontology migration or import-admission mechanism. See
+`contract_compiler/index.md`.
 
 Three optional, grounded knowledge packs also ship: `metrology`, `chronology`,
 and `research`. They provide reusable mixins, reference classes, and enums
@@ -103,7 +109,9 @@ names the real grounding and compiler commands, routes document captures and
 structured sources into the same neutral population plan, preserves typed
 gaps, checks the capture census for untouched source blocks, and repeats only
 through additive contract revision. It treats every concrete Entity and
-Relation type as eligible, calls the public history admit and reopen boundaries,
+Relation type as eligible. A selected profile with an Event role also admits
+concrete Event types, plus concrete EventParticipation types when that optional
+vocabulary is present. It calls the public history admit and reopen boundaries,
 keeps the loop in one session by default, and caps it at two revision rounds.
 Admission runs only when `PopulationPreparation.change_set` is present;
 `NO_DOMAIN_CHANGE` retains its evidence without an admission call.

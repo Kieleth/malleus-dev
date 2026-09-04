@@ -16,6 +16,6 @@ After this invariant passes its focused tests and the active Small Shop suite, m
 - Fuzzing and pathological JSON depth, size, or custom Python mapping objects.
 - Exhaustive permutations of otherwise valid event, role, and artifact combinations.
 - The full `DomainHistoryProfile`, including domain-time, completeness, change-kind, and projection semantics.
-- Operation-level provenance, generic fan-out, Event materialization, and Semantic Re-entry.
+- Operation-level provenance, generic fan-out, Event-to-Event ordering, Signal population, and Semantic Re-entry.
 
 Promote one of these items only when a public contract needs it or a concrete reproducer shows that the current path cannot serve an adopter. Until then, preserve it as roadmap work rather than blocking the executable end-to-end path.
