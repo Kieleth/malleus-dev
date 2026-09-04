@@ -1,0 +1,171 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:f1abdb6b465bd603068673bff150291bd7d3012951e3400a9264f1ae7dc51a50",
+        "before_digest": "sha256:f94e8657c3c70859ede5de4e7e97a3ce2f3702316a988f2a941617b2582f96cf",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:f9eefe6ee3ab5f64e61e388ea7ccf5db5bcfb348c398ad56fabef5e732aee7aa",
+        "before_digest": "sha256:35f6485f28d68e754525c1da22d7e5b3b689cf78463fc32b11bad93c668c251a",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:34779ae6883a2c14844f7735fe20d6e5994c5d41d8a0a5ab85d5626a52954f8a",
+        "before_digest": "sha256:555a292b79673aa615b1f072496141195293019096e1910b064f9fe6fcb6aff1",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:fbaafa5f7d749dbcdc2095bb6c0acf7500e11e3732eeb10e992c129e614f32e1",
+        "before_digest": "sha256:7bcf702e0a44703092a9e625a9b029949ff33b6d7b7d0c150facd03f63eee44b",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:60dce785f5c009c681d43806cbbaabed745f363265fad263a9ff7a3d892ac0ff",
+        "change": "CREATED",
+        "path": "src/malleus/profiles/object-event.json"
+      },
+      {
+        "after_digest": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46",
+        "change": "CREATED",
+        "path": "src/malleus/profiles/source-assertion.json"
+      },
+      {
+        "after_digest": "sha256:2205605234ea2654b7c5a0efd442a24762825dac99b5ab34a573cd2949b03c80",
+        "change": "CREATED",
+        "path": "src/malleus/profiles/state-version.json"
+      },
+      {
+        "after_digest": "sha256:4219efc84367ed6dc3f0d52ce6d922ab0d8916edfe782d6923ff2385880d9e7c",
+        "before_digest": "sha256:7fb1264b0243820f3773bb232f0c161cb0f90b2ab7bd25fd268731b96e9a84dd",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:55fc2870bd5e2063d8db72bb3c3291c9cde3ce55ebf122fdc55d3bb760dfd81c",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_time.py"
+      },
+      {
+        "after_digest": "sha256:3c4eac8b2aec0a9a4d8bd03951e7428d835e2ea4f57087e2a9c637137f62c620",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_domain_history_profile.py"
+      },
+      {
+        "after_digest": "sha256:b9adfa0975b49fea436664b224198b9cf5b9415fbe9c3333a90189ea8f6060e2",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_governed_population.py"
+      },
+      {
+        "after_digest": "sha256:9156b58bdb24be1207079e5b7d07ef0317ef106e207c6553e181d93d9cbf4085",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:e2070318ad034f40f2a663f5556c715979755fb12780414e404e85b77f074e5f",
+        "before_digest": "sha256:87111538045d0372f26fd20f1c4924d6740d530c903753fba9c52add912b49df",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_trace.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:efa23ce295954bf7e569d456cb8f72dc54674b5de3fa26635c2e5c181c4bb286",
+  "entry_id": "OVR-000377",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ce20ee409ef084ce24b5f1fbd8c97fde9a86385e9ecd270f8521eedf6b92fb16",
+  "recorded_at": "2026-09-04T05:53:24Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7b7eddbbbc236efb0853d0cf4e950a212e8d6601",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5ef011d83da30322b289f7a53c939cbb4fa1112a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d79d3d70fa2799a6d8e88b11053008f9ac94adaa",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7ad5b486e901902088e1a6872b790c6ec48d01a5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "52a26bf83f04917ab8a75b8a705d29709d58676b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c837e2f0aac62a39e27c1560aa48a98df6e6dd97",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "26859bc7e6ddee874e0586dfc1e3c3437f581704",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5cd15c286ef0c22015f7571e1bd1279f17a54a66",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "fd6a5103debbfc9d7470d810c400bfde56042576",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d1ab24267fa92c7f198ad807a7268e6d17594a39",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "17c4a8c64b597eb5dd5aaebf623c39ef8f721692",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bcfa787227cc6c95d18e506ab8e644d89aea8aaf",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 377,
+  "subject": {
+    "id": "domain-history-profile-runtime",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the executable domain-history profile contract and public compiler surface.",
+  "why": "P6 makes the adopter's history model an explicit, immutable input instead of hidden runtime convention. The shipped profiles, parser, document adapter, population compiler, and tests now agree on genesis, time, change, ontology-role, projection, and grounding semantics. This records only the executable and conformance surface, including package inclusion, and adds no mandatory universal profile, Event population, mapping DSL, or stable wire claim."
+}

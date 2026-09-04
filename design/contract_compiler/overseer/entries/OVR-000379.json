@@ -1,0 +1,178 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:5c3f489d589312bb29ce3b60701f7d3b62462f1e5f0f12e51c88e809fcf3cbca",
+        "before_digest": "sha256:ccaac8ac4f9f3d5f79b94013b725fa389280a4b5e2b3ef8eb7f98659cc8ce1fc",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:c8a2a61e34792fcf0b96f114beb307e00040f0a4be8dcf151a629fdcb4bab8a8",
+        "before_digest": "sha256:62a12e1769cf81d8ccc0ea199eb6536d99b575a3bf14bed36733303d2bf8312c",
+        "change": "MODIFIED",
+        "path": "docs/ADOPTION_GUIDE.md"
+      },
+      {
+        "after_digest": "sha256:7333cc4a9b95d017935bb776787987826c39c98b7cd6ad2cc12854bea046fb34",
+        "before_digest": "sha256:71705e5479c2ec122f46bc2775fdcf5ded558f793572052e45de3989fc576b86",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:bafc726433aa75a4734b61dd331df468e072a8fad7c86b4a2edfcf8f7d801b56",
+        "before_digest": "sha256:7c702acfca05cf7851acd569702f310798c89067e372a5480d9cf6c44a6d7052",
+        "change": "MODIFIED",
+        "path": "docs/KNOWLEDGE_GRAPH_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:08e8e26016f7d1fd3a6f82638db0966f2cb808333b928f3a36a58bea4cfdce56",
+        "before_digest": "sha256:75294db40de0b4bd527cad4fc6f8447d232dc91a9014e9cab0033027e447bcdc",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:191a5185b2b58ccff621793094a645a105eac440bd5b838a41a7c9b59c9b7307",
+        "before_digest": "sha256:79c248536211fa328e3618c53b7c5d0ddeace8f98983a0caf4aa7f8ae6bcb68c",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:4c1003daa60e23e6e6ee993138f7c9d895116d90635d854131d455135ca405b7",
+        "before_digest": "sha256:f75aace2b67c25fec958e73798797e83ffdbd95a54900ff9102a54ba2674dad0",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md"
+      },
+      {
+        "after_digest": "sha256:c8dd95737ad907cc787cea623f0b7a5400b607fe9c30e7f7c900720372fd5567",
+        "before_digest": "sha256:b2eeae42456fd6dc2d8cd87808e7f7bceab14382f9179a14abeea1d4cdc7a1c1",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json"
+      },
+      {
+        "after_digest": "sha256:db96e3d8d50728ce4da7a08b31f8c6d91e3b17814b749b28e29794a579903232",
+        "before_digest": "sha256:c823cec259d290b6f226a1277999a83c06b0733978aa5051060f9f728acda5d7",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/invoice-base.json"
+      },
+      {
+        "after_digest": "sha256:089cfe786641ab4872bdfb80ec0e463076594c7da57724db053a3e63a7a24e7c",
+        "before_digest": "sha256:7711ac910d40a48e23d8f69005f0421ebf15ea8da380d4d78e599586da897fe8",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/payment-e30.json"
+      },
+      {
+        "after_digest": "sha256:3fbf7b59199ac58de24b2924a484e900d43a117dbb6cc262fd636c1dfa8d0f2a",
+        "before_digest": "sha256:3a4691d0c4ccfb53a0f0416ff189d3778fa1427ed503e32a872a840dd7688667",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/ret010.json"
+      },
+      {
+        "after_digest": "sha256:f41275c76212e39523a5f330f7feb2d675e2a9b4e052c8a8cca9b3c25267a78f",
+        "before_digest": "sha256:a566f5b917e2a9c91eb9f829acb0dbfd6c207b71c8ed9e62402bed963d2009ad",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e4.json"
+      },
+      {
+        "after_digest": "sha256:2ffa3b1a8364788b22ade0632ce88a972228f403a6a6c34f7a30f208bf6d8cdd",
+        "before_digest": "sha256:aae9daa34539b0a1d93337360c1dd5108a5cb399423f30d3f7fcf854933a7e0c",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json"
+      },
+      {
+        "after_digest": "sha256:b6c824b8233ccbc40c7c5785591176d146a55e46e1a9f331de4116c7d9cb7fe3",
+        "before_digest": "sha256:d56697ed329f20de869aafa6f4856de2d2a1b6f6d1950639e97d38ce1e00e28b",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:60808e07abbea8c3e0470b86323e0fd73cbcbd32d1903c024acba8c5eca27023",
+  "entry_id": "OVR-000379",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:730104b2fb517d71b03c254ccc4e392401ccda804f29dd7c116139b86ef8098a",
+  "recorded_at": "2026-09-04T05:53:26Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7b7eddbbbc236efb0853d0cf4e950a212e8d6601",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5ef011d83da30322b289f7a53c939cbb4fa1112a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d79d3d70fa2799a6d8e88b11053008f9ac94adaa",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7ad5b486e901902088e1a6872b790c6ec48d01a5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "52a26bf83f04917ab8a75b8a705d29709d58676b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c837e2f0aac62a39e27c1560aa48a98df6e6dd97",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "26859bc7e6ddee874e0586dfc1e3c3437f581704",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5cd15c286ef0c22015f7571e1bd1279f17a54a66",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "fd6a5103debbfc9d7470d810c400bfde56042576",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d1ab24267fa92c7f198ad807a7268e6d17594a39",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "17c4a8c64b597eb5dd5aaebf623c39ef8f721692",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bcfa787227cc6c95d18e506ab8e644d89aea8aaf",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 379,
+  "subject": {
+    "id": "domain-history-profile-public-guidance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind public guidance and the complete Small Shop state-version rerun.",
+  "why": "The public documentation now separates the domain ontology, domain-history profile, append-only protocol history, and replayed graph. Every Small Shop population plan binds the shipped state-version profile, while the inspection-note path demonstrates the source-assertion profile and retained epistemic trace. This records the documented and research-fixture evidence without turning either fixture's choices into universal Malleus rules."
+}

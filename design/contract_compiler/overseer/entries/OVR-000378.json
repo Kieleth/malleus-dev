@@ -1,0 +1,165 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:4c8b1f60e136f406e41692135985f32afc01b4d4e21a4e5e06a6a96fbbe1449c",
+        "before_digest": "sha256:baf429b823b0075f3c1667c90453f9fbca4b29899753723d9ee971e32c10e6b9",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-p4-report.md"
+      },
+      {
+        "after_digest": "sha256:d15e05c4f7ef35115d079de219f23ba6ea63cdcbbb239c6551da02b169f258bb",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-p6-report.md"
+      },
+      {
+        "after_digest": "sha256:f3bb217657455f02e14fe7f3483c54c6db4d9b4723a01a756f6718c2b68e331b",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2.md"
+      },
+      {
+        "after_digest": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/document-capture.json"
+      },
+      {
+        "after_digest": "sha256:4897c36c485224bede030e7605a18b43bfeb11780aaea747fb91e153ad138304",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/document-census.json"
+      },
+      {
+        "after_digest": "sha256:f6176f3e5f6aa4707715ea2921050fb0b79305708eb712f5b21d5e7b79d4d770",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/document-change.json"
+      },
+      {
+        "after_digest": "sha256:4cfe4dd1d232b53d5062b053cdbbadda43d0c435e4a7059c69f7f49669bb715d",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/document-plan.json"
+      },
+      {
+        "after_digest": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/profile-source-assertion.json"
+      },
+      {
+        "after_digest": "sha256:2205605234ea2654b7c5a0efd442a24762825dac99b5ab34a573cd2949b03c80",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/profile-state-version.json"
+      },
+      {
+        "after_digest": "sha256:7dbc2661468cfcd93b4ac43f77206f68e8a521ef95cf3865937333ebc1259745",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/reading.json"
+      },
+      {
+        "after_digest": "sha256:72eaca7b0b948b469742babd416d0398f38287ce650c3e93e4de3c6d3a2dc2b6",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/small-shop-change-e7.json"
+      },
+      {
+        "after_digest": "sha256:426154de1461fcccca53ad3716a2b632c3de9d8f202409e194c5f755822b3c32",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/small-shop-plan-e4.json"
+      },
+      {
+        "after_digest": "sha256:e186797a12f1a3ed380d71f3612ce390d1da2f4196de97742c67d20171e8e763",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/examples/small-shop-plan-e7.json"
+      },
+      {
+        "after_digest": "sha256:75afbd79e0d266fd27320630b6d6d0121f75a0025cac4a1009b3b20eb1f65b92",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-v2/validate_examples.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:730104b2fb517d71b03c254ccc4e392401ccda804f29dd7c116139b86ef8098a",
+  "entry_id": "OVR-000378",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:efa23ce295954bf7e569d456cb8f72dc54674b5de3fa26635c2e5c181c4bb286",
+  "recorded_at": "2026-09-04T05:53:25Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7b7eddbbbc236efb0853d0cf4e950a212e8d6601",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5ef011d83da30322b289f7a53c939cbb4fa1112a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d79d3d70fa2799a6d8e88b11053008f9ac94adaa",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7ad5b486e901902088e1a6872b790c6ec48d01a5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "52a26bf83f04917ab8a75b8a705d29709d58676b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c837e2f0aac62a39e27c1560aa48a98df6e6dd97",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "26859bc7e6ddee874e0586dfc1e3c3437f581704",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5cd15c286ef0c22015f7571e1bd1279f17a54a66",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "fd6a5103debbfc9d7470d810c400bfde56042576",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d1ab24267fa92c7f198ad807a7268e6d17594a39",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "17c4a8c64b597eb5dd5aaebf623c39ef8f721692",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bcfa787227cc6c95d18e506ab8e644d89aea8aaf",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 378,
+  "subject": {
+    "id": "domain-history-profile-runnable-examples",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind byte-reproducible population examples to the full domain-history profiles.",
+  "why": "The earlier handover examples still encoded the retired five-field profile and a source date as whole-batch valid time. The corrected archive uses the public compiler, exact shipped profile identities, ORDER_ONLY capture-import time, and committed raw reading and capture bytes. Tests compile, prepare, admit, reopen, replay, and trace those bytes without replacing profile identities or time values in memory."
+}
