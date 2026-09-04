@@ -1,0 +1,113 @@
+id: https://malleus.dev/schema/packs/metrology
+name: malleus_metrology
+version: 0.1.0
+title: Malleus Metrology Knowledge Pack
+description: >-
+  Optional reusable vocabulary for quantities, bounds, units, uncertainty,
+  determination basis, ratios, and counts. Importing this pack is an adopter
+  choice and does not change the Malleus protocol.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+
+imports:
+  - linkml:types
+  - malleus
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: Physical measurement
+      taxonomy: DDC 530.8
+      vocabularies:
+        - vocabulary: JCGM 200:2012 International Vocabulary of Metrology, 3rd edition
+          vocabulary_url: https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf
+          borrowed_terms:
+            - quantity value
+            - measurement unit
+            - measurement uncertainty
+            - quantity kind
+      invented_terms: []
+
+enums:
+  Determination:
+    description: How a quantity value was obtained.
+    permissible_values:
+      MEASURED:
+      DERIVED:
+      ESTIMATED:
+      MODELLED:
+
+classes:
+  Quantified:
+    mixin: true
+    description: A record carrying a bounded quantity and its measurement context.
+    slots:
+      - quantity_kind
+      - value_lower
+      - value_upper
+      - unit
+      - uncertainty
+      - determination
+
+  Counted:
+    mixin: true
+    description: A record carrying an integer count and the scope counted.
+    slots:
+      - count
+      - count_scope
+
+  QuantityValue:
+    is_a: Entity
+    mixins:
+      - Quantified
+    description: A quantity represented as a graph entity when a project needs it.
+
+  Ratio:
+    is_a: Entity
+    description: A ratio whose numerator and denominator kinds remain explicit.
+    slots:
+      - numerator_kind
+      - denominator_kind
+      - ratio_value
+      - uncertainty
+
+slots:
+  quantity_kind:
+    range: string
+    description: Kind of quantity being reported.
+  value_lower:
+    range: float
+    description: Lower bound, equal to value_upper for an exact value.
+  value_upper:
+    range: float
+    description: Upper bound, equal to value_lower for an exact value.
+  unit:
+    range: string
+    description: Measurement unit, preferably a UCUM code where one exists.
+  uncertainty:
+    range: float
+    description: Reported measurement uncertainty.
+  determination:
+    range: Determination
+    description: How the quantity was determined.
+  count:
+    range: integer
+    description: Integer number of things counted.
+  count_scope:
+    range: string
+    description: What the count includes.
+  numerator_kind:
+    range: string
+    description: Quantity kind in the ratio numerator.
+  denominator_kind:
+    range: string
+    description: Quantity kind in the ratio denominator.
+  ratio_value:
+    range: float
+    description: Numeric value of the ratio.

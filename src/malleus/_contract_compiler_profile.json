@@ -1,7 +1,7 @@
 {
   "schema": "malleus.contract-compiler.linkml-profile/v0",
   "adapter": "linkml",
-  "support_profile": "malleus.linkml/private-v0",
+  "support_profile": "malleus.linkml/private-v1",
   "linkml_version": "1.11.1",
   "linkml_runtime_version": "1.11.1",
   "canonicalization": "malleus.canonical-json/compact-sorted-key-utf8-no-newline/v0",
@@ -96,7 +96,8 @@
         "enums": {"classification": "ENFORCED", "item_shape": "enum", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
         "slots": {"classification": "ENFORCED", "item_shape": "slot", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
         "classes": {"classification": "ENFORCED", "item_shape": "class", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
-        "prefixes": {"classification": "IDENTITY_ONLY", "identity_role": "prefix_map", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "prefixes", "value_classification": "IDENTITY_ONLY"}
+        "prefixes": {"classification": "IDENTITY_ONLY", "identity_role": "prefix_map", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "prefixes", "value_classification": "IDENTITY_ONLY"},
+        "annotations": {"classification": "ANNOTATION_ONLY", "item_shape": "grounding_annotations", "parser": "adoption_annotations"}
       }
     },
     "type": {
@@ -186,7 +187,8 @@
         "slots": {"classification": "ENFORCED", "item_classification": "IDENTITY_ONLY", "parser": "string_list"},
         "attributes": {"classification": "ENFORCED", "item_shape": "attribute", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
         "exactly_one_of": {"classification": "ENFORCED", "item_classification": "ENFORCED", "item_shape": "alternative", "min_items": 1, "parser": "items"},
-        "slot_usage": {"bootstrap": "REJECTED", "classification": "ENFORCED", "item_shape": "slot_usage", "key_classification": "IDENTITY_ONLY", "key_parser": "reference", "parser": "named"}
+        "slot_usage": {"bootstrap": "REJECTED", "classification": "ENFORCED", "item_shape": "slot_usage", "key_classification": "IDENTITY_ONLY", "key_parser": "reference", "parser": "named"},
+        "annotations": {"classification": "ANNOTATION_ONLY", "item_shape": "grounding_annotations", "parser": "adoption_annotations"}
       },
       "declaration_kind": "Class",
       "kind": "class",
@@ -241,6 +243,44 @@
       "label": "adoption annotation",
       "max_fields": 1,
       "min_fields": 1
+    },
+    "grounding_annotations": {
+      "fields": {
+        "grounding": {"classification": "ANNOTATION_ONLY", "item_shape": "grounding_annotation", "parser": "adoption_annotations", "required": true}
+      },
+      "label": "grounding annotations",
+      "max_fields": 1,
+      "min_fields": 1
+    },
+    "grounding_annotation": {
+      "fields": {
+        "tag": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string", "required": true, "values": ["grounding"]},
+        "value": {"classification": "ANNOTATION_ONLY", "item_shape": "grounding", "parser": "adoption_annotations", "required": true}
+      },
+      "label": "grounding annotation",
+      "max_fields": 2,
+      "min_fields": 2
+    },
+    "grounding": {
+      "fields": {
+        "area": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"},
+        "taxonomy": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"},
+        "vocabularies": {"classification": "ANNOTATION_ONLY", "item_classification": "ANNOTATION_ONLY", "item_shape": "grounding_vocabulary", "min_items": 1, "parser": "items"},
+        "invented_terms": {"classification": "ANNOTATION_ONLY", "item_classification": "ANNOTATION_ONLY", "parser": "string_list"},
+        "none_found": {"classification": "ANNOTATION_ONLY", "parser": "boolean"},
+        "search": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"}
+      },
+      "label": "grounding block"
+    },
+    "grounding_vocabulary": {
+      "fields": {
+        "vocabulary": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string", "required": true},
+        "vocabulary_url": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string", "required": true},
+        "borrowed_terms": {"classification": "ANNOTATION_ONLY", "item_classification": "ANNOTATION_ONLY", "min_items": 1, "parser": "string_list", "required": true}
+      },
+      "label": "grounding vocabulary",
+      "max_fields": 3,
+      "min_fields": 3
     }
   },
   "structural_identities": {

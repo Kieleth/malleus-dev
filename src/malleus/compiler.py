@@ -116,7 +116,7 @@ from malleus._contract_source import (
 
 
 _RESOLVER_ID = "malleus.compiler.exact-linkml-source-set/v1"
-_RESOLVER_PROFILE = "malleus.linkml/private-v0"
+_RESOLVER_PROFILE = "malleus.linkml/private-v1"
 _MEDIA_TYPE = "application/yaml"
 
 

@@ -225,6 +225,10 @@ _SHAPE_NAMES = {
     "class",
     "condition",
     "enum",
+    "grounding",
+    "grounding_annotation",
+    "grounding_annotations",
+    "grounding_vocabulary",
     "permissible_value",
     "schema",
     "slot",
@@ -376,7 +380,7 @@ def _validate_adapter_profile(
             LinkMLRefusalReason.INVALID_PROFILE,
             "profile LinkML versions are not supported",
         )
-    if authority["support_profile"] != "malleus.linkml/private-v0":
+    if authority["support_profile"] != "malleus.linkml/private-v1":
         raise _refusal(
             LinkMLRefusalReason.INVALID_PROFILE,
             "packaged adapter profile identity is not supported",

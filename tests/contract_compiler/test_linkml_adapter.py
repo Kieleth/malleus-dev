@@ -181,7 +181,7 @@ def test_quiet_bell_modules_preserve_exact_source_imports_and_declarations(
     assert module.source.byte_length == source_record["byte_length"]
     assert module.source.sha256.removeprefix("sha256:") in source_record["source_blob"]
     assert module.authored_imports == expected_imports
-    assert module.support_profile == "malleus.linkml/private-v0"
+    assert module.support_profile == "malleus.linkml/private-v1"
     assert module.profile_sha256 == sha256(PROFILE.read_bytes()).hexdigest()
     assert _declaration_inventory(module) == QUIET_ORACLE["declarations"][relative]
 

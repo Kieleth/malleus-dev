@@ -116,7 +116,7 @@ def test_result_attests_the_exact_caller_supplied_source() -> None:
     assert result.source.sha256 == hashlib.sha256(source).hexdigest()
     assert result.facts_sha256 == hashlib.sha256(result.canonical_facts).hexdigest()
     assert result.implementation.linkml_runtime_version == "1.11.1"
-    assert result.implementation.support_profile == "malleus.linkml/private-v0"
+    assert result.implementation.support_profile == "malleus.linkml/private-v1"
     assert (
         result.implementation.profile_sha256
         == hashlib.sha256(PROFILE.read_bytes()).hexdigest()
@@ -218,7 +218,7 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
     }
 
     implementation = IMPLEMENTATION.read_text(encoding="utf-8")
-    assert profile["support_profile"] == "malleus.linkml/private-v0"
+    assert profile["support_profile"] == "malleus.linkml/private-v1"
     policy = json.dumps(profile, ensure_ascii=False, sort_keys=True)
     for fixture_literal in (
         "greenhouse",

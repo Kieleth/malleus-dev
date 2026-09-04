@@ -1,0 +1,25 @@
+{
+  "schema": "malleus.pack-grounding-rite/v0",
+  "roles": ["PACK", "PROJECT"],
+  "root_parents": ["Entity", "Event", "Signal", "Relation"],
+  "annotation_key": "grounding",
+  "annotation_tag": "grounding",
+  "cited_fields": [
+    "area",
+    "taxonomy",
+    "vocabularies",
+    "invented_terms"
+  ],
+  "vocabulary_fields": [
+    "vocabulary",
+    "vocabulary_url",
+    "borrowed_terms"
+  ],
+  "none_found_fields": [
+    "area",
+    "taxonomy",
+    "none_found",
+    "search",
+    "invented_terms"
+  ]
+}

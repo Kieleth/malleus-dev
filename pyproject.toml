@@ -109,6 +109,8 @@ include = [
     "/src/malleus/prolog_verifier.py",
     "/src/malleus/inquisition/__init__.py",
     "/src/malleus/inquisition/cli.py",
+    "/src/malleus/inquisition/pack_grounding.py",
+    "/src/malleus/inquisition/pack-grounding.json",
     "/src/malleus/inquisition/rubric.yaml",
     "/src/malleus/ocr/__init__.py",
     "/src/malleus/ocr/bundle.py",
@@ -150,6 +152,7 @@ include = [
     "/conformance/ocr/v0/corpus/**/*.pdf",
     "/ontology/malleus.yaml",
     "/ontology/assent.yaml",
+    "/ontology/packs/*.yaml",
     "/ontology/domains/attack.yaml",
     "/ontology/domains/ocr.yaml",
     "/ontology/domains/cyp450.yaml",
@@ -194,6 +197,9 @@ core-metadata-version = "2.4"
 [tool.hatch.build.targets.wheel.shared-data]
 "ontology/malleus.yaml" = "share/malleus/ontology/malleus.yaml"
 "ontology/assent.yaml" = "share/malleus/ontology/assent.yaml"
+"ontology/packs/metrology.yaml" = "share/malleus/ontology/packs/metrology.yaml"
+"ontology/packs/chronology.yaml" = "share/malleus/ontology/packs/chronology.yaml"
+"ontology/packs/research.yaml" = "share/malleus/ontology/packs/research.yaml"
 "ontology/domains/attack.yaml" = "share/malleus/ontology/domains/attack.yaml"
 "ontology/domains/ocr.yaml" = "share/malleus/ontology/domains/ocr.yaml"
 "ontology/domains/cyp450.yaml" = "share/malleus/ontology/domains/cyp450.yaml"

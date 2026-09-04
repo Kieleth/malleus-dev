@@ -1,0 +1,159 @@
+id: https://malleus.dev/schema/packs/research
+name: malleus_research
+version: 0.1.0
+title: Malleus Research Knowledge Pack
+description: >-
+  Optional reusable vocabulary for attributed claims, observations, methods,
+  instruments, investigations, samples, sources, and evidence. Source
+  modality remains a domain fact. It is separate from protocol acceptance.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  research: https://malleus.dev/schema/packs/research/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: Research and experimental development
+      taxonomy: DDC 001.4
+      vocabularies:
+        - vocabulary: W3C SOSA/SSN
+          vocabulary_url: https://www.w3.org/TR/vocab-ssn/
+          borrowed_terms:
+            - Observation
+            - Instrument
+            - Sample
+        - vocabulary: OECD Frascati Manual 2015
+          vocabulary_url: https://doi.org/10.1787/9789264239012-en
+          borrowed_terms:
+            - research and experimental development
+            - Agent
+            - Method
+            - Campaign
+            - investigation
+        - vocabulary: SEPIO
+          vocabulary_url: https://ceur-ws.org/Vol-1747/IT605_ICBO2016.pdf
+          borrowed_terms:
+            - assertion
+            - evidence line
+            - evidence item
+            - support
+            - challenge
+        - vocabulary: Micropublications semantic model
+          vocabulary_url: https://doi.org/10.1186/2041-1480-5-28
+          borrowed_terms:
+            - Claim
+            - Evidence
+            - support
+            - challenge
+      invented_terms: []
+
+enums:
+  AssertionModality:
+    description: Coarse shared modality of what a source asserts.
+    permissible_values:
+      STATED:
+      MEASURED:
+      CALCULATED:
+      HYPOTHESISED:
+      CONTESTED:
+      NEGATED:
+
+  ResearchRelationType:
+    description: Generic relation predicates supplied by the research pack.
+    permissible_values:
+      CLAIM_CONCERNS:
+      OBSERVED_WITH:
+      PART_OF_CAMPAIGN:
+      SAMPLED_FROM:
+      SUPPORTS:
+      CHALLENGES:
+      REPORTED_BY:
+
+classes:
+  SourceAsserted:
+    mixin: true
+    description: Source-level modality and optional confidence on a domain record.
+    slots:
+      - assertion_modality
+      - assertion_confidence
+
+  Claim:
+    is_a: Entity
+    mixins:
+      - SourceAsserted
+    description: An attributed statement represented as a graph entity.
+    slots:
+      - statement
+      - claim_kind
+
+  Observation:
+    is_a: Entity
+    mixins:
+      - Quantified
+      - TemporalExtent
+      - SourceAsserted
+    description: A source-attributed observation with optional quantity and time.
+
+  Method:
+    is_a: Entity
+    description: A method named by a source or investigation.
+
+  Instrument:
+    is_a: Entity
+    description: An instrument used to produce an observation.
+
+  Campaign:
+    is_a: Entity
+    mixins:
+      - TemporalExtent
+      - Counted
+    description: A bounded research activity such as an observing campaign or study.
+
+  Sample:
+    is_a: Entity
+    description: A sample observed or analysed by an investigation.
+
+  Source:
+    is_a: Entity
+    description: A work or document that reports domain assertions.
+
+  Evidence:
+    is_a: Entity
+    description: A retained reference from a graph statement back to source material.
+    slots:
+      - locator
+      - source_digest
+
+  ResearchRelation:
+    is_a: Relation
+    description: A typed research relation between graph entities.
+    slot_usage:
+      relation_type:
+        range: ResearchRelationType
+
+slots:
+  assertion_modality:
+    range: AssertionModality
+    description: What the source says and how it says it, not whether Malleus accepts it.
+  assertion_confidence:
+    range: float
+    minimum_value: 0.0
+    maximum_value: 1.0
+    description: Optional confidence stated by the source or adopter.
+  claim_kind:
+    range: string
+    description: Project-defined refinement of a claim.
+  source_digest:
+    range: string
+    description: Digest of exact retained source bytes.

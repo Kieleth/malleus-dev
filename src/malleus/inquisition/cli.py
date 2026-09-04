@@ -24,9 +24,11 @@ from malleus.inquisition import (
     COMMENDATION,
     HERESY,
     NOTE,
+    PackGroundingRefusal,
     SUSPICION,
     RubricError,
     run_rites,
+    validate_pack_grounding,
 )
 
 _BADGES = {HERESY: "✠ HERESY     ", SUSPICION: "? suspicion  ",
@@ -85,10 +87,42 @@ def _install_skills(argv: list[str]) -> int:
     return 0 if installed else 1
 
 
+def _pack_grounding(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="malleus-inquisitor pack-grounding",
+        description="Check citation shape for one exact pack or project ontology.",
+    )
+    parser.add_argument("schema", help="path to the LinkML source")
+    parser.add_argument("--role", choices=("PACK", "PROJECT"), required=True)
+    parser.add_argument("--json", action="store_true", help="machine-readable receipt")
+    args = parser.parse_args(argv)
+    try:
+        receipt = validate_pack_grounding(
+            Path(args.schema).read_bytes(),
+            role=args.role,
+        )
+    except OSError as error:
+        print(f"malleus-inquisitor: cannot read source: {error}", file=sys.stderr)
+        return 2
+    except PackGroundingRefusal as error:
+        print(f"malleus-inquisitor: {error}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(receipt.to_json())
+    else:
+        print(
+            f"PACK GROUNDING PASS :: {receipt.role} :: {receipt.source_id} :: "
+            f"{receipt.source_sha256}"
+        )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     if argv and argv[0] == "install-skills":
         return _install_skills(argv[1:])
+    if argv and argv[0] == "pack-grounding":
+        return _pack_grounding(argv[1:])
     parser = argparse.ArgumentParser(
         prog="malleus-inquisitor",
         description="Mechanical rites for the Malleus root ontology profile.",
