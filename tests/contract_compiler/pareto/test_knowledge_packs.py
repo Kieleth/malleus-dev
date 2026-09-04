@@ -63,9 +63,13 @@ def _cited_grounding() -> dict[str, object]:
     return {
         "area": "Physical measurement",
         "taxonomy": "DDC 530.8",
-        "vocabulary": "JCGM 200:2012 (VIM), 3rd edition",
-        "vocabulary_url": "https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf",
-        "borrowed_terms": ["quantity value"],
+        "vocabularies": [
+            {
+                "vocabulary": "JCGM 200:2012 (VIM), 3rd edition",
+                "vocabulary_url": "https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf",
+                "borrowed_terms": ["quantity value"],
+            }
+        ],
         "invented_terms": [],
     }
 
@@ -124,6 +128,16 @@ def test_research_pack_carries_the_shared_assertion_modality() -> None:
     assert set(values) == ASSERTION_MODALITIES
 
 
+def test_research_observation_is_explicitly_grounded_in_sosa_ssn() -> None:
+    source = yaml.safe_load(bundled_ontology_path("packs", "research.yaml").read_bytes())
+    vocabularies = source["annotations"]["grounding"]["value"]["vocabularies"]
+    sosa = next(
+        item for item in vocabularies if item["vocabulary"] == "W3C SOSA/SSN"
+    )
+    assert sosa["vocabulary_url"] == "https://www.w3.org/TR/vocab-ssn/"
+    assert "Observation" in sosa["borrowed_terms"]
+
+
 def test_project_importing_research_and_metrology_compiles_through_public_api() -> None:
     sources = _pack_sources()
     sources["project"] = b"""\
@@ -163,11 +177,11 @@ def test_pack_without_grounding_refuses_with_typed_reason() -> None:
             "GROUNDING_NOT_CLOSED",
         ),
         (
-            lambda value: value.update({"vocabulary_url": ""}),
+            lambda value: value["vocabularies"][0].update({"vocabulary_url": ""}),
             "GROUNDING_INCOMPLETE",
         ),
         (
-            lambda value: value.update({"borrowed_terms": []}),
+            lambda value: value["vocabularies"][0].update({"borrowed_terms": []}),
             "GROUNDING_INCOMPLETE",
         ),
     ],
