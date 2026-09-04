@@ -978,6 +978,11 @@ class KnowledgeChangeHistory:
                 "machine event is not declared as a retention event",
             )
         fields = retention[event_type]
+        if role not in fields["allowed_roles"]:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                f"machine event cannot retain role: {role}",
+            )
         record_id = machine_payload.get(fields["record_id_field"])
         declared_identity = machine_payload.get(fields["identity_field"])
         actual_identity = _digest(retained_bytes)
@@ -1414,7 +1419,9 @@ class KnowledgeChangeHistory:
                         "retained event is absent from the history binding",
                     )
                 if (
-                    machine_payload.get(event_binding["record_id_field"]) != record_id
+                    role not in event_binding["allowed_roles"]
+                    or machine_payload.get(event_binding["record_id_field"])
+                    != record_id
                     or machine_payload.get(event_binding["identity_field"])
                     != payload["retained_sha256"]
                 ):

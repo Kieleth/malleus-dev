@@ -315,6 +315,7 @@ def _verify_retention_event(
     *,
     history: KnowledgeChangeHistory,
     expected_record_id: str,
+    expected_role: str,
     retained_bytes: bytes,
     machine_event: bytes,
 ) -> None:
@@ -359,8 +360,15 @@ def _verify_retention_event(
         )
     record_id_field = binding["record_id_field"]
     identity_field = binding["identity_field"]
+    allowed_roles = binding["allowed_roles"]
     assert isinstance(record_id_field, str)
     assert isinstance(identity_field, str)
+    assert isinstance(allowed_roles, tuple)
+    if expected_role not in allowed_roles:
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            f"retention event cannot retain role: {expected_role}",
+        )
     if record_id_field not in payload or identity_field not in payload:
         raise _refuse(
             PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
@@ -1276,6 +1284,7 @@ def prepare_population_change(
         _verify_retention_event(
             history=history,
             expected_record_id=record_id,
+            expected_role="RETAINED_EVIDENCE",
             retained_bytes=content,
             machine_event=event_snapshot[record_id],
         )
