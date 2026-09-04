@@ -16,7 +16,7 @@ historical milestones below with settlement, one ledger, replay-derived current
 state, named queries, and exact change-level provenance.
 
 The newer
-[full public-path conformance run](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
+[full public-path conformance evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
 executes all five changes through `malleus.compiler`, records one additive
 ontology revision, and verifies every current and superseded record back to its
 retained population plan, field derivations, source bytes, and mapping bytes.

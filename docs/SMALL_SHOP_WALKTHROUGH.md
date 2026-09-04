@@ -17,7 +17,7 @@ The point is not the size of the graph. The point is that meaning, mapping,
 checks, decisions, history, and projection remain separate and inspectable.
 
 The original showcase below remains frozen evidence. A newer sibling
-[public-path conformance run](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
+[public-path conformance run](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
 now sends the same complete five-stage dataset through `malleus.compiler` using
 five canonical neutral population plans. It also records one additive ontology
 revision, reopens one history, and verifies every current and superseded record
