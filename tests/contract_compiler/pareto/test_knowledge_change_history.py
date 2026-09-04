@@ -43,7 +43,7 @@ from tests.contract_compiler.pareto.test_validated_contract import (
 
 
 KCS_GRAMMAR = "malleus.knowledge-change-set/private-v0"
-BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v0"
+BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v1"
 ROLE_BOUND_BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v1"
 ARTIFACT_RETENTION_ROLES = [
     "KNOWLEDGE_HISTORY_BINDING",
@@ -138,10 +138,12 @@ def _binding_payload() -> dict[str, object]:
         },
         "retention_events": {
             "ARTIFACT_REGISTERED": {
+                "allowed_roles": list(ARTIFACT_RETENTION_ROLES),
                 "identity_field": "artifact_identity",
                 "record_id_field": "artifact_id",
             },
             "SOURCE_REGISTERED": {
+                "allowed_roles": ["RETAINED_SOURCE"],
                 "identity_field": "source_identity",
                 "record_id_field": "source_id",
             },

@@ -27,7 +27,7 @@ from malleus.ledger import GENESIS, JsonlLedger, LedgerError, content_digest
 
 
 _CHANGE_GRAMMAR = "malleus.knowledge-change-set/private-v0"
-_BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v0"
+_BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v1"
 _CONTRACT_KIND = "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0"
 _CHANGE_EVENT = "KNOWLEDGE_CHANGE_SET_RETAINED"
 _HEAD_ROLES = frozenset(
@@ -593,11 +593,24 @@ class KnowledgeChangeHistoryBinding:
                 fields = _object(raw, "retention event binding must be an object")
                 _exact(
                     fields,
-                    frozenset({"identity_field", "record_id_field"}),
+                    frozenset({"allowed_roles", "identity_field", "record_id_field"}),
                     "retention event binding is not closed",
                 )
-                for field in fields.values():
+                for field in (fields["identity_field"], fields["record_id_field"]):
                     _text(field, "retention event field name is required")
+                allowed_roles = fields["allowed_roles"]
+                if not isinstance(allowed_roles, list) or not allowed_roles:
+                    raise ValueError("retention event allowed roles must be nonempty")
+                for role in allowed_roles:
+                    _text(role, "retention event allowed role is required")
+                    if role not in _HEAD_ROLES:
+                        raise ValueError(
+                            f"retention event allowed role is unsupported: {role}"
+                        )
+                if allowed_roles != sorted(set(allowed_roles)):
+                    raise ValueError(
+                        "retention event allowed roles must be sorted and unique"
+                    )
             for group in (proposal, decision):
                 for field in group.values():
                     _text(field, "history binding field is required")
