@@ -1795,8 +1795,11 @@ class TestSkillsAreInstallable:
             "state-version`, `source-assertion`, or `object-event",
             "Steps 6 through 9 are the governed-history branch",
             "choose an exact history profile before proposing the ontology",
-            "schema-only or typed-graph-only adoption",
-            "stop after step 5",
+            "For schema-only adoption, stop after step 5",
+            "For typed-graph-only adoption",
+            "OntologyRegistry",
+            "KnowledgeGraph.from_records",
+            "stop before step 6",
             "malleus-compiler contract",
             "Keep instances out of schema vocabulary",
             "Keep protocol, provenance, locators, ledger, policy, and query machinery out",
@@ -1836,6 +1839,8 @@ class TestSkillsAreInstallable:
             "incomplete captures, gaps, and typed refusals as results",
             "query-shaped vocabulary",
             "current private-v0 shape, not a stable wire",
+            "reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`, `records`, and `supersessions",
+            "canonical JSON bytes",
             "INTERVAL_NOT_EXPRESSIBLE",
             "AGGREGATE_ONLY",
             "MODALITY_NOT_EXPRESSIBLE",
@@ -1904,6 +1909,7 @@ class TestSkillsAreInstallable:
     def test_nascent_document_template_runs_through_the_public_adapter(self):
         from hashlib import sha256
         from importlib import import_module
+        from inspect import signature
 
         skill = (
             self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
@@ -1912,8 +1918,9 @@ class TestSkillsAreInstallable:
             "<!-- malleus-nascent-document-template:start -->", 1
         )[1].split("<!-- malleus-nascent-document-template:end -->", 1)[0]
         template = json.loads(template_region.split("```json", 1)[1].split("```", 1)[0])
-        assert template["schema"] == "malleus.nascent-document-example/private-v0"
-        assert template["accepted_gap_kinds"] == [
+        assert "schema" not in template
+        assert template["documentation_example"] == "nascent-document-input"
+        gap_kinds = [
             "INTERVAL_NOT_EXPRESSIBLE",
             "AGGREGATE_ONLY",
             "MODALITY_NOT_EXPRESSIBLE",
@@ -1921,6 +1928,7 @@ class TestSkillsAreInstallable:
             "TYPE_ABSENT",
             "RELATION_ABSENT",
         ]
+        assert template["accepted_gap_kinds"] == gap_kinds
 
         reading_bytes = json.dumps(
             template["reading"],
@@ -1930,6 +1938,10 @@ class TestSkillsAreInstallable:
             sort_keys=True,
         ).encode()
         capture = template["capture"]
+        capture["assertions"][0]["gaps"] = [
+            {"kind": kind, "statement": f"Example gap: {kind}"}
+            for kind in gap_kinds
+        ]
         assert capture["reading_sha256"] == "sha256:" + sha256(
             reading_bytes
         ).hexdigest()
@@ -1960,6 +1972,15 @@ class TestSkillsAreInstallable:
         }
 
         compiler = import_module("malleus.compiler")
+        assert tuple(signature(compiler.adapt_document_assertions).parameters) == (
+            "reading_bytes",
+            "capture_bytes",
+            "capture_id",
+            "plan_id",
+            "contract_identity",
+            "records",
+            "supersessions",
+        )
         result = compiler.adapt_document_assertions(
             reading_bytes=reading_bytes,
             capture_bytes=json.dumps(
@@ -1978,8 +1999,12 @@ class TestSkillsAreInstallable:
         plan = json.loads(result.canonical_plan_bytes)
         census = json.loads(result.canonical_census_bytes)
         assert plan["records"] == template["records"]
-        assert plan["gaps"][0]["kind"] == "MODALITY_NOT_EXPRESSIBLE"
-        assert census["blocks"] == {"block:1": "REVIEWED"}
+        assert [gap["kind"] for gap in plan["gaps"]] == gap_kinds
+        assert census["gaps_by_kind"] == {kind: 1 for kind in gap_kinds}
+        assert census["blocks"] == {
+            "block:1": "REVIEWED",
+            "block:2": "UNTOUCHED",
+        }
         assert census["assertions"] == {
             "FULLY_FORMALIZED": 0,
             "PARTLY_FORMALIZED": 1,
@@ -1992,6 +2017,7 @@ class TestSkillsAreInstallable:
         from importlib import import_module
 
         compiler = import_module("malleus.compiler")
+        malleus = import_module("malleus")
         required = {
             "DOCUMENT_CAPTURE_GRAMMAR",
             "KnowledgeChangeHistory",
@@ -2006,6 +2032,8 @@ class TestSkillsAreInstallable:
         assert all(hasattr(compiler, name) for name in required)
         assert callable(compiler.KnowledgeChangeHistory.admit)
         assert callable(compiler.KnowledgeChangeHistory.reopen)
+        assert {"KnowledgeGraph", "OntologyRegistry"} <= set(malleus.__all__)
+        assert callable(malleus.KnowledgeGraph.from_records)
 
         assert main(
             ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
