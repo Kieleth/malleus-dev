@@ -229,3 +229,7 @@ Iteration 4, decided: projected subject. When a source-asserted record's `subjec
 Harness for run-12: run-11's plus the review task v4, the locality token scoped to RELATION rows (the run-10 RCA's first review-surface debt); the binder unchanged.
 
 Ledger wart for Luis: governance entry timestamps run ahead of the wall clock since OVR-000409 (recorded 11:20Z at about 07:30Z), and the monotonic rule now pushes each entry further into the future.
+
+### Iteration 3 closed (10:32Z): review in, RCA written
+
+Review merged from two sessions: R, R, R, P, the matrix's best; 450 SUPPORTED, 7 PARTIAL; all 262 digests DIGEST_OK. Record at 3614a22, E-0151. RCA at `handover/2026-09-05-v45-rca.md`. The return is gone; coverage fell; responsiveness rose because the producer attached the instrument counts. Four harness defects queued from the review: the empty relation projection (a v3 defect the reviewers of run-09 and run-10 did not report), tags not projected, subtype duplication, identical rows judged three times. Iteration 4 (Core-16 projected subject; run-12 with task v4) was dispatched before the review closed.

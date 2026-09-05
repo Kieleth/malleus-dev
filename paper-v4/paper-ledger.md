@@ -4030,3 +4030,35 @@ Cost, from `results/usage.json`: ontology attempt 01 161,902; population
 Non-claim: admission is structural acceptance, not adequacy. No preliminary
 review exists yet. Whether coverage fell because the check changed or because
 the producer captured more is the iteration's analysis, recorded separately.
+
+### E-0151, run-11's preliminary review and the iteration's analysis
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-11/review-record.preliminary.md`
+(sha256:e6039d01…), its four question blocks written by two fresh sessions,
+the private launch log and usage record, and `handover/2026-09-05-v45-rca.md`.
+
+Review: two fresh Claude Opus 5 sessions (CQ-01 with CQ-02, 183 rows; CQ-03
+with CQ-04, 274 rows) under protocol v2 and the v3 task, merged and validated
+as one record, actor `actor:claude-preliminary-run-11`, completed
+2026-09-05T10:30:35Z; the split is a recorded deviation. Responsiveness: CQ-01
+RESPONSIVE, CQ-02 RESPONSIVE, CQ-03 RESPONSIVE, CQ-04 PARTIAL, the best of the
+matrix. Support: 450 SUPPORTED, 7 PARTIAL, none UNSUPPORTED, none
+NOT_EVALUABLE. All 262 rows carrying a statement digest recomputed DIGEST_OK;
+9 SUBJECT_NOT_IN_BLOCK rows, six of them the ridge named in full where the
+block abbreviates it. Cost: 535,415 tokens across the two sessions.
+Ratification pending.
+
+Analysis (the RCA): the change under test removed the return (no diagnostic at
+either stage) and failed its coverage falsifier: 91 of 248 subjects against
+run-10's 114 of 235, with 77 unattached records sitting on sentences that name
+exactly the entity they are about. A stated duty with no mechanism behaved as
+a preference for the third time in the loop. Harness defects the review
+surfaced: RELATION rows project an empty relation record (since v3); tags are
+matched at capture and not projected at query; the Instrument case returns a
+subtype's records; one feature type makes three questions return the same rows.
+Iteration 4 is decided: the projected subject (Core-16) and the review task v4.
+
+Non-claim: one cell per iteration; the preliminary record is not paper
+evidence until ratified.
