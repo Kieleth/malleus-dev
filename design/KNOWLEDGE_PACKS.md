@@ -391,6 +391,53 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     check goes with the slot. The pack is unchanged, so no version moves and no
     fixture or frozen paper cell moves with it.
 
+20. A subject is named by any of its names, in the document-assertion
+    adapter, no pack change. Run-10 refused 35 of its 130 subjects with
+    `SUBJECT_NOT_NAMED`, and a script over the capture classified them: 14
+    are genuinely unnamed in the sentence that formalizes them, the inference
+    class the check exists to catch; 7 are aliases, the entity named
+    "Mid-Atlantic Ridge" where the sentence writes "the MAR"; 8 are partial
+    names, "Oceanic crust" named where the sentence writes "crust"; and 6 are
+    whitespace artefacts, "CO2" named where the reading's text layer prints
+    "CO 2" or "C O 2". Twenty-one of the thirty-five are the check being more
+    literal than names are, and none of the twenty-one is a wrong subject. A
+    source calls the same thing several things, introducing it once in full
+    and using a short form thereafter, so an entity has more than one name and
+    the check compared against one of them. Decision 18 named this cost and
+    left it standing; this pays it. The other forms go where the root already
+    keeps them: `tags` is a slot on `Describable`, which `Entity` mixes in,
+    string-ranged and multivalued, so every Entity carries it and nothing is
+    declared to use it. The check now accepts the subject entity's `name` or
+    any member of its `tags`, and it compares with whitespace removed from
+    both sides rather than collapsed, case-folded as before, so a name the
+    text layer breaks across a space or a line still matches its own bytes.
+    Neither side is rewritten: the record keeps its own spelling, the
+    statement keeps the source's, and the removal happens only in the
+    comparison. The alternative considered at run-09 and rejected was to teach
+    the check aliases, a parenthesised abbreviation or a trailing head noun,
+    which is a heuristic that grows and that a second implementation would
+    have to reproduce; here the source's own forms are data the producer
+    writes down, and the check stays a substring. No new reason: the refusal
+    is still `SUBJECT_NOT_NAMED`, aggregated with the other derivation
+    defects, and its message names every form it tried, the `name` first and
+    then the tags in the order the record carries them, so a producer reads
+    what was compared rather than guessing. One skill clause says that the
+    other forms the source uses for the same thing, an abbreviation or a bare
+    head noun, go in `tags`. What it does not do: no fuzzy matching, no
+    stemming, no edit distance and no semantic judgment, so a name is still
+    matched by its own bytes and no model runs at admission; a sentence
+    naming the thing only by a pronoun or by an antecedent it does not repeat
+    still refuses, and the honest answers stay what decision 18 said, to
+    formalize the subject from the sentence that names it or to leave
+    `subject` unset and let the census count it, which is the 14; a tag is not
+    a second name for query projection, nothing projects `tags`, and a row
+    still shows the record's `name`; dropping whitespace can match a form
+    across a word boundary the source spaces, which is the price of matching a
+    name the page broke, and it is bounded by the forms the record itself
+    declares; and it adds no slot, no reason and no pack revision, so
+    `research` stays at 0.5.0 and every fixture and frozen paper cell keeps
+    compiling.
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.

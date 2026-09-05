@@ -325,7 +325,10 @@ fallback.
    An entity's `name` is the form the source uses to refer to it in its
    sentences, the shortest one the reading repeats, and the descriptive
    introduction the source gives it goes in `description`; the subject check
-   compares names against sentences, so a descriptive name fails it.
+   compares names against sentences, so a descriptive name fails it; the
+   other forms the source uses for the same thing, an abbreviation or a bare
+   head noun, go in `tags`, and the check accepts any of them, whitespace
+   ignored on both sides.
    A relation's endpoints are formalized by an assertion whose statement names
    both of them; a relation the reading only implies is a `RELATION_ABSENT`
    gap, not a derivation from a neighbouring sentence.

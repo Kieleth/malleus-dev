@@ -1958,6 +1958,11 @@ class TestSkillsAreInstallable:
                 "sentences, so a descriptive name fails it"
             ),
             (
+                "the other forms the source uses for the same thing, an "
+                "abbreviation or a bare head noun, go in `tags`, and the "
+                "check accepts any of them, whitespace ignored on both sides"
+            ),
+            (
                 "A relation's endpoints are formalized by an assertion whose "
                 "statement names both of them"
             ),

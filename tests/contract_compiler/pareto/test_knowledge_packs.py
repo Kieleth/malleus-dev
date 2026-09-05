@@ -830,6 +830,32 @@ def test_governing_design_records_the_asserted_modality_decision() -> None:
     )
 
 
+def test_governing_design_records_the_subject_name_forms_decision() -> None:
+    """Decision 20 says why a subject is named by any of the forms the record
+    carries, and what the comparison still refuses to do."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "20. A subject is named by any of its names",
+        "Run-10 refused 35 of its 130 subjects with `SUBJECT_NOT_NAMED`",
+        '"Mid-Atlantic Ridge" where the sentence writes "the MAR"',
+        '"CO2" named where the reading\'s text layer prints "CO 2"',
+        "`tags` is a slot on `Describable`, which `Entity` mixes in, "
+        "string-ranged and multivalued",
+        "whitespace removed from both sides rather than collapsed",
+        "no fuzzy matching, no stemming, no edit distance and no semantic "
+        "judgment",
+        "a tag is not a second name for query projection",
+        "`research` stays at 0.5.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("19. One source of truth for a source-asserted record") < (
+        normalized.index("20. A subject is named by any of its names")
+    )
+
+
 def test_governing_design_records_the_evaluative_slot_decision() -> None:
     """Decision 17 says which slots are evaluative and how a reader finds out."""
 
