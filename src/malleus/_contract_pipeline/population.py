@@ -1051,24 +1051,20 @@ def compile_population_plan(
                     PopulationPlanRefusalReason.DANGLING_ENDPOINT,
                     f"relation {relation['id']} has absent {endpoint_name}: {endpoint}",
                 )
-    for family in records.values():
-        for record in family:
-            assert isinstance(record, dict)
-            properties = record.get("properties")
-            subject = (
-                properties.get(_SUBJECT_SLOT)
-                if isinstance(properties, dict)
-                else None
+    for record_id, record in sorted(by_id.items()):
+        properties = record.get("properties")
+        subject = (
+            properties.get(_SUBJECT_SLOT) if isinstance(properties, dict) else None
+        )
+        if (
+            isinstance(subject, str)
+            and subject not in by_id
+            and subject not in base_changes
+        ):
+            raise _refuse(
+                PopulationPlanRefusalReason.DANGLING_SUBJECT,
+                f"record {record_id} has absent subject: {subject}",
             )
-            if (
-                isinstance(subject, str)
-                and subject not in by_id
-                and subject not in base_changes
-            ):
-                raise _refuse(
-                    PopulationPlanRefusalReason.DANGLING_SUBJECT,
-                    f"record {record['id']} has absent subject: {subject}",
-                )
     for participation in records.get("event_participations", []):
         assert isinstance(participation, dict)
         properties = participation.get("properties")
