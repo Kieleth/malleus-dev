@@ -208,3 +208,9 @@ A larger candidate, from the producer's own validator: 251 of 435 records carry 
 ### Iteration 2 closed (09:00Z): review in, RCA written, iteration 3 in flight
 
 Review merged from two sessions and validated: P, R, R, P; 542 SUPPORTED, 10 PARTIAL; all 249 digests DIGEST_OK. Record at ceb3271, E-0148. RCA at `handover/2026-09-05-v44-rca.md`: the modality change held (0 of 174); the ENTITY restriction cut the review 59 per cent and priced the 51 per cent of source-asserted records without a subject in two PARTIAL verdicts. Two review-surface defects for the harness after run-11: the locality token scoped to RELATION rows only; hedged categorical values (fault status) have no modality slot. Core-15 and the run-11 harness were dispatched before the review closed; run-11 pins after Core-15.
+
+## Loop iteration 3: run-11 (v4.5, Opus 5), launched 2026-09-05T09:18Z at 9d789f2 (E-0149)
+
+Change under test: the subject check matches a name the way the reading spells it, the entity's `name` or any of its `tags`, whitespace ignored (Core-15, decision 20, OVR-000410; one skill clause). Harness unchanged from run-10 (v4.5 is a version name for a change list one entry longer). Expected: subject refusals near the fourteen that were genuinely unnamed in run-10; coverage above 114 of 235; CQ-01 and CQ-04 regaining their missing semantics if the producer attaches them. Falsifiers: refusals staying near 35 with alias or whitespace classes among them; coverage not rising; the review cost rising above run-10's without more responsive questions.
+
+Queued for the harness after run-11, from the run-10 RCA: the locality token scoped to RELATION rows only; a modality on categorical source-asserted values (fault status), which is decision 15's idea for enums.
