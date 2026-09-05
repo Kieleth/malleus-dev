@@ -1,0 +1,27 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-05T15:41:20Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the one feature type this surface declares (its kinds are an enum), the seismicity set, the observation types, Claim",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the feature, seismicity, sample, method and bibliographic types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim, the observation types, the feature and seismicity types, Method"
+  },
+  "translation": {
+    "every ridge, structure, layer, boundary, melt, volcanic and hydrothermal type of run-13": "GeologicFeature (feature_kind enum)",
+    "SeismicObservation, GeochemicalObservation": "Observation",
+    "CountedObservation": "CountObservation",
+    "QuantityRatio": "ReportedRatio",
+    "RockMaterial, EarthMaterial": "RockSample",
+    "DataResource": "BibliographicWork (work_kind DATASET, DATABASE, RESEARCH_CRUISE)",
+    "Organization": "ResearchAgent",
+    "SoftwareTool": "SoftwareApplication",
+    "PhysicalModel, ThermalModel, SolubilityModel, VelocityModel": "no model type on this surface; Method kept"
+  },
+  "added_on_this_surface": [
+    "SeismicitySet (an Entity for a body of seismicity, the surface's own name for the earthquake population CQ-02 asks about) in CQ-02, CQ-03 and CQ-04"
+  ],
+  "left_out": "GeologicEvent (EVENT family, magnitude on the event as slots, no subject) is in no set, as run-12 and run-13 left their event type out; one record expected",
+  "note": "run-13's sets translated to run-14's flatter surface; the same questions, the same judgement"
+}

@@ -4843,3 +4843,70 @@ proposed subject whose form occurs only inside another word is refused; an
 inflected or glued form costs the producer a tag, which on run-13's capture
 would have been two returns in one. Falsifier: a return at the runner for a
 subject a reader would say the sentence names as a word.
+
+### E-0164, run-14 (v4.8) is admitted at the second runner attempt; the word rule refused one subject the text layer had glued
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-14/ontology-run/`, `paper-v4/experiment-v4/run-14/results/`,
+`private/paper-v4-v4-run-14/` (ledger, query result, population plan, the
+refused first attempt, withheld files), `paper-v4/evaluation-v4/run-14/`
+(review inputs under protocol v2 and task v4).
+
+Ontology: accepted at attempt 01, 3,482 facts, 21 entity types, 2 event types,
+4 relation types, 4 subject-bearing types. A flatter proposal than run-13's:
+one GeologicFeature class with a twenty-value kind enum where run-13 declared
+fourteen feature subtypes, a SeismicitySet entity for a body of seismicity,
+GeologicEvent carrying magnitude as slots and bearing no subject. Seven cited
+vocabulary URLs, all confirmed today or in run-13's check, none fabricated.
+
+Population: 347 assertions over all 186 blocks (2 declared nothing-assertable),
+461 records (412 entities, 1 event, 48 relations), 27 typed gaps (14
+RELATION_ABSENT, 12 TYPE_ABSENT, 1 INTERVAL_NOT_EXPRESSIBLE). Twelve relations
+the producer withdrew under the rule that one sentence names both endpoints
+are among the RELATION_ABSENT gaps; six compass bearings are TYPE_ABSENT gaps
+rather than numerals, by the producer's own decision. Runner attempt 1 refused
+seven defects in one aggregated diagnostic: six MODALITY_NOT_ASSERTED (records
+typed STATED whose formalizing assertion is MEASURED, HYPOTHESISED or NEGATED)
+and one SUBJECT_NOT_NAMED (obs:saturation-pressure names the melt; the text
+layer prints "the melt" as "t h em e l t", so no form of the entity occurs as
+a word). Returned as structural diagnostic 1 of 2. The producer split four
+two-modality sentences into two assertions each, relabelled two records, and
+added the glued form to the entity's tags as the skill instructs. Attempt 2
+admitted under `actor:overseer-run-14`: fourteen ledger events, replay
+reproducing admission, 461 traced. Census: 320 fully, 18 partly, 9
+unformalized; 10 of 48 relations non-local; largest hub 16 (the byline).
+Subject coverage 132 of 203, all proposed by the producer: 17 attachable, 21
+ambiguous, 33 unnamed, under the word-bounded comparison.
+
+Against run-13: proposed subjects 65 per cent of subject-bearing records
+against 41; attachable 17 against 33 (26 under the word rule on run-13's
+capture); the one subject refusal is the cost decision 23 names, on text-layer
+damage, and the falsifier (a return for a form a reader of the reading's bytes
+would call a word) did not fire. The modality six are this producer's own
+check missing Core-14's equality, which runs 12 and 13 met at the first
+attempt.
+
+Query: the v4 binding frozen at acceptance (1,254 cases: 19 ENTITY, 1,128
+RELATION, 107 SUBJECT) executed unchanged after replay: CQ-01 190, CQ-02 195,
+CQ-03 323, CQ-04 211, 919 rows (427 ENTITY, 82 RELATION, 410 SUBJECT) over 389
+witnesses, no forbidden attempt. The ENTITY count carries the evaluator's
+translation of DataResource to BibliographicWork on a surface where that type
+also holds the 84 reference-list works, in two sets; GeologicEvent is in no
+set, as the event type was in runs 12 and 13.
+
+Execution coordinate: inputs pinned at `dc52547` (E-0163); the runner executed
+at main `c4dfbfa`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 182,760; population
+239,145; correction 17,856; producer total 439,761 (run-13: 383,284 with no
+correction).
+
+Two producer observations recorded in the launch log: this session ran a
+malleus-inquisitor console script it found on the ambient PATH (it failed on
+import; nothing reached it; run-13's producer declined to probe), and it asked
+the parent three questions at ONTOLOGY_READY, which the protocol does not
+answer; it then took the three decisions itself and said so.
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet; the review judges the rows as rows.

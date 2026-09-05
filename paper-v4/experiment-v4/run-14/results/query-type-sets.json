@@ -1,0 +1,42 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "CountObservation",
+    "Observation",
+    "Method",
+    "SoftwareApplication",
+    "BibliographicWork",
+    "ResearchAgent"
+  ],
+  "CQ-02": [
+    "GeologicFeature",
+    "SeismicitySet",
+    "CountObservation",
+    "Observation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "CountObservation",
+    "ReportedRatio",
+    "QuantityValue",
+    "Ratio",
+    "GeologicFeature",
+    "SeismicitySet",
+    "RockSample",
+    "Sample",
+    "Method",
+    "Claim",
+    "BibliographicWork"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "CountObservation",
+    "ReportedRatio",
+    "GeologicFeature",
+    "SeismicitySet",
+    "Method"
+  ]
+}

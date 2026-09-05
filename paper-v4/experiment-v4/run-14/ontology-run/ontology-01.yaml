@@ -1,0 +1,614 @@
+id: https://malleus.dev/schema/projects/mid-ocean-ridge-seismicity
+name: mid_ocean_ridge_seismicity
+version: 0.1.0
+title: Mid-Ocean Ridge Seismicity and Melt Geochemistry Project Ontology
+description: >-
+  Project vocabulary for material that reports the seismicity, structure and
+  melt geochemistry of an ocean spreading centre: the features of a ridge and
+  its discontinuities, the bodies of recorded seismicity attributed to them,
+  the individual occurrences a source names, the rock samples and quantities a
+  source reports, and the agents, works and software behind the report.
+  Quantities, counts, ratios, attributed claims, methods, instruments,
+  campaigns, samples and sources come from the metrology, chronology and
+  research packs and are not redeclared here.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  mors: https://malleus.dev/schema/projects/mid-ocean-ridge-seismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+  GeologicFeatureKind:
+    description: >-
+      Kind of geological feature a source names. Every value is a distinction
+      the material draws between named features; the feature's own identity
+      stays in the record, never in this list. The list grows by adding
+      values, never by redefining one. OTHER records a kind no listed value
+      fits.
+    permissible_values:
+      OCEAN_REGION:
+        description: A named ocean, sea or ocean sector.
+      TECTONIC_PLATE:
+        description: A lithospheric plate.
+      SPREADING_RIDGE:
+        description: A divergent plate boundary where new lithosphere forms.
+      RIDGE_SEGMENT:
+        description: A bounded portion of a spreading ridge axis.
+      NON_TRANSFORM_DISCONTINUITY:
+        description: >-
+          An offset of a ridge axis that is not accommodated by a transform
+          fault.
+      RIDGE_TRANSFORM_INTERSECTION:
+        description: Where a ridge axis meets a transform fault.
+      TRANSFORM_FAULT:
+        description: A strike-slip plate boundary offsetting ridge segments.
+      FRACTURE_ZONE:
+        description: The inactive trace of a transform fault beyond the ridge offset.
+      FAULT:
+        description: >-
+          A fault other than a plate-boundary transform, including normal and
+          detachment faults.
+      SHEAR_ZONE:
+        description: A zone of localised ductile or semi-brittle deformation.
+      OCEANIC_CORE_COMPLEX:
+        description: An exhumed footwall dome with a corrugated detachment surface.
+      AXIAL_VALLEY:
+        description: >-
+          A median, axial or transform valley, and the floor and walls a source
+          treats as part of it.
+      VOLCANIC_EDIFICE:
+        description: >-
+          A volcano, volcanic cone, neo-volcanic ridge, seamount or massif built
+          by volcanic construction.
+      HYDROTHERMAL_FIELD:
+        description: A hydrothermal vent field, mound or deposit, active or extinct.
+      LITHOSPHERIC_LAYER:
+        description: >-
+          A layer of the solid Earth a source names as a body: crust, mantle,
+          lithosphere, asthenosphere.
+      BOUNDARY_SURFACE:
+        description: >-
+          An interface between layers or rheological domains, such as a
+          brittle-ductile boundary, a crust-mantle interface or a
+          lithosphere-asthenosphere boundary.
+      MELT_BODY:
+        description: >-
+          A body of melt or magma a source names, including a melt lens, a
+          magma reservoir or a melt channel.
+      MANTLE_SOURCE:
+        description: >-
+          A mantle domain a source names as the source of a melt, including a
+          plume.
+      LANDMASS:
+        description: An island, peninsula or continental land area.
+      OTHER:
+        description: A named geological feature no listed kind fits.
+
+  GeologicEventKind:
+    description: >-
+      Kind of occurrence a source reports. The list grows by adding values,
+      never by redefining one.
+    permissible_values:
+      EARTHQUAKE:
+        description: A single seismic rupture a source identifies.
+      VOLCANIC_ERUPTION:
+        description: An eruption of magma at the surface.
+      DYKE_INTRUSION:
+        description: Emplacement of magma into a fracture at depth.
+      DEGASSING:
+        description: Exsolution of a volatile phase from a melt.
+      MELT_MIGRATION:
+        description: Movement of melt through the crust or mantle.
+      OTHER:
+        description: A reported occurrence no listed kind fits.
+
+  RockKind:
+    description: >-
+      Kind of rock or melt material a sample is, in the classification the
+      material uses. The list grows by adding values, never by redefining one.
+    permissible_values:
+      PERIDOTITE:
+      BASALT:
+      PILLOW_BASALT:
+      MID_OCEAN_RIDGE_BASALT:
+      VOLCANIC_GLASS:
+      MELT_INCLUSION:
+      POPPING_ROCK:
+      OTHER:
+
+  WorkKind:
+    description: >-
+      Kind of work a source cites or names. The list grows by adding values,
+      never by redefining one.
+    permissible_values:
+      JOURNAL_ARTICLE:
+      BOOK_CHAPTER:
+      CONFERENCE_ABSTRACT:
+      PREPRINT:
+      DATASET:
+      DATABASE:
+      RESEARCH_CRUISE:
+      SOFTWARE_DOCUMENTATION:
+      SUPPLEMENTARY_MATERIAL:
+      OTHER:
+
+  AgentKind:
+    description: >-
+      Whether a named agent is an individual or a collective body, following
+      the PROV-O distinction between Person and Organization.
+    permissible_values:
+      PERSON:
+      ORGANIZATION:
+      OTHER:
+
+  GeologicRelationType:
+    description: >-
+      Predicates a source states between two named geological entities. The
+      list grows by adding values, never by redefining one.
+    permissible_values:
+      PART_OF:
+        description: The source entity is a constituent portion of the target.
+      LOCATED_IN:
+        description: The source entity lies within the extent of the target.
+      ADJACENT_TO:
+        description: The two entities border or neighbour each other.
+      BOUNDED_BY:
+        description: The target entity forms a limit of the source entity.
+      OFFSETS:
+        description: The source entity displaces the target laterally.
+      CUTS:
+        description: The source entity dissects or truncates the target.
+      LIES_BENEATH:
+        description: The source entity is at greater depth than the target.
+      OVERLIES:
+        description: The source entity is at shallower depth than the target.
+      HOSTS:
+        description: The target entity is observed or contained within the source.
+      INTERSECTS:
+        description: The two entities meet or cross.
+
+  ScholarlyRelationType:
+    description: >-
+      Predicates a source states between the agents, works, software and
+      activities behind a report. Contribution roles are carried by the
+      research pack's own contribution relation and are not duplicated here.
+      The list grows by adding values, never by redefining one.
+    permissible_values:
+      AUTHORED:
+        description: The agent is credited as an author of the work.
+      AFFILIATED_WITH:
+        description: The agent is stated to belong to the organisation.
+      FUNDED:
+        description: >-
+          The agent provided financial support for the work or activity. The
+          award identifier, when the source states one, is carried on the
+          relation.
+      CORRESPONDING_FOR:
+        description: The agent is named to receive correspondence about the work.
+      DEPOSITED_IN:
+        description: The work is stated to be held by the repository or database.
+      USED:
+        description: The activity or work is stated to have used the entity.
+
+# -------------------------------------------------------------------
+# Classes derived directly from a Malleus root
+# -------------------------------------------------------------------
+
+classes:
+  GeologicFeature:
+    is_a: Entity
+    description: >-
+      A geological feature a source names and makes statements about: a
+      structure, a unit, a material body or a boundary surface. Its kind is
+      declared; its quantities are carried by observations whose subject is
+      the feature, never by slots here.
+    slots:
+      - feature_kind
+      - assertion_modality
+    slot_usage:
+      feature_kind:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology
+          taxonomy: DDC 551.8
+          vocabularies:
+            - vocabulary: GeoSciML, IUGS Commission for the Management and Application of Geoscience Information
+              vocabulary_url: https://geosciml.org/
+              borrowed_terms:
+                - geologic feature
+                - geologic unit
+                - geologic structure
+                - fault
+                - shear displacement structure
+          invented_terms:
+            - GeologicFeatureKind
+          invention_search: >-
+            GeoSciML supplies the generic feature, unit and structure terms and
+            names faults and shear displacement structures, and the class name
+            is taken from it. It does not name the mid-ocean-ridge feature
+            kinds this material needs, among them spreading ridge, ridge
+            segment, non-transform discontinuity, ridge-transform intersection,
+            oceanic core complex, axial valley and lithosphere-asthenosphere
+            boundary. Those terms are standard in marine geology and the
+            retained reading uses them, but no vocabulary among the declared
+            inputs defines them and this session has no network with which to
+            verify one, so the enum that holds them is local and is recorded
+            here rather than cited to a standard this session cannot vouch for.
+            The IHO-IOC guidelines on the standardization of undersea feature
+            names were considered and are not cited for the same reason.
+
+  GeologicEvent:
+    is_a: Event
+    description: >-
+      An individual occurrence a source names and places, such as an earthquake
+      or an eruption. Relation endpoints stay Entity-to-Entity under the bound
+      history profile, so the feature an occurrence is placed at is carried by
+      a slot here rather than by a relation.
+    slots:
+      - magnitude
+      - magnitude_scale
+      - event_location
+      - assertion_modality
+    slot_usage:
+      event_type:
+        range: GeologicEventKind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: QuakeML, seismological data exchange format
+              vocabulary_url: https://quake.ethz.ch/quakeml/
+              borrowed_terms:
+                - event
+                - origin
+                - magnitude
+                - focal mechanism
+          invented_terms:
+            - GeologicEventKind
+            - magnitude_scale
+            - event_location
+          invention_search: >-
+            QuakeML names the event, its origin, its magnitude and its focal
+            mechanism, which is what this class carries for an individual
+            earthquake. It is a seismological exchange format: it names no
+            class for the non-seismic occurrences the retained reading also
+            reports, such as an eruption, a dyke intrusion or the degassing of
+            a volatile from an ascending melt, and it carries the scale a
+            magnitude is stated on as an attribute of its magnitude element
+            rather than as a named term this session can quote. SOSA/SSN and
+            the VIM, both cited by the declared packs, describe observations
+            and measuring instruments rather than occurrences. The kind enum,
+            the magnitude scale slot and the placement slot are therefore local.
+
+  SeismicitySet:
+    is_a: Entity
+    description: >-
+      A body of recorded seismicity a source treats as one thing it can count,
+      locate, attribute depths to and argue about: a catalogue, a subset used
+      in a test, a cluster, a swarm, or the seismicity of a named area. It is
+      an entity rather than an occurrence, so observations can take it as their
+      subject and relations can reach it.
+    slots:
+      - assertion_modality
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: QuakeML, seismological data exchange format
+              vocabulary_url: https://quake.ethz.ch/quakeml/
+              borrowed_terms:
+                - event parameters
+                - event
+          invented_terms:
+            - SeismicitySet
+          invention_search: >-
+            QuakeML's event parameters element holds a set of events, but it is
+            a container for an exchange document rather than a named domain
+            object a source makes claims about. SOSA/SSN, cited by the research
+            pack, names Sample and Observation, neither of which is a body of
+            recorded seismicity, and the VIM names measurement terms only. No
+            term was found for the thing a seismological source counts, relocates
+            and attributes a depth range to as one body, so the class name is
+            local.
+
+  SoftwareApplication:
+    is_a: Entity
+    description: >-
+      A named software package or program a source states it used, with the
+      version the source declares and the route the source gives for obtaining
+      it.
+    slots:
+      - software_version
+      - locator
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Computer software
+          taxonomy: DDC 005
+          vocabularies:
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/SoftwareApplication
+              borrowed_terms:
+                - SoftwareApplication
+                - SoftwareSourceCode
+                - softwareVersion
+                - codeRepository
+          invented_terms: []
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person or a collective body a source names as acting: an author, a
+      contributor, an institution, a funding body, a repository operator or a
+      ship's party.
+    slots:
+      - contact_email
+    slot_usage:
+      agent_type:
+        range: AgentKind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, the PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+                - actedOnBehalfOf
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/email
+              borrowed_terms:
+                - email
+          invented_terms:
+            - ResearchAgent
+            - AgentKind
+            - contact_email
+          invention_search: >-
+            PROV-O names Agent and its Person and Organization subclasses, and
+            those are exactly the distinctions this class carries. The Malleus
+            root already declares an Agent mixin, so a class named Agent would
+            collide with it; the local class name and the kind enum that holds
+            PROV-O's Person and Organization distinction as values are recorded
+            here as local shapes over borrowed terms. Schema.org names email as
+            a property of a person or organisation; the slot name is spelled
+            locally to say that it is the contact address the source publishes.
+
+  GeologicRelation:
+    is_a: Relation
+    description: >-
+      A relation a source states between two named geological entities, or
+      between a body of seismicity and the feature it is attributed to.
+    slots:
+      - assertion_modality
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology
+          taxonomy: DDC 551.8
+          vocabularies:
+            - vocabulary: OBO Relation Ontology
+              vocabulary_url: https://oborel.github.io/
+              borrowed_terms:
+                - part of
+                - located in
+                - adjacent to
+                - overlaps
+          invented_terms:
+            - GeologicRelationType
+          invention_search: >-
+            The Relation Ontology names the general mereological and topological
+            predicates this class reuses, and they cover being part of, lying
+            within and neighbouring. No vocabulary among the declared inputs
+            names the ridge-specific predicates the retained reading states: one
+            structure offsetting another, a fault cutting a surface, a body of
+            seismicity lying beneath a ridge axis, a feature bounding a segment.
+            This session has no network with which to verify a marine-geological
+            predicate vocabulary, so the predicate enum is local.
+
+  ScholarlyRelation:
+    is_a: Relation
+    description: >-
+      A relation a source states among the agents, works, software and
+      activities behind a report: authorship, affiliation, funding,
+      correspondence, deposition and use. The award identifier, when the source
+      states one, qualifies the funding link and travels with it.
+    slots:
+      - award_identifier
+      - assertion_modality
+    slot_usage:
+      relation_type:
+        range: ScholarlyRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, the PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - wasAttributedTo
+                - wasAssociatedWith
+                - actedOnBehalfOf
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/funder
+              borrowed_terms:
+                - author
+                - funder
+                - affiliation
+          invented_terms:
+            - ScholarlyRelationType
+            - award_identifier
+          invention_search: >-
+            PROV-O names attribution and association between an entity and an
+            agent, and Schema.org names author, funder and affiliation. Neither
+            names a predicate for a catalogue deposited in a repository or for
+            software a study states it used, and neither carries a grant
+            identifier as a property of the funding link itself rather than of
+            the funder or the work. The CRediT taxonomy is already borrowed by
+            the research pack and its roles are carried through that pack's own
+            contribution relation, not duplicated here. The predicate enum and
+            the award identifier slot are therefore local.
+
+# -------------------------------------------------------------------
+# Classes derived through a pack type
+# -------------------------------------------------------------------
+
+  CountObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A source-attributed observation whose reported value is an integer count
+      and the scope counted, rather than a bounded continuous quantity.
+
+  ReportedRatio:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A ratio a source reports, carrying the modality, the subject and the
+      route back to the retained assertion, and how the source qualifies the
+      number it states.
+    slots:
+      - value_qualification
+
+  RockSample:
+    is_a: Sample
+    description: >-
+      A rock, glass or melt-inclusion sample a source reports, in the material
+      classification the source uses.
+    slots:
+      - rock_kind
+
+  BibliographicWork:
+    is_a: Source
+    description: >-
+      A work a source names or cites, with the identifiers and publication
+      details the source states about it.
+    slots:
+      - work_kind
+      - doi
+      - publication_year
+      - container_title
+      - volume_number
+      - page_range
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  feature_kind:
+    range: GeologicFeatureKind
+    description: >-
+      Kind of geological feature. Required, because a feature a source names
+      without a kind it can be placed under is a gap to declare rather than a
+      record to write.
+
+  magnitude:
+    range: float
+    description: >-
+      Magnitude value a source states for an occurrence, as the source states
+      it.
+
+  magnitude_scale:
+    range: string
+    description: >-
+      Scale the stated magnitude is on, in the source's own notation. Kept
+      separate from the value so that magnitudes on different scales are never
+      silently compared.
+
+  event_location:
+    range: GeologicFeature
+    description: >-
+      Geological feature a source places an occurrence at. It is a slot and not
+      a relation because relation endpoints stay Entity-to-Entity under the
+      bound history profile.
+
+  software_version:
+    range: string
+    description: Version designation the source declares for a software package.
+
+  contact_email:
+    range: string
+    description: >-
+      Contact address a source publishes for an agent, as the source writes it.
+
+  rock_kind:
+    range: RockKind
+    description: Material classification the source gives a sample.
+
+  work_kind:
+    range: WorkKind
+    description: Kind of work, as the source presents it.
+
+  doi:
+    range: string
+    description: >-
+      Digital Object Identifier a source states for a work, as the source
+      writes it.
+
+  publication_year:
+    range: integer
+    description: Year of publication a source states for a work.
+
+  container_title:
+    range: string
+    description: >-
+      Journal, book, series or repository a source names as holding a work, in
+      the source's own abbreviation.
+
+  volume_number:
+    range: string
+    description: >-
+      Volume designation a source states for a work. A string, because a source
+      may state a designation that is not a number.
+
+  page_range:
+    range: string
+    description: Page range or article number a source states for a work.
+
+  award_identifier:
+    range: string
+    description: >-
+      Grant, award or agreement number a source states for a funding link, as
+      the source writes it.
