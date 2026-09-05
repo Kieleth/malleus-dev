@@ -332,6 +332,19 @@ def _refuse_defects(defects: list[_Defect]) -> DocumentAssertionRefusal:
     )
 
 
+def _refuse_gaps(defects: list[_Defect]) -> DocumentAssertionRefusal:
+    """One refusal for every assertion the capture formalizes nowhere."""
+
+    ordered = sorted(defects, key=lambda defect: defect.order)
+    return DocumentAssertionRefusal(
+        DocumentAssertionRefusalReason.GAP_REQUIRED,
+        "document capture assertions are not accepted: "
+        + "; ".join(defect.render() for defect in ordered)
+        + "; every assertion names at least one formalization target or one "
+        "typed gap",
+    )
+
+
 def _refuse_derivations(defects: list[_Defect]) -> DocumentAssertionRefusal:
     """One refusal for every derivation whose content the capture denies."""
 
@@ -417,12 +430,12 @@ def _evaluative_slots(contract_view: object) -> frozenset[str]:
         return frozenset()
 
 
-def _subject_bearing_types(
-    contract_view: object, types: set[str]
+def _slot_bearing_types(
+    contract_view: object, types: set[str], slot: str
 ) -> frozenset[str]:
-    """The record types the bound contract declares as carrying ``subject``.
+    """The record types the bound contract declares as carrying ``slot``.
 
-    Which types may name a subject is a contract question, so the adapter asks
+    Which types may carry a slot is a contract question, so the adapter asks
     the compiled contract and nothing else. Without one it knows no such type,
     exactly as it knows no evaluative slot, and the coverage axis stays empty.
     """
@@ -435,9 +448,88 @@ def _subject_bearing_types(
             slots = contract_view.effective_slots(type_name)
         except (KeyError, ValueError):
             continue
-        if _SUBJECT_SLOT in slots:
+        if slot in slots:
             bearing.add(type_name)
     return frozenset(bearing)
+
+
+def _provenance_census(
+    records_by_id: dict[str, dict[str, object]],
+    bearing: frozenset[str],
+) -> dict[str, object]:
+    """Report how many records reach the assertion behind them, and how many
+    bind its bytes.
+
+    One axis, reported and never refused, shaped like ``subject_coverage``.
+    ``by_type`` carries one entry per type present in the records that the
+    compiled contract declares as carrying ``assertion_locator``, each with
+    ``total``, ``with_locator`` and ``with_digest``; the top-level counts are
+    those summed. Both slots stay optional, so a capture that sets neither is
+    admitted and the digest check has nothing to run on. The number is what
+    makes that silence visible at admission rather than at review.
+    """
+
+    by_type: dict[str, dict[str, int]] = {}
+    for record_id in sorted(records_by_id):
+        record = records_by_id[record_id]
+        type_name = record.get("type")
+        if not isinstance(type_name, str) or type_name not in bearing:
+            continue
+        counts = by_type.setdefault(
+            type_name, {"total": 0, "with_digest": 0, "with_locator": 0}
+        )
+        properties = _record_properties(record)
+        counts["total"] += 1
+        for key, slot in (
+            ("with_digest", _STATEMENT_DIGEST_SLOT),
+            ("with_locator", _LOCATOR_SLOT),
+        ):
+            value = properties.get(slot)
+            if isinstance(value, str) and value:
+                counts[key] += 1
+    totals: dict[str, object] = {
+        key: sum(counts[key] for counts in by_type.values())
+        for key in ("total", "with_digest", "with_locator")
+    }
+    return {"by_type": dict(sorted(by_type.items())), **totals}
+
+
+def _block_census(
+    blocks: tuple[tuple[str, str], ...],
+    asserted: set[str],
+    declared: set[str],
+) -> dict[str, object]:
+    """Label every block of the reading and count the three labels.
+
+    ``ASSERTED`` is a block at least one assertion names, which is the
+    capture's own evidence. ``DECLARED_NOTHING_ASSERTABLE`` is a block the
+    producer listed and no assertion names, which is a producer claim the
+    census cannot check against the reading. ``UNTOUCHED`` is neither.
+    ``blocks_reviewed`` is the sum of the first two: it says the producer
+    accounted for the block, never that the capture carries anything from it.
+    """
+
+    labels = {
+        block_id: (
+            "ASSERTED"
+            if block_id in asserted
+            else "DECLARED_NOTHING_ASSERTABLE"
+            if block_id in declared
+            else "UNTOUCHED"
+        )
+        for block_id, _ in blocks
+    }
+    counted = list(labels.values())
+    asserted_count = counted.count("ASSERTED")
+    declared_count = counted.count("DECLARED_NOTHING_ASSERTABLE")
+    return {
+        "blocks": labels,
+        "blocks_asserted": asserted_count,
+        "blocks_declared_nothing_assertable": declared_count,
+        "blocks_reviewed": asserted_count + declared_count,
+        "blocks_total": len(blocks),
+        "blocks_untouched": counted.count("UNTOUCHED"),
+    }
 
 
 def _subject_census(
@@ -890,6 +982,23 @@ def _locator_defects(
     return defects
 
 
+def _empty_assertion_defects(
+    checked: tuple[tuple[dict[str, object], str, str, str], ...],
+) -> list[_Defect]:
+    """Collect every assertion with neither a formalization target nor a gap."""
+
+    return [
+        _Defect(
+            DocumentAssertionRefusalReason.GAP_REQUIRED,
+            assertion_id,
+            f"assertion has no formalization or gap: {assertion_id}",
+        )
+        for assertion, assertion_id, _, _ in checked
+        if not _items(assertion["formalized_by"], "formalized_by")
+        and not _items(assertion["gaps"], "assertion gaps")
+    ]
+
+
 def adapt_document_assertions(
     *,
     reading_bytes: bytes,
@@ -944,10 +1053,14 @@ def adapt_document_assertions(
 
     record_data, records_by_id = _record_snapshot(records)
     checked = _checked_assertions(_items(capture["assertions"], "capture assertions"))
-    reviewed, defects = _reviewed_blocks(capture, block_text)
+    declared, defects = _declared_blocks(capture, block_text)
     defects.extend(_locator_defects(checked, block_text))
     if defects:
         raise _refuse_defects(defects)
+    empty = _empty_assertion_defects(checked)
+    if empty:
+        raise _refuse_gaps(empty)
+    asserted = {block_id for _, _, block_id, _ in checked}
     derivations: list[dict[str, object]] = []
     gaps: list[dict[str, object]] = []
     modality_by_assertion: dict[str, str] = {}
@@ -959,7 +1072,6 @@ def adapt_document_assertions(
     gaps_by_kind: dict[str, int] = {}
 
     for assertion, assertion_id, block_id, _ in checked:
-        reviewed.add(block_id)
         modality = _word(assertion["modality"], "assertion modality")
         if modality not in _MODALITIES:
             raise _fail(
@@ -970,11 +1082,6 @@ def adapt_document_assertions(
 
         formalizations = _items(assertion["formalized_by"], "formalized_by")
         assertion_gaps = _items(assertion["gaps"], "assertion gaps")
-        if not formalizations and not assertion_gaps:
-            raise _fail(
-                DocumentAssertionRefusalReason.GAP_REQUIRED,
-                f"assertion has no formalization or gap: {assertion_id}",
-            )
         _append_formalizations(
             formalizations,
             assertion_id,
@@ -1001,14 +1108,13 @@ def adapt_document_assertions(
     statements = {
         assertion_id: statement for _, assertion_id, _, statement in checked
     }
-    bearing = _subject_bearing_types(
-        contract_view,
-        {
-            record["type"]
-            for record in records_by_id.values()
-            if isinstance(record.get("type"), str)
-        },
-    )
+    present = {
+        record["type"]
+        for record in records_by_id.values()
+        if isinstance(record.get("type"), str)
+    }
+    bearing = _slot_bearing_types(contract_view, present, _SUBJECT_SLOT)
+    located = _slot_bearing_types(contract_view, present, _LOCATOR_SLOT)
     subject_outcomes = _subject_outcomes(
         records_by_id,
         record_data,
@@ -1062,12 +1168,7 @@ def adapt_document_assertions(
     }
     census = {
         "assertions": counts,
-        "blocks": {
-            block_id: "REVIEWED" if block_id in reviewed else "UNTOUCHED"
-            for block_id, _ in blocks
-        },
-        "blocks_reviewed": len(reviewed),
-        "blocks_total": len(blocks),
+        **_block_census(blocks, asserted, declared),
         "capture_sha256": capture_identity,
         "derivation": _derivation_census(
             derivations,
@@ -1075,6 +1176,7 @@ def adapt_document_assertions(
             record_data,
         ),
         "gaps_by_kind": dict(sorted(gaps_by_kind.items())),
+        "provenance_coverage": _provenance_census(records_by_id, located),
         "subject_coverage": _subject_census(
             records_by_id, bearing, subject_outcomes
         ),
@@ -1089,10 +1191,12 @@ def adapt_document_assertions(
     )
 
 
-def _reviewed_blocks(
+def _declared_blocks(
     capture: dict[str, object], block_text: dict[str, str]
 ) -> tuple[set[str], list[_Defect]]:
-    reviewed: set[str] = set()
+    """The blocks the producer listed as carrying nothing assertable."""
+
+    declared: set[str] = set()
     defects: list[_Defect] = []
     for value in _items(capture["nothing_assertable"], "nothing_assertable"):
         block_id = _word(value, "nothing_assertable block ID")
@@ -1105,8 +1209,8 @@ def _reviewed_blocks(
                 )
             )
             continue
-        reviewed.add(block_id)
-    return reviewed, defects
+        declared.add(block_id)
+    return declared, defects
 
 
 def _append_formalizations(

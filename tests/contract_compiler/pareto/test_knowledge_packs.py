@@ -987,6 +987,34 @@ def test_governing_design_records_the_second_pack_revision_decisions() -> None:
     )
 
 
+def test_governing_design_records_the_reporting_decision() -> None:
+    """Decision 24 says what each of the four reports said before, the run that
+    showed it, and that none of the four changes what is admitted."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "24. Four fixes to what the protocol reports",
+        "None changes what is admitted",
+        "Run-16 read 186 of 186 reviewed",
+        "`blocks_asserted`, `blocks_declared_nothing_assertable` and "
+        "`blocks_untouched`",
+        "Run-16 admitted 194 records and not one carried `assertion_locator` "
+        "or `statement_sha256`, where runs 13 to 15 carried 269, 203 and 142",
+        "the census gains `provenance_coverage`",
+        "Run-17's runner met `ValueError: Cannot rehydrate graph from records",
+        "`RECORDS_NOT_REHYDRATABLE`",
+        "Run-17's third attempt had eight such assertions and the diagnostic "
+        "named one",
+        "`research` stays at 0.5.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("23. A name occurs as a word") < (
+        normalized.index("24. Four fixes to what the protocol reports")
+    )
+
+
 def test_governing_design_sketches_match_the_shipped_pack_revisions() -> None:
     design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
     normalized = " ".join(design.split())

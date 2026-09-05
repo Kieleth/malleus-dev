@@ -343,7 +343,8 @@ fallback.
    gap, not a derivation from a neighbouring sentence.
    Inspect the returned `canonical_census_bytes`; continue reviewing
    and capturing source-supported material across both census axes. Each block is
-   `REVIEWED` or `UNTOUCHED`; each captured assertion is `FULLY_FORMALIZED`,
+   `ASSERTED`, `DECLARED_NOTHING_ASSERTABLE` or `UNTOUCHED`, counted each and
+   summed as `blocks_reviewed`; each captured assertion is `FULLY_FORMALIZED`,
    `PARTLY_FORMALIZED`, or `UNFORMALIZED`. A reviewed block is not thereby
    formalized, and uncaptured assertions remain invisible. The census also
    reports derivation, under `derivation`: how many distinct records each
@@ -352,7 +353,9 @@ fallback.
    distribution, the top hubs and the count of non-local relation derivations.
    It reports subject coverage under `subject_coverage`: per type the compiled
    contract declares as carrying `subject`, how many records name one and how
-   many do not.
+   many do not. It reports provenance coverage under `provenance_coverage`:
+   per type carrying `assertion_locator`, how many records carry one and how
+   many carry a digest.
    Those are reported and never refused; one sentence carrying dozens of
    records is a signal to recheck what that sentence actually says, not a
    refusal. If the declared

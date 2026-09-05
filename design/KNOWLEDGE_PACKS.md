@@ -582,6 +582,78 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     `paper-v4/paper-ledger.md` E-0160 and the correction section of
     `handover/2026-09-05-v46-rca.md`.
 
+24. Four fixes to what the protocol reports, no pack change, decided after the
+    matrix cells of 2026-09-05 (runs 16 and 17, Sonnet 5 and Haiku 4.5 at the
+    settled protocol v4.9). None changes what is admitted; each makes a number
+    or a refusal say what is true. The evidence is
+    `handover/2026-09-05-run-16-sonnet-rca.md`,
+    `handover/2026-09-05-overseer-journal.md` from "Run-16, RCA before the
+    review (20:50Z)" on, and `paper-v4/paper-ledger.md` E-0172, E-0173 and
+    E-0176.
+
+    **Census block labels.** The block map read `REVIEWED` for a block an
+    assertion names and for a block the producer listed as nothing-assertable,
+    and `UNTOUCHED` otherwise. Run-16 read 186 of 186 reviewed, and the 186
+    were 58 blocks with assertions and 128 declarations, 90 of the
+    declarations reference entries by shape that the Opus cells captured as
+    79 to 84 works; run-15's 185 asserted blocks read the same number. A
+    declaration is a producer claim the census cannot check against the
+    reading, and the label folded it into the capture's own evidence. So the
+    map carries `ASSERTED` (at least one assertion names the block),
+    `DECLARED_NOTHING_ASSERTABLE` (the producer listed it and no assertion
+    names it) and `UNTOUCHED`, and the census counts each as
+    `blocks_asserted`, `blocks_declared_nothing_assertable` and
+    `blocks_untouched`. `blocks_reviewed` stays, as their sum, and its
+    docstring says it means the producer accounted for the block and not that
+    the capture carries anything from it. Coverage, for the paper, is
+    `blocks_asserted`.
+
+    **Provenance coverage in the census.** Run-16 admitted 194 records and not
+    one carried `assertion_locator` or `statement_sha256`, where runs 13 to 15
+    carried 269, 203 and 142. DIGEST_MISMATCH and DIGEST_NOT_LOCATED check a
+    digest when one is present, so neither ran, the review wrote no digest
+    token on any row, and the protocol's one mechanical binding of a claim to
+    its sentence was absent without a number saying so. The slots stay
+    optional and no rule is added: the census gains `provenance_coverage`, in
+    the shape of `subject_coverage`, per type the compiled contract declares
+    as carrying `assertion_locator`, with `total`, `with_locator` and
+    `with_digest` by type and summed. Reported, never refused; a cell with
+    none is visible at admission rather than at review.
+
+    **A typed refusal for graph rehydration.** Run-17's runner met `ValueError:
+    Cannot rehydrate graph from records: entities[2] 'entity:3': Unknown
+    property ...`, and every other refusal the cells met carried a typed
+    reason. `KnowledgeGraph.from_records` keeps its contract for its other
+    callers, aggregating every structural failure into one `ValueError`. The
+    boundary that rehydrates a population's records, `compile_population_plan`
+    in the private population module, now raises
+    `RECORDS_NOT_REHYDRATABLE` and carries the gate's own aggregated text as
+    its detail. This replaces the property two tests pinned, that the compiler
+    re-raises the graph gate's exception with its type and message untouched;
+    the message is kept, the bare type is not.
+
+    **GAP_REQUIRED aggregated.** The refusal named the first assertion with
+    neither a formalization target nor a gap. Run-17's third attempt had eight
+    such assertions and the diagnostic named one, so the producer answered one
+    and returned. Every such assertion is now listed in one refusal, in the
+    Core-9 style the locator and derivation defects already use: sorted,
+    joined, each tagged with its reason, closed by the rule that every
+    assertion names at least one formalization target or one typed gap. The
+    check moves ahead of the per-assertion semantics for that reason, so an
+    empty assertion is reported before an unknown modality later in the
+    capture.
+
+    What none of the four does: the pack is untouched, so `research` stays at
+    0.5.0; no reason is removed and one is added, on the population side only;
+    admission is unchanged, and every frozen paper cell keeps compiling
+    against the commit it pins. The census digest of the
+    `inspection_note_capture_v1` fixture moves with the first two items, from
+    `sha256:dae9b29e7ff6b412bb373760b617f24e9d2843be168a75a24260af0cbe20198d`
+    at 802 bytes to
+    `sha256:592db0dc3d1ba773332b09c073f3e158d81f6bbcb4d55c13b75d8ed4e31689b1`
+    at 981 bytes, and the fixture manifest is repinned.
+
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.

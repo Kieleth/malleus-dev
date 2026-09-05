@@ -155,6 +155,7 @@ class PopulationPlanRefusalReason(str, Enum):
     MALFORMED_PROFILE_REFERENCE = "MALFORMED_PROFILE_REFERENCE"
     MALFORMED_RETENTION_EVENT = "MALFORMED_RETENTION_EVENT"
     MALFORMED_SUPERSESSION = "MALFORMED_SUPERSESSION"
+    RECORDS_NOT_REHYDRATABLE = "RECORDS_NOT_REHYDRATABLE"
     SOURCES_REQUIRED = "SOURCES_REQUIRED"
     SUPERSESSION_FORK = "SUPERSESSION_FORK"
     SUPERSESSION_TYPE_MISMATCH = "SUPERSESSION_TYPE_MISMATCH"
@@ -200,6 +201,25 @@ class PopulationTraceRefusal(ValueError):
 
 def _refuse(reason: PopulationPlanRefusalReason, detail: str) -> PopulationPlanRefusal:
     return PopulationPlanRefusal(reason, detail)
+
+
+def _rehydrate(contract_view: ContractView, records: Mapping[str, object]) -> None:
+    """Replay the plan's records with the base state through the graph gate.
+
+    The gate is `KnowledgeGraph.from_records`, whose contract for its other
+    callers is unchanged: it aggregates every structural failure into one
+    `ValueError`. This boundary is where a population's records are
+    rehydrated, so the refusal a plan compiler returns carries a reason like
+    every other refusal it can raise, and the detail is the gate's own
+    aggregated text.
+    """
+
+    try:
+        KnowledgeGraph.from_records(contract_view, records)
+    except (TypeError, ValueError) as error:
+        raise _refuse(
+            PopulationPlanRefusalReason.RECORDS_NOT_REHYDRATABLE, str(error)
+        ) from error
 
 
 def _freeze(value: object) -> object:
@@ -990,24 +1010,18 @@ def compile_population_plan(
     for family in _ADMITTED_FAMILIES:
         for raw_record in records.get(family, []):
             if not isinstance(raw_record, dict):
-                KnowledgeGraph.from_records(
-                    contract_view, _merged_records(records, base_state)
-                )
+                _rehydrate(contract_view, _merged_records(records, base_state))
                 raise AssertionError(
                     "structural validation accepted a malformed record"
                 )
             if "id" not in raw_record:
-                KnowledgeGraph.from_records(
-                    contract_view, _merged_records(records, base_state)
-                )
+                _rehydrate(contract_view, _merged_records(records, base_state))
                 raise AssertionError(
                     "structural validation accepted a record without an ID"
                 )
             record_id = raw_record["id"]
             if not isinstance(record_id, str) or not record_id:
-                KnowledgeGraph.from_records(
-                    contract_view, _merged_records(records, base_state)
-                )
+                _rehydrate(contract_view, _merged_records(records, base_state))
                 raise AssertionError(
                     "structural validation accepted a malformed record ID"
                 )
@@ -1136,7 +1150,7 @@ def compile_population_plan(
             )
         prior_ids.add(prior_id)
 
-    KnowledgeGraph.from_records(
+    _rehydrate(
         contract_view,
         _merged_records(
             records,
