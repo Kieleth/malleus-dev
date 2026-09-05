@@ -85,3 +85,9 @@ Source: `private/paper-v4-v4-run-04/results/gaps.json` (withheld; carries the pr
 | The source never states whether two named hydrothermal features are one | 1 | RELATION_ABSENT | nothing: the correct gap |
 
 Reading: 26 of 61 gaps are two pack limits (approximation and event-date precision), 2 are one missing vocabulary, 20 are the text layer, and 13 are the protocol working as designed. Run-02 under v4 reported 84 AGGREGATE_ONLY gaps against run-04's 8 under v4.1; the derivation rule and the revised packs changed what the producer counted as a gap, so the two figures are not comparable as coverage.
+
+## Core-12 residuals and a harness catch (2026-09-05, after OVR-000402)
+
+- A record that carries `statement_sha256` and no `assertion_locator` is not checked by DIGEST_MISMATCH, because nothing in the capture can check it. A producer could escape the digest check that way. Candidate for the next Core entry: refuse a digest with no locator, or require the locator whenever the digest is present, decided at the pack.
+- `_derivation_census` in the document adapter takes an unused `records_by_id` parameter; found after OVR-000402 sealed and run-08 pinned the commit. One line for whoever holds the next ledger entry.
+- The adapter's new `contract_view` argument defaults to None so older runners keep working; a runner that omits it silently skips EVALUATIVE_SLOT_NOT_EVALUATED. Run-08's runner was run-04's bytes and omitted it; fixed before phase two (commit 05f9c5e) and pinned in run-08's pipeline test. Any future runner must pass it; a harness test that greps for the argument is the cheap guard.
