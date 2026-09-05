@@ -1908,6 +1908,16 @@ class TestSkillsAreInstallable:
             "Stop when another addition would require invention",
             "incomplete captures, gaps, and typed refusals as results",
             "query-shaped vocabulary",
+            (
+                "The producer writes one file, `document-population.json`, "
+                "with exactly three top-level keys: `capture`, `records`, and "
+                "`supersessions`"
+            ),
+            "the producer never writes a contract identity",
+            (
+                "the parent or `malleus-compiler capture` computes "
+                "`contract_identity` from the compiled contract"
+            ),
             "current private-v0 shape, not a stable wire",
             "reading object is illustrative input, not a live grammar or closed shape",
             "reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`, `records`, and `supersessions",
@@ -1946,6 +1956,7 @@ class TestSkillsAreInstallable:
         assert "The command-line compiler stops at contract compilation" not in section
         assert "stops at the first block whose shape is wrong" not in section
         assert "naming the first such field it meets" not in section
+        assert "replace-with-PartialEffectiveContract.identity" not in skill
         steps = (
             "Retain the source boundary",
             "Choose the Malleus level",
@@ -2051,24 +2062,33 @@ class TestSkillsAreInstallable:
         source_skill = self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
         assert installed_skill.read_bytes() == source_skill.read_bytes()
         skill = installed_skill.read_text(encoding="utf-8")
-        template_region = skill.split(
-            "<!-- malleus-nascent-document-template:start -->", 1
-        )[1].split("<!-- malleus-nascent-document-template:end -->", 1)[0]
-        template = json.loads(template_region.split("```json", 1)[1].split("```", 1)[0])
+        def _block(marker):
+            region = skill.split(f"<!-- {marker}:start -->", 1)[1].split(
+                f"<!-- {marker}:end -->", 1
+            )[0]
+            return json.loads(region.split("```json", 1)[1].split("```", 1)[0])
+
+        template = _block("malleus-nascent-document-template")
+        harness = _block("malleus-nascent-document-harness")
         assert "schema" not in template
         assert "documentation_example" not in template
-        assert "schema" not in template["reading"]
-        assert set(template) == {
+        assert "schema" not in harness["reading"]
+        assert set(template) == {"capture", "records", "supersessions"}
+        assert set(harness) == {
             "accepted_gap_kinds",
             "accepted_modalities",
-            "capture",
+            "adapter_call",
+            "reading",
+        }
+        assert tuple(harness["adapter_call"]) == (
+            "capture_bytes",
             "capture_id",
             "contract_identity",
             "plan_id",
-            "reading",
+            "reading_bytes",
             "records",
             "supersessions",
-        }
+        )
         modalities = [
             "CALCULATED",
             "CONTESTED",
@@ -2077,7 +2097,7 @@ class TestSkillsAreInstallable:
             "NEGATED",
             "STATED",
         ]
-        assert template["accepted_modalities"] == modalities
+        assert harness["accepted_modalities"] == modalities
         gap_kinds = [
             "INTERVAL_NOT_EXPRESSIBLE",
             "AGGREGATE_ONLY",
@@ -2086,10 +2106,10 @@ class TestSkillsAreInstallable:
             "TYPE_ABSENT",
             "RELATION_ABSENT",
         ]
-        assert template["accepted_gap_kinds"] == gap_kinds
+        assert harness["accepted_gap_kinds"] == gap_kinds
 
         reading_bytes = json.dumps(
-            template["reading"],
+            harness["reading"],
             allow_nan=False,
             ensure_ascii=False,
             separators=(",", ":"),
@@ -2158,9 +2178,9 @@ class TestSkillsAreInstallable:
                     separators=(",", ":"),
                     sort_keys=True,
                 ).encode(),
-                capture_id=template["capture_id"],
-                plan_id=template["plan_id"],
-                contract_identity=template["contract_identity"],
+                capture_id=harness["adapter_call"]["capture_id"],
+                plan_id=harness["adapter_call"]["plan_id"],
+                contract_identity=harness["adapter_call"]["contract_identity"],
                 records=template["records"],
                 supersessions=template["supersessions"],
             )
