@@ -1,0 +1,160 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:f19f905761d97809b9ef731ff5a9cf6bf6ccd3e9a1756f7f8c3a8fca49356f89",
+        "before_digest": "sha256:2845e91a084d1c624598fd2dc4bf5e8ef0b9641193e9cd8da0667fb823bb621f",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:a5ae733080c23604c0b0cf1ab45e55386f23493ef7a4b9a7830242b5df3d9279",
+        "before_digest": "sha256:f31f8ada947d31d5b8c7e2ae6b308ae8f4531e6b4dc47d0bed3c9a4157eded28",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b",
+        "before_digest": "sha256:937bf8e16a50caba9a3dd9b7af4c3792eb4d25afc089e7589ab19810b3aac919",
+        "change": "MODIFIED",
+        "path": "ontology/packs/research.yaml"
+      },
+      {
+        "after_digest": "sha256:6c5e01293557687962fa1fd697cd5995fb828a766b8c2e4dbe916d0ea1dffff4",
+        "before_digest": "sha256:c947e574396114af996a6b19571966ac134df3df03f42726b5f31dc59a38542c",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-census.json"
+      },
+      {
+        "after_digest": "sha256:33cf6409dcc248695de5b6713bbaf77fdeefb31e3ee6591288bebaea812bca62",
+        "before_digest": "sha256:cd240aa6f9141b848f081a3a4a33decbd952b9076c4b17c360cd8f599390d558",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:21e32174c3629fb5f0b7482814005fb8e373b845e4f235727692b02fe486ac5b",
+        "before_digest": "sha256:a200459fe62ea1312112496430ff8c9a71e691405426adaa9004fde0a3c726f5",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:d564632838023d632523ff4563f03a9e62d0fdbf1d0cd4f375644ba394eb89e2",
+        "before_digest": "sha256:4778e43da6c4477297ee0b46ad8ceef6ddfe0ae7b53b0c32530c689751beed5c",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:b8a06fb38b94de31c5280347a0f3404e0fdf2afbca89f5d4cff03d07b7982c14",
+        "before_digest": "sha256:3aef3fdc782ae3c8ff147e69639259109e22e3207923354b805c897e93b4246f",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:296f552750235f76a0fc14a60693e1341b09a49caf7f5cf61ca543fa1063ff47",
+        "before_digest": "sha256:e6fdf9ed9c9fafcff89b646786463f2c079c64702ac15ea05a418be3237a549f",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:aa46ef1cea65c0783dba391f5e27fae752de9062321436f7e80805afc7f5e87f",
+        "before_digest": "sha256:cc55edbcdf4cd8d6c6608cf8c8dd58c88044e4510c65432868f8acdcbb6d6867",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:05f62bea42934f4fcf7299000c9a5b89ee493d3ae68bfc1efd13265fc0366bdd",
+        "before_digest": "sha256:462b8958e66caea1619840165694d584ceb74f082b344b81cf4b95b6444b39be",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:7b1dca10ffc8070f52be7500ea6fe0a48efe39b2c757ac0da22db604160db2a6",
+  "entry_id": "OVR-000405",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ff48db47606afab87eeb5ee4e4a7d1c019f222d634bcb07aa4726f3683c53107",
+  "recorded_at": "2026-09-05T06:45:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "edd07556e78561426c7c15161a8e8f63ca50bbf5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0c660ce7aced39f1de028578528f269d69c529e7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2482318189ea887de83a2543c86f2bb5ef135b89",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "61403e53a7bceaf3102b486b86646968a140e5c1",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d4672271507dcc7c019a6848a7daf927e06a055f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "932a4f1f07e63794a9c96d294ad0ff2914abf1fb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "62a0b5ec254d6c287aa274194a63edcb390db3a4",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7b684d9925a7f513fd72276fd54a5d494b4839bb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "975f955ec2ff299e79fa4f2c385b7c2421aba0c8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7347c4d2e35f537c8290dc3063bb4b2e439f3d77",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b18aedbd40434e29fb7e6f45bf0876f0764d419f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000402",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 405,
+  "subject": {
+    "id": "subject-of-a-source-asserted-record",
+    "type": "DOCUMENT"
+  },
+  "summary": "Replacing OVR-000403: carry what a source-asserted record is about as a subject reference, refuse a subject its sentence does not name, report subject coverage.",
+  "why": "handover/2026-09-05-v42-rca.md, follow-up 1. Run-04 attached observations and claims to what they were about 27 times and answered 240 query rows, 94 of them resting on relations whose formalizing sentence names neither endpoint; run-08, the same model on the same reading, made no science relation, put the feature inside quantity_kind text 23 times in 131 observations, and answered 8. Neither the producer's ontology nor the pack offered a slot for what a record is about. research 0.5.0 adds optional single subject on the SourceAsserted mixin, ranged on Entity as a relation endpoint is, borrowed from RDF 1.1 Concepts with SOSA's feature of interest recorded as the narrower term passed over. The adapter refuses SUBJECT_NOT_NAMED, aggregated, when the subject's name, whitespace collapsed and case folded, is absent from every statement formalizing the record's subject path; the plan compiler refuses DANGLING_SUBJECT for a subject resolving in neither the change set nor the base state. The census gains subject_coverage, reported and never refused. Core-12's residuals close: DIGEST_NOT_LOCATED for a digest no locator can check, and _derivation_census loses an unread argument."
+}

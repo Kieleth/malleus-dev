@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "subject-of-a-source-asserted-record"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000403"
+  },
+  "entry_hash": "sha256:ff48db47606afab87eeb5ee4e4a7d1c019f222d634bcb07aa4726f3683c53107",
+  "entry_id": "OVR-000404",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:82f552d1b5ceae80fda9febd471a102a9cae30ab9cf08c96cc8cd891ddfa124a",
+  "recorded_at": "2026-09-05T06:40:00Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000403",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 404,
+  "subject": {
+    "id": "subject-of-a-source-asserted-record",
+    "type": "DOCUMENT"
+  },
+  "summary": "OVR-000403 pins four commits as evidence that belong to the concurrent paper workstream, not to this revision.",
+  "why": "The entry's commit references were collected as every commit since the session's base, in a working tree a second session was writing to. Four of the fourteen, e6aa68f, ba209e1, 2c579bc and 90dea96, are the paper thread's run-09 harness and journal and touch none of the eleven documents the revision pins. A reader following them would find work this revision did not do, which is a false claim in a governance record even though the pinned digests are correct. The eleven documents and their before and after digests stand and are re-recorded by the replacement, whose references name only the ten commits of this revision."
+}
