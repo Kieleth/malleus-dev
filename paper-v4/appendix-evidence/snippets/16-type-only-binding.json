@@ -1,0 +1,35 @@
+# source: paper-v4/experiment-v4/run-05/results/native-query-binding.json, header plus queries[0].cases[0] of 24 cases
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# Written after the replay was frozen; names only record types, relation types
+# and projected fields. No record id, locator, value or row count.
+{
+  "bound_after_replay_receipt_sha256": "sha256:5895a803aa651793c26f37e7b4d4ce5c65306a4d02d30a2839b1df0ff8490611",
+  "queries[0].cases[0]": {
+    "ordinal": 1,
+    "output_fields": {
+      "relation": [
+        "relation_type",
+        "strength"
+      ],
+      "source": [
+        "name",
+        "description"
+      ],
+      "target": [
+        "name",
+        "description",
+        "begins_at",
+        "ends_at",
+        "temporal_precision",
+        "count",
+        "count_scope"
+      ]
+    },
+    "relation_record_type": "ResearchRelation",
+    "source_record_type": "Instrument",
+    "target_record_type": "Campaign"
+  },
+  "queries[0].id": "NQ-CQ-01",
+  "schema": "malleus.paper-v4.native-query-binding/v2",
+  "status": "FROZEN_AFTER_REPLAY"
+}

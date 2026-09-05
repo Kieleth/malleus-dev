@@ -5,7 +5,7 @@ Overseer session. Everything below is on disk or in git; paths and commits are g
 ## What the stretch did, in order
 
 1. Audited the overnight Codex work on Core (P1 to P9) and the paper thread, took both roles over (Codex tokens exhausted), and fixed Core in numbered Opus agents: Core-1 (ledger digests, OVR-000385 to 390), Core-7 (aggregated grounding and UNDERIVED_FIELD diagnostics), Core-8 (packs 0.2.0: QUDT quantity kind class, claim locator and digest, source licence; decisions 13 and 14 in `design/KNOWLEDGE_PACKS.md`), Core-9 (skill and adapter fixes from the Haiku RCA, OVR-000397), Core-10 (multivalued properties at admit, OVR-000398).
-2. Rebuilt the paper harness per cell (run contract, producer input manifest with `git show` digests, isolation-only spawn message, gate, runner over the public facade, type-only native query, review package) and ran the v4 cells run-02 (Opus, admitted, ratified) and run-03 (Sonnet, refused at ontology), then the v4.1 cells run-04 (Opus), run-05 (Sonnet), run-06 (Haiku) and the paired variant run-07 (Haiku producer plus Haiku checker per phase).
+2. Rebuilt the paper harness per cell (run contract, producer input manifest with `git show` digests, isolation-only spawn message, gate, runner over the public facade, type-only native query, review package) and ran the v4 cells run-02 (Opus, admitted, review preliminary) and run-03 (Sonnet, refused at ontology), then the v4.1 cells run-04 (Opus), run-05 (Sonnet), run-06 (Haiku) and the paired variant run-07 (Haiku producer plus Haiku checker per phase).
 3. Restructured the manuscript to 1.4.x (plain abstract, state of the art with verified references, hashes and run narratives to appendices, latest results lead, the Fahland 2022 shop as calibration) and rendered the PDF at 16 pages with zero warnings.
 4. Wrote the Haiku RCA (`handover/2026-09-05-haiku-rca.md`) and journaled every cell in the paper ledger.
 
@@ -13,7 +13,7 @@ Overseer session. Everything below is on disk or in git; paths and commits are g
 
 | cell | producer | protocol | ontology | population | review | producer tokens |
 |---|---|---|---|---|---|---|
-| run-02 | Opus 5 | v4 | accepted, attempt 03 | admitted, 2 returns; 419 entities, 170 relations | ratified (E-0122, E-0123) | 410,064 |
+| run-02 | Opus 5 | v4 | accepted, attempt 03 | admitted, 2 returns; 419 entities, 170 relations | preliminary complete, NOT ratified (E-0122; corrected in E-0134) | 410,064 |
 | run-03 | Sonnet 5 | v4 | refused, 3 attempts | not started | none | 259,405 |
 | run-04 | Opus 5 | v4.1 | accepted, attempt 02 | admitted at the Core-10 fix, 0 returns; 256/3/144, 403 traced, 186 of 186 blocks | pending | 371,026 |
 | run-05 | Sonnet 5 | v4.1 | accepted, attempt 02 | admitted, 0 returns; 47/1/26, 27 of 186 blocks | ratified (E-0131, E-0132) | 382,952 |

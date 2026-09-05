@@ -1,0 +1,18 @@
+# source: paper-v4/experiment-v4/run-05/ontology-run/result.json, attempts[0]
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# A compilation refusal with its chained cause. The frozen diagnostic file
+# beside it carries only the bare reason; the cause was recovered by the
+# parent through the public facade and recorded here.
+{
+  "attempt": 1,
+  "chained_cause": "REJECTED_SOURCE: schema root contains rejected field 'comments'",
+  "diagnostic_path": "paper-v4/experiment-v4/run-05/ontology-run/attempt-01-diagnostic.json",
+  "diagnostic_returned_to_producer_at": "2026-09-05T00:04:09Z",
+  "diagnostic_sha256": "sha256:03c62d170e7bf4a15dfd91706eaf555f26d929e1203a77700a0ed448cce42c0f",
+  "ontology_path": "private/paper-v4-v4-run-05/withheld-ontology-run/ontology-01.yaml",
+  "ontology_sha256": "sha256:46f648ff1cb3551ef9d3f88d13bfc3ce7e2fa8ea663e1b0eea1e2176ced799eb",
+  "ontology_visibility": "PRIVATE",
+  "reason": "IMPORT_READER_REFUSED",
+  "stage": "CONTRACT_COMPILATION",
+  "status": "REFUSED"
+}

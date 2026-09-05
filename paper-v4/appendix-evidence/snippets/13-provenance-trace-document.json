@@ -1,0 +1,36 @@
+# source: paper-v4/experiment-v4/run-05/results/trace-summary.json, records[0]
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# One replayed record traced back through its change set, plan, history
+# profile and retained evidence to the assertion locator it was read from. The
+# locator names the reading block. Evidence is selected by record id.
+{
+  "change_set_id": "change:plan:paper-v4:yu-2025:v4:5",
+  "contract_identity": "sha256:7072e5e8f4d24835310e62c1c433e032360250a17b42c4a8c22d098d6f758b8f",
+  "derivations": [
+    {
+      "locator": "assertion:page-5-block-002:23",
+      "path": [
+        "properties",
+        "claim_kind"
+      ],
+      "source_id": "source:yu-2025-mid-atlantic-ridge"
+    }
+  ],
+  "evidence": {
+    "capture:paper-v4:yu-2025:v4:5": "sha256:3c8e26d8b21fd2ba0a730c2a405b669403e0c062ca6ae011e280d5ef1a86de8b"
+  },
+  "history_profile": {
+    "profile_id": "source-assertion",
+    "sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
+  },
+  "plan_id": "plan:paper-v4:yu-2025:v4:5",
+  "record_id": "claim:co2-degassing-preferred",
+  "record_type": "Claim",
+  "sources": {
+    "source:yu-2025-mid-atlantic-ridge": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+  },
+  "valid_from": {
+    "kind": "ORDER_ONLY",
+    "value": "capture:paper-v4:yu-2025:v4:5"
+  }
+}

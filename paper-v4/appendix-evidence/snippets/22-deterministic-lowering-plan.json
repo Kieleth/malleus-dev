@@ -1,0 +1,37 @@
+# source: research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/ret010.json, re-indented; excerpt
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# One neutral population plan: contract identity, grammar, history profile,
+# sources by digest, records in the public record shape, one derivation per
+# field with its locator, and valid time.
+{
+  "adapter": "small-shop-full-fixture v1",
+  "contract_identity": "sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17",
+  "derivations": [
+    {
+      "locator": "row:0:order",
+      "path": [
+        "properties",
+        "order_number"
+      ],
+      "record_id": "O1",
+      "source_id": "source:small-shop:warehouse"
+    }
+  ],
+  "grammar": "malleus.population-plan/private-v0",
+  "history_profile.profile_id": "state-version",
+  "plan_id": "plan:small-shop:ret010",
+  "records.entities[0]": {
+    "id": "O1",
+    "properties": {
+      "order_number": "O1"
+    },
+    "type": "SalesOrder"
+  },
+  "sources": [
+    {
+      "sha256": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e",
+      "source_id": "source:small-shop:warehouse"
+    }
+  ],
+  "valid_time": "INSTANT 2000-05-07T17:00:00Z"
+}

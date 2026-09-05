@@ -1,0 +1,40 @@
+# source: src/malleus/compiler.py, lines 358-371, 392-399 and 419-427
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# One call validates and admits. The check event is generated inside the call
+# and persisted only if the same batch passes; the caller cannot supply a
+# check outcome, and a stale base refuses before any append.
+def admit_structural_change(
+    *,
+    history: KnowledgeChangeHistory,
+    preparation: PopulationPreparation,
+    transaction_time: str,
+    actor_id: str,
+) -> KnowledgeHistoryReplay:
+    """Atomically validate and admit one prepared structural change.
+
+    The successful check event is generated here and is persisted only if the
+    same candidate batch passes base, retained-closure, and graph application
+    validation. The caller cannot supply a check outcome.
+    """
+
+
+# ...
+    current = history.replay()
+    if current.receipt.identity != preparation.retention_replay.receipt.identity:
+        raise KnowledgeChangeRefusal(
+            KnowledgeChangeRefusalReason.STALE_BASE,
+            "population preparation is stale against the current history",
+        )
+    policy = STRUCTURAL_HISTORY_BUNDLE.policy_program
+    proposal_id = f"proposal:{change.change_set_id}:structural-admission"
+
+# ...
+            "VERDICT_RECORDED",
+            decision_id=f"decision:{change.change_set_id}:structural-admission",
+            proposal_id=proposal_id,
+        ),
+    )
+    return history.admit(
+        change_set=change,
+        machine_events=events,
+        transaction_time=transaction_time,

@@ -1,0 +1,17 @@
+# source: paper-v4/experiment-v4/run-04/ontology-run/population-surface.json, families and type names only
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The admissible surface handed to the producer is derived from the compiled
+# contract and the bound history profile, not chosen by the evaluator.
+# families_admitted comes from the profile's ontology roles.
+schema: malleus.paper-v4.population-surface/v2
+history_profile_id: source-assertion
+families_admitted: ["entities", "events", "relations"]
+ENTITY (26): AnalysisMethod, BibliographicSource, Campaign, Claim,
+EarthquakeSet, Entity, Evidence, FundingAward, GeochemicalObservation,
+GeophysicalObservation, Instant, Instrument, InterpretationClaim, Interval,
+LithosphericInterface, Method, Observation, QuantityValue, Ratio,
+ReportedRatio, ResearchContributor, RockSample, Sample, SeismicStationNetwork,
+Source, TectonicStructure
+EVENT (2): Earthquake, Event
+RELATION (3): GeospatialStructureRelation, ResearchRelation,
+ScientificRecordRelation

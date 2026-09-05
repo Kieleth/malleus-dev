@@ -1,0 +1,34 @@
+# source: paper-v4/experiment-v4/run-04/ontology-run/validated-contract.json, header plus facts[0:3] of 3,986
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# Compilation output is a flat, deterministic subject-predicate-object fact
+# set with its own digest, plus the exact adapter, metamodel, canonicalizer
+# and symbol-policy identities that produced it. The capability field states
+# what the artifact is and is not.
+{
+  "canonicalization": {
+    "id": "malleus.canonical-json/d05-compact-sorted-key-utf8-no-newline/v0",
+    "sha256": "sha256:aabfbd9a01fedd395eac94c3f7ea2fa320474648392c66b423b99c27a445709a"
+  },
+  "capability": "VALIDATED_FACTS_AND_STRUCTURAL_VIEW_ONLY",
+  "evidence.adapter": {
+    "id": "malleus.linkml/private-v1",
+    "sha256": "sha256:d9d31fae01c082a7dfd51df23d068fbdda7126965257847a7143addea74fd792"
+  },
+  "fact_count": 3986,
+  "facts[0]": {
+    "object": "0",
+    "predicate": "https://malleus.dev/contract-facts/minimum",
+    "subject": "https://malleus.dev/schema/packs/research/assertion_confidence"
+  },
+  "facts_sha256": "sha256:acd62b4161a09db0b1a6efedf86efe9168905ee1a17e72c8530fea521a9db1be",
+  "grammar": "malleus.validated-contract-artifact/private-v0",
+  "metamodel": {
+    "id": "urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:1c68a612f3e7a0f80c31965aa5525954921dfbee60d151552d10d61cb0aac71b",
+    "sha256": "sha256:1c68a612f3e7a0f80c31965aa5525954921dfbee60d151552d10d61cb0aac71b"
+  },
+  "symbol_policy": {
+    "id": "urn:malleus:contract-symbol-policy:linkml-v0-slash-qualified:v0",
+    "sha256": "sha256:db21b81b3ec5e1c471a3ca1133c6788e0f374ec2f3e7640742038ed9a8eed60c"
+  },
+  "validated_fact_set_sha256": "sha256:36ea8b8913b6f7d0c5883bde95a500b5080194c982b782c5a7d0d0e890955d27"
+}

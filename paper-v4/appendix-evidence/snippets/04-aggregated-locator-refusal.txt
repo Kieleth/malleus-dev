@@ -1,0 +1,38 @@
+# source: src/malleus/_contract_pipeline/document.py, lines 235-261 and 299-320
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# Every unknown block and every non-verbatim statement is collected, sorted,
+# and reported in one refusal that also states the method.
+@dataclass(frozen=True, slots=True)
+class _Defect:
+    """One capture locator the retained reading does not support."""
+
+    reason: DocumentAssertionRefusalReason
+    subject: str
+    message: str
+
+    @property
+    def order(self) -> tuple[str, str, str]:
+        return (self.reason.name, self.subject, self.message)
+
+    def render(self) -> str:
+        return f"{self.message} [{self.reason.name}]"
+
+
+def _refuse_defects(defects: list[_Defect]) -> DocumentAssertionRefusal:
+    ordered = sorted(defects, key=lambda defect: defect.order)
+    return DocumentAssertionRefusal(
+        ordered[0].reason,
+        "document capture locators are not accepted: "
+        + "; ".join(defect.render() for defect in ordered)
+        + "; every block ID comes from the reading's inventory and every "
+        "statement is copied from its block's own bytes, matching after "
+        "whitespace collapse",
+    )
+
+
+# ...
+def _locator_defects(
+    checked: tuple[tuple[dict[str, object], str, str, str], ...],
+    block_text: dict[str, str],
+) -> list[_Defect]:
+    """Collect every unknown assertion block and every non-verbatim statement."""

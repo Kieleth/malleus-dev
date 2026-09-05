@@ -1,0 +1,33 @@
+# source: src/malleus/_contract_pipeline/knowledge.py, lines 214-241
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The ontology validator runs on the staged write, not on the proposal. The
+# change set freezes lists to tuples so operations hash by identity, so the
+# staged copy is thawed before the validator sees it.
+def _freeze(value: object) -> object:
+    if isinstance(value, dict):
+        return MappingProxyType({key: _freeze(item) for key, item in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(item) for item in value)
+    return value
+
+
+def _thaw(value: object) -> object:
+    if isinstance(value, Mapping):
+        return {key: _thaw(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw(item) for item in value]
+    return value
+
+
+def _staged_properties(properties: Mapping[str, object]) -> dict[str, object]:
+    """Hand the staged graph plain containers, not the frozen change-set view.
+
+    A change set freezes list values into tuples so operations compare and
+    hash by identity. The ontology validator accepts only ``list`` for a
+    multivalued slot, so a shallow copy would refuse every multivalued
+    property at admit. Thaw the whole value instead.
+    """
+
+    thawed = _thaw(properties)
+    assert isinstance(thawed, dict)
+    return thawed

@@ -1,0 +1,11 @@
+# source: paper-v4/experiment-v4/run-0{2,4,5}/results/census.json, per-block map elided; identical to the census inside each run-result.json
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# Two independent axes: which reading blocks were reviewed, and how far each
+# captured assertion was formalized. Neither is gated; both are reported.
+# Typed gaps are counted by kind beside them.
+run-02: blocks 186/186  assertions F226 P103 U0
+         gaps {"AGGREGATE_ONLY": 84, "INTERVAL_NOT_EXPRESSIBLE": 1, "RELATION_ABSENT": 3, "TYPE_ABSENT": 16}
+run-04: blocks 186/186  assertions F289 P40 U20
+         gaps {"AGGREGATE_ONLY": 8, "INTERVAL_NOT_EXPRESSIBLE": 26, "RELATION_ABSENT": 1, "REQUIRED_FIELD_ABSENT_IN_SOURCE": 21, "TYPE_ABSENT": 5}
+run-05: blocks 27/186  assertions F65 P1 U0
+         gaps {"INTERVAL_NOT_EXPRESSIBLE": 1}

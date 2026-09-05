@@ -1,0 +1,37 @@
+# source: design/contract_compiler/overseer/entries/OVR-000398.json
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# Shape of one governance ledger entry: hash-linked to its predecessor, typed,
+# carrying the before and after digest of every file it changed. The prose
+# `why` field and three of four document rows are elided.
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:37795abe4624642e957040e3a3dd2e9527b20131232beb76697573850c2f290b",
+        "before_digest": "sha256:9fadb8b72e7148042d5fe6b2d5c36060d37366ae5f575fea1f302e487857b743",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      }
+    ],
+    "documents_elided": 3
+  },
+  "entry_hash": "sha256:c8895cbee23c12abf75a9f094436b2043a8b20cbe7900a825d9d1f0a443b8fdf",
+  "entry_id": "OVR-000398",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:cd417d16e9ed809cbe9b0774fd81973eb6199b93311c8802f84f8c2dfa355f95",
+  "recorded_at": "2026-09-05T02:40:00Z",
+  "sequence": 398,
+  "subject": {
+    "id": "thaw-change-set-properties-before-staged-writes",
+    "type": "DOCUMENT"
+  },
+  "summary": "Thaw the change-set properties at the four staged write sites so a multivalued slot admits, and guard the sites mechanically."
+}

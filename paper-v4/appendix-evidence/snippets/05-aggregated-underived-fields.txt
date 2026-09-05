@@ -1,0 +1,25 @@
+# source: src/malleus/_contract_pipeline/population.py, lines 1207-1227
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# Every properties key and both relation endpoints need a derivation. The plan
+# compiler lists the complete missing set in one UNDERIVED_FIELD refusal.
+
+    underived: list[tuple[str, tuple[str, ...]]] = []
+    for record_id, record in by_id.items():
+        properties = record["properties"]
+        assert isinstance(properties, dict)
+        required = [("properties", key) for key in properties]
+        if "source_id" in record:
+            required.extend((("source_id",), ("target_id",)))
+        for path in required:
+            if (record_id, path) not in derived:
+                underived.append((record_id, path))
+    if underived:
+        raise _refuse(
+            PopulationPlanRefusalReason.UNDERIVED_FIELD,
+            "record fields lack derivations: "
+            + ", ".join(
+                f"{record_id}:{list(path)}" for record_id, path in sorted(underived)
+            )
+            + "; every properties key and both relation endpoints need a "
+            "derivation, type and id do not",
+        )

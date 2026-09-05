@@ -1,0 +1,32 @@
+# source: paper-v4/experiment-v4/run-05/test_contract.py, lines 641, 657-667 and 687-697
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The leak rule as an executable test. It enumerates every 60-character window
+# of every reading block and asserts that no frozen public artifact contains
+# one.
+LEAK_WINDOW = 60
+
+# ...
+def _reading_windows(width: int) -> set[str]:
+    reading = json.loads(SELECTED_READING.read_bytes())
+    windows: set[str] = set()
+    for page in reading["pages"]:
+        for block in page["blocks"]:
+            plain = _plain(block["text"])
+            for start in range(0, max(1, len(plain) - width + 1)):
+                piece = plain[start : start + width]
+                if len(piece) == width:
+                    windows.add(piece)
+    return windows
+
+# ...
+def test_no_frozen_artifact_reproduces_the_reading() -> None:
+    windows = _reading_windows(LEAK_WINDOW)
+
+    for relative in FROZEN_ARTIFACTS:
+        text = _plain((HERE / relative).read_text(encoding="utf-8"))
+        shared = [
+            text[start : start + LEAK_WINDOW]
+            for start in range(0, max(1, len(text) - LEAK_WINDOW + 1))
+            if text[start : start + LEAK_WINDOW] in windows
+        ]
+        assert shared == [], (relative, shared[:1])

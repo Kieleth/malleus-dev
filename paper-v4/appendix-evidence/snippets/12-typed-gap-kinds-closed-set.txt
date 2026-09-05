@@ -1,0 +1,14 @@
+# source: src/malleus/_contract_pipeline/population.py, lines 123-132
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The gap vocabulary is a closed set in Core. A capture naming any other kind
+# refuses with UNKNOWN_GAP_KIND; a producer cannot mint a gap kind.
+_GAP_KINDS = frozenset(
+    {
+        "AGGREGATE_ONLY",
+        "INTERVAL_NOT_EXPRESSIBLE",
+        "MODALITY_NOT_EXPRESSIBLE",
+        "RELATION_ABSENT",
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+        "TYPE_ABSENT",
+    }
+)

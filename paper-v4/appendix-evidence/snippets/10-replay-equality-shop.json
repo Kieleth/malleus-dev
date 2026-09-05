@@ -1,0 +1,31 @@
+# source: research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json (excerpt)
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The calibration fixture with no model in it: five accepted change sets, one
+# additive contract revision, 48 ledger events, nine current and ten
+# historical records, all reproduced byte for byte on rerun.
+{
+  "claim": "The public Malleus facade deterministically compiles, admits, reopens, replays, queries, and traces the complete Small Shop fixture.",
+  "contract_revision": {
+    "count": 1,
+    "identities": [
+      "sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17",
+      "sha256:0e1f03bc16861a2cfbca6879a40a8329448ba44a436ddff421458906aa92c5c7"
+    ],
+    "revision_identity": "sha256:d74dcd6bcfa10c9bac9a2c1131cb131fa6c90a69be2515b3d0cf4d0837a77e9f"
+  },
+  "grammar": "malleus.small-shop.full-public-population-evidence/private-v0",
+  "history": {
+    "acceptance_head": "sha256:40aef4714385eba826aadde4c7291d41bcf6434c40c20ab002a1252fd7de49f5",
+    "change_set_count": 5,
+    "graph_state_digest": "sha256:b7ee85186b24453b276c4f33b29b49e6100bb8dc225766932f496c88f499a058",
+    "ledger_event_count": 48,
+    "ledger_head": "sha256:40aef4714385eba826aadde4c7291d41bcf6434c40c20ab002a1252fd7de49f5",
+    "ledger_sha256": "sha256:eb0cb36db45800f133181f13c16d29b18fed55461889105c3057fbf15b64fe94",
+    "materialization_head": "sha256:d4f83826af62b0c92330c4d3d2aabad8f3a7c584c37f5c153ef90284a7231fb0",
+    "receipt_identity": "sha256:125062cf210a2ac98035550f2cf9b7f0a3a17f5babfefac04a4c62de5578ecf1"
+  },
+  "record_counts": {
+    "current": 9,
+    "historical": 10
+  }
+}

@@ -1,0 +1,30 @@
+# source: paper-v4/experiment-v4/run-05/results/withheld-artifacts.json, check block plus two of eleven withheld rows
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The frozen rule: no public file may share a 60-character run with any
+# reading block after whitespace collapse. Every public file measures 0; each
+# withheld file is named by identity and by what it carries.
+{
+  "check": {
+    "frozen_threshold": "NO_PUBLIC_FILE_SHARES_A_60_CHARACTER_RUN",
+    "ladder": [
+      40,
+      60,
+      80,
+      120,
+      200,
+      320
+    ],
+    "method": "SHARED_NORMALIZED_CHARACTER_RUN_AGAINST_EVERY_READING_BLOCK",
+    "normalization": "UNICODE_WHITESPACE_COLLAPSED_TO_SINGLE_SPACE"
+  },
+  "public_files_measured_count": 14,
+  "public_files_measured_max": 0,
+  "reason": "Each file below reproduces text of the selected reading. Only its identity is public.",
+  "schema": "malleus.paper-v4.run-05-withheld-artifacts/v1",
+  "withheld[0]": {
+    "carries": "PRODUCER_CAPTURE_ASSERTIONS_QUOTING_THE_READING",
+    "name": "document-population.json",
+    "sha256": "sha256:bccea679a5a4c390cc4b909134f54ec246cb19e8c6b43226a79777144c93c9f6",
+    "shared_run_chars_at_least": 80
+  }
+}

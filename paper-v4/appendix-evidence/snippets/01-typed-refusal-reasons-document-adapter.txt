@@ -1,0 +1,25 @@
+# source: src/malleus/_contract_pipeline/document.py, lines 51-70
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The closed set of typed refusals the public document adapter raises. A
+# refusal names one reason and a detail; there is no untyped failure and no
+# repair path.
+
+
+class DocumentAssertionRefusalReason(str, Enum):
+    FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
+    GAP_REQUIRED = "GAP_REQUIRED"
+    MALFORMED_CAPTURE = "MALFORMED_CAPTURE"
+    MALFORMED_READING = "MALFORMED_READING"
+    NOT_VERBATIM = "NOT_VERBATIM"
+    READING_MISMATCH = "READING_MISMATCH"
+    UNKNOWN_BLOCK = "UNKNOWN_BLOCK"
+    UNKNOWN_FORMALIZATION_TARGET = "UNKNOWN_FORMALIZATION_TARGET"
+    UNKNOWN_GAP_KIND = "UNKNOWN_GAP_KIND"
+    UNKNOWN_MODALITY = "UNKNOWN_MODALITY"
+    UNSUPPORTED_GRAMMAR = "UNSUPPORTED_GRAMMAR"
+
+
+class DocumentAssertionRefusal(ValueError):
+    def __init__(self, reason: DocumentAssertionRefusalReason, detail: str) -> None:
+        self.reason = reason
+        self.detail = detail

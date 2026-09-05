@@ -1,0 +1,40 @@
+# source: research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json, records[0]
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The same trace with no model in it; two evidence and one source row elided.
+{
+  "change_set_id": "change:plan:small-shop:ret010",
+  "contract_identity": "sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17",
+  "derivations": [
+    {
+      "locator": "row:0:order",
+      "path": [
+        "properties",
+        "order_number"
+      ],
+      "record_id": "O1",
+      "source_id": "source:small-shop:warehouse"
+    }
+  ],
+  "evidence": [
+    {
+      "record_id": "profile:state-version",
+      "sha256": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"
+    }
+  ],
+  "history_profile": {
+    "profile_id": "state-version",
+    "sha256": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"
+  },
+  "population_plan": {
+    "plan_id": "plan:small-shop:ret010",
+    "sha256": "sha256:3fbf7b59199ac58de24b2924a484e900d43a117dbb6cc262fd636c1dfa8d0f2a"
+  },
+  "record_id": "O1",
+  "record_type": "SalesOrder",
+  "sources": [
+    {
+      "record_id": "source:small-shop:warehouse",
+      "sha256": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e"
+    }
+  ]
+}

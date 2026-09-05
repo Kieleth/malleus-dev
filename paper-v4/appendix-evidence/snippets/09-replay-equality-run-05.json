@@ -1,0 +1,28 @@
+# source: paper-v4/experiment-v4/run-05/results/run-result.json (excerpt)
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The in-memory handles were discarded, the file-backed ledger reopened and
+# replayed, and the replayed receipt and export compared to the admitted ones.
+# Both comparisons are true, per record.
+{
+  "actor_id": "actor:overseer-run-05",
+  "admitted_receipt_sha256": "sha256:5895a803aa651793c26f37e7b4d4ce5c65306a4d02d30a2839b1df0ff8490611",
+  "change_set_id": "change:plan:paper-v4:yu-2025:v4:5",
+  "export_records_sha256": "sha256:e804642120bbcbfc182386ce00111050c232bbcdbfead36556686a42b4009345",
+  "graph": {
+    "entities": 47,
+    "event_participations": 0,
+    "events": 1,
+    "relations": 26,
+    "signals": 0
+  },
+  "ledger_event_count": 14,
+  "ledger_head": "sha256:f3acd8d62ce20a83101845fd22db24e9acb333d91a9d1ba0a90fdf7cd12bd1b2",
+  "records_traced": 74,
+  "reopen_matches_admitted": {
+    "export_records": true,
+    "receipt": true
+  },
+  "replay_receipt_sha256": "sha256:5895a803aa651793c26f37e7b4d4ce5c65306a4d02d30a2839b1df0ff8490611",
+  "status": "ADMITTED_AND_REPLAYED",
+  "transaction_time": "2026-09-05T00:33:07Z"
+}

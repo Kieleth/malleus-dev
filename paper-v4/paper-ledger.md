@@ -3006,3 +3006,30 @@ Non-claim: admission is structural acceptance, not adequacy. No preliminary
 review exists yet; nothing here is paper evidence until Luis ratifies a review
 record. Run-02 (v4) and run-04 (v4.1) are the same model on two harness
 iterations and are not compared here.
+
+### E-0134, corrections to E-0131 and E-0132 found by the deep sweep
+
+Date: 2026-09-05
+
+Sources: `handover/2026-09-05-deep-sweep.md` (D-03 and the E-0131 finding),
+`paper-v4/experiment-v4/run-05/results/query-trace-summary.json`,
+`paper-v4/evaluation-v4/` (which holds run-02's preliminary record and no human
+record).
+
+Correction 1, E-0131. The entry says the query trace summary for run-05 covers
+"4 witnesses". The artifact's `witnesses_traced` field reads 44 and it lists 44
+records; the overseer counted the file's top-level keys instead of its
+witnesses. The public artifact was right; the sentence was wrong.
+
+Correction 2, E-0132. The entry says run-05's human record is "the second
+ratified review record of the paper, after run-02's". Run-02's preliminary
+record (`paper-v4/evaluation-v4/review-record.preliminary.md`) carries
+PRELIMINARY_COMPLETE with disposition PENDING; no `review-record.human.md`
+exists for run-02 and the manuscript still carries the placeholder sentence in
+section 4.2. Run-05's is the first ratified review record of the paper. The
+overseer's journal (`handover/2026-09-05-overseer-journal.md`) carried the same
+error in its cell table and is corrected in the same commit as this entry.
+
+Neither correction changes a result, a digest or a judgment. Both were found by
+a fresh sweep of the record against the artifacts, which is the check that
+should have run before the entries were written.

@@ -1,0 +1,36 @@
+# source: research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py, lines 96-125
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The calibration's own test: rerun produces byte-identical evidence, the
+# reopened replay reproduces the receipt and the graph, the ledger file is
+# unchanged by tracing, and the history holds five change sets under two
+# contract identities.
+def test_full_run_admits_reopens_queries_and_traces_every_record(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    output = tmp_path / "full-shop"
+
+    first = module.run_full_shop(output)
+    ledger_before_trace = (output / "history.jsonl").read_bytes()
+    second = module.run_full_shop(output)
+
+    assert first.evidence_bytes == second.evidence_bytes
+    assert first.evidence_bytes == EXPECTED_EVIDENCE.read_bytes()
+    evidence = json.loads(first.evidence_bytes)
+    assert evidence["history"]["ledger_sha256"] == (
+        "sha256:" + sha256(ledger_before_trace).hexdigest()
+    )
+    assert first.replay.receipt == second.replay.receipt
+    assert (output / "history.jsonl").read_bytes() == ledger_before_trace
+
+    old_graph = json.loads(OLD_GRAPH.read_bytes())
+    new_graph = second.replay.graph.snapshot()
+    assert new_graph["nodes"] == old_graph["nodes"]
+    assert new_graph["relations"] == old_graph["relations"]
+    assert set(second.replay.record_history) == HISTORICAL_RECORD_IDS
+    assert {record["id"] for record in new_graph["nodes"]} | {
+        record["key"] for record in new_graph["relations"]
+    } == CURRENT_RECORD_IDS
+    assert len(second.replay.change_sets) == 5
+    assert len(second.replay.contract_revisions) == 1
+    assert len({change.contract_identity for change in second.replay.change_sets}) == 2

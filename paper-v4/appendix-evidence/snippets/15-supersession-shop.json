@@ -1,0 +1,35 @@
+# source: research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json, the two SupplierOrderState records (derivations elided)
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The property the document runs never exercise: a later change supersedes an
+# earlier record. Both stay in history; only e7 is current.
+[
+  {
+    "change_set_id": "change:plan:small-shop:supplier-e4",
+    "contract_identity": "sha256:0e1f03bc16861a2cfbca6879a40a8329448ba44a436ddff421458906aa92c5c7",
+    "record_id": "supplier-order-state:B:e4",
+    "record_type": "SupplierOrderState",
+    "superseded_by": "supplier-order-state:B:e7",
+    "supersedes_record_id": null,
+    "valid_from": {
+      "kind": "ORDER_ONLY",
+      "value": "e4"
+    },
+    "valid_to": {
+      "kind": "ORDER_ONLY",
+      "value": "e7"
+    }
+  },
+  {
+    "change_set_id": "change:plan:small-shop:supplier-e7",
+    "contract_identity": "sha256:0e1f03bc16861a2cfbca6879a40a8329448ba44a436ddff421458906aa92c5c7",
+    "record_id": "supplier-order-state:B:e7",
+    "record_type": "SupplierOrderState",
+    "superseded_by": null,
+    "supersedes_record_id": "supplier-order-state:B:e4",
+    "valid_from": {
+      "kind": "ORDER_ONLY",
+      "value": "e7"
+    },
+    "valid_to": null
+  }
+]

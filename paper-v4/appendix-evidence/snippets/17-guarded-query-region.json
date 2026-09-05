@@ -1,0 +1,25 @@
+# source: paper-v4/experiment-v4/run-05/results/launch-log.json, query block
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The query ran over the reopened ledger inside a guard that counts file
+# opens, socket and name-resolution calls, and imports of named embedding
+# packages. All three counts are zero. This is a Python-level observation, not
+# an operating-system sandbox.
+{
+  "binding": "results/native-query-binding.json (type-only, from the accepted surface; 4 questions x 6 cases; one relation type on the surface)",
+  "bound_after_replay_receipt_sha256": "sha256:5895a803aa651793c26f37e7b4d4ce5c65306a4d02d30a2839b1df0ff8490611",
+  "bound_at": "2026-09-05T00:35:00Z",
+  "forbidden_attempts": {
+    "embedding_import": 0,
+    "file_read": 0,
+    "network": 0
+  },
+  "graph_state_digest": "sha256:3303aa621b39f65debac0c506a59233490346248954b951ec22578c92125f91c",
+  "result": "query/query-result.json",
+  "rows_by_question": {
+    "NQ-CQ-01": 2,
+    "NQ-CQ-02": 5,
+    "NQ-CQ-03": 9,
+    "NQ-CQ-04": 13
+  },
+  "rows_total": 29
+}

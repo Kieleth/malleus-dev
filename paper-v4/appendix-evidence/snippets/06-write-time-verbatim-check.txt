@@ -1,0 +1,26 @@
+# source: src/malleus/_contract_pipeline/document.py, lines 231-232 and 305-320
+# read at commit: 77058f7326a03e788da0b3d6f40484ad9b1e8337
+# The verbatim rule as executable code: the captured statement must be a
+# substring of its named block after whitespace collapse, checked before any
+# plan is emitted.
+def _normalise(text: str) -> str:
+    return " ".join(text.split())
+
+# ...
+
+    defects: list[_Defect] = []
+    for _, assertion_id, block_id, statement in checked:
+        if block_id not in block_text:
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.UNKNOWN_BLOCK,
+                    assertion_id,
+                    f"assertion {assertion_id} names unknown block {block_id}",
+                )
+            )
+            continue
+        if _normalise(statement) not in _normalise(block_text[block_id]):
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.NOT_VERBATIM,
+                    assertion_id,
