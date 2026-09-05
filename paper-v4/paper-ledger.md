@@ -3965,3 +3965,25 @@ entity's tags with whitespace ignored (Core-15), run-11 on the same harness.
 
 Non-claim: one cell per iteration; the preliminary record is not paper
 evidence until ratified.
+
+### E-0149, run-11 is pinned to the v4.5 Core coordinate
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-11/run-contract.json` and
+`producer-input-manifest.json` as rewritten by `pin.py --commit 9d789f2`, the
+governance ledger through OVR-000410, and E-0147.
+
+Coordinates: Core commit `9d789f2a2ab0d02d6de995acfd922e9a3e8eefd5` (the head after Core-15's
+commits and its governance entry OVR-000410), replacing E-0147's provisional
+pin. Core-15 landed: the subject check accepts the subject entity's `name` or
+any of its `tags` and compares with whitespace removed (decision 20; no new
+slot, no new reason; the SUBJECT_NOT_NAMED message names the forms tried); one
+skill clause says the source's other forms of a name go in `tags`. One declared
+input moved against run-10: the skill. The protocol version is v4.5 because a
+version is a change list and run-11's has one more entry than run-10's.
+
+Non-claim: no producer has run at this coordinate. Expected effect, stated
+before the run: subject refusals near the fourteen that were genuinely unnamed
+in run-10; coverage above 114 of 235; CQ-01 and CQ-04 regaining their missing
+semantics if the producer attaches them.
