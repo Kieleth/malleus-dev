@@ -1,0 +1,300 @@
+{
+ "schema": "malleus.paper-v4.producer-launch-log/v2",
+ "run": "run-13",
+ "protocol": "v4.7",
+ "launches": [
+  {
+   "ordinal": 1,
+   "role": "PRODUCER",
+   "phase": "ONTOLOGY",
+   "first_stage": "ONTOLOGY_ATTEMPT_01",
+   "launched_at": "2026-09-05T12:57:11Z",
+   "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+   "requested_model": "opus",
+   "model_family": "Claude Opus 5",
+   "model_id": "claude-opus-5",
+   "spawn_message": "paper-v4/experiment-v4/run-13/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+   "outcome": "POPULATION_READY",
+   "execution": {
+    "pinned_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+    "paper_commit": "8aa8072",
+    "staged_at": "2026-09-05T12:57:11Z",
+    "interpreter": "VERIFIED by prepare_producer.py preflight"
+   },
+   "phase_two": {
+    "dispatched_at": "2026-09-05T13:15:31Z",
+    "after_binding_frozen_at": "2026-09-05T13:15:03Z",
+    "message": "run-12's phase-two message with run-13's coordinates and fact count",
+    "capture_id": "capture:paper-v4:yu-2025:v4:13",
+    "plan_id": "plan:paper-v4:yu-2025:v4:13",
+    "staged": [
+     "producer/accepted/population-surface.json",
+     "producer/accepted/diagnostic.json"
+    ]
+   },
+   "usage_cumulative": {
+    "tokens": 168092,
+    "tool_uses": 14,
+    "duration_ms": 885579
+   },
+   "usage_by_resume": [
+    {
+     "after": "POPULATION",
+     "tokens": 383284,
+     "tool_uses": 32,
+     "duration_ms": 3232854
+    }
+   ],
+   "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures"
+  }
+ ],
+ "gate": [
+  {
+   "attempt": 1,
+   "ontology_sha256": "sha256:39c72202cc44fa30475baa6c0957f64409e93d8190d0a646993efab0262eaf68",
+   "status": "ACCEPTED",
+   "validated_fact_set_sha256": "sha256:f971d03ca020fd306eda05732af3f27a960da7e5e74529e528d0e28f0f37db36",
+   "fact_count": 4943,
+   "accepted_at": "2026-09-05T13:12:33Z",
+   "families_admitted": [
+    "entities",
+    "events",
+    "relations"
+   ],
+   "surface_families": {
+    "ENTITY": 40,
+    "EVENT": 2,
+    "RELATION": 3
+   },
+   "event_types": [
+    "Event",
+    "SeismicEvent"
+   ],
+   "relation_types": [
+    "ContributionRelation",
+    "ResearchRelation",
+    "ProjectRelation"
+   ],
+   "subject_bearing_types": [
+    "Claim",
+    "Observation",
+    "CountedObservation",
+    "GeochemicalObservation",
+    "QuantityRatio",
+    "SeismicEvent",
+    "SeismicObservation"
+   ],
+   "note": "accepted at attempt 01; 30 project classes, five root extensions (GeologicFeature, EarthMaterial, ResearchAgent, SeismicEvent, ProjectRelation); SeismicEvent carries subject through Quantified; gate output first written under producer/gate and moved to gate/ by the overseer before binding",
+   "phase_two_inputs_staged": [
+    "accepted/population-surface.json",
+    "accepted/diagnostic.json"
+   ],
+   "diagnostic_returns_used": 0,
+   "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-05T13:13:00Z",
+    "urls": 6,
+    "result": "w3.org/TR/prov-o fetched: defines Agent, Person, Organization, used; w3.org/TR/vocab-ssn fetched: defines sosa:FeatureOfInterest; obofoundry.org/ontology/ro.html fetched: RO page, names 'part of'; 'located in' (RO_0001025) and 'adjacent to' (RO_0002220) confirmed by label through the EBI OLS API; schema.org fetched, and schema.org/affiliation and schema.org/funder fetched with their definitions; www.ogc.org/standards/geosciml NOT fetched (DNS lookup failed from this environment on two attempts, also for /standard/geosciml/); geosciml.org fetched and states GeoSciML is a data model and transfer standard for geological data, with the class names on its linked UML models and not on the landing page; quakeml.org NOT fetched (the host serves a certificate for quake.ethz.ch); quake.ethz.ch/quakeml fetched and states QuakeML is an XML representation of seismological data covering a basic seismic event description, without listing event, origin, magnitude, focal mechanism on the landing page",
+    "unverified": [
+     "https://www.ogc.org/standards/geosciml (transport; vocabulary confirmed at geosciml.org)",
+     "https://quakeml.org/ (transport; vocabulary confirmed at quake.ethz.ch/quakeml)"
+    ],
+    "checked_at_precision": "minute, from the session clock; fetches ran between the gate and the type sets",
+    "fabricated": 0,
+    "fabricated_basis": "none of the six names a standard or a term that does not exist; the two unfetched URLs point at standards confirmed at their other homes"
+   }
+  }
+ ],
+ "runner": [
+  {
+   "attempt": 1,
+   "transaction_time": "2026-09-05T14:09:48Z",
+   "execution_commit": "8aa8072",
+   "core_note": "Core files at the pinned coordinate 12a04a9 (OVR-000412); the one commit between is the pin (paper files)",
+   "status": "ADMITTED_AND_REPLAYED",
+   "graph": {
+    "entities": 440,
+    "event_participations": 0,
+    "events": 1,
+    "relations": 28,
+    "signals": 0
+   },
+   "ledger_event_count": 14,
+   "records_traced": 469,
+   "reopen_matches_admitted": {
+    "export_records": true,
+    "receipt": true
+   },
+   "census": {
+    "assertions": {
+     "FULLY_FORMALIZED": 357,
+     "PARTLY_FORMALIZED": 10,
+     "UNFORMALIZED": 7
+    },
+    "blocks_reviewed": 186,
+    "blocks_total": 186,
+    "capture_sha256": "sha256:dfa8c3f45bd2c7bcd460a1b5ac9d0dbaf1837c8cc23d4188806681b1f1868a17",
+    "gaps_by_kind": {
+     "INTERVAL_NOT_EXPRESSIBLE": 2,
+     "RELATION_ABSENT": 13,
+     "REQUIRED_FIELD_ABSENT_IN_SOURCE": 1,
+     "TYPE_ABSENT": 1
+    }
+   },
+   "derivation_census": {
+    "non_local_relations": 5,
+    "top_hubs": [
+     {
+      "assertion": "a:p8b3:3",
+      "records": 8
+     },
+     {
+      "assertion": "a:p1b5:3",
+      "records": 7
+     },
+     {
+      "assertion": "a:p1b1:7",
+      "records": 6
+     },
+     {
+      "assertion": "a:p1b5:5",
+      "records": 6
+     },
+     {
+      "assertion": "a:p1b6:6",
+      "records": 6
+     }
+    ],
+    "fan_out_distribution": {
+     "0": 7,
+     "1": 265,
+     "2": 60,
+     "3": 22,
+     "4": 11,
+     "5": 2,
+     "6": 5,
+     "7": 1,
+     "8": 1
+    }
+   },
+   "subject_coverage": {
+    "ambiguous": 49,
+    "attachable": 33,
+    "by_type": {
+     "Claim": {
+      "ambiguous": 29,
+      "attachable": 14,
+      "proposed": 44,
+      "total": 128,
+      "unnamed": 41,
+      "with_subject": 44,
+      "without_subject": 84
+     },
+     "CountedObservation": {
+      "ambiguous": 4,
+      "attachable": 4,
+      "proposed": 8,
+      "total": 22,
+      "unnamed": 6,
+      "with_subject": 8,
+      "without_subject": 14
+     },
+     "GeochemicalObservation": {
+      "ambiguous": 1,
+      "attachable": 0,
+      "proposed": 18,
+      "total": 19,
+      "unnamed": 0,
+      "with_subject": 18,
+      "without_subject": 1
+     },
+     "Observation": {
+      "ambiguous": 7,
+      "attachable": 3,
+      "proposed": 23,
+      "total": 42,
+      "unnamed": 9,
+      "with_subject": 23,
+      "without_subject": 19
+     },
+     "QuantityRatio": {
+      "ambiguous": 2,
+      "attachable": 1,
+      "proposed": 0,
+      "total": 3,
+      "unnamed": 0,
+      "with_subject": 0,
+      "without_subject": 3
+     },
+     "SeismicEvent": {
+      "ambiguous": 0,
+      "attachable": 0,
+      "proposed": 1,
+      "total": 1,
+      "unnamed": 0,
+      "with_subject": 1,
+      "without_subject": 0
+     },
+     "SeismicObservation": {
+      "ambiguous": 6,
+      "attachable": 11,
+      "proposed": 17,
+      "total": 54,
+      "unnamed": 20,
+      "with_subject": 17,
+      "without_subject": 37
+     }
+    },
+    "proposed": 111,
+    "total": 269,
+    "unnamed": 76,
+    "with_subject": 111,
+    "without_subject": 158
+   },
+   "gaps_by_kind": {
+    "INTERVAL_NOT_EXPRESSIBLE": 2,
+    "RELATION_ABSENT": 13,
+    "REQUIRED_FIELD_ABSENT_IN_SOURCE": 1,
+    "TYPE_ABSENT": 1
+   },
+   "structural_diagnostic_returns_used": 0,
+   "admitted_at": "2026-09-05T14:09:48Z"
+  }
+ ],
+ "query": {
+  "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "bound_at": "2026-09-05T13:15:03Z",
+  "type_sets": "query-type-sets.json",
+  "type_sets_sha256": "sha256:7efee25bfecf7d46ac149e7bfe1ed9cae5d7363b27a078a1c9468969816bceba",
+  "type_sets_note": "query-type-sets.note.json",
+  "binding_at_acceptance": "query-binding.acceptance.json",
+  "binding_at_acceptance_sha256": "sha256:0d065b0276889c1d94ca26d04b4051565ae4db23b83b6ddd9d1958af93e1d73e",
+  "cases_sha256": "sha256:5840b7b1794e7e6b1262736dcf90fb7be1137653492ca0e64bcfc99dcaf183a2",
+  "cases": 3013,
+  "cases_by_kind": {
+   "ENTITY": 39,
+   "RELATION": 2697,
+   "SUBJECT": 277
+  },
+  "phase_two_dispatched_after": true,
+  "executed_at": "2026-09-05T14:11:07Z",
+  "binding_executed": "results/native-query-binding.json",
+  "bound_after_replay_receipt_sha256": "sha256:4b4d54335fe091677cd5224abe4685d653c5e806657bbe4d11de2c58a477cac0",
+  "cases_sha256_matches_acceptance": true,
+  "result": "query/query-result.json",
+  "rows_by_question": {
+   "NQ-CQ-01": 63,
+   "NQ-CQ-02": 127,
+   "NQ-CQ-03": 176,
+   "NQ-CQ-04": 149
+  },
+  "rows_total": 515,
+  "forbidden_attempts": {
+   "embedding_import": 0,
+   "file_read": 0,
+   "network": 0
+  },
+  "graph_state_digest": "sha256:d13e529cb26a729ebab91532cdff545a76a08e83984fc94c451c60e7c57a7bf5"
+ },
+ "review": {}
+}

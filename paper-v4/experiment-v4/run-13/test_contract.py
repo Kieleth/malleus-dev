@@ -1906,14 +1906,23 @@ def test_the_earlier_cell_artifacts_are_untouched() -> None:
         assert _digest(HERE.parent / relative) == digest, relative
 
 
-def test_the_evaluation_directory_carries_the_blank_record_and_nothing_yet() -> None:
-    """Written at open: the blank. The manifest, the task and the records land
-    at freeze and are not pinned by this test."""
-
+def test_the_evaluation_directory_carries_the_frozen_review_package() -> None:
     directory = EVALUATION / "run-13"
     present = {path.name for path in directory.iterdir() if path.name != "__pycache__"}
 
-    assert present == {"review-record.blank.md"}
+    assert {
+        "review-input-manifest.json",
+        "review-record.blank.md",
+        "review-record.run-13.blank.md",
+        "review-task.md",
+    } <= present
+    manifest = json.loads((directory / "review-input-manifest.json").read_bytes())
+    assert manifest["run_id"] == "run-13"
+    assert [item["name"] for item in manifest["materials"]][-2:] == [
+        "retained_capture",
+        "query_trace_summary",
+    ]
+    assert "{{" not in (directory / "review-task.md").read_text(encoding="utf-8")
 
 
 # Nothing public may reproduce the reading. Sixty normalized characters is the
@@ -1934,16 +1943,264 @@ def _reading_windows(width: int) -> set[str]:
     return windows
 
 
-def test_the_result_directories_are_empty_until_the_producer_runs() -> None:
+# The exact bytes this run leaves in the repository. A frozen run is a closed
+# set: a file added, removed or rewritten later is a different run.
+FROZEN_ARTIFACTS = {
+    "ontology-run/attempt-01-diagnostic.json": (
+        "sha256:795be7f1a2ba4e1743fec4a635362b593f0a87f629693aa517c168ae3200fa61"
+    ),
+    "ontology-run/grounding-receipt.json": (
+        "sha256:7b963c5c850565058fa7304703478e26f46df038057047b99bd34a96a35ef00e"
+    ),
+    "ontology-run/ontology-01.yaml": (
+        "sha256:39c72202cc44fa30475baa6c0957f64409e93d8190d0a646993efab0262eaf68"
+    ),
+    "ontology-run/population-surface.json": (
+        "sha256:6f5b5c14cc99be14547cb23dbcee05815c1789a1e95ef4fe79021eeb590a9962"
+    ),
+    "ontology-run/result.json": (
+        "sha256:587d17aa730744c4d6293be39bdb5e5d0d519cd55aa69b545063959ff97c82c9"
+    ),
+    "ontology-run/validated-contract.json": (
+        "sha256:c330cc9e5295a7798102c96fac9630c699d1a4c9bad0c5c6f844a1067ae27930"
+    ),
+    "results/census.json": (
+        "sha256:deac3eb8776f81ba8d217d09e333b24b627c3f396bb309cace281a359f873591"
+    ),
+    "results/launch-log.json": (
+        "sha256:1b7647b909b504463a1e552bbebd44a541061f93f8afeb7c49c4e978b1273006"
+    ),
+    "results/native-query-binding.json": (
+        "sha256:7bf2b6051103f632e1a8e0a60dc5194722b7aafa1397ac6df3ee52f67b592318"
+    ),
+    "results/paper-events.json": (
+        "sha256:020f3284bdc07ba0509e9a2a30088558eb7d25ef864a6f44de870fc099466e56"
+    ),
+    "results/query-binding.acceptance.json": (
+        "sha256:0d065b0276889c1d94ca26d04b4051565ae4db23b83b6ddd9d1958af93e1d73e"
+    ),
+    "results/query-trace-summary.json": (
+        "sha256:5807d6e246a62b7a8e65345e6e11666e2beb4ed4c2dd2ee2c9e9089836796984"
+    ),
+    "results/query-type-sets.json": (
+        "sha256:7efee25bfecf7d46ac149e7bfe1ed9cae5d7363b27a078a1c9468969816bceba"
+    ),
+    "results/query-type-sets.note.json": (
+        "sha256:98bf937e3ee83c034fbd1a1d7564ba0dd422405da314d243c2c47e08dce7381d"
+    ),
+    "results/run-result.json": (
+        "sha256:b309d7930b85ba740232d41494ad609170d1bddc6a75f4b643a5782a48319f92"
+    ),
+    "results/trace-summary.json": (
+        "sha256:23226d46709383bb52b43a542e313ddf33dcd6bb5dcdd11441d9f426115c6c99"
+    ),
+    "results/transaction-time.txt": (
+        "sha256:7b8a04afac3ab73bd890105c06bdf4f6e4a79e3b3161cc774c560f1bf64b10bb"
+    ),
+    "results/usage.json": (
+        "sha256:0acfb32900cc1264a044e58407aed07955388a06933571dc9e9b7ca8ae34a1ae"
+    ),
+    "results/withheld-artifacts.json": (
+        "sha256:eb154388d77ac58f3b360ef933a312847503cf0233e326e7e847126cdd6fda63"
+    ),
+}
+
+# Nothing public may reproduce the reading. Sixty normalized characters is the
+# threshold every frozen file clears.
+LEAK_WINDOW = 60
+WITHHELD_NAMES = [
+    "document-population.json",
+    "export-records.json",
+    "gaps.json",
+    "history.jsonl",
+    "population-plan.json",
+    "query-result.json",
+    "replay-receipt.json",
+    "retained-capture.json"
+]
+RUNNER_STATUSES = ["ADMITTED_AND_REPLAYED"]
+EXECUTION_COMMIT = "8aa8072"
+USAGE_STAGES = ["ONTOLOGY_ATTEMPT_01", "POPULATION"]
+
+
+def _reading_windows(width: int) -> set[str]:
+    reading = json.loads(SELECTED_READING.read_bytes())
+    windows: set[str] = set()
+    for page in reading["pages"]:
+        for block in page["blocks"]:
+            plain = _plain(block["text"])
+            for start in range(0, max(1, len(plain) - width + 1)):
+                piece = plain[start : start + width]
+                if len(piece) == width:
+                    windows.add(piece)
+    return windows
+
+
+def test_the_frozen_artifact_set_is_exact_and_digest_pinned() -> None:
     for name in ("ontology-run", "results"):
         directory = HERE / name
         assert directory.is_dir()
         observed = sorted(
-            path.name
+            f"{name}/{path.name}"
             for path in directory.iterdir()
-            if path.is_file() and path.suffix != ".pyc"
+            if path.is_file() and path.suffix != ".pyc" and path.name != ".gitkeep"
         )
-        assert observed == [".gitkeep"], name
+        expected = sorted(
+            relative for relative in FROZEN_ARTIFACTS if relative.startswith(f"{name}/")
+        )
+        assert observed == expected
+    for relative, digest in FROZEN_ARTIFACTS.items():
+        assert _digest(HERE / relative) == digest, relative
+
+
+def test_no_frozen_artifact_reproduces_the_reading() -> None:
+    windows = _reading_windows(LEAK_WINDOW)
+
+    for relative in FROZEN_ARTIFACTS:
+        text = _plain((HERE / relative).read_text(encoding="utf-8"))
+        shared = [
+            text[start : start + LEAK_WINDOW]
+            for start in range(0, max(1, len(text) - LEAK_WINDOW + 1))
+            if text[start : start + LEAK_WINDOW] in windows
+        ]
+        assert shared == [], (relative, shared[:1])
+
+
+def test_every_withheld_artifact_is_named_by_identity_and_stays_private() -> None:
+    record = json.loads((HERE / "results/withheld-artifacts.json").read_bytes())
+    public = {Path(relative).name for relative in FROZEN_ARTIFACTS}
+
+    assert record["schema"] == "malleus.paper-v4.run-13-withheld-artifacts/v1"
+    assert record["run_id"] == "run-13"
+    names = [item["name"] for item in record["withheld"]]
+    assert sorted(names) == WITHHELD_NAMES
+    assert not set(names) & public
+    assert max(record["check"]["public_files_measured"].values()) < LEAK_WINDOW
+    for item in record["withheld"]:
+        private = item["private_path"]
+        assert private.startswith("private/paper-v4-v4-run-13/")
+        assert _digest(ROOT / private) == item["sha256"], private
+
+
+def test_the_ontology_run_result_records_one_accepted_attempt() -> None:
+    result = json.loads((HERE / "ontology-run/result.json").read_bytes())
+    producer = result["producer"]
+    attempts = result["attempts"]
+
+    assert result["schema"] == "malleus.paper-v4.ontology-run-result/v1"
+    assert result["status"] == "ACCEPTED"
+    assert result["run_id"] == "run-13"
+    assert result["core"] == {
+        "commit": _contract()["core_gate"]["execution_baseline"]["core_commit"],
+        "tree": _contract()["core_gate"]["execution_baseline"]["core_tree"],
+    }
+    assert result["producer_input_manifest_sha256"] == _digest(PRODUCER_MANIFEST)
+    assert producer["kind"] == "CLAUDE_CODE_FRESH_SUBAGENT"
+    assert producer["requested_model"] == "opus"
+    assert producer["model_id"] == "claude-opus-5"
+    assert producer["questions_visible"] is False
+    assert producer["fallback_used"] is False
+    assert producer["hand_repair_used"] is False
+    log = json.loads((HERE / "results/launch-log.json").read_bytes())
+    assert producer["diagnostic_returns"] == len(log["gate"]) - 1
+    assert [item["status"] for item in attempts] == ["ACCEPTED"]
+    for item in attempts:
+        assert _digest(ROOT / item["ontology_path"]) == item["ontology_sha256"]
+        assert _digest(ROOT / item["diagnostic_path"]) == item["diagnostic_sha256"]
+    accepted = result["accepted"]
+    assert accepted["fact_count"] == 4943
+    assert accepted["population_surface_families"] == {"ENTITY": 40, "EVENT": 2, "RELATION": 3}
+    assert result["citation_check"]["fabricated"] == 0
+    assert result["citation_check"]["urls"] == 6
+
+
+def test_the_accepted_surface_carries_event_and_three_relation_types() -> None:
+    surface = json.loads((HERE / "ontology-run/population-surface.json").read_bytes())
+    by_family: dict[str, list[str]] = {}
+    for item in surface["record_types"]:
+        by_family.setdefault(item["family"], []).append(item["name"])
+
+    assert sorted(by_family) == ["ENTITY", "EVENT", "RELATION"]
+    assert sorted(by_family["EVENT"]) == ["Event", "SeismicEvent"]
+    assert sorted(by_family["RELATION"]) == ["ContributionRelation", "ProjectRelation", "ResearchRelation"]
+
+
+def test_the_run_result_is_admitted_replayed_and_binds_the_frozen_stage() -> None:
+    result = json.loads((HERE / "results/run-result.json").read_bytes())
+    census = json.loads((HERE / "results/census.json").read_bytes())
+    events = json.loads((HERE / "results/paper-events.json").read_bytes())
+    ontology_run = json.loads((HERE / "ontology-run/result.json").read_bytes())
+
+    assert result["status"] == "ADMITTED_AND_REPLAYED"
+    assert result["run_id"] == "run-13"
+    assert result["actor_id"] == "actor:overseer-run-13"
+    assert (
+        result["transaction_time"]
+        == (HERE / "results/transaction-time.txt").read_text(encoding="utf-8").strip()
+    )
+    assert result["ontology_sha256"] == ontology_run["accepted_ontology_sha256"]
+    assert result["reading_sha256"] == _contract()["source"]["selected_reading_sha256"]
+    assert result["reopen_matches_admitted"] == {"receipt": True, "export_records": True}
+    assert result["admitted_receipt_sha256"] == result["replay_receipt_sha256"]
+    assert result["trace_summary_sha256"] == _digest(HERE / "results/trace-summary.json")
+    assert result["ledger_event_count"] == 14
+    assert result["graph"] == {"entities": 440, "event_participations": 0, "events": 1, "relations": 28, "signals": 0}
+    assert result["gaps_by_kind"] == {"INTERVAL_NOT_EXPRESSIBLE": 2, "RELATION_ABSENT": 13, "REQUIRED_FIELD_ABSENT_IN_SOURCE": 1, "TYPE_ABSENT": 1}
+    assert result["census"] == census
+    assert census["assertions"] == {"FULLY_FORMALIZED": 357, "PARTLY_FORMALIZED": 10, "UNFORMALIZED": 7}
+    assert census["blocks_total"] == census["blocks_reviewed"] == 186
+    assert census["derivation"]["non_local_relations"] == 5
+    assert census["derivation"]["top_hubs"][0]["records"] == 8
+    assert events["events"][0]["ontology_sha256"] == result["ontology_sha256"]
+
+
+def test_the_binding_was_frozen_at_acceptance_and_executed_unchanged() -> None:
+    accepted = json.loads((HERE / "results/query-binding.acceptance.json").read_bytes())
+    executed = json.loads((HERE / "results/native-query-binding.json").read_bytes())
+    result = json.loads((HERE / "results/run-result.json").read_bytes())
+    log = json.loads((HERE / "results/launch-log.json").read_bytes())
+    type_sets = json.loads((HERE / "results/query-type-sets.json").read_bytes())
+
+    assert accepted["bound_at_stage"] == executed["bound_at_stage"] == "ONTOLOGY_ACCEPTANCE"
+    assert executed["schema"] == "malleus.paper-v4.native-query-binding/v4"
+    assert accepted["bound_after_replay_receipt_sha256"] == "PENDING"
+    assert executed["bound_after_replay_receipt_sha256"] == result["replay_receipt_sha256"]
+    assert accepted["cases_sha256"] == executed["cases_sha256"] == log["query"]["cases_sha256"]
+    assert log["query"]["binding_at_acceptance_sha256"] == _digest(
+        HERE / "results/query-binding.acceptance.json"
+    )
+    assert log["query"]["type_sets_sha256"] == _digest(HERE / "results/query-type-sets.json")
+    assert log["query"]["bound_at"] < log["launches"][0]["phase_two"]["dispatched_at"]
+    assert sorted(type_sets) == ["CQ-01", "CQ-02", "CQ-03", "CQ-04"]
+    assert sum(len(query["cases"]) for query in executed["queries"]) == 3013
+    assert log["query"]["rows_by_question"] == {"NQ-CQ-01": 63, "NQ-CQ-02": 127, "NQ-CQ-03": 176, "NQ-CQ-04": 149}
+
+
+def test_the_v2_launch_log_and_the_derived_cost_record_agree() -> None:
+    log = json.loads((HERE / "results/launch-log.json").read_bytes())
+    usage = json.loads((HERE / "results/usage.json").read_bytes())
+    launch = log["launches"][0]
+
+    assert log["schema"] == "malleus.paper-v4.producer-launch-log/v2"
+    assert log["protocol"] == "v4.7"
+    assert launch["requested_model"] == "opus"
+    assert launch["model_id"] == "claude-opus-5"
+    assert launch["first_stage"] == "ONTOLOGY_ATTEMPT_01"
+    assert [entry["status"] for entry in log["gate"]] == ["ACCEPTED"]
+    assert log["gate"][0]["citation_check"]["fabricated"] == 0
+    assert [entry["status"] for entry in log["runner"]] == RUNNER_STATUSES
+    assert log["runner"][-1]["status"] == "ADMITTED_AND_REPLAYED"
+    assert log["runner"][-1]["execution_commit"] == EXECUTION_COMMIT
+    assert [stage["stage"] for stage in usage["stages"]] == USAGE_STAGES
+    assert usage["producer_total_tokens"] == launch["usage_by_resume"][-1]["tokens"]
+    assert sum(stage["tokens"] for stage in usage["stages"]) == usage["producer_total_tokens"]
+
+
+def test_the_paper_ledger_records_the_admitted_run() -> None:
+    ledger = PAPER_LEDGER.read_text(encoding="utf-8")
+
+    assert "### E-0142," in ledger
+    assert "actor:overseer-run-13" in ledger
 
 
 def test_the_active_gate_collects_run_13() -> None:

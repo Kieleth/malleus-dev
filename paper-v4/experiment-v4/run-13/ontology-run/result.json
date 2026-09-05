@@ -1,0 +1,70 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-13",
+  "core": {
+    "commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+    "tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7"
+  },
+  "producer_input_manifest_sha256": "sha256:aec319549963bc50ea5d51fab3daeb8f72b614713dc39697cfbac2102600fb33",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:a509f850b293716a8042e94360c2008551ab5aa1bcbb7a17582a9546700b3482",
+    "final_status_sha256": "sha256:edf2fb7402c5e4dcf11a4f6daa8d003f3cc89151b392f0d97a119af2effb555a"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:39c72202cc44fa30475baa6c0957f64409e93d8190d0a646993efab0262eaf68",
+      "ontology_path": "paper-v4/experiment-v4/run-13/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-13/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:795be7f1a2ba4e1743fec4a635362b593f0a87f629693aa517c168ae3200fa61",
+      "accepted_at": "2026-09-05T13:12:33Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:39c72202cc44fa30475baa6c0957f64409e93d8190d0a646993efab0262eaf68",
+    "validated_contract_sha256": "sha256:c330cc9e5295a7798102c96fac9630c699d1a4c9bad0c5c6f844a1067ae27930",
+    "validated_fact_set_sha256": "sha256:f971d03ca020fd306eda05732af3f27a960da7e5e74529e528d0e28f0f37db36",
+    "fact_count": 4943,
+    "grounding_receipt_sha256": "sha256:7b963c5c850565058fa7304703478e26f46df038057047b99bd34a96a35ef00e",
+    "population_surface_sha256": "sha256:6f5b5c14cc99be14547cb23dbcee05815c1789a1e95ef4fe79021eeb590a9962",
+    "population_surface_families": {
+      "ENTITY": 40,
+      "EVENT": 2,
+      "RELATION": 3
+    }
+  },
+  "accepted_ontology_sha256": "sha256:39c72202cc44fa30475baa6c0957f64409e93d8190d0a646993efab0262eaf68",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-05T13:13:00Z",
+    "urls": 6,
+    "result": "w3.org/TR/prov-o fetched: defines Agent, Person, Organization, used; w3.org/TR/vocab-ssn fetched: defines sosa:FeatureOfInterest; obofoundry.org/ontology/ro.html fetched: RO page, names 'part of'; 'located in' (RO_0001025) and 'adjacent to' (RO_0002220) confirmed by label through the EBI OLS API; schema.org fetched, and schema.org/affiliation and schema.org/funder fetched with their definitions; www.ogc.org/standards/geosciml NOT fetched (DNS lookup failed from this environment on two attempts, also for /standard/geosciml/); geosciml.org fetched and states GeoSciML is a data model and transfer standard for geological data, with the class names on its linked UML models and not on the landing page; quakeml.org NOT fetched (the host serves a certificate for quake.ethz.ch); quake.ethz.ch/quakeml fetched and states QuakeML is an XML representation of seismological data covering a basic seismic event description, without listing event, origin, magnitude, focal mechanism on the landing page",
+    "unverified": [
+      "https://www.ogc.org/standards/geosciml (transport; vocabulary confirmed at geosciml.org)",
+      "https://quakeml.org/ (transport; vocabulary confirmed at quake.ethz.ch/quakeml)"
+    ],
+    "checked_at_precision": "minute, from the session clock; fetches ran between the gate and the type sets",
+    "fabricated": 0,
+    "fabricated_basis": "none of the six names a standard or a term that does not exist; the two unfetched URLs point at standards confirmed at their other homes"
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-13 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

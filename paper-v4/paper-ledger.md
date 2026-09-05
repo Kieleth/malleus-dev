@@ -4518,3 +4518,58 @@ subject and so none wrong by projection, and the census's attachable count as
 the measure of what the producer left unset. No cell can falsify a removal; the
 test is that nothing it removed was worth keeping, which run-12's review
 already showed (18 of 26 rows on projected records PARTIAL, E-0157).
+
+### E-0159, run-13 (v4.7) is admitted at the first runner attempt with no return at either stage; the subject is the producer's alone
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-13/ontology-run/`, `paper-v4/experiment-v4/run-13/results/`,
+`private/paper-v4-v4-run-13/` (ledger, query result, population plan, withheld
+files), `paper-v4/evaluation-v4/run-13/` (review inputs under protocol v2 and
+task v4).
+
+Ontology: accepted at attempt 01, 4,943 facts, 40 entity types, 2 event types,
+3 relation types, 7 subject-bearing types (SeismicEvent among them, carrying
+the magnitude through Quantified). Six cited vocabulary URLs: PROV-O, SOSA/SSN,
+the Relations Ontology page and Schema.org fetched and their borrowed terms
+found (two RO terms by IRI through the EBI OLS API, two Schema.org properties
+on their own pages); the OGC GeoSciML page and quakeml.org not fetched from
+this environment (a DNS failure and a certificate issued for quake.ethz.ch),
+each standard confirmed at its other home without the borrowed class names on
+the landing page.
+
+Population: 374 assertions over 184 of 186 blocks (2 declared
+nothing-assertable), 469 records (440 entities, 1 event, 28 relations), 17
+typed gaps (13 RELATION_ABSENT, 2 INTERVAL_NOT_EXPRESSIBLE, 1
+REQUIRED_FIELD_ABSENT_IN_SOURCE, 1 TYPE_ABSENT). Runner attempt 1 admitted
+under `actor:overseer-run-13`: fourteen ledger events, replay reproducing
+admission, 469 traced. No structural return at either stage, the second cell
+after run-11 to need none. Census: 357 fully, 10 partly, 7 unformalized; 5 of
+28 relations non-local; largest hub 8. Subject coverage 111 of 269, all
+proposed by the producer: 33 attachable (subject unset, one capture entity
+named in a formalizing sentence), 49 ambiguous, 76 unnamed. No projected
+subject exists at this coordinate (decision 22).
+
+Against the two cells before it: run-11 proposed 91 of 248 subject-bearing
+records and run-12 proposed 75 of 143 with 15 projected, thirteen of them
+wrong; run-13 proposes 111 of 269 with nothing derived for it. The attachable
+count is the census's first mechanical measure of what a producer leaves
+where a sentence names exactly one entity: 33 records, against the 77 the
+run-11 RCA counted by reading a different capture.
+
+Query: the v4 binding frozen at acceptance (3,013 cases: 39 ENTITY, 2,697
+RELATION, 277 SUBJECT) executed unchanged after replay: CQ-01 63, CQ-02 127,
+CQ-03 176, CQ-04 149, 515 rows (164 ENTITY, 22 RELATION, 329 SUBJECT) over 198
+witnesses, no forbidden attempt. SUBJECT rows carry the subject's tags beside
+its name for the first time (E-0156). SeismicEvent is in no type set, as in
+run-12's sets these translate; one SeismicEvent record exists.
+
+Execution coordinate: inputs pinned at `12a04a9` (E-0158); the runner executed
+at main `8aa8072`, whose Core files are the pinned coordinate's (the one commit
+between is the pin).
+
+Cost, from `results/usage.json`: ontology attempt 01 168,092; population
+215,192; producer total 383,284 (run-12: 374,055 with one correction).
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet; the review judges the rows as rows.

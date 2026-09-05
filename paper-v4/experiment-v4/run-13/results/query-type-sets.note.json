@@ -1,0 +1,28 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-05T13:15:03Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the ridge and seafloor structure types, the seismic, counted and generic observation types, Claim",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the structure, sample, material, melt, layer, boundary, method, model and data-resource types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim, the observation, melt, structural, volcanic, hydrothermal, fault and model types"
+  },
+  "translation": {
+    "Dataset": "DataResource",
+    "MidOceanRidge": "SpreadingRidge",
+    "LithosphericInterface": "SubsurfaceBoundary",
+    "GeologicUnit": "SubsurfaceLayer",
+    "MeltBody": "Melt",
+    "RockSampleSet": "Sample plus RockMaterial and EarthMaterial",
+    "NumericalModel": "PhysicalModel, ThermalModel, SolubilityModel, VelocityModel",
+    "ShearZone": "no counterpart on this surface",
+    "MarineRegion": "no counterpart on this surface"
+  },
+  "added_on_this_surface": [
+    "CountedObservation (an Observation subtype carrying count and count_scope) beside Observation in every set",
+    "QuantityRatio (subject-bearing) in CQ-03"
+  ],
+  "left_out": "SeismicEvent carries subject on this surface (Quantified, magnitude on the event) and is not in any set, as in run-12, so the sets stay a translation; the RCA counts what that leaves unreached",
+  "note": "run-12's sets translated to run-13's type names; the same questions, the same judgement"
+}

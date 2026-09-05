@@ -1,0 +1,634 @@
+id: https://malleus.dev/schema/projects/ridge-seismicity
+name: ridge_seismicity
+version: 0.1.0
+title: Ridge Microseismicity and Melt Volatile Project Ontology
+description: >-
+  Proposed project ontology for the material reported by the retained reading:
+  an ocean-bottom seismometer microseismicity study of a Mid-Atlantic Ridge
+  supersegment near a ridge-transform intersection, together with the
+  geochemical estimation of melt volatile content used to interpret it.
+  Every class, slot, and enum here is a proposal, not accepted knowledge. The
+  vocabulary covers what the reading reports: geologic features and the
+  materials in them, seismic occurrences, source-attributed observations and
+  claims, the methods, models, instruments, software, campaigns, samples,
+  works, and agents the reading names, and the relations it states between
+  them. Instance material (segment names, numbers, conclusions, wording)
+  stays out of this file.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  ridge: https://malleus.dev/schema/projects/ridge-seismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+#
+# Each enum records a distinction the reading itself draws. Values are
+# type-level classifications, never instance material.
+# -------------------------------------------------------------------
+
+enums:
+
+  SpreadingRateClass:
+    description: >-
+      Classification of a spreading centre by spreading rate, as the reading
+      classifies ridges. Unset is the honest value when the reading gives a
+      rate without naming a class.
+    permissible_values:
+      FAST:
+      INTERMEDIATE:
+      SLOW:
+      ULTRASLOW:
+
+  SegmentCharacter:
+    description: >-
+      The accretion character the reading attributes to a ridge subsection.
+      Unset when the reading names no character.
+    permissible_values:
+      MAGMATIC:
+      AMAGMATIC:
+      TECTONIC:
+      MAGMATIC_AND_TECTONIC:
+
+  FaultKind:
+    description: >-
+      Kind of fault structure the reading names. A kind the reading names and
+      this list does not is a typed gap, which is how the list grows.
+    permissible_values:
+      DETACHMENT:
+      NORMAL:
+      TRANSFORM:
+
+  HydrothermalActivityState:
+    description: >-
+      Activity state the reading attributes to a hydrothermal feature. Kept
+      separate from the Malleus EntityStatus lifecycle, which is about a
+      record's own lifecycle rather than a source's observation.
+    permissible_values:
+      ACTIVE:
+      INACTIVE:
+      EXTINCT:
+
+  SubsurfaceBoundaryKind:
+    description: Kind of subsurface interface or isotherm the reading names.
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY:
+      MOHOROVICIC_DISCONTINUITY:
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+      ISOTHERM:
+
+  SubsurfaceLayerKind:
+    description: Kind of subsurface layer the reading names.
+    permissible_values:
+      CRUST:
+      MANTLE:
+      LITHOSPHERE:
+      ASTHENOSPHERE:
+      SEDIMENT:
+
+  MeltStage:
+    description: >-
+      The stage at which the reading reports a melt composition. The reading
+      separates melts in equilibrium with their mantle source from melts that
+      have undergone fractional crystallization, and reports different values
+      for each, so the distinction is typed rather than folded into wording.
+    permissible_values:
+      PRIMARY:
+        description: A melt the source reports as in equilibrium with its mantle source.
+      PRE_ERUPTIVE:
+        description: >-
+          A melt the source reports after fractional crystallization and before
+          eruption.
+
+  DepthReference:
+    description: >-
+      The datum a reported depth is measured from, as the source states it.
+      Unset when the source states a depth without naming its datum.
+    permissible_values:
+      BELOW_SEAFLOOR:
+      BELOW_SEA_LEVEL:
+
+  SeismicEventType:
+    description: >-
+      Classification of a seismic occurrence the source names. EARTHQUAKE is
+      spelled after the QuakeML event type of the same meaning.
+    permissible_values:
+      EARTHQUAKE:
+      SWARM:
+
+  ProjectRelationType:
+    description: >-
+      Relation predicates this project needs and the research pack's
+      ResearchRelationType does not carry. The research pack's own predicates
+      remain in use through ResearchRelation and are not repeated here.
+    permissible_values:
+      ADJACENT_TO:
+        description: The source states that one thing lies next to another.
+      AFFILIATED_WITH:
+        description: The source states an agent's affiliation with an organization.
+      BOUNDED_BY:
+        description: The source states that a structure bounds a feature.
+      FUNDED_BY:
+        description: The source states that an organization funded work or an agent.
+      LOCATED_IN:
+        description: >-
+          The source states that a thing lies within, on, or beneath another
+          thing.
+      OFFSET_BY:
+        description: >-
+          The source states that a discontinuity or fault offsets a ridge or
+          another structure.
+      PART_OF:
+        description: The source states that a thing is a part of another thing.
+      USES:
+        description: >-
+          The source states that a method, campaign, or work used an
+          instrument, software tool, model, or resource.
+
+# -------------------------------------------------------------------
+# Classes
+#
+# Five classes extend a Malleus root directly and each carries its own
+# grounding block. Everything else is derived through a pack type or
+# through one of those five, and carries none.
+# -------------------------------------------------------------------
+
+classes:
+
+  GeologicFeature:
+    is_a: Entity
+    description: >-
+      A named geological or morphological feature of the sea floor and the
+      subsurface that the source refers to and asserts things about. Concrete
+      on purpose: the reading names features whose kind it does not further
+      classify, and typing them as the bare genus is honest where a subclass
+      would invent a kind.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Marine and structural geology
+          taxonomy: DDC 551.8
+          vocabularies:
+            - vocabulary: GeoSciML, IUGS-CGI and OGC geoscience information model
+              vocabulary_url: https://www.ogc.org/standards/geosciml
+              borrowed_terms:
+                - GeologicFeature
+                - GeologicStructure
+                - ShearDisplacementStructure
+                - MappedFeature
+            - vocabulary: W3C SOSA/SSN
+              vocabulary_url: https://www.w3.org/TR/vocab-ssn/
+              borrowed_terms:
+                - FeatureOfInterest
+          invented_terms: []
+
+  SpreadingRidge:
+    is_a: GeologicFeature
+    description: An ocean spreading centre the source names.
+    slots:
+      - spreading_class
+
+  RidgeSegment:
+    is_a: GeologicFeature
+    description: >-
+      A subsection of a spreading centre that the source names and treats as a
+      unit, including a supersegment and the subsections it is divided into.
+    slots:
+      - segment_character
+
+  NonTransformDiscontinuity:
+    is_a: GeologicFeature
+    description: A non-transform discontinuity offsetting a spreading centre.
+
+  RidgeTransformIntersection:
+    is_a: GeologicFeature
+    description: The intersection of a spreading centre and a transform fault.
+
+  OceanicCoreComplex:
+    is_a: GeologicFeature
+    description: An oceanic core complex exposing footwall material at the sea floor.
+
+  Fault:
+    is_a: GeologicFeature
+    description: >-
+      A fault or fault system the source names, including transform faults,
+      which the source treats as named features in their own right.
+    slots:
+      - fault_kind
+
+  VolcanicFeature:
+    is_a: GeologicFeature
+    description: >-
+      A volcanic construction or edifice the source names, such as a
+      neo-volcanic ridge, a volcanic cone, a seamount, or a volcano.
+
+  HydrothermalFeature:
+    is_a: GeologicFeature
+    description: A hydrothermal vent field, mound, or massif the source names.
+    slots:
+      - hydrothermal_activity
+
+  SubsurfaceBoundary:
+    is_a: GeologicFeature
+    description: >-
+      A subsurface interface or isotherm the source names and locates, such as
+      the brittle-ductile boundary, the Moho, the lithosphere-asthenosphere
+      boundary, or a named isotherm.
+    slots:
+      - boundary_kind
+
+  SubsurfaceLayer:
+    is_a: GeologicFeature
+    description: A subsurface layer the source names, such as crust or mantle.
+    slots:
+      - layer_kind
+
+  EarthMaterial:
+    is_a: Entity
+    description: >-
+      A material of the solid Earth that the source names and asserts
+      composition, presence, or behaviour about. Kept separate from
+      GeologicFeature because a material and the feature it occurs in are two
+      concepts the source distinguishes.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Petrology
+          taxonomy: DDC 552
+          vocabularies:
+            - vocabulary: GeoSciML, IUGS-CGI and OGC geoscience information model
+              vocabulary_url: https://www.ogc.org/standards/geosciml
+              borrowed_terms:
+                - EarthMaterial
+                - RockMaterial
+          invented_terms: []
+
+  Melt:
+    is_a: EarthMaterial
+    description: >-
+      A silicate melt the source names and reports a composition or a
+      behaviour for.
+    slots:
+      - melt_stage
+
+  RockMaterial:
+    is_a: EarthMaterial
+    description: >-
+      A rock material the source names, such as a basalt, a peridotite, or a
+      mylonite. The material's own name is the record's name; the source's
+      descriptive introduction goes in description.
+
+  ResearchAgent:
+    is_a: Entity
+    abstract: true
+    mixins:
+      - Agent
+    description: >-
+      An actor the source names as bearing responsibility for part of the
+      reported work: a person or an organization. Abstract, because the
+      source always names one or the other. agent_type stays unset unless the
+      source states a classification of its own.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Provenance and agency in data description
+          taxonomy: "Outline of academic disciplines: Knowledge representation and reasoning"
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+          invented_terms:
+            - ResearchAgent
+          invention_search: >-
+            PROV-O names Agent and, through PROV-DM, the Person and
+            Organization kinds of agent, and those two names are borrowed
+            unchanged for the subclasses. The superclass could not be called
+            Agent because the Malleus root already declares a mixin with that
+            name, so ResearchAgent is a local spelling of the borrowed PROV-O
+            concept and nothing more. FOAF and schema.org were also considered
+            from certain knowledge; both name Person and Organization with the
+            same meanings and neither supplies a differently named superclass
+            that would avoid the collision.
+
+  Person:
+    is_a: ResearchAgent
+    description: An individual the source names as an author, contributor, or contact.
+    slots:
+      - contact_email
+
+  Organization:
+    is_a: ResearchAgent
+    description: >-
+      An institution, agency, programme, or funder the source names.
+
+  Publication:
+    is_a: Source
+    description: >-
+      A published work the source names, including the article itself and the
+      works it cites. The identifiers the source reports about a work are
+      domain facts and are carried here.
+    slots:
+      - doi
+      - container_title
+      - container_volume
+      - page_range
+      - article_number
+      - publication_year
+      - date_received
+      - date_accepted
+
+  DataResource:
+    is_a: Source
+    description: >-
+      A database, deposited dataset, or data archive the source names as a
+      source of material it reports.
+    slots:
+      - doi
+      - access_locator
+
+  SoftwareTool:
+    is_a: Instrument
+    description: >-
+      A named software package the source states it used to produce or process
+      its results. Derived from the research pack's Instrument rather than
+      from a Malleus root: the source presents these tools the way it presents
+      its measuring equipment, as named things it used, and the two remain
+      distinct classes.
+    slots:
+      - access_locator
+      - software_version
+
+  CountedObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A source-attributed observation whose reported content is a count, with
+      the scope counted stated as the source states it.
+
+  SeismicObservation:
+    is_a: CountedObservation
+    description: >-
+      A source-attributed seismological observation. Counted as well as
+      quantified, because the reading routinely reports a number of events
+      together with the depth range they occupy.
+    slots:
+      - depth_reference
+
+  GeochemicalObservation:
+    is_a: Observation
+    description: >-
+      A source-attributed geochemical observation, carrying the element or
+      species reported and the basis on which the value was obtained when the
+      source states one.
+    slots:
+      - analyte
+      - estimation_basis
+
+  QuantityRatio:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A ratio the source reports, with its numerator and denominator kinds
+      kept in the source's own wording, and with the route back to the
+      assertion that states it.
+
+  PhysicalModel:
+    is_a: Method
+    description: >-
+      A model of physical structure or process that the source names, uses, or
+      selects among. Derived from the research pack's Method: the source
+      presents its models as part of how the work was done, and each kind of
+      model remains its own class.
+
+  VelocityModel:
+    is_a: PhysicalModel
+    description: A seismic velocity model the source constructs, selects, or perturbs.
+
+  ThermalModel:
+    is_a: PhysicalModel
+    description: A thermal model the source cites or uses to infer temperature.
+
+  SolubilityModel:
+    is_a: PhysicalModel
+    description: A volatile solubility model the source uses to compute saturation.
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+      - SourceAsserted
+    description: >-
+      An individual seismic occurrence the source names. Quantified because a
+      named event's magnitude is a property of the occurrence and the research
+      pack's subject slot ranges on Entity, so a magnitude observation cannot
+      point at an occurrent.
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: QuakeML, seismological data exchange standard
+              vocabulary_url: https://quakeml.org/
+              borrowed_terms:
+                - event
+                - origin
+                - magnitude
+                - focal mechanism
+          invented_terms:
+            - SeismicEvent
+            - SeismicEventType
+          invention_search: >-
+            QuakeML names the event, its origin, its magnitude and its focal
+            mechanism, and those terms are borrowed. The class could not be
+            called Event because the Malleus root already declares a class with
+            that name, so SeismicEvent is a local spelling of the borrowed
+            QuakeML concept. QuakeML's own event type list was checked from
+            certain knowledge, without network access, for a value naming a
+            swarm of events; none was found, so the enum name and the SWARM
+            value are local while EARTHQUAKE is spelled after QuakeML's value
+            of the same meaning. A reader who finds the value in the current
+            QuakeML schema should replace the local enum with it.
+
+  ProjectRelation:
+    is_a: Relation
+    description: >-
+      A typed relation this project needs between two entities, carrying a
+      predicate the research pack's closed ResearchRelationType does not
+      supply. Research relations continue to use the pack's ResearchRelation,
+      whose surface this class does not touch.
+    slot_usage:
+      relation_type:
+        range: ProjectRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Knowledge representation and reasoning
+          taxonomy: "Outline of academic disciplines: Knowledge representation and reasoning"
+          vocabularies:
+            - vocabulary: OBO Relations Ontology
+              vocabulary_url: https://obofoundry.org/ontology/ro.html
+              borrowed_terms:
+                - part of
+                - located in
+                - adjacent to
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - used
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - affiliation
+                - funder
+          invented_terms:
+            - ProjectRelation
+            - ProjectRelationType
+          invention_search: >-
+            The Relations Ontology supplies part of, located in and adjacent
+            to, PROV-O supplies used, and Schema.org supplies affiliation and
+            funder; PART_OF, LOCATED_IN, ADJACENT_TO, USES, AFFILIATED_WITH and
+            FUNDED_BY are spelled after them. Those three vocabularies were
+            then checked from certain knowledge, without network access, for a
+            term naming one structure offsetting another and for a term naming
+            a structure that bounds a feature. Neither was found: the
+            Relations Ontology's mereological and topological terms describe
+            containment and contact rather than displacement, and GeoSciML
+            models a displacement structure as a feature rather than as a
+            relation predicate. OFFSET_BY and BOUNDED_BY are therefore local.
+            The class and enum names are local because the research pack's
+            ResearchRelationType is a closed list that this project must not
+            weaken, and a project predicate set needs its own home.
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+
+  spreading_class:
+    range: SpreadingRateClass
+    description: Spreading-rate class the source assigns to a spreading centre.
+
+  segment_character:
+    range: SegmentCharacter
+    description: Accretion character the source attributes to a ridge subsection.
+
+  fault_kind:
+    range: FaultKind
+    description: Kind of fault the source names.
+
+  hydrothermal_activity:
+    range: HydrothermalActivityState
+    description: Activity state the source attributes to a hydrothermal feature.
+
+  boundary_kind:
+    range: SubsurfaceBoundaryKind
+    description: Kind of subsurface interface or isotherm.
+
+  layer_kind:
+    range: SubsurfaceLayerKind
+    description: Kind of subsurface layer.
+
+  melt_stage:
+    range: MeltStage
+    description: >-
+      Stage at which the source reports this melt's composition.
+
+  depth_reference:
+    range: DepthReference
+    description: >-
+      Datum a reported depth is measured from, as the source states it. It
+      records the source's stated datum and never converts the value.
+
+  analyte:
+    range: string
+    description: >-
+      Element, oxide, or species whose content the observation reports, in the
+      source's own wording. Open on purpose, like the metrology pack's
+      quantity_kind.
+
+  estimation_basis:
+    range: string
+    description: >-
+      The basis on which a reported value was obtained, in the source's own
+      wording, when the source distinguishes several bases for the same
+      quantity. It records the source's label and never the computation.
+
+  doi:
+    range: string
+    description: >-
+      Digital Object Identifier the source reports for a work or dataset, as
+      the source writes it.
+
+  access_locator:
+    range: string
+    description: >-
+      Address at which the source states a resource is available, as the
+      source writes it. A route to a thing, never evidence about it.
+
+  container_title:
+    range: string
+    description: Title of the journal, series, or book that contains a work.
+
+  container_volume:
+    range: string
+    description: Volume designation the source reports for a work.
+
+  page_range:
+    range: string
+    description: Page range the source reports for a work, as the source writes it.
+
+  article_number:
+    range: string
+    description: Article number the source reports for a work.
+
+  publication_year:
+    range: integer
+    description: Year of publication the source reports for a work.
+
+  date_received:
+    range: string
+    description: >-
+      Date of receipt exactly as the source writes it. Retained as text rather
+      than as a datetime because the source states a calendar day and a
+      datetime range would require inventing a time of day; the chronology
+      pack's duration slot retains a source-declared value the same way.
+
+  date_accepted:
+    range: string
+    description: >-
+      Date of acceptance exactly as the source writes it, retained as text for
+      the same reason as date_received.
+
+  software_version:
+    range: string
+    description: Version designation the source reports for a software tool.
+
+  contact_email:
+    range: string
+    description: >-
+      Contact address the source publishes for a person, as the source writes
+      it.
