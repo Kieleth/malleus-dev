@@ -270,7 +270,15 @@ fallback.
    capture; those rules still limit the implementation slice. Make one exact
    document capture under `DOCUMENT_CAPTURE_GRAMMAR`: retain verbatim
    assertions, attribution, block locators, modality, optional assertion or
-   domain time, formalisation targets, and typed gaps. Pass it to
+   domain time, formalisation targets, and typed gaps. The method for a
+   statement is mechanical: locate the span in the named block by a
+   whitespace-insensitive anchor and copy the block's own bytes; never retype
+   the text and never clean it up, because the reading's spacing, ligatures and
+   hyphenation are part of the bytes the adapter compares. Before you stop,
+   verify every statement is a substring of its block after whitespace
+   collapse. Every block ID in `assertions` and in `nothing_assertable` is
+   taken from the reading's own block inventory; never construct one from a
+   page number, an ordinal, or a pattern you noticed in other IDs. Pass it to
    `adapt_document_assertions`, or run `malleus-compiler capture`, which wraps
    that call and writes the plan and census bytes to named output paths. For
    structured sources, write a source-specific adapter that emits the same
