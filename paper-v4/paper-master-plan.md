@@ -1,8 +1,8 @@
 # Malleus paper master plan
 
-Version: 1.3.1
+Version: 1.3.2
 
-Date: 2026-09-04
+Date: 2026-09-05
 
 Status: corrected v2 remains the selected evidence. The first KISS v4 producer
 run is frozen as a structural refusal after three fail-fast grounding failures
@@ -316,6 +316,16 @@ Use one protocol figure and compact result tables only where they reduce prose. 
    PDF page.
 6. Publish the exact paper reproducer through an immutable tag or archive,
    obtain final author review, and submit.
+7. If time allows, after the cells above: a split-producer harness variant
+   (Opus ontology with Sonnet population, and the reverse). Two fresh sessions
+   instead of one, the second starting from the accepted surface, recorded as
+   a distinct producer block. Precondition: the spawn message's stop rule says
+   that reviewing the next block is not invention (run-05 stopped at 27 of 186
+   blocks by choice).
+8. Once the Opus 5 cell of record is settled: a reviewer swap. A blind Sonnet
+   review of run-02's and run-05's frozen inputs, compared label by label with
+   the ratified records. Protocol untouched; the ratified record is the
+   reference.
 
 ## Submission gate
 
@@ -335,6 +345,7 @@ Submit only when:
 
 ## Plan changelog
 
+- 1.3.2, 2026-09-05: Added two deferred items to the remaining order at the author's instruction: a split-producer harness variant if time allows, and a reviewer swap once the Opus 5 cell of record is settled. Run-05 (Sonnet 5, v4.1) is the second ratified cell (E-0131, E-0132); run-04 (Opus 5, v4.1) is running on the Core-10 fix.
 - 1.3.1, 2026-09-04: Recorded the second matrix cell. Run-03 changed the producer model to Claude Sonnet 5 and refused at the ontology stage on three grounding rules with both diagnostic returns used, so the cell yields no population under this harness. The grounding block shape moves into the skill and the pack-grounding rite is to aggregate shape defects; the rerun opens a new cell at the corrected Core coordinate and replaces neither run-02 nor run-03. Scope, claim boundary and submission gate are unchanged.
 - 1.3.0, 2026-09-04: Applied the author's decisions of 2026-09-04. Bound the v4 rerun as run-02 to the current Core coordinate, cut the producer spawn message to isolation only, recorded the producer model and harness in the run contract, and kept manuscript 1.2.1 as the paper of record with the v4 result entering as a new section of its successor. The lean v4 draft is a support document and replaces nothing.
 - 1.2.0, 2026-09-03: Accepted the KISS v4 execution cut under the author's overnight relay instruction. Selected one document and one producer loop, `source-assertion` with conservative `PARTIAL_IMPORT` origin, questions only after replay, typed gaps, no fallback, and no more than two evidence-triggered ontology revision rounds. The prior three-producer matrix remains diagnostic background. V2 remains selected until v4 passes its complete evidence and reproduction gates.
