@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:20dcc388fffee1a4ccba71a740ed66e68b5eb348f2952e23e420520867a29d2b",
+        "before_digest": "sha256:21e32174c3629fb5f0b7482814005fb8e373b845e4f235727692b02fe486ac5b",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:f69a20be37db3f0986314c732a0b51ccb567eead0f06dedb7d28bd1d410c6491",
+        "before_digest": "sha256:b8a06fb38b94de31c5280347a0f3404e0fdf2afbca89f5d4cff03d07b7982c14",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:d240b27209fa3d2799e475cf19bc92081a88d925ad9216cc56e6c5d15bc586cc",
+  "entry_id": "OVR-000408",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:92278f97b6a27d2474eb5761a2b49077de2c5599bf0dfd107e095e0d2d967a0a",
+  "recorded_at": "2026-09-05T07:50:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "758ed187882e0d43a9eaebdfd287885e88db1419",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "226af38bd7e414050b55e480db4f58716a463a30",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000405",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 408,
+  "subject": {
+    "id": "subject-of-a-source-asserted-record",
+    "type": "DOCUMENT"
+  },
+  "summary": "The subject refusal copied the record's name verbatim, so a name broken across lines broke the aggregated refusal line.",
+  "why": "The aggregated refusal is one line joining every defect with a semicolon, and the subject defect wrote the record's name into it unchanged. A name the reading broke across two lines, which is exactly the case whitespace collapse exists for, put the break in the diagnostic. The defect now reads the name once, collapsed, and uses that for both the substring comparison and the message. No record's acceptance changes; the check compared the collapsed name already."
+}
