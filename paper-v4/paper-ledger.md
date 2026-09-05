@@ -5558,3 +5558,145 @@ from 27 blocks to 58 with assertions; run-05's review judged its rows
 supported on a capture a fifth this size.
 
 Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
+
+### E-0174, run-17 opens the third cell of v4.9: Haiku 4.5 on the settled protocol
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-17/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`native_query.py`, `offline-validation.json`, `test_contract.py`,
+`test_pipeline.py`, `paper-v4/evaluation-v4/run-17/review-record.blank.md`,
+`handover/2026-09-05-haiku-rca.md`, and E-0127 to E-0130 and E-0166 to E-0172.
+
+Cell: run-17 is the third cell of v4.9 and the second matrix cell on the
+settled protocol. The protocol does not move, the harness does not move and
+Core does not move. What moves is the producer's model: requested model
+`haiku`, model family Claude Haiku 4.5, model id
+`claude-haiku-4-5-20251001`, reasoning effort the harness default and neither
+pinned nor observed. Every other key of run-16's producer block reaches this
+cell unchanged, and `run-17/test_pipeline.py` compares the two blocks key by
+key, so only those three may differ. The scope block says it plainly:
+`matrix_cell` THIRD_OF_V4_9, `variable` PRODUCER_MODEL_ONLY, `harness`
+IDENTICAL_TO_RUN_16, `harness_matched_cell` run-16, `model_matched_cells`
+run-06 and run-07. Run-17 supersedes nothing; run-15 stays the first cell of
+v4.9 and run-16 the second.
+
+Harness: byte for byte run-16's. `native_query.py` carries no run id and is
+copied without a substitution. Six scripts, the spawn message and
+`offline_validation.py` are run-16's with the run id moved, read through one
+table that reverses. `pin.py` takes a second table: the reference cell steps
+from run-15 to run-16, the interface ordinal from 16 to 17, and two sentences
+are repaired because the blanket step would otherwise make them say something
+untrue, the change count among them. Both tables reverse to run-16's bytes and
+`test_pipeline.py` reverses them, so an edit in neither table fails rather than
+travelling with the cell.
+
+Coordinates: `pin.py --commit dc5254795a78648591d3a1b0bcf602af8d443dc1` pins
+that commit, tree `a712e938be28e4929e50f3a6a419f94ec57d3d0a`, governance head
+`OVR-000413` at `sha256:b2196bcc…`, the v4.8 head and the coordinate run-14,
+run-15 and run-16 all ran at. The gate status reads
+`PINNED_TO_THE_V4_9_CORE_COORDINATE`. The pin resolved the adapter's two
+subject sites by AST at the pinned commit and found `_occurs_as_word` at both
+with no substring test left at either. None of the eight declared inputs moved
+against run-16's manifest, the skill included. The interface coordinates are
+new: `capture:paper-v4:yu-2025:v4:17` and `plan:paper-v4:yu-2025:v4:17`, the
+runner will execute under `actor:overseer-run-17` with the reading artifact
+`artifact:selected-reading:yu-2025:v4:17`, and the private workspace is
+`private/paper-v4-v4-run-17/producer`.
+
+All twenty-three of run-16's `changes` entries are carried forward and marked
+`carried_from: run-16`. Eight are Core's and are read at fixed commits, the
+newest of them, `CORE_18_NAME_AS_WORD`, between the v4.7 and the v4.8
+coordinates, exactly as run-16 read it. Fourteen are the harness's. The
+twenty-third is run-16's own `SONNET_5_PRODUCER_AT_V4_9`, carried as the closed
+cell's record and not as this cell's: its subject stays
+`paper-v4/experiment-v4/run-16/run-contract.json#producer` and its three model
+fields stay Sonnet 5's, because a cell whose producer is Haiku 4.5 cannot carry
+them as its own. It is the one entry in the list whose subject is neither a
+file nor a block of this cell.
+
+One entry is this cell's, and it is the producer's:
+
+1. `HAIKU_4_5_PRODUCER_AT_V4_9`, kind `MODEL_CELL`, subject the contract's own
+   producer block, `defect_of: none`. The three model fields and nothing else.
+   The harness delta is NONE and the Core delta is NONE; the spawn message is
+   run-16's with the run id moved, the installed skill is the same declared
+   bytes at the same commit, and the executor is run-16's byte for byte. The
+   change is visible to the producer in the only sense that matters, because a
+   producer is the model that runs it, and to nothing else: no input, no message
+   and no file it reads differs from run-16's. Cause:
+   `handover/2026-09-05-haiku-rca.md`.
+
+The review surface does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell it
+is instantiated to changes. The blank record for run-17 is run-16's with the run
+id moved and nothing else.
+
+The offline validation is carried whole. `offline_validation.py` re-runs the
+v4.4 ENTITY restriction and the v4.9 collapse on run-09's frozen record and
+returns run-16's counts unchanged, because neither the binder nor the executor
+moved: 630 of run-09's 1,466 rows kept (58, 319, 131, 122), 618 SUPPORTED, 12
+PARTIAL, none unjudged, and those 630 become 463 under one row per witness per
+question (54, 168, 123, 118), 167 re-projections removed, 456 SUPPORTED and 7
+PARTIAL, with no collapsed row carrying a label the survivor did not. Every
+total and every per-question figure equals run-16's record key for key, which is
+what "no harness delta" means where it can be counted.
+
+Measurement: run-17 is measured against run-16, the harness-matched cell; against
+run-15, the other cell of this harness; and against run-06 and run-07, the two
+Haiku 4.5 cells at v4.1. Run-16 (Sonnet 5): 433 admitted rows (36, 112, 144, 141;
+121 ENTITY, 35 RELATION, 277 SUBJECT) over 157 witnesses and 194 traced records,
+159 entities, 3 events and 32 relations, 148 assertions over 186 of 186 blocks
+reviewed, subject coverage 99 of 103 proposed, accepted at the first ontology
+attempt and refused once at the runner on one aggregated diagnostic of fifty
+defects before admission at the second, producer 529,350 tokens; review E-0173,
+pending when this cell opened. The split of 58 blocks with assertions from 128
+declared nothing-assertable is E-0172's and is carried with that source named,
+because the frozen census counts a nothing-assertable block as reviewed and no
+public file of run-16 separates them. Run-15 (Opus 5): 433 rows (28, 104, 154,
+147) over 160 witnesses, 351 records, producer 351,253 tokens, preliminary review
+E-0169. Run-06 (Haiku 4.5, v4.1): ontology accepted at attempt 02 at 2,216 facts,
+population refused three times after two structural returns, producer 137,734
+tokens, E-0127 and E-0129. Run-07 (Haiku 4.5, v4.1-pair): ontology accepted at
+2,244 facts after one checker loop, population refused three times after two
+structural returns, producer 166,959 tokens with 98,381 for the checker and
+265,340 for the pair, E-0128 and E-0130. Neither Haiku cell reached an admitted
+run, so neither left a public result directory; their figures are in their
+private launch logs and cost records, and the contract names those paths where it
+carries them.
+
+Expected, stated before the run: under the v4.9 skill a Haiku 4.5 producer
+reaches admission within the two structural returns the manifest allows, where
+run-06 and run-07 did not. Falsifier: a third structural refusal, which is where
+both v4.1 cells ended. The expectation rests on four things the skill and the
+adapter carry at the pinned commit and did not carry at the v4.1 baseline
+`8b806f7`, and run-17's `test_contract.py` reads all four with `git show` at both
+commits rather than from the RCA: the verbatim rule has a mechanical method
+("locate the span in the named block by a whitespace-insensitive anchor and copy
+the block's own bytes"), block ids are taken from the reading's own inventory,
+the adapter refuses every non-verbatim statement and every unknown block once for
+the whole capture instead of the first, and the capture template no longer
+carries the `replace-with-PartialEffectiveContract.identity` placeholder the
+run-06 producer copied into its own output file. Core-18's word rule is in force
+at the same coordinate. Nothing is expected of coverage, of row counts or of the
+review.
+
+Two corrections to prose carried since run-15, made here rather than propagated.
+Run-15's `test_pipeline.py` named the last executor without the v4.9 removal as
+"run-14"; the blanket run id step at run-16 turned that into "run-15", which
+carries the removal, and the same step would have made it "run-16". Run-17's
+file names run-14 at both sites. A third sentence that read "run-17's delta is
+in the executor" now reads that this cell has no harness delta at all, which is
+what the contract says everywhere else. No closed cell is edited.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-17, and
+`ontology-run/` and `results/` carry only a keepfile. Nothing here is a claim
+about any model. One cell per model is one observation, and a difference between
+two single sessions is not a measurement of either; run-06 and run-07 ran five
+iterations earlier against a different skill, a different pack set and a
+different adapter, so they bound an expectation and not a comparison. A cell that
+is admitted will not have shown that the four fixes caused it, only that the
+outcome the RCA predicted from them occurred. Whether the expectation holds is
+open.
