@@ -4657,3 +4657,159 @@ What the reviewers could not decide under the task, for ratification:
   is correct for the clipped bytes and the block carries the completion.
 
 Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
+
+### E-0162, run-14 opens v4.8: a name occurs as a word, not inside another word
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-14/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `native_query.py`, `offline_validation.py`,
+`offline-validation.json`, `test_contract.py`, `test_pipeline.py`,
+`paper-v4/evaluation-v4/review-task-v4.template.md`,
+`paper-v4/evaluation-v4/run-14/review-record.blank.md`,
+`handover/2026-09-05-overseer-journal.md` (iteration 5, RCA before the review;
+iteration 5 closed), `handover/2026-09-05-v47-rca.md`, and E-0156 to E-0161.
+
+Iteration: run-14 is the ninth iteration of the v4 protocol, `v4.8`. The
+protocol shape does not change, the producer does not change, and the harness
+does not change at all: this is the first cell since run-08 with no harness
+delta of its own. Eight executable files and the spawn message are run-13's
+bytes. Seven carry the run id and are reconstructed from run-13's text by three
+exact substitutions that reverse back to run-13's bytes; `native_query.py`
+carries no run id and is compared byte for byte. A ninth file, or an edit to any
+of the eight, fails `test_pipeline.py` rather than travelling with the cell.
+Run-04 to run-13 are the ten cells this iteration follows; none is superseded,
+repaired or reinterpreted, and the frozen artifacts of every closed cell,
+run-13's included, are digest-pinned by `run-14/test_contract.py`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default
+and neither pinned nor observed. The model is run-04's through run-13's, so the
+model is not the variable.
+
+Coordinates: `pin.py --commit HEAD` pins commit
+`68e7baaa7a3acb642877c361124a439bbea09e85`, tree
+`315d5c9c6b14a847d8a92994c51f4f76619e6448`, governance head `OVR-000412` at
+`sha256:623436a4…`, which is Core-17's entry and the v4.7 head. Core-18 has not
+landed at this pin: its RED fixtures are committed at `95353eb` and the adapter
+and the skill are still the v4.7 coordinate's bytes, so the entry reads
+`PENDING_AT_PIN` and the gate status reads
+`PROVISIONALLY_PINNED_PENDING_CORE_18`. The overseer re-pins after Core-18's
+governance entry, which moves the whole cell in one step; nothing in this
+directory needs editing for it. The interface coordinates are new:
+`capture:paper-v4:yu-2025:v4:14` and `plan:paper-v4:yu-2025:v4:14`, the runner
+will execute under `actor:overseer-run-14` with the reading artifact
+`artifact:selected-reading:yu-2025:v4:14`, and the private workspace is
+`private/paper-v4-v4-run-14/producer`. At this pin none of the eight declared
+inputs has moved against run-13's manifest; the skill is the one that is
+expected to, and only when Core-18 lands.
+
+All twenty of run-13's `changes` entries are carried forward and marked
+`carried_from: run-13`. Seven of them are Core's and are read at fixed commits
+so that nothing Core-18 lands can be attributed to an earlier task:
+`CORE_12_DERIVATION_CHECKS` at the v4.1 baseline, `PACKS_0_3_0` at run-08's
+expected versions, `SUBJECT_ELEMENT` at the v4.3 coordinate `f6c8c71`,
+`CORE_14_MODALITY_SOURCE_OF_TRUTH` between the v4.3 and the v4.4 coordinates,
+`CORE_15_SUBJECT_ALIASES` between the v4.4 coordinate `2026244` and the v4.5
+coordinate `9d789f2`, `CORE_16_PROJECTED_SUBJECT` between the v4.5 and the v4.6
+coordinate `90abc79`, and `CORE_17_PROJECTION_WITHDRAWN`, which was run-13's
+change under test and is now read between the v4.6 coordinate and the v4.7
+coordinate `12a04a9`. Core-17 is read at fixed commits for the reason Core-16
+was: Core-18 rewrites the same adapter and the same skill, so a comparison
+against this cell's pin would report Core-18's bytes as Core-17's, and its
+census outcome keys are read at the v4.7 coordinate for the same reason.
+`SUBJECT_TAGS_PROJECTED` is carried too, as run-13's bytes unchanged, because
+the executor carries no run id.
+
+One entry is this iteration's, and it is Core's:
+
+1. `CORE_18_NAME_AS_WORD`. The name-or-tag comparison becomes word-bounded at
+   both sites that make it, the `SUBJECT_NOT_NAMED` check and the subject
+   census. A form occurs in a statement when its non-whitespace characters
+   appear in order with any whitespace between them, case-insensitively, and
+   the match is adjacent to no letter on either side; digits and punctuation
+   are boundaries, so the text layer's glued citation digits still name and an
+   occurrence inside another word does not. One predicate serves both sites and
+   replaces the whitespace-free substring test Core-15 widened the check to.
+   The rule does not change: a source-asserted record's subject is the one the
+   producer set or none, and the subject entity's `name` or one of its `tags`
+   must occur in a statement that formalizes the record. What changes is what
+   counts as occurring. No refusal reason is added and none is removed, so
+   `expected_reasons` is empty; what narrows is `SUBJECT_NOT_NAMED`'s
+   condition. The census keeps Core-17's four outcomes, `proposed`,
+   `attachable`, `ambiguous` and `unnamed`, and counts them under the same
+   predicate, so no census key moves either. `subject` is the slot Core-13
+   added and `tags` an existing root slot, so there is no new slot, no pack
+   version and no ontology change. One skill sentence says a name occurs as a
+   word. Cause: `handover/2026-09-05-overseer-journal.md`, iteration 5 RCA
+   before the review, decision 23, and E-0160. State at the pin: `PENDING`.
+   Because the expectation is empty and the census keys do not move, neither a
+   subset check on the enum nor a reading of the outcomes could report this
+   change: `pin_status` is set from the adapter's and the skill's bytes against
+   the v4.7 coordinate plus the adapter's own two sites resolved by AST at the
+   pinned commit. LANDED requires all four of the adapter moved, the skill
+   moved, one module-level predicate called at both sites that neither called
+   at the v4.7 coordinate, and no membership test against a statement left at
+   either site. The pin refuses to declare it otherwise, and at this commit it
+   reads the two substring tests still in place, one per site.
+
+The review task does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell it
+is instantiated to changes. The blank record for run-14 is run-13's with the run
+id moved and nothing else.
+
+The offline validation is carried again. `offline_validation.py` re-runs
+run-10's computation of the v4.4 ENTITY restriction against this cell's binder
+and returns the same counts unchanged: 630 of run-09's 1,466 rows kept (58,
+319, 131, 122), 618 SUPPORTED, 12 PARTIAL, none unjudged. That is a regression
+check on a binder that did not move, not evidence about v4.8.
+
+Measurement: run-14 is measured against run-13's 515 admitted rows (63, 127,
+176, 149) over 198 witnesses and 469 traced records, admitted at the first
+runner attempt with no return at either stage, and against run-13's subject
+coverage, 111 of 269, every one of them the producer's own with nothing derived:
+33 attachable, 49 ambiguous, 76 unnamed. The rows, the rows by question and the
+census are in run-13's own public launch log, the witness count is in its query
+trace summary, the traced records and the returns are in the same log's runner
+block, and the producer's 383,284 tokens are in its public cost record;
+`test_contract.py` recomputes all of them. Run-13's launch log publishes no
+rows-by-kind split, so this cell records none rather than carrying a figure it
+cannot recompute. Run-13's preliminary review landed as E-0161 after this cell
+was dispatched: RESPONSIVE on all four questions, 497 SUPPORTED, 18 PARTIAL,
+none UNSUPPORTED, fifteen of the PARTIALs aboutness findings on producer-set
+subjects whose name is in the block. It is recorded as preliminary and
+unratified and it bounds nothing this cell claims.
+
+Expected, stated before the run: the census's `attachable` and `ambiguous`
+counts fall to what a word-bounded rule gives, which on run-13's own capture is
+26 and 43 against 33 and 49 with `unnamed` rising from 76 to 89 (E-0160,
+measured by script over the retained captures of runs 11 to 13); a proposed
+subject whose form occurs only inside another word is refused; and an inflected
+or glued form costs the producer a tag, which under the same script would have
+refused one of run-11's subjects, none of run-12's and two of run-13's, both
+"velocity model" against "velocity models". Falsifier: a `SUBJECT_NOT_NAMED`
+return at the runner for a subject a reader would say the sentence names as a
+word. That is a cell-firable falsifier, which the last two iterations did not
+have.
+
+`SeismicEvent`: run-13's accepted surface carried `subject` on `SeismicEvent`
+and no question's type set named the type, so its one record reached no row.
+That is the evaluator's judgement about which types answer a question, made at
+ontology acceptance before phase two exists, and it is not a harness matter; the
+binder is not changed for it. The contract records it and `test_contract.py`
+recomputes both halves from run-13's own gate block and type sets.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-14, and
+`ontology-run/` and `results/` carry only a keepfile. Core-18 has not landed:
+the gate reads the code, not the governance ledger, and at this pin it reads the
+v4.7 adapter and the v4.7 skill, which is why the status is provisional and the
+entry says `PENDING` rather than claiming the change. Run-13's 515 rows and its
+111 of 269 subjects are run-13's, on run-13's graph; they bound what this cell
+is compared against and say nothing about the graph run-14's producer will
+build. The counts E-0160 computed under the word-bounded rule are counts on
+run-13's retained capture by a scratchpad script, not a prediction of run-14's
+census. Whether any of it holds is open, and run-14 is one cell that will be one
+observation, not a measurement, until it has run to ratification.
