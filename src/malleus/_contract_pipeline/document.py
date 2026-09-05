@@ -602,8 +602,11 @@ def _subject_defects(
         target = records_by_id.get(subject)
         if target is None:
             continue
-        name = _record_properties(target).get(_NAME_SLOT)
-        if not isinstance(name, str) or not _normalise(name):
+        declared_name = _record_properties(target).get(_NAME_SLOT)
+        name = (
+            _normalise(declared_name) if isinstance(declared_name, str) else ""
+        )
+        if not name:
             defects.append(
                 _Defect(
                     DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED,
@@ -613,7 +616,7 @@ def _subject_defects(
                 )
             )
             continue
-        wanted = _normalise(name).casefold()
+        wanted = name.casefold()
         formalizing = formalized.get(record_id, {}).get(_SUBJECT_SLOT, [])
         if any(
             wanted in _normalise(statements[assertion_id]).casefold()
