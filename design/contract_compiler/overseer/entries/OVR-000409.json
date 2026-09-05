@@ -1,0 +1,114 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:9f37686fd809dfac4fd2eac6fd570cf51fa4029dd16435b9a35b30e54467eba6",
+        "before_digest": "sha256:f19f905761d97809b9ef731ff5a9cf6bf6ccd3e9a1756f7f8c3a8fca49356f89",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:899d16e6775d59b678fc74b4a4f6107bb0cdd0ad4679e7f1da29507f8f712937",
+        "before_digest": "sha256:dbcc85998269e8c627e4abc05895fb477014a7a6044cef1a8d4e51d54ba7f1a6",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:d7ea99a463195fdaf20c7bfb5d1f63736ea48f2252a5651d7d3266a015048673",
+        "before_digest": "sha256:ac48ac4917f12541ed87dbff5b7bb7bd7ae31d6958b41ba58c6a833e5ecd9184",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-change.json"
+      },
+      {
+        "after_digest": "sha256:6640056f140e1e541b3c2c1eea1329ec9336c184f06aa6bb50b27cb70727a5b7",
+        "before_digest": "sha256:33cf6409dcc248695de5b6713bbaf77fdeefb31e3ee6591288bebaea812bca62",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:50b84d715b7f9d493ab39e6579c85e524b837fa4b7ceed95c071a4bc7505af78",
+        "before_digest": "sha256:20dcc388fffee1a4ccba71a740ed66e68b5eb348f2952e23e420520867a29d2b",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:714cf83f07b4f9552bb956cd6f2ceeee5bc90e7985ae7cc0bd6212c4a760a524",
+        "before_digest": "sha256:fb5863741a6d252eef628e81a65a77fe8b57aa8f9deb9ee396e9aab4957bf140",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/elaborate.py"
+      },
+      {
+        "after_digest": "sha256:bfcdd78d4186c86f3457929691270ca8e5f914c3c1cd845bdc3eb892fccee217",
+        "before_digest": "sha256:f69a20be37db3f0986314c732a0b51ccb567eead0f06dedb7d28bd1d410c6491",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:d9abead163e076d5345b3c975bce8e7c90d2b4da1896c7fd68236ceca971cc72",
+        "before_digest": "sha256:c04ce91b6f472121623f18a708d7a480225b0a438203054faadce00689f8af12",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:04633cafa51fe1753285f8de2bc2a1d275b466fc2dd50ee71cbe4826d26272d1",
+        "before_digest": "sha256:598ec27595a79fadbdfa68a7b7308e22b26b9943e87bd6d33c460368e8b10218",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py"
+      },
+      {
+        "after_digest": "sha256:02195661e6806d380165b6870f4ad3b47979bac50f799f2bf3fb0c865040d4f1",
+        "before_digest": "sha256:05f62bea42934f4fcf7299000c9a5b89ee493d3ae68bfc1efd13265fc0366bdd",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:f24828629a19e320e6e71a39dc234403d28de5a5348268afacad8a831c56d642",
+  "entry_id": "OVR-000409",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d240b27209fa3d2799e475cf19bc92081a88d925ad9216cc56e6c5d15bc586cc",
+  "recorded_at": "2026-09-05T11:20:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "e4fa5fd340100a62f1d6470d1c9c579b48289d05",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "a61336edb0d83a7dd12d286cf0b2948d757f1518",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000408",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 409,
+  "subject": {
+    "id": "one-source-of-truth-for-a-records-modality",
+    "type": "DOCUMENT"
+  },
+  "summary": "A record's assertion_modality must be one its formalizing assertion carries; the unbound-range refusal names the range and the five that bind; the skill says what a name is.",
+  "why": "Twenty of run-09's 212 source-asserted records carried a modality no assertion behind them carries, MEASURED in the capture and STATED on the record twelve times, because the record's modality was a second copy written against the clause where the capture tagged the sentence. Only the assertion carries evidence, so the adapter now refuses a record whose assertion_modality no assertion formalizing its properties path carries, typed MODALITY_NOT_ASSERTED and aggregated with the other derivation defects. Decision 19 records it and names the removal it defers. Two returns that cost a first attempt each are message and prose, not rules: INVALID_RANGE now names the range that failed to bind and the five seed scalars that do, and the skill's claim that every LinkML built-in loads is corrected to the inspector, where it is true, against the compiler, where date and uri refuse; and the skill now says an entity's name is the form the source uses to refer to it. The validated-contract artifact pins a producer digest over five pipeline files, elaborate.py among them, so the inspection-note change fixture carries a recomputed ledger head."
+}
