@@ -2942,3 +2942,67 @@ responsiveness on CQ-02 and CQ-04 names representation limits (no field for the
 position relative to the ridge axis; no field for the volume change or the
 extensional stress), which are modelling choices under the packs as pinned, not
 support failures.
+
+### E-0133, run-04 is admitted and replayed once Core admits a list
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-04/ontology-run/`, `paper-v4/experiment-v4/run-04/results/`,
+`private/paper-v4-v4-run-04/` (launch log with the refused attempt, the shadow
+run and the admitted attempt; usage; ledger; three query drafts; withheld
+files), `paper-v4/evaluation-v4/run-04/` (frozen review inputs), and the
+governance ledger entry OVR-000398.
+
+Outcome: the Opus 5 cell reaches ADMITTED_AND_REPLAYED with zero structural
+returns at the population stage, after one runner attempt refused on a Core
+defect. Ontology attempt 01 was refused at CONTRACT_COMPILATION (INVALID_RANGE:
+one slot with an unbound range; PACK_GROUNDING had passed on the first attempt,
+the first cell to do so). Attempt 02 was accepted at 3,986 facts:
+26 entity types, 2 event types (`Earthquake` and the root `Event`), 3 relation types. The
+population carried 349 assertions over all 186 blocks (289 fully formalized,
+40 partly, 20 unformalized) and 403 records: 256 entities, 3 events, 144
+relations, with 61 typed gaps (REQUIRED_FIELD_ABSENT_IN_SOURCE 21,
+INTERVAL_NOT_EXPRESSIBLE 26, AGGREGATE_ONLY 8, TYPE_ABSENT 5, RELATION_ABSENT
+1). Claims use the assertion locator and statement digest form throughout, so
+no claim record quotes the reading.
+
+The Core defect: the first runner attempt (2026-09-05T00:05:35Z, main 2f38112)
+refused at admit with `STRUCTURAL_REFUSAL: Property 'affiliation' must be a
+list`. The population file carried lists; the change set freezes list values to
+tuples and admit handed the tuples to the ontology validator, which accepts only
+a Python list for a multivalued slot. No earlier admitted population had a
+list-valued property. Classified as a Core defect, not a producer return; a
+shadow run with the thaw patched in memory admitted the identical file; Core-10
+landed the fix with a RED test, an AST guard and OVR-000398 (commits ea60b19,
+67aa2b0, ea0b4d2). The second attempt (2026-09-05T01:04:55Z, main 1152db9) ran
+the same population bytes under `actor:overseer-run-04` and admitted: fourteen ledger events, the reopened
+replay reproduces the admitted receipt and export, 403 records traced.
+
+Query: the type-only binding is the exhaustive form: for each question a set of
+surface types judged relevant to its required semantics, then every ordered
+pair of those types under each of the three relation types, with a fixed field
+projection per type, 900 cases. Two drafts precede it and are kept
+privately: a hand-picked 38-case draft returned no row for CQ-03, and the first
+exhaustive draft bound 75 citation rows to CQ-04 through the bibliographic type,
+which was removed from that question's set. Rows: CQ-01 17, CQ-02 69,
+CQ-03 83, CQ-04 71, over 114 witnesses, no forbidden attempt. Rows stay
+private; the query trace summary is public.
+
+Execution coordinate: inputs pinned at `8b806f7`; the admitted runner executed
+at main `1152db9` (Core-10 head `ea0b4d2` over Core-9 `3b29309`). The skill
+change had no effect on this producer (pinned copy); the adapter aggregation
+was in force and not exercised; the thaw was required. Recorded per attempt in
+the public launch log.
+
+Leak check: both ontology attempts and the validated contract share a
+40-character run with the reading and no 60-character run, so they are public,
+unlike run-05's. Everything else public measures 0.
+
+Cost, harness-reported tokens per stage: ontology attempt 01 185,877; attempt
+02 17,875; population 167,274; producer total 371,026. Public in
+`results/usage.json`.
+
+Non-claim: admission is structural acceptance, not adequacy. No preliminary
+review exists yet; nothing here is paper evidence until Luis ratifies a review
+record. Run-02 (v4) and run-04 (v4.1) are the same model on two harness
+iterations and are not compared here.

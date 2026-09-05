@@ -1,0 +1,854 @@
+id: https://malleus.dev/schema/projects/ridge_seismicity
+name: ridge_seismicity
+version: 0.1.0
+title: Mid-Ocean Ridge Deep Seismicity and Melt Volatile Project Ontology
+description: >-
+  Project vocabulary for one marine-geophysics document run: microseismicity
+  recorded by an ocean-bottom seismometer network along a slow-spreading
+  mid-ocean ridge, the tectonic structures and lithospheric interfaces the
+  events are placed against, the rock samples and geochemical estimates of
+  melt volatile content, the methods and software that produced both, the
+  people and awards the source credits, the works it cites, and the competing
+  mechanisms it advances or rejects. Every class here is a proposal over one
+  retained reading. Nothing in it asserts that a record built from it is true.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  ridgeseis: https://malleus.dev/schema/projects/ridge_seismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+#
+# Every value below is a classification the retained reading states in
+# its own words. Instance values (segment names, depths, counts, dates,
+# sample identifiers, wording) are data and never appear here.
+# -------------------------------------------------------------------
+
+enums:
+
+  TectonicStructureKind:
+    description: >-
+      Kind of sea-floor or lithospheric structure. The list holds only kinds
+      the retained reading names; it grows by adding values, never by widening
+      one to absorb a kind it does not cover.
+    permissible_values:
+      SPREADING_RIDGE:
+        description: An oceanic spreading centre taken as a whole.
+      RIDGE_SEGMENT:
+        description: A named length of spreading axis bounded by discontinuities.
+      NON_TRANSFORM_DISCONTINUITY:
+        description: An axial offset that is not a transform plate boundary.
+      TRANSFORM_FAULT:
+        description: A transform plate boundary offsetting a spreading axis.
+      TRANSFORM_VALLEY:
+        description: The bathymetric valley along an active transform.
+      SUSPENDED_VALLEY:
+        description: A suspended valley as the source labels it.
+      RIDGE_TRANSFORM_INTERSECTION:
+        description: The junction between a ridge axis and a transform.
+      OCEANIC_CORE_COMPLEX:
+        description: A domed exposure unroofed on the flank of an axis.
+      DETACHMENT_FAULT:
+        description: A low-angle fault that unroofs an oceanic core complex.
+      NORMAL_FAULT:
+        description: An extensional fault cutting the sea floor.
+      AXIAL_VALLEY:
+        description: The median valley of a slow-spreading axis.
+      NEOVOLCANIC_RIDGE:
+        description: A volcanic construction along the axis.
+      VOLCANIC_CONE:
+        description: An individual volcanic cone.
+      HYDROTHERMAL_VENT_FIELD:
+        description: A vent field or mound, whether active or extinct.
+      FRACTURE_ZONE:
+        description: The trace of a transform beyond the offset ridge axes.
+      TRANSVERSE_RIDGE:
+        description: A ridge flanking a transform valley.
+      SEAMOUNT:
+        description: An isolated submarine elevation.
+      MASSIF:
+        description: A submarine massif as the source labels it.
+
+  AccretionCharacter:
+    description: >-
+      How the source characterises the accretion process that built a
+      structure. It is the source's characterisation, not a measurement.
+    permissible_values:
+      MAGMATIC:
+        description: Built dominantly by magmatic accretion.
+      TECTONIC:
+        description: Built dominantly by tectonic extension and unroofing.
+      MAGMATIC_AND_TECTONIC:
+        description: Both origins asserted together for one structure.
+      AMAGMATIC:
+        description: Asserted to lack magmatic accretion.
+
+  LithosphericInterfaceKind:
+    description: Kind of depth interface within crust and mantle.
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY:
+        description: The boundary between brittle and ductile deformation.
+      MOHO:
+        description: The crust-mantle interface.
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+        description: The base of the lithosphere.
+
+  SeismicityDepthClass:
+    description: >-
+      The coarse depth grouping the source applies to a body of seismicity.
+      The depth intervals themselves are carried by observation records.
+    permissible_values:
+      SHALLOW:
+        description: The source's shallow grouping.
+      NORMAL_DEPTH:
+        description: The source's normal-depth grouping.
+      DEEP:
+        description: The source's deep grouping.
+
+  LocationQualityCategory:
+    description: >-
+      Four-level location-reliability classification declared by the source.
+      The criteria themselves are retained as method records.
+    permissible_values:
+      A:
+        description: Meets every location-reliability criterion the source states.
+      B:
+        description: Meets two of the criteria the source states.
+      C:
+        description: Meets two of the criteria the source states.
+      D:
+        description: Meets one of the criteria the source states.
+
+  EarthquakeSetStage:
+    description: Processing stage at which a set of earthquakes was constituted.
+    permissible_values:
+      DETECTED:
+        description: Triggered and registered, before location.
+      LOCATED:
+        description: Located by a hypocentre search.
+      RELOCATED:
+        description: Relocated by a differential-time method.
+      FINAL_CATALOG:
+        description: The catalogue the source carries into interpretation.
+      TEST_SUBSET:
+        description: A subset assembled to test a location or model choice.
+
+  MagnitudeScale:
+    description: Magnitude scale on which a reported magnitude was determined.
+    permissible_values:
+      ML:
+        description: Local magnitude.
+      MW:
+        description: Moment magnitude.
+
+  SeismicEventType:
+    description: Kind of seismic occurrence reported as an individual event.
+    permissible_values:
+      EARTHQUAKE:
+        description: An individually reported earthquake.
+      RUPTURE_SUBEVENT:
+        description: A subevent of a larger rupture, reported separately.
+
+  DepthReference:
+    description: >-
+      Datum a reported depth is measured from. Depths on the two datums are
+      not comparable and are never converted into one another here.
+    permissible_values:
+      BELOW_SEA_FLOOR:
+        description: Measured downward from the sea floor.
+      BELOW_SEA_LEVEL:
+        description: Measured downward from sea level.
+
+  ProxyElementBasis:
+    description: >-
+      Incompatible trace element whose abundance carries an estimated volatile
+      concentration. The 90 forms are the concentrations in melts in
+      equilibrium with forsterite-90 olivine, as the source defines them.
+    permissible_values:
+      RB:
+        description: Rubidium abundance in the analysed material.
+      BA:
+        description: Barium abundance in the analysed material.
+      RB90:
+        description: Rubidium in melt in equilibrium with forsterite-90 olivine.
+      BA90:
+        description: Barium in melt in equilibrium with forsterite-90 olivine.
+
+  MeltPhaseContext:
+    description: >-
+      Which material a reported concentration belongs to. The distinction is
+      load-bearing: degassed erupted material, pre-eruptive melt, and primary
+      melt carry different concentrations of the same element.
+    permissible_values:
+      WHOLE_ROCK:
+        description: Bulk rock analysis.
+      MELT_INCLUSION:
+        description: Melt trapped in a host crystal.
+      POPPING_ROCK:
+        description: Vesicle-rich basalt retaining exsolved volatiles.
+      SEAFLOOR_BASALT:
+        description: Basalt recovered from the sea floor.
+      PRE_ERUPTIVE_MELT:
+        description: Melt before eruption, after fractional crystallisation.
+      PRIMARY_MELT:
+        description: Melt in equilibrium with its mantle source.
+
+  SampleMaterial:
+    description: Material of a recovered or compiled sample.
+    permissible_values:
+      BASALT:
+        description: Basalt.
+      PILLOW_BASALT:
+        description: Pillow basalt.
+      PERIDOTITE:
+        description: Peridotite.
+      MORB_WHOLE_ROCK:
+        description: Mid-ocean ridge basalt analysed as whole rock.
+      MORB_GLASS:
+        description: Mid-ocean ridge basalt glass.
+      POPPING_ROCK:
+        description: Vesicle-rich basalt retaining exsolved volatiles.
+      MELT_INCLUSION:
+        description: Melt inclusion hosted in a crystal.
+
+  MethodRole:
+    description: >-
+      What a named method or software package was used for in this study.
+      One value per step the source names.
+    permissible_values:
+      EARTHQUAKE_DETECTION:
+        description: Automatic triggering of candidate arrivals.
+      PHASE_PICKING:
+        description: Picking or checking P- and S-wave arrivals.
+      VELOCITY_MODEL_SELECTION:
+        description: Choosing among candidate velocity models.
+      VELOCITY_MODEL_INVERSION:
+        description: Inverting arrival data for a velocity model.
+      EARTHQUAKE_LOCATION:
+        description: Determining hypocentres.
+      EARTHQUAKE_RELOCATION:
+        description: Relocating hypocentres from differential times.
+      DEPTH_RESOLUTION_TESTING:
+        description: Testing whether reported depths are required by the data.
+      MAGNITUDE_ESTIMATION:
+        description: Determining earthquake magnitudes.
+      CATALOG_STATISTICS:
+        description: Deriving catalogue statistics such as completeness.
+      FOCAL_MECHANISM_DETERMINATION:
+        description: Determining focal mechanism solutions.
+      STRUCTURAL_ANALYSIS:
+        description: Analysing sea-floor structure from bathymetry.
+      CARTOGRAPHY:
+        description: Producing maps and figures.
+      VOLATILE_CONCENTRATION_ESTIMATION:
+        description: Estimating a volatile concentration from a proxy element.
+      SOLUBILITY_MODELLING:
+        description: Computing volatile solubility in a silicate melt.
+      FRACTIONATION_CORRECTION:
+        description: Correcting an abundance for fractional crystallisation.
+
+  BibliographicResourceType:
+    description: Kind of work a bibliographic record describes.
+    permissible_values:
+      JOURNAL_ARTICLE:
+        description: An article in a serial.
+      BOOK_CHAPTER:
+        description: A chapter or contribution in an edited volume.
+      CONFERENCE_ABSTRACT:
+        description: A conference abstract.
+      DATASET:
+        description: A deposited dataset, catalogue, or cruise record.
+      PREPRINT:
+        description: A work posted before or without journal publication.
+
+  ContributorRole:
+    description: Role in which the source credits a named person.
+    permissible_values:
+      AUTHOR:
+        description: Listed in the author byline.
+      CORRESPONDING_AUTHOR:
+        description: Named as the address for correspondence.
+      ACKNOWLEDGED_CONTRIBUTOR:
+        description: Thanked without authorship.
+
+  ClaimKind:
+    description: What kind of statement a claim record carries.
+    permissible_values:
+      MECHANISM_HYPOTHESIS:
+        description: A candidate physical mechanism the source weighs.
+      INTERPRETATION:
+        description: A reading the source places on its own observations.
+      IMPLICATION:
+        description: A consequence the source extends beyond the study area.
+      LIMITATION:
+        description: A stated limit on what the study can support.
+      NEGATIVE_FINDING:
+        description: A stated absence of something in the observations.
+
+  HypothesisDisposition:
+    description: >-
+      What the source does with a mechanism it has raised. Only the two
+      dispositions the reading actually exercises are declared.
+    permissible_values:
+      PREFERRED:
+        description: The mechanism the source adopts.
+      NOT_SUPPORTED:
+        description: A mechanism the source raises and then declines.
+
+  GeospatialRelationType:
+    description: Spatial and structural predicates between two graph entities.
+    permissible_values:
+      LOCATED_WITHIN:
+        description: The source entity lies inside the target entity.
+      BOUNDED_BY:
+        description: The source entity is bounded by the target structure.
+      OFFSETS:
+        description: The source structure offsets the target structure.
+      ADJACENT_TO:
+        description: The two entities neighbour one another along strike.
+      INTERSECTS:
+        description: The two structures meet.
+      LIES_BENEATH:
+        description: The source entity is positioned beneath the target entity.
+
+  ScientificRecordRelationType:
+    description: >-
+      Predicates that describe or attribute a scientific record rather than
+      place it in space.
+    permissible_values:
+      CONCERNS_FEATURE:
+        description: The record reports a property of the target entity.
+      CITES:
+        description: The source work cites the target work.
+      CONTRIBUTED_TO:
+        description: The person contributed to the target work or campaign.
+      FUNDED_BY:
+        description: The target award funded the source work or campaign.
+
+# -------------------------------------------------------------------
+# Classes
+#
+# Classes whose is_a is a Malleus root carry a class-level grounding
+# block. Classes derived through a pack type do not, and are placed
+# there deliberately so that the pack, not this project, owns the term.
+# -------------------------------------------------------------------
+
+classes:
+
+  # --- direct root extensions (grounded) ---------------------------
+
+  TectonicStructure:
+    is_a: Entity
+    mixins:
+      - Statusable
+    description: >-
+      A named sea-floor or lithospheric structure: an axis, a segment, a
+      discontinuity, a fault, a valley, a volcanic construction, or a vent
+      field. One class with an explicit kind, because the source reasons about
+      all of them as located, oriented, bounded objects.
+    slots:
+      - structure_kind
+      - accretion_character
+      - strike_orientation
+    slot_usage:
+      structure_kind:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural and submarine geology
+          taxonomy: DDC 551.8
+          vocabularies:
+            - vocabulary: IUGS-CGI Geoscience Terminology (GeoSciML vocabularies)
+              vocabulary_url: http://resource.geosciml.org/
+              borrowed_terms:
+                - geologic structure
+                - geologic unit
+                - fault
+                - contact
+            - vocabulary: IHO-IOC GEBCO Standardization of Undersea Feature Names
+              vocabulary_url: https://www.gebco.net/
+              borrowed_terms:
+                - mid-oceanic ridge
+                - fracture zone
+                - median valley
+                - transverse ridge
+                - seamount
+          invented_terms: []
+
+  LithosphericInterface:
+    is_a: Entity
+    description: >-
+      A depth interface within the crust and mantle whose position the source
+      argues about: the brittle-ductile boundary, the crust-mantle interface,
+      and the base of the lithosphere. Kept apart from TectonicStructure
+      because an interface is a surface whose depth is the thing observed,
+      not an edifice with an extent and an origin.
+    slots:
+      - interface_kind
+    slot_usage:
+      interface_kind:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Gross structure of the Earth's interior
+          taxonomy: DDC 551.1
+          vocabularies:
+            - vocabulary: SWEET, Semantic Web for Earth and Environmental Terminology
+              vocabulary_url: https://github.com/ESIPFed/sweet
+              borrowed_terms:
+                - Lithosphere
+                - Asthenosphere
+                - Crust
+                - Mantle
+          invented_terms: []
+
+  EarthquakeSet:
+    is_a: Entity
+    mixins:
+      - Counted
+    description: >-
+      An identified population of earthquakes reported as a group: a catalogue
+      at a processing stage, a test subset, or a body of seismicity the source
+      characterises by depth and position. This class exists because the
+      retained reading reports earthquakes almost entirely as counted
+      populations rather than as individually enumerable events.
+    slots:
+      - processing_stage
+      - depth_class
+      - location_quality
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology and earthquake catalogues
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: QuakeML seismological data exchange format
+              vocabulary_url: https://quake.ethz.ch/quakeml/
+              borrowed_terms:
+                - event parameters
+                - event
+                - origin
+                - magnitude
+          invented_terms: []
+
+  Earthquake:
+    is_a: Event
+    description: >-
+      One earthquake reported individually, with the magnitude and scale the
+      source states. Depth, uncertainty, and position are carried by
+      observation records rather than repeated here.
+    slots:
+      - magnitude_value
+      - magnitude_scale
+      - depth_class
+      - location_quality
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: QuakeML seismological data exchange format
+              vocabulary_url: https://quake.ethz.ch/quakeml/
+              borrowed_terms:
+                - event
+                - origin
+                - magnitude
+                - focal mechanism
+                - pick
+          invented_terms: []
+
+  ResearchContributor:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person the source credits, with the affiliations it prints. Roles are
+      those the source declares, not roles inferred from the work described.
+    slots:
+      - affiliation
+    slot_usage:
+      agent_type:
+        range: ContributorRole
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research attribution
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: DataCite Metadata Schema
+              vocabulary_url: https://schema.datacite.org/
+              borrowed_terms:
+                - creator
+                - contributor
+                - affiliation
+                - nameIdentifier
+          invented_terms: []
+
+  FundingAward:
+    is_a: Entity
+    description: >-
+      An award or programme the source names as funding the work, with the
+      funder and the award number exactly as printed.
+    slots:
+      - funder_name
+      - award_number
+      - programme_name
+    slot_usage:
+      funder_name:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research funding
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: DataCite Metadata Schema
+              vocabulary_url: https://schema.datacite.org/
+              borrowed_terms:
+                - fundingReference
+                - funderName
+                - awardNumber
+                - awardTitle
+          invented_terms: []
+
+  GeospatialStructureRelation:
+    is_a: Relation
+    description: >-
+      A spatial or structural edge between two entities: containment, bounding,
+      offset, adjacency, intersection, or vertical position.
+    slot_usage:
+      relation_type:
+        range: GeospatialRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Geospatial topological relations
+          taxonomy: 'Outline of academic disciplines: Geographic information science'
+          vocabularies:
+            - vocabulary: OGC GeoSPARQL
+              vocabulary_url: https://www.ogc.org/standard/geosparql/
+              borrowed_terms:
+                - within
+                - contains
+                - touches
+                - overlaps
+                - disjoint
+            - vocabulary: IUGS-CGI Geoscience Terminology (GeoSciML vocabularies)
+              vocabulary_url: http://resource.geosciml.org/
+              borrowed_terms:
+                - fault
+                - contact
+                - geologic structure
+          invented_terms: []
+
+  ScientificRecordRelation:
+    is_a: Relation
+    description: >-
+      An edge that describes or attributes a record rather than placing it in
+      space: what an observation is about, what a work cites, who contributed,
+      and what funded it.
+    slot_usage:
+      relation_type:
+        range: ScientificRecordRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Scientific record description and attribution
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C SOSA/SSN
+              vocabulary_url: https://www.w3.org/TR/vocab-ssn/
+              borrowed_terms:
+                - Observation
+                - FeatureOfInterest
+                - hasFeatureOfInterest
+            - vocabulary: DataCite Metadata Schema
+              vocabulary_url: https://schema.datacite.org/
+              borrowed_terms:
+                - relatedIdentifier
+                - relationType
+                - contributor
+                - fundingReference
+          invented_terms: []
+
+  # --- extensions through pack types (the pack owns the term) ------
+
+  SeismicStationNetwork:
+    is_a: Instrument
+    mixins:
+      - Counted
+    description: >-
+      A deployed network of seismic stations treated as the instrument that
+      produced a body of observations, carrying the station count and what the
+      count includes.
+
+  RockSample:
+    is_a: Sample
+    description: >-
+      A rock or melt sample recovered from the sea floor or compiled from a
+      sample database, with the material the source states.
+    slots:
+      - sample_material
+
+  AnalysisMethod:
+    is_a: Method
+    description: >-
+      A named analysis step, with the role it played and, where the source
+      names one, the software package and version that implemented it. Method
+      and implementing software are one record because the retained reading
+      pairs them one to one; both are kept as separate fields so neither is
+      lost. The code location uses the root locator slot: it is a route to the
+      software, never evidence about it.
+    slots:
+      - method_role
+      - software_name
+      - software_version
+      - locator
+    slot_usage:
+      method_role:
+        required: true
+
+  BibliographicSource:
+    is_a: Source
+    description: >-
+      A work the reading reports as a bibliographic record: the article itself,
+      a cited work, a deposited dataset, or a cruise record. Identifiers the
+      source prints as facts about the work, such as a DOI or a deposit
+      locator, are domain slots and live here.
+    slots:
+      - bibliographic_authors
+      - container_title
+      - volume
+      - page_range
+      - article_number
+      - publication_year
+      - doi
+      - received_date
+      - accepted_date
+      - bibliographic_resource_type
+      - locator
+
+  GeophysicalObservation:
+    is_a: Observation
+    description: >-
+      A source-attributed geophysical quantity: a depth, a thickness, a
+      velocity or velocity ratio, a magnitude statistic, a spreading rate, a
+      temperature, a dimension, an uncertainty, or a count of located events.
+      Depths carry the datum they were measured from, because depths on
+      different datums are not comparable.
+    slots:
+      - depth_reference
+
+  GeochemicalObservation:
+    is_a: Observation
+    description: >-
+      A source-attributed geochemical quantity, with the material it belongs to
+      and, where the concentration was estimated from a trace element, the
+      proxy that carried it.
+    slots:
+      - melt_phase_context
+      - proxy_element
+
+  ReportedRatio:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A ratio the source reports with both kinds kept explicit, carrying the
+      modality under which the source states it and the route back to the
+      retained assertion.
+
+  InterpretationClaim:
+    is_a: Claim
+    description: >-
+      A statement the source advances: a candidate mechanism, a reading of its
+      own observations, an implication beyond the study area, a stated limit,
+      or a stated absence. For a mechanism, the disposition records what the
+      source then did with it.
+    slots:
+      - hypothesis_disposition
+    slot_usage:
+      claim_kind:
+        range: ClaimKind
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+
+  structure_kind:
+    range: TectonicStructureKind
+    description: Kind of structure, as the source names it.
+
+  accretion_character:
+    range: AccretionCharacter
+    description: >-
+      How the source characterises the accretion process behind the structure.
+
+  strike_orientation:
+    range: string
+    description: >-
+      Orientation of the structure in the source's own notation, retained
+      without conversion to a numeric bearing. Converting it is a separate
+      operation that would need its own evidence.
+
+  interface_kind:
+    range: LithosphericInterfaceKind
+    description: Which depth interface this record is.
+
+  processing_stage:
+    range: EarthquakeSetStage
+    description: >-
+      Stage at which the set was constituted. Left unset for a group the
+      source assembles by position or depth rather than by processing.
+
+  depth_class:
+    range: SeismicityDepthClass
+    description: Coarse depth grouping the source applies.
+
+  location_quality:
+    range: LocationQualityCategory
+    description: Location-reliability category the source assigns.
+
+  magnitude_value:
+    range: float
+    description: Reported magnitude value.
+
+  magnitude_scale:
+    range: MagnitudeScale
+    description: Scale on which the magnitude was determined.
+
+  depth_reference:
+    range: DepthReference
+    description: Datum a reported depth is measured from.
+
+  melt_phase_context:
+    range: MeltPhaseContext
+    description: Material the reported concentration belongs to.
+
+  proxy_element:
+    range: ProxyElementBasis
+    description: >-
+      Trace element whose abundance carried an estimated volatile
+      concentration. Unset when the quantity was measured directly.
+
+  sample_material:
+    range: SampleMaterial
+    description: Material of the sample.
+
+  method_role:
+    range: MethodRole
+    description: What the method or software was used for.
+
+  software_name:
+    range: string
+    description: >-
+      Name of the software package implementing the method, as the source
+      writes it. Unset for a method the source states without software.
+
+  software_version:
+    range: string
+    description: Version of the software, when the source states one.
+
+  bibliographic_authors:
+    range: string
+    multivalued: true
+    description: >-
+      Author names as the work's own reference entry prints them, in order.
+
+  container_title:
+    range: string
+    description: Serial or volume title containing the work.
+
+  volume:
+    range: string
+    description: Volume designation, retained as printed.
+
+  page_range:
+    range: string
+    description: Page range, retained as printed.
+
+  article_number:
+    range: string
+    description: Article number where the work has one instead of pages.
+
+  publication_year:
+    range: integer
+    description: Year of publication as printed.
+
+  doi:
+    range: string
+    description: >-
+      Digital Object Identifier the source prints for the work. A fact the
+      source reports about the work, not a route used by this project.
+
+  received_date:
+    range: string
+    description: >-
+      Date the publisher records as received, retained in the form the source
+      prints it. Ranged as a string rather than a calendar type: the source
+      states a day and no time of day, and the contract compiler binds no
+      day-precision type, so a calendar encoding would have to invent a time
+      the source never states.
+
+  accepted_date:
+    range: string
+    description: >-
+      Date the publisher records as accepted, retained in the form the source
+      prints it, on the same footing as received_date.
+
+  bibliographic_resource_type:
+    range: BibliographicResourceType
+    description: Kind of work the record describes.
+
+  affiliation:
+    range: string
+    multivalued: true
+    description: Affiliations printed for the person, in order.
+
+  funder_name:
+    range: string
+    description: Funding body as the source names it.
+
+  award_number:
+    range: string
+    description: Award or agreement number as printed.
+
+  programme_name:
+    range: string
+    description: Programme or project name under which the award was made.
+
+  hypothesis_disposition:
+    range: HypothesisDisposition
+    description: >-
+      What the source does with a mechanism it has raised. Unset for a claim
+      that is not a candidate mechanism.

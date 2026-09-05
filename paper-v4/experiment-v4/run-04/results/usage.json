@@ -1,0 +1,29 @@
+{
+  "schema": "malleus.paper-v4.producer-usage/v1",
+  "run": "run-04",
+  "note": "Harness-reported subagent tokens per stage, taken from the Claude Code Agent tool's usage report at each producer resume (cumulative per session; stage figures are differences). The count is the harness's own total for the session and is not split into input, output or cache tokens. tool_uses and duration_ms are cumulative in the same way. Reasoning effort was the harness default.",
+  "model_id": "claude-opus-5",
+  "model_family": "Claude Opus 5",
+  "stages": [
+    {
+      "stage": "ONTOLOGY_ATTEMPT_01",
+      "tokens": 185877,
+      "tool_uses": 17,
+      "duration_ms": 1007660
+    },
+    {
+      "stage": "ONTOLOGY_ATTEMPT_02",
+      "tokens": 17875,
+      "tool_uses": 6,
+      "duration_ms": 186362
+    },
+    {
+      "stage": "POPULATION",
+      "tokens": 167274,
+      "tool_uses": 49,
+      "duration_ms": 1502288
+    }
+  ],
+  "producer_total_tokens": 371026,
+  "population": "ADMITTED_AND_REPLAYED at runner attempt 2, zero structural returns; attempt 1 refused on a Core defect (Core-10) with the same population bytes"
+}

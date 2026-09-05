@@ -1,0 +1,230 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v1",
+  "run": "run-04",
+  "protocol": "v4.1",
+  "launches": [
+    {
+      "ordinal": 1,
+      "phase": "ONTOLOGY",
+      "launched_at": "2026-09-04T23:18:44Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-04/spawn-message.md with the workspace path substituted by its absolute path",
+      "outcome": "ONTOLOGY_READY",
+      "usage_cumulative": {
+        "tokens": 185877,
+        "tool_uses": 17,
+        "duration_ms": 1007660
+      },
+      "usage_by_resume": [
+        {
+          "after": "ONTOLOGY_ATTEMPT_02",
+          "tokens": 203752,
+          "tool_uses": 6,
+          "duration_ms": 186362
+        },
+        {
+          "after": "POPULATION",
+          "tokens": 371026,
+          "tool_uses": 49,
+          "duration_ms": 1502288
+        }
+      ]
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:dd0e1100753aeabf4542d0b6a94d42692eef288f967e05f505c63701469026cd",
+      "status": "REFUSED",
+      "stage": "CONTRACT_COMPILATION",
+      "reason": "INVALID_RANGE",
+      "subjects": 1,
+      "detail": "accepted_date has an unbound range",
+      "note": "PACK_GROUNDING passed on attempt 1 (first cell to do so)",
+      "diagnostic_returned_to_producer_at": "2026-09-04T23:36:17Z",
+      "diagnostic_return_ordinal": 1,
+      "diagnostic_return_limit": 2
+    },
+    {
+      "attempt": 2,
+      "ontology_sha256": "sha256:94f2fcc6c901fef51ccbe3e1ad7d266c4351671c28484209e9cc545557c29149",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:36ea8b8913b6f7d0c5883bde95a500b5080194c982b782c5a7d0d0e890955d27",
+      "fact_count": 3986,
+      "accepted_at": "2026-09-04T23:39:50Z",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "event_types_on_surface": [
+        "Event",
+        "Earthquake"
+      ],
+      "phase_two_inputs_staged": [
+        "accepted/population-surface.json",
+        "accepted/diagnostic.json"
+      ],
+      "diagnostic_returns_used": 1,
+      "citation_check": {
+        "checked_at": "2026-09-04T23:42:41Z",
+        "method": "overseer inspection of the seven vocabulary entries",
+        "finding": "all seven name real, widely used vocabularies at their canonical hosts (GeoSciML/CGI, GEBCO undersea feature names, SWEET, QuakeML, DataCite metadata schema, OGC GeoSPARQL, W3C SOSA/SSN); no fabricated vocabulary; borrowed-term aptness not judged here"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-05T00:05:35Z",
+      "status": "REFUSED",
+      "stage": "ADMIT",
+      "reason": "STRUCTURAL_REFUSAL",
+      "detail": "Property 'affiliation' must be a list",
+      "classification": "CORE_DEFECT_NOT_PRODUCER",
+      "evidence": "population file carries lists for all six affiliation values and the change-set operation still carries the list; KnowledgeChangeSet freezes list values to tuples (knowledge.py _freeze) and _apply_change passes dict(operation.properties) to the staged graph, so the ontology validator (ontology.py _validate_value, isinstance(value, list)) sees a tuple; run-02 and run-06 populations carried zero list-valued properties, so this is the first population to exercise a multivalued slot",
+      "producer_return": false,
+      "leftovers": "refused-runner-attempt-01/ (ledger written before the refusal, runner stderr)",
+      "planned_fix": "Core-10 (opus): thaw operation properties at the four create_* call sites, RED test first, ledger entry; then rerun this runner unchanged"
+    },
+    {
+      "attempt": "shadow",
+      "at": "2026-09-05T00:15:23Z",
+      "where": "overseer scratchpad, not the cell",
+      "core": "working tree with _apply_change patched in memory to _thaw(operation.properties) at the four create_* sites; nothing on disk changed",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 256,
+        "events": 3,
+        "relations": 144,
+        "event_participations": 0,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 403,
+      "reopen_matches_admitted": true,
+      "census": {
+        "FULLY_FORMALIZED": 289,
+        "PARTLY_FORMALIZED": 40,
+        "UNFORMALIZED": 20,
+        "blocks_reviewed": "186/186"
+      },
+      "gaps_by_kind": {
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE": 21,
+        "TYPE_ABSENT": 5,
+        "AGGREGATE_ONLY": 8,
+        "RELATION_ABSENT": 1,
+        "INTERVAL_NOT_EXPRESSIBLE": 26
+      },
+      "purpose": "establish before the Core fix whether further structural refusals lurk behind the tuple defect; none did; the official run happens on the committed fix"
+    },
+    {
+      "attempt": 2,
+      "transaction_time": "2026-09-05T01:04:55Z",
+      "execution_commit": "1152db9",
+      "core_note": "Core files at Core-10 head ea0b4d2 (thaw at admit, OVR-000398) over Core-9 3b29309; the cell's pinned inputs stay at 8b806f7; the population file is byte-identical to attempt 1's",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 256,
+        "event_participations": 0,
+        "events": 3,
+        "relations": 144,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 403,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 289,
+          "PARTLY_FORMALIZED": 40,
+          "UNFORMALIZED": 20
+        },
+        "blocks_reviewed": 186,
+        "blocks_total": 186,
+        "capture_sha256": "sha256:c5b444abaf382b73beb4165afe4dceadb057ed63a7bc034c818095f9fbfeb3ca",
+        "gaps_by_kind": {
+          "AGGREGATE_ONLY": 8,
+          "INTERVAL_NOT_EXPRESSIBLE": 26,
+          "RELATION_ABSENT": 1,
+          "REQUIRED_FIELD_ABSENT_IN_SOURCE": 21,
+          "TYPE_ABSENT": 5
+        }
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 8,
+        "INTERVAL_NOT_EXPRESSIBLE": 26,
+        "RELATION_ABSENT": 1,
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE": 21,
+        "TYPE_ABSENT": 5
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-05T01:06:26Z",
+      "matches_shadow_run": true
+    }
+  ],
+  "query": {
+    "bound_at": "2026-09-05T01:09:39Z",
+    "binding": "results/native-query-binding.json (exhaustive type cross-product per question under the surface's three relation types; type sets are the evaluator's only judgement)",
+    "drafts": [
+      {
+        "file": "results/native-query-binding.draft-01.json",
+        "cases": 38,
+        "outcome": "hand-picked pairs; CQ-03 returned 0 rows; replaced",
+        "query_dir": "query-draft-01"
+      },
+      {
+        "file": "results/native-query-binding.draft-02.json",
+        "cases": 957,
+        "outcome": "exhaustive; CQ-04's set included BibliographicSource, binding 75 CITES rows; type removed",
+        "query_dir": "query-draft-02",
+        "rows": {
+          "NQ-CQ-01": 17,
+          "NQ-CQ-02": 69,
+          "NQ-CQ-03": 83,
+          "NQ-CQ-04": 146
+        }
+      }
+    ],
+    "bound_after_replay_receipt_sha256": "sha256:e5f1740110012b458e646302b2f7985386833ef57d4e07d74ac56a7d99421c0c",
+    "result": "query/query-result.json",
+    "rows_by_question": {
+      "NQ-CQ-01": 17,
+      "NQ-CQ-02": 69,
+      "NQ-CQ-03": 83,
+      "NQ-CQ-04": 71
+    },
+    "rows_total": 240,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:08f31a89f4e5a0fcc3aac3c0ce77e146a82617d3eae67811652e85c0ecaf84ae"
+  },
+  "core_10": {
+    "reported_at": "2026-09-05T01:09:39Z",
+    "commits": [
+      "ea60b19",
+      "67aa2b0",
+      "ea0b4d2"
+    ],
+    "ledger": "OVR-000398",
+    "full_suite": "1 failed (tests/test_docs.py worktree-immutability guard tripped by the overseer's concurrent edit of paper-master-plan.md; passes alone), 3048 passed, 2 skipped",
+    "residual": "OVR-000398 says the six affiliation values were one-item lists; verified by the overseer from the population file, see affiliation_list_lengths",
+    "affiliation_list_lengths": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      3
+    ]
+  }
+}
