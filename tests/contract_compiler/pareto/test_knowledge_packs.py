@@ -856,6 +856,35 @@ def test_governing_design_records_the_subject_name_forms_decision() -> None:
     )
 
 
+def test_governing_design_records_the_projected_subject_decision() -> None:
+    """Decision 21 says why the compiler derives the attachment run-11 left to
+    the producer, how the derivation is marked, and what it still refuses."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "21. The subject is projected by the compiler",
+        "77 source-asserted records leave `subject` unset while the sentence "
+        "formalizing them names an entity of the same capture",
+        "a duty with no gate behaves as a preference",
+        "That derivation carries `origin: PROJECTED`",
+        "enters neither the lowered operations nor "
+        "`KnowledgeGraph.from_records`",
+        "`proposed` for a subject the producer set, `projected` for one the "
+        "adapter derived",
+        "no projection from a sentence naming two entities",
+        "no projection onto an event",
+        "no projection over a subject the producer set",
+        "no semantic judgment past the name occurring",
+        "`research` stays at 0.5.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("20. A subject is named by any of its names") < (
+        normalized.index("21. The subject is projected by the compiler")
+    )
+
+
 def test_governing_design_records_the_evaluative_slot_decision() -> None:
     """Decision 17 says which slots are evaluative and how a reader finds out."""
 

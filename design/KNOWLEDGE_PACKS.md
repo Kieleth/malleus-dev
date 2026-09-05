@@ -438,6 +438,58 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     `research` stays at 0.5.0 and every fixture and frozen paper cell keeps
     compiling.
 
+21. The subject is projected by the compiler, in the document-assertion
+    adapter and the population-plan grammar, no pack change. Run-11 spent
+    decision 20 and got what it paid for: no `SUBJECT_NOT_NAMED` refusal at
+    either runner attempt, 27 entities carrying tags. Coverage fell anyway,
+    91 of 248 against run-10's 114 of 235, and a script over the frozen
+    capture says why: 77 source-asserted records leave `subject` unset while
+    the sentence formalizing them names an entity of the same capture, the
+    mantle, the MAR, the RTI, the OCC. The check would have accepted every
+    one. The rule was stated as a duty to the producer with no gate behind
+    it, and a duty with no gate behaves as a preference; the producer's own
+    validator enforced the check it was given, which was the name comparison,
+    and read attachment itself as optional. The name is in the retained bytes
+    either way, so the attachment is derived and not requested: when a record
+    of a subject-bearing type leaves `subject` unset, the adapter collects the
+    capture's entity records that carry a `name` and whose own type bears no
+    subject, and finds those whose `name` or any of whose `tags` occurs in the
+    statement of an assertion formalizing any field of that record, compared
+    by decision 20's rule, whitespace removed from both sides and case-folded.
+    Exactly one entity named sets `subject` to that entity's id in the lowered
+    plan and records the derivation for `["properties", "subject"]` against
+    the first assertion, in capture order, whose statement names it. That
+    derivation carries `origin: PROJECTED`, one optional field the
+    population-plan grammar now admits on a derivation with `PROJECTED` its
+    only value, so a reader of the plan and a second implementation replaying
+    it tell a derived subject from a producer's own. The field is carried and
+    never interpreted: it names no record, resolves nothing, and enters
+    neither the lowered operations nor `KnowledgeGraph.from_records`, which
+    reads the plan's `records` alone, so the direct graph and the governed
+    replay still agree record for record. The census reports which is which,
+    under `subject_coverage` beside `derivation`: per subject-bearing type and
+    in total, `proposed` for a subject the producer set, `projected` for one
+    the adapter derived, `ambiguous` for a record whose sentences name more
+    than one entity, `unnamed` for one whose sentences name none, with
+    `with_subject` the first two summed and `without_subject` the last two.
+    One skill sentence says the adapter projects, and tells the producer to
+    set `subject` only where the sentence names more than one entity or where
+    the one it names is not what the record is about. What it does not do:
+    no projection from a sentence naming two entities, which is the case a
+    substring cannot decide and the census counts as ambiguous rather than
+    guessing at it; no projection onto an event, because the candidates are
+    the capture's entity records, exactly as a relation endpoint and a
+    producer's own subject are Entity-ranged; no projection over a subject the
+    producer set, which stays the producer's and is checked as decision 18 and
+    decision 20 check it; no semantic judgment past the name occurring, so a
+    sentence that names a thing it is not about projects the wrong subject and
+    the review is what measures that, which is the falsifier this change is
+    run against; nothing refuses, no reason is added and none is removed; and
+    the pack is untouched, so `research` stays at 0.5.0 and every fixture and
+    frozen paper cell keeps compiling. A plan whose derivations carry no
+    `origin` is unchanged, which is every plan written before this and every
+    plan a structured-row adapter writes.
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.
