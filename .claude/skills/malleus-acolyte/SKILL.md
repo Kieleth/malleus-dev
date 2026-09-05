@@ -343,8 +343,16 @@ fallback.
 
 ### Current document-capture template
 
-This is the current private-v0 shape, not a stable wire. Parse the JSON, replace
-the contract identity and project record types with values from the compiled
+The producer writes one file, `document-population.json`, with exactly three
+top-level keys: `capture`, `records`, and `supersessions`. Nothing else belongs
+in that file, and the producer never writes a contract identity: the parent or
+`malleus-compiler capture` computes `contract_identity` from the compiled
+contract, and a producer that writes one has invented a coordinate it cannot
+know. The second block below is what the parent or the harness supplies around
+the file; none of it is written into the file.
+
+This is the current private-v0 shape, not a stable wire. Parse the JSON and
+replace the project record types with values from the compiled
 contract. Encode the `capture` object as canonical JSON bytes: UTF-8, sorted
 keys, no insignificant whitespace, and no non-finite numbers. `reading_bytes`
 are the raw bytes of the declared reading input exactly as supplied, and
@@ -352,8 +360,8 @@ are the raw bytes of the declared reading input exactly as supplied, and
 bytes. The adapter digests the argument it is handed and compares the two; it
 never re-serialises the reading first, so naming the reading by the digest of a
 re-encoding refuses with `READING_MISMATCH`. The reading in this template is
-canonical JSON only because it is written here as JSON data. Pass exactly
-these seven public keyword arguments to `adapt_document_assertions`:
+canonical JSON only because it is written here as JSON data. The parent passes
+exactly these seven public keyword arguments to `adapt_document_assertions`:
 `reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`,
 `records`, and `supersessions`. The reading object is illustrative input, not a
 live grammar or closed shape; the adapter reads its pages and each block's ID,
@@ -395,24 +403,10 @@ target; an event participation carries its `event_id` and `entity_id` under
 rule that closes them.
 
 <!-- malleus-nascent-document-template:start -->
+The producer's output file, `document-population.json`:
+
 ```json
 {
-  "accepted_gap_kinds": [
-    "INTERVAL_NOT_EXPRESSIBLE",
-    "AGGREGATE_ONLY",
-    "MODALITY_NOT_EXPRESSIBLE",
-    "REQUIRED_FIELD_ABSENT_IN_SOURCE",
-    "TYPE_ABSENT",
-    "RELATION_ABSENT"
-  ],
-  "accepted_modalities": [
-    "CALCULATED",
-    "CONTESTED",
-    "HYPOTHESISED",
-    "MEASURED",
-    "NEGATED",
-    "STATED"
-  ],
   "capture": {
     "assertions": [
       {
@@ -421,15 +415,22 @@ rule that closes them.
         "domain_time": "2026-01-02",
         "formalized_by": [
           {
-            "path": ["properties", "relation_type"],
+            "path": [
+              "properties",
+              "relation_type"
+            ],
             "record_id": "relation:A:B"
           },
           {
-            "path": ["source_id"],
+            "path": [
+              "source_id"
+            ],
             "record_id": "relation:A:B"
           },
           {
-            "path": ["target_id"],
+            "path": [
+              "target_id"
+            ],
             "record_id": "relation:A:B"
           }
         ],
@@ -447,7 +448,10 @@ rule that closes them.
         "block": "block:3",
         "formalized_by": [
           {
-            "path": ["properties", "outcome"],
+            "path": [
+              "properties",
+              "outcome"
+            ],
             "record_id": "event:inspection:1"
           }
         ],
@@ -465,33 +469,6 @@ rule that closes them.
     "nothing_assertable": [],
     "reading_sha256": "sha256:b9ce4886371f23412e778928a20599d4f656e36cc117e1d2f606f73174e08e29",
     "schema": "malleus.document-capture/private-v0"
-  },
-  "capture_id": "capture:neutral:1",
-  "contract_identity": "replace-with-PartialEffectiveContract.identity",
-  "plan_id": "plan:neutral:1",
-  "reading": {
-    "pages": [
-      {
-        "blocks": [
-          {
-            "id": "block:1",
-            "ordinal": 0,
-            "text": "On 2026-01-02, object A links to object B."
-          },
-          {
-            "id": "block:2",
-            "ordinal": 1,
-            "text": "No captured assertion in this block."
-          },
-          {
-            "id": "block:3",
-            "ordinal": 2,
-            "text": "Object A passed inspection."
-          }
-        ],
-        "page": 1
-      }
-    ]
   },
   "records": {
     "entities": [
@@ -531,6 +508,64 @@ rule that closes them.
 }
 ```
 <!-- malleus-nascent-document-template:end -->
+
+<!-- malleus-nascent-document-harness:start -->
+Supplied by the parent or the harness, never written into `document-population.json`:
+
+```json
+{
+  "accepted_gap_kinds": [
+    "INTERVAL_NOT_EXPRESSIBLE",
+    "AGGREGATE_ONLY",
+    "MODALITY_NOT_EXPRESSIBLE",
+    "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+    "TYPE_ABSENT",
+    "RELATION_ABSENT"
+  ],
+  "accepted_modalities": [
+    "CALCULATED",
+    "CONTESTED",
+    "HYPOTHESISED",
+    "MEASURED",
+    "NEGATED",
+    "STATED"
+  ],
+  "adapter_call": {
+    "capture_bytes": "the canonical JSON bytes of document-population.json's capture object",
+    "capture_id": "capture:neutral:1",
+    "contract_identity": "the parent computes PartialEffectiveContract.identity from the compiled contract; the producer never writes one",
+    "plan_id": "plan:neutral:1",
+    "reading_bytes": "the exact bytes of the reading file below, byte for byte as supplied",
+    "records": "document-population.json's records object, passed through",
+    "supersessions": "document-population.json's supersessions array, passed through"
+  },
+  "reading": {
+    "pages": [
+      {
+        "blocks": [
+          {
+            "id": "block:1",
+            "ordinal": 0,
+            "text": "On 2026-01-02, object A links to object B."
+          },
+          {
+            "id": "block:2",
+            "ordinal": 1,
+            "text": "No captured assertion in this block."
+          },
+          {
+            "id": "block:3",
+            "ordinal": 2,
+            "text": "Object A passed inspection."
+          }
+        ],
+        "page": 1
+      }
+    ]
+  }
+}
+```
+<!-- malleus-nascent-document-harness:end -->
 
 ## Standing orders (the playbook, condensed)
 
