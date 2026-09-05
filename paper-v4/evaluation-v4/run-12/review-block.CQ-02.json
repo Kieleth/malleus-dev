@@ -1,0 +1,953 @@
+{
+  "question_id": "CQ-02",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "Both halves of the question are answered by rows rather than by inference. The named subsection is returned as its own record and named again as the subject of several observations, and those observations place the deep microseismicity beneath that subsection's ridge axis, give its depth band twice over from two different blocks, deny any events below the lower edge of that band, and put the shallow off-axis seismicity to the west of the same axis. The earthquake population is present as depth-bounded observations rather than as a catalogue object, which is enough to answer where the events sit. Two caveats worth recording and neither of them fatal: the spatial relation is carried in the free-text quantity descriptions of subject-bound observations, not as a typed relation between the subsection and an event population, and none of the seven returned relations connects the two; and a minority of rows attach general ridge-class expectations and location-error statistics to features the cited blocks never name, which is noise around an otherwise direct answer. Several supporting rows also derive from figure-caption blocks, which the question's own scope excludes as an answer surface.",
+  "source_locators": [
+    "page:2:block:004",
+    "page:2:block:006"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The study-area block places the work between two named transform faults, one of them this one, so both the name and the transform classification are carried by the block.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The same block describes the eastern boundary of the RTI segment as a westward dipping detachment fault, which supports a fault record of that name and kind.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the core complex surface as cut by normal faults with given strikes, so a fault record of that name and kind holds.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The study-area block names this transform fault as one bound of the ridge segment and the results block names it again as terrain the network covered, so the name and the transform kind both hold.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction defines the brittle-ductile boundary and gives this abbreviation for it, which is what a record under that name asserts.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The discussion introduces the lithosphere-asthenosphere boundary with this abbreviation, so an interface record under that name is carried by the block.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The cross-section caption refers to the expected crust-mantle interface by this name, which supports a record under it.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block discusses seismicity beneath the axial valley floor, so a region record under that name holds.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The opening of the study-area block places the ridge in this ocean region by name.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The discussion names this ridge as one of the ultraslow-spreading centres with a record of deep seismicity in the mantle.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The study-area block introduces the ridge with this abbreviation and the figure caption expands it again, so the name holds.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ]
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the Southwest Indian Ridge with this abbreviation while comparing lithospheric regimes.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The subdivision sentence names the first non-transform discontinuity under this label.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The same subdivision sentence names the second non-transform discontinuity under this label.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The study-area block names the oceanic core complex east of the ridge axis with this abbreviation.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block refers to the ridge segment between the two bounding transforms in exactly these terms, so a record under that name holds.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The subdivision sentence gives this label to the ridge-transform intersection segment.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The subdivision sentence names this short ridge segment and the morphology block describes it again under the same label.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block gives this label to the ridge segment south of the second discontinuity.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the intersection at the eastern end of the transform and gives it this abbreviation.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction links deep seismicity on transform faults to semi-brittle deformation in hot hydrated mylonite zones, so a shear-zone record under this name holds; the prose carries the fuller phrase and the record name is its clipped form.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The relation's block is also one of the blocks that formalize the fault endpoint. It states that the core complex surface is heavily cut by those normal faults, which is the relation the row asserts.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The relation's block is among the blocks that formalize the ridge endpoint. The figure caption puts the core complex at a named corner of the ridge, which supports an adjacency; the row keeps the pairing and drops which corner.",
+      "source_locators": [
+        "page:2:block:007"
+      ]
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The relation's block formalizes both endpoints. It states that the intersection segment, labelled in the same block, is bounded on its eastern side by that detachment fault.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The relation's block formalizes both endpoints and places the ridge segment between the two named transforms, which supports a bounding relation to this one.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The same sentence supports the bounding relation to the other named transform, and the block formalizes both endpoints.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The relation's block is among the blocks that formalize the ridge-segment endpoint. It places that segment immediately south of the discontinuity, which supports the adjacency.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The relation's block formalizes both endpoints and identifies the segment south of the second discontinuity by name, which supports the adjacency.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The abstract names the interface in full rather than by its abbreviation, and the located sentence is a forward-looking assertion about melt beneath that interface, which matches the stated modality, the prediction kind and the subject binding.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block attributes the melt-flushing suggestion to named earlier authors and names the interface where the melt would gather, so the attributed-claim kind, the stated modality and the subject all hold.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence denies current eruptive activity in the axial valley on observational grounds, which matches the negated modality, the observation-statement kind and the subject.",
+      "source_locators": [
+        "page:4:block:003"
+      ]
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence flags the brevity of the microseismicity record as a caveat on what it can show about processes along this ridge supersegment, which matches the limitation kind, the stated modality and the ridge as subject.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence draws a hedged conclusion from the authors' own model about volatile content at ultraslow ridges, naming this one, which matches the hypothesised modality, the inference kind and the subject.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The discussion block presents this mechanism as one of several possibilities and marks it as the authors' preferred one, and names the segment the deep seismicity sits beneath, so the hypothesised modality, the possibility kind, the preferred disposition and the subject all hold.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block offers the cold-and-thick-lithosphere account as one explanation and then argues against it from the segment's magmatic morphology, so the hypothesised modality, the explanation kind, the not-supported disposition and the segment as subject all hold.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence reads the resolution tests as showing the deep events beneath that segment's ridge axis are real, which matches the stated modality, the interpretation kind and the subject.",
+      "source_locators": [
+        "page:8:block:001"
+      ]
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block raises hydrothermal cooling as a hypothesis and then closes against it by concluding the mantle there is hot and magmatism dominates, so the hypothesised modality, the not-supported disposition and the segment as subject all hold.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence denies any observation of active venting on that segment's axis, which matches the negated modality, the observation-statement kind and the subject.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence denies evidence of detachment faulting at that segment while describing the faults that do bound it, which matches the negated modality and the subject.",
+      "source_locators": [
+        "page:4:block:001"
+      ]
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block raises deformation in mantle mylonite shear zones as another hypothesis and states in the same block that observations do not support it, so the hypothesised modality, the hypothesis kind, the not-supported disposition and the subject all hold.",
+      "source_locators": [
+        "page:3:block:003"
+      ]
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The results block names the transform fault and gives the length of its eastern part that the network covered, and that length is a property of the fault segment the row names as subject.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The relocation block names the transform fault and reports the events located along it as a plain result, so a stated record whose subject is that fault is what the prose carries; the counted events are localised to the subject itself.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the interface and gives the sub-solidus temperature for anhydrous peridotite there, hedged as approximate, so value, unit, approximation and subject all hold.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The cross-section caption names the boundary and states the isotherm the earthquake-constrained boundary corresponds to, matching the value, the unit and the subject.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the boundary and gives its depth under the cold-lithosphere account in the conditional, which matches the hypothesised modality, the approximate value and the subject.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same conditional sentence gives the isotherm band corresponding to that boundary depth, so the bounds, the unit, the hypothesised modality and the subject all hold.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The introduction names the boundary and states the isotherm with its tolerance that the maximum earthquake depth is taken to mark, matching the value, the uncertainty, the unit and the subject.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the boundary and gives its depth beneath the second discontinuity as an approximate figure inferred from the seismicity, matching value, unit and subject.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same block gives the crustal age up to which that boundary stays shallow, hedged as approximate, with the unit the row carries.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the interface and reports a proposed melt fraction at its base, which matches the hypothesised modality, the approximate value, the unit and the subject.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same proposal gives the water content as an upper bound at the base of that interface, matching the open upper bound, the unit and the subject.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the ocean region and reports an average volatile concentration there from earlier work, obtained through element-ratio estimation, which matches the calculated modality, the estimated determination, the approximate value and the unit.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same sentence gives the upper figure reached in that region by the same estimation route, matching the value, the unit and the subject.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the axial valley and gives the shallow focal-depth band of the cluster on its western side, hedged as approximate, so the bounds, the unit and the subject all hold.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the ridge and gives the highest melt volatile content previously reported there, matching the value, the unit and the subject.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The abstract names the ridge in full rather than by its abbreviation and reports the depth band of the deep mantle earthquakes along its axis, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The figure caption names the ridge axis and gives the depth band of the deep earthquakes beneath it, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The study-area block names the ridge and gives its half-spreading rate with the unit the row carries, and that rate is a property of the ridge itself.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The results block names the ridge axis and gives the length of it the network covered, matching the value, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The relocation block names the ridge and reports the events located along it as a plain result, and the figure panel repeats the total, so a stated record whose subject is the ridge is what the prose carries.",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 60,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_IN_BLOCK The figure caption names the ridge and does state that the marks along the profile are at that interval, so the value and unit hold, but the interval is a plotting convention of the figure rather than a property of the ridge, so the block does not support that the record is about the subject shown.",
+      "source_locators": [
+        "page:3:block:005"
+      ]
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The morphology block names the discontinuity and gives its length, hedged as approximate, with the unit the row carries.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block names the southern discontinuity and gives the depth band of the normal-depth earthquakes beneath it, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the discontinuity and gives the approximate maximum depth the earthquakes there reach, matching the open upper bound, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The morphology block names the discontinuity and gives its ridge offset, hedged as approximate, with the unit the row carries.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block names the core complex and places the shallow earthquake band beneath its faulted dome, so the bounds, the unit and the localisation to the subject all hold.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 66,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The introduction does support the expected maximum earthquake depth beneath slow-spreading ridges as an upper bound in the unit the row carries, but the sentence is a general thermal-model expectation for a class of ridges, the core complex is not named anywhere in the block, and nothing there supports that the record is about it.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 67,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The same sentence supports the ultraslow-ridge bound and its unit, but again it is a general expectation for a ridge class, the core complex is not named in the block, and the subject binding is unsupported.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The geochemistry block names the segment and gives the lower bound on barium in its samples as a measured enrichment, matching the open lower bound, the unit and the subject.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same sentence gives the rubidium lower bound for that segment's samples, matching the open lower bound, the unit and the subject.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block names the segment and gives the pre-eruptive volatile range estimated from barium, and the surrounding sentences make clear the figures are estimates from element ratios, so the bounds, the unit, the calculated modality and the estimated determination all hold.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block names the segment and gives the primary-melt range estimated from the barium proxy corrected to equilibrium, matching the bounds, the unit and the estimation status.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The results block names the segment and gives the calculated volatile content of melts generated along it, matching the bounds, the unit and the calculated status.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment and gives the estimated pre-eruptive concentration range there, matching the bounds, the unit and the estimated status.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block names the segment and states a floor on the primary-melt volatile concentration along it, which matches the open lower bound, the unit and the subject.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same estimation sentence gives the pre-eruptive range from the rubidium proxy for that segment, matching the bounds, the unit and the estimation status.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block gives the primary-melt range from the rubidium proxy for that segment, matching the bounds, the unit and the estimation status.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block names the southern segment and gives its pre-eruptive range from the barium proxy, matching the bounds, the unit and the estimation status.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block gives the primary-melt range from the barium proxy for that southern segment, matching the bounds, the unit and the estimation status.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The results block names the southern segment in the comparison and gives its calculated volatile content, matching the bounds, the unit and the calculated status.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block gives the pre-eruptive range from the rubidium proxy for the southern segment, matching the bounds, the unit and the estimation status.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The methods block gives the primary-melt range from the rubidium proxy for the southern segment, matching the bounds, the unit and the estimation status.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment and gives the depth band of the deep earthquakes observed beneath its axis, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block names the segment and places the deep microseismicity beneath its ridge axis with an approximate depth band, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment axis and offers the higher temperature at greater depth as a possible reason no earthquakes are seen there, drawing the figure from a cited thermal model, which matches the hypothesised modality, the modelled determination and the open lower bound.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The morphology block names the segment and gives the width of its median valley with the unit the row carries.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment axis and denies any earthquakes below that depth beneath it, which matches the negated modality, the open lower bound and the subject.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment axis and gives the depth to which the off-axis shallow seismicity west of it reaches, matching the open upper bound, the unit and the subject.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The cross-section caption names the segment and gives the crustal thickness beneath it with its tolerance, matching the value, the uncertainty, the unit and the subject.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The morphology block names the segment and gives its length, hedged as approximate, with the unit the row carries.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The morphology block names the southern segment and gives its length with the unit the row carries.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The study-area block names the ridge segment between the two bounding transforms and gives its length, hedged as approximate, with the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The results block names the intersection region and reports the earthquakes located in its vicinity as a plain result, so a stated record localised to the subject is what the prose carries.",
+      "source_locators": [
+        "page:2:block:003"
+      ]
+    },
+    {
+      "row_index": 93,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The location-quality block does support the mean horizontal error, its approximation and its unit, but the sentence predicates the error of the located earthquakes, the intersection region is not named anywhere in the block, and nothing there supports that the record is about it.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    },
+    {
+      "row_index": 94,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The same sentence supports the mean vertical error and its unit, but again the quantity belongs to the located earthquakes, the intersection region is not named in the block, and the subject binding is unsupported.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    },
+    {
+      "row_index": 95,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_IN_BLOCK The study-area block does state how many non-transform discontinuities offset the studied ridge portion, so the count holds, but the count is a property of that ridge portion, which spans several subsections, and the block does not support that the record is about the intersection alone.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 96,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_IN_BLOCK The same sentence supports the length of the studied ridge portion and its approximation, but that portion is the whole surveyed stretch rather than the intersection the row names as subject, so the subject binding is not carried by the block.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The relocation block names the transform fault and gives the number of events located along it, matching the count and its scope, and the counted events are localised to the subject.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the boundary and gives its depth under the cold-lithosphere account in the conditional, matching the hypothesised modality, the approximate value and the subject.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same block gives the boundary depth beneath the second discontinuity as inferred from the seismicity, matching the approximate value, the unit and the subject.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the axial valley and gives the shallow focal-depth band of the cluster on its western side, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The abstract names the ridge in full and reports the depth band of the deep mantle earthquakes along its axis, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The figure caption names the ridge axis, gives the depth band of the deep earthquakes beneath it and states that the depths are referenced to the sea floor, so the bounds, the unit, the depth reference and the subject all hold.",
+      "source_locators": [
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The relocation block names the ridge and gives the number of events located along it, matching the count and its scope, and the figure panel repeats the same total.",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 104,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_IN_BLOCK The figure caption names the ridge and supports the marking interval and its unit, but the interval is a reference convention of the plot rather than a property of the ridge, so the block does not support that the record is about the subject shown.",
+      "source_locators": [
+        "page:3:block:005"
+      ]
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block names the southern discontinuity and gives the depth band of the normal-depth earthquakes beneath it, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the discontinuity and gives the approximate maximum depth the earthquakes there reach, matching the open upper bound, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block names the core complex and places the shallow earthquake band beneath its faulted dome, so the bounds, the unit and the localisation to the subject all hold.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 108,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The introduction supports the slow-ridge depth bound, its unit and that it is referenced to the sea floor, but the sentence is a general expectation for a class of ridges, the core complex is not named in the block, and the subject binding is unsupported.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 109,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The same sentence supports the ultraslow-ridge bound, its unit and the sea-floor reference, but it says nothing about the core complex, which is not named in the block, so the subject binding is unsupported.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment and gives the depth band of the deep earthquakes observed beneath its axis, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block names the segment and places the deep microseismicity beneath its ridge axis with an approximate depth band, matching the bounds, the unit and the subject.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment axis and denies any earthquakes below that depth beneath it, matching the negated modality, the open lower bound and the subject.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block names the segment axis and gives the depth to which the off-axis shallow seismicity west of it reaches, matching the open upper bound, the unit and the subject.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The results block names the intersection region and gives the number of earthquakes located in its vicinity, matching the count and its scope, and the counted events are localised to the subject.",
+      "source_locators": [
+        "page:2:block:003"
+      ]
+    },
+    {
+      "row_index": 115,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The location-quality block supports the mean horizontal error, its approximation and its unit, but the quantity belongs to the located earthquakes and the intersection region is named nowhere in the block, so the subject binding is unsupported.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    },
+    {
+      "row_index": 116,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_NOT_IN_BLOCK The same sentence supports the mean vertical error and its unit, but the quantity belongs to the located earthquakes and the intersection region is not named in the block, so the subject binding is unsupported.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    }
+  ]
+}

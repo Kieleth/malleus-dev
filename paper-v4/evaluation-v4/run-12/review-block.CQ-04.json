@@ -1,0 +1,915 @@
+{
+  "question_id": "CQ-04",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The rows do identify the authors' preferred explanation and mark its epistemic standing explicitly: one claim record carries a hypothesised modality together with a disposition naming it the preferred one, and the three rival explanations are returned beside it carrying the same hypothesised modality with a disposition recording that each was rejected. That answers the question's demand for a hypothesis rather than an established fact, and the ascending melt is present as its own record. What the rows do not carry is the mechanism itself. The causal chain the question asks for, from degassing through a volume change and extensional stress to the triggering of the earthquakes, appears nowhere in any projected field; it is reachable only by following a locator into the retained capture and reading the sentence. The record that holds that chain is a separate claim marked as a flat statement rather than as part of the preferred hypothesis, no returned relation ties the two claims together, and the preferred claim's subject is the ridge segment rather than the earthquakes. The rows therefore address the epistemic-status part of the question directly and the mechanism part only by pointer.",
+  "source_locators": [
+    "page:5:block:002",
+    "page:5:block:003",
+    "page:1:block:001",
+    "page:3:block:003"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block names this transform as one of the two bounding the studied ridge and marks it a transform fault.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block describes the fault bounding the intersection segment and calls it a detachment, fixing name and kind.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the normal faults cutting the core-complex surface, fixing name and kind.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW Both blocks name this transform, one as a boundary of the study area and one as part of the network's coverage.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block names the ascending melt as the body the degassing comes from, which is the projected name.",
+      "source_locators": [
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The abstract block names the primary melts as the melts whose volatile content is reported.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW Both blocks the derivation reaches speak of the crust as a layer in its own right, which is all this row claims.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the brittle lithosphere as the layer above the partially molten material.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW Both blocks name the mantle as a body in its own right.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block reports the extinct vent field on the flank of the first discontinuity, which carries the projected name.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The figure legend names the inactive mound inferred from the dive observations; caption text rather than body prose.",
+      "source_locators": [
+        "page:2:block:007"
+      ]
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the brittle-ductile boundary together with the abbreviation the row carries.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the lithosphere-asthenosphere boundary together with the abbreviation the row carries.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The figure legend block names the Moho as an interface drawn on the section; the support is caption text rather than body prose.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block names the ascending melt as the body the degassing comes from, which is the projected name.",
+      "source_locators": [
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The abstract block names the primary melts as the melts whose volatile content is reported.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block names the solubility model applied to the melt.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block attributes its temperature estimate to thermal modelling, which is the name the row carries.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 18,
+      "source_support": "UNSUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block the derivation reaches describes a forced-depth relocation test and a velocity perturbation exercise; it designates no numbered model and calls no model the fastest, so neither projected field has any support there.",
+      "source_locators": [
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The methods block names the average velocity model and its designation, matching both projected fields.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block names the ridge stretch between the two transforms, which is what the projected name denotes.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block gives this label to the ridge-transform intersection subsection.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The first block introduces this label and the second describes the subsection under it.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block gives this label to the subsection south of the second discontinuity.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block links deep transform-fault earthquakes to deformation in high-temperature mylonite shear zones, which carries the projected name.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names this volcano among the magmatic-tectonic analogues cited.",
+      "source_locators": [
+        "page:4:block:002"
+      ]
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names this peninsula among the magmatic-tectonic analogues cited.",
+      "source_locators": [
+        "page:4:block:002"
+      ]
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the neo-volcanic ridge in that segment's valley.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The block says the intersection segment is bounded to the east by a detachment fault and introduces the segment's label in the same passage, so both endpoints and the pairing sit in it.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The block places the studied ridge stretch between the two transforms, which supports a bounding relation with this one, and both endpoint records take a name from that same block.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The block places the studied ridge stretch between the two transforms, which supports a bounding relation with this one, and both endpoint records take a name from that same block.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement puts the triggering of the deep events in the mantle, so the mantle is the body the claim is about, and the block carries it in the flat declarative voice the row records.",
+      "source_locators": [
+        "page:5:block:003"
+      ]
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The first block raises the magmatic-tectonic route as one possibility among several and places the events in the mantle; the second block rejects it, which is the disposition recorded. Only the first of the two blocks names the subject.",
+      "source_locators": [
+        "page:4:block:002",
+        "page:5:block:001"
+      ]
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states the gap in the negative and puts it in the upper part of the mantle, so both the modality and the subject hold.",
+      "source_locators": [
+        "page:1:block:003"
+      ]
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the general strain-rate argument and places the resulting failure in the crust, which is the subject named.",
+      "source_locators": [
+        "page:4:block:002"
+      ]
+    },
+    {
+      "row_index": 35,
+      "source_support": "PARTIAL",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block supports the negated knowledge gap, but the gap it states is about the role of volatiles during melt migration; the mantle appears only as the setting of melting, so the block backs the subject far more weakly than it backs the claim.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_NOT_IN_BLOCK The abstract block predicts an effect on melt beneath that boundary, so it does support the record being about the boundary, but it writes the boundary out in full and never uses the abbreviation the row shows.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block attributes the claim to another group and names the boundary where the melt is said to gather, matching both the attributed kind and the subject.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The discussion block marks this route as the authors' preferred possibility and ties it to the segment named as subject; the abstract block carries the same suggestion. Only the discussion block names the segment.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK One block carries both the alternative explanation and the morphological argument against it for that segment, matching the hypothesised modality and the rejected disposition.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block concludes from the location tests that the deep events under that segment are real, which is the interpretation recorded.",
+      "source_locators": [
+        "page:8:block:001"
+      ]
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block sets out the cooling hypothesis and the reasons it fails for that segment side by side, matching the modality and the disposition.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block denies active venting on that segment's axis, which is the negated observation recorded.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block denies detachment faulting at that segment and describes the bounding faults instead.",
+      "source_locators": [
+        "page:4:block:001"
+      ]
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block raises the shear-zone route as a further hypothesis, names the mylonite shear zones as its locus and then rejects it against the observations, matching modality, kind and disposition.",
+      "source_locators": [
+        "page:3:block:003"
+      ]
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The abstract block gives this bounded volatile quantity for the primary melts, in the unit recorded and with the same approximate marking, and it names the melt stage.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block carries the proposed upper bound on water at the base of that boundary, with the unit and the proposal status recorded.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The abstract block gives this bounded volatile quantity for the primary melts, in the unit recorded and with the same approximate marking, and it names the melt stage.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the measured trace-element floor for the samples of that segment, in the unit recorded and for the element named.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the measured trace-element floor for the samples of that segment, in the unit recorded and for the element named.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 52,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_IN_BLOCK The block supports the range, the unit, the calculated status and the segment, but it speaks of the melts generated along the segment and never marks them primary, so that projected stage is not carried here.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive range for that segment after fractionation, with the unit and the estimated status recorded.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block states the lower bound on volatile content in that segment's primary melts, which matches the open lower bound recorded.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 59,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_IN_BLOCK The block supports the range, the unit, the calculated status and the segment, but it speaks of the melts generated along the segment and never marks them primary, so that projected stage is not carried here.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The results block gives the length of the eastern transform stretch the network covered and names the transform the subject points to.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK This projection carries only the stated modality and the subject; the relocation block reports an event tally for that transform, which supports both. The subject is named in that block and not in the other one the derivation reaches.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The abstract block gives this bounded volatile quantity for the primary melts, in the unit recorded and with the same approximate marking; every field this projection carries is there.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the thickness of that crustal flank with its uncertainty, and the layer is the subject the row names.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block states the depth interval in the mantle over which continued degassing would produce earthquakes, in the tentative voice recorded.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the depth interval at which extensive dry melting begins and frames the melting as mantle melting driven by upwelling.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the temperature floor of the mantle in which these events are said to occur.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block attributes the temperature interval at those depths to thermal modelling and names the mantle beneath that axis, so the value, the unit and the modelled determination all hold.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the sub-solidus temperature for anhydrous peridotite at that boundary.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The figure legend ties the boundary drawn from maximum earthquake depth to that isotherm; the support is caption text rather than body prose.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block states the boundary depth that the cold-lithosphere explanation would require, in the hypothetical voice recorded.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The same sentence gives the isotherm interval such a boundary depth would correspond to.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the isotherm and its uncertainty used to define the boundary.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the boundary depth found beneath the southern discontinuity.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the crustal age out to which the boundary stays shallow, in the unit recorded.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block carries the proposed melt fraction at the base of that boundary.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block carries the proposed upper bound on water at the base of that boundary, with the unit and the proposal status recorded.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The abstract block gives this bounded volatile quantity for the primary melts, in the unit recorded and with the same approximate marking; every field this projection carries is there.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the measured trace-element floor for the samples of that segment, in the unit recorded and for the element named.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the measured trace-element floor for the samples of that segment, in the unit recorded and for the element named.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK With no melt stage projected in this row, the block carries every field shown: the range, the unit, the calculated status and the segment.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive range for that segment after fractionation, with the unit and the estimated status recorded.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block states the lower bound on volatile content in that segment's primary melts, which matches the open lower bound recorded.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK With no melt stage projected in this row, the block carries every field shown: the range, the unit, the calculated status and the segment.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the primary-melt estimate for that segment from that proxy, with the unit and the estimated status the row carries.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the deep events beneath that segment's axis over the depth interval and in the unit recorded.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block places the deep microseismicity beneath that segment's ridge axis over the approximate interval recorded.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 96,
+      "source_support": "PARTIAL",
+      "rationale": "SUBJECT_IN_BLOCK The block supports the temperature floor said to hinder nucleation, its unit, the segment and the tentative voice, but it points to a figure and a reference without saying the temperature is modelled, so the determination the row carries is not backed here.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the width of that segment's median valley.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block denies events below that depth beneath the segment's axis, which matches the negated reading.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the depth limit of the shallow off-axis activity west of that segment's axis.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The figure legend gives the crustal thickness and uncertainty beneath that segment; caption text rather than body prose.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the along-axis length of that segment, in the unit and with the approximate marking recorded.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the along-axis length of the southern segment, in the unit recorded and stated flat.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The introduction block gives the length of the ridge stretch between the two transforms.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The relocation block reports the event tally for that transform, matching the count and its scope; the other block the derivation reaches carries the same total as figure text.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block states the depth interval in the mantle over which continued degassing would produce earthquakes, in the tentative voice recorded.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block states the boundary depth that the cold-lithosphere explanation would require, in the hypothetical voice recorded.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the boundary depth found beneath the southern discontinuity.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block reports the deep events beneath that segment's axis over the depth interval and in the unit recorded.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The observations block places the deep microseismicity beneath that segment's ridge axis over the approximate interval recorded.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block denies events below that depth beneath the segment's axis, which matches the negated reading.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "rationale": "SUBJECT_IN_BLOCK The block gives the depth limit of the shallow off-axis activity west of that segment's axis.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    }
+  ]
+}
