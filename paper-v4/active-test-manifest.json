@@ -22,6 +22,7 @@
     "paper-v4/experiment-v4/run-07",
     "paper-v4/experiment-v4/run-08",
     "paper-v4/experiment-v4/run-09",
+    "paper-v4/experiment-v4/run-10",
     "paper-v4/test_publication_consistency.py"
   ],
   "excluded_roots": [
