@@ -232,6 +232,98 @@ def _normalise(text: str) -> str:
     return " ".join(text.split())
 
 
+@dataclass(frozen=True, slots=True)
+class _Defect:
+    """One capture locator the retained reading does not support."""
+
+    reason: DocumentAssertionRefusalReason
+    subject: str
+    message: str
+
+    @property
+    def order(self) -> tuple[str, str, str]:
+        return (self.reason.name, self.subject, self.message)
+
+    def render(self) -> str:
+        return f"{self.message} [{self.reason.name}]"
+
+
+def _refuse_defects(defects: list[_Defect]) -> DocumentAssertionRefusal:
+    ordered = sorted(defects, key=lambda defect: defect.order)
+    return DocumentAssertionRefusal(
+        ordered[0].reason,
+        "document capture locators are not accepted: "
+        + "; ".join(defect.render() for defect in ordered)
+        + "; every block ID comes from the reading's inventory and every "
+        "statement is copied from its block's own bytes, matching after "
+        "whitespace collapse",
+    )
+
+
+def _checked_assertions(
+    assertions: list[object],
+) -> tuple[tuple[dict[str, object], str, str, str], ...]:
+    """Close each assertion's shape and return its ID, block, and statement."""
+
+    checked: list[tuple[dict[str, object], str, str, str]] = []
+    seen: set[str] = set()
+    for raw_assertion in assertions:
+        assertion = _obj(raw_assertion, "assertion")
+        if not _ASSERTION_FIELDS <= set(assertion) or set(assertion) - (
+            _ASSERTION_FIELDS | _ASSERTION_TIME_FIELDS
+        ):
+            raise _fail(
+                DocumentAssertionRefusalReason.FIELDS_NOT_CLOSED,
+                "assertion fields are not closed",
+            )
+        for field in sorted(_ASSERTION_TIME_FIELDS & set(assertion)):
+            _word(assertion[field], f"assertion {field}")
+        assertion_id = _word(assertion["id"], "assertion ID")
+        if assertion_id in seen:
+            raise _fail(
+                DocumentAssertionRefusalReason.MALFORMED_CAPTURE,
+                f"repeated assertion ID: {assertion_id}",
+            )
+        seen.add(assertion_id)
+        checked.append(
+            (
+                assertion,
+                assertion_id,
+                _word(assertion["block"], "assertion block"),
+                _word(assertion["statement"], "assertion statement"),
+            )
+        )
+    return tuple(checked)
+
+
+def _locator_defects(
+    checked: tuple[tuple[dict[str, object], str, str, str], ...],
+    block_text: dict[str, str],
+) -> list[_Defect]:
+    """Collect every unknown assertion block and every non-verbatim statement."""
+
+    defects: list[_Defect] = []
+    for _, assertion_id, block_id, statement in checked:
+        if block_id not in block_text:
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.UNKNOWN_BLOCK,
+                    assertion_id,
+                    f"assertion {assertion_id} names unknown block {block_id}",
+                )
+            )
+            continue
+        if _normalise(statement) not in _normalise(block_text[block_id]):
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.NOT_VERBATIM,
+                    assertion_id,
+                    f"assertion {assertion_id} is not verbatim in {block_id}",
+                )
+            )
+    return defects
+
+
 def adapt_document_assertions(
     *,
     reading_bytes: bytes,
@@ -277,8 +369,11 @@ def adapt_document_assertions(
     _word(attribution["date"], "capture date")
 
     record_data, records_by_id = _record_snapshot(records)
-    assertions = _items(capture["assertions"], "capture assertions")
-    reviewed = _reviewed_blocks(capture, block_text)
+    checked = _checked_assertions(_items(capture["assertions"], "capture assertions"))
+    reviewed, defects = _reviewed_blocks(capture, block_text)
+    defects.extend(_locator_defects(checked, block_text))
+    if defects:
+        raise _refuse_defects(defects)
     derivations: list[dict[str, object]] = []
     gaps: list[dict[str, object]] = []
     counts = {
@@ -287,39 +382,9 @@ def adapt_document_assertions(
         "UNFORMALIZED": 0,
     }
     gaps_by_kind: dict[str, int] = {}
-    seen_assertions: set[str] = set()
 
-    for raw_assertion in assertions:
-        assertion = _obj(raw_assertion, "assertion")
-        if not _ASSERTION_FIELDS <= set(assertion) or set(assertion) - (
-            _ASSERTION_FIELDS | _ASSERTION_TIME_FIELDS
-        ):
-            raise _fail(
-                DocumentAssertionRefusalReason.FIELDS_NOT_CLOSED,
-                "assertion fields are not closed",
-            )
-        for field in _ASSERTION_TIME_FIELDS & set(assertion):
-            _word(assertion[field], f"assertion {field}")
-        assertion_id = _word(assertion["id"], "assertion ID")
-        if assertion_id in seen_assertions:
-            raise _fail(
-                DocumentAssertionRefusalReason.MALFORMED_CAPTURE,
-                f"repeated assertion ID: {assertion_id}",
-            )
-        seen_assertions.add(assertion_id)
-        block_id = _word(assertion["block"], "assertion block")
-        if block_id not in block_text:
-            raise _fail(
-                DocumentAssertionRefusalReason.UNKNOWN_BLOCK,
-                f"unknown assertion block: {block_id}",
-            )
+    for assertion, assertion_id, block_id, _ in checked:
         reviewed.add(block_id)
-        statement = _word(assertion["statement"], "assertion statement")
-        if _normalise(statement) not in _normalise(block_text[block_id]):
-            raise _fail(
-                DocumentAssertionRefusalReason.NOT_VERBATIM,
-                f"assertion is not verbatim: {assertion_id}",
-            )
         modality = _word(assertion["modality"], "assertion modality")
         if modality not in _MODALITIES:
             raise _fail(
@@ -408,17 +473,22 @@ def adapt_document_assertions(
 
 def _reviewed_blocks(
     capture: dict[str, object], block_text: dict[str, str]
-) -> set[str]:
+) -> tuple[set[str], list[_Defect]]:
     reviewed: set[str] = set()
+    defects: list[_Defect] = []
     for value in _items(capture["nothing_assertable"], "nothing_assertable"):
         block_id = _word(value, "nothing_assertable block ID")
         if block_id not in block_text:
-            raise _fail(
-                DocumentAssertionRefusalReason.UNKNOWN_BLOCK,
-                f"unknown nothing_assertable block: {block_id}",
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.UNKNOWN_BLOCK,
+                    block_id,
+                    f"nothing_assertable names unknown block {block_id}",
+                )
             )
+            continue
         reviewed.add(block_id)
-    return reviewed
+    return reviewed, defects
 
 
 def _append_formalizations(

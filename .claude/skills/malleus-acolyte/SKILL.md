@@ -387,7 +387,12 @@ Accepted modalities are `CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`,
 statement must occur verbatim after whitespace normalization in that block. If
 `formalized_by` is empty, at least one typed gap is required. Every formalization
 `record_id` and `path` must resolve in `records`. Every `nothing_assertable`
-block ID must exist in the reading. A failure is a typed refusal, not permission
+block ID must exist in the reading. The adapter refuses those last two once for
+the whole capture, naming every non-verbatim assertion with its block and every
+unknown block ID from `assertions` and from `nothing_assertable` in one sorted
+detail with the rule that closes them; it does not stop at the first such
+defect, and it reports them before an unknown modality or an unresolved
+formalization target. A failure is a typed refusal, not permission
 to repair, infer, or ignore the capture.
 
 The `records` object carries an `events` envelope beside `entities` and
