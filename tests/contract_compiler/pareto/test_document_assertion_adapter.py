@@ -865,6 +865,96 @@ def test_document_adapter_matches_a_name_the_text_layer_broke() -> None:
     assert json.loads(result.canonical_plan_bytes)["records"] == records
 
 
+def _reworded(
+    text: str,
+    *,
+    name: str | None = None,
+    tags: list[str] | None = None,
+) -> tuple[dict[str, object], dict[str, object], dict[str, object]]:
+    """The reading's second block reworded, and the record's subject on it.
+
+    ``asr:003`` is the only assertion of ``page:1:block:002``, so replacing
+    that block's text and that assertion's statement leaves every other
+    locator of the fixture alone. With ``name`` absent the subject carries its
+    tags and nothing else, and the derivation of its name goes with it.
+    """
+
+    reading, capture, plan, _ = _inputs()
+    reading["pages"][0]["blocks"][1]["text"] = text
+    capture["assertions"][2]["statement"] = text
+    capture["reading_sha256"] = _digest(_canonical(reading))
+    capture["assertions"][2]["formalized_by"] = [
+        {
+            "path": ["properties", "subject"],
+            "record_id": "inspection:P-7:2026-03-02",
+        }
+    ]
+    records = deepcopy(plan["records"])
+    records["entities"][1]["properties"]["subject"] = "asset:P-7"
+    properties = records["entities"][0]["properties"]
+    if name is None:
+        del properties["name"]
+        capture["assertions"][0]["formalized_by"] = [
+            item
+            for item in capture["assertions"][0]["formalized_by"]
+            if item["record_id"] != "asset:P-7"
+        ]
+    else:
+        properties["name"] = name
+    if tags is not None:
+        properties["tags"] = tags
+    return reading, capture, records
+
+
+def test_document_adapter_refuses_a_form_found_inside_another_word() -> None:
+    """Eight of run-12's fifteen projected subjects were a three-letter tag
+    inside another word: RTI inside "vertical" and "portion", OCC inside
+    "occur", MAR inside "mark", OBS inside "observations". A form names its
+    entity where the sentence writes it as a word, and nowhere else."""
+
+    api = _api()
+    reading, capture, records = _reworded(
+        "Vertical offset is under 4 mm.", tags=["RTI"]
+    )
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records, reading=reading)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED
+    )
+    assert (
+        "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
+        "RTI does not occur as a word in the statement of asr:003"
+    ) in refusal.value.detail
+
+
+def test_document_adapter_matches_a_name_a_citation_number_is_glued_to() -> None:
+    """The text layer prints a citation number against the word before it. A
+    digit bounds a word, so "lithosphere13" still names the lithosphere."""
+
+    reading, capture, records = _reworded(
+        "The lithosphere13 is thin here.", name="lithosphere"
+    )
+
+    result = _adapt_records(capture, records, reading=reading)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_matches_a_form_the_text_layer_spaced_out() -> None:
+    """Whitespace between a form's characters is still the same form: the page
+    prints "R C 2" and the record is tagged "RC2"."""
+
+    reading, capture, records = _reworded(
+        "R C 2 was surveyed twice.", name="segment two", tags=["RC2"]
+    )
+
+    result = _adapt_records(capture, records, reading=reading)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
 def test_document_adapter_names_every_form_it_tried_for_a_subject() -> None:
     """The refusal says which forms were tried, in the order the record has
     them: its name first, then its tags."""
@@ -1345,6 +1435,29 @@ def test_document_census_counts_a_sentence_that_names_nothing() -> None:
     plan = json.loads(result.canonical_plan_bytes)
 
     assert plan["records"] == records
+    census = json.loads(result.canonical_census_bytes)
+    assert census["subject_coverage"]["by_type"]["Observation"] == {
+        "ambiguous": 0,
+        "attachable": 0,
+        "proposed": 0,
+        "total": 1,
+        "unnamed": 1,
+        "with_subject": 0,
+        "without_subject": 1,
+    }
+
+
+def test_document_census_counts_a_name_inside_another_word_unnamed() -> None:
+    """A name inside another word names nothing: "ring" inside "bearing" is
+    the shape of run-12's RTI inside "vertical". The only candidate entity is
+    not named by the sentence, so the record is unnamed, not attachable."""
+
+    capture, records = _attachable(
+        sentence="asr:003", named=(("instrument:ring", "ring"),)
+    )
+
+    result = _adapt_with_contract(capture, records)
+
     census = json.loads(result.canonical_census_bytes)
     assert census["subject_coverage"]["by_type"]["Observation"] == {
         "ambiguous": 0,
