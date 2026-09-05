@@ -351,6 +351,79 @@ def _evaluative_slots(contract_view: object) -> frozenset[str]:
         return frozenset()
 
 
+def _subject_bearing_types(
+    contract_view: object, types: set[str]
+) -> frozenset[str]:
+    """The record types the bound contract declares as carrying ``subject``.
+
+    Which types may name a subject is a contract question, so the adapter asks
+    the compiled contract and nothing else. Without one it knows no such type,
+    exactly as it knows no evaluative slot, and the coverage axis stays empty.
+    """
+
+    if contract_view is None:
+        return frozenset()
+    bearing: set[str] = set()
+    for type_name in types:
+        try:
+            slots = contract_view.effective_slots(type_name)
+        except (KeyError, ValueError):
+            continue
+        if _SUBJECT_SLOT in slots:
+            bearing.add(type_name)
+    return frozenset(bearing)
+
+
+def _subject_census(
+    record_data: dict[str, object],
+    contract_view: object,
+) -> dict[str, object]:
+    """Report how many subject-bearing records name a subject, and how many do not.
+
+    One axis, reported and never refused. ``by_type`` carries one entry per
+    subject-bearing type present in the records, each with ``total``,
+    ``with_subject`` and ``without_subject``; the three top-level counts are
+    those summed. A record whose subject the reading does not name leaves the
+    slot unset and is counted here rather than invented.
+    """
+
+    records: list[tuple[str, dict[str, object]]] = []
+    types: set[str] = set()
+    for raw_family in record_data.values():
+        for raw_record in _items(raw_family, "record family"):
+            record = _obj(raw_record, "record")
+            type_name = record.get("type")
+            if not isinstance(type_name, str) or not type_name:
+                continue
+            types.add(type_name)
+            records.append((type_name, record))
+
+    bearing = _subject_bearing_types(contract_view, types)
+    by_type: dict[str, dict[str, int]] = {}
+    for type_name, record in records:
+        if type_name not in bearing:
+            continue
+        subject = _record_properties(record).get(_SUBJECT_SLOT)
+        counts = by_type.setdefault(
+            type_name, {"total": 0, "with_subject": 0, "without_subject": 0}
+        )
+        counts["total"] += 1
+        key = (
+            "with_subject"
+            if isinstance(subject, str) and subject
+            else "without_subject"
+        )
+        counts[key] += 1
+    return {
+        "by_type": dict(sorted(by_type.items())),
+        "total": sum(counts["total"] for counts in by_type.values()),
+        "with_subject": sum(counts["with_subject"] for counts in by_type.values()),
+        "without_subject": sum(
+            counts["without_subject"] for counts in by_type.values()
+        ),
+    }
+
+
 def _derivation_census(
     derivations: list[dict[str, object]],
     block_by_assertion: dict[str, str],
@@ -781,6 +854,7 @@ def adapt_document_assertions(
             records_by_id,
         ),
         "gaps_by_kind": dict(sorted(gaps_by_kind.items())),
+        "subject_coverage": _subject_census(record_data, contract_view),
     }
     return DocumentAssertionCompilation(
         capture_id=capture_id,
