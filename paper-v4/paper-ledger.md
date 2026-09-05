@@ -5870,3 +5870,95 @@ and are not paper evidence until the author ratifies them. Nothing in this
 catalogue extension ratifies anything, and no new measurement was run against
 any cell: every figure is read from a frozen artifact, a pinned source, or a
 ledger entry that names its own source.
+
+### E-0179, the appendix evidence catalogue gets a leak guard of its own
+
+Date: 2026-09-05
+
+Sources: `paper-v4/appendix-evidence/catalogue.md` and the 43 files under
+`paper-v4/appendix-evidence/snippets/`;
+`paper-v4/experiment-v4/run-15/test_contract.py` for `LEAK_WINDOW`,
+`_reading_windows`, `_plain` and
+`test_no_frozen_artifact_reproduces_the_reading`;
+`private/paper-v4-text-layer/selected-reading.json`;
+`paper-v4/experiment-v4/run-03/ontology-run/ontology-01.yaml`;
+`handover/2026-09-05-deep-sweep.md` D-16. Read at `0727021`.
+
+**What was missing.** The leak rule is enforced per cell. Each run's
+`test_contract.py` walks its own `FROZEN_ARTIFACTS`, the closed set that cell
+froze, and measures nothing else. The appendix evidence catalogue belongs to no
+cell. E-0178 recorded a maximum shared run for each of the eighteen snippets it
+added and for `catalogue.md`, measured once by hand at write time; nothing
+recomputed those numbers afterwards, nothing measured snippets 01 to 25 at all,
+and a snippet dropped into `snippets/` without a catalogue entry would have sat
+there unmeasured. This is deep-sweep defect D-16, restated in E-0178's own
+scope note.
+
+**The guard.** `paper-v4/appendix-evidence/test_catalogue_leak.py`, five tests,
+added to `paper-v4/active-test-manifest.json` as the path
+`paper-v4/appendix-evidence`.
+
+1. `test_no_catalogue_file_reproduces_the_reading` measures `catalogue.md` and
+   every file under `snippets/` at the freeze rule: with Unicode whitespace
+   collapsed to one space, no file shares a run of 60 characters with any block
+   of `private/paper-v4-text-layer/selected-reading.json`, the 186 blocks
+   enumerated separately so that no match crosses a block boundary. The failure
+   names the offending files and never quotes the run it found, so a leak
+   cannot reach a test log.
+2. `test_the_catalogue_and_the_snippet_directory_name_the_same_files` closes the
+   set both ways. Every snippet the catalogue names exists, and every file under
+   `snippets/` is named in the catalogue, so an unlisted snippet cannot sit
+   there outside the measure. The names are read from backtick-delimited tokens
+   that match the snippet file-name shape whole, which is why the gaps list's
+   `ontology-run/attempt-01-diagnostic.json` is not read as a snippet.
+3. `test_every_recorded_snippet_digest_matches_its_file` recomputes the sha256
+   the catalogue records against the bytes on disk. Eighteen digests parse, one
+   per entry added at the second read coordinate; all eighteen match. Snippets
+   01 to 25 record no digest, are named in tables rather than in bullets, and
+   are covered by tests 1 and 2 only. The test skips rather than invents a parse
+   if the catalogue ever records none.
+4. `test_the_measure_finds_the_known_leak_in_run_03s_first_ontology` is the
+   calibration, run before the guard is trusted:
+   `paper-v4/experiment-v4/run-03/ontology-run/ontology-01.yaml` must report a
+   hit. It does, 14 windows of 60, the article title, which is the run E-0124
+   located and justified and which Paper-20 measured whole at 73. A guard that
+   cannot see a known leak fails here rather than passing everywhere.
+5. `test_a_snippet_that_copied_a_reading_block_fails_the_leak_test` is the
+   negative control. It writes a snippet carrying one reading block into
+   `tmp_path`, never into the repository, and asserts the same measure reports
+   it. Test 1 is the one such a snippet would break; tests 2 and 3 would pass,
+   because a copied block can be listed and hashed like any other file. The
+   simulation was also run directly against test 1 with the temporary file
+   appended to the guarded set, and test 1 failed naming that file.
+
+`_plain` and `_reading_windows` are copied from run-15's `test_contract.py`, not
+imported, and the module's docstring says so and says why: a run directory is a
+frozen cell, and a repository-level guard must not depend on a closed set a
+later run is free to leave behind. If the freezes ever change the measure, this
+file has to be changed with them.
+
+**The measurement at HEAD.** The maximum shared run over the whole guarded set
+is 21 characters, reached by `catalogue.md`,
+`24-population-surface-families.txt`, `35-run-14-runner-diagnostic.txt` and
+`36-run-16-runner-diagnostic.txt`. That is 39 characters under the threshold.
+The figure is an exact longest common substring against the 186 blocks
+separately and independently reproduces the 21 E-0178 recorded for
+`catalogue.md` and for its eighteen snippets; snippets 01 to 25, which carried
+no recorded figure, are all at or under 21 as well. The guard was green on the
+current tree at the commit that adds it, so RED and GREEN are one commit; the
+red state is demonstrated by test 5 and by the direct simulation, not by a
+committed failure.
+
+**What this guard does not cover.** Only `catalogue.md` and `snippets/`.
+`paper-v4/paper-ledger.md` is outside its scope and measures 73 at HEAD, through
+the article title, the same benign citation hit the deep sweep recorded. So do
+`manuscript.md`, `arxiv/main.tex`, `paper-master-plan.md`,
+`manuscript-v4-working.md`, `source/source-manifest.json` and
+`recon/ledger.jsonl`, each at 73, and run-03's three ontologies. All of them are
+the article title, which is a citation and is meant to be there. The counts D-16
+records in parentheses are windows, not run lengths: 14 windows of 60 is one run
+of 73, and `manuscript.md`'s 28 windows are the title appearing twice.
+D-16's full fix, a walk over every
+tracked file under `paper-v4/` and `handover/` with an allowlist naming each
+file and its reason, is still unbuilt; this entry narrows the defect to the
+catalogue and does not close it.
