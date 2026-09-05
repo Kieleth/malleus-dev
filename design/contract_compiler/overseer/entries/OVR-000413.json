@@ -1,0 +1,80 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:022041359239ea345c4d5f33e8bc7aa478c58b439910200fe261ab72e08bd367",
+        "before_digest": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:35e060c8a3b802cd3e7358138e0ecb05f1a91dae73d6d1cc7c6dce8781025514",
+        "before_digest": "sha256:251d6d9d68943efe3f2dba967b037644511c8ef56191ba711e79c5947a54afbe",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:a2bf48502d19600630bfcb03ff57639e676b833d22c88e80324478254d46a95f",
+        "before_digest": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:97903ab5e917ac9f8c1336e54a7026f592a4747590d79aecce71b1d242614f2c",
+        "before_digest": "sha256:ec06ccc3061dcfb9d8f3f0578c67a42db92637e9a726f3574af88ddd1a8c1a07",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:1acc6d7d5aec82188c0693dfebe997aaf11be295708d2c53a432da458ec0aef4",
+        "before_digest": "sha256:30184033a73e565edce3f458f59c9da6cdcc4eedc72943f3c7508183b96f4006",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:6194b8c47fe6f30d3fce14ce79da5c41f77361ae9b435ae19737df90108e320a",
+        "before_digest": "sha256:3f84bbb9103ccab59e75fdb5ac0a561e0a986437adb0da24af811aaa09897d3e",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:b2196bccaa4415451d4b10afe95cfc3ca8ab3b4bfd7d5486274ef692c0967036",
+  "entry_id": "OVR-000413",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:623436a4387d3659c961d87de7f8139f59a6fc625cdf7ce64daaa5dda2981d71",
+  "recorded_at": "2026-09-05T15:06:14Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "95353eb812c9f5623224f926db7129e8c8494fcb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "dacc57daee5690e5e5680bbb6253b3fe11c2069e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 413,
+  "subject": {
+    "id": "name-occurs-as-a-word",
+    "type": "DOCUMENT"
+  },
+  "summary": "The subject check and the census compare a form against a statement as a word: a tag inside another word names nothing, while a glued citation number and a spaced-out form still name their entity.",
+  "why": "Decision 20 made the comparison a substring, and a substring has no word boundary. The run-13 RCA, re-checked by script against the retained captures of runs 11 to 13, found eight of run-12's fifteen projected subjects to be the entity's three-letter tag inside a longer word: RTI in \"vertical\" and \"portion\", OCC in \"occur\", MAR in \"mark\", OBS in \"observations\". Run-13's census counts 33 records attachable and 49 ambiguous where a word-bounded rule counts 26 and 43. So one predicate now serves both sites: a form's non-whitespace characters occur in the statement in order, with any whitespace between them, case-folded on both sides, and the characters bounding the match are not letters. A digit bounds a word deliberately, so the text layer's \"lithosphere13\" still names the lithosphere and \"R C 2\" still names the record tagged RC2. The cost is the inflected and the glued form: the producer-set subjects of runs 11 to 13 fail three times, run-11's \"axial valley\" once and run-13's \"velocity model\" against \"velocity models\" twice, and the skill sends those forms to tags. The refusal keeps its reason and now says the form must occur as a word. Decision 23 carries the evidence."
+}
