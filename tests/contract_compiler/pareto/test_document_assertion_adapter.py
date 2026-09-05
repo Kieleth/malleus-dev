@@ -469,3 +469,150 @@ def test_document_adapter_leaves_an_undigested_locator_alone() -> None:
     result = _adapt_records(capture, records)
 
     assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def _research_view():
+    """The compiled packs, whose `Evaluative` mixin declares the slot list."""
+
+    from importlib.resources import files
+
+    from malleus.ontology import bundled_ontology_path
+
+    linkml_types = Path(
+        str(
+            files("linkml_runtime").joinpath(
+                "linkml_model", "model", "schema", "types.yaml"
+            )
+        )
+    )
+    sources = {
+        "linkml:types": linkml_types.read_bytes(),
+        "malleus": bundled_ontology_path("malleus.yaml").read_bytes(),
+        "metrology": bundled_ontology_path("packs", "metrology.yaml").read_bytes(),
+        "chronology": bundled_ontology_path("packs", "chronology.yaml").read_bytes(),
+        "research": bundled_ontology_path("packs", "research.yaml").read_bytes(),
+    }
+    return _api().compile_linkml_contract(
+        root_locator="research", sources=sources
+    ).view
+
+
+def _disposed(
+    *,
+    modality: str = "HYPOTHESISED",
+    formalized: bool = True,
+) -> tuple[dict[str, object], dict[str, object]]:
+    """The fixture with one claim disposition and the assertion behind it."""
+
+    _, capture, plan, _ = _inputs()
+    records = deepcopy(plan["records"])
+    records["entities"][1]["properties"]["hypothesis_disposition"] = "NOT_SUPPORTED"
+    capture["assertions"][2]["modality"] = modality
+    if formalized:
+        capture["assertions"][2]["formalized_by"] = [
+            {
+                "path": ["properties", "hypothesis_disposition"],
+                "record_id": "inspection:P-7:2026-03-02",
+            }
+        ]
+    return capture, records
+
+
+def _adapt_with_contract(capture: dict[str, object], records: dict[str, object]):
+    api = _api()
+    reading, _, plan, _ = _inputs()
+    return api.adapt_document_assertions(
+        reading_bytes=_canonical(reading),
+        capture_bytes=_canonical(capture),
+        capture_id="capture:inspection-note",
+        plan_id=str(plan["plan_id"]),
+        contract_identity=str(plan["contract_identity"]),
+        contract_view=_research_view(),
+        records=records,
+        supersessions=plan["supersessions"],
+    )
+
+
+def test_document_adapter_refuses_a_disposition_no_assertion_evaluates() -> None:
+    """All five of run-04's dispositions derive from HYPOTHESISED assertions.
+
+    The value was right and the evidence pointer was wrong: each disposition
+    hung on the sentence that raises the hypothesis, never on the sentence
+    that disposes of it. A slot the contract declares evaluative must be
+    formalized by at least one assertion that evaluates.
+    """
+
+    api = _api()
+    capture, records = _disposed()
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_with_contract(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.EVALUATIVE_SLOT_NOT_EVALUATED
+    )
+    assert refusal.value.detail == (
+        "document capture derivations are not accepted: "
+        "record inspection:P-7:2026-03-02 evaluative slot "
+        "hypothesis_disposition is formalized by asr:003 HYPOTHESISED "
+        "[EVALUATIVE_SLOT_NOT_EVALUATED]; "
+        "a record's assertion_locator names an assertion of this capture, its "
+        "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
+        "and a slot the contract declares evaluative is formalized by at "
+        "least one assertion whose modality is not HYPOTHESISED"
+    )
+
+
+def test_document_adapter_accepts_a_disposition_an_evaluating_assertion_carries() -> (
+    None
+):
+    """The sentence that declines the hypothesis is NEGATED, and it evaluates."""
+
+    capture, records = _disposed(modality="NEGATED")
+
+    result = _adapt_with_contract(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_refuses_a_disposition_nothing_formalizes() -> None:
+    """No formalizing assertion at all fails the same rule and says so."""
+
+    api = _api()
+    capture, records = _disposed(formalized=False)
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_with_contract(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.EVALUATIVE_SLOT_NOT_EVALUATED
+    )
+    assert (
+        "record inspection:P-7:2026-03-02 evaluative slot "
+        "hypothesis_disposition is formalized by no assertion"
+    ) in refusal.value.detail
+
+
+def test_document_adapter_reads_the_evaluative_declaration_from_the_contract() -> None:
+    """With no compiled contract the adapter knows no evaluative slot."""
+
+    capture, records = _disposed()
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_keeps_the_six_capture_modalities() -> None:
+    """The check reads the existing enum; no modality is added for it."""
+
+    document = import_module("malleus._contract_pipeline.document")
+
+    assert document._MODALITIES == {
+        "CALCULATED",
+        "CONTESTED",
+        "HYPOTHESISED",
+        "MEASURED",
+        "NEGATED",
+        "STATED",
+    }

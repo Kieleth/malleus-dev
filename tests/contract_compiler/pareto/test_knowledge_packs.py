@@ -51,6 +51,7 @@ VALUE_QUALIFICATIONS = (
     "OPEN_UPPER_BOUND",
     "ORDER_OF_MAGNITUDE",
 )
+HYPOTHESIS_DISPOSITIONS = ("PREFERRED", "NOT_SUPPORTED", "UNDECIDED")
 CREDIT_TAXONOMY_URL = "https://credit.niso.org/"
 CREDIT_VOCABULARY = "ANSI/NISO Z39.104-2022, CRediT, Contributor Roles Taxonomy"
 CREDIT_ROLE_NAMES = (
@@ -428,6 +429,8 @@ def test_research_grounding_assigns_only_supported_term_groups() -> None:
         "Campaign",
         "Contribution",
         "ContributionRelation",
+        "Evaluative",
+        "HypothesisDisposition",
         "Instrument",
     ]
     assert grounding["invention_search"]
@@ -660,6 +663,65 @@ def test_governing_design_records_the_pack_revision_decisions() -> None:
         assert phrase in normalized
     assert normalized.index("13. A controlled quantity-kind classification") < (
         normalized.index("14. Claim text policy")
+    )
+
+
+def test_research_declares_which_slots_are_evaluative() -> None:
+    """Decision 17. All five of run-04's hypothesis dispositions derive from
+    HYPOTHESISED assertions: the sentence that raises each hypothesis, never
+    the sentence that disposes of it. The pack now carries the disposition and
+    names it evaluative, and the mixin's slot list is the declaration the
+    document adapter reads through the compiled contract."""
+
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
+
+    assert source["classes"]["Evaluative"]["mixin"] is True
+    assert source["classes"]["Evaluative"]["slots"] == ["hypothesis_disposition"]
+    assert "Evaluative" in source["classes"]["Claim"]["mixins"]
+    assert source["slots"]["hypothesis_disposition"]["range"] == (
+        "HypothesisDisposition"
+    )
+    assert tuple(source["enums"]["HypothesisDisposition"]["permissible_values"]) == (
+        HYPOTHESIS_DISPOSITIONS
+    )
+    assert source["version"] == "0.4.0"
+
+
+def test_compiled_evaluative_mixin_names_the_slots_the_adapter_reads() -> None:
+    view = _compiler().compile_linkml_contract(
+        root_locator="research",
+        sources=_pack_sources(),
+    ).view
+
+    assert set(view.effective_slots("Evaluative")) == {"hypothesis_disposition"}
+    assert view.get_slot_constraint("Claim", "hypothesis_disposition").required is (
+        False
+    )
+    assert view.get_enum_values("HypothesisDisposition") == frozenset(
+        HYPOTHESIS_DISPOSITIONS
+    )
+
+
+def test_governing_design_records_the_evaluative_slot_decision() -> None:
+    """Decision 17 says which slots are evaluative and how a reader finds out."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "17. Evaluative slots in `research`",
+        "`hypothesis_disposition`",
+        "`Evaluative`",
+        "`HypothesisDisposition`",
+        "all five of run-04's dispositions derive from HYPOTHESISED assertions",
+        "the mixin's slot list is the declaration",
+        "0.4.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("16. Contribution roles in `research`") < (
+        normalized.index("17. Evaluative slots in `research`")
     )
 
 
