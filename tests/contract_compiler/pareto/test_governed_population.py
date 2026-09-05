@@ -54,6 +54,60 @@ PROFILE_IDENTITIES = {
     "state-version": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3",
 }
 NEUTRAL_PROFILE_DATA = json.loads(PROFILE_BYTES)
+MULTIVALUED_CONTRACT = b"""\
+id: https://example.malleus.dev/pareto-history
+name: pareto_history
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  test: https://example.malleus.dev/pareto-history/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  LinkKind:
+    permissible_values:
+      LINKS:
+slots:
+  label:
+    range: string
+  affiliation:
+    range: string
+    multivalued: true
+classes:
+  LeftObject:
+    is_a: Entity
+    slots:
+      - label
+      - affiliation
+    slot_usage:
+      label:
+        required: true
+      affiliation:
+        required: true
+        multivalued: true
+  RightObject:
+    is_a: Entity
+    slots:
+      - label
+    slot_usage:
+      label:
+        required: true
+  ObjectLink:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: LinkKind
+        required: true
+        equals_string: LINKS
+      source_id:
+        range: LeftObject
+        required: true
+      target_id:
+        range: RightObject
+        required: true
+"""
 SHOP_FIXTURE = (
     ROOT
     / "research/ontology_driven_kg_realization/fixtures"
@@ -411,6 +465,67 @@ def test_prepared_neutral_change_admits_reopens_and_matches_direct_graph(
     assert reopened.graph.export_records() == admitted.graph.export_records()
     assert reopened.receipt == admitted.receipt
     assert reopened.change_sets == admitted.change_sets
+
+
+def test_prepared_multivalued_property_admits_reopens_and_keeps_the_list(
+    tmp_path: Path,
+) -> None:
+    history, compiled, partial, _, source, evidence = _anchored_history(
+        tmp_path, contract_source=MULTIVALUED_CONTRACT
+    )
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    entities = plan["records"]["entities"]
+    assert isinstance(entities, list)
+    left = entities[0]
+    assert isinstance(left, dict)
+    left["properties"]["affiliation"] = ["alpha", "beta"]
+    derivations = plan["derivations"]
+    assert isinstance(derivations, list)
+    derivations.append(
+        {
+            "record_id": "left-1",
+            "path": ["properties", "affiliation"],
+            "source_id": "source-generic",
+            "locator": "row:0:affiliation",
+        }
+    )
+
+    prepared = _prepare(history, plan, NEUTRAL_PROFILE_DATA)
+
+    assert prepared.compilation.status is population.PopulationPlanStatus.CHANGE_SET
+    assert prepared.change_set is not None
+    operation = next(
+        member
+        for member in prepared.change_set.operations
+        if member.record_id == "left-1"
+    )
+    assert tuple(operation.properties["affiliation"]) == ("alpha", "beta")
+
+    admitted = history.admit(
+        change_set=prepared.change_set,
+        machine_events=_protocol_events(
+            prepared.change_set,
+            prepared.retention_replay.machine_state.identity,
+            identifier_suffix="-population-multivalued",
+        ),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    reopened = KnowledgeChangeHistory.reopen(history.path).replay()
+    direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
+
+    assert admitted.graph.export_records() == direct.export_records()
+    assert reopened.graph.export_records() == admitted.graph.export_records()
+    exported = next(
+        record
+        for record in reopened.graph.export_records()["entities"]
+        if record["id"] == "left-1"
+    )
+    assert exported["properties"]["affiliation"] == ["alpha", "beta"]
 
 
 def test_preparation_accepts_a_shipped_profile_value(tmp_path: Path) -> None:

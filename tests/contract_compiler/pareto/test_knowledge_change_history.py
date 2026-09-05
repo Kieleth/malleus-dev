@@ -60,8 +60,8 @@ def _digest(source: bytes) -> str:
     return "sha256:" + sha256(source).hexdigest()
 
 
-def _generic_compilation():
-    source = b"""\
+def _generic_compilation(source: bytes | None = None):
+    source = source or b"""\
 id: https://example.malleus.dev/pareto-history
 name: pareto_history
 default_range: string
@@ -165,8 +165,8 @@ def _role_bound_binding_payload() -> dict[str, object]:
     return payload
 
 
-def _history(tmp_path: Path):
-    compiled = _generic_compilation()
+def _history(tmp_path: Path, *, contract_source: bytes | None = None):
+    compiled = _generic_compilation(contract_source)
     partial = _effective(
         validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
     )
@@ -197,8 +197,15 @@ def _anchor(
     assert result.machine_receipt.outcome == "APPLIED"
 
 
-def _anchored_history(tmp_path: Path, *, omit_bootstrap_role: str | None = None):
-    history, compiled, partial, binding = _history(tmp_path)
+def _anchored_history(
+    tmp_path: Path,
+    *,
+    omit_bootstrap_role: str | None = None,
+    contract_source: bytes | None = None,
+):
+    history, compiled, partial, binding = _history(
+        tmp_path, contract_source=contract_source
+    )
     contract_bytes = partial.canonical_bytes
     source_bytes = b"generic retained source\n"
     evidence_bytes = b"generic retained evidence\n"
