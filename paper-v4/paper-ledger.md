@@ -2739,3 +2739,53 @@ citation both sessions find plausible will pass this loop exactly as it passed
 the rite. What the design fixes is that a second reader looks at the artifact
 before the gate does, that its report is retained, and that the producer must
 answer every item in writing.
+
+### E-0129, run-06 closes: ontology accepted, population refused, one fabricated citation
+
+Date: 2026-09-05
+
+Sources: `private/paper-v4-v4-run-06/launch-log.json`,
+`private/paper-v4-v4-run-06/usage.json`, the three refused runner attempts under
+`private/paper-v4-v4-run-06/refused-runner-attempt-0N/`, the gate diagnostics
+under `private/paper-v4-v4-run-06/gate/`, and the root-cause record at
+`handover/2026-09-05-haiku-rca.md`.
+
+Outcome: the Haiku 4.5 cell ends with an accepted ontology and a refused
+population. Ontology attempt 01 was refused at PACK_GROUNDING
+(DIRECT_ROOT_GROUNDING_REQUIRED, one class); attempt 02 was accepted at 2,216
+facts with one project class, `Earthquake` as an Event, every entity type on the
+surface a root or pack class. The accepted grounding block cites
+"ISO 18611-1:2015 Earthquake magnitudes" at an iso.org address. That standard
+does not exist; ISO 18611-1 is a 2014 marine NOx reduction agent specification.
+The rite checks block shape and never citation truth, so acceptance stands as
+stage acceptance; the overseer found the fabrication by a web search outside the
+protocol, after the gate, and it is recorded in the launch log as a review
+finding. The population carried 7 assertions, 8 entities, 1 event and 3 relations
+over 186 blocks, with 5 blocks declared nothing-assertable. The runner refused it
+three times: extra envelope keys including a contract identity the producer wrote
+itself; an unknown block id constructed rather than read from the inventory; and
+a statement that is not verbatim. All seven statements were paraphrases when
+checked after the fact, against a session log that claimed verbatim copies. Both
+structural returns were spent on the first two refusals; the third is terminal.
+No fallback and no hand repair were used.
+
+Cost, harness-reported tokens per stage, cumulative session figures differenced:
+ontology attempt 01 83,259; ontology attempt 02 11,795; population 31,320;
+correction 01 (envelope) 5,423; correction 02 (unknown block) 5,937; producer
+total 137,734. No review stage ran, so no review cost exists for this cell.
+
+What changed because of this cell: the root-cause record names five causes and
+six fixes, of which the Core fixes (skill separates the producer's output file
+from the adapter's call and drops the contract-identity placeholder; the verbatim
+rule gets its method and block ids come only from the inventory; the adapter
+lists every non-verbatim statement and every unknown block in one refusal; an
+honest gap is stated to beat a fabricated citation) landed as the Core-9 series
+on main. Citation verification becomes a named review step and the paired
+variant (run-07) puts a checker in front of the gate. Coverage stays a census
+figure with no gate.
+
+Non-claim: one session on one document measures nothing about Haiku 4.5. The
+fabricated citation was found by a search outside the protocol, and the same
+search has not been run on every citation in every cell. The thin capture is a
+valid protocol outcome. Nothing here compares the cell to run-04 or run-05, which
+had not reached results when this entry was written.
