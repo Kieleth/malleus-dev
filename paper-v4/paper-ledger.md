@@ -3833,3 +3833,35 @@ Non-claim: admission is structural acceptance, not adequacy. No preliminary
 review exists yet. Relations fell to 11 from run-09's 219; whether the subject
 element absorbed them or the producer under-derived is the iteration's
 analysis, recorded separately.
+
+### E-0148, run-10's preliminary review and the iteration's analysis
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-10/review-record.preliminary.md`
+(sha256:2278bbeb…), its four question blocks written by two fresh sessions,
+the private launch log and usage record, and `handover/2026-09-05-v44-rca.md`.
+
+Review: two fresh Claude Opus 5 sessions (CQ-01 with CQ-02, 215 rows; CQ-03
+with CQ-04, 337 rows) under protocol v2 and the v3 task, merged by the overseer
+into one record and validated as one, actor `actor:claude-preliminary-run-10`,
+completed 2026-09-05T08:56:38Z; the split is a recorded deviation.
+Responsiveness: CQ-01 PARTIAL, CQ-02 RESPONSIVE, CQ-03 RESPONSIVE, CQ-04
+PARTIAL. Support: 542 SUPPORTED, 10 PARTIAL, none UNSUPPORTED, none
+NOT_EVALUABLE. All 249 rows carrying a statement digest recomputed DIGEST_OK; no
+SUBJECT_NOT_IN_BLOCK. Each PARTIAL question misses one required semantic that
+sits on a source-asserted record with no subject, unreachable by construction
+under the restricted binding. Cost: 498,191 tokens across the two sessions.
+Ratification pending.
+
+Analysis (the RCA): the change under test held, modality drift 0 of 174
+against run-09's 20 of 212; the range clarification and the naming sentence
+each removed the return they targeted; the ENTITY restriction cut the review
+by 59 per cent at unchanged support and priced the missing subjects, 49 per
+cent coverage, in two PARTIAL verdicts. Two review-surface defects: the
+locality token misapplied to SUBJECT rows, and hedged categorical values with
+no modality slot. Iteration 3 is decided there: the subject check accepts an
+entity's tags with whitespace ignored (Core-15), run-11 on the same harness.
+
+Non-claim: one cell per iteration; the preliminary record is not paper
+evidence until ratified.
