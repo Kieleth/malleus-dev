@@ -44,6 +44,91 @@ QUDT_QUANTITY_KINDS = (
     "Count",
     "Angle",
 )
+VALUE_QUALIFICATIONS = (
+    "EXACT",
+    "APPROXIMATE",
+    "OPEN_LOWER_BOUND",
+    "OPEN_UPPER_BOUND",
+    "ORDER_OF_MAGNITUDE",
+)
+CREDIT_TAXONOMY_URL = "https://credit.niso.org/"
+CREDIT_VOCABULARY = "ANSI/NISO Z39.104-2022, CRediT, Contributor Roles Taxonomy"
+CREDIT_ROLE_NAMES = (
+    "Conceptualization",
+    "Data curation",
+    "Formal analysis",
+    "Funding acquisition",
+    "Investigation",
+    "Methodology",
+    "Project administration",
+    "Resources",
+    "Software",
+    "Supervision",
+    "Validation",
+    "Visualization",
+    "Writing – original draft",
+    "Writing – review & editing",
+)
+CREDIT_ROLES = {
+    "CONCEPTUALIZATION": (
+        "Ideas; formulation or evolution of overarching research goals and aims."
+    ),
+    "DATA_CURATION": (
+        "Management activities to annotate (produce metadata), scrub data and "
+        "maintain research data (including software code, where it is necessary "
+        "for interpreting the data itself) for initial use and later re-use."
+    ),
+    "FORMAL_ANALYSIS": (
+        "Application of statistical, mathematical, computational, or other "
+        "formal techniques to analyze or synthesize study data."
+    ),
+    "FUNDING_ACQUISITION": (
+        "Acquisition of the financial support for the project leading to this "
+        "publication."
+    ),
+    "INVESTIGATION": (
+        "Conducting a research and investigation process, specifically "
+        "performing the experiments, or data/evidence collection."
+    ),
+    "METHODOLOGY": "Development or design of methodology; creation of models.",
+    "PROJECT_ADMINISTRATION": (
+        "Management and coordination responsibility for the research activity "
+        "planning and execution."
+    ),
+    "RESOURCES": (
+        "Provision of study materials, reagents, materials, patients, "
+        "laboratory samples, animals, instrumentation, computing resources, or "
+        "other analysis tools."
+    ),
+    "SOFTWARE": (
+        "Programming, software development; designing computer programs; "
+        "implementation of the computer code and supporting algorithms; testing "
+        "of existing code components."
+    ),
+    "SUPERVISION": (
+        "Oversight and leadership responsibility for the research activity "
+        "planning and execution, including mentorship external to the core team."
+    ),
+    "VALIDATION": (
+        "Verification, whether as a part of the activity or separate, of the "
+        "overall replication/reproducibility of results/experiments and other "
+        "research outputs."
+    ),
+    "VISUALIZATION": (
+        "Preparation, creation and/or presentation of the published work, "
+        "specifically visualization/data presentation."
+    ),
+    "WRITING_ORIGINAL_DRAFT": (
+        "Preparation, creation and/or presentation of the published work, "
+        "specifically writing the initial draft (including substantive "
+        "translation)."
+    ),
+    "WRITING_REVIEW_AND_EDITING": (
+        "Preparation, creation and/or presentation of the published work by "
+        "those from the original research group, specifically critical review, "
+        "commentary or revision – including pre- or post-publication stages."
+    ),
+}
 GROUNDING_EXAMPLE_MARKER = (
     "carries a `grounding` block:\n\n"
     "```yaml\n"
@@ -223,6 +308,70 @@ def test_compiled_quantity_kind_class_is_optional_and_carries_the_qudt_names() -
     assert view.get_slot_constraint("Observation", "quantity_kind").required is False
 
 
+def test_metrology_records_how_the_source_states_the_number() -> None:
+    """A bound pair alone cannot carry a hedge or an open end.
+
+    Twenty-five of run-04's sixty-one typed gaps are
+    INTERVAL_NOT_EXPRESSIBLE reading "the source marks this value as
+    approximate; the records carry the stated number as an exact bound pair and
+    cannot carry the approximation", and run-05 declared a gap for a
+    temperature the source states only as above a threshold. The pack carries
+    an optional qualification of how the source states the number; the number
+    and its unit are untouched.
+    """
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    )
+    carried = source["classes"]["Quantified"]["slots"]
+    grounding = source["annotations"]["grounding"]["value"]
+
+    assert tuple(source["enums"]["ValueQualification"]["permissible_values"]) == (
+        VALUE_QUALIFICATIONS
+    )
+    assert carried.index("value_upper") + 1 == carried.index("value_qualification")
+    assert source["slots"]["value_qualification"]["range"] == "ValueQualification"
+    assert grounding["invented_terms"] == ["ValueQualification"]
+    assert "QUDT" in grounding["invention_search"]
+    assert "UCUM" in grounding["invention_search"]
+    assert "ISO 80000" in grounding["invention_search"]
+    assert source["version"] == "0.3.0"
+
+
+def test_compiled_value_qualification_admits_an_open_bound_and_a_hedge() -> None:
+    """Run-05's open lower bound and run-04's approximations, as records."""
+    view = _compiler().compile_linkml_contract(
+        root_locator="research",
+        sources=_pack_sources(),
+    ).view
+
+    assert view.get_enum_values("ValueQualification") == frozenset(
+        VALUE_QUALIFICATIONS
+    )
+    for name in ("value_qualification", "value_lower", "value_upper"):
+        assert view.get_slot_constraint("Observation", name).required is False
+    assert view.validate_instance(
+        "Observation",
+        {
+            "id": "observation:mantle-temperature-rc2",
+            "quantity_kind": "mantle temperature",
+            "value_lower": 1100.0,
+            "unit": "Cel",
+            "value_qualification": "OPEN_LOWER_BOUND",
+        },
+    ) == []
+    assert view.validate_instance(
+        "Observation",
+        {
+            "id": "observation:full-spreading-rate",
+            "quantity_kind": "full spreading rate",
+            "value_lower": 24.0,
+            "value_upper": 24.0,
+            "unit": "mm/a",
+            "value_qualification": "APPROXIMATE",
+        },
+    ) == []
+
+
 def test_shipped_pack_revision_is_its_own_conformance_baseline() -> None:
     """The rite's baseline is the exact reference bytes its caller supplies.
 
@@ -350,6 +499,81 @@ classes:
     )
 
 
+def test_research_carries_the_credit_contributor_roles() -> None:
+    """Run-04 declared two TYPE_ABSENT gaps for the roles its source states.
+
+    The source names a specific contribution for each author and the accepted
+    ontology carried no contribution-role vocabulary. CRediT is the published
+    NISO standard for exactly that, so the pack ships its fourteen roles under
+    their own definitions rather than coining a list.
+    """
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
+    values = source["enums"]["ContributorRole"]["permissible_values"]
+    credit = next(
+        item
+        for item in source["annotations"]["grounding"]["value"]["vocabularies"]
+        if item["vocabulary"] == CREDIT_VOCABULARY
+    )
+
+    assert tuple(values) == tuple(CREDIT_ROLES) + ("OTHER",)
+    assert tuple(credit["borrowed_terms"]) == CREDIT_ROLE_NAMES
+    assert credit["vocabulary_url"] == CREDIT_TAXONOMY_URL
+    for name, definition in CREDIT_ROLES.items():
+        assert " ".join(values[name]["description"].split()) == definition
+    assert source["version"] == "0.3.0"
+
+
+def test_research_carries_the_contribution_relation_that_holds_the_role() -> None:
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
+    grounding = source["annotations"]["grounding"]["value"]
+
+    assert source["classes"]["Contribution"]["slots"] == ["contribution_role"]
+    assert source["classes"]["Contribution"]["mixin"] is True
+    assert source["classes"]["ContributionRelation"]["is_a"] == "ResearchRelation"
+    assert source["classes"]["ContributionRelation"]["mixins"] == ["Contribution"]
+    assert source["slots"]["contribution_role"]["range"] == "ContributorRole"
+    assert (
+        "CONTRIBUTED_TO" in source["enums"]["ResearchRelationType"]["permissible_values"]
+    )
+    assert grounding["invented_terms"] == [
+        "Campaign",
+        "Contribution",
+        "ContributionRelation",
+        "Instrument",
+    ]
+
+
+def test_compiled_contribution_role_is_optional_on_the_relation() -> None:
+    view = _compiler().compile_linkml_contract(
+        root_locator="research",
+        sources=_pack_sources(),
+    ).view
+    credited = {
+        "id": "contribution:yu-zhiteng-writing-original-draft",
+        "relation_type": "CONTRIBUTED_TO",
+        "source_id": "person:yu-zhiteng",
+        "target_id": "source:yu-2025-mid-atlantic-ridge",
+        "contribution_role": "WRITING_ORIGINAL_DRAFT",
+    }
+
+    assert view.get_enum_values("ContributorRole") == frozenset(
+        tuple(CREDIT_ROLES) + ("OTHER",)
+    )
+    assert view.get_slot_constraint(
+        "ContributionRelation", "contribution_role"
+    ).required is False
+    assert view.is_subtype_of("ContributionRelation", "Relation")
+    assert view.validate_instance("ContributionRelation", credited) == []
+    assert view.validate_instance(
+        "ContributionRelation",
+        {key: value for key, value in credited.items() if key != "contribution_role"},
+    ) == []
+
+
 def test_research_pack_matches_the_accepted_campaign_surface() -> None:
     source = yaml.safe_load(
         bundled_ontology_path("packs", "research.yaml").read_bytes()
@@ -434,6 +658,34 @@ def test_governing_design_records_the_pack_revision_decisions() -> None:
     )
 
 
+def test_governing_design_records_the_second_pack_revision_decisions() -> None:
+    """Decision 15 says why a bound pair could not carry a hedge or an open
+    end, and that the vocabulary search found nothing to borrow. Decision 16
+    says why the roles are CRediT's fourteen and not a coined list."""
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "15. How the source states its number, in `metrology`",
+        "25 of run-04's 61 typed gaps",
+        "`ValueQualification`",
+        "`value_qualification`",
+        "OPEN_LOWER_BOUND",
+        "never changes the number",
+        "no term for how a source qualifies a stated number",
+        "16. Contribution roles in `research`",
+        "ANSI/NISO Z39.104-2022",
+        "`ContributorRole`",
+        "fourteen roles",
+        "https://credit.niso.org/",
+        "0.3.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("15. How the source states its number") < (
+        normalized.index("16. Contribution roles in `research`")
+    )
+
+
 def test_governing_design_sketches_match_the_shipped_pack_revisions() -> None:
     design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
     normalized = " ".join(design.split())
@@ -442,10 +694,13 @@ def test_governing_design_sketches_match_the_shipped_pack_revisions() -> None:
     status = normalized.split("Status:", 1)[1].split("## Why", 1)[0]
 
     assert "`quantity_kind_class`" in metrology
+    assert "`value_qualification`" in metrology
     assert "`assertion_locator`" in research
     assert "`statement_sha256`" in research
     assert "`licence`" in research
+    assert "`contribution_role`" in research
     assert "0.2.0" in status
+    assert "0.3.0" in status
 
 
 def test_public_milestone_names_the_live_frozen_receipt_guard() -> None:

@@ -1909,6 +1909,17 @@ class TestSkillsAreInstallable:
                 "wording in `quantity_kind`, which stays open and is never "
                 "rewritten to fit the class"
             ),
+            (
+                "set `value_qualification` to how the source states it: "
+                "`APPROXIMATE`, `OPEN_LOWER_BOUND` with `value_upper` left "
+                "absent, `OPEN_UPPER_BOUND` with `value_lower` left absent, "
+                "`ORDER_OF_MAGNITUDE`, or `EXACT`"
+            ),
+            "the qualification never changes the number or the unit",
+            (
+                "carry it in `contribution_role` on a `ContributionRelation`, "
+                "whose values are the fourteen CRediT roles plus `OTHER`"
+            ),
             "explicit evidence-bearing operation",
             "typed gaps",
             "NO_DOMAIN_CHANGE",
