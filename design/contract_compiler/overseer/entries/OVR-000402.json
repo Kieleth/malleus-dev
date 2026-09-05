@@ -1,0 +1,119 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:2845e91a084d1c624598fd2dc4bf5e8ef0b9641193e9cd8da0667fb823bb621f",
+        "before_digest": "sha256:98abcad33abc43d5143d539116b9b24efab0da242beb652005990edf64d59cb9",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:f31f8ada947d31d5b8c7e2ae6b308ae8f4531e6b4dc47d0bed3c9a4157eded28",
+        "before_digest": "sha256:b0f2e58d31c5a54b780e6e3f8b01db5bade54b52f738ffccbf2e2101752a8dcc",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:937bf8e16a50caba9a3dd9b7af4c3792eb4d25afc089e7589ab19810b3aac919",
+        "before_digest": "sha256:85603a48eab90a52466094170bcbca31cb025b639b275883f062f80a590a24f2",
+        "change": "MODIFIED",
+        "path": "ontology/packs/research.yaml"
+      },
+      {
+        "after_digest": "sha256:c947e574396114af996a6b19571966ac134df3df03f42726b5f31dc59a38542c",
+        "before_digest": "sha256:4897c36c485224bede030e7605a18b43bfeb11780aaea747fb91e153ad138304",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-census.json"
+      },
+      {
+        "after_digest": "sha256:cd240aa6f9141b848f081a3a4a33decbd952b9076c4b17c360cd8f599390d558",
+        "before_digest": "sha256:d58e940ad6ca219aaeb61c8aed44e50423f8bcce139895863cf064266fc8c2e8",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:a200459fe62ea1312112496430ff8c9a71e691405426adaa9004fde0a3c726f5",
+        "before_digest": "sha256:4040de216e647b115c173af3c20ddc9ca124258823e170f32d3ae045c62249ba",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:95e1af4e99758aa5469f23114aae6c67a288f5cd86e19dc1189e7feeedc12d40",
+        "before_digest": "sha256:471b1edefbbcebc6dc2eba563a318187d134abcff69e2056e3f358b3ba448a26",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler_cli.py"
+      },
+      {
+        "after_digest": "sha256:3aef3fdc782ae3c8ff147e69639259109e22e3207923354b805c897e93b4246f",
+        "before_digest": "sha256:d3b21607e13f879a50fbdc28dd868064eddb13f645e758833c9384e1b51fcac6",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:e6fdf9ed9c9fafcff89b646786463f2c079c64702ac15ea05a418be3237a549f",
+        "before_digest": "sha256:6967a688a2b9e4db03eea7ea3bd86c2dae2c2254ab5690a34f4a1f3905c407ac",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:462b8958e66caea1619840165694d584ceb74f082b344b81cf4b95b6444b39be",
+        "before_digest": "sha256:712e1e083210f46d5a08c9ff3afb9049f866578ded1a71229a605cb3bc436560",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:2990cac4caee4e6fca22ac2a59e4a7fda9d14d1b446117639b9d63c70aff819d",
+  "entry_id": "OVR-000402",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6474ec9b615be31102ae8c48aacb2c4bfb5cc94c6a5a4bfc504ab4686e78cc91",
+  "recorded_at": "2026-09-05T04:20:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "26cda30238bf729748c080702851cac7ba3254d2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6abdd2a3582f6ce50ae137564ef21f28796667e2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f5965789a6bdb3fd6b1e1a329a7decc1e0e8cd49",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b169c86946dd6632588df350b9b9359f77888390",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000401",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 402,
+  "subject": {
+    "id": "derivation-rule-reach-digest-modality-and-locality",
+    "type": "DOCUMENT"
+  },
+  "summary": "Check what a derivation points at: recompute the statement digest, require an evaluating assertion for an evaluative slot, and report derivation locality and fan-out.",
+  "why": "handover/2026-09-05-run-04-review-rca.md. The derivation rule binds every value to an assertion; the adapter enforced the binding's existence, never its content. All 104 of run-04's located claims carried a correct statement_sha256 and nothing recomputed one; rel:069 carried 36 targets for twelve relations whose endpoints it names none of, and the largest hubs formalize 47 and 23 records from single sentences; all five dispositions derive from the HYPOTHESISED sentence that raises the hypothesis, never the one that disposes of it. DIGEST_MISMATCH and UNKNOWN_ASSERTION_LOCATOR recompute the digest from the located assertion's statement bytes, in one aggregated refusal. research 0.4.0 adds enum HypothesisDisposition, slot hypothesis_disposition and the mixin Evaluative worn by Claim, whose slot list declares which slots are evaluative; the adapter takes the compiled contract as an eighth argument and refuses EVALUATIVE_SLOT_NOT_EVALUATED when only HYPOTHESISED assertions formalize one. No modality was added. The census gains a closed derivation block: fan-out, relation locality, the distribution, the top hubs and the non-local count, reported and never refused."
+}
