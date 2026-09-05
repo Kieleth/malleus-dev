@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28",
+        "before_digest": "sha256:d564632838023d632523ff4563f03a9e62d0fdbf1d0cd4f375644ba394eb89e2",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:b34d4931b273d346bf42ba57d05e42782676daa5f4de64d38a40dae0bfecd2c5",
+  "entry_id": "OVR-000406",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7b1dca10ffc8070f52be7500ea6fe0a48efe39b2c757ac0da22db604160db2a6",
+  "recorded_at": "2026-09-05T07:05:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7465986fda4f84f8c33a3eec5b00d5832667941b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000405",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 406,
+  "subject": {
+    "id": "subject-of-a-source-asserted-record",
+    "type": "DOCUMENT"
+  },
+  "summary": "Read the dangling-subject check from the plan compiler's validated record map rather than from the raw families.",
+  "why": "The check landed in OVR-000405 walking records.values() and re-asserting per record what the family validation had already established, in whatever order the families arrived. by_id is the map the plan compiler builds from the admitted families with every id and properties object already checked, so the check reads that and refuses in sorted order. Behaviour and tests are unchanged; the revision is recorded because the pinned bytes moved."
+}
