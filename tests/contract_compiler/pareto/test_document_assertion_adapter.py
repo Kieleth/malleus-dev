@@ -778,6 +778,23 @@ def test_document_adapter_matches_a_subject_name_past_spacing_and_case() -> None
     assert records["entities"][0]["properties"]["name"] == "pump\n  p-7"
 
 
+def test_document_adapter_names_the_subject_in_one_collapsed_line() -> None:
+    """The refusal is one aggregated line, so a name broken across two lines
+    in the reading must reach the detail collapsed, not with the break in it."""
+
+    api = _api()
+    capture, records = _subjected(name="pump\n  p-9", locator="asr:003")
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert "\n" not in refusal.value.detail
+    assert (
+        "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
+        "pump p-9 is absent from the statement of asr:003"
+    ) in refusal.value.detail
+
+
 def test_document_adapter_refuses_a_subject_carrying_no_name() -> None:
     """A subject with no name is a subject no statement can be checked against."""
 
