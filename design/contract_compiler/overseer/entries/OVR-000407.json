@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:dbcc85998269e8c627e4abc05895fb477014a7a6044cef1a8d4e51d54ba7f1a6",
+        "before_digest": "sha256:a5ae733080c23604c0b0cf1ab45e55386f23493ef7a4b9a7830242b5df3d9279",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:c04ce91b6f472121623f18a708d7a480225b0a438203054faadce00689f8af12",
+        "before_digest": "sha256:296f552750235f76a0fc14a60693e1341b09a49caf7f5cf61ca543fa1063ff47",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:92278f97b6a27d2474eb5761a2b49077de2c5599bf0dfd107e095e0d2d967a0a",
+  "entry_id": "OVR-000407",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b34d4931b273d346bf42ba57d05e42782676daa5f4de64d38a40dae0bfecd2c5",
+  "recorded_at": "2026-09-05T07:25:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "81e6230c0783f74f0b8d2d8090c068e3470b641b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000405",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 407,
+  "subject": {
+    "id": "subject-of-a-source-asserted-record",
+    "type": "DOCUMENT"
+  },
+  "summary": "Decision 18 counted run-04's attachment from a truncated RCA row; it now carries the RCA's own count.",
+  "why": "The decision opened with 27 attachments, summing the RCA's observation-to-subject row of 13 CONCERNS_FEATURE, 3 LIES_BENEATH and 11 LOCATED_WITHIN. That cell ends in an ellipsis, so 27 is a floor read as a total. The RCA's own count of what decision 18 is about is 55 science relations, neither bibliographic nor contribution, 34 of them LOCAL, against run-08's none. The decision and the pack test now say that, and the phrase is guarded. No mechanism, slot, refusal or census changes."
+}
