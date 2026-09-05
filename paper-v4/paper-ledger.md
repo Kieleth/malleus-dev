@@ -4290,3 +4290,34 @@ Non-claim: admission is structural acceptance. No preliminary review exists
 yet. The verdict on projection above is the overseer's reading of fifteen
 derivations, recorded before the review so that the review cannot be accused
 of shaping it; the review judges the rows as rows.
+
+### E-0157, run-12's preliminary review and the iteration's analysis
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-12/review-record.preliminary.md`
+(sha256:d1eff7ed…), its four question blocks written by two fresh sessions,
+the private launch log and usage record, the population plan's PROJECTED
+derivations, and `handover/2026-09-05-v46-rca.md`.
+
+Review: two fresh Claude Opus 5 sessions (CQ-01 with CQ-02, 165 rows; CQ-03
+with CQ-04, 243 rows) under protocol v2 and the v4 task, told to judge a
+SUBJECT row on whether the block supports that the record is about the subject
+shown; merged and validated as one record, actor
+`actor:claude-preliminary-run-12`, completed 2026-09-05T12:20:59Z.
+Responsiveness: CQ-01 PARTIAL, CQ-02 RESPONSIVE, CQ-03 RESPONSIVE, CQ-04
+PARTIAL. Support: 381 SUPPORTED, 25 PARTIAL, 2 UNSUPPORTED (one mis-derived
+model record, the loop's first), none NOT_EVALUABLE. All 42 digest-bearing
+rows DIGEST_OK. Rows on projected-subject records: 26, of which 18 PARTIAL; the
+other 382 rows carry 7 PARTIAL and 2 UNSUPPORTED. Cost: 436,361 tokens across
+the two sessions. Ratification pending.
+
+Analysis (the RCA): the projected subject failed on both counts stated before
+the run, wrong subjects (13 of 15 by reading, 18 of 26 rows by review) and a
+producer that narrowed its evidence to avoid the rule. Iteration 5 withdraws
+projection and keeps the census (Core-17, decision 22); run-13 adds the
+subject's tags to SUBJECT rows. The loop's earned principle, recorded in the
+RCA: check the output, never steer the producer.
+
+Non-claim: one cell per iteration; the preliminary record is not paper
+evidence until ratified.
