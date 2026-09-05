@@ -5421,3 +5421,77 @@ run-05's witness count (44, not 4).
 
 Non-claim: no producer has run under this cell. The expected effect and the
 falsifier are E-0170's.
+
+### E-0172, run-16 (Sonnet 5 at v4.9) is admitted at the second runner attempt after fifty defects; the census shows the anchors
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-16/ontology-run/`, `paper-v4/experiment-v4/run-16/results/`,
+`private/paper-v4-v4-run-16/` (ledger, query result, population plan, the
+refused first runner attempt with the diagnostic's exact bytes, withheld
+files), `paper-v4/evaluation-v4/run-16/` (review inputs under protocol v2 and
+task v4).
+
+Ontology: accepted at attempt 01, 2,880 facts, 17 entity types, 2 event
+types, 3 relation types, 2 subject-bearing types (Claim, Observation; no count
+or ratio subtypes). Six project classes; three grounding blocks in the
+none_found form, one citing FOAF Person (confirmed today). The producer
+excluded the 79 references and the funding identifiers by its own decision and
+said so.
+
+Population: 148 assertions (132 before the correction) over 58 blocks, 128
+blocks declared nothing-assertable (the reference list, running headers,
+acknowledgements, most of the additional information), 194 records (159
+entities, 3 events, 32 relations), 8 typed gaps (4 REQUIRED_FIELD_ABSENT_IN_SOURCE,
+2 AGGREGATE_ONLY, 2 TYPE_ABSENT). The census reads 186 of 186 blocks reviewed
+because a block declared nothing-assertable counts as reviewed; the
+declaration is a producer claim, and for the reference entries the Opus cells
+captured as records it is a scope choice rather than an absence.
+
+Runner attempt 1 refused fifty defects in one aggregated diagnostic: 45
+SUBJECT_NOT_NAMED (RC2 seventeen times, the SMARTIES cruise seven, the MAR
+six, the Romanche transform four, the OBS network three, HASH twice, hypoDD
+once, a detachment fault once: subjects set by topic on sentences that name
+none of them), 4 MODALITY_NOT_ASSERTED, 1 EVALUATIVE_SLOT_NOT_EVALUATED. The
+producer's own validator had checked verbatim statements and formalization
+targets and none of the three derivation-content rules; the three Opus cells
+at this protocol returned zero, seven and zero defects at the runner. Returned
+as structural diagnostic 1 of 2 with its exact bytes staged in the producer's
+workspace (9,665 bytes). The producer split three multi-modality assertions,
+retyped the preferred disposition's sentence STATED, and added twelve anchor
+assertions, one clause per subject entity, to formalize the subject fields the
+rule refused; it reports extending its validator to the three rules and
+finding two more instances, one a ligature in a stored name. Attempt 2
+admitted under `actor:overseer-run-16`: fourteen ledger events, replay
+reproducing admission, 194 traced.
+
+Census after the anchors: 140 fully, 6 partly, 2 unformalized; subject
+coverage 99 of 103 proposed, 0 attachable, 0 ambiguous, 4 unnamed; 20 of 32
+relations non-local; the largest hub formalizes 17 records (the RC2 anchor),
+the next 8, 7 and 6. The anchor is the hub pattern the Core-12 census was built
+to expose (E-0135's second finding): the rule that a formalizing sentence
+names the subject is met by attaching one naming clause to many records, and
+the census counts it rather than refusing it.
+
+Query: the v4 binding frozen at acceptance (391 cases: 13 ENTITY, 342
+RELATION, 36 SUBJECT; no agent or publication catalogue in a set) executed
+unchanged after replay under the v4.9 executor: CQ-01 36, CQ-02 112, CQ-03
+144, CQ-04 141, 433 rows (121 ENTITY, 35 RELATION, 277 SUBJECT) over 157
+witnesses, 6 rows from more than one case, no forbidden attempt.
+
+Execution coordinate: inputs pinned at `dc52547` (E-0171); the runner
+executed at main `156938a`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 204,122; population
+236,964; correction 88,264; producer total 529,350 (run-15, Opus 5 at the same
+protocol: 351,253; run-05, Sonnet 5 at v4.1: see E-0126).
+
+Against run-05: coverage rose from 27 blocks with assertions to 58, with 128
+declared nothing-assertable against run-05's 5 and 154 untouched; the stop
+rule rewritten since v4.1 is the difference in the untouched count, the
+declaration is the producer's. Expected effect (E-0170): more than 27 blocks
+covered, held; at most two returns per stage, held with one; no UNSUPPORTED
+row, pending the review.
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet; the review judges the rows as rows.

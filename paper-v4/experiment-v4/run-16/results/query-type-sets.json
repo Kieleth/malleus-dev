@@ -1,0 +1,30 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "Observation",
+    "Method"
+  ],
+  "CQ-02": [
+    "ProjectTectonicFeature",
+    "Observation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "QuantityValue",
+    "Ratio",
+    "ProjectTectonicFeature",
+    "ProjectRockSample",
+    "Sample",
+    "Method",
+    "Claim"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "ProjectTectonicFeature",
+    "ProjectRockSample",
+    "Method"
+  ]
+}

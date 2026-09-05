@@ -1,0 +1,283 @@
+{
+ "schema": "malleus.paper-v4.producer-launch-log/v2",
+ "run": "run-16",
+ "protocol": "v4.9",
+ "launches": [
+  {
+   "ordinal": 1,
+   "role": "PRODUCER",
+   "phase": "ONTOLOGY",
+   "first_stage": "ONTOLOGY_ATTEMPT_01",
+   "launched_at": "2026-09-05T19:25:54Z",
+   "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+   "requested_model": "sonnet",
+   "model_family": "Claude Sonnet 5",
+   "model_id": "claude-sonnet-5",
+   "spawn_message": "paper-v4/experiment-v4/run-16/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+   "outcome": "POPULATION_READY",
+   "execution": {
+    "pinned_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+    "paper_commit": "156938a",
+    "staged_at": "2026-09-05T19:25:54Z",
+    "interpreter": "VERIFIED by prepare_producer.py preflight"
+   },
+   "producer_status_string": "DOCUMENT_POPULATION_READY",
+   "usage_cumulative": {
+    "tokens": 204122,
+    "tool_uses": 25,
+    "duration_ms": 1381047
+   },
+   "usage_by_resume": [
+    {
+     "after": "POPULATION",
+     "tokens": 441086,
+     "tool_uses": 109,
+     "duration_ms": 1633322
+    },
+    {
+     "after": "POPULATION_CORRECTION_01_SUBJECTS_MODALITY_DISPOSITION",
+     "tokens": 529350,
+     "tool_uses": 156,
+     "duration_ms": 2300474
+    }
+   ],
+   "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures",
+   "phase_two": {
+    "dispatched_at": "2026-09-05T19:50:14Z",
+    "dispatched_at_source": "the harness transcript's timestamp of the SendMessage call",
+    "after_binding_frozen_at": "2026-09-05T19:50:05Z",
+    "message": "run-15's phase-two message with run-16's coordinates and fact count",
+    "capture_id": "capture:paper-v4:yu-2025:v4:16",
+    "plan_id": "plan:paper-v4:yu-2025:v4:16",
+    "staged": [
+     "producer/accepted/population-surface.json",
+     "producer/accepted/diagnostic.json"
+    ]
+   }
+  }
+ ],
+ "gate": [
+  {
+   "attempt": 1,
+   "ontology_sha256": "sha256:8eadb5659bdf79262d934c3c7524d7c879bf1d547c463c72bb3fd0e3a8e6c0a4",
+   "status": "ACCEPTED",
+   "validated_fact_set_sha256": "sha256:fc4c9960ca993ab519dc819f866c2d7ac6eb8da1c1891b11ce0b86000585155b",
+   "fact_count": 2880,
+   "accepted_at": "2026-09-05T19:49:31Z",
+   "families_admitted": [
+    "entities",
+    "events",
+    "relations"
+   ],
+   "surface_families": {
+    "ENTITY": 17,
+    "EVENT": 2,
+    "RELATION": 3
+   },
+   "event_types": [
+    "Event",
+    "ProjectSeismicEvent"
+   ],
+   "relation_types": [
+    "ContributionRelation",
+    "ResearchRelation",
+    "ProjectTectonicRelation"
+   ],
+   "subject_bearing_types": [
+    "Claim",
+    "Observation"
+   ],
+   "note": "accepted at attempt 01; six project classes, four root extensions (ProjectTectonicFeature, ProjectTectonicRelation, ProjectSeismicEvent, ProjectPerson), three grounded in the none_found form with a search note, one cited (FOAF Person); two pack subtypes (ProjectRockSample, ProjectPublication); no count or ratio subtypes, so subject rides on Claim and Observation only; the 79 references not modelled by the producer's own decision",
+   "producer_observations": [
+    "no ambient probe reported; no question to the parent",
+    "three grounding blocks in the none_found form, one FOAF citation the producer said it was confident of without verification"
+   ],
+   "phase_two_inputs_staged": [
+    "accepted/population-surface.json",
+    "accepted/diagnostic.json"
+   ],
+   "diagnostic_returns_used": 0,
+   "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-05T19:50:05Z",
+    "checked_at_precision": "minute, from the session clock",
+    "urls": 1,
+    "fabricated": 0,
+    "fabricated_basis": "the one cited vocabulary is FOAF and the borrowed term Person is one it defines; the three uncited blocks declare none_found",
+    "result": "xmlns.com/foaf/0.1/ redirects (303) to xmlns.com/foaf/spec/, the FOAF Vocabulary Specification 0.99, which defines the class Person; the three uncited blocks declare none_found and name no URL",
+    "unverified": []
+   }
+  }
+ ],
+ "runner": [
+  {
+   "attempt": 1,
+   "transaction_time": "2026-09-05T20:17:55Z",
+   "execution_commit": "156938a",
+   "core_note": "Core files at the pinned coordinate dc52547 (OVR-000413); commits between are paper files",
+   "status": "REFUSED",
+   "stage": "DOCUMENT_ADAPTER",
+   "reason": "EVALUATIVE_SLOT_NOT_EVALUATED",
+   "classification": "STRUCTURAL_REFUSAL_RETURNED_TO_PRODUCER",
+   "detail": "50 defects in one aggregated refusal: {'EVALUATIVE_SLOT_NOT_EVALUATED': 1, 'MODALITY_NOT_ASSERTED': 4, 'SUBJECT_NOT_NAMED': 45}; the subjects refused most often are feat:rc2 (17), campaign:smarties (7), feat:mar (6), feat:romanche-tf (4), instr:obs-network (3)",
+   "overseer_reading": "the producer set subjects by topic (a segment, the ridge, the cruise, a software package) on records whose formalizing sentence names none of them, which is the Core-13 rule this cell's three Opus predecessors pre-flighted; its own validator checked verbatim statements and formalization targets only; one disposition sits on the sentence that raises the hypothesis (Core-12), four modalities differ from the formalizing assertion's (Core-14)",
+   "structural_diagnostic_returned_to_producer_at": "2026-09-05T20:18:36Z",
+   "structural_diagnostic_return_ordinal": 1,
+   "structural_diagnostic_return_limit": 2,
+   "hand_repair": false,
+   "leftovers": "refused-runner-attempt-01/ (ledger of the attempt, and a deterministic re-run capturing the diagnostic text)",
+   "return_form": "the diagnostic's exact bytes staged at producer/returned/runner-attempt-01-diagnostic.txt (9,665 bytes, 50 defects) and named in the return message, which reproduces its head and the rule sentence; earlier cells reproduced shorter diagnostics in the message body"
+  },
+  {
+   "attempt": 2,
+   "transaction_time": "2026-09-05T20:30:29Z",
+   "execution_commit": "156938a",
+   "core_note": "Core files at the pinned coordinate dc52547 (OVR-000413); commits between are paper files",
+   "status": "ADMITTED_AND_REPLAYED",
+   "graph": {
+    "entities": 159,
+    "event_participations": 0,
+    "events": 3,
+    "relations": 32,
+    "signals": 0
+   },
+   "ledger_event_count": 14,
+   "records_traced": 194,
+   "reopen_matches_admitted": {
+    "export_records": true,
+    "receipt": true
+   },
+   "census": {
+    "assertions": {
+     "FULLY_FORMALIZED": 140,
+     "PARTLY_FORMALIZED": 6,
+     "UNFORMALIZED": 2
+    },
+    "blocks_reviewed": 186,
+    "blocks_total": 186,
+    "capture_sha256": "sha256:61485ac0fe9840b17f77218b8d9c3fc8b3fe07a68ec5fa6a7e1db86ded8e0617",
+    "gaps_by_kind": {
+     "AGGREGATE_ONLY": 2,
+     "REQUIRED_FIELD_ABSENT_IN_SOURCE": 4,
+     "TYPE_ABSENT": 2
+    }
+   },
+   "derivation_census": {
+    "non_local_relations": 20,
+    "top_hubs": [
+     {
+      "assertion": "assertion:136",
+      "records": 17
+     },
+     {
+      "assertion": "assertion:124",
+      "records": 8
+     },
+     {
+      "assertion": "assertion:137",
+      "records": 7
+     },
+     {
+      "assertion": "assertion:138",
+      "records": 6
+     },
+     {
+      "assertion": "assertion:63",
+      "records": 6
+     }
+    ],
+    "fan_out_distribution": {
+     "0": 2,
+     "1": 89,
+     "2": 29,
+     "3": 10,
+     "4": 13,
+     "6": 2,
+     "7": 1,
+     "8": 1,
+     "17": 1
+    }
+   },
+   "subject_coverage": {
+    "ambiguous": 0,
+    "attachable": 0,
+    "by_type": {
+     "Claim": {
+      "ambiguous": 0,
+      "attachable": 0,
+      "proposed": 9,
+      "total": 10,
+      "unnamed": 1,
+      "with_subject": 9,
+      "without_subject": 1
+     },
+     "Observation": {
+      "ambiguous": 0,
+      "attachable": 0,
+      "proposed": 90,
+      "total": 93,
+      "unnamed": 3,
+      "with_subject": 90,
+      "without_subject": 3
+     }
+    },
+    "proposed": 99,
+    "total": 103,
+    "unnamed": 4,
+    "with_subject": 99,
+    "without_subject": 4
+   },
+   "gaps_by_kind": {
+    "AGGREGATE_ONLY": 2,
+    "REQUIRED_FIELD_ABSENT_IN_SOURCE": 4,
+    "TYPE_ABSENT": 2
+   },
+   "structural_diagnostic_returns_used": 1,
+   "admitted_at": "2026-09-05T20:30:29Z",
+   "correction_note": "the producer split three multi-modality assertions, retyped the preferred disposition's sentence STATED, and added twelve anchor assertions, one clause per subject entity, to formalize the subject fields the rule refused; 148 assertions from 132; nothing_assertable 128 blocks unchanged"
+  }
+ ],
+ "query": {
+  "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "bound_at": "2026-09-05T19:50:05Z",
+  "type_sets": "query-type-sets.json",
+  "type_sets_sha256": "sha256:29ca3d1c8fe7457228aac8e81d27421da734ac8b9193d05caf22a9da5421f23e",
+  "type_sets_note": "query-type-sets.note.json",
+  "binding_at_acceptance": "query-binding.acceptance.json",
+  "binding_at_acceptance_sha256": "sha256:64e08ff6f95f6c8ec45a036dc96a5daa0c554fb89e2776520e4bbc93a8d01b77",
+  "cases_sha256": "sha256:bb792aa3f70d93533b538c68f5fb4e7cf4b912c7789ee834f489684130d5680d",
+  "cases": 391,
+  "cases_by_kind": {
+   "ENTITY": 13,
+   "RELATION": 342,
+   "SUBJECT": 36
+  },
+  "phase_two_dispatched_after": true,
+  "executed_at": "2026-09-05T20:31:17Z",
+  "binding_executed": "results/native-query-binding.json",
+  "bound_after_replay_receipt_sha256": "sha256:ed6adf16c6304c4f71837afa817fa878b6a7687f00412fa73f2616dff0c124e9",
+  "cases_sha256_matches_acceptance": true,
+  "result": "query/query-result.json",
+  "result_schema": "malleus.paper-v4.query-result/v3",
+  "rows_by_question": {
+   "NQ-CQ-01": 36,
+   "NQ-CQ-02": 112,
+   "NQ-CQ-03": 144,
+   "NQ-CQ-04": 141
+  },
+  "rows_total": 433,
+  "rows_by_kind": {
+   "ENTITY": 121,
+   "RELATION": 35,
+   "SUBJECT": 277
+  },
+  "rows_from_more_than_one_case": 6,
+  "forbidden_attempts": {
+   "embedding_import": 0,
+   "file_read": 0,
+   "network": 0
+  },
+  "graph_state_digest": "sha256:c60da8eb02280b77f4b132127c63491244f86ceafcf86d2d3c517e3e5b846d54"
+ },
+ "review": {}
+}

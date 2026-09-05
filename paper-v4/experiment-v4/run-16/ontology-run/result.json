@@ -1,0 +1,67 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-16",
+  "core": {
+    "commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+    "tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a"
+  },
+  "producer_input_manifest_sha256": "sha256:9e3a07d5aeabd63197adfb876f03428e7dc5ca19b7902206ef970f69e0bf7516",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "sonnet",
+    "model_family": "Claude Sonnet 5",
+    "model_id": "claude-sonnet-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:25067bd2d762293e256eb463783037fa1ea0a0bfa4875bd50149137eea40dc9b",
+    "final_status_sha256": "sha256:8fe52cb5abbd41a07e0f562115239cd47048272fb33b31606c0b8f8dbcdd8810"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:8eadb5659bdf79262d934c3c7524d7c879bf1d547c463c72bb3fd0e3a8e6c0a4",
+      "ontology_path": "paper-v4/experiment-v4/run-16/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-16/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:fe92090d7a7ca1211706b4048b9166d0a87dac12c1e2d0eabec9f0ea03e56f12",
+      "accepted_at": "2026-09-05T19:49:31Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:8eadb5659bdf79262d934c3c7524d7c879bf1d547c463c72bb3fd0e3a8e6c0a4",
+    "validated_contract_sha256": "sha256:ffb140fef93354c5bdaa2b3dd632e3af11dac9be23ec2a7a87a7b071a9f70404",
+    "validated_fact_set_sha256": "sha256:fc4c9960ca993ab519dc819f866c2d7ac6eb8da1c1891b11ce0b86000585155b",
+    "fact_count": 2880,
+    "grounding_receipt_sha256": "sha256:84093933f6351b503aa7262e9729c6a73b83b0a498f3e96009fdbac5b57b9b88",
+    "population_surface_sha256": "sha256:2fe7944bc5f6e581833fcf4806db30b1138d7b1c2dcac0ea0317ee59703d79af",
+    "population_surface_families": {
+      "ENTITY": 17,
+      "EVENT": 2,
+      "RELATION": 3
+    }
+  },
+  "accepted_ontology_sha256": "sha256:8eadb5659bdf79262d934c3c7524d7c879bf1d547c463c72bb3fd0e3a8e6c0a4",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-05T19:50:05Z",
+    "checked_at_precision": "minute, from the session clock",
+    "urls": 1,
+    "fabricated": 0,
+    "fabricated_basis": "the one cited vocabulary is FOAF and the borrowed term Person is one it defines; the three uncited blocks declare none_found",
+    "result": "xmlns.com/foaf/0.1/ redirects (303) to xmlns.com/foaf/spec/, the FOAF Vocabulary Specification 0.99, which defines the class Person; the three uncited blocks declare none_found and name no URL",
+    "unverified": []
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-16 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

@@ -1,0 +1,306 @@
+id: https://malleus.dev/schema/projects/mar-deep-seismicity
+name: malleus_project_mar_deep_seismicity
+version: 0.1.0
+title: Project ontology for deep mantle earthquakes and CO2 degassing at the Mid-Atlantic Ridge
+description: >-
+  Project-level extension over the Malleus root and the metrology, chronology,
+  and research knowledge packs, sized to the material the selected reading
+  reports: a microseismicity study along the Mid-Atlantic Ridge (Romanche
+  ridge-transform intersection, segments RC1/RC2/RC3, non-transform
+  discontinuities NTD1/NTD2), the four competing explanatory hypotheses for
+  observed deep mantle earthquakes, the CO2-in-melt geochemical evidence bearing
+  on those hypotheses, the seismic instrumentation and cruise that produced the
+  data, the rock samples analysed, the publication itself, and its credited
+  contributors.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  project: https://malleus.dev/schema/projects/mar-deep-seismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+  TectonicFeatureKind:
+    description: >-
+      Kind of named tectonic or geomorphic feature the reading distinguishes
+      along or near a mid-ocean ridge. Distinctions are kept only where the
+      reading itself names and treats them differently; a boundary/interface
+      at depth (brittle-ductile boundary, Moho, lithosphere-asthenosphere
+      boundary) is one kind because the reading treats all three the same
+      way, as a named depth horizon, and distinguishes the specific one by
+      name, not by a separate class.
+    permissible_values:
+      RIDGE_SEGMENT:
+        description: A named along-axis section of spreading ridge, e.g. RC1, RC2, RC3.
+      NON_TRANSFORM_DISCONTINUITY:
+        description: A named ridge offset that is not a transform fault, e.g. NTD1, NTD2.
+      TRANSFORM_FAULT:
+        description: A named oceanic transform fault, e.g. the Romanche or Chain transform.
+      RIDGE_TRANSFORM_INTERSECTION:
+        description: A named intersection of a spreading ridge and a transform fault.
+      OCEANIC_CORE_COMPLEX:
+        description: A named exhumed-mantle dome bounded by a detachment fault.
+      DETACHMENT_FAULT:
+        description: A named low-angle normal fault exhuming an oceanic core complex.
+      NORMAL_FAULT:
+        description: A named high-angle normal fault, when the reading singles one out.
+      HYDROTHERMAL_VENT_FIELD:
+        description: A named active or extinct hydrothermal vent field or mound.
+      VOLCANO:
+        description: A named volcano or volcanic edifice used as a comparandum.
+      LITHOSPHERIC_BOUNDARY:
+        description: >-
+          A named depth boundary or interface within the lithosphere-mantle
+          system, e.g. the brittle-ductile boundary, the Moho, or the
+          lithosphere-asthenosphere boundary; the specific boundary is carried
+          in the record's name.
+      TECTONIC_PLATE:
+        description: A named tectonic plate used as a comparandum.
+      ISLAND:
+        description: A named island used to locate a comparandum.
+      OTHER:
+        description: A named feature the above kinds do not cover.
+
+  TectonicRelationType:
+    description: >-
+      Spatial or structural relation the reading states between two named
+      tectonic features. Local to this project: see the class-level grounding
+      note on ProjectTectonicRelation for the vocabularies checked and not
+      found to name these specific predicates.
+    permissible_values:
+      PART_OF:
+        description: One feature is a named part of another, e.g. an OCC on a ridge flank.
+      ADJACENT_TO:
+        description: Two features are stated as neighbouring along the ridge.
+      BOUNDED_BY:
+        description: One feature is stated as bounded by another, e.g. a segment bounded by a detachment fault.
+      OFFSET_BY:
+        description: One feature's continuity is stated as offset by another, e.g. a ridge offset by a discontinuity.
+      LOCATED_AT:
+        description: One feature is stated as located at or on another.
+      OTHER:
+        description: A stated relation the above predicates do not cover.
+
+  SeismicEventType:
+    description: >-
+      Kind of individually identified (not merely aggregately counted) seismic
+      event the reading names.
+    permissible_values:
+      TRANSFORM_FAULT_EARTHQUAKE:
+        description: A named earthquake located on or attributed to a transform fault.
+      RIDGE_AXIS_EARTHQUAKE:
+        description: A named earthquake located on or attributed to a ridge axis.
+      OTHER:
+        description: A named earthquake the above kinds do not cover.
+
+  RockSampleKind:
+    description: >-
+      Kind of rock sample or sample form the reading distinguishes, following
+      the reading's own legends and wording (e.g. Fig. 1b, Fig. 5).
+    permissible_values:
+      BASALT:
+        description: A basaltic rock sample recovered from the seafloor.
+      PERIDOTITE:
+        description: A peridotite rock sample recovered from the seafloor.
+      MORB_WHOLE_ROCK:
+        description: A mid-ocean-ridge-basalt whole-rock sample.
+      POPPING_ROCK:
+        description: A popping-rock sample, preserving exsolved vesicle gas.
+      MELT_INCLUSION:
+        description: An olivine-hosted melt inclusion sample.
+      OTHER:
+        description: A sample form the above kinds do not cover.
+
+# -------------------------------------------------------------------
+# Classes
+# -------------------------------------------------------------------
+
+classes:
+
+  ProjectTectonicFeature:
+    is_a: Entity
+    description: >-
+      A named tectonic or geomorphic feature along or near the studied ridge,
+      or a named comparandum feature cited elsewhere in the discussion.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and plate tectonics
+          taxonomy: DDC 551.8
+          none_found: true
+          search: >-
+            Checked, from memory, the OGC/CGI GeoSciML structural-geology
+            vocabulary and general earth-science term lists for a controlled
+            class covering named ridge segments, ridge-transform
+            intersections, oceanic core complexes, and non-transform
+            discontinuities as used in mid-ocean-ridge tectonics. No exact
+            class names or a verifiable URL could be certified without
+            network access, so the class and its kind enum are recorded as
+            local rather than risk citing an unverified vocabulary.
+          invented_terms:
+            - ProjectTectonicFeature
+            - TectonicFeatureKind
+    slots:
+      - feature_kind
+    slot_usage:
+      feature_kind:
+        required: true
+
+  ProjectTectonicRelation:
+    is_a: Relation
+    description: >-
+      A stated spatial or structural relation between two ProjectTectonicFeature
+      records.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and plate tectonics
+          taxonomy: DDC 551.8
+          none_found: true
+          search: >-
+            Checked, from memory, the OGC GeoSPARQL / DE-9IM topological
+            relation vocabulary (touches, within, contains, overlaps). Its
+            generic spatial predicates do not name the structural-geology
+            relations the reading states (a segment bounded by a detachment
+            fault, a ridge offset by a non-transform discontinuity), and the
+            exact current vocabulary URL could not be certified without
+            network access, so the relation type and its enum are recorded as
+            local.
+          invented_terms:
+            - ProjectTectonicRelation
+            - TectonicRelationType
+    slot_usage:
+      relation_type:
+        range: TectonicRelationType
+
+  ProjectSeismicEvent:
+    is_a: Event
+    mixins:
+      - TemporalExtent
+      - Quantified
+    description: >-
+      An individually identified seismic event (as opposed to an aggregately
+      counted earthquake population), such as the named 2016 Mw 7.1 Romanche
+      transform-fault earthquake and its named subevents. Magnitude is carried
+      through the Quantified mixin (quantity_kind e.g. "moment magnitude");
+      domain-time of unstated precision is carried through the TemporalExtent
+      mixin's temporal_precision rather than invented into occurred_at.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          none_found: true
+          search: >-
+            Checked, from memory, seismological glossaries (IASPEI
+            terminology, USGS earthquake glossary) for a controlled class
+            naming a discrete, individually attributed seismic event as
+            distinct from an aggregate earthquake-catalog entry. No exact
+            class name or a verifiable URL could be certified without network
+            access, so the class and its type enum are recorded as local.
+          invented_terms:
+            - ProjectSeismicEvent
+            - SeismicEventType
+    slots:
+      - associated_feature
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+
+  ProjectPerson:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person credited by the source as a contributor to the work, e.g. a
+      named author in the Author contributions section.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: FOAF (Friend of a Friend) Vocabulary Specification
+              vocabulary_url: http://xmlns.com/foaf/0.1/
+              borrowed_terms:
+                - Person
+          invented_terms: []
+
+  ProjectRockSample:
+    is_a: Sample
+    description: >-
+      A rock sample or sample form analysed by the study or by the compiled
+      literature it draws on, distinguished by RockSampleKind following the
+      reading's own map and figure legends. Pack-derived (is_a Sample), so it
+      carries no class-level grounding block of its own.
+    slots:
+      - sample_kind
+
+  ProjectPublication:
+    is_a: Source
+    description: >-
+      The article itself as a Source record, carrying the identifiers and
+      milestone dates the reading states about its own publication (DOI,
+      journal, received/accepted dates). Pack-derived (is_a Source), so it
+      carries no class-level grounding block of its own.
+    slots:
+      - doi
+      - published_in
+      - received_at
+      - accepted_at
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  feature_kind:
+    range: TectonicFeatureKind
+    description: Kind of tectonic or geomorphic feature this record names.
+
+  associated_feature:
+    range: Entity
+    description: >-
+      The ProjectTectonicFeature this seismic event is stated as located on,
+      at, or along. A plain reference slot, not a reified Relation, because
+      Relation endpoints are Entity-to-Entity only and this record is an
+      Event.
+
+  sample_kind:
+    range: RockSampleKind
+    description: Kind of rock sample or sample form this record is.
+
+  doi:
+    range: string
+    description: Digital Object Identifier the source states for itself.
+
+  published_in:
+    range: string
+    description: Name of the journal or venue the source states it is published in.
+
+  received_at:
+    range: datetime
+    description: Date the source states its manuscript was received by the venue.
+
+  accepted_at:
+    range: datetime
+    description: Date the source states its manuscript was accepted by the venue.

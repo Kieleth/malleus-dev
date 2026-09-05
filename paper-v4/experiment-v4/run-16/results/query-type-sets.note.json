@@ -1,0 +1,20 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-05T19:50:05Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the one feature type, Observation, Claim",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the feature, sample and method types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim, Observation, the feature and sample types, Method"
+  },
+  "translation": {
+    "run-15 GeologicFeature": "ProjectTectonicFeature (feature_kind enum)",
+    "run-15 EarthMaterial and Sample": "ProjectRockSample and Sample",
+    "run-15 SoftwareTool": "no software type on this surface; Method kept",
+    "run-15 CountObservation and RatioObservation": "no subtypes on this surface; Observation and Ratio"
+  },
+  "lesson_applied": "no catalogue type the question does not ask for: ProjectPerson (the authors) and ProjectPublication (the article) are in no set",
+  "left_out": "ProjectSeismicEvent (EVENT family, the named 2016 Romanche earthquake, no subject) is in no set, as the event type was in runs 12 to 15",
+  "note": "run-15's sets translated to run-16's surface; the same questions, the same judgement"
+}
