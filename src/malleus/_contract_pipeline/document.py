@@ -47,6 +47,19 @@ _STATEMENT_DIGEST_SLOT = "statement_sha256"
 _SUBJECT_SLOT = "subject"
 _NAME_SLOT = "name"
 _TAGS_SLOT = "tags"
+_ENTITY_FAMILY = "entities"
+_PROJECTED_ORIGIN = "PROJECTED"
+_SUBJECT_PROPOSED = "proposed"
+_SUBJECT_PROJECTED = "projected"
+_SUBJECT_AMBIGUOUS = "ambiguous"
+_SUBJECT_UNNAMED = "unnamed"
+_SUBJECT_OUTCOMES = (
+    _SUBJECT_AMBIGUOUS,
+    _SUBJECT_PROJECTED,
+    _SUBJECT_PROPOSED,
+    _SUBJECT_UNNAMED,
+)
+_SUBJECT_PRESENT = frozenset({_SUBJECT_PROPOSED, _SUBJECT_PROJECTED})
 _MODALITY_SLOT = "assertion_modality"
 _DERIVATION_RULE = (
     "a record's assertion_locator names an assertion of this capture, a "
@@ -400,53 +413,146 @@ def _subject_bearing_types(
 
 
 def _subject_census(
-    record_data: dict[str, object],
-    contract_view: object,
+    records_by_id: dict[str, dict[str, object]],
+    bearing: frozenset[str],
+    outcomes: dict[str, str],
 ) -> dict[str, object]:
-    """Report how many subject-bearing records name a subject, and how many do not.
+    """Report how each subject-bearing record came by its subject, or did not.
 
     One axis, reported and never refused. ``by_type`` carries one entry per
-    subject-bearing type present in the records, each with ``total``,
-    ``with_subject`` and ``without_subject``; the three top-level counts are
-    those summed. A record whose subject the reading does not name leaves the
-    slot unset and is counted here rather than invented.
+    subject-bearing type present in the records, each with ``total``, the four
+    outcomes and their two sums; the top-level counts are those summed.
+    ``proposed`` is a subject the producer set, ``projected`` one the adapter
+    derived from the single entity a formalizing sentence names, and
+    ``with_subject`` is the two together. ``ambiguous`` is a record whose
+    sentences name more than one entity and ``unnamed`` one whose sentences
+    name none, which are the two ways the slot stays unset rather than
+    invented.
     """
 
-    records: list[tuple[str, dict[str, object]]] = []
-    types: set[str] = set()
-    for raw_family in record_data.values():
-        for raw_record in _items(raw_family, "record family"):
-            record = _obj(raw_record, "record")
-            type_name = record.get("type")
-            if not isinstance(type_name, str) or not type_name:
-                continue
-            types.add(type_name)
-            records.append((type_name, record))
-
-    bearing = _subject_bearing_types(contract_view, types)
     by_type: dict[str, dict[str, int]] = {}
-    for type_name, record in records:
-        if type_name not in bearing:
+    for record_id in sorted(records_by_id):
+        record = records_by_id[record_id]
+        type_name = record.get("type")
+        if not isinstance(type_name, str) or type_name not in bearing:
             continue
-        subject = _record_properties(record).get(_SUBJECT_SLOT)
         counts = by_type.setdefault(
-            type_name, {"total": 0, "with_subject": 0, "without_subject": 0}
+            type_name,
+            {"total": 0, "with_subject": 0, "without_subject": 0}
+            | {outcome: 0 for outcome in _SUBJECT_OUTCOMES},
         )
+        outcome = outcomes.get(record_id, _SUBJECT_UNNAMED)
         counts["total"] += 1
-        key = (
-            "with_subject"
-            if isinstance(subject, str) and subject
-            else "without_subject"
-        )
-        counts[key] += 1
-    return {
-        "by_type": dict(sorted(by_type.items())),
-        "total": sum(counts["total"] for counts in by_type.values()),
-        "with_subject": sum(counts["with_subject"] for counts in by_type.values()),
-        "without_subject": sum(
-            counts["without_subject"] for counts in by_type.values()
-        ),
+        counts[outcome] += 1
+        counts[
+            "with_subject" if outcome in _SUBJECT_PRESENT else "without_subject"
+        ] += 1
+    totals: dict[str, object] = {
+        key: sum(counts[key] for counts in by_type.values())
+        for key in ("total", "with_subject", "without_subject", *_SUBJECT_OUTCOMES)
     }
+    return {"by_type": dict(sorted(by_type.items())), **totals}
+
+
+def _project_subjects(
+    records_by_id: dict[str, dict[str, object]],
+    record_data: dict[str, object],
+    bearing: frozenset[str],
+    derivations: list[dict[str, object]],
+    statements: dict[str, str],
+    source_id: str,
+) -> dict[str, str]:
+    """Set the subject of a record whose formalizing sentence names one entity.
+
+    Run-11 left 77 source-asserted records with no subject whose own
+    formalizing sentence nonetheless names an entity of the same capture. The
+    name is in the retained bytes, so the compiler derives the attachment
+    rather than leaving it to the producer's diligence, and the producer sets
+    ``subject`` only where the sentence names more than one entity or where
+    the one it names is not what the record is about.
+
+    The candidates are the capture's entity records that carry a ``name`` and
+    whose own type bears no subject, compared by the Core-15 rule against the
+    statement of every assertion formalizing any field of the record,
+    whitespace removed from both sides and case-folded. Exactly one entity
+    named projects; none and more than one leave the slot unset and the census
+    says which. The derivation is recorded against the first assertion, in
+    capture order, whose statement names that entity, and carries
+    ``origin: PROJECTED`` so a reader of the plan tells a derived subject from
+    a producer's own. Nothing here refuses, and a subject the producer set is
+    left alone and checked as before.
+    """
+
+    outcomes: dict[str, str] = {}
+    if not bearing:
+        return outcomes
+
+    candidates: list[tuple[str, list[str]]] = []
+    for raw_record in _items(
+        record_data.get(_ENTITY_FAMILY, []), "record family"
+    ):
+        entity = _obj(raw_record, "record")
+        type_name = entity.get("type")
+        if not isinstance(type_name, str) or type_name in bearing:
+            continue
+        name = _record_properties(entity).get(_NAME_SLOT)
+        if not isinstance(name, str) or not name:
+            continue
+        candidates.append(
+            (
+                _word(entity.get("id"), "record ID"),
+                [_compact(form).casefold() for form in _subject_names(entity)],
+            )
+        )
+
+    locators_by_record: dict[str, list[str]] = {}
+    for derivation in derivations:
+        locators = locators_by_record.setdefault(str(derivation["record_id"]), [])
+        locator = str(derivation["locator"])
+        if locator not in locators:
+            locators.append(locator)
+
+    projected: list[dict[str, object]] = []
+    for record_id in sorted(records_by_id):
+        record = records_by_id[record_id]
+        type_name = record.get("type")
+        if not isinstance(type_name, str) or type_name not in bearing:
+            continue
+        properties = record.get("properties")
+        if not isinstance(properties, dict):
+            outcomes[record_id] = _SUBJECT_UNNAMED
+            continue
+        subject = properties.get(_SUBJECT_SLOT)
+        if isinstance(subject, str) and subject:
+            outcomes[record_id] = _SUBJECT_PROPOSED
+            continue
+        named: dict[str, str] = {}
+        for locator in locators_by_record.get(record_id, []):
+            statement = _compact(statements[locator]).casefold()
+            for entity_id, forms in candidates:
+                if entity_id in named:
+                    continue
+                if any(form in statement for form in forms):
+                    named[entity_id] = locator
+        if len(named) != 1:
+            outcomes[record_id] = (
+                _SUBJECT_AMBIGUOUS if named else _SUBJECT_UNNAMED
+            )
+            continue
+        entity_id, locator = next(iter(named.items()))
+        properties[_SUBJECT_SLOT] = entity_id
+        projected.append(
+            {
+                "locator": locator,
+                "origin": _PROJECTED_ORIGIN,
+                "path": ["properties", _SUBJECT_SLOT],
+                "record_id": record_id,
+                "source_id": source_id,
+            }
+        )
+        outcomes[record_id] = _SUBJECT_PROJECTED
+    derivations.extend(projected)
+    return outcomes
 
 
 def _derivation_census(
@@ -887,6 +993,22 @@ def adapt_document_assertions(
     statements = {
         assertion_id: statement for _, assertion_id, _, statement in checked
     }
+    bearing = _subject_bearing_types(
+        contract_view,
+        {
+            record["type"]
+            for record in records_by_id.values()
+            if isinstance(record.get("type"), str)
+        },
+    )
+    subject_outcomes = _project_subjects(
+        records_by_id,
+        record_data,
+        bearing,
+        derivations,
+        statements,
+        source_id,
+    )
     formalized = _formalized_slots(derivations, modality_by_assertion)
     derivation_defects = _digest_defects(records_by_id, statements)
     derivation_defects.extend(
@@ -946,7 +1068,9 @@ def adapt_document_assertions(
             record_data,
         ),
         "gaps_by_kind": dict(sorted(gaps_by_kind.items())),
-        "subject_coverage": _subject_census(record_data, contract_view),
+        "subject_coverage": _subject_census(
+            records_by_id, bearing, subject_outcomes
+        ),
     }
     return DocumentAssertionCompilation(
         capture_id=capture_id,

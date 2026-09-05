@@ -48,6 +48,9 @@ _GRAMMAR = "malleus.population-plan/private-v0"
 _DIGEST_PREFIX = "sha256:"
 _SUBJECT_SLOT = "subject"
 _HEX = frozenset("0123456789abcdef")
+_DERIVATION_FIELDS = frozenset({"locator", "path", "record_id", "source_id"})
+_DERIVATION_ORIGIN = "origin"
+_DERIVATION_ORIGINS = frozenset({"PROJECTED"})
 _ROOT_FIELDS = frozenset(
     {
         "adapter",
@@ -1169,12 +1172,24 @@ def compile_population_plan(
             PopulationPlanRefusalReason.MALFORMED_PLAN,
             "derivation must be an object",
         )
-        _exact(
-            derivation,
-            frozenset({"locator", "path", "record_id", "source_id"}),
-            PopulationPlanRefusalReason.MALFORMED_PLAN,
-            "derivation fields are not closed",
-        )
+        if not _DERIVATION_FIELDS <= set(derivation) or set(derivation) - (
+            _DERIVATION_FIELDS | {_DERIVATION_ORIGIN}
+        ):
+            raise _refuse(
+                PopulationPlanRefusalReason.MALFORMED_PLAN,
+                "derivation fields are not closed",
+            )
+        if _DERIVATION_ORIGIN in derivation:
+            origin = _text(
+                derivation[_DERIVATION_ORIGIN],
+                PopulationPlanRefusalReason.MALFORMED_PLAN,
+                "derivation origin is required",
+            )
+            if origin not in _DERIVATION_ORIGINS:
+                raise _refuse(
+                    PopulationPlanRefusalReason.MALFORMED_PLAN,
+                    f"unknown derivation origin: {origin}",
+                )
         record_id = _text(
             derivation["record_id"],
             PopulationPlanRefusalReason.MALFORMED_PLAN,

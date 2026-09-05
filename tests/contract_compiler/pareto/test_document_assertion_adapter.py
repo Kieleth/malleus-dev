@@ -1155,10 +1155,30 @@ def test_document_census_reports_subject_coverage_per_bearing_type() -> None:
 
     assert census["subject_coverage"] == {
         "by_type": {
-            "Claim": {"total": 1, "with_subject": 0, "without_subject": 1},
-            "Observation": {"total": 2, "with_subject": 1, "without_subject": 1},
+            "Claim": {
+                "ambiguous": 0,
+                "projected": 0,
+                "proposed": 0,
+                "total": 1,
+                "unnamed": 1,
+                "with_subject": 0,
+                "without_subject": 1,
+            },
+            "Observation": {
+                "ambiguous": 0,
+                "projected": 0,
+                "proposed": 1,
+                "total": 2,
+                "unnamed": 1,
+                "with_subject": 1,
+                "without_subject": 1,
+            },
         },
+        "ambiguous": 0,
+        "projected": 0,
+        "proposed": 1,
         "total": 3,
+        "unnamed": 2,
         "with_subject": 1,
         "without_subject": 2,
     }
@@ -1176,10 +1196,179 @@ def test_document_census_knows_no_subject_bearing_type_without_a_contract() -> N
 
     assert census["subject_coverage"] == {
         "by_type": {},
+        "ambiguous": 0,
+        "projected": 0,
+        "proposed": 0,
         "total": 0,
+        "unnamed": 0,
         "with_subject": 0,
         "without_subject": 0,
     }
+
+
+def _projectable(
+    *,
+    sentence: str = "asr:001",
+    named: tuple[tuple[str, str], ...] = (("instrument:ovg", "Pump P-7"),),
+    subject: str | None = None,
+) -> tuple[dict[str, object], dict[str, object]]:
+    """One observation, and the entities the sentence formalizing it may name.
+
+    ``asr:001`` reads "Pump P-7 was inspected on 2026-03-02." and ``asr:003``
+    reads "The technician suspects bearing wear.". ``Instrument`` carries no
+    subject slot and ``Observation`` does, so the instruments are what the
+    adapter may project and the observation is what it projects onto.
+    """
+
+    _, capture, _, _ = _inputs()
+    entities: list[object] = [
+        {"id": record_id, "properties": {"name": name}, "type": "Instrument"}
+        for record_id, name in named
+    ]
+    properties: dict[str, object] = {"name": "co2"}
+    paths: list[list[str]] = [["properties", "name"]]
+    if subject is not None:
+        properties["subject"] = subject
+        paths.append(["properties", "subject"])
+    entities.append(
+        {"id": "obs:co2", "properties": properties, "type": "Observation"}
+    )
+    index = {"asr:001": 0, "asr:002": 1, "asr:003": 2}[sentence]
+    capture["assertions"][index]["formalized_by"] = [
+        {"path": path, "record_id": "obs:co2"} for path in paths
+    ]
+    if index != 0:
+        capture["assertions"][0]["formalized_by"] = [
+            {"path": ["properties", "name"], "record_id": named[0][0]}
+        ]
+    return capture, {"entities": entities, "relations": []}
+
+
+def test_document_adapter_projects_the_one_entity_the_sentence_names() -> None:
+    """Run-11 left 77 source-asserted records with no subject whose own
+    formalizing sentence names an entity of the same capture. The name is in
+    the retained bytes, so the compiler derives the attachment rather than
+    leaving it to the producer's diligence: exactly one entity named, the
+    subject is set and the derivation records which sentence named it."""
+
+    capture, records = _projectable()
+
+    result = _adapt_with_contract(capture, records)
+    plan = json.loads(result.canonical_plan_bytes)
+
+    by_id = {record["id"]: record for record in plan["records"]["entities"]}
+    assert by_id["obs:co2"]["properties"]["subject"] == "instrument:ovg"
+    assert {
+        "locator": "asr:001",
+        "origin": "PROJECTED",
+        "path": ["properties", "subject"],
+        "record_id": "obs:co2",
+        "source_id": "source:inspection-note",
+    } in plan["derivations"]
+    census = json.loads(result.canonical_census_bytes)
+    assert census["subject_coverage"]["by_type"]["Observation"] == {
+        "ambiguous": 0,
+        "projected": 1,
+        "proposed": 0,
+        "total": 1,
+        "unnamed": 0,
+        "with_subject": 1,
+        "without_subject": 0,
+    }
+
+
+def test_document_adapter_leaves_a_subject_two_named_entities_would_share() -> None:
+    """A sentence naming two entities does not say which one the record is
+    about, and the adapter makes no semantic judgment past the name. The slot
+    stays unset, the census calls it ambiguous, and the producer sets it."""
+
+    capture, records = _projectable(
+        sentence="asr:003",
+        named=(
+            ("instrument:tech", "technician"),
+            ("instrument:wear", "bearing wear"),
+        ),
+    )
+
+    result = _adapt_with_contract(capture, records)
+    plan = json.loads(result.canonical_plan_bytes)
+
+    by_id = {record["id"]: record for record in plan["records"]["entities"]}
+    assert "subject" not in by_id["obs:co2"]["properties"]
+    assert not [
+        derivation
+        for derivation in plan["derivations"]
+        if derivation["path"] == ["properties", "subject"]
+    ]
+    census = json.loads(result.canonical_census_bytes)
+    assert census["subject_coverage"]["by_type"]["Observation"] == {
+        "ambiguous": 1,
+        "projected": 0,
+        "proposed": 0,
+        "total": 1,
+        "unnamed": 0,
+        "with_subject": 0,
+        "without_subject": 1,
+    }
+
+
+def test_document_adapter_keeps_the_subject_the_producer_set() -> None:
+    """A producer-set subject is the producer's, checked as before and never
+    projected over: the census counts it proposed and the plan is unchanged."""
+
+    capture, records = _projectable(subject="instrument:ovg")
+
+    result = _adapt_with_contract(capture, records)
+    plan = json.loads(result.canonical_plan_bytes)
+
+    assert plan["records"] == records
+    assert not [
+        derivation for derivation in plan["derivations"] if "origin" in derivation
+    ]
+    census = json.loads(result.canonical_census_bytes)
+    assert census["subject_coverage"]["by_type"]["Observation"] == {
+        "ambiguous": 0,
+        "projected": 0,
+        "proposed": 1,
+        "total": 1,
+        "unnamed": 0,
+        "with_subject": 1,
+        "without_subject": 0,
+    }
+
+
+def test_document_adapter_projects_no_subject_from_an_unnamed_sentence() -> None:
+    """A sentence naming no entity of the capture leaves the slot unset, which
+    is the honest residue decision 18 named and the census counts."""
+
+    capture, records = _projectable(named=(("instrument:mar", "Romanche"),))
+
+    result = _adapt_with_contract(capture, records)
+    plan = json.loads(result.canonical_plan_bytes)
+
+    assert plan["records"] == records
+    census = json.loads(result.canonical_census_bytes)
+    assert census["subject_coverage"]["by_type"]["Observation"] == {
+        "ambiguous": 0,
+        "projected": 0,
+        "proposed": 0,
+        "total": 1,
+        "unnamed": 1,
+        "with_subject": 0,
+        "without_subject": 1,
+    }
+
+
+def test_document_adapter_projects_no_subject_onto_an_untyped_capture() -> None:
+    """Which types carry a subject is the contract's answer, so with no
+    compiled contract the adapter projects nothing and the plan is the
+    producer's own."""
+
+    capture, records = _projectable()
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
 
 
 def test_document_census_names_a_relation_derived_away_from_its_endpoints() -> None:
