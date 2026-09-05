@@ -141,3 +141,9 @@ Rules for the loop:
 6. Nothing irreversible, nothing destructive, no ratification by me, no pushing to any branch but main.
 
 A candidate unification to test when the data supports it: the derivation rule's content checks (verbatim statement, statement digest, subject named in the statement, disposition from a disposing sentence, locality of relation endpoints) are all instances of one rule, "what a pointer derives must be visible in the statement it points at". If one check over every derived scalar (name, number, enum label, subject name) subsumes the rest, four reasons become one and the skill loses four sentences. To be tried after run-09, not before.
+
+## Loop iteration 1: run-09 (v4.3, Opus 5), launched 2026-09-05T05:20Z at f6c8c71
+
+Change under test (one idea, two halves): the subject of a source-asserted record is a first-class derived element (Core-13: `subject` on SourceAsserted, SUBJECT_NOT_NAMED by name substring, coverage census, one skill sentence), and the query can see it (binding v3: ENTITY and SUBJECT case kinds beside RELATION, all type-only, frozen at acceptance). Hypothesis: the same model that produced run-08's 131 unattached observations attaches them now, and the questions become reachable without relation records; measured against run-04's 146 local-relation rows and run-08's 8. Falsifier: subject coverage stays low or SUBJECT rows do not reach the answer-bearing quantities.
+
+Also under observation, not under test: the ledger cost of a Core change. Core-13 spent six governance entries, two of them correcting its own evidence and its own count. A Core agent that writes its entry after its last commit, from the diff rather than from the log, would have spent one. Candidate simplification for the ledger procedure, to raise with Luis.
