@@ -389,9 +389,9 @@ bytes. The adapter digests the argument it is handed and compares the two; it
 never re-serialises the reading first, so naming the reading by the digest of a
 re-encoding refuses with `READING_MISMATCH`. The reading in this template is
 canonical JSON only because it is written here as JSON data. The parent passes
-exactly these seven public keyword arguments to `adapt_document_assertions`:
+exactly these eight public keyword arguments to `adapt_document_assertions`:
 `reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`,
-`records`, and `supersessions`. The reading object is illustrative input, not a
+`records`, `supersessions`, and `contract_view`. The reading object is illustrative input, not a
 live grammar or closed shape; the adapter reads its pages and each block's ID,
 ordinal, and text. The only live grammar in this example is
 `DOCUMENT_CAPTURE_GRAMMAR == malleus.document-capture/private-v0` in
@@ -567,6 +567,7 @@ Supplied by the parent or the harness, never written into `document-population.j
     "capture_bytes": "the canonical JSON bytes of document-population.json's capture object",
     "capture_id": "capture:neutral:1",
     "contract_identity": "the parent computes PartialEffectiveContract.identity from the compiled contract; the producer never writes one",
+    "contract_view": "the parent's compiled ContractView; the producer never writes one",
     "plan_id": "plan:neutral:1",
     "reading_bytes": "the exact bytes of the reading file below, byte for byte as supplied",
     "records": "document-population.json's records object, passed through",

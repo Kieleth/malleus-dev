@@ -38,7 +38,9 @@ _ASSERTION_FIELDS = {
     "statement",
 }
 _ASSERTION_TIME_FIELDS = {"assertion_time", "domain_time"}
+EVALUATIVE_SLOT_MIXIN = "Evaluative"
 _LOCATOR_SLOT = "assertion_locator"
+_EVALUATING_MODALITY_EXCLUDED = "HYPOTHESISED"
 _STATEMENT_DIGEST_SLOT = "statement_sha256"
 _DERIVATION_RULE = (
     "a record's assertion_locator names an assertion of this capture, its "
@@ -60,6 +62,7 @@ _MODALITIES = {
 
 class DocumentAssertionRefusalReason(str, Enum):
     DIGEST_MISMATCH = "DIGEST_MISMATCH"
+    EVALUATIVE_SLOT_NOT_EVALUATED = "EVALUATIVE_SLOT_NOT_EVALUATED"
     FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
     GAP_REQUIRED = "GAP_REQUIRED"
     MALFORMED_CAPTURE = "MALFORMED_CAPTURE"
@@ -326,6 +329,81 @@ def _digest_defects(
     return defects
 
 
+def _evaluative_slots(contract_view: object) -> frozenset[str]:
+    """The slot names the bound contract's `Evaluative` mixin declares.
+
+    The mixin's slot list is the declaration. A contract that does not carry
+    the mixin declares no evaluative slot, and no contract declares none.
+    """
+
+    if contract_view is None:
+        return frozenset()
+    try:
+        return frozenset(contract_view.effective_slots(EVALUATIVE_SLOT_MIXIN))
+    except KeyError:
+        return frozenset()
+
+
+def _formalized_slots(
+    derivations: list[dict[str, object]],
+    modality_by_assertion: dict[str, str],
+) -> dict[str, dict[str, list[tuple[str, str]]]]:
+    """Group each record's property derivations by slot, with their modality."""
+
+    formalized: dict[str, dict[str, list[tuple[str, str]]]] = {}
+    for derivation in derivations:
+        path = derivation["path"]
+        if not isinstance(path, list) or len(path) != 2 or path[0] != "properties":
+            continue
+        slot = path[1]
+        if not isinstance(slot, str):
+            continue
+        locator = str(derivation["locator"])
+        record = formalized.setdefault(str(derivation["record_id"]), {})
+        record.setdefault(slot, []).append(
+            (locator, modality_by_assertion[locator])
+        )
+    return formalized
+
+
+def _evaluative_defects(
+    records_by_id: dict[str, dict[str, object]],
+    evaluative: frozenset[str],
+    formalized: dict[str, dict[str, list[tuple[str, str]]]],
+) -> list[_Defect]:
+    """Collect every evaluative value no evaluating assertion formalizes."""
+
+    defects: list[_Defect] = []
+    if not evaluative:
+        return defects
+    for record_id in sorted(records_by_id):
+        properties = _record_properties(records_by_id[record_id])
+        by_slot = formalized.get(record_id, {})
+        for slot in sorted(evaluative & set(properties)):
+            formalizing = by_slot.get(slot, [])
+            if any(
+                modality != _EVALUATING_MODALITY_EXCLUDED
+                for _, modality in formalizing
+            ):
+                continue
+            named = (
+                ", ".join(
+                    f"{assertion_id} {modality}"
+                    for assertion_id, modality in sorted(formalizing)
+                )
+                or "no assertion"
+            )
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.EVALUATIVE_SLOT_NOT_EVALUATED,
+                    f"{record_id} {slot}",
+                    f"record {record_id} evaluative slot {slot} is formalized "
+                    f"by {named}",
+                )
+            )
+    return defects
+
+
 def _checked_assertions(
     assertions: list[object],
 ) -> tuple[tuple[dict[str, object], str, str, str], ...]:
@@ -399,8 +477,16 @@ def adapt_document_assertions(
     contract_identity: str,
     records: object,
     supersessions: object,
+    contract_view: object | None = None,
 ) -> DocumentAssertionCompilation:
-    """Turn one checked document capture into one neutral population plan."""
+    """Turn one checked document capture into one neutral population plan.
+
+    ``contract_view`` is the compiled contract the records are written
+    against. The adapter reads one thing from it, the slot list of the
+    ``Evaluative`` mixin, which is the pack's declaration of which slots
+    carry a source's evaluation. Without it the adapter knows no evaluative
+    slot and checks none.
+    """
 
     reading = _load(
         reading_bytes,
@@ -442,6 +528,7 @@ def adapt_document_assertions(
         raise _refuse_defects(defects)
     derivations: list[dict[str, object]] = []
     gaps: list[dict[str, object]] = []
+    modality_by_assertion: dict[str, str] = {}
     counts = {
         "FULLY_FORMALIZED": 0,
         "PARTLY_FORMALIZED": 0,
@@ -457,6 +544,7 @@ def adapt_document_assertions(
                 DocumentAssertionRefusalReason.UNKNOWN_MODALITY,
                 f"unsupported assertion modality: {modality}",
             )
+        modality_by_assertion[assertion_id] = modality
 
         formalizations = _items(assertion["formalized_by"], "formalized_by")
         assertion_gaps = _items(assertion["gaps"], "assertion gaps")
@@ -491,7 +579,15 @@ def adapt_document_assertions(
     statements = {
         assertion_id: statement for _, assertion_id, _, statement in checked
     }
+    formalized = _formalized_slots(derivations, modality_by_assertion)
     derivation_defects = _digest_defects(records_by_id, statements)
+    derivation_defects.extend(
+        _evaluative_defects(
+            records_by_id,
+            _evaluative_slots(contract_view),
+            formalized,
+        )
+    )
     if derivation_defects:
         raise _refuse_derivations(derivation_defects)
 

@@ -464,7 +464,7 @@ def test_research_carries_a_locator_and_a_digest_rather_than_source_text() -> No
     assert dcmi["vocabulary_url"] == (
         "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"
     )
-    assert source["version"] == "0.3.0"
+    assert source["version"] == "0.4.0"
 
 
 def test_compiled_claim_keeps_statement_optional_beside_locator_and_digest() -> None:
@@ -530,7 +530,7 @@ def test_research_carries_the_credit_contributor_roles() -> None:
     assert credit["vocabulary_url"] == CREDIT_TAXONOMY_URL
     for name, definition in CREDIT_ROLES.items():
         assert " ".join(values[name]["description"].split()) == definition
-    assert source["version"] == "0.3.0"
+    assert source["version"] == "0.4.0"
 
 
 def test_research_carries_the_contribution_relation_that_holds_the_role() -> None:
@@ -551,6 +551,8 @@ def test_research_carries_the_contribution_relation_that_holds_the_role() -> Non
         "Campaign",
         "Contribution",
         "ContributionRelation",
+        "Evaluative",
+        "HypothesisDisposition",
         "Instrument",
     ]
 

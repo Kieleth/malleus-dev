@@ -226,6 +226,7 @@ def _run_capture(arguments: argparse.Namespace) -> int:
         capture_id=arguments.capture_id,
         plan_id=arguments.plan_id,
         contract_identity=partial.identity,
+        contract_view=compilation.view,
         records=_read_json(arguments.records),
         supersessions=_read_json(arguments.supersessions),
     )

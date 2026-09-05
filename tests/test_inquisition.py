@@ -1954,7 +1954,7 @@ class TestSkillsAreInstallable:
             ),
             "current private-v0 shape, not a stable wire",
             "reading object is illustrative input, not a live grammar or closed shape",
-            "reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`, `records`, and `supersessions",
+            "reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`, `records`, `supersessions`, and `contract_view",
             "canonical JSON bytes",
             "after whitespace normalization",
             "must name a known reading block",
@@ -2125,6 +2125,7 @@ class TestSkillsAreInstallable:
             "capture_bytes",
             "capture_id",
             "contract_identity",
+            "contract_view",
             "plan_id",
             "reading_bytes",
             "records",
@@ -2205,6 +2206,7 @@ class TestSkillsAreInstallable:
             "contract_identity",
             "records",
             "supersessions",
+            "contract_view",
         )
         by_modality = {}
         for modality in modalities:

@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/packs/research
 name: malleus_research
-version: 0.3.0
+version: 0.4.0
 title: Malleus Research Knowledge Pack
 description: >-
   Optional reusable vocabulary for attributed claims, observations, methods,
@@ -82,6 +82,8 @@ annotations:
         - Campaign
         - Contribution
         - ContributionRelation
+        - Evaluative
+        - HypothesisDisposition
         - Instrument
       invention_search: >-
         The cited SOSA/SSN, VIM, Frascati, SEPIO, and Micropublications
@@ -92,7 +94,15 @@ annotations:
         the fourteen roles and defines each, and ContributorRole follows its
         naming, but it is a term list with no classes, so the mixin
         Contribution and the class ContributionRelation that carry a role in a
-        graph are local shapes and are recorded here.
+        graph are local shapes and are recorded here. The same five
+        vocabularies were checked for what a source does with a hypothesis it
+        has raised. SEPIO models an assertion's evidence lines and their
+        support or refutation, and Micropublications models one statement
+        supporting or challenging another; both describe a relation between
+        two things, not the source's own disposition of its own hypothesis.
+        No term was found for it, so the enum HypothesisDisposition and the
+        mixin Evaluative that marks which slots carry such a value are local
+        and are recorded here.
 
 enums:
   AssertionModality:
@@ -180,6 +190,23 @@ enums:
         description: >-
           The source states a contribution the taxonomy does not name.
 
+  HypothesisDisposition:
+    description: >-
+      What a source does with a hypothesis it has raised. It records the
+      source's own disposition, never Malleus's acceptance of it. Unset is the
+      honest value when the source raises a hypothesis and never returns to
+      it; a disposition these three do not cover is a gap to declare, which is
+      how the list grows.
+    permissible_values:
+      PREFERRED:
+        description: The source adopts the hypothesis as its own reading.
+      NOT_SUPPORTED:
+        description: The source raises the hypothesis and then declines it.
+      UNDECIDED:
+        description: >-
+          The source weighs the hypothesis and leaves it open, stating that
+          the evidence does not settle it.
+
   ResearchRelationType:
     description: Generic relation predicates supplied by the research pack.
     permissible_values:
@@ -206,6 +233,18 @@ classes:
       - assertion_locator
       - statement_sha256
 
+  Evaluative:
+    mixin: true
+    description: >-
+      Slots whose value is the source's evaluation of something the source has
+      already stated, rather than a further statement of its own. This mixin's
+      slot list is the pack's declaration of which slots are evaluative: a
+      reader takes it from the compiled contract, and the document-assertion
+      adapter refuses an evaluative value that no assertion outside
+      HYPOTHESISED formalizes.
+    slots:
+      - hypothesis_disposition
+
   Contribution:
     mixin: true
     description: >-
@@ -219,6 +258,7 @@ classes:
     is_a: Entity
     mixins:
       - SourceAsserted
+      - Evaluative
     description: >-
       An attributed statement represented as a graph entity. statement is
       optional and stays empty unless the record's Source declares a licence
@@ -297,6 +337,12 @@ slots:
   claim_kind:
     range: string
     description: Project-defined refinement of a claim.
+  hypothesis_disposition:
+    range: HypothesisDisposition
+    description: >-
+      What the source does with a hypothesis it has raised. It is captured
+      from the sentence that disposes of the hypothesis, not from the sentence
+      that raises it. Unset for a claim the source never disposes of.
   contribution_role:
     range: ContributorRole
     description: >-

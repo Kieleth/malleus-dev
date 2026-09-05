@@ -1,6 +1,6 @@
 # Knowledge packs, typed gaps, and the revision loop
 
-Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Decisions 13 and 14, taken on 2026-09-04 after run-02, ship in `metrology` and `research` at version 0.2.0; both are additive. Decisions 15 and 16, taken on 2026-09-05 after run-04 and run-05, ship in the same two packs at version 0.3.0; both are additive. Sections marked "open" remain undecided.
+Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Decisions 13 and 14, taken on 2026-09-04 after run-02, ship in `metrology` and `research` at version 0.2.0; both are additive. Decisions 15 and 16, taken on 2026-09-05 after run-04 and run-05, ship in the same two packs at version 0.3.0; both are additive. Decision 17, taken on 2026-09-05 after run-04's review RCA, ships in `research` at version 0.4.0 and is additive. Sections marked "open" remain undecided.
 
 ## Why
 
@@ -60,6 +60,7 @@ These are shapes for discussion, not schemas. Slot names follow the borrowed voc
 ### research
 
 - Enum `AssertionModality`, shared across every project that loads the pack: STATED, MEASURED, CALCULATED, HYPOTHESISED, CONTESTED, NEGATED. One coarse list so that "which records here are hypotheses" means the same thing in every graph. A project that needs finer distinctions adds a refinement slot beside it and never redefines a coarse value. The three producers' private enums (`ObservationBasis`, `DeterminationMode`, `LocationQuality`) are the evidence that this list must be shared.
+- Mixin `Evaluative`: `hypothesis_disposition` (enum `HypothesisDisposition`, optional, what the source does with a hypothesis it raised: PREFERRED, NOT_SUPPORTED, UNDECIDED). Worn by `Claim`. The mixin's slot list is the pack's declaration of which slots are evaluative, read from the compiled contract.
 - Mixin `SourceAsserted`: `assertion_modality` (enum above), `assertion_confidence` (float, optional), `assertion_locator` (string, optional, an opaque route back to the retained assertion), `statement_sha256` (string, optional, the digest of the exact retained assertion text). Any entity or relation can wear it, so "melt degassing triggers earthquakes" can enter a graph as HYPOTHESISED instead of being left out.
 - Class `Claim` (Entity, wears `SourceAsserted`): `statement` (root slot, optional and empty unless the record's `Source` declares a permitting licence), `claim_kind`. Seeded from Recon's `Claim`; the reviewer-workflow slots stay in Recon.
 - Class `Observation` (Entity, wears `Quantified`, `TemporalExtent`, `SourceAsserted`).
@@ -253,6 +254,41 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     they played is recorded without inventing one; and it makes no claim that the
     role the source states is true. The change is additive, so the pack is version
     0.3.0.
+17. Evaluative slots in `research`, additive. The derivation rule binds every
+    field to a formalizing assertion and the adapter checks that the target
+    exists, never that the formalizing sentence has anything to do with the
+    value. In run-04's capture all five of run-04's dispositions derive from
+    HYPOTHESISED assertions: `claim:mechanism-magmatic-tectonic` carries
+    `hypothesis_disposition: NOT_SUPPORTED` and all six of its fields, the
+    disposition included, derive from `c:072`, the sentence introducing the
+    possibility, while the rejection sits in the next prose block and no
+    assertion there formalizes anything. The reviewer confirmed each value on
+    the reading, so this is mis-derivation and not invention, and the rule
+    could not see it. A disposition is an evaluative value: the assertion that
+    formalizes it must be one that evaluates. So the pack ships the slot and
+    the vocabulary, optional enum `HypothesisDisposition` with `PREFERRED`,
+    `NOT_SUPPORTED` and `UNDECIDED` on slot `hypothesis_disposition`, and it
+    ships the declaration of which slots are evaluative as a new mixin,
+    `Evaluative`, worn by `Claim`, where the mixin's slot list is the
+    declaration: the compiled contract already exposes a class's effective
+    slots, so the
+    document-assertion adapter reads `Evaluative`'s slot list from the
+    contract it is handed and needs no new compiler surface, no annotation
+    grammar and no argument the caller invents. A record carrying an
+    evaluative slot must be formalized by at least one assertion whose
+    modality is not `HYPOTHESISED`; otherwise the adapter refuses,
+    aggregated, naming the record, the slot and the formalizing assertions
+    with their modalities. The grounding search came back empty: SEPIO models
+    an assertion's evidence lines and their support or refutation and
+    Micropublications models one statement supporting or challenging another,
+    both relations between two things rather than a source's disposition of
+    its own hypothesis, so the enum and the mixin are local and
+    `invention_search` says so. What it does not do: it adds no modality, the
+    six of `AssertionModality` are unchanged; it does not decide whether the
+    disposition is correct, only which sentence may carry it; and it says
+    nothing about a slot no pack declares evaluative. The change is additive,
+    so the pack is version 0.4.0 and the list of evaluative slots grows by
+    adding a slot to the mixin.
 
 ## Open
 
