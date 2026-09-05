@@ -175,3 +175,9 @@ Review: four fresh Opus sessions, one per question, merged into one record and v
 ### Iteration 1 closed (06:55Z): review in, RCA written, iteration 2 decided
 
 Review merged from four sessions and validated: R, P, R, P; 1,450 SUPPORTED, 16 PARTIAL; all 1,162 digests DIGEST_OK; every row local. Record at a468a1d, E-0143. RCA at `handover/2026-09-05-v43-rca.md`. Iteration 2: Core-14 (modality single source of truth; INVALID_RANGE names the bound ranges and the skill's range note corrected; the skill says what a name is) and harness v4.4 for run-10 (ENTITY kind only for types without a subject, validated offline: 630 rows, 618 SUPPORTED, 12 PARTIAL). Dispatched both in parallel; run-10 pins after Core-14.
+
+## Loop iteration 2: run-10 (v4.4, Opus 5), launched 2026-09-05T07:38Z at 2026244 (E-0145)
+
+Change under test: a record's modality has one source of truth, its formalizing assertion (Core-14, MODALITY_NOT_ASSERTED, decision 19, one skill sentence). Riding along with separately measurable effects and no semantic change: the INVALID_RANGE refusal names the range that failed and the ranges that bind, the skill's range note corrected; the skill says what a name is. Harness: the ENTITY kind restricted to types without a subject (validated offline on run-09's judged rows: 630 rows, 618 SUPPORTED, 12 PARTIAL). Expected: modality drift 0; no INVALID_RANGE return; no SUBJECT_NOT_NAMED return; about 600 rows over two review sessions; responsiveness at least run-09's R, P, R, P. Falsifiers: drift above 0; either return recurring; SUBJECT rows losing responsiveness.
+
+A slip of mine, recorded: the pin commit d061883 went in with one red paper test because my command chain did not stop on the gate; fixed in b6f16dd four minutes later (E-0145 named the short commit). The chain now writes the gate line to a file and commits only if it reads "passed" and not "failed".
