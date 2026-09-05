@@ -59,12 +59,15 @@ Environment:
 - Added to the master plan: split-producer variant if time allows; reviewer swap once the Opus 5 cell of record is settled.
 - QUDT quantity kind class adopted (decision 13); the subject-edge rule rejected in favour of ontology anchors in the graph (design pending); the flexible claim locator confirmed as designed (decision 14).
 
-## What is next, in order
+## What is next, in order (revised 2026-09-05 after the run-04 ratification and the deep sweep)
 
-1. Run-04, admitted at the Core-10 fix on 2026-09-05: type-only binding, query, freeze, fresh review, ratification. This is the candidate Opus 5 cell of record.
-2. Deep sweep for defects and appendix evidence (dispatched 2026-09-05; deliverables under `paper-v4/appendix-evidence/` and `handover/2026-09-05-deep-sweep.md`).
-3. The anchors design once the three answers arrive.
-4. Manuscript 1.5: the matrix under the final protocol, early trials in the appendix.
+Decided by Luis: Core-12, then a v4.2 Opus cell on packs 0.3.0, then analysis.
+
+1. Core-11 (metrology value qualifier, research CRediT roles, OVR-000398 correction), in flight.
+2. Core-12 (DIGEST_MISMATCH, modality-disposition consistency, derivation locality and fan-out census axes, skill sentences), scoped in `handover/2026-09-05-run-04-review-rca.md`; dispatches when Core-11 releases the ledger.
+3. Run-08, the v4.2 Opus 5 cell: harness under construction by Paper-10 (binding frozen at ontology acceptance, stop rule clarified, gate surfaces chained causes, interpreter preflight, launch-log v2 and public cost record, review task v2); pinned to the post-Core-12 coordinate with `pin.py`; then producer, freeze, review, ratification, and the comparison with run-04 (E-0133, E-0135).
+4. Manuscript 1.5 on the ratified Opus cell of record, with run-02 to run-07 in the appendix; run-02's review is unratified (E-0134) and stays so unless Luis ratifies it.
+5. The anchors design (events as relation endpoints, event temporal precision, imported values) once Luis's three answers arrive.
 
 ## Run-04's 61 typed gaps, read by cause (2026-09-05)
 
