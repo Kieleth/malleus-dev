@@ -5495,3 +5495,66 @@ row, pending the review.
 
 Non-claim: admission is structural acceptance. No preliminary review exists
 yet; the review judges the rows as rows.
+
+### E-0173, run-16 (Sonnet 5 at v4.9) preliminary review: RESPONSIVE, PARTIAL, PARTIAL, PARTIAL; 370 SUPPORTED, 61 PARTIAL, 2 UNSUPPORTED; no digest on any row
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-16/review-block.CQ-01.json` to
+`review-block.CQ-04.json` (two fresh Opus 5 sessions, CQ-01 with CQ-02 and
+CQ-03 with CQ-04, dispatched 20:39Z under task v4 and protocol v2 with the
+aboutness instruction and one sentence for subjects that derive from a
+different assertion than the value), merged and validated as
+`review-record.preliminary.md`
+(`sha256:cadf0a61d61ebd7c0a6e12f4931ce08a9e0bddc06749a20e9e77f7209f8dd61e`),
+manifest
+`sha256:0bd70670db36c192617e2cbdca76f7c1808096ea45198fd17d8d6b727b7ad876`.
+
+Results: CQ-01 RESPONSIVE, 31 SUPPORTED, 5 PARTIAL; CQ-02 PARTIAL, 100 and 12;
+CQ-03 PARTIAL, 121, 22 and 1 UNSUPPORTED; CQ-04 PARTIAL, 118, 22 and 1
+UNSUPPORTED. 433 rows. The first UNSUPPORTED rows of the cells at the stable
+Core: 514 located earthquakes attributed to the Romanche transform where the
+reading gives 514 as the whole-region total and splits it 317 along the ridge
+and 197 along the transform. No row carries a digest token: none of the 194
+records carries `assertion_locator` or `statement_sha256` (run-13: 269 of 469;
+run-15: 142 of 351), so the digest check, the protocol's mechanical binding of
+a claim to its sentence, did not run on this cell at all. The packs do not
+require those slots; the producer did not set them.
+
+The sixty-one PARTIAL rows: ten counts of events or solutions whose subject is
+a software package (hypoDD, HASH, VELEST), the case the task names; twelve or
+more rows whose subject is RC2, the Romanche transform or the MAR where
+neither cited block ties the value to that feature, the rows the anchors
+produced (E-0172); a seamount typed as a volcano the block does not support;
+a relation carried by a later block than its derivation reaches; a catalogue-
+wide uncertainty and a general hypothesis pinned to the Romanche transform.
+Five rows drop the source's approximation mark and were left SUPPORTED with
+the omission noted; a stricter reading moves them.
+
+Why three questions are PARTIAL, in the reviewers' words: CQ-02 because no row
+projects the deep events' position relative to the ridge axis (the vocabulary
+can, one row reads "off-axis shallow earthquake depth", and the deep records
+do not); CQ-03 because competing depth and CO2 ranges sit side by side with
+nothing marking the pair that answers; CQ-04 because the preferred claim's
+kind is generic and names no mechanism while the rejected rivals name theirs,
+volume and pressure change appear only in assertion text, and extensional
+stress has no row.
+
+Tokens under the second session's convention: a subject that derives from an
+anchor assertion is tested against the block that carries the value, which
+yields 13 SUBJECT_NOT_IN_BLOCK per question in CQ-03 and CQ-04 (under the
+looser "any block the derivation reaches" all would read SUBJECT_IN_BLOCK);
+one non-local relation per question (the boundary located at the second
+discontinuity, formalized on page 3 with both endpoints introduced on page 1),
+supported on its own block. Not judged: ontology-internal enums
+(determination, quantity_kind_class) and borderline modality calls, whose
+definitions sit outside the review surface.
+
+Against the Opus cells at the same protocol (run-13 3.5 per cent PARTIAL,
+run-14 2.4, run-15 1.4, none UNSUPPORTED): 14.1 per cent PARTIAL and two
+UNSUPPORTED, with the aboutness findings concentrated on the anchored
+subjects. Against run-05 (Sonnet 5 at v4.1, ratified E-0132): coverage rose
+from 27 blocks to 58 with assertions; run-05's review judged its rows
+supported on a capture a fifth this size.
+
+Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.

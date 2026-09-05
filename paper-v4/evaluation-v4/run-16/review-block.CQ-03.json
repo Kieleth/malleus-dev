@@ -1,0 +1,1237 @@
+{
+  "question_id": "CQ-03",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The returned rows do carry the parts the question asks for: earthquake depths at the central ridge segment, the calculated primary-melt carbon-dioxide range for that segment, a unit on every quantity, and a determination and modality that separate measured from calculated values. What they do not do is single out one answer. Several competing depth ranges are returned for overlapping subjects, and several carbon-dioxide ranges sit side by side for the same segment, primary against pre-eruptive and one trace-element proxy against the other, with the neighbouring southern segment's values in the same list and no field marking which pair the question is asking after. That ambiguity is material, so the rows address the question without resolving it. One further note on how I read the subject token on these rows: where a record's subject derives from a different assertion than its values, I based the token on the block carrying the values, since the naming block names every subject by construction and would make the token say nothing.",
+  "source_locators": [
+    "page:2:block:006",
+    "page:5:block:005",
+    "page:7:block:012",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the methods block names the five one-dimensional P-wave velocity models the record is named for, which is the only field it projects."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the block the derivation reaches names the CO2 solubility model used to work out saturation conditions, matching the only projected field."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the code-availability block names Global Mapper and gives the structural-analysis use and address that the description projects."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the same availability block names the GMT 6 toolbox, which is all this record projects."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:003",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW one block names the package used for focal mechanisms and the other gives its version, use and address, covering both projected fields."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:006",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW between them the three blocks carry the relocation method, the program, its version and its address, so every projected field sits in the prose."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the methods block attributes the theoretical solubility calculation to the model the record is named after."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the magnitude block states that magnitudes were determined on the local magnitude scale, which is the only projected field."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:004",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the location algorithm, the program name and the address each appear in one of the blocks the derivations reach."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the results block names the active-source wide-angle refraction profile and its role in choosing the velocity model."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:002",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW one block names the package used in detection and the other gives the phase-picking use and address the description projects."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the results block names the trigger algorithm used for automatic detection."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW one block records the VELEST run and the other its inversion use and address."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the magnitude block attributes the completeness and b-value calculation to ZMAP and the availability block gives the use and address."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the figure block lists melt inclusions among the plotted sample sets, matching the projected name and sample kind."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the same figure block lists popping rocks among the plotted sample sets."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the geochemistry block establishes a sample set from segment RC2 and the figure block classes the plotted rocks as whole-rock MORB, covering both projected fields."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the same two blocks give the southern RC3 sample set and its whole-rock MORB character."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the alternative-hypothesis block names Askja Volcano, so both the name and the volcano classification sit in the prose."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the introduction block defines the brittle-ductile boundary as a lithospheric boundary fixed by the maximum earthquake depth."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the study-area block names the westward dipping detachment fault that bounds the ridge-transform intersection segment."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the block names Fagradalsfjall Peninsula and the record classifies it only as OTHER, which the prose does not contradict."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the assertion cited is about the Southwest Indian Ridge maximum, but the block it sits in names Gakkel Ridge among the ultraslow-spreading ridges with deep mantle earthquakes, so the projected name is in the block."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the hypothesis block reports an extinct vent field on the eastern flank of NTD1, matching the projected name and the vent-field classification."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the discussion block refers to the young Juan de Fuca plate, supporting both the name and the plate classification."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the maximum-depth block names Knipovich Ridge and the record classifies it only as OTHER."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the block that names the lithosphere-asthenosphere boundary carries both the name and its boundary character."
+    },
+    {
+      "row_index": 27,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the block names the Logachev Seamount, but nothing in that prose makes it a volcano, so the projected feature kind is not carried by the block the derivation reaches."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the study-area block names the Mid-Atlantic Ridge and the record classifies it only as OTHER."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the block names Mayotte Island, supporting both the name and the island classification."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the figure block refers to the expected Moho interface, which supports the name and treating it as a boundary."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the subdivision block names the first non-transform discontinuity and identifies the two offsets as non-transform."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the same block names the second non-transform discontinuity."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the study-area block names the oceanic core complex east of the ridge axis."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the maximum-depth block names the Rainbow massif and the record classifies it only as OTHER."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the subdivision block names the ridge-transform intersection segment as one of the four subsections."
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the subdivision block introduces segment RC2 as a ridge segment."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the same block names RC3 as the ridge segment south of the second discontinuity."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the assertion cited concerns the instrument network, but the block it belongs to names the Romanche transform fault, which carries both the projected name and the transform classification as the paper writes it."
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the alternative-hypothesis block names the Southwest Indian Ridge and the record classifies it only as OTHER."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the geochemistry block gives the carbon-dioxide to barium ratio and its uncertainty exactly as projected."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the same block gives the carbon-dioxide to rubidium ratio and its uncertainty as projected."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW the methods block gives the compressional-to-shear velocity ratio the record projects."
+    },
+    {
+      "row_index": 43,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL the block the relation derives from reports the earlier authors' suggestion that volatiles carry melt to the boundary, and both endpoint claims are carried, but that block does not itself say the earlier finding supports the authors' own claim; the connective sits in the following block."
+    },
+    {
+      "row_index": 44,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002",
+        "page:5:block:003",
+        "page:1:block:005",
+        "page:7:block:012"
+      ],
+      "rationale": "DERIVATION_LOCAL the figure block states the interpretation that ties the deep-earthquake depths to degassing-driven volume change, so the relation type holds, but it attaches those depths to the ridge axis generally while the row's source projects segment RC2, whose binding comes from the naming block instead."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL one block states the rival cold-lithosphere explanation and then the morphological evidence against it, so both endpoints and the challenging direction sit where the relation derives."
+    },
+    {
+      "row_index": 46,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:4:block:001",
+        "page:2:block:002",
+        "page:3:block:003"
+      ],
+      "rationale": "DERIVATION_LOCAL the block the relation derives from records the absence of detachment-fault evidence at the segment, but the statement that this defeats the shear-zone hypothesis is in the preceding block, and the target claim is attached to the transform rather than to the segment whose earthquakes it explains."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:001",
+        "page:4:block:002",
+        "page:4:block:003",
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL the block sets the magmatic-tectonic analogues against the absence of any current eruption in the study valley, which is the challenge the relation encodes."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002",
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL the block states the hydrothermal-cooling hypothesis and then the absence of active vents on the segment axis, so the challenging direction is carried where the relation derives."
+    },
+    {
+      "row_index": 49,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002",
+        "page:5:block:003",
+        "page:5:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL both endpoints are carried, but the block the relation's own derivation reaches attributes the enrichment to low-degree melting of an enriched source and does not assert that it supports the degassing hypothesis; that chaining appears in the abstract block the row also reaches."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005",
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL the geochemistry block places the sample set inside segment RC2, which is what the sampling relation asserts."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005",
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL the same block distinguishes the southern RC3 samples, which is what the second sampling relation asserts."
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:1:block:004",
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL the block the relation derives from puts the brittle-ductile boundary at about ten kilometres beneath the second discontinuity, which is the relation asserted; neither endpoint is formalised from that block, so the pointer is not local."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL one block carries the relation and both endpoints, stating that the intersection segment is bounded to the east by the westward dipping detachment fault."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002",
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL the block places the extinct vent field on the eastern flank of the first discontinuity, which is the relation asserted."
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002",
+        "page:5:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states the degassing explanation as the authors' preferred fourth possibility for the deep microseismicity at the segment, matching the hypothesised modality and the preferred disposition; the abstract block the same derivation reaches does not name the segment."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the abstract block asserts the influence of high primitive-melt carbon dioxide on melt at the boundary as a forward claim, and the later block that fixes the subject names that boundary."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states the cold and thick lithosphere as one explanation and then argues against it, matching the hypothesised modality and the not-supported disposition, and it names the segment."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002",
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states the hydrothermal-cooling hypothesis and then the finding that magmatism dominates at the segment, which is the disposition the record carries."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK one block carries the earlier authors' statement about volatiles flushing melt to the boundary and names that boundary, so subject and content come from the same prose."
+    },
+    {
+      "row_index": 60,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:5:block:001",
+        "page:4:block:002",
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the rival magmatic-tectonic explanation and its rejection are both carried, but neither block that supplies them names segment RC2; the subject binding comes only from the naming block, which carries none of the claim."
+    },
+    {
+      "row_index": 61,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:002",
+        "page:3:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block carries the shear-zone hypothesis and its rejection, but the hypothesis is offered as an explanation for the segment's deep earthquakes rather than as a claim about the Romanche transform, so the subject shown is not what the block's claim is about."
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the block carrying the claim refers to the fault by description rather than by the projected name, but it plainly concerns the same detachment fault near the core-complex termination and states that it is inactive."
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block reports measured carbon dioxide close to theoretical solubility and concludes the samples are degassed, and it names the segment."
+    },
+    {
+      "row_index": 64,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:006",
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the block supports a figure of 276 successfully relocated events, but that count is a property of the earthquake catalogue rather than of the relocation program the row shows as its subject, and the block does not name the program."
+    },
+    {
+      "row_index": 65,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the 364 well-constrained relocations and names the program, but the count is of events, not a property of the software the row makes the subject."
+    },
+    {
+      "row_index": 66,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block supports the three new focal-mechanism solutions and names the package, yet the count belongs to the solutions obtained rather than to the software the row makes the subject."
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block attributes the sixty-eight percent error-ellipsoid confidence to the location program itself, so the value is a property of the subject shown."
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives twelve hundred degrees as a parameter of the solubility calculation and names the model, so the value belongs to the subject shown."
+    },
+    {
+      "row_index": 69,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives six as a combined total that includes three solutions from earlier work, so the count is neither wholly the named package's output nor a property of it."
+    },
+    {
+      "row_index": 70,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block supports a 360-earthquake validation subset and names the program, but the count describes the dataset rather than the program the row makes the subject."
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states that five such velocity models were constructed, which is a count of the subject entity itself."
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block ties the roughly sixty kilometre velocity constraint to the refraction profile, so the depth limit is a property of the subject shown; the naming block supplies the subject."
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the abstract block reports deep earthquakes at ten to twenty kilometres along the ridge axis and names the ridge, matching value, unit and subject."
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the Icelandic depths greater than ten kilometres alongside the volcano the row makes the subject."
+    },
+    {
+      "row_index": 75,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:009"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the block supports the roughly 2.6 kilometre average depth uncertainty for axial events but does not identify the segment, and the subject binding rests on the naming block, which carries no uncertainty."
+    },
+    {
+      "row_index": 76,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:002",
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the blocks give a horizontal location uncertainty averaging about 2.1 kilometres across the entire relocated catalogue, which covers ridge and transform events alike, so attaching it to the transform alone is narrower than the prose."
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block puts the brittle-ductile boundary at about ten kilometres from the microseismicity beneath the second discontinuity and names the boundary."
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the figure block ties the boundary to the 750 degree isotherm, matching value, unit and the modelled determination."
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states that the boundary stays shallower than ten kilometres out to about 1.3 million years of crustal age."
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the introduction block gives the 700 plus or minus 100 degree isotherm criterion and the other block names the boundary."
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block concludes that brittle lithosphere is no thicker than about ten kilometres where the segments meet, and it names the second discontinuity."
+    },
+    {
+      "row_index": 82,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:5:block:003",
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the eighty to ninety percent exsolution loss as a general property of ascending carbon-dioxide-bearing melt taken from earlier work, not as a quantity determined for the segment the row makes the subject, although that segment is named later in the same block."
+    },
+    {
+      "row_index": 83,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block supports that the trace-element ratios are a good proxy for carbon dioxide, which is a methodological statement rather than an observation about the segment the row shows as subject, and the row projects no quantity of its own."
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives roughly twenty-five kilometres as the saturation depth for the segment's melt and names the segment."
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the same block gives roughly 0.7 gigapascals as the saturation pressure for that melt."
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the same block gives 1250 degrees as the saturation temperature for that melt."
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:006",
+        "page:7:block:011"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK both blocks give the 5.4 plus or minus 0.3 kilometre crustal thickness and one of them ties it to the segment."
+    },
+    {
+      "row_index": 88,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:012"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the figure block gives ten to nineteen kilometres below sea floor but places them beneath the ridge axis rather than the segment, and the subject binding comes from the naming block, which carries no depths."
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block reports earthquakes of sixteen to nineteen kilometres under the axis of the segment it names, carrying value and subject together."
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the observations block puts microseismicity of roughly ten to twenty kilometres under the axis of the named segment."
+    },
+    {
+      "row_index": 91,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:009"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the block gives the roughly 2800 parts per million average but attributes it to several equatorial Atlantic segments from earlier work and does not name the ridge entity the row makes the subject."
+    },
+    {
+      "row_index": 92,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:009"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the same block gives the roughly 8799 parts per million upper figure for those earlier-study segments, again without naming the subject shown."
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the block states the expected maximum depth of under ten kilometres for the study ridge's full spreading rate, identifying the ridge by description rather than by name."
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the same block gives the roughly thirty-two millimetre per year full spreading rate the record projects."
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the study-area block gives the sixteen millimetre per year half-spreading rate and names the ridge."
+    },
+    {
+      "row_index": 96,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:008"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the block supports that some deep earthquakes lack energy above five hertz but does not tie those events to the segment, and the subject comes from the naming block."
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block concludes that the earthquakes occur in mantle hotter than eleven hundred degrees at the segment it names."
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the roughly twenty kilometre boundary depth the rejected cold-lithosphere hypothesis would require, matching the hypothesised modality."
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block puts the melt fraction needed at the boundary's base at about 1.1 percent and names that boundary."
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the same block gives the water content of up to 332 parts per million."
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block concludes that magmatism dominates crustal accretion at the segment it names; the row projects only modality and determination, both of which fit."
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the results block gives 120 kilometres of ridge axis covered by the network and names the ridge."
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives depths greater than thirty kilometres offshore the island the row makes the subject."
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states that no active vents are observed on the segment axis, matching the negated modality."
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states that no earthquakes are seen deeper than twenty kilometres beneath the segment axis."
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the observations block gives four to ten kilometre earthquakes beneath the southern discontinuity."
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the morphology block gives the roughly thirty-five kilometre length of the first discontinuity."
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the same block gives the roughly thirty-three kilometre ridge offset at the second discontinuity."
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the under-ten-kilometre observed maximum depth at the second discontinuity."
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the same block gives the under-six-kilometre maximum depth beneath the core complex."
+    },
+    {
+      "row_index": 111,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:5:block:001",
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the block gives shallow microseismicity under ten kilometres, off axis and to the west, but does not name the segment, so the subject rests on the naming block alone."
+    },
+    {
+      "row_index": 112,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the abstract block gives roughly 0.4 to 3.0 weight percent carbon dioxide in the primary melts without naming the segment, and the subject binding comes from the naming block."
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the geochemistry block gives the barium enrichment above eighty-nine parts per million for the segment's samples."
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.7 to 4.6 weight percent pre-eruptive carbon dioxide from barium for the segment."
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.4 to 3.0 weight percent primary-melt carbon dioxide from the barium correction for the segment."
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the results block gives the calculated 0.4 to 3.0 weight percent for the melts formed along that segment."
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.9 to 4.3 weight percent pre-eruptive carbon dioxide from rubidium for the segment."
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.5 to 2.8 weight percent primary-melt carbon dioxide from the rubidium correction for the segment."
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block concludes that the deep events under the segment axis are demanded by the data rather than being location artefacts."
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the morphology block gives the segment's roughly twenty-two kilometre length."
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block reports the volcanic axial morphology that indicates the segment is magmatic."
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the morphology block gives the ten kilometre wide median valley of the segment."
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003",
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block finds no evidence of an eruption underway in the axial valley and names the segment."
+    },
+    {
+      "row_index": 124,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block states that the segment shows no evidence of detachment faults."
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block reports normal velocity ratios at the segment from tomography."
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the estimated 0.7 to 4.6 weight percent pre-eruptive carbon dioxide for the segment."
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the geochemistry block gives the rubidium enrichment above eight parts per million for the segment's samples."
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.06 to 0.8 weight percent pre-eruptive carbon dioxide from barium for the southern segment."
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.04 to 0.5 weight percent primary-melt carbon dioxide from barium for the southern segment."
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the results block gives the calculated 0.04 to 0.7 weight percent for the southern segment."
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.07 to 1.0 weight percent pre-eruptive carbon dioxide from rubidium for the southern segment."
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the methods block gives 0.05 to 0.7 weight percent primary-melt carbon dioxide from rubidium for the southern segment."
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the morphology block gives the southern segment's fifty kilometre length."
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:010"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the depth-resolution block gives the forty-five event subset used to test the deep locations and names the segment."
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the results block gives the 140 kilometres of transform covered by the network."
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the observations block gives the zero to six kilometre shallow earthquakes beneath the core-complex dome."
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the study-area block gives the roughly 120 kilometre studied portion of the ridge."
+    },
+    {
+      "row_index": 138,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the 1.9 weight percent highest reported melt carbon dioxide at the Southwest Indian Ridge."
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives temperatures above twelve hundred degrees below twenty kilometres as the modelled reason no deeper events occur."
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives the modelled eleven hundred to twelve hundred degrees at ten to twenty kilometres beneath the segment axis."
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:004",
+        "page:1:block:005",
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the block gives 317 events located along the ridge, matching value and subject."
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:3:block:003",
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK the same block gives 197 events along the transform, matching value and subject."
+    },
+    {
+      "row_index": 143,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:2:block:003",
+        "page:6:block:005"
+      ],
+      "rationale": "SUBJECT_NOT_IN_BLOCK the blocks give 514 as the total located across the whole study region, and the reading splits that total into separate ridge and transform counts, so assigning all 514 to the transform contradicts the prose."
+    }
+  ]
+}

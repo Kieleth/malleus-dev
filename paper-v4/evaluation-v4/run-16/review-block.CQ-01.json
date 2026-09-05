@@ -1,0 +1,319 @@
+{
+  "question_id": "CQ-01",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "The rows name the SMARTIES cruise as the campaign and the ocean-bottom seismometer network as the observing system, tie the two with a part-of-campaign relation, carry nineteen deployed instruments on the campaign record together with a separate count of seventeen useful instruments, and describe the acquisition as a July and August 2019 passive OBS experiment recorded continuously for about three weeks. Every part of the question is answered from the reading. Most of the remaining rows are analysis software and catalogue statistics the question does not ask about, which is noise rather than a gap.",
+  "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Campaign projection carries no subject slot. Both cited blocks name the SMARTIES cruise: one gives the nineteen-instrument ocean-bottom seismometer network that acquired the microseismicity data and the roughly three-week continuous recording, the other gives the July and August 2019 passive OBS experiment. Every projected field is carried by those two blocks."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Instrument projection carries no subject slot. The cited block states that the microseismicity data were acquired by a network of ocean-bottom seismometers during the SMARTIES cruise, which is what the projected name and description assert."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The cited block states that five one-dimensional P-wave velocity models were constructed, so the projected name is the prose's own term."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The cited block applies a CO2 solubility model to the melt, which is the single field the row projects."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The code-availability block names Global Mapper, states it was used for structural analysis and gives the address the description repeats."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The code-availability block names the GMT 6 toolbox, which is the only field the row projects."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:003",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. One cited block names the HASH package as the tool used to determine focal mechanisms; the other gives its version, the same purpose and the address. Name and description are both carried."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:006",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The Results block states hypocenters were relocated with a double-difference location method, the Methods block names the hypoDD program doing it, and the availability block gives the version, the purpose and the address. Name and description are both carried."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The cited block attributes the theoretical CO2 solubility calculation to the model of Iacono-Marziano and colleagues, which is the projected name."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The cited block states that earthquake magnitudes were determined on the local magnitude scale ML."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:004",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The Results block calls it a non-linear earthquake location algorithm, the Methods block names NonLinLoc locating the initial hypocenters, and the availability block gives the address. Name and description are both carried."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The cited block states an active-source wide-angle seismic refraction profile was used to find the best 1-D velocity model, which is the projected name."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:002",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. One block places the automatic trigger and the earthquake register inside the SEISAN package, the other gives its phase-picking purpose and the address. Name and description are both carried."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. The cited block states that initial arrivals were detected automatically with a short-term-average/long-term-average trigger algorithm."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. One block states VELEST was used to search for the minimum 1-D velocity model, the other gives the inversion purpose and the address. Name and description are both carried."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002",
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The Method projection carries no subject slot. One block states ZMAP produced the magnitude completeness and the b value, the other gives the same catalogue-analysis purpose and the address. Name and description are both carried."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation's own assertion and the assertions formalizing both endpoints all sit in the same Results block. That block states the microseismicity data were acquired by a network of nineteen ocean-bottom seismometers during the SMARTIES cruise, so the network belonging to that campaign is what the prose asserts, and the direction from instrument to campaign matches it."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:008"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The SMARTIES cruise is named in the block the subject derivation reaches, and that block establishes that the located microseismicity is the cruise's own data. The value block carries the approximate 78 per cent of located earthquakes meeting at least two location-quality criteria. Subject and value rest on different blocks; together they support the row."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:8:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The subject block names the SMARTIES cruise and ties the earthquake catalogue to it; the value block states the b value of 0.87 was calculated. Subject and value come from different blocks and both hold, and the calculated modality matches the prose."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:8:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The subject block names the SMARTIES cruise; the value block divides the earthquakes into three groups and gives the small spread of their b values, which is the range the row projects. The two blocks together support both parts."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:8:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The subject block names the SMARTIES cruise; the value block gives the magnitude completeness of 1.5 as a calculated figure. Subject and value rest on different blocks and both hold."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The subject block names the SMARTIES cruise and identifies its microseismicity data; the value block gives the approximate mean horizontal error of 2.8 km for the located events. The split across two blocks is the only complication and both halves hold."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The subject block names the SMARTIES cruise; the same value block that carries the horizontal figure gives the approximate mean vertical error of 2.9 km. Both halves hold."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK Here the value block itself names the SMARTIES cruise and then states that 760 earthquakes were identified and registered, so the count and its attribution to the campaign sit in one place; the second block repeats the cruise as the source of the data."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The subject block names the ocean-bottom seismometers; the value block states each event was checked manually to confirm detection by at least five OBSs. The quantity counts instruments of the network, so it is a property of the subject, and the open lower bound matches the at-least phrasing."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK One block carries both halves: it names the ocean-bottom seismometers and gives the approximate 30 km instrument spacing. Spacing is a property of the network itself, so the subject attribution is what the prose asserts."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK One block carries both halves: it names the ocean-bottom seismometers and states that arrivals were detected from 17 useful OBSs. The count is a count of the subject's own instruments."
+    },
+    {
+      "row_index": 27,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:006",
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The hypoDD program is named in the block the subject derivation reaches and the other block states that 276 events were well relocated, so the value holds. The count is a count of this study's earthquakes, not a property of the relocation program, so the block does not support the record being about hypoDD."
+    },
+    {
+      "row_index": 28,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK One block names hypoDD and carries the 364 well-constrained relocated events in the same sentence, so the value holds. The count is still of earthquakes rather than of the program, so the subject attribution is not what the prose asserts."
+    },
+    {
+      "row_index": 29,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block names the HASH package and states that three new well-constrained focal mechanism solutions were obtained, so the value holds. The count is of solutions produced in this study, not a property of the software, so the record is not about HASH in the way the subject slot claims."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:004",
+        "page:7:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The value block names NonLinLoc and states it estimates a three-dimensional error ellipsoid at 68 per cent confidence. The confidence level is a property of what the program estimates, so both the value and the subject attribution are carried by the prose; the second block is where the program's short name is introduced."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK One block carries both halves: the solubility calculation is said to follow the Iacono-Marziano model with a temperature of 1200 degrees Celsius among its parameters. The temperature is a stated parameter of that model's application, so the subject attribution holds with the value."
+    },
+    {
+      "row_index": 32,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block names the HASH package and gives six focal mechanisms as the total, so the value holds. The block also says three of the six come from previously published swarm solutions, and the total is a count of solutions rather than a property of the software, so the record is not about HASH."
+    },
+    {
+      "row_index": 33,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block names the VELEST program and states that a 360-earthquake sub-dataset was constructed for the velocity-model check, so the value holds. The count is of earthquakes assembled by the authors, not a property of the program, so the subject attribution is not supported."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK One block carries both halves: it states that five 1-D P-wave velocity models were constructed. The quantity counts the subject's own kind, so value and subject attribution are both what the prose asserts."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The subject block names the active-source wide-angle refraction profile; the value block states that this profile provides velocity constraints down to about 60 km below sea level. The depth constraint is a property of the profile itself, so both halves hold; the approximation on the figure is carried as an upper bound rather than as an approximate value."
+    }
+  ]
+}
