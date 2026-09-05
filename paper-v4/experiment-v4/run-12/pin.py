@@ -283,11 +283,11 @@ REFERENCE_MANIFEST = f"paper-v4/experiment-v4/{REFERENCE_RUN}/producer-input-man
 
 
 def _moved_since_reference(declared: list[dict[str, str]]) -> dict[str, object]:
-    """Which declared inputs carry other bytes than the v4.4 cell of record's.
+    """Which declared inputs carry other bytes than the v4.5 cell of record's.
 
     A cell states what its producer read, and a cell that shares an input list
     with an earlier one has to say which of those inputs actually moved. The
-    skill moves by design in v4.5; anything else that moved is a fact this run
+    skill moves by design in v4.6; anything else that moved is a fact this run
     records rather than a change it claims.
     """
     reference = {
