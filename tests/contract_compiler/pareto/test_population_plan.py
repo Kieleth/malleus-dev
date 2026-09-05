@@ -6,7 +6,6 @@ import ast
 from copy import deepcopy
 from hashlib import sha256
 import importlib
-import json
 from pathlib import Path
 from types import ModuleType
 
@@ -829,30 +828,15 @@ def test_population_lowering_refuses_a_subject_that_resolves_nowhere() -> None:
     assert refusal.value.detail == "record left-1 has absent subject: right-404"
 
 
-def test_population_lowering_carries_a_projected_subject_derivation() -> None:
-    """Core-16. The adapter sets a subject the formalizing sentence names and
-    marks that derivation `PROJECTED`, so a reader of the plan tells a derived
-    subject from a producer's own. The mark is carried and not interpreted:
-    the plan compiles and its canonical bytes keep it, which is the artifact
-    the trace recompiles when it verifies a retained plan."""
-
-    plan, pair = _subject_plan("right-1", origin="PROJECTED")
-
-    result = _compile(plan, pair)
-
-    assert result.status is _population().PopulationPlanStatus.CHANGE_SET
-    assert (
-        json.loads(result.canonical_plan_bytes)["derivations"]
-        == plan["derivations"]
-    )
-
-
-def test_population_lowering_refuses_an_unknown_derivation_origin() -> None:
-    """An origin the grammar does not declare is not a weaker mark but an
-    unknown one, and the derivation's fields fail closed as they always have."""
+def test_population_lowering_refuses_a_derivation_that_marks_its_origin() -> None:
+    """Core-17 withdraws the projected subject, and `origin` leaves the plan
+    grammar with it: every derivation is again four fields, and a fifth is
+    refused for the reason a fifth was always refused. A reader of a plan
+    needs no mark to tell a derived subject from a producer's own, because
+    nothing derives one."""
 
     population = _population()
-    plan, pair = _subject_plan("right-1", origin="GUESSED")
+    plan, pair = _subject_plan("right-1", origin="PROJECTED")
 
     with pytest.raises(population.PopulationPlanRefusal) as refusal:
         _compile(plan, pair)
@@ -860,7 +844,7 @@ def test_population_lowering_refuses_an_unknown_derivation_origin() -> None:
     assert (
         refusal.value.reason is population.PopulationPlanRefusalReason.MALFORMED_PLAN
     )
-    assert refusal.value.detail == "unknown derivation origin: GUESSED"
+    assert refusal.value.detail == "derivation fields are not closed"
 
 
 def test_population_lowering_refuses_unknown_supersession(contract_pair) -> None:

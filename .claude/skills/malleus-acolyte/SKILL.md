@@ -322,10 +322,10 @@ fallback.
    it; the subject is never folded into `quantity_kind` or the record's name;
    a record whose subject the reading does not name in the formalizing
    sentence leaves `subject` unset and the census counts it.
-   The adapter projects the subject of a record that leaves it unset when
-   exactly one entity of the capture is named in a sentence formalizing that
-   record, so set `subject` yourself only where the sentence names more than
-   one entity, or where the one it names is not what the record is about.
+   The census reports, per subject-bearing type, how many records propose a
+   subject and how many leave it unset while the sentence formalizing them
+   names exactly one entity; the producer sets the subject, and nothing is set
+   for it.
    An entity's `name` is the form the source uses to refer to it in its
    sentences, the shortest one the reading repeats, and the descriptive
    introduction the source gives it goes in `description`; the subject check

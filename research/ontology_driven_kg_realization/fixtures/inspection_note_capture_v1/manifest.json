@@ -2,7 +2,7 @@
   "input_set_id": "inspection-note-capture-v1",
   "members": [
     {"bytes": 1574, "path": "document-capture.json", "sha256": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99"},
-    {"bytes": 801, "path": "document-census.json", "sha256": "sha256:67e6cffc3e2c8f2b66efa990d30011c4ab939c6da3cfc79350085faa411e059b"},
+    {"bytes": 802, "path": "document-census.json", "sha256": "sha256:dae9b29e7ff6b412bb373760b617f24e9d2843be168a75a24260af0cbe20198d"},
     {"bytes": 2594, "path": "document-change.json", "sha256": "sha256:d7ea99a463195fdaf20c7bfb5d1f63736ea48f2252a5651d7d3266a015048673"},
     {"bytes": 3069, "path": "document-plan.json", "sha256": "sha256:4cfe4dd1d232b53d5062b053cdbbadda43d0c435e4a7059c69f7f49669bb715d"},
     {"bytes": 1090, "path": "inspection-note.yaml", "sha256": "sha256:c91cc11a8368ae98fc7e1c4058464393405d0f9c5c6eb49a59292bfbae3feec5"},

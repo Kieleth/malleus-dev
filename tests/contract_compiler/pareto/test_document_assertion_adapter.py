@@ -1157,7 +1157,7 @@ def test_document_census_reports_subject_coverage_per_bearing_type() -> None:
         "by_type": {
             "Claim": {
                 "ambiguous": 0,
-                "projected": 0,
+                "attachable": 0,
                 "proposed": 0,
                 "total": 1,
                 "unnamed": 1,
@@ -1166,7 +1166,7 @@ def test_document_census_reports_subject_coverage_per_bearing_type() -> None:
             },
             "Observation": {
                 "ambiguous": 0,
-                "projected": 0,
+                "attachable": 0,
                 "proposed": 1,
                 "total": 2,
                 "unnamed": 1,
@@ -1175,7 +1175,7 @@ def test_document_census_reports_subject_coverage_per_bearing_type() -> None:
             },
         },
         "ambiguous": 0,
-        "projected": 0,
+        "attachable": 0,
         "proposed": 1,
         "total": 3,
         "unnamed": 2,
@@ -1197,7 +1197,7 @@ def test_document_census_knows_no_subject_bearing_type_without_a_contract() -> N
     assert census["subject_coverage"] == {
         "by_type": {},
         "ambiguous": 0,
-        "projected": 0,
+        "attachable": 0,
         "proposed": 0,
         "total": 0,
         "unnamed": 0,
@@ -1206,7 +1206,7 @@ def test_document_census_knows_no_subject_bearing_type_without_a_contract() -> N
     }
 
 
-def _projectable(
+def _attachable(
     *,
     sentence: str = "asr:001",
     named: tuple[tuple[str, str], ...] = (("instrument:ovg", "Pump P-7"),),
@@ -1217,7 +1217,7 @@ def _projectable(
     ``asr:001`` reads "Pump P-7 was inspected on 2026-03-02." and ``asr:003``
     reads "The technician suspects bearing wear.". ``Instrument`` carries no
     subject slot and ``Observation`` does, so the instruments are what the
-    adapter may project and the observation is what it projects onto.
+    census may count as named and the observation is what it counts.
     """
 
     _, capture, _, _ = _inputs()
@@ -1244,45 +1244,42 @@ def _projectable(
     return capture, {"entities": entities, "relations": []}
 
 
-def test_document_adapter_projects_the_one_entity_the_sentence_names() -> None:
-    """Run-11 left 77 source-asserted records with no subject whose own
-    formalizing sentence names an entity of the same capture. The name is in
-    the retained bytes, so the compiler derives the attachment rather than
-    leaving it to the producer's diligence: exactly one entity named, the
-    subject is set and the derivation records which sentence named it."""
+def test_document_census_counts_a_record_one_named_entity_could_attach() -> None:
+    """Run-12 projected fifteen subjects and thirteen attached the record to
+    its instrument, its database or its reference frame. A sentence naming
+    exactly one entity names its tool as often as its subject, so nothing is
+    set: the slot stays unset, no derivation is written for it, and the census
+    counts the record `attachable` for the producer to read."""
 
-    capture, records = _projectable()
+    capture, records = _attachable()
 
     result = _adapt_with_contract(capture, records)
     plan = json.loads(result.canonical_plan_bytes)
 
-    by_id = {record["id"]: record for record in plan["records"]["entities"]}
-    assert by_id["obs:co2"]["properties"]["subject"] == "instrument:ovg"
-    assert {
-        "locator": "asr:001",
-        "origin": "PROJECTED",
-        "path": ["properties", "subject"],
-        "record_id": "obs:co2",
-        "source_id": "source:inspection-note",
-    } in plan["derivations"]
+    assert plan["records"] == records
+    assert not [
+        derivation
+        for derivation in plan["derivations"]
+        if derivation["path"] == ["properties", "subject"]
+    ]
     census = json.loads(result.canonical_census_bytes)
     assert census["subject_coverage"]["by_type"]["Observation"] == {
         "ambiguous": 0,
-        "projected": 1,
+        "attachable": 1,
         "proposed": 0,
         "total": 1,
         "unnamed": 0,
-        "with_subject": 1,
-        "without_subject": 0,
+        "with_subject": 0,
+        "without_subject": 1,
     }
 
 
-def test_document_adapter_leaves_a_subject_two_named_entities_would_share() -> None:
+def test_document_census_counts_a_sentence_two_named_entities_share() -> None:
     """A sentence naming two entities does not say which one the record is
     about, and the adapter makes no semantic judgment past the name. The slot
     stays unset, the census calls it ambiguous, and the producer sets it."""
 
-    capture, records = _projectable(
+    capture, records = _attachable(
         sentence="asr:003",
         named=(
             ("instrument:tech", "technician"),
@@ -1303,7 +1300,7 @@ def test_document_adapter_leaves_a_subject_two_named_entities_would_share() -> N
     census = json.loads(result.canonical_census_bytes)
     assert census["subject_coverage"]["by_type"]["Observation"] == {
         "ambiguous": 1,
-        "projected": 0,
+        "attachable": 0,
         "proposed": 0,
         "total": 1,
         "unnamed": 0,
@@ -1313,10 +1310,11 @@ def test_document_adapter_leaves_a_subject_two_named_entities_would_share() -> N
 
 
 def test_document_adapter_keeps_the_subject_the_producer_set() -> None:
-    """A producer-set subject is the producer's, checked as before and never
-    projected over: the census counts it proposed and the plan is unchanged."""
+    """The subject is the producer's, checked as before: the census counts it
+    proposed, and no derivation carries a field the grammar does not
+    declare."""
 
-    capture, records = _projectable(subject="instrument:ovg")
+    capture, records = _attachable(subject="instrument:ovg")
 
     result = _adapt_with_contract(capture, records)
     plan = json.loads(result.canonical_plan_bytes)
@@ -1328,7 +1326,7 @@ def test_document_adapter_keeps_the_subject_the_producer_set() -> None:
     census = json.loads(result.canonical_census_bytes)
     assert census["subject_coverage"]["by_type"]["Observation"] == {
         "ambiguous": 0,
-        "projected": 0,
+        "attachable": 0,
         "proposed": 1,
         "total": 1,
         "unnamed": 0,
@@ -1337,11 +1335,11 @@ def test_document_adapter_keeps_the_subject_the_producer_set() -> None:
     }
 
 
-def test_document_adapter_projects_no_subject_from_an_unnamed_sentence() -> None:
+def test_document_census_counts_a_sentence_that_names_nothing() -> None:
     """A sentence naming no entity of the capture leaves the slot unset, which
     is the honest residue decision 18 named and the census counts."""
 
-    capture, records = _projectable(named=(("instrument:mar", "Romanche"),))
+    capture, records = _attachable(named=(("instrument:mar", "Romanche"),))
 
     result = _adapt_with_contract(capture, records)
     plan = json.loads(result.canonical_plan_bytes)
@@ -1350,7 +1348,7 @@ def test_document_adapter_projects_no_subject_from_an_unnamed_sentence() -> None
     census = json.loads(result.canonical_census_bytes)
     assert census["subject_coverage"]["by_type"]["Observation"] == {
         "ambiguous": 0,
-        "projected": 0,
+        "attachable": 0,
         "proposed": 0,
         "total": 1,
         "unnamed": 1,
@@ -1359,16 +1357,17 @@ def test_document_adapter_projects_no_subject_from_an_unnamed_sentence() -> None
     }
 
 
-def test_document_adapter_projects_no_subject_onto_an_untyped_capture() -> None:
+def test_document_census_counts_nothing_without_a_compiled_contract() -> None:
     """Which types carry a subject is the contract's answer, so with no
-    compiled contract the adapter projects nothing and the plan is the
-    producer's own."""
+    compiled contract the axis is empty and the plan is the producer's own."""
 
-    capture, records = _projectable()
+    capture, records = _attachable()
 
     result = _adapt_records(capture, records)
 
     assert json.loads(result.canonical_plan_bytes)["records"] == records
+    census = json.loads(result.canonical_census_bytes)
+    assert census["subject_coverage"]["by_type"] == {}
 
 
 def test_document_census_names_a_relation_derived_away_from_its_endpoints() -> None:

@@ -1951,11 +1951,10 @@ class TestSkillsAreInstallable:
                 "counts it"
             ),
             (
-                "The adapter projects the subject of a record that leaves it "
-                "unset when exactly one entity of the capture is named in a "
-                "sentence formalizing that record, so set `subject` yourself "
-                "only where the sentence names more than one entity, or where "
-                "the one it names is not what the record is about"
+                "The census reports, per subject-bearing type, how many "
+                "records propose a subject and how many leave it unset while "
+                "the sentence formalizing them names exactly one entity; the "
+                "producer sets the subject, and nothing is set for it"
             ),
             (
                 "An entity's `name` is the form the source uses to refer to "
@@ -2355,7 +2354,7 @@ class TestSkillsAreInstallable:
         assert census["subject_coverage"] == {
             "ambiguous": 0,
             "by_type": {},
-            "projected": 0,
+            "attachable": 0,
             "proposed": 0,
             "total": 0,
             "unnamed": 0,
