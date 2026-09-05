@@ -65,6 +65,8 @@ from .view import _fact_set_digest, load_validated_contract_artifact
 
 
 _MISSING = object()
+_SEED_SCALARS = ("Boolean", "DateTime", "Float", "Integer", "String")
+_SEED_SCALAR_NAMES = ", ".join(name.lower() for name in _SEED_SCALARS)
 _BOOLEAN_FIELDS = ("required", "multivalued", "identifier", "inlined")
 _OPTIONAL_FIELDS = ("equals_string", "minimum", "maximum", "value_presence")
 _CONSTRAINT_FIELDS = ("range_id", *_BOOLEAN_FIELDS, *_OPTIONAL_FIELDS)
@@ -322,13 +324,14 @@ class _Elaborator:
     ) -> None:
         target = self.declarations.get(constraint.range_id)
         is_seed = constraint.range_id in {
-            FACT_NAMESPACE + name
-            for name in ("Boolean", "DateTime", "Float", "Integer", "String")
+            FACT_NAMESPACE + name for name in _SEED_SCALARS
         }
         if not is_seed and target is None:
             raise _refuse(
                 ElaborationRefusalReason.INVALID_RANGE,
-                f"{subject} has an unbound range",
+                f"{subject} has an unbound range {constraint.range_id}; a "
+                f"range binds as one of the seed scalars {_SEED_SCALAR_NAMES}"
+                ", or a class or enum declared in the closure",
             )
         target_kind = None if target is None else target.kind
         if constraint.inlined and target_kind != "Class":

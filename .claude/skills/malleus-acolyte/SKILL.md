@@ -688,15 +688,20 @@ them mean the tool was previously wrong about your project.
    inspector. If you carried a `--map malleus=...` purely to work around
    that, you can drop it. Keep it if you are deliberately inspecting against
    a specific root.
-2. **All of LinkML's built-in ranges load.** `uri`, `double`, `decimal`,
-   `date`, `time`, `curie`, `uriorcurie`, `ncname`, `jsonpointer` and the
-   rest. Previously five were accepted and the other fourteen were
+2. **All of LinkML's built-in ranges load in the inspector.** `uri`, `double`,
+   `decimal`, `date`, `time`, `curie`, `uriorcurie`, `ncname`, `jsonpointer`
+   and the rest. Previously five were accepted and the other fourteen were
    construction failures, so a schema using `uri` could not load at all.
    Each validates as its base kind: `double` and `decimal` as numbers, the
    others as strings. **The lexical form is not checked**: `"not a uri"` in a
    `uri` slot commits. That boundary is `lexical-format-validation` on the
    not-implemented list. If your project needs the finer check, it belongs in
-   your write path today.
+   your write path today. The contract compiler is narrower and binds five
+   scalar ranges, `boolean`, `datetime`, `float`, `integer` and `string`, plus
+   every class and enum declared in the closure. `date` and `uri` do not bind
+   there: a slot ranged on either compiles nowhere and refuses with
+   `INVALID_RANGE`, which names the range and the five. A schema that loads in
+   the inspector is not thereby compilable.
 3. **A construction failure now names the rites it skipped.** Rite one
    failing short-circuits the run, so one unresolvable range used to blind
    every later rite silently. A report showing one heresy and nothing else

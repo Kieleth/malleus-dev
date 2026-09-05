@@ -2084,6 +2084,31 @@ class TestSkillsAreInstallable:
         ):
             assert leaked not in section.lower()
 
+    def test_acolyte_range_note_separates_the_loader_from_the_compiler(self):
+        """Every LinkML built-in range loads in the inspector and five bind in
+        the contract compiler. The note stated the first as if it were both,
+        and two producer runs spent their first ontology attempt on a `date`
+        or a `uri` slot."""
+
+        skill = (
+            self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        section = " ".join(
+            skill.split("## What changed in 0.9.0", 1)[1]
+            .split("\n## ", 1)[0]
+            .split()
+        )
+
+        for phrase in (
+            "The contract compiler is narrower and binds five scalar ranges",
+            "`boolean`, `datetime`, `float`, `integer` and `string`",
+            "plus every class and enum declared in the closure",
+            "`date` and `uri` do not bind there",
+            "`INVALID_RANGE`, which names the range and the five",
+        ):
+            assert phrase in section
+        assert "All of LinkML's built-in ranges load." not in section
+
     def test_acolyte_grounding_block_passes_the_live_rite(self):
         """The block the skill tells a project to copy is run through the
         checker it must satisfy. A prose example is wrong until proven

@@ -2,7 +2,7 @@
   "base_acceptance_head": "GENESIS",
   "base_accepted_state_digest": "sha256:c6d3e4a1dc16c81d55a1a62ba6b756d3aec08965e57a77185e9216dc7b226275",
   "base_ledger_event_count": 9,
-  "base_ledger_head": "sha256:30c0e2e0fe3a6cc3adfe18846053c25556086e32c5a2cbd1ce8f5fd81b81d017",
+  "base_ledger_head": "sha256:5f52eeecdc80479f6b3a0133fd0390d67f39733c12b88fe0c4946790b405c390",
   "base_materialization_head": "GENESIS",
   "change_set_id": "change:plan:inspection-note:1",
   "contract_identity": "sha256:0a9a02ced1581c30bbcf0daafcb2af7e5cfff8ff3bec7d206c00bcad9c456a02",

@@ -544,6 +544,67 @@ def test_public_population_refuses_event_records_by_family() -> None:
     assert refusal.value.reason is api.PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED
 
 
+def _range_probe(range_name: str) -> dict[str, bytes]:
+    """One project slot over the root, ranged as the producer wrote it."""
+
+    return {
+        "probe": (
+            "id: https://example.org/schema/probe\n"
+            "name: probe\n"
+            "imports: [malleus, 'linkml:types']\n"
+            "classes:\n"
+            "  Probe:\n"
+            "    is_a: Entity\n"
+            "    slots: [accepted_date]\n"
+            "slots:\n"
+            "  accepted_date:\n"
+            f"    range: {range_name}\n"
+        ).encode(),
+        "malleus": (ROOT / "ontology/malleus.yaml").read_bytes(),
+        "linkml:types": (
+            files("linkml_runtime")
+            .joinpath("linkml_model", "model", "schema", "types.yaml")
+            .read_bytes()
+        ),
+    }
+
+
+@pytest.mark.parametrize("range_name", ("date", "uri"))
+def test_an_unbound_range_names_the_range_and_what_binds(range_name: str) -> None:
+    """Two producer runs spent their first ontology attempt on a `date` or a
+    `uri` slot. The compiler binds five seed scalars and the schema language
+    offers nineteen built-ins, and the refusal said neither: it named the slot,
+    called the range unbound, and left the producer to guess which ranges are
+    not."""
+
+    api = _api()
+
+    with pytest.raises(api.ElaborationRefusal) as refusal:
+        api.compile_linkml_contract(
+            root_locator="probe", sources=_range_probe(range_name)
+        )
+
+    assert refusal.value.reason is api.ElaborationRefusalReason.INVALID_RANGE
+    assert refusal.value.detail == (
+        "https://example.org/schema/probe/accepted_date has an unbound range "
+        f"https://w3id.org/linkml/types/{range_name}; a range binds as one of "
+        "the seed scalars boolean, datetime, float, integer, string, or a "
+        "class or enum declared in the closure"
+    )
+
+
+def test_a_seed_scalar_range_binds() -> None:
+    """The five the refusal names are the five that bind."""
+
+    api = _api()
+
+    for range_name in ("boolean", "datetime", "float", "integer", "string"):
+        compiled = api.compile_linkml_contract(
+            root_locator="probe", sources=_range_probe(range_name)
+        )
+        assert compiled.artifact.validated_fact_set_sha256.startswith("sha256:")
+
+
 def test_compiler_cli_compiles_exact_named_sources() -> None:
     command = [
         sys.executable,

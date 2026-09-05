@@ -3,7 +3,7 @@
   "members": [
     {"bytes": 1574, "path": "document-capture.json", "sha256": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99"},
     {"bytes": 748, "path": "document-census.json", "sha256": "sha256:6c5e01293557687962fa1fd697cd5995fb828a766b8c2e4dbe916d0ea1dffff4"},
-    {"bytes": 2594, "path": "document-change.json", "sha256": "sha256:ac48ac4917f12541ed87dbff5b7bb7bd7ae31d6958b41ba58c6a833e5ecd9184"},
+    {"bytes": 2594, "path": "document-change.json", "sha256": "sha256:d7ea99a463195fdaf20c7bfb5d1f63736ea48f2252a5651d7d3266a015048673"},
     {"bytes": 3069, "path": "document-plan.json", "sha256": "sha256:4cfe4dd1d232b53d5062b053cdbbadda43d0c435e4a7059c69f7f49669bb715d"},
     {"bytes": 1090, "path": "inspection-note.yaml", "sha256": "sha256:c91cc11a8368ae98fc7e1c4058464393405d0f9c5c6eb49a59292bfbae3feec5"},
     {"bytes": 1124, "path": "profile-source-assertion.json", "sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46"},
