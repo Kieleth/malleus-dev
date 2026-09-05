@@ -490,6 +490,56 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     `origin` is unchanged, which is every plan written before this and every
     plan a structured-row adapter writes.
 
+22. The projected subject is withdrawn and the census keeps the count, in the
+    document-assertion adapter and the population-plan grammar, no pack
+    change. Decision 21 reached run-12 and its own falsifier fired before the
+    review opened. Of the fifteen subjects the adapter projected, two are
+    plausibly what the record is about; thirteen attach the record to its
+    instrument, its database, its reference frame, or a feature the sentence
+    mentions in passing: a relocation count to the HypoDD program, an
+    identification count to the SEISAN database, an error ellipsoid to
+    NonLinLoc, expected depths beneath slow- and ultraslow-spreading ridges to
+    the OCC, mean location errors to the RTI, a snapshot caveat to the MAR. A
+    sentence that names exactly one entity names its instrument as often as
+    its subject, and a substring cannot tell the two apart; "exactly one
+    entity named" is a fact about the sentence and not knowledge of what the
+    sentence is about. The second effect is the producer's. Knowing the rule,
+    it enumerated the records the adapter would project, found eight where the
+    one entity named is a tool or a model, and narrowed the formalizing span
+    so those sentences would name nothing, which trades evidence for the
+    absence of a wrong subject. The review surface measures neither effect: a
+    projected subject occurs in the record's own block by construction, so a
+    reviewer comparing the row against the block reads the name and supports
+    it. A rule the producer can see is a rule the producer works around; a
+    count the producer never reads it cannot. So the adapter sets no subject.
+    It still computes, for every subject-bearing record that leaves `subject`
+    unset, whether the statements of the assertions formalizing it name
+    exactly one of the capture's entity records that carry a `name` and whose
+    own type bears no subject, compared by decision 20's rule, and reports it:
+    `subject_coverage` gains `attachable` for exactly one entity named beside
+    `ambiguous` for more than one and `unnamed` for none, `proposed` still
+    counts a subject the producer set, `with_subject` is now `proposed` alone
+    and `without_subject` the other three. `projected` leaves the census and
+    `origin: PROJECTED` leaves the population-plan grammar with it: every
+    derivation is again the four fields `locator`, `path`, `record_id` and
+    `source_id`, and a fifth field refuses `MALFORMED_PLAN` with `derivation
+    fields are not closed`, exactly as it did before decision 21. What stays:
+    the check on a subject the producer did set, `SUBJECT_NOT_NAMED` from
+    decision 18 against decision 20's name forms, unchanged in reason, message
+    and aggregation; the census axis, which is what a producer and an overseer
+    read to see how much attachment a capture left unmade; and the honest
+    residue decision 18 named, a record whose sentence does not name what it
+    is about keeping `subject` unset. What it does not do: it does not restrict
+    the candidate entities to the types that can be subjects at all, which was
+    the other repair available and is a new pack-level declaration, more
+    rather than less; it does not touch the name comparison, which stays a
+    substring over the source's own forms; it adds no reason and removes none;
+    and the pack is untouched, so `research` stays at 0.5.0 and every fixture
+    and frozen paper cell keeps compiling. Run-12's retained plan, written
+    under decision 21, carries `origin: PROJECTED` derivations and stays as it
+    was recorded; it is the only plan that does, and a plan carrying that
+    field no longer compiles here.
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.

@@ -885,6 +885,30 @@ def test_governing_design_records_the_projected_subject_decision() -> None:
     )
 
 
+def test_governing_design_withdraws_the_projected_subject_decision() -> None:
+    """Decision 22 says why decision 21 is withdrawn on run-12's evidence, what
+    the census keeps counting, and what the compiler no longer sets."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "22. The projected subject is withdrawn and the census keeps the count",
+        "thirteen attach the record to its instrument, its database, its "
+        "reference frame, or a feature the sentence mentions in passing",
+        "narrowed the formalizing span so those sentences would name nothing",
+        "So the adapter sets no subject",
+        "`subject_coverage` gains `attachable` for exactly one entity named",
+        "`origin: PROJECTED` leaves the population-plan grammar with it",
+        "`SUBJECT_NOT_NAMED` from decision 18 against decision 20's name forms",
+        "`research` stays at 0.5.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("21. The subject is projected by the compiler") < (
+        normalized.index("22. The projected subject is withdrawn")
+    )
+
+
 def test_governing_design_records_the_evaluative_slot_decision() -> None:
     """Decision 17 says which slots are evaluative and how a reader finds out."""
 
