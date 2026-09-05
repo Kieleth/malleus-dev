@@ -650,6 +650,60 @@ def test_populate_surfaces_every_underived_field_from_the_document_route(
     assert not (tmp_path / "change-set.json").exists()
 
 
+def test_capture_surfaces_every_locator_defect_from_the_document_route(
+    tmp_path: Path, capsysbinary
+) -> None:
+    """The capture route carries the whole aggregated refusal to stderr.
+
+    Two paraphrased statements and one block the reading does not carry are
+    one run and one message. The paper-facing runner calls the same adapter
+    and prints the same string, so neither surface needed a change.
+    """
+
+    capture = json.loads((FIXTURE / "document-capture.json").read_bytes())
+    capture["assertions"][0]["statement"] = "Pump P-7 was inspected."
+    capture["assertions"][1]["statement"] = (
+        "Vibration was approximately 4.3 mm/s on 2026-03-01."
+    )
+    capture["nothing_assertable"].append("page:3:block:007")
+    capture_path = tmp_path / "capture-locator-defects.json"
+    capture_path.write_bytes(_canonical(capture))
+    records, supersessions = _plan_inputs(tmp_path)
+
+    code, out, err = _run(
+        capsysbinary,
+        [
+            "capture",
+            *_contract_arguments(),
+            "--reading",
+            str(FIXTURE / "reading.json"),
+            "--capture",
+            str(capture_path),
+            "--capture-id",
+            CAPTURE_ID,
+            "--plan-id",
+            "plan:inspection-note:1",
+            "--records",
+            str(records),
+            "--supersessions",
+            str(supersessions),
+            "--plan-out",
+            str(tmp_path / "plan.json"),
+            "--census-out",
+            str(tmp_path / "census.json"),
+        ],
+    )
+
+    assert code == 2
+    assert out == b""
+    message = err.decode()
+    assert message.startswith("malleus-compiler: NOT_VERBATIM: ")
+    for name in ("asr:001", "asr:002", "page:3:block:007"):
+        assert name in message
+    assert not (tmp_path / "plan.json").exists()
+    assert not (tmp_path / "census.json").exists()
+
+
 def _admitted_history(capsysbinary, tmp_path: Path) -> tuple[Path, Path, dict, dict]:
     ledger = _create_history(capsysbinary, tmp_path)
     _retain_inputs(capsysbinary, ledger)

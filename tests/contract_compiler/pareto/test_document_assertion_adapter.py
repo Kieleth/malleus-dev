@@ -185,6 +185,60 @@ def test_document_adapter_refuses_each_semantic_boundary(
     assert refusal.value.reason is getattr(api.DocumentAssertionRefusalReason, reason)
 
 
+def test_document_adapter_reports_every_locator_defect_in_one_refusal() -> None:
+    """Paraphrases and phantom blocks are one refusal, not one return each.
+
+    A fresh producer paraphrased all seven of its statements and named a block
+    the reading does not carry. The adapter reported one defect per run, so a
+    capture that was wrong throughout cost a structural return per statement.
+    The reason stays the first defect's under the sort; every other defect is
+    named inline, with the rule that closes them.
+    """
+
+    api = _api()
+    reading, capture, _, _ = _inputs()
+    capture["assertions"][0]["statement"] = "Pump P-7 was inspected."
+    capture["assertions"][1]["statement"] = (
+        "Vibration was approximately 4.3 mm/s on 2026-03-01."
+    )
+    capture["assertions"][2]["block"] = "page:9:block:999"
+    capture["nothing_assertable"].append("page:3:block:007")
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt(reading=reading, capture=capture)
+
+    assert refusal.value.reason is api.DocumentAssertionRefusalReason.NOT_VERBATIM
+    assert refusal.value.detail == (
+        "document capture locators are not accepted: "
+        "assertion asr:001 is not verbatim in page:1:block:001 [NOT_VERBATIM]; "
+        "assertion asr:002 is not verbatim in page:1:block:001 [NOT_VERBATIM]; "
+        "assertion asr:003 names unknown block page:9:block:999 "
+        "[UNKNOWN_BLOCK]; "
+        "nothing_assertable names unknown block page:3:block:007 "
+        "[UNKNOWN_BLOCK]; "
+        "every block ID comes from the reading's inventory and every statement "
+        "is copied from its block's own bytes, matching after whitespace "
+        "collapse"
+    )
+
+
+def test_document_adapter_reports_locator_defects_before_other_semantics() -> None:
+    """A defect later in the capture never hides a non-verbatim statement."""
+
+    api = _api()
+    reading, capture, _, _ = _inputs()
+    capture["assertions"][0]["modality"] = "VIBES"
+    capture["assertions"][2]["statement"] = "The technician suspects wear."
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt(reading=reading, capture=capture)
+
+    assert refusal.value.reason is api.DocumentAssertionRefusalReason.NOT_VERBATIM
+    assert "assertion asr:003 is not verbatim in page:1:block:002" in (
+        refusal.value.detail
+    )
+
+
 def test_document_adapter_accepts_verbatim_text_after_whitespace_normalisation() -> (
     None
 ):

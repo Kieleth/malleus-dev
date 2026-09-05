@@ -1957,6 +1957,12 @@ class TestSkillsAreInstallable:
                 "detail with the rule that closes them"
             ),
             "Every `nothing_assertable` block ID must exist",
+            (
+                "naming every non-verbatim assertion with its block and every "
+                "unknown block ID from `assertions` and from "
+                "`nothing_assertable` in one sorted detail"
+            ),
+            "it does not stop at the first such defect",
             "CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`, `NEGATED`, or `STATED",
             "INTERVAL_NOT_EXPRESSIBLE",
             "AGGREGATE_ONLY",
@@ -1971,6 +1977,7 @@ class TestSkillsAreInstallable:
         assert "stops at the first block whose shape is wrong" not in section
         assert "naming the first such field it meets" not in section
         assert "replace-with-PartialEffectiveContract.identity" not in skill
+        assert "stops at the first such defect" not in section
         steps = (
             "Retain the source boundary",
             "Choose the Malleus level",
