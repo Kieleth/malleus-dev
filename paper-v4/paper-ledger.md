@@ -4488,3 +4488,33 @@ RCA: check the output, never steer the producer.
 
 Non-claim: one cell per iteration; the preliminary record is not paper
 evidence until ratified.
+
+### E-0158, run-13 is pinned to the v4.7 Core coordinate
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-13/run-contract.json` and
+`producer-input-manifest.json` as rewritten by `pin.py --commit 12a04a9`, the
+governance ledger through OVR-000412, and E-0156.
+
+Coordinates: Core commit `12a04a9f033d890663398e1249b4e91c1ed6da7f` (the head after Core-17's
+two commits and its governance entry OVR-000412), replacing E-0156's pin at
+`2290245`, which read the governance head as OVR-000411 because Core-17's entry
+was still being written. Core-17 landed: the document adapter derives no
+subject; a source-asserted record's subject is the one the producer set or
+none, and the Core-15 check still holds it (the subject entity's name or one of
+its tags, whitespace ignored, occurs in a statement that formalizes the record);
+the census reports proposed, attachable, ambiguous and unnamed, with
+`projected` gone (decision 22). One skill sentence says so. One declared input
+moved against run-12: the skill. Pack versions unchanged (metrology 0.3.0,
+chronology 0.1.0, research 0.5.0). The population compiler is byte-identical to
+its pre-Core-16 revision, so a plan carrying an `origin` field is refused as
+MALFORMED_PLAN; run-12's retained plan carries `origin: PROJECTED` and stays as
+recorded, and nothing re-compiles it.
+
+Non-claim: no producer has run at this coordinate. Expected effect, stated
+before the run: subject coverage near run-11's proposed share, no projected
+subject and so none wrong by projection, and the census's attachable count as
+the measure of what the producer left unset. No cell can falsify a removal; the
+test is that nothing it removed was worth keeping, which run-12's review
+already showed (18 of 26 rows on projected records PARTIAL, E-0157).

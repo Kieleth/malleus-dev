@@ -889,12 +889,12 @@
     "verification_owner": "OVERSEER_BEFORE_PRODUCER_SPAWN",
     "pinned_by": "paper-v4/experiment-v4/run-13/pin.py",
     "execution_baseline": {
-      "core_commit": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
-      "core_tree": "be2488de6e69e231d004eb3913f5499c381c2fa1"
+      "core_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+      "core_tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7"
     },
     "governance_head": {
-      "entry_id": "OVR-000411",
-      "head_hash": "sha256:24ecdab837f85773b084c479d2b6eb5776622da40cbb28d26da8837462d1afcc"
+      "entry_id": "OVR-000412",
+      "head_hash": "sha256:623436a4387d3659c961d87de7f8139f59a6fc625cdf7ce64daaa5dda2981d71"
     },
     "required_pieces": [
       "FULL_DOMAIN_HISTORY_PROFILE",
@@ -906,8 +906,8 @@
     ],
     "verified_pieces": {
       "AGGREGATE_REFUSAL_DIAGNOSTICS": {
-        "core_commit": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
-        "core_tree": "be2488de6e69e231d004eb3913f5499c381c2fa1",
+        "core_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "core_tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7",
         "paper_audit": "DIGEST_PINNED",
         "governance_entry": "OVR-000395",
         "shape": "ONE_SORTED_DEFECT_SET_PER_REFUSAL",
@@ -915,8 +915,8 @@
         "rite_module_sha256": "sha256:d2d76fe0181f74d5352b7535d19d7a6925ae0ca45ccb8393c0eaf1b64b06ba11"
       },
       "DERIVATION_CONTENT_CHECKS": {
-        "core_commit": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
-        "core_tree": "be2488de6e69e231d004eb3913f5499c381c2fa1",
+        "core_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "core_tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7",
         "paper_audit": "DIGEST_PINNED",
         "document_adapter_path": "src/malleus/_contract_pipeline/document.py",
         "document_adapter_sha256": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
@@ -941,8 +941,8 @@
         ]
       },
       "EVENT_FAMILY_ADMISSION": {
-        "core_commit": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
-        "core_tree": "be2488de6e69e231d004eb3913f5499c381c2fa1",
+        "core_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "core_tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7",
         "paper_audit": "DIGEST_PINNED",
         "profile_id": "source-assertion",
         "event_role": [
@@ -957,8 +957,8 @@
         "plan_compiler_sha256": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28"
       },
       "FULL_DOMAIN_HISTORY_PROFILE": {
-        "core_commit": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
-        "core_tree": "be2488de6e69e231d004eb3913f5499c381c2fa1",
+        "core_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "core_tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7",
         "paper_audit": "DIGEST_PINNED",
         "profile_id": "source-assertion",
         "profile_path": "src/malleus/profiles/source-assertion.json",
@@ -966,8 +966,8 @@
         "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
       },
       "GROUNDED_PACKS_AND_PACK_GROUNDING": {
-        "core_commit": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
-        "core_tree": "be2488de6e69e231d004eb3913f5499c381c2fa1",
+        "core_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "core_tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7",
         "paper_audit": "DIGEST_PINNED",
         "grounding_rite_sha256": "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709",
         "pack_sha256": {
@@ -982,8 +982,8 @@
         }
       },
       "NASCENT_PROJECT_PLAYBOOK": {
-        "core_commit": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
-        "core_tree": "be2488de6e69e231d004eb3913f5499c381c2fa1",
+        "core_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "core_tree": "84e0674e0e2037e5bc4d370ce5ee09b6ff936cf7",
         "paper_audit": "DIGEST_PINNED",
         "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
         "skill_sha256": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f"
