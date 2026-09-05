@@ -47,8 +47,9 @@ _STATEMENT_DIGEST_SLOT = "statement_sha256"
 _SUBJECT_SLOT = "subject"
 _NAME_SLOT = "name"
 _DERIVATION_RULE = (
-    "a record's assertion_locator names an assertion of this capture, its "
-    "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
+    "a record's assertion_locator names an assertion of this capture, a "
+    "statement_sha256 comes with the locator that checks it and is the "
+    "SHA-256 of that assertion's statement bytes, "
     "a slot the contract declares evaluative is formalized by at least one "
     "assertion whose modality is not HYPOTHESISED, and the name of a "
     "record's subject occurs in the statement of an assertion that "
@@ -68,6 +69,7 @@ _MODALITIES = {
 
 class DocumentAssertionRefusalReason(str, Enum):
     DIGEST_MISMATCH = "DIGEST_MISMATCH"
+    DIGEST_NOT_LOCATED = "DIGEST_NOT_LOCATED"
     EVALUATIVE_SLOT_NOT_EVALUATED = "EVALUATIVE_SLOT_NOT_EVALUATED"
     FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
     GAP_REQUIRED = "GAP_REQUIRED"
@@ -302,13 +304,28 @@ def _digest_defects(
     records_by_id: dict[str, dict[str, object]],
     statements: dict[str, str],
 ) -> list[_Defect]:
-    """Recompute every located statement digest against the capture's own text."""
+    """Recompute every located statement digest against the capture's own text.
+
+    A digest with no locator names no assertion to recompute from, so it is
+    not a weaker binding to the words behind a record but none, and it
+    refuses under its own reason.
+    """
 
     defects: list[_Defect] = []
     for record_id in sorted(records_by_id):
         properties = _record_properties(records_by_id[record_id])
+        declared = properties.get(_STATEMENT_DIGEST_SLOT)
         locator = properties.get(_LOCATOR_SLOT)
         if not isinstance(locator, str) or not locator:
+            if isinstance(declared, str) and declared:
+                defects.append(
+                    _Defect(
+                        DocumentAssertionRefusalReason.DIGEST_NOT_LOCATED,
+                        record_id,
+                        f"record {record_id} carries a statement digest and "
+                        "no assertion_locator",
+                    )
+                )
             continue
         if locator not in statements:
             defects.append(
@@ -319,7 +336,6 @@ def _digest_defects(
                 )
             )
             continue
-        declared = properties.get(_STATEMENT_DIGEST_SLOT)
         if not isinstance(declared, str) or not declared:
             continue
         recomputed = _digest(statements[locator].encode("utf-8"))
@@ -428,7 +444,6 @@ def _derivation_census(
     derivations: list[dict[str, object]],
     block_by_assertion: dict[str, str],
     record_data: dict[str, object],
-    records_by_id: dict[str, dict[str, object]],
 ) -> dict[str, object]:
     """Report how far each derivation reaches, and how much each one carries.
 
@@ -851,7 +866,6 @@ def adapt_document_assertions(
             derivations,
             {assertion_id: block for _, assertion_id, block, _ in checked},
             record_data,
-            records_by_id,
         ),
         "gaps_by_kind": dict(sorted(gaps_by_kind.items())),
         "subject_coverage": _subject_census(record_data, contract_view),
