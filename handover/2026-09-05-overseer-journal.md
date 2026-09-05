@@ -113,3 +113,9 @@ Three consequences, for decision:
 1. The subject link is not optional. Observations and claims need an edge to what they are about, or the graph is a bag of typed facts. This is Luis's anchors point in its sharpest form; the design should make the subject edge a required, derived part of an observation or claim (from the sentence that states both, else a gap the census counts), not a producer choice.
 2. The query surface should reach entities. A case kind that projects a type's fields without a relation (type-only, still value-blind) would have returned every depth and CO2 observation for CQ-03. Cheap; a binding-schema change and a native_query.py change for the next harness.
 3. The comparison is one cell against one cell under a different harness, packs and skill; nothing here isolates a cause beyond what the artifacts state.
+
+## Run-08 review outcome and two review-surface debts (2026-09-05)
+
+Preliminary review (fresh Opus 5, 123,865 tokens): CQ-01 PARTIAL, CQ-02, CQ-03 and CQ-04 NOT_RESPONSIVE; 5 rows SUPPORTED, 3 PARTIAL, each PARTIAL a hedge the reading makes and the row carries as settled; all 8 rows derivation-local with the formalizing block a subset of the endpoint blocks; the digest check vacuous because no returned row carries a locator (the Claim, CountObservation and AssertedRatio cases returned no row). Ratification pending.
+
+Debts the reviewer found in the review surface: the retained capture and the query trace summary are named by the task as inputs but are not in the manifest's `materials`, whose list is fixed by the frozen protocol's `review_materials`; both are bound only transitively (the capture through the trace's evidence digest, the trace summary through `stage_identities`). Closing it means a protocol revision (a new frozen protocol version listing seven materials) before the next cell's freeze, or a documented deviation as the CODEX_PRELIMINARY substitution was.
