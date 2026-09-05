@@ -5395,3 +5395,29 @@ between two single sessions is not a measurement of either; run-05 and run-16
 are five iterations apart, so the pair bounds an expectation and not a
 comparison. Whether the expectation holds is open, and run-16 is one cell that
 will be one observation, not a measurement, until it has run to ratification.
+
+### E-0171, run-16's pin verified by the overseer at the v4.8 Core coordinate, unchanged; a witness count corrected in the v4.9 RCA
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-16/run-contract.json` and
+`producer-input-manifest.json`, `pin.py --commit dc52547` run again by the
+overseer after E-0170, `paper-v4/experiment-v4/run-15/results/query-trace-summary.json`,
+`handover/2026-09-05-v49-rca.md`.
+
+Run-16 pins the Core coordinate runs 14 and 15 ran at: Core commit
+`dc5254795a78648591d3a1b0bcf602af8d443dc1`, governance head OVR-000413,
+Core-18's predicate read by AST at both sites. The overseer's re-run of the
+pin rewrote nothing. No declared input moved against run-15, the skill
+included; the harness is run-15's byte for byte except the run id and the
+producer's model fields (Sonnet 5, `claude-sonnet-5`).
+
+Correction: the v4.9 RCA's table gave run-15 "162 distinct witnesses". The
+frozen trace summary records 160 witness records; 162 is the count of
+distinct (kind, witness) keys, two records returning under two kinds. The
+table now carries both, with run-13's 198 and run-14's 391 and 389 beside
+them. E-0168 had the right figure. E-0170 also restates E-0134's correction of
+run-05's witness count (44, not 4).
+
+Non-claim: no producer has run under this cell. The expected effect and the
+falsifier are E-0170's.
