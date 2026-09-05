@@ -1,0 +1,109 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:e232d66c37a5b05216daf3522a8186ed80a739a738d0642192dfaaa26b2c144d",
+        "before_digest": "sha256:0909026f2c9d50192f02cf8f7af2572fffbb5e3a542c3bc4dc35fc96098f360b",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:4040de216e647b115c173af3c20ddc9ca124258823e170f32d3ae045c62249ba",
+        "before_digest": "sha256:f9eefe6ee3ab5f64e61e388ea7ccf5db5bcfb348c398ad56fabef5e732aee7aa",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:a08003a1de879efc0e82d9597232685d7bc00c3e597b804f92bb461304feb5f3",
+        "before_digest": "sha256:527885786c41a981b55ed9f3c3a441b219a442847843529bbc091c325e81e6ad",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      },
+      {
+        "after_digest": "sha256:d3b21607e13f879a50fbdc28dd868064eddb13f645e758833c9384e1b51fcac6",
+        "before_digest": "sha256:6ecf429d70715a3340584c11c8c1e78e9e4b84e29f7d234cd85e86939b2e3870",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:5c3f3a97e6ba40d3e3f447bd048f029f94269c54a0c341545525c4b6d0d219a7",
+        "before_digest": "sha256:d9131a1648a961ca056640a845b78e4b2dd2cf8bf82cfe6a6c06fe416a7e454a",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_compiler_cli.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:cd417d16e9ed809cbe9b0774fd81973eb6199b93311c8802f84f8c2dfa355f95",
+  "entry_id": "OVR-000397",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:51a62e70dc8b80d3d14079f9b919d1aa45c519e66a22316938015d7c51a437f2",
+  "recorded_at": "2026-09-05T01:30:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "fed1116f92de1bb8a1269814bac81b876c1371f0",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "20b4b3589c497c4223b833eb21348e4b40307225",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3f88b5230c731ec35221b5d95bf44245714f09a5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "966e696e0f9582258d66e2facf601d1f2b7939a6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bb2eeb8cf63ff7ede57dc00a53d684d9d253040d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "59b4c6d773e9d47bf4a171fa814b7f6bbb843a49",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ec2809ee21112bfeca215557cb4bf91f5988898d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "729f33c2c68ad1bebfac47fc5643b7fe416a068f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000396",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 397,
+  "subject": {
+    "id": "document-capture-producer-contract-and-locator-diagnostics",
+    "type": "DOCUMENT"
+  },
+  "summary": "Separate the producer's capture file from the adapter's call, give the verbatim rule a method, aggregate the locator refusals, and prefer an honest citation gap.",
+  "why": "A fresh producer spent both structural returns on defects the protocol could remove. The capture template put the adapter's call and the producer's output in one object with the placeholder \"replace-with-PartialEffectiveContract.identity\"; the producer copied that shape and invented the identity. The template now shows document-population.json as exactly capture, records and supersessions, with a second block for what the parent supplies, and says the producer never writes a contract identity. The verbatim rule had no method, so all seven statements were retyped paraphrases called verbatim; step 6 now says to anchor the span whitespace-insensitively, copy the block's own bytes, check every statement before stopping, and take block IDs from the reading's inventory. The adapter reported one locator defect per run, so a capture wrong throughout cost a return per statement; it now names every non-verbatim assertion and every unknown block ID, from assertions and nothing_assertable, in one sorted refusal, reason enum unchanged. A grounding block cited a standard that does not exist, so step 3 sends an unvouched vocabulary to the none_found form; citation truth is checked at review."
+}
