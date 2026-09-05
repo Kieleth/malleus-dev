@@ -1,0 +1,109 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:8a136ff5b9db629ee4b4c626c2c0a71a4a9b304000e8f621e6dfd06651fdcd96",
+        "before_digest": "sha256:0509df9a6b28ee093e5d08d5d8214a7e9ce10a4a598c8e525c83c306195c2691",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:07a1e961812077db2a23f25beb298fb84b3f942b8e980957df19a7c48e1e2370",
+        "before_digest": "sha256:1b82bde3fb64bbb2e40c7deda727a8415cd1c6b0c2a17299b5e5b3d438e88e8b",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:67e6cffc3e2c8f2b66efa990d30011c4ab939c6da3cfc79350085faa411e059b",
+        "before_digest": "sha256:6c5e01293557687962fa1fd697cd5995fb828a766b8c2e4dbe916d0ea1dffff4",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-census.json"
+      },
+      {
+        "after_digest": "sha256:d0e857295fd8c929c9e34dadda63a262607441e4bc69d1efdca403c15a975639",
+        "before_digest": "sha256:6640056f140e1e541b3c2c1eea1329ec9336c184f06aa6bb50b27cb70727a5b7",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:238ba414a060211947c233e862fff30209d65616c91aee415b2de1f447cfe78f",
+        "before_digest": "sha256:e91737af6d8dafcddd399d76ced853eb8fbb4409389b3ec3cbabdf2f84dfcf44",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:51b2fcb94239d6f3e1e09a318832b3a52acd28f6b869be72821cfff216ea228a",
+        "before_digest": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:f87fd609dd6b5e1110bc4ed9ba3327d3fc7313cf0eeb6ad5110a72361f18a923",
+        "before_digest": "sha256:6b40ee1bc0a2d2492764fa43e756def184cae4a71d172ac63e026ed111f60cc2",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:a871b308f3d926974a56f97734bfe87a8fc7d8eb2fe2275c5f1816fb31857a15",
+        "before_digest": "sha256:f5c3faf05bb482cdc1d8ef37cce85cde4b3fad0f2f512446901f8d6df139bb9a",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:77a844ac4fe8af63d3efa93fd7225e37d2c7faefa9e2f98fd4fded1eea753328",
+        "before_digest": "sha256:aa46ef1cea65c0783dba391f5e27fae752de9062321436f7e80805afc7f5e87f",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:58e8db71a9858f0c1044830f38806c2f9aeb3afac6208003ee38430a4f50ab83",
+        "before_digest": "sha256:bb741800452fa8b707d7eef40d968d98fb9e845b8ff2920c9eb93f514071459c",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:24ecdab837f85773b084c479d2b6eb5776622da40cbb28d26da8837462d1afcc",
+  "entry_id": "OVR-000411",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5930999e74fe444197ed4861df656826a9c32141ea6d1c723ddf3a9bccd6cc34",
+  "recorded_at": "2026-09-05T11:45:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "d7f644f17e07816077f6132fdcb34e6c3ccb5ae6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "4bd6af469e7230fa01364443999015f4e4484c6c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000410",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 411,
+  "subject": {
+    "id": "subject-projected-by-the-compiler",
+    "type": "DOCUMENT"
+  },
+  "summary": "The adapter projects a record's subject when exactly one entity of the capture is named in a sentence formalizing it; the derivation carries origin PROJECTED and the census counts proposed, projected, ambiguous and unnamed.",
+  "why": "Run-11 removed the SUBJECT_NOT_NAMED return and coverage still fell, 91 of 248 against run-10's 114 of 235. From the frozen capture: 77 source-asserted records leave subject unset while the sentence formalizing them names an entity of the same capture, which the check would have accepted. A duty stated to the producer with no gate behaves as a preference, so the compiler derives the attachment. For a record of a subject-bearing type with subject unset, the capture's named entity records whose own type bears no subject are compared by Core-15's rule against every assertion formalizing any field of the record; exactly one match sets the subject and records the derivation against the first sentence naming it, marked origin PROJECTED, one optional field the plan grammar now admits. The mark enters no operation and no from_records call, so direct and replayed graphs still agree. Zero and more than one leave the slot unset; nothing refuses. The census counts proposed, projected, ambiguous and unnamed. Decision 21 carries the limits. Recorded at 11:45:00Z, the smallest value the monotonic rule accepts: the wall clock read 2026-09-05T10:53Z and OVR-000409 and OVR-000410 sit ahead of it."
+}
