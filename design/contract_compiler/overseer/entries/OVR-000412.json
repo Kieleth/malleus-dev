@@ -1,0 +1,109 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f",
+        "before_digest": "sha256:8a136ff5b9db629ee4b4c626c2c0a71a4a9b304000e8f621e6dfd06651fdcd96",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:251d6d9d68943efe3f2dba967b037644511c8ef56191ba711e79c5947a54afbe",
+        "before_digest": "sha256:07a1e961812077db2a23f25beb298fb84b3f942b8e980957df19a7c48e1e2370",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:dae9b29e7ff6b412bb373760b617f24e9d2843be168a75a24260af0cbe20198d",
+        "before_digest": "sha256:67e6cffc3e2c8f2b66efa990d30011c4ab939c6da3cfc79350085faa411e059b",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-census.json"
+      },
+      {
+        "after_digest": "sha256:d28b76a0b6db2bc86bfcae44503d49f3282f2de047deed1c2ffe4c8a6ca59103",
+        "before_digest": "sha256:d0e857295fd8c929c9e34dadda63a262607441e4bc69d1efdca403c15a975639",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
+        "before_digest": "sha256:238ba414a060211947c233e862fff30209d65616c91aee415b2de1f447cfe78f",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28",
+        "before_digest": "sha256:51b2fcb94239d6f3e1e09a318832b3a52acd28f6b869be72821cfff216ea228a",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:ec06ccc3061dcfb9d8f3f0578c67a42db92637e9a726f3574af88ddd1a8c1a07",
+        "before_digest": "sha256:f87fd609dd6b5e1110bc4ed9ba3327d3fc7313cf0eeb6ad5110a72361f18a923",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:30184033a73e565edce3f458f59c9da6cdcc4eedc72943f3c7508183b96f4006",
+        "before_digest": "sha256:a871b308f3d926974a56f97734bfe87a8fc7d8eb2fe2275c5f1816fb31857a15",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:52d76c58b0c278b49ad634f99236a7d95b47941370a9f8d13748646cd57a4dfb",
+        "before_digest": "sha256:77a844ac4fe8af63d3efa93fd7225e37d2c7faefa9e2f98fd4fded1eea753328",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:3f84bbb9103ccab59e75fdb5ac0a561e0a986437adb0da24af811aaa09897d3e",
+        "before_digest": "sha256:58e8db71a9858f0c1044830f38806c2f9aeb3afac6208003ee38430a4f50ab83",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:623436a4387d3659c961d87de7f8139f59a6fc625cdf7ce64daaa5dda2981d71",
+  "entry_id": "OVR-000412",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:24ecdab837f85773b084c479d2b6eb5776622da40cbb28d26da8837462d1afcc",
+  "recorded_at": "2026-09-05T12:40:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "baacfa546d0c2e32c2395ec18287213879d0b068",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "229024596d50f52a8c0a49d380ade59b0bdd1e1c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000411",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 412,
+  "subject": {
+    "id": "projected-subject-withdrawn",
+    "type": "DOCUMENT"
+  },
+  "summary": "The adapter no longer sets a subject; the census counts attachable, ambiguous and unnamed beside proposed, and the PROJECTED derivation origin leaves the population-plan grammar.",
+  "why": "Run-12 ran OVR-000411's projection. Of the fifteen subjects the adapter projected, the overseer read thirteen as attaching the record to its instrument, its database, its reference frame or a feature the sentence mentions in passing: a relocation count to the HypoDD program, an identification count to the SEISAN database, an error ellipsoid to NonLinLoc, expected ridge depths to the OCC. A sentence naming exactly one entity names its tool as often as its subject. The producer, knowing the rule, narrowed eight formalizing spans so those sentences would name nothing, trading evidence for the absence of a wrong subject. So the projection goes and the report stays: for a subject-bearing record leaving subject unset, the adapter counts whether the statements formalizing it name exactly one capture entity, and files it attachable, ambiguous or unnamed beside proposed, with_subject now proposed alone. The optional origin field leaves the plan grammar with it, so a derivation is four fields again and a fifth refuses MALFORMED_PLAN. SUBJECT_NOT_NAMED and its name and tag comparison are unchanged. Decision 22 carries the evidence; 21 is left as written and withdrawn by it."
+}
