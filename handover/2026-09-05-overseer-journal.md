@@ -155,3 +155,19 @@ Run-09's population: 343 assertions over all 186 blocks, 775 records (553 entiti
 Reading. The check is right and the naming convention is missing. Two ways to close it: (a) teach the check aliases (accept a parenthesised abbreviation or a trailing head noun), which is a heuristic that grows; (b) one skill sentence: an entity's `name` is the form the source uses to refer to it in its sentences, the shortest one the reading repeats; the first descriptive mention goes to `description`. (b) is less; (b) also makes names comparable across cells and readable in rows. Candidate for iteration 2 if the producer's repair confirms that renaming is what closes the refusal.
 
 Second finding from the gate, recorded for iteration 2 as well: both Opus cells on the current skill (run-04, run-09) spent their first ontology attempt on a slot with range `date` or `uri`. The elaborator binds five seed scalar types (Boolean, DateTime, Float, Integer, String) and declared classes; the skill's note that every LinkML built-in range loads describes the inquisitor's loader, not the compiler. The elegant fix is the refusal naming the bound ranges and the skill note corrected; no new rule.
+
+### Iteration 1, second runner attempt and query (06:21Z to 06:32Z)
+
+Admitted at runner attempt 2 after the naming repair: 553 entities, 3 events, 219 relations, 775 traced, all 186 blocks, 59 gaps, 9 of 219 relations non-local, largest hub 18 (the byline), subject coverage 106 of 212 (Observation 64 of 114, Claim 37 of 76, CountedObservation 5 of 19, SeismicEvent 0 of 3). Frozen at 92e3800, E-0142.
+
+The v3 query, frozen at acceptance (3,045 cases), returned 1,466 rows: 1,061 ENTITY, 326 SUBJECT, 79 RELATION. Measured before any review:
+- CQ-02: 171 SUBJECT rows, 50 of them with subject RC2 (claims and observations about the segment).
+- CQ-03: 72 SUBJECT rows; 14 are depth quantities (6 with subject RC2, 4 the BDB) and 12 are CO2 wt% quantities (7 RC2, 5 RC3). Run-08 had these 44 quantities unattached and unreachable.
+- CQ-04: the five dispositioned claims come back as SUBJECT rows (the preferred mechanism with subject "mantle"; the four declined ones on the lithosphere and the mantle).
+- CQ-01: 10 SUBJECT rows, counts and observations on the instrument network and the datasets.
+
+So the change under test did what the hypothesis said: the same model attached its quantities and claims to named things once the pack had a place for it, and a value-blind query reached them through the subject. The falsifier did not fire.
+
+What the data also says: the ENTITY kind is a flood. It returns every admitted record of every type in a question's set, 1,061 rows that reach the question through nothing, and it makes the review six times run-04's. The elegant correction is a removal, not a rule: a source-asserted record reaches a question only through its subject (SUBJECT kind), and the ENTITY kind is kept for types that carry no subject (structures, campaigns, instruments). That halves the rows and lets the coverage census bite, because an unattached observation then reaches nothing, which is the honest outcome.
+
+Review: four fresh Opus sessions, one per question, merged into one record and validated as one; recorded as a deviation from "one session judges every row", forced by 1,466 rows. Candidates for iteration 2, to be chosen by the RCA once the review is in: (a) the ENTITY-kind removal above (harness); (b) the naming sentence (skill); (c) INVALID_RANGE naming the bound scalar ranges (Core diagnostic) with the skill's range note corrected.
