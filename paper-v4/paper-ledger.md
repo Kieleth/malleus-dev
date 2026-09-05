@@ -3771,7 +3771,7 @@ Sources: `paper-v4/experiment-v4/run-10/run-contract.json` and
 `producer-input-manifest.json` as rewritten by `pin.py --commit 2026244`, the
 governance ledger through OVR-000409, and E-0144.
 
-Coordinates: Core commit `2026244` (the head after Core-14's three commits and
+Coordinates: Core commit `2026244516aa2c5bdc14ae0fea5c4242f5e7f31f` (the head after Core-14's three commits and
 its single governance entry OVR-000409), replacing E-0144's provisional pin.
 Core-14 landed: MODALITY_NOT_ASSERTED in the document adapter (a
 source-asserted record's modality must be one its formalizing assertion
