@@ -41,6 +41,8 @@ _ASSERTION_TIME_FIELDS = {"assertion_time", "domain_time"}
 EVALUATIVE_SLOT_MIXIN = "Evaluative"
 _LOCATOR_SLOT = "assertion_locator"
 _EVALUATING_MODALITY_EXCLUDED = "HYPOTHESISED"
+_RELATION_FAMILY = "relations"
+_CENSUS_TOP_HUBS = 5
 _STATEMENT_DIGEST_SLOT = "statement_sha256"
 _DERIVATION_RULE = (
     "a record's assertion_locator names an assertion of this capture, its "
@@ -344,6 +346,86 @@ def _evaluative_slots(contract_view: object) -> frozenset[str]:
         return frozenset()
 
 
+def _derivation_census(
+    derivations: list[dict[str, object]],
+    block_by_assertion: dict[str, str],
+    record_data: dict[str, object],
+    records_by_id: dict[str, dict[str, object]],
+) -> dict[str, object]:
+    """Report how far each derivation reaches, and how much each one carries.
+
+    Three axes, reported and never refused. ``assertion_fan_out`` counts, for
+    every captured assertion, the distinct records it formalizes.
+    ``relation_locality`` says of every relation record whether every block
+    formalizing one of its own fields also formalizes a field of at least one
+    endpoint: ``LOCAL`` when it does, ``NON_LOCAL`` when a block does not, and
+    ``UNDERIVED`` when no assertion formalizes the relation at all.
+    ``fan_out_distribution`` maps a fan-out count, written as a string, to the
+    number of assertions carrying it; ``top_hubs`` lists the assertions with
+    the largest fan-out, at most five, each naming its assertion, its block
+    and its count; ``non_local_relations`` counts the NON_LOCAL relations.
+    """
+
+    fan_out: dict[str, set[str]] = {
+        assertion_id: set() for assertion_id in block_by_assertion
+    }
+    blocks_by_record: dict[str, set[str]] = {}
+    for derivation in derivations:
+        assertion_id = str(derivation["locator"])
+        record_id = str(derivation["record_id"])
+        fan_out[assertion_id].add(record_id)
+        blocks_by_record.setdefault(record_id, set()).add(
+            block_by_assertion[assertion_id]
+        )
+
+    locality: dict[str, str] = {}
+    for raw_relation in _items(
+        record_data.get(_RELATION_FAMILY, []), "record family"
+    ):
+        relation = _obj(raw_relation, "record")
+        relation_id = _word(relation.get("id"), "record ID")
+        own = blocks_by_record.get(relation_id, set())
+        endpoints: set[str] = set()
+        for end in ("source_id", "target_id"):
+            target = relation.get(end)
+            if isinstance(target, str):
+                endpoints |= blocks_by_record.get(target, set())
+        locality[relation_id] = (
+            "UNDERIVED" if not own else "LOCAL" if own <= endpoints else "NON_LOCAL"
+        )
+
+    counts = {assertion_id: len(seen) for assertion_id, seen in fan_out.items()}
+    distribution: dict[str, int] = {}
+    for count in counts.values():
+        key = str(count)
+        distribution[key] = distribution.get(key, 0) + 1
+    hubs = sorted(
+        (
+            (-count, assertion_id)
+            for assertion_id, count in counts.items()
+            if count
+        )
+    )[:_CENSUS_TOP_HUBS]
+    return {
+        "assertion_fan_out": dict(sorted(counts.items())),
+        "fan_out_distribution": dict(
+            sorted(distribution.items(), key=lambda item: int(item[0]))
+        ),
+        "non_local_relations": sum(
+            1 for value in locality.values() if value == "NON_LOCAL"
+        ),
+        "relation_locality": dict(sorted(locality.items())),
+        "top_hubs": [
+            {
+                "assertion": assertion_id,
+                "block": block_by_assertion[assertion_id],
+                "records": -negated,
+            }
+            for negated, assertion_id in hubs
+        ],
+    }
+
+
 def _formalized_slots(
     derivations: list[dict[str, object]],
     modality_by_assertion: dict[str, str],
@@ -628,6 +710,12 @@ def adapt_document_assertions(
         "blocks_reviewed": len(reviewed),
         "blocks_total": len(blocks),
         "capture_sha256": capture_identity,
+        "derivation": _derivation_census(
+            derivations,
+            {assertion_id: block for _, assertion_id, block, _ in checked},
+            record_data,
+            records_by_id,
+        ),
         "gaps_by_kind": dict(sorted(gaps_by_kind.items())),
     }
     return DocumentAssertionCompilation(
