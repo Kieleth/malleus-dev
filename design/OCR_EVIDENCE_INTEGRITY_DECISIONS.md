@@ -236,3 +236,29 @@ the first conformance run that contradicts them.
 2. Section 11 must state when the metric declaration freezes (C3).
 3. The source-class declaration object needs a name and a schema (C8).
 4. The staleness section must carry both planes (C7).
+
+## F. Upstream defect recorded from the paper stream, 2026-09-05
+
+**F1. Letter-spaced runs in PDF text layers are a damage class this profile
+must handle.** The paper's frozen reading (pypdf 6.16.2, `PdfReader(strict=True)`
+plus `extract_text()`, 186 blocks) carries a space between letters wherever the
+PDF positions characters individually: a byline name arrives as
+`S a t i s h C . S i n g h`, and 27 of the 186 blocks carry a run of five or
+more spaced characters, almost all in the byline, the acknowledgements and the
+reference list. A producer bound to verbatim capture cannot record such a name
+without reconstructing it, and reconstruction is invention, so the paper cell
+run-04 recorded 20 `REQUIRED_FIELD_ABSENT_IN_SOURCE` gaps for exactly these
+spans and the manuscript declares the limit (section 4.5). Nothing in Core or
+in the packs is wrong here; the damage is in the reading.
+
+Recorded as an owner decision for this profile, not for the paper: the frozen
+reading stays as it is, because every cell, manifest and review is pinned to
+its digest. The pragmatic fix belongs to this profile's extraction path:
+detect letter-spaced runs mechanically (a run of single characters separated by
+single spaces above a length threshold is unambiguous in Latin text), keep the
+text layer as one extraction candidate beside raster OCR, and reconcile a
+damaged span against the other candidate before it enters a reading, recording
+the reconciliation as an evidence operation with both candidates retained. A
+span that no candidate renders legibly stays a gap. The threshold, the
+reconciliation rule and its evidence shape are open until the first adapter
+stresses them (section D applies).
