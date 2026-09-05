@@ -1931,6 +1931,20 @@ class TestSkillsAreInstallable:
                 "raises it"
             ),
             (
+                "A quantity, count, ratio or claim the source reports about a "
+                "named thing carries that thing as its `subject`, formalized "
+                "by the sentence that names it"
+            ),
+            (
+                "the subject is never folded into `quantity_kind` or the "
+                "record's name"
+            ),
+            (
+                "a record whose subject the reading does not name in the "
+                "formalizing sentence leaves `subject` unset and the census "
+                "counts it"
+            ),
+            (
                 "A relation's endpoints are formalized by an assertion whose "
                 "statement names both of them"
             ),
@@ -1939,6 +1953,11 @@ class TestSkillsAreInstallable:
                 "gap, not a derivation from a neighbouring sentence"
             ),
             "The census also reports derivation",
+            (
+                "subject coverage under `subject_coverage`: per type the "
+                "compiled contract declares as carrying `subject`, how many "
+                "records name one and how many do not"
+            ),
             "reported and never refused",
             "explicit evidence-bearing operation",
             "typed gaps",
@@ -2198,6 +2217,18 @@ class TestSkillsAreInstallable:
         }
         assert set(assertion["gaps"][0]) == {"kind", "statement"}
         assert set(template["records"]) == {"entities", "events", "relations"}
+        by_id = {
+            record["id"]: record
+            for family in template["records"].values()
+            for record in family
+        }
+        assert by_id["object:A"]["properties"]["name"] == "object A"
+        assert by_id["event:inspection:1"]["properties"]["subject"] == "object:A"
+        assert {
+            "path": ["properties", "subject"],
+            "record_id": "event:inspection:1",
+        } in capture["assertions"][1]["formalized_by"]
+        assert "object A" in capture["assertions"][1]["statement"]
         assert set(template["records"]["entities"][0]) == {
             "id",
             "properties",
@@ -2268,6 +2299,12 @@ class TestSkillsAreInstallable:
             "FULLY_FORMALIZED": 1,
             "PARTLY_FORMALIZED": 1,
             "UNFORMALIZED": 0,
+        }
+        assert census["subject_coverage"] == {
+            "by_type": {},
+            "total": 0,
+            "with_subject": 0,
+            "without_subject": 0,
         }
 
     def test_nascent_playbook_names_live_python_and_cli_surfaces(
