@@ -2897,3 +2897,48 @@ are frozen at `paper-v4/evaluation-v4/run-05/review-input-manifest.json`; no
 preliminary review exists yet and nothing here is paper evidence until Luis
 ratifies a review record. No comparison with run-02 or run-04 is made: run-04's
 runner is blocked on Core-10, and one cell per model is one observation.
+
+### E-0132, run-05's review is ratified as recorded
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-05/review-record.human.md` (sha256:605dfe7a206cf6173e52aa64bdd7dd261bff7affb7b4ba08c66846800a55ff4a),
+its preliminary form `review-record.preliminary.md`, the frozen inputs at
+`paper-v4/evaluation-v4/run-05/review-input-manifest.json`, and the private
+launch log.
+
+Review: a fresh Claude Opus 5 session (CLAUDE_PRELIMINARY,
+`actor:claude-preliminary-run-05`, the same deviation from CODEX_PRELIMINARY the
+run-02 manifest records) judged all 29 rows against the selected reading alone
+and completed at 2026-09-05T00:49:13Z. Responsiveness: CQ-01 RESPONSIVE, CQ-02
+PARTIAL, CQ-03 RESPONSIVE, CQ-04 PARTIAL. Support: 24 rows SUPPORTED, 5 PARTIAL,
+none UNSUPPORTED, none NOT_EVALUABLE. The five PARTIAL rows are three witnesses
+(an imported pore-pressure threshold recorded without attribution; an
+approximate saturation pressure recorded as an exact closed interval with empty
+uncertainty; a Method record named from a differently numbered model). Three
+rows rest on a reading block their derivation does not cite and were judged on
+the reading with the gap noted in the rationale. The validator accepted the
+record on its first run; no judgment was changed for it.
+
+Ratification: Luis ratified the record as recorded, in chat on 2026-09-05, after
+the overseer presented every verdict, the support counts, the PARTIAL rows and
+the derivation-reach notes. The human record carries status HUMAN_RATIFIED,
+disposition RATIFIED_AS_RECORDED, completed at 2026-09-05T00:58:22Z, and validates with human
+ratification required. This is the second ratified review record of the paper,
+after run-02's.
+
+Defect on the harness side: `review-task.md` for run-05 carried run-02's row
+counts on a wrapped line the freeze substitution missed; the reviewer judged the
+actual rows, which the manifest and validator enforce, and the line was
+corrected after the review (commit 1580b79). The task file is not a
+digest-bound material.
+
+Cost: review 150,194 harness-reported tokens (Opus 5), recorded in the private
+`usage.json` beside the producer's 382,952; the public `results/usage.json`
+stays at its frozen producer-only content.
+
+Non-claim: one ratified cell per model is one observation. The PARTIAL
+responsiveness on CQ-02 and CQ-04 names representation limits (no field for the
+position relative to the ridge axis; no field for the volume change or the
+extensional stress), which are modelling choices under the packs as pinned, not
+support failures.
