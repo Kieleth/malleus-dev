@@ -4062,3 +4062,25 @@ Iteration 4 is decided: the projected subject (Core-16) and the review task v4.
 
 Non-claim: one cell per iteration; the preliminary record is not paper
 evidence until ratified.
+
+### E-0152, correction to E-0151: relation rows are not projected empty
+
+Date: 2026-09-05
+
+Sources: `private/paper-v4-v4-run-10/query/query-result.json` and
+`private/paper-v4-v4-run-11/query/query-result.json`, checked by script after
+E-0151 was written; `handover/2026-09-05-v45-rca.md` section 5 as corrected.
+
+E-0151 repeats one reviewer's report that RELATION rows "project an empty
+relation record". Checked: run-11's 35 relation rows all carry
+`relation_type` (21 also `spatial_qualifier`, 4 `contribution_role`) and
+run-10's 16 all carry `relation_type`; the projector omits only fields the
+relation record does not have. The reviewer read a key relation rows do not
+carry. There is no harness defect of that kind, since v3 or otherwise; the
+sentence in E-0151 and the corresponding item of the RCA are withdrawn, and the
+RCA is corrected in place. The reviewer's row judgments stand as recorded; the
+rationales say what they judged.
+
+The overseer wrote the claim into the entry before checking it against the
+artifact, which is the error E-0134 recorded once already. The check that
+should precede such a sentence is one script over the frozen result.
