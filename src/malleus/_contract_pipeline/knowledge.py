@@ -227,6 +227,20 @@ def _thaw(value: object) -> object:
     return value
 
 
+def _staged_properties(properties: Mapping[str, object]) -> dict[str, object]:
+    """Hand the staged graph plain containers, not the frozen change-set view.
+
+    A change set freezes list values into tuples so operations compare and
+    hash by identity. The ontology validator accepts only ``list`` for a
+    multivalued slot, so a shallow copy would refuse every multivalued
+    property at admit. Thaw the whole value instead.
+    """
+
+    thawed = _thaw(properties)
+    assert isinstance(thawed, dict)
+    return thawed
+
+
 def _text(value: object, detail: str) -> str:
     if not isinstance(value, str) or not value:
         raise ValueError(detail)
@@ -1915,19 +1929,19 @@ class KnowledgeChangeHistory:
                 result = staged.create_entity(
                     operation.record_type,
                     operation.record_id,
-                    dict(operation.properties),
+                    _staged_properties(operation.properties),
                 )
             elif operation.operation_type == "CREATE_EVENT":
                 result = staged.create_event(
                     operation.record_type,
                     operation.record_id,
-                    dict(operation.properties),
+                    _staged_properties(operation.properties),
                 )
             elif operation.operation_type == "CREATE_EVENT_PARTICIPATION":
                 result = staged.create_event_participation(
                     operation.record_type,
                     operation.record_id,
-                    dict(operation.properties),
+                    _staged_properties(operation.properties),
                 )
             elif operation.operation_type == "CREATE_RELATION":
                 assert operation.source_id is not None
@@ -1937,7 +1951,7 @@ class KnowledgeChangeHistory:
                     operation.record_id,
                     operation.source_id,
                     operation.target_id,
-                    dict(operation.properties),
+                    _staged_properties(operation.properties),
                 )
             else:  # guarded by KnowledgeChangeSet.from_bytes
                 raise AssertionError(

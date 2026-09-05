@@ -1,13 +1,16 @@
 """Mechanical guards for couplings that can return without a test.
 
-Two invariants live here. No Python file under ``src`` or ``tests`` may name a
-handover path, because a handover directory is archived evidence and never a
+Three invariants live here. No Python file under ``src`` or ``tests`` may name
+a handover path, because a handover directory is archived evidence and never a
 fixture. Every fixture manifest must match the bytes of the members it pins,
-because nothing else recomputes those digests.
+because nothing else recomputes those digests. Every staged graph write in the
+knowledge history must thaw the change set's frozen properties, because a
+shallow copy refuses every multivalued slot at admit.
 """
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 from pathlib import Path
@@ -18,6 +21,15 @@ ROOT = Path(__file__).resolve().parents[3]
 FIXTURES = ROOT / "research" / "ontology_driven_kg_realization" / "fixtures"
 SCANNED_ROOTS = ("src", "tests")
 SELF = Path(__file__).resolve()
+KNOWLEDGE = ROOT / "src" / "malleus" / "_contract_pipeline" / "knowledge.py"
+STAGED_WRITE_METHODS = frozenset(
+    {
+        "create_entity",
+        "create_event",
+        "create_event_participation",
+        "create_relation",
+    }
+)
 HANDOVER_PATH = re.compile(
     r"handover/|[\"']handover[\"']\s*/|/\s*[\"']handover[\"']"
 )
@@ -92,3 +104,41 @@ def test_every_fixture_manifest_matches_its_members_bytes() -> None:
                     f"{label}: byte-length drift for {relative}: "
                     f"pinned {member['bytes']}, found {len(content)}"
                 )
+
+
+def test_staged_writes_thaw_the_frozen_change_set_properties() -> None:
+    """Every staged graph write must thaw the operation's frozen properties.
+
+    A change set freezes list values into tuples. The ontology validator
+    accepts only ``list`` for a multivalued slot, so a shallow ``dict()``
+    copy refuses every multivalued property at admit. Nothing else catches
+    the shallow copy: a population without a list-valued property replays
+    either way.
+    """
+
+    source = KNOWLEDGE.read_text(encoding="utf-8")
+    tree = ast.parse(source, filename=str(KNOWLEDGE))
+    writes = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr in STAGED_WRITE_METHODS
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id == "staged"
+    ]
+
+    assert len(writes) == len(STAGED_WRITE_METHODS), (
+        "the staged write sites moved: "
+        f"{sorted(call.func.attr for call in writes)}"
+    )
+    for call in writes:
+        argument = call.args[-1]
+        assert (
+            isinstance(argument, ast.Call)
+            and isinstance(argument.func, ast.Name)
+            and argument.func.id == "_staged_properties"
+        ), (
+            f"staged.{call.func.attr} at line {call.lineno} does not thaw the "
+            "operation properties"
+        )
