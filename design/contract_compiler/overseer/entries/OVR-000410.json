@@ -1,0 +1,85 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:0509df9a6b28ee093e5d08d5d8214a7e9ce10a4a598c8e525c83c306195c2691",
+        "before_digest": "sha256:9f37686fd809dfac4fd2eac6fd570cf51fa4029dd16435b9a35b30e54467eba6",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:1b82bde3fb64bbb2e40c7deda727a8415cd1c6b0c2a17299b5e5b3d438e88e8b",
+        "before_digest": "sha256:899d16e6775d59b678fc74b4a4f6107bb0cdd0ad4679e7f1da29507f8f712937",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:e91737af6d8dafcddd399d76ced853eb8fbb4409389b3ec3cbabdf2f84dfcf44",
+        "before_digest": "sha256:50b84d715b7f9d493ab39e6579c85e524b837fa4b7ceed95c071a4bc7505af78",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:6b40ee1bc0a2d2492764fa43e756def184cae4a71d172ac63e026ed111f60cc2",
+        "before_digest": "sha256:bfcdd78d4186c86f3457929691270ca8e5f914c3c1cd845bdc3eb892fccee217",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:f5c3faf05bb482cdc1d8ef37cce85cde4b3fad0f2f512446901f8d6df139bb9a",
+        "before_digest": "sha256:d9abead163e076d5345b3c975bce8e7c90d2b4da1896c7fd68236ceca971cc72",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:bb741800452fa8b707d7eef40d968d98fb9e845b8ff2920c9eb93f514071459c",
+        "before_digest": "sha256:02195661e6806d380165b6870f4ad3b47979bac50f799f2bf3fb0c865040d4f1",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:5930999e74fe444197ed4861df656826a9c32141ea6d1c723ddf3a9bccd6cc34",
+  "entry_id": "OVR-000410",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f24828629a19e320e6e71a39dc234403d28de5a5348268afacad8a831c56d642",
+  "recorded_at": "2026-09-05T11:45:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "6180ba75575b865f33e2616daaa8ce232b3ab1b5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f2169a0f5f8f1137e914a7f902f72df2701e0bc2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000409",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 410,
+  "subject": {
+    "id": "subject-named-by-any-of-its-names",
+    "type": "DOCUMENT"
+  },
+  "summary": "The subject check accepts the subject entity's name or any of its tags, compared with whitespace removed from both sides; the skill says where the source's other forms go.",
+  "why": "Run-10 refused 35 of its 130 subjects with SUBJECT_NOT_NAMED. Classified from the capture: 14 genuinely unnamed in the sentence that formalizes them, 7 aliases (\"Mid-Atlantic Ridge\" named, \"the MAR\" written), 8 partial names (\"Oceanic crust\" named, \"crust\" written), 6 whitespace artefacts (\"CO2\" named, the text layer printing \"CO 2\"). Twenty-one of the thirty-five are the check being more literal than names are and none is a wrong subject: a source uses a short form after introducing a thing in full. The adapter now reads every form the subject record carries, its name and each member of tags, and accepts a statement that writes any of them; both sides drop whitespace rather than collapsing it, case-folded as before, so a name the text layer breaks matches its own bytes. tags is a root slot on Describable, which Entity mixes in, so no slot is added. SUBJECT_NOT_NAMED stands and names every form tried. Decision 20 carries the limits: no fuzzy or semantic matching, a pronoun or an unrepeated antecedent still leaves subject unset and the census counts it, the residual 14, and a tag is not a second name for query projection. Additive, so research stays at 0.5.0."
+}
