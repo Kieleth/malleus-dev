@@ -402,7 +402,7 @@ Haiku 4.5 accepted at attempt 01 in 89 seconds and 90,064 tokens: 2,687 facts, t
 
 ### Run-17, population and first runner attempt (21:19Z to 21:20Z)
 
-Haiku 4.5 wrote 8 assertions over 7 blocks, 9 records (5 ridge segments, 1 campaign, 1 aggregate earthquake event, 2 relations), no nothing-assertable declaration, 178 blocks untouched, and stopped with "the parent can now assess coverage and request expansion if needed", a step the protocol does not have. Runner attempt 1 refused all eight assertions NOT_VERBATIM in one aggregated diagnostic: every statement is a clean retyped sentence ("The MAR here spreads at a half-spreading rate of 16 mm/yr.") that is not a byte span of its block. Run-06 met the same defect one statement per refusal and spent both returns on it; the v4.9 skill states the slicing method and the aggregation names all eight at once. Returned as structural diagnostic 1 of 2 at 21:20Z. Whether the skill's method reaches a Haiku producer on a return is what the second attempt measures.
+Haiku 4.5 wrote 8 assertions over 7 blocks, 9 records (5 ridge segments, 1 campaign, 1 aggregate earthquake event, 2 relations), no nothing-assertable declaration, 179 blocks untouched (written as 178 at the time, corrected by E-0177), and stopped with "the parent can now assess coverage and request expansion if needed", a step the protocol does not have. Runner attempt 1 refused all eight assertions NOT_VERBATIM in one aggregated diagnostic: every statement is a clean retyped sentence ("The MAR here spreads at a half-spreading rate of 16 mm/yr.") that is not a byte span of its block. Run-06 met the same defect one statement per refusal and spent both returns on it; the v4.9 skill states the slicing method and the aggregation names all eight at once. Returned as structural diagnostic 1 of 2 at 21:20Z. Whether the skill's method reaches a Haiku producer on a return is what the second attempt measures.
 
 ### Run-17, second runner attempt (21:22Z to 21:23Z)
 
@@ -415,3 +415,21 @@ An observation for Core-19: this refusal is a raw `ValueError` from `kg.py`'s re
 Attempt 3 refused GAP_REQUIRED: the second correction stripped every assertion of its targets and left none with a gap; the reason named one, all eight are empty. Terminal, as runs 06 and 07 at v4.1, one stage later. E-0176; RCA at `handover/2026-09-05-run-17-haiku-rca.md`. Producer 151,411 tokens. The v4.9 skill's methods reached the producer (byte spans on one return, no constructed block id, no fabricated standard); its rules without method did not (validate against the surface; a target or a gap on every assertion).
 
 The matrix pass at the settled protocol: Opus 5 three cells (R R R R; P R R P; P R P P; no UNSUPPORTED in 1,867 rows), Sonnet 5 one cell (R P P P; 2 UNSUPPORTED in 433; fifty defects returned; anchors), Haiku 4.5 one cell (refused after two returns). Core-19 dispatched 21:30Z with the four reporting fixes the two matrix cells surfaced: census block labels, locator coverage, a typed rehydration refusal, aggregated GAP_REQUIRED. No Core change touches admission semantics. Luis's rulings stand open: Claim.statement, the reviewers' lines, review protocol v3, ratification of runs 09 to 17, the locator requirement.
+
+## Core-19 landed (21:56Z): the protocol reports what is true
+
+Commits 0f4da9a (RED), c53d982 (GREEN), 8a6c3f3 (OVR-000414); decision 24; pushed after the active tests (1,143). Verified on disk: the census block map carries ASSERTED, DECLARED_NOTHING_ASSERTABLE and UNTOUCHED with three counts and `blocks_reviewed` kept as the sum with its meaning stated; `provenance_coverage` per type with total, with_locator, with_digest; `RECORDS_NOT_REHYDRATABLE` raised in the population pipeline around the rehydration message; GAP_REQUIRED lists every empty assertion. No admission semantics moved.
+
+The new census applied by script to the five frozen captures at v4.7 to v4.9 (the final capture of each cell; run-17's is the one that was refused):
+
+| cell | blocks asserted | declared | untouched | source-asserted records | with locator | with digest |
+|---|---|---|---|---|---|---|
+| run-13 | 184 | 2 | 0 | 269 | 269 | 269 |
+| run-14 | 184 | 2 | 0 | 242 | 203 | 203 |
+| run-15 | 185 | 1 | 0 | 142 | 142 | 142 |
+| run-16 | 58 | 128 | 0 | 103 | 0 | 0 |
+| run-17 | 7 | 0 | 179 | 0 | 0 | 0 |
+
+Read across the row: the Opus cells asserted 184 to 185 blocks and set locators on most source-asserted records; Sonnet asserted 58, declared 128 and set no locator; Haiku asserted 7. These are the coverage and provenance numbers the paper reports per cell, and from Core-19 on the census computes them at admission.
+
+No new cell is opened. The record cell, the licence ruling on Claim.statement, the locator requirement, review protocol v3 and the reviewers' lines are Luis's; the loop waits on them. The one cell the evidence supports without a ruling is an Opus rerun at the Core-19 coordinate so the record cell's frozen census carries these counts; it costs about 400,000 producer tokens and a review, and it should run after the rulings, not before, so that it is run once.

@@ -5783,3 +5783,19 @@ rehydration refusal is untyped, and GAP_REQUIRED is not aggregated.
 
 Non-claim: this is one session on one document; it measures the protocol's
 reach into a small producer, not the model.
+
+### E-0177, correction to E-0176: run-17 left 179 blocks untouched, not 178
+
+Date: 2026-09-05
+
+Sources: `private/paper-v4-v4-run-17/producer/work/document-population.json`
+(8 assertions naming 7 distinct blocks, no nothing-assertable list), the
+Core-19 census rule applied by script to the five frozen captures
+(`handover/2026-09-05-overseer-journal.md`, "Core-19 landed").
+
+E-0176 said 178 blocks untouched, taken from the producer's report of "8
+blocks"; two of its eight assertions name one block, so 7 blocks are asserted
+and 179 of 186 are untouched. `handover/2026-09-05-run-17-haiku-rca.md` and
+the journal are corrected in place with a note; E-0176 stands as written with
+this entry beside it. Same rule as E-0134, E-0152 and E-0160: the figure
+entered the record from a report before the script ran.

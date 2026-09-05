@@ -7,7 +7,7 @@ Overseer session. The second matrix cell: no change under test, the producer's m
 | measure | run-06, Haiku at v4.1 | run-07, paired Haiku at v4.1 | run-17, Haiku at v4.9 |
 |---|---|---|---|
 | ontology | accepted at attempt 02 (a fabricated ISO standard cited) | accepted | accepted at attempt 01 (three institution home pages cited as vocabularies; nothing fabricated) |
-| population | 7 assertions, 5 declared, 174 untouched | (E-0130) | 8 assertions over 7 blocks, 0 declared, 178 untouched |
+| population | 7 assertions, 5 declared, 174 untouched | (E-0130) | 8 assertions over 7 blocks, 0 declared, 179 untouched (E-0176 said 178; corrected by E-0177) |
 | runner refusals | envelope keys; a phantom block id; a paraphrase (one per refusal) | (E-0130) | all 8 NOT_VERBATIM (aggregated); rehydration (6 unknown properties, a missing required slot, 2 enum values); GAP_REQUIRED (all 8 assertions empty) |
 | terminal | refused after two returns | refused after two returns | refused after two returns |
 | producer tokens | 137,734 | (pair 265,340) | 151,411 |
