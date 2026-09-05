@@ -65,3 +65,20 @@ Environment:
 2. Deep sweep for defects and appendix evidence (dispatched 2026-09-05; deliverables under `paper-v4/appendix-evidence/` and `handover/2026-09-05-deep-sweep.md`).
 3. The anchors design once the three answers arrive.
 4. Manuscript 1.5: the matrix under the final protocol, early trials in the appendix.
+
+## Run-04's 61 typed gaps, read by cause (2026-09-05)
+
+Source: `private/paper-v4-v4-run-04/results/gaps.json` (withheld; carries the producer's gap statements). Grouped by what would remove the gap, not by kind:
+
+| cause | gaps | kinds | what would remove them |
+|---|---|---|---|
+| A value the source marks approximate has to be stored as an exact bound pair | 25 | INTERVAL_NOT_EXPRESSIBLE | a value qualifier on the metrology pack's quantity value (approximate, about, open bound, exact); the same limit produced run-05's 0.7 GPa PARTIAL at review |
+| A year-only date has no place on an Event, whose `occurred_at` is a datetime | 1 | INTERVAL_NOT_EXPRESSIBLE | temporal precision on events, as chronology's Instant already carries; adjacent to the anchors and participation design |
+| The text layer destroyed letter spacing in bylines, references and one award number | 20 | REQUIRED_FIELD_ABSENT_IN_SOURCE | nothing in Core: the reading is frozen for the paper; a source limit to report, confined to bylines and references, none in domain content |
+| The producer's own ontology made `structure_kind` required and the source names faults without a kind | 1 | REQUIRED_FIELD_ABSENT_IN_SOURCE | the producer's choice; honest gap |
+| Figure panels and legends flattened to axis labels; groups described by depth range without a count | 8 | AGGREGATE_ONLY | nothing: figures are excluded by the question scope and a "majority" without a count is correctly not a count |
+| No contribution-role vocabulary in the research pack | 2 | TYPE_ABSENT | a grounded role enumeration (the CRediT contributor roles are a published NISO taxonomy) on the research pack's contribution relation |
+| Statements about the publication process (competing interests, reprints, a funding programme with no award) | 3 | TYPE_ABSENT | nothing: out of the domain by design |
+| The source never states whether two named hydrothermal features are one | 1 | RELATION_ABSENT | nothing: the correct gap |
+
+Reading: 26 of 61 gaps are two pack limits (approximation and event-date precision), 2 are one missing vocabulary, 20 are the text layer, and 13 are the protocol working as designed. Run-02 under v4 reported 84 AGGREGATE_ONLY gaps against run-04's 8 under v4.1; the derivation rule and the revised packs changed what the producer counted as a gap, so the two figures are not comparable as coverage.
