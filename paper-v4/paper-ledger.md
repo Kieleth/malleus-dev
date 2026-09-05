@@ -4971,3 +4971,147 @@ What the reviewers could not decide under the task, for ratification:
   protocol's labels have no slot for precision.
 
 Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
+
+### E-0166, run-15 opens v4.9: one row per witness per question, projected through the record's own type
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-15/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `native_query.py`, `offline_validation.py`,
+`offline-validation.json`, `test_contract.py`, `test_pipeline.py`,
+`paper-v4/evaluation-v4/review-task-v4.template.md`,
+`paper-v4/evaluation-v4/run-15/review-record.blank.md`,
+`handover/2026-09-05-overseer-journal.md` (iteration 6, RCA before the review;
+iteration 6 closed), and E-0160 to E-0165.
+
+Iteration: run-15 is the tenth iteration of the v4 protocol, `v4.9`. The
+protocol shape does not change and the producer does not change. Core does not
+change either: run-15 pins the coordinate run-14 pinned,
+`dc5254795a78648591d3a1b0bcf602af8d443dc1`, so all eight Core change entries are
+carried and every one of them reads as landed at a fixed coordinate. Run-04 to
+run-14 are the eleven cells this iteration follows; none is superseded, repaired
+or reinterpreted, and the frozen artifacts of every closed cell, run-14's
+included, are digest-pinned by `run-15/test_contract.py`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default
+and neither pinned nor observed. The model is run-04's through run-14's, so the
+model is not the variable.
+
+Coordinates: `pin.py --commit dc5254795a78648591d3a1b0bcf602af8d443dc1` pins that
+commit, tree `a712e938be28e4929e50f3a6a419f94ec57d3d0a`, governance head
+`OVR-000413` at `sha256:b2196bcc…`, which is Core-18's entry and the v4.8 head.
+The gate status reads `PINNED_TO_THE_V4_9_CORE_COORDINATE`. The pin still reads
+the adapter by AST at the pinned commit and refuses if the word-bounded
+predicate is not at both subject sites or a membership test against a statement
+is back at either; it records `_occurs_as_word` at both and an empty list of
+substring sites. None of the eight declared inputs moved against run-14's
+manifest, the skill included, which is what "Core does not move this cell"
+means at the byte level. The interface coordinates are new:
+`capture:paper-v4:yu-2025:v4:15` and `plan:paper-v4:yu-2025:v4:15`, the runner
+will execute under `actor:overseer-run-15` with the reading artifact
+`artifact:selected-reading:yu-2025:v4:15`, and the private workspace is
+`private/paper-v4-v4-run-15/producer`.
+
+All twenty-one of run-14's `changes` entries are carried forward and marked
+`carried_from: run-14`. Eight of them are Core's and are read at fixed commits:
+`CORE_12_DERIVATION_CHECKS` at the v4.1 baseline, `PACKS_0_3_0` at run-08's
+expected versions, `SUBJECT_ELEMENT` at the v4.3 coordinate `f6c8c71`,
+`CORE_14_MODALITY_SOURCE_OF_TRUTH` between the v4.3 and the v4.4 coordinates,
+`CORE_15_SUBJECT_ALIASES` between the v4.4 and the v4.5 coordinate `9d789f2`,
+`CORE_16_PROJECTED_SUBJECT` between the v4.5 and the v4.6 coordinate `90abc79`,
+`CORE_17_PROJECTION_WITHDRAWN` between the v4.6 and the v4.7 coordinate
+`12a04a9`, and `CORE_18_NAME_AS_WORD`, which was run-14's change under test and
+is now read between the v4.7 coordinate and the v4.8 coordinate `dc52547`, the
+way run-14 carried Core-17. `SUBJECT_TAGS_PROJECTED` is carried too: the tags
+edit is unchanged inside this cell's executor, and what it now projects tags
+beside is the subject record's own type's fields.
+
+One entry is this iteration's, and it is the harness's:
+
+1. `ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION`, subject
+   `paper-v4/experiment-v4/run-15/native_query.py`, kind `REMOVAL`, `defect_of:
+   run-13`. Within one question, rows with the same witness are one row. A
+   witness is the row's kind plus its record ids: `record_id` for an ENTITY row,
+   `record_id` and `subject_id` for a SUBJECT row, `relation_id` with both
+   endpoint ids for a RELATION row. The row projects the fields of the witness
+   record's own type as the surface declares them and never the case's: for a
+   SUBJECT row each side through its own record's type, for a RELATION row the
+   relation's own type and each endpoint's own type. It records every case
+   ordinal that produced it as `case_ordinals`, sorted, in place of
+   `case_ordinal`, and the rows of a question are ordered by the first ordinal
+   that produced them. The query-result schema moves to
+   `malleus.paper-v4.query-result/v3`. The per-type projections are read back out
+   of the binding, where `bind_from_surface.py` already wrote one list per record
+   type off the accepted surface and repeated it in every case naming that type,
+   so the binder does not change and the binding frozen at acceptance with its
+   `cases_sha256` stays the executed binding's proof. A type the binding projects
+   two ways, and a record whose own type the binding never names, are both
+   refused rather than guessed past. The subject's tags stay projected on the
+   subject side (E-0156). Nothing else in the executor moves. Cause:
+   `handover/2026-09-05-overseer-journal.md`, iteration 6 RCA before the review,
+   and E-0161. Measured on the frozen query results before this cell was built,
+   by re-running this cell's executor against run-13's and run-14's frozen
+   ledgers and their frozen bindings: run-13's 515 rows carry 152 repeats of a
+   witness inside one question, 93 with identical projections and 59 the same
+   record projected under a parent type's case with fewer fields, and 515 rows
+   become 363; run-14's 919 carry 44 such re-projections and become 875 (187,
+   186, 301, 201 against 190, 195, 323, 211), with 389 witnesses traced before
+   and after. On both cells exactly three records, `ratio:co2-ba`,
+   `ratio:co2-rb` and `ratio:vp-vs`, get back the `statement_sha256` a parent
+   type's projection had hidden from the reviewers.
+
+The review task does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell it
+is instantiated to changes. The blank record for run-15 is run-14's with the run
+id moved and nothing else.
+
+The offline validation is carried and extended. `offline_validation.py` re-runs
+the v4.4 ENTITY restriction on run-09's frozen record and returns the carried
+counts unchanged, because the binder did not move: 630 of run-09's 1,466 rows
+kept (58, 319, 131, 122), 618 SUPPORTED, 12 PARTIAL, none unjudged. Beside them
+it now applies this cell's removal to exactly those kept rows: 630 become 463
+(54, 168, 123, 118), 167 re-projections removed, 456 SUPPORTED and 7 PARTIAL,
+and no collapsed row carried a label the surviving row did not. Before and
+after, in one line: 630 rows kept, 463 after one row per witness per question.
+That is a bound on the review of another cell's rows, not evidence about v4.9.
+
+Measurement: run-15 is measured against run-14's 919 admitted rows (190, 195,
+323, 211; 427 ENTITY, 82 RELATION, 410 SUBJECT) over 389 witnesses and 461
+traced records, admitted at the second runner attempt after one structural
+return, and against the 44 within-question repeats measured in them. The rows,
+the rows by question, the rows by kind and the census are in run-14's own public
+launch log, the witness count is in its query trace summary, and the producer's
+439,761 tokens are in its public cost record; `test_contract.py` recomputes all
+of them. Run-14's subject coverage, 132 of 203 with nothing derived (17
+attachable, 21 ambiguous, 33 unnamed), is carried because it is the figure the
+last change moved; it is not what this one touches. Run-14's preliminary review
+is E-0165: PARTIAL, RESPONSIVE, RESPONSIVE, PARTIAL, 897 SUPPORTED, 22 PARTIAL,
+no UNSUPPORTED. It is recorded as preliminary and unratified, and it is what
+decided this cell's change.
+
+Expected, stated before the run: no witness appears twice in one question; no
+record's digest is hidden by a parent-type projection; the row count falls by
+the within-question repeats and by nothing else. Falsifier: a row count that
+falls by anything other than the within-question repeats, which any frozen cell
+can check by re-running the executor. The removal runs after replay and the
+producer never sees the executor, so the change can cost no runner return.
+
+What this cell does not touch: the cross-question repeats. 484 of run-14's
+witnesses are returned by more than one question, the 84 bibliographic works
+twice, the 40 features three times, the 44 agents once. A catalogue returned
+whole by every question whose type set names its type is the evaluator's
+judgement at ontology acceptance, recorded in run-14's
+`query-type-sets.note.json`, and the executor is not changed for it. The same
+goes for `GeologicEvent`, which run-14's surface carried and no type set named:
+its one admitted record reached no row, as the event type did in runs 12 and 13.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-15, and
+`ontology-run/` and `results/` carry only a keepfile. The 44 and the 152 are
+counts on run-14's and run-13's graphs, made by re-running this cell's executor
+against their frozen ledgers; they say nothing about the graph run-15's producer
+will build. Whether the removal holds is open, and run-15 is one cell that will
+be one observation, not a measurement, until it has run to ratification.
