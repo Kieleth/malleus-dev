@@ -1,0 +1,35 @@
+# source: src/malleus/_contract_pipeline/document.py, lines 274-304
+# read at commit: dc52547 (Core-18, decision 23, OVR-000413)
+# One predicate at both sites, the SUBJECT_NOT_NAMED check and the census.
+# It replaced a whitespace-free substring test that had no word boundary.
+_LETTER = r"[^\W\d_]"
+
+
+def _occurs_as_word(form: str, statement: str) -> bool:
+    """Whether one form of a subject occurs in a statement as a word.
+
+    The form's non-whitespace characters occur in the statement in order, with
+    any whitespace between them, case-folded on both sides, and the character
+    before the first and the character after the last are not letters. Digits,
+    punctuation, whitespace and the ends of the statement bound a word, so a
+    citation number the text layer glues on, "lithosphere13", still names its
+    entity, and a form the page spaces out, "R C 2" for RC2, still matches its
+    own bytes. A form inside another word does not name anything: eight of
+    run-12's fifteen projected subjects were the entity's three-letter tag
+    found inside a longer word, RTI inside "vertical", OCC inside "occur",
+    MAR inside "mark". Neither side is rewritten; the comparison alone ignores
+    the whitespace and the case.
+    """
+
+    return (
+        re.search(
+            f"(?<!{_LETTER})"
+            + r"\s*".join(
+                re.escape(character)
+                for character in "".join(form.casefold().split())
+            )
+            + f"(?!{_LETTER})",
+            statement.casefold(),
+        )
+        is not None
+    )

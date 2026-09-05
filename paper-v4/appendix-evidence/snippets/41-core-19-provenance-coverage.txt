@@ -1,0 +1,40 @@
+# source: tests/contract_compiler/pareto/test_document_assertion_adapter.py,
+#         lines 1381-1399 and 1402-1417
+# read at commit: 8a6c3f3 (Core-19, decision 24, OVR-000414)
+# The second reporting fix: how many source-asserted records carry the route
+# back to their sentence. Which types carry it is a contract question.
+    """Run-16 admitted 194 records and not one carried `assertion_locator` or
+    `statement_sha256`, so DIGEST_MISMATCH and DIGEST_NOT_LOCATED never ran and
+    the review wrote no digest token on any row; runs 13 to 15 carried 269, 203
+    and 142. The slots stay optional and the count makes the silence visible at
+    admission. Reported, never refused."""
+
+    capture, records = _locator_bearing()
+
+    result = _adapt_with_contract(capture, records)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["provenance_coverage"] == {
+        "by_type": {
+            "Observation": {"total": 2, "with_digest": 0, "with_locator": 1}
+        },
+        "total": 2,
+        "with_digest": 0,
+        "with_locator": 1,
+    }
+# ...
+def test_document_census_knows_no_locator_bearing_type_without_a_contract() -> None:
+    """Which types carry the route back to an assertion is a contract question,
+    asked exactly as the subject axis asks its own."""
+
+    capture, records = _locator_bearing()
+
+    result = _adapt_records(capture, records)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["provenance_coverage"] == {
+        "by_type": {},
+        "total": 0,
+        "with_digest": 0,
+        "with_locator": 0,
+    }

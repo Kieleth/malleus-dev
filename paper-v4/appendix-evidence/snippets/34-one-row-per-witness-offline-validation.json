@@ -1,0 +1,31 @@
+# source: paper-v4/experiment-v4/run-15/offline-validation.json, top-level
+#         fields, `totals` reduced to the row counts, and the non-claim
+# read at commit: dd55ecd (Paper-17, E-0166)
+# The executor's removal measured before it ran: run-09's 1,466 rows under
+# the ENTITY restriction and then under one row per witness per question.
+{
+ "and_change_id": "ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION",
+ "and_rule": "within one question, rows with the same witness are one row, the row projecting the fields of the witness record's own type; a collapsed row's label here is the first producing row's",
+ "change_id": "ENTITY_KIND_RESTRICTED",
+ "executes": "NOTHING",
+ "measured_on": "run-09",
+ "non_claim": "These are run-09's rows under run-15's rule, not run-15's rows. No producer has run at this cell's coordinate and no graph of its own exists. The labels are run-09's preliminary reviewers' and are not ratified. What the numbers bound is the review, not the result.",
+ "run_id": "run-15",
+ "schema": "malleus.paper-v4.run-15-offline-validation/v1",
+ "status": "COMPUTED",
+ "totals": {
+  "rows_kept": 630,
+  "rows_kept_by_label": {
+   "PARTIAL": 12,
+   "SUPPORTED": 618
+  },
+  "rows_one_per_witness": 463,
+  "rows_one_per_witness_by_label": {
+   "PARTIAL": 7,
+   "SUPPORTED": 456
+  },
+  "rows_re_projected": 167,
+  "rows_re_projected_under_another_label": 0,
+  "rows_v3": 1466
+ }
+}

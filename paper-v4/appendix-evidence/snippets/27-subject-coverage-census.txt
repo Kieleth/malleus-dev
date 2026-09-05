@@ -1,0 +1,40 @@
+# source: src/malleus/_contract_pipeline/document.py, lines 393-404, 417 and 422-440
+# read at commit: f6c8c71 (the Core coordinate run-09 pins, E-0141)
+# The other half of Core-13: one axis, reported and never refused. Which
+# types may carry a subject is a contract question. Run-09's frozen census
+# reads 106 of 212 (Observation 64 of 114, Claim 37 of 76, CountedObservation
+# 5 of 19, SeismicEvent 0 of 3) in results/census.json.
+def _subject_census(
+    record_data: dict[str, object],
+    contract_view: object,
+) -> dict[str, object]:
+    """Report how many subject-bearing records name a subject, and how many do not.
+
+    One axis, reported and never refused. ``by_type`` carries one entry per
+    subject-bearing type present in the records, each with ``total``,
+    ``with_subject`` and ``without_subject``; the three top-level counts are
+    those summed. A record whose subject the reading does not name leaves the
+    slot unset and is counted here rather than invented.
+    """
+# ...
+    bearing = _subject_bearing_types(contract_view, types)
+# ...
+        subject = _record_properties(record).get(_SUBJECT_SLOT)
+        counts = by_type.setdefault(
+            type_name, {"total": 0, "with_subject": 0, "without_subject": 0}
+        )
+        counts["total"] += 1
+        key = (
+            "with_subject"
+            if isinstance(subject, str) and subject
+            else "without_subject"
+        )
+        counts[key] += 1
+    return {
+        "by_type": dict(sorted(by_type.items())),
+        "total": sum(counts["total"] for counts in by_type.values()),
+        "with_subject": sum(counts["with_subject"] for counts in by_type.values()),
+        "without_subject": sum(
+            counts["without_subject"] for counts in by_type.values()
+        ),
+    }

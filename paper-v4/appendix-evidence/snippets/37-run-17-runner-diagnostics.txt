@@ -1,0 +1,30 @@
+# source: private/paper-v4-v4-run-17/refused-runner-attempt-0{1,2,3}/diagnostic.txt
+# read at commit: dd55ecd (the cell is refused and freezes no capture, E-0176)
+# The three refusals in the order the producer met them, each the diagnostic's
+# own text, wrapped. Attempt 1's eight NOT_VERBATIM defects are aggregated into
+# one refusal; attempt 2 is the untyped rehydration ValueError Core-19 later
+# wrapped as RECORDS_NOT_REHYDRATABLE; attempt 3 is terminal. Maximum runs
+# shared with the reading: 13, 13 and 9 characters.
+# attempt 01:
+run-17: DocumentAssertionRefusal: NOT_VERBATIM: document capture locators are not accepted:
+  assertion assertion:1 is not verbatim in page:1:block:005 [NOT_VERBATIM]
+  # ... 6 further NOT_VERBATIM defects, one per assertion, in one refusal
+  assertion assertion:8 is not verbatim in page:5:block:005 [NOT_VERBATIM]
+  # the rule the refusal states:
+  every block ID comes from the reading's inventory and every statement is
+  copied from its block's own bytes, matching after whitespace collapse
+# attempt 02:
+run-17: ValueError: Cannot rehydrate graph from records: entities[2]
+'entity:3': Unknown property 'co2_concentration_range' for RidgeSegment;
+Unknown property 'mechanism' for RidgeSegment; entities[4] 'entity:5':
+Unknown property 'co2_concentration_range' for RidgeSegment; events[0]
+'event:1': Unknown property 'count' for DeepMantleEarthquake; Unknown
+property 'depth_range' for DeepMantleEarthquake; Unknown property
+'focal_depth_range' for DeepMantleEarthquake; Unknown property 'location' for
+DeepMantleEarthquake; Required slot 'event_type' missing for
+DeepMantleEarthquake; relations[0] 'relation:event:1:entity:3': Invalid value
+'occurs_along' for relation_type; relations[1] 'relation:entity:6:entity:3':
+Invalid value 'observed_with' for relation_type
+# attempt 03:
+run-17: DocumentAssertionRefusal: GAP_REQUIRED: assertion has no
+formalization or gap: assertion:1

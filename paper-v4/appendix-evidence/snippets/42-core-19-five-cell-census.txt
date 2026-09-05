@@ -1,0 +1,13 @@
+# source: handover/2026-09-05-overseer-journal.md, "Core-19 landed (21:56Z)"
+# read at commit: dd55ecd (the new census applied by script to the five
+#         frozen captures of runs 13 to 17; run-17's is the refused one)
+# What decision 24's two reporting fixes say about the cells that forced
+# them. Coverage for the paper is blocks_asserted, not blocks_reviewed,
+# which reads 186 for run-13, run-15 and run-16 alike.
+| cell | blocks asserted | declared | untouched | source-asserted records | with locator | with digest |
+|---|---|---|---|---|---|---|
+| run-13 | 184 | 2 | 0 | 269 | 269 | 269 |
+| run-14 | 184 | 2 | 0 | 242 | 203 | 203 |
+| run-15 | 185 | 1 | 0 | 142 | 142 | 142 |
+| run-16 | 58 | 128 | 0 | 103 | 0 | 0 |
+| run-17 | 7 | 0 | 179 | 0 | 0 | 0 |

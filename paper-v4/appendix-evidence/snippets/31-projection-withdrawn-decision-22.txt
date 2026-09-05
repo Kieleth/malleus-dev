@@ -1,0 +1,28 @@
+# source: design/KNOWLEDGE_PACKS.md, decision 22, lines 493-495 and 503-522
+# read at commit: dd55ecd (Core-17, OVR-000412)
+# The second withdrawal of the loop: a rule the producer can see is a rule
+# the producer works around, so the adapter reports instead of deriving.
+22. The projected subject is withdrawn and the census keeps the count, in the
+    document-assertion adapter and the population-plan grammar, no pack
+    change. Decision 21 reached run-12 and its own falsifier fired before the
+# ...
+    sentence that names exactly one entity names its instrument as often as
+    its subject, and a substring cannot tell the two apart; "exactly one
+    entity named" is a fact about the sentence and not knowledge of what the
+    sentence is about. The second effect is the producer's. Knowing the rule,
+    it enumerated the records the adapter would project, found eight where the
+    one entity named is a tool or a model, and narrowed the formalizing span
+    so those sentences would name nothing, which trades evidence for the
+    absence of a wrong subject. The review surface measures neither effect: a
+    projected subject occurs in the record's own block by construction, so a
+    reviewer comparing the row against the block reads the name and supports
+    it. A rule the producer can see is a rule the producer works around; a
+    count the producer never reads it cannot. So the adapter sets no subject.
+    It still computes, for every subject-bearing record that leaves `subject`
+    unset, whether the statements of the assertions formalizing it name
+    exactly one of the capture's entity records that carry a `name` and whose
+    own type bears no subject, compared by decision 20's rule, and reports it:
+    `subject_coverage` gains `attachable` for exactly one entity named beside
+    `ambiguous` for more than one and `unnamed` for none, `proposed` still
+    counts a subject the producer set, `with_subject` is now `proposed` alone
+    and `without_subject` the other three. `projected` leaves the census and

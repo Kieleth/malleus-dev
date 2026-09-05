@@ -1,0 +1,36 @@
+# source: src/malleus/_contract_pipeline/document.py, lines 49-57 and 619-638
+# read at commit: f6c8c71 (the Core coordinate run-09 pins, E-0141)
+# Core-13 makes the subject of a source-asserted record a checked element.
+# The derivation rule the refusal states, then the check and the message a
+# producer receives when a subject's name is absent from the sentence that
+# formalizes it.
+_DERIVATION_RULE = (
+    "a record's assertion_locator names an assertion of this capture, a "
+    "statement_sha256 comes with the locator that checks it and is the "
+    "SHA-256 of that assertion's statement bytes, "
+    "a slot the contract declares evaluative is formalized by at least one "
+    "assertion whose modality is not HYPOTHESISED, and the name of a "
+    "record's subject occurs in the statement of an assertion that "
+    "formalizes that subject"
+)
+# ...
+        wanted = name.casefold()
+        formalizing = formalized.get(record_id, {}).get(_SUBJECT_SLOT, [])
+        if any(
+            wanted in _normalise(statements[assertion_id]).casefold()
+            for assertion_id, _ in formalizing
+        ):
+            continue
+        named = (
+            ", ".join(sorted(assertion_id for assertion_id, _ in formalizing))
+            or "no assertion"
+        )
+        defects.append(
+            _Defect(
+                DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED,
+                record_id,
+                f"record {record_id} names subject {subject}, whose name "
+                f"{name} is absent from the statement of {named}",
+            )
+        )
+    return defects

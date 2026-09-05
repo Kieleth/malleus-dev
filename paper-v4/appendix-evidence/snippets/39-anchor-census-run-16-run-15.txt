@@ -1,0 +1,16 @@
+# source: paper-v4/experiment-v4/run-1{5,6}/results/census.json, `derivation`,
+#         with the per-assertion fan-out map elided and its distribution kept
+# read at commit: dd55ecd (run-15 frozen at 139e2ab, E-0168; run-16 at
+#         1d06352, E-0172)
+# The anchor pattern as the census reports it. Run-16's producer met the
+# subject rule by attaching one naming clause to many records; the top hub
+# formalizes 17 subject fields from one block, and 20 of 32 relations derive
+# from a sentence that is not the relation's own.
+run-15:
+  non_local_relations 0 of 35
+  fan_out_distribution (records per assertion: assertions) 0:8 1:198 2:68 3:41 4:16 5:12 6:6 7:3 8:3 9:1 21:1 24:1
+  top hub assertion:349 in page:10:block:046: 24 records
+run-16:
+  non_local_relations 20 of 32
+  fan_out_distribution (records per assertion: assertions) 0:2 1:89 2:29 3:10 4:13 6:2 7:1 8:1 17:1
+  top hub assertion:136 in page:1:block:005: 17 records

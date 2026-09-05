@@ -1,0 +1,29 @@
+# source: private/paper-v4-v4-run-16/refused-runner-attempt-01/diagnostic.txt
+# read at commit: dd55ecd (the cell frozen at 1d06352, E-0172)
+# The private diagnostic is 9,665 bytes and names fifty defects in one
+# aggregation. Its head, the count per reason, the first defect of each class
+# and the closing rule sentence; nothing else, and no statement or block text.
+# The subject name forms are the diagnostic's own. Maximum run shared with the
+# reading, over the whole file: 35 characters, so nothing is elided.
+run-16: DocumentAssertionRefusal: EVALUATIVE_SLOT_NOT_EVALUATED: document capture derivations are not accepted:
+# 50 defects in one refusal:
+# 1 x EVALUATIVE_SLOT_NOT_EVALUATED
+# 4 x MODALITY_NOT_ASSERTED
+# 45 x SUBJECT_NOT_NAMED
+# the first defect of each class, in the diagnostic's own order:
+  record claim:co2-degassing-preferred evaluative slot hypothesis_disposition
+  is formalized by assertion:59 HYPOTHESISED [EVALUATIVE_SLOT_NOT_EVALUATED]
+  record obs:askja-eq-depth assertion_modality STATED is formalized by
+  assertion:52 HYPOTHESISED [MODALITY_NOT_ASSERTED]
+  record claim:cold-thick-lithosphere names subject feat:rc2, whose names
+  segment RC2, RC2, short ridge segment do not occur as words in the
+  statement of assertion:36 [SUBJECT_NOT_NAMED]
+# the rule the refusal states:
+  a record's assertion_locator names an assertion of this capture, a
+  statement_sha256 comes with the locator that checks it and is the SHA-256
+  of that assertion's statement bytes, a slot the contract declares
+  evaluative is formalized by at least one assertion whose modality is not
+  HYPOTHESISED, a name of a record's subject, its name or one of its tags,
+  occurs as a word in the statement of an assertion that formalizes that
+  subject, and a record's assertion_modality is the modality of an assertion
+  that formalizes it

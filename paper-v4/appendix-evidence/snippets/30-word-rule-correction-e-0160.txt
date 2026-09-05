@@ -1,0 +1,32 @@
+# source: paper-v4/paper-ledger.md, E-0160, lines 4577, 4581-4584, 4586-4599
+#         and 4601-4605
+# read at commit: dd55ecd
+# The correction the word rule forced on the record: the count that entered
+# the ledger from a reading, and the count the script produced.
+### E-0160, correction to E-0155 and E-0157: eight of run-12's fifteen projected subjects were in-word matches of a three-letter tag
+# ...
+Sources: `handover/2026-09-05-v46-rca.md` (correction section), the overseer
+scratchpad script `rca13_letter.py` run against
+`private/paper-v4-v4-run-12/results/population-plan.json` and the retained
+captures of runs 11, 12 and 13.
+# ...
+E-0155 read the fifteen PROJECTED derivations and called thirteen wrong; E-0157
+and the v4.6 RCA attributed them to a sentence naming its instrument as often
+as its subject. The subjects are wrong as read. The attribution is not: eight
+of the fifteen were matched by the Core-15 comparison, whitespace removed and
+case-folded, finding the entity's tag inside another word (RTI in "vertical"
+and "portion", OCC in "occur", MAR in "mark", OBS in "observations"). Of the
+seven named as a word, three attach a record to its software, one is marginal
+and three are plausible. The check tested by script: a form occurs as a word
+when it is not adjacent to a letter on either side, whitespace ignored inside
+the form, so the text layer's glued citation digits ("lithosphere13") still
+count. Under that rule the producer-set subjects of runs 11, 12 and 13 would
+have been refused 1, 0 and 2 times (run-11: "axial valley" once; run-13:
+"velocity model" against "velocity models" twice), and run-13's census would
+read 26 attachable, 43 ambiguous, 89 unnamed instead of 33, 49, 76.
+# ...
+Non-claim: the review records of runs 12 and 13 are untouched; they judge rows,
+and a row whose subject was matched inside a word was judged PARTIAL on the
+reading, which is the same outcome. The principle recorded in the v4.6 RCA
+stands on the producer's own report of narrowed spans and on three software
+attachments, not on thirteen.

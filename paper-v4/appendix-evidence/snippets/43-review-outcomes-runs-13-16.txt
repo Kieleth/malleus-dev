@@ -1,0 +1,15 @@
+# source: paper-v4/evaluation-v4/run-1{3,4,5,6}/review-record.preliminary.md,
+#         counted from each record's own JSON block; no rationale is quoted
+# read at commit: dd55ecd
+# PRELIMINARY_COMPLETE, ratification.disposition PENDING in all four. These
+# are not paper evidence until Luis ratifies them; they are recorded here as
+# the reviewers' preliminary reading and nothing more.
+cell    CQ-01      CQ-02      CQ-03      CQ-04          S   P  U  digest
+run-13  RESPONSIVE RESPONSIVE RESPONSIVE RESPONSIVE   497  18  0     329
+run-14  PARTIAL    RESPONSIVE RESPONSIVE PARTIAL      897  22  0     410
+run-15  PARTIAL    RESPONSIVE PARTIAL    PARTIAL      427   6  0     214
+run-16  RESPONSIVE PARTIAL    PARTIAL    PARTIAL      370  61  2       0
+# S SUPPORTED, P PARTIAL, U UNSUPPORTED; `digest` counts the rows whose
+# rationale opens DIGEST_OK or DIGEST_MISMATCH. All 953 of them read
+# DIGEST_OK; not one row in the four cells read DIGEST_MISMATCH. Run-16
+# wrote none: no record it admitted carries a locator or a digest (E-0173).

@@ -1,0 +1,39 @@
+# source: src/malleus/_contract_pipeline/document.py, lines 52-61 and 538-561
+# read at commit: dc52547 (Core-17's withdrawal, decision 22, carried forward)
+# The adapter sets no subject. It classifies every subject-bearing record
+# into one of four reported outcomes and refuses none of them.
+_SUBJECT_PROPOSED = "proposed"
+_SUBJECT_ATTACHABLE = "attachable"
+_SUBJECT_AMBIGUOUS = "ambiguous"
+_SUBJECT_UNNAMED = "unnamed"
+_SUBJECT_OUTCOMES = (
+    _SUBJECT_AMBIGUOUS,
+    _SUBJECT_ATTACHABLE,
+    _SUBJECT_PROPOSED,
+    _SUBJECT_UNNAMED,
+)
+# ...
+    for record_id, record in records_by_id.items():
+        type_name = record.get("type")
+        if not isinstance(type_name, str) or type_name not in bearing:
+            continue
+        subject = _record_properties(record).get(_SUBJECT_SLOT)
+        if isinstance(subject, str) and subject:
+            outcomes[record_id] = _SUBJECT_PROPOSED
+            continue
+        named: set[str] = set()
+        for locator in locators_by_record.get(record_id, ()):
+            statement = statements[locator]
+            named |= {
+                entity_id
+                for entity_id, forms in candidates
+                if any(_occurs_as_word(form, statement) for form in forms)
+            }
+        outcomes[record_id] = (
+            _SUBJECT_ATTACHABLE
+            if len(named) == 1
+            else _SUBJECT_AMBIGUOUS
+            if named
+            else _SUBJECT_UNNAMED
+        )
+    return outcomes

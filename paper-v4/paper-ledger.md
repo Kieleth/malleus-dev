@@ -5799,3 +5799,74 @@ and 179 of 186 are untouched. `handover/2026-09-05-run-17-haiku-rca.md` and
 the journal are corrected in place with a note; E-0176 stands as written with
 this entry beside it. Same rule as E-0134, E-0152 and E-0160: the figure
 entered the record from a report before the script ran.
+
+### E-0178, the appendix evidence catalogue is extended with the loop of 2026-09-05 and the matrix pass
+
+Date: 2026-09-05
+
+Sources: `paper-v4/appendix-evidence/catalogue.md` and the eighteen new files
+under `paper-v4/appendix-evidence/snippets/`; the frozen public artifacts of
+runs 09 and 13 to 16; `src/malleus/_contract_pipeline/document.py` and
+`tests/contract_compiler/pareto/test_document_assertion_adapter.py` at
+`f6c8c71`, `dc52547` and `8a6c3f3` through `git show`;
+`design/KNOWLEDGE_PACKS.md` decisions 22 and 24;
+`handover/2026-09-05-overseer-journal.md`; the five runner diagnostics under
+`private/paper-v4-v4-run-1{4,6,7}/refused-runner-attempt-0N/`.
+
+Eight entries added, numbered 13 to 20 in the catalogue, each naming its
+snippets by path, source, commit, digest and maximum shared run: the subject
+element (Core-13, E-0141 to E-0143); the word rule (Core-18, E-0158 to E-0161);
+the withdrawal of projection (Core-17, decision 22); the executor's one row per
+witness (Paper-17, E-0166); producer variance at a fixed protocol (E-0164,
+E-0172, E-0176); the anchors (E-0172, E-0173); Core-19's census shapes
+(decision 24); and the preliminary review outcomes of runs 13 to 16 (E-0161,
+E-0165, E-0169, E-0173).
+
+The eighteen snippets and their digests:
+
+- `26-subject-not-named-refusal.txt` `sha256:ab0b897264e3d5b3d24da263ec44c1fb66b20004954e0115a9a7819dced512e8`
+- `27-subject-coverage-census.txt` `sha256:3a92fa62d3602a7967c5d274eb80700b600ecec34c1e49309cfc4b460959430e`
+- `28-word-rule-predicate.txt` `sha256:02d22e30ae5621254d64bc99eb0a1884fabe54ef308d7fb12a5e0b3ec90691b0`
+- `29-word-rule-fixtures.txt` `sha256:e33ee47277ada90ef17c5e3dbe217002e1c6259764612a0c6d6328121b28a878`
+- `30-word-rule-correction-e-0160.txt` `sha256:d2c09a22244f8cf888e79f0cbcd0505979dd9a7215c98d243a204901b56e6c50`
+- `31-projection-withdrawn-decision-22.txt` `sha256:ab6731599c3f41feb067e0d325c6b1a590f7924fbf25177a4f16b82da5dcd7f1`
+- `32-subject-outcomes-adapter.txt` `sha256:10b3578f63d19a41dc79b808c85df13e2b6f50b5bac6e87d1eaf4ac1561b7afb`
+- `33-subject-census-run-13.txt` `sha256:7cd0ad15ebe74d41aff4af1d6e983d6eea66c4e54acede4ca0e8073e7ad8e3f8`
+- `34-one-row-per-witness-offline-validation.json` `sha256:351b6df97d5cc1d5e1851aeb8a863a80dd5432c142acc6b1cef0f9cc6b2e4e4d`
+- `35-run-14-runner-diagnostic.txt` `sha256:a89bf212bf040a4d020d286614d86f41fddf256b49089759d664e5eb8b30a43b`
+- `36-run-16-runner-diagnostic.txt` `sha256:d7c1405413890174dd413ee2dfda581089405148543bf21fa8dbe412a6d93358`
+- `37-run-17-runner-diagnostics.txt` `sha256:e32c651f756cb169d35dec7b26c2a185019e08162cd23cb827be679aefb5a6fb`
+- `38-producer-model-and-cost.txt` `sha256:c2284ff048daf8dfa57d11b657d5c0b9538223dba591199e793d1f4a0a0ac13c`
+- `39-anchor-census-run-16-run-15.txt` `sha256:abaf61331ac506551e2f5cc8e38c39c1a6a1dca453e9c076bdaf2b05585d2b02`
+- `40-core-19-block-labels.txt` `sha256:060c2ee11d6f580468bdad82364c7d463a243fe65850ab0f26321801e8aaf6d1`
+- `41-core-19-provenance-coverage.txt` `sha256:e57771582d6fab224d8afbc998ff4550aa0b7aa8cdd7b3d221e3c415376a33a6`
+- `42-core-19-five-cell-census.txt` `sha256:c61ae14297c51a8d8bbcb241ff2977d9b77adca6e6547eba50735fa6b7c423ae`
+- `43-review-outcomes-runs-13-16.txt` `sha256:81089ddcef3f3dce18851b807cca214065e2460b732a4416640ab9bc0e56534e`
+
+Leak measurement. The rule is the one the freezes run: with Unicode whitespace
+collapsed to one space, no public file may share a run of 60 characters with any
+block of `private/paper-v4-text-layer/selected-reading.json`. Measured here as
+an exact longest common substring against the 186 blocks separately, so no match
+crosses a block boundary, and calibrated first on a known leak
+(`paper-v4/experiment-v4/run-03/ontology-run/ontology-01.yaml` measures 73, the
+article title E-0124 located). The maximum shared run over all eighteen new
+snippets is 21 characters, and over `catalogue.md` 21. Nothing is elided: the
+five private diagnostics quoted measure 21, 35, 13, 13 and 9 whole, so no
+subject name or tag in them needed a marked ellipsis, and only each
+diagnostic's own text is reproduced. This entry measures 14 on its own; the
+file it is appended to, `paper-v4/paper-ledger.md`, measures 73 at HEAD before
+this entry, on the article title, which is the pre-existing hit the deep sweep
+recorded as D-16 and which no entry here introduces or fixes.
+
+Five snippets quote a file under `private/`, which the catalogue's opening
+paragraph said none did. That paragraph is corrected in place to scope its
+claim to snippets 01 to 25 and sections 1 to 12; nothing else above the new
+section is edited.
+
+Non-claim, and it governs entry 20 and every review figure in entries 13 to 19:
+the review records of runs 13 to 16 are `PRELIMINARY_COMPLETE` with
+`ratification.disposition` `PENDING`. They are a preliminary reader's reading
+and are not paper evidence until the author ratifies them. Nothing in this
+catalogue extension ratifies anything, and no new measurement was run against
+any cell: every figure is read from a frozen artifact, a pinned source, or a
+ledger entry that names its own source.

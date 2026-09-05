@@ -1,0 +1,39 @@
+# source: tests/contract_compiler/pareto/test_document_assertion_adapter.py,
+#         lines 913-934 and 936-946
+# read at commit: dc52547 (Core-18's RED cases, decision 23)
+# The two fixtures that fix the boundary: a three-letter tag inside another
+# word names nothing, and a digit the text layer glues on still bounds a word.
+def test_document_adapter_refuses_a_form_found_inside_another_word() -> None:
+    """Eight of run-12's fifteen projected subjects were a three-letter tag
+    inside another word: RTI inside "vertical" and "portion", OCC inside
+    "occur", MAR inside "mark", OBS inside "observations". A form names its
+    entity where the sentence writes it as a word, and nowhere else."""
+
+    api = _api()
+    reading, capture, records = _reworded(
+        "Vertical offset is under 4 mm.", tags=["RTI"]
+    )
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records, reading=reading)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED
+    )
+    assert (
+        "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
+        "RTI does not occur as a word in the statement of asr:003"
+    ) in refusal.value.detail
+
+# ...
+def test_document_adapter_matches_a_name_a_citation_number_is_glued_to() -> None:
+    """The text layer prints a citation number against the word before it. A
+    digit bounds a word, so "lithosphere13" still names the lithosphere."""
+
+    reading, capture, records = _reworded(
+        "The lithosphere13 is thin here.", name="lithosphere"
+    )
+
+    result = _adapt_records(capture, records, reading=reading)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records

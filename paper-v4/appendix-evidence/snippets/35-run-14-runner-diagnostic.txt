@@ -1,0 +1,34 @@
+# source: private/paper-v4-v4-run-14/refused-runner-attempt-01/diagnostic.txt
+# read at commit: dd55ecd (the cell frozen at e10be6e, E-0164)
+# The private diagnostic's own text only: its head, its seven defect clauses
+# split on the ';' it separates them with, and the rule sentence it closes
+# with. No statement and no block text is reproduced. Maximum run shared with
+# the reading, over the whole file: 21 characters.
+run-14: DocumentAssertionRefusal: MODALITY_NOT_ASSERTED: document capture derivations are not accepted:
+# 6 x MODALITY_NOT_ASSERTED
+# 1 x SUBJECT_NOT_NAMED
+  record obs:bdb-shallow-offaxis assertion_modality STATED is formalized by
+  assertion:0077 MEASURED [MODALITY_NOT_ASSERTED]
+  record obs:crustal-age-13 assertion_modality STATED is formalized by
+  assertion:0077 MEASURED [MODALITY_NOT_ASSERTED]
+  record obs:iceland-depths assertion_modality STATED is formalized by
+  assertion:0095 HYPOTHESISED [MODALITY_NOT_ASSERTED]
+  record obs:mayotte-depths assertion_modality STATED is formalized by
+  assertion:0095 HYPOTHESISED [MODALITY_NOT_ASSERTED]
+  record obs:reloc-min-obs assertion_modality STATED is formalized by
+  assertion:0164 MEASURED [MODALITY_NOT_ASSERTED]
+  record obs:temp-below-20 assertion_modality STATED is formalized by
+  assertion:0126 NEGATED [MODALITY_NOT_ASSERTED]
+  record obs:saturation-pressure names subject feature:melt, whose names
+  melt, melts, Melts, primary melts, primitive melt, pre-eruptive melts,
+  ascending melt do not occur as words in the statement of assertion:0125
+  [SUBJECT_NOT_NAMED]
+# the rule the refusal states:
+  a record's assertion_locator names an assertion of this capture, a
+  statement_sha256 comes with the locator that checks it and is the SHA-256
+  of that assertion's statement bytes, a slot the contract declares
+  evaluative is formalized by at least one assertion whose modality is not
+  HYPOTHESISED, a name of a record's subject, its name or one of its tags,
+  occurs as a word in the statement of an assertion that formalizes that
+  subject, and a record's assertion_modality is the modality of an assertion
+  that formalizes it

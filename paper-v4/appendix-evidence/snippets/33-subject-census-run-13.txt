@@ -1,0 +1,15 @@
+# source: paper-v4/experiment-v4/run-13/results/census.json, subject_coverage,
+#         rendered one line per type; no other field of the file is shown
+# read at commit: dd55ecd (the cell frozen at 4e96118, E-0159)
+# The four outcomes Core-17 left in place of a derived subject. `proposed` is
+# the producer's own; the other three are the report on what it left unset.
+# `attachable` is exactly one capture entity named in a formalizing sentence.
+type                      total  proposed  attachable  ambiguous  unnamed
+Claim                       128        44          14         29       41
+CountedObservation           22         8           4          4        6
+GeochemicalObservation       19        18           0          1        0
+Observation                  42        23           3          7        9
+QuantityRatio                 3         0           1          2        0
+SeismicEvent                  1         1           0          0        0
+SeismicObservation           54        17          11          6       20
+all subject-bearing         269       111          33         49       76
