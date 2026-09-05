@@ -69,8 +69,8 @@ Per question, choose one `question_responsiveness`:
 - `NOT_RESPONSIVE`: they do not answer it.
 - `NOT_EVALUABLE`: the row representation is insufficient to decide.
 
-Judge every returned row exactly once, in order: 4 rows for CQ-01, 32 for CQ-02,
-34 for CQ-03, 3 for CQ-04. Cite at least one reading block per row and per
+Judge every returned row exactly once, in order: 2 rows for CQ-01, 5 for CQ-02,
+9 for CQ-03, 13 for CQ-04. Cite at least one reading block per row and per
 question. Write each reason in your own words. Copy no source passage into the
 record and add no numerical aggregate.
 
