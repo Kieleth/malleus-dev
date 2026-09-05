@@ -1,0 +1,12 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-05T09:30:51Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the one feature type, observations, claims",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the feature, sample, method, dataset types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim, the quantified types, the feature type, Method"
+  },
+  "note": "run-11's surface folds every feature kind into GeologicFeature with an open feature_kind string, so the sets are shorter than run-10's; the same questions, the same judgement"
+}

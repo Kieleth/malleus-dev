@@ -1,0 +1,35 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "Observation",
+    "Method",
+    "SoftwareTool",
+    "DataResource",
+    "ResearchAgent"
+  ],
+  "CQ-02": [
+    "GeologicFeature",
+    "Observation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "AttributedRatio",
+    "QuantityValue",
+    "Ratio",
+    "GeologicFeature",
+    "RockSample",
+    "Method",
+    "Claim",
+    "Sample",
+    "DataResource"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "AttributedRatio",
+    "GeologicFeature",
+    "Method"
+  ]
+}

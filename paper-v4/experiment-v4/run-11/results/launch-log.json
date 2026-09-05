@@ -1,0 +1,246 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-11",
+  "protocol": "v4.5",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-05T09:18:16Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-11/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "POPULATION_READY",
+      "usage_cumulative": {
+        "tokens": 161902,
+        "tool_uses": 20,
+        "duration_ms": 692321
+      },
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 404110,
+          "tool_uses": 69,
+          "duration_ms": 2885389
+        }
+      ],
+      "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures",
+      "execution": {
+        "pinned_commit": "9d789f2a2ab0d02d6de995acfd922e9a3e8eefd5",
+        "staged_at": "2026-09-05T09:18:16Z",
+        "interpreter": "VERIFIED by prepare_producer.py preflight"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-05T09:31:12Z",
+        "after_binding_frozen_at": "2026-09-05T09:30:51Z",
+        "message": "run-10's phase-two message with run-11's coordinates",
+        "capture_id": "capture:paper-v4:yu-2025:v4:11",
+        "plan_id": "plan:paper-v4:yu-2025:v4:11",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ]
+      }
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:48d98f1c7143f553c2d01950e96a220c32179c000c6e66e04af918140b3499d9",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:7c2e340abfedda9a53ee0f7078acf5702faef66b5e037bf550990efbce69dc17",
+      "fact_count": 3207,
+      "accepted_at": "2026-09-05T09:30:51Z",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 20,
+        "EVENT": 2,
+        "RELATION": 4
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "ResearchRelation",
+        "FundingRelation",
+        "GeologicRelation"
+      ],
+      "subject_bearing_types": [
+        "Claim",
+        "Observation",
+        "AttributedRatio"
+      ],
+      "note": "accepted at attempt 01; ten project classes, four root extensions; one GeologicFeature type for every feature, feature kinds as open strings",
+      "phase_two_inputs_staged": [
+        "accepted/population-surface.json",
+        "accepted/diagnostic.json"
+      ],
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "overseer, before phase two",
+        "checked_at": "2026-09-05T09:30:51Z",
+        "urls": 2,
+        "result": "PROV-O and SOSA/SSN at the W3C TR URLs, both fetched and verified on 2026-09-05 for run-08; SeismicEvent and GeologicRelation take the honest none_found form naming QuakeML, the USGS glossary, GeoSPARQL, RCC-8 and RO as considered",
+        "fabricated": 0
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-05T10:07:58Z",
+      "execution_commit": "1b38c4f",
+      "core_note": "Core files at the pinned coordinate 9d789f2 (OVR-000410); commits between are paper files",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 401,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 30,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 432,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 358,
+          "PARTLY_FORMALIZED": 13,
+          "UNFORMALIZED": 16
+        },
+        "blocks_reviewed": 186,
+        "blocks_total": 186,
+        "capture_sha256": "sha256:9089a09263fd7b06db950de81ccdaf107c5364812619d2d4bc971988e7864336",
+        "gaps_by_kind": {
+          "AGGREGATE_ONLY": 5,
+          "INTERVAL_NOT_EXPRESSIBLE": 2,
+          "RELATION_ABSENT": 5,
+          "TYPE_ABSENT": 17
+        }
+      },
+      "derivation_census": {
+        "non_local_relations": 1,
+        "top_hubs": [
+          {
+            "assertion": "assertion:259",
+            "block": "page:10:block:044",
+            "records": 9
+          },
+          {
+            "assertion": "assertion:262p",
+            "block": "page:10:block:045",
+            "records": 9
+          },
+          {
+            "assertion": "assertion:003",
+            "block": "page:1:block:001",
+            "records": 8
+          },
+          {
+            "assertion": "assertion:267",
+            "block": "page:10:block:046",
+            "records": 7
+          },
+          {
+            "assertion": "assertion:022",
+            "block": "page:1:block:005",
+            "records": 6
+          }
+        ],
+        "fan_out_distribution": {
+          "0": 16,
+          "1": 287,
+          "2": 47,
+          "3": 16,
+          "4": 9,
+          "5": 3,
+          "6": 5,
+          "7": 1,
+          "8": 1,
+          "9": 2
+        }
+      },
+      "subject_coverage": {
+        "by_type": {
+          "AttributedRatio": {
+            "total": 3,
+            "with_subject": 0,
+            "without_subject": 3
+          },
+          "Claim": {
+            "total": 102,
+            "with_subject": 39,
+            "without_subject": 63
+          },
+          "Observation": {
+            "total": 143,
+            "with_subject": 52,
+            "without_subject": 91
+          }
+        },
+        "total": 248,
+        "with_subject": 91,
+        "without_subject": 157
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 5,
+        "INTERVAL_NOT_EXPRESSIBLE": 2,
+        "RELATION_ABSENT": 5,
+        "TYPE_ABSENT": 17
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-05T10:08:51Z",
+      "note": "first cell admitted with no return at either stage"
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-05T09:30:51Z",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:001f1c8da094d5726b2cbc942267116d264ec6345a7da138c1045df010c516c4",
+    "type_sets_note": "query-type-sets.note.json",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:64cdd0eeae3281e4b27cf618d343adaea2b06aae19e332c37fc8ac517df2c2bf",
+    "cases_sha256": "sha256:6bb7939704f521cbabdbd6167f48158febbfe2bae69dbc1652285906a505feea",
+    "cases": 806,
+    "cases_by_kind": {
+      "ENTITY": 16,
+      "RELATION": 732,
+      "SUBJECT": 58
+    },
+    "phase_two_dispatched_after": true,
+    "executed_at": "2026-09-05T10:09:05Z",
+    "binding_executed": "results/native-query-binding.json",
+    "bound_after_replay_receipt_sha256": "sha256:37cf0a526686c75dc3ee36821901be0f752fa30789d2e404b78f1f76c1e9a12b",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "rows_by_question": {
+      "NQ-CQ-01": 60,
+      "NQ-CQ-02": 123,
+      "NQ-CQ-03": 145,
+      "NQ-CQ-04": 129
+    },
+    "rows_total": 457,
+    "witnesses_traced": 183,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:355e8c3b46748508f93224e3cb2a4751ab05f90c2ed691f30a931eb108ddeb5c"
+  },
+  "review": {}
+}

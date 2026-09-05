@@ -1,0 +1,64 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-11",
+  "core": {
+    "commit": "9d789f2a2ab0d02d6de995acfd922e9a3e8eefd5",
+    "tree": "3816665d683987bc77964f5b1cc958f89113cdba"
+  },
+  "producer_input_manifest_sha256": "sha256:22d5e29570d1c4b3333827a82e364ee3dcba73fa3475a843bfa26e38e9997dd3",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:87e781b26f949cfea0f87be53dafd629b64c5cbb95561bdfc867b872dfb27f1d",
+    "final_status_sha256": "sha256:be6e35033ba8d5cb0cbc706ed2c21716934acfcafcbaebcb82f14ed7902b9b72"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:48d98f1c7143f553c2d01950e96a220c32179c000c6e66e04af918140b3499d9",
+      "ontology_path": "paper-v4/experiment-v4/run-11/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-11/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:e47cbc78b3355ea9ca7594b1b675978b63ace8cfa312e11d133c919e480af851",
+      "accepted_at": "2026-09-05T09:30:51Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:48d98f1c7143f553c2d01950e96a220c32179c000c6e66e04af918140b3499d9",
+    "validated_contract_sha256": "sha256:20f0b6bc0144ab905d8620bda155cb4c977e7dcd6c077c2747b2583f72df3bb0",
+    "validated_fact_set_sha256": "sha256:7c2e340abfedda9a53ee0f7078acf5702faef66b5e037bf550990efbce69dc17",
+    "fact_count": 3207,
+    "grounding_receipt_sha256": "sha256:070473392e84191072783ce20513c21adf0b2a3c2d1900ea56381649f0e3715f",
+    "population_surface_sha256": "sha256:a4188e956e1af3fb6b7eea132148522bd1c66fe281b1ab180892b763a4f0f7c9",
+    "population_surface_families": {
+      "ENTITY": 20,
+      "EVENT": 2,
+      "RELATION": 4
+    }
+  },
+  "accepted_ontology_sha256": "sha256:48d98f1c7143f553c2d01950e96a220c32179c000c6e66e04af918140b3499d9",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-05T09:30:51Z",
+    "urls": 2,
+    "result": "PROV-O and SOSA/SSN at the W3C TR URLs, both fetched and verified on 2026-09-05 for run-08; SeismicEvent and GeologicRelation take the honest none_found form naming QuakeML, the USGS glossary, GeoSPARQL, RCC-8 and RO as considered",
+    "fabricated": 0
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-11 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

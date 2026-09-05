@@ -3987,3 +3987,46 @@ Non-claim: no producer has run at this coordinate. Expected effect, stated
 before the run: subject refusals near the fourteen that were genuinely unnamed
 in run-10; coverage above 114 of 235; CQ-01 and CQ-04 regaining their missing
 semantics if the producer attaches them.
+
+### E-0150, run-11 (v4.5) is admitted with no return at either stage; 457 rows
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-11/ontology-run/`, `paper-v4/experiment-v4/run-11/results/`,
+`private/paper-v4-v4-run-11/` (ledger, query result, withheld files),
+`paper-v4/evaluation-v4/run-11/` (review inputs under protocol v2).
+
+Ontology: accepted at attempt 01, 3,207 facts, 20 entity types, 2 event types,
+4 relation types, 3 subject-bearing types; ten project classes and four root
+extensions, every feature kind folded into one `GeologicFeature` with an open
+`feature_kind` string, the packs carrying counts, estimates, dispositions and
+CRediT roles. Two vocabularies cited, both verified; two honest none-found
+blocks naming what was considered.
+
+Population: 387 assertions over all 186 blocks, none nothing-assertable; 432
+records (401 entities, 1 event, 30 relations); 29 typed gaps (TYPE_ABSENT 17,
+AGGREGATE_ONLY 5, RELATION_ABSENT 5, INTERVAL_NOT_EXPRESSIBLE 2). Runner
+attempt 1 admitted under `actor:overseer-run-11`: the first cell with no
+diagnostic return at either stage. Fourteen ledger events, the reopened replay
+reproducing the admitted receipt and export, 432 records traced. Census: 358
+fully, 13 partly, 16 unformalized; 1 of 30 relations non-local; largest hub 9;
+subject coverage 91 of 248 (Observation 52 of 143, Claim 39 of 102,
+AttributedRatio 0 of 3); 27 entities carry tags. The 79-entry reference list is
+captured as PublishedWork records with title, container, volume, pages, year
+and DOI; their author names are a declared limitation, not records.
+
+Query: the v4 binding frozen at acceptance (806 cases) executed unchanged
+after replay (`cases_sha256` equal): CQ-01 60, CQ-02 123, CQ-03 145, CQ-04 129,
+457 rows over 183 witnesses, no forbidden attempt. The three science questions
+share the same 86 SUBJECT rows, because one feature type means one SUBJECT case
+per source-asserted type.
+
+Execution coordinate: inputs pinned at `9d789f2` (E-0149); the runner executed
+at main `1b38c4f`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 161,902; population
+242,208; producer total 404,110.
+
+Non-claim: admission is structural acceptance, not adequacy. No preliminary
+review exists yet. Whether coverage fell because the check changed or because
+the producer captured more is the iteration's analysis, recorded separately.

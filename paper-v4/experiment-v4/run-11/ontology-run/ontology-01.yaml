@@ -1,0 +1,371 @@
+id: https://malleus.dev/schema/projects/ridge-seismicity
+name: ridge_seismicity
+version: 0.1.0
+title: Ridge Seismicity and Melt Volatiles Project Ontology
+description: >-
+  Project ontology proposed for one retained reading: a study that reports
+  microseismicity recorded by ocean-bottom seismometers along a slow-spreading
+  mid-ocean ridge, together with the geochemistry of basalts sampled from the
+  same segments and the claims the source builds on both. The project declares
+  only what the imported packs do not carry: the geological features the
+  reading names, the seismic occurrences it names, the structural relations it
+  states between features, the people and organisations it credits, and the
+  works, datasets and software it identifies. Quantities, bounds, units,
+  uncertainty, counts, ratios, temporal extent, samples, methods, instruments,
+  sources, claims, modality, hypothesis disposition and contributor roles come
+  from the metrology, chronology and research packs and are not redeclared here.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  ridge: https://malleus.dev/schema/projects/ridge-seismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+enums:
+
+  AgentKind:
+    description: >-
+      Whether the source names an agent as an individual or as an institution.
+      Both values carry the definition of the PROV-O class of the same name.
+      Unset is the honest value when the source names an agent without making
+      the distinction.
+    permissible_values:
+      PERSON:
+        description: An individual the source names.
+      ORGANIZATION:
+        description: >-
+          A social or legal institution the source names, such as a laboratory,
+          an agency, a university or a funding body.
+
+  GeologicRelationType:
+    description: >-
+      Structural and spatial predicates the source states between two named
+      geological features. Each value is a predicate the reading uses. The
+      source's own qualification of the relation, a direction, a side or a
+      depth order, travels in spatial_qualifier and never in the predicate. The
+      list is deliberately short and grows by adding values, never by
+      redefining one.
+    permissible_values:
+      PART_OF:
+        description: >-
+          The source states that one feature is a part or a subdivision of
+          another.
+      BOUNDED_BY:
+        description: The source states that one feature is delimited by another.
+      OFFSET_BY:
+        description: >-
+          The source states that one feature is displaced or interrupted
+          by another.
+      LOCATED_ON:
+        description: >-
+          The source states that one feature lies on, at, or within another.
+      ADJACENT_TO:
+        description: >-
+          The source states that two features neighbour each other, with the
+          direction the source gives retained in spatial_qualifier.
+      CUT_BY:
+        description: The source states that one feature is transected by another.
+      OVERLIES:
+        description: >-
+          The source states that one feature lies above another in the depth
+          section.
+
+classes:
+
+  # -----------------------------------------------------------------
+  # Direct extensions of Malleus roots. Each carries its own grounding
+  # block, as the PROJECT role requires.
+  # -----------------------------------------------------------------
+
+  GeologicFeature:
+    is_a: Entity
+    description: >-
+      A physical feature of the sea floor or the lithosphere that the source
+      names and then makes statements about: a ridge, a ridge segment, a
+      transform fault, a discontinuity, a core complex, a valley, a fault, a
+      crustal or lithospheric layer, or a boundary between two of them. It is
+      the thing an observation in this reading is about, so it is the usual
+      value of subject on a quantified record.
+    slots:
+      - feature_kind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural and marine geology
+          taxonomy: DDC 551.8
+          vocabularies:
+            - vocabulary: W3C Semantic Sensor Network Ontology (SOSA/SSN)
+              vocabulary_url: https://www.w3.org/TR/vocab-ssn/
+              borrowed_terms:
+                - feature of interest
+          invented_terms:
+            - GeologicFeature
+            - feature_kind
+          invention_search: >-
+            SOSA/SSN, cited above and already cited by the research pack in the
+            declared inputs, supplies feature of interest, the thing whose
+            property an observation estimates, and that is the position these
+            features occupy in this reading. It names no geological feature
+            type. The vocabularies that do are the IHO-IOC standardization of
+            undersea feature names, GeoSciML and the CGI geoscience
+            terminologies, and the SWEET ontology. This session has no network
+            access and the declared inputs carry none of them, so their exact
+            title, edition and URL cannot be verified here, and recording a
+            recalled URL would fabricate a citation. The class name and the
+            open source-worded kind slot are therefore recorded as local. A
+            reviewer with access to those three vocabularies should replace
+            this entry with the one that names these features.
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+    description: >-
+      A single seismic occurrence the source names and identifies, for example
+      an earthquake it gives a date and a magnitude. It carries the metrology
+      Quantified mixin because the quantity the source states about a named
+      event, its magnitude, cannot be carried by a separate quantified record:
+      the research pack's subject slot ranges on Entity and an Event is not an
+      Entity. Populations of earthquakes that the source counts, bounds by
+      depth, or describes as a cluster are not events under this ontology: they
+      are reported as quantified records whose subject is the geological
+      feature the source places them under.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          none_found: true
+          search: >-
+            The declared inputs, the Malleus root and the metrology, chronology
+            and research packs, name no seismological vocabulary. The
+            candidates known to this session are QuakeML, the FDSN exchange
+            format that defines event, origin, hypocentre, magnitude and focal
+            mechanism, and the USGS earthquake glossary. This session has no
+            network access, so neither title, version nor URL can be verified
+            here, and an unverified URL in a citation slot is a fabrication and
+            a worse outcome than a declared gap. The class name is therefore
+            recorded as local, and the kind of occurrence stays in the root's
+            open event_type slot in the source's own wording rather than in an
+            invented enumeration. A reviewer with access to QuakeML should
+            replace this block with that citation.
+          invented_terms:
+            - SeismicEvent
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person or an organisation the source names as acting in, supporting or
+      funding the reported work: an author, a colleague it thanks, an
+      affiliation, a funding body, a research vessel operator. The kind is
+      carried in the root's agent_type slot, narrowed here to the two PROV-O
+      agent classes the source distinguishes.
+    slot_usage:
+      agent_type:
+        range: AgentKind
+        description: >-
+          Whether the source names this agent as a person or an organisation.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Provenance and attribution of research
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+          invented_terms: []
+
+  GeologicRelation:
+    is_a: Relation
+    description: >-
+      A structural or spatial relation the source states between two named
+      geological features. Only relations a sentence of the reading states are
+      admitted; a relation the reading merely implies by adjacency of two
+      figures or two sentences is a declared gap, not an edge.
+    slots:
+      - spatial_qualifier
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology
+          taxonomy: DDC 551.8
+          none_found: true
+          search: >-
+            The declared inputs carry no spatial or mereological vocabulary:
+            the research pack's ResearchRelationType covers claims, samples,
+            campaigns, evidence and credit, and none of its eight predicates is
+            spatial. The candidates known to this session are OGC GeoSPARQL and
+            its simple-features predicates, the Region Connection Calculus, and
+            the OBO Relation Ontology's part of. This session has no network
+            access, so none of their titles or URLs can be verified here, and
+            recording a recalled URL would fabricate a citation. The relation
+            class, its predicate enumeration and the qualifier slot are
+            therefore recorded as local. A reviewer with access to GeoSPARQL or
+            the OBO Relation Ontology should replace this block with the
+            citation and map the seven predicates onto it.
+          invented_terms:
+            - GeologicRelation
+            - GeologicRelationType
+            - spatial_qualifier
+
+  # -----------------------------------------------------------------
+  # Extensions of pack classes. The grounding rite reads no block on
+  # these, because each reaches a Malleus root through a pack type.
+  # -----------------------------------------------------------------
+
+  RockSample:
+    is_a: Sample
+    description: >-
+      A rock sample, or a group of rock samples the source refers to
+      collectively, that was dredged, dived for, or compiled from a database,
+      and whose composition the source reports. The material the source calls
+      it stays in its own wording.
+    slots:
+      - material_kind
+
+  PublishedWork:
+    is_a: Source
+    description: >-
+      An article, chapter, abstract or report the reading identifies, including
+      the reading's own article and every work in its reference list. The
+      identifiers and the location the source states about the work are domain
+      facts and are carried here; they are not provenance coordinates of the
+      capture.
+    slots:
+      - doi
+      - container_title
+      - publication_year
+      - volume
+      - pages
+      - access_url
+
+  DataResource:
+    is_a: Source
+    description: >-
+      A database, catalogue, archive or deposit the source names as a place its
+      data came from or was deposited in, with the identifier and address the
+      source gives for it.
+    slots:
+      - doi
+      - access_url
+
+  SoftwareTool:
+    is_a: Instrument
+    description: >-
+      A named software package or program the source names as the tool by which
+      an analysis step was performed, with the version and the address the
+      source states for obtaining it. It extends the pack's Instrument because
+      the source names it in the same position an instrument occupies: the
+      thing used to produce a reported result. The procedure a tool implements,
+      when the source names it separately, is a Method and not this class.
+    slots:
+      - software_version
+      - access_url
+
+  AttributedRatio:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A ratio the source reports and attributes, keeping the numerator and
+      denominator kinds explicit, and carrying the modality, the subject and
+      the route back to the retained assertion that the bare pack Ratio does
+      not.
+
+  FundingRelation:
+    is_a: ContributionRelation
+    description: >-
+      Financial support the source states an agent gave to the reported work,
+      carrying the award identifier the source states. contribution_role stays
+      unset unless the source itself declares a role for the funder: providing
+      the money is not the CRediT role of acquiring it, and inferring one from
+      the other would report a role the source does not state.
+    slots:
+      - award_identifier
+
+slots:
+
+  feature_kind:
+    range: string
+    description: >-
+      The kind of feature in the source's own wording. Open on purpose: it is
+      what the source called the thing, and it is never rewritten to fit a
+      classification.
+
+  material_kind:
+    range: string
+    description: >-
+      The material or rock type the source states for a sample, in its own
+      wording, and never rewritten.
+
+  spatial_qualifier:
+    range: string
+    description: >-
+      The source's own qualification of a structural relation, such as a
+      direction, a side, or a depth order. It records how the source states the
+      relation and never replaces relation_type. Unset when the source states
+      the relation without qualifying it.
+
+  software_version:
+    range: string
+    description: The version of a software tool as the source states it.
+
+  access_url:
+    range: string
+    description: >-
+      The address the source states for obtaining a work, a dataset or a
+      software tool. It is a fact the source reports about the thing, not a
+      provenance route into the capture. The range is string because the
+      contract compiler binds no uri range.
+
+  doi:
+    range: string
+    description: >-
+      The Digital Object Identifier the source states for a work or a deposit,
+      as the source states it.
+
+  container_title:
+    range: string
+    description: >-
+      The journal, book or series the source states a work appeared in.
+
+  publication_year:
+    range: integer
+    description: The year of publication the source states for a work.
+
+  volume:
+    range: string
+    description: The volume designation the source states for a work.
+
+  pages:
+    range: string
+    description: >-
+      The page range or article number the source states for a work, as the
+      source states it.
+
+  award_identifier:
+    range: string
+    description: >-
+      The grant, agreement or award number the source states for financial
+      support, as the source states it.
