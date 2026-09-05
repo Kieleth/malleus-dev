@@ -1,0 +1,73 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:37795abe4624642e957040e3a3dd2e9527b20131232beb76697573850c2f290b",
+        "before_digest": "sha256:9fadb8b72e7148042d5fe6b2d5c36060d37366ae5f575fea1f302e487857b743",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:20abf02b2417eecc371285000d1e4165a14470a551f798164c712e26584dcff7",
+        "before_digest": "sha256:b9adfa0975b49fea436664b224198b9cf5b9415fbe9c3333a90189ea8f6060e2",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_governed_population.py"
+      },
+      {
+        "after_digest": "sha256:8b3f56c18a56710a736f16b68e7105521734ccf27dde4b79ea1d704a7224a745",
+        "before_digest": "sha256:9d4c276be7957f5a15a4db1b8b6cb8a9b8c85708110e096ac1046136d2d83926",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      },
+      {
+        "after_digest": "sha256:d15c00e3f2e5f9935ba559fa5b68004f618f511bdcad48209e5d49580ac2f5f9",
+        "before_digest": "sha256:79f640e2794575d94d9a32cb52f39ed2264ed6bc25dde0dc8ee07d21b99e3cd0",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_repository_guards.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:c8895cbee23c12abf75a9f094436b2043a8b20cbe7900a825d9d1f0a443b8fdf",
+  "entry_id": "OVR-000398",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:cd417d16e9ed809cbe9b0774fd81973eb6199b93311c8802f84f8c2dfa355f95",
+  "recorded_at": "2026-09-05T02:40:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "ea60b199cc26e36507290c1f1a18ebbabea6b8ff",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "67aa2b0719dfe1aad82a70a71c6cca8462cbf263",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000397",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 398,
+  "subject": {
+    "id": "thaw-change-set-properties-before-staged-writes",
+    "type": "DOCUMENT"
+  },
+  "summary": "Thaw the change-set properties at the four staged write sites so a multivalued slot admits, and guard the sites mechanically.",
+  "why": "A KnowledgeChangeSet freezes list values into tuples. _apply_change handed the staged graph dict(operation.properties), a shallow copy, so the tuple reached the ontology validator, which accepts only isinstance(value, list) for a multivalued slot. Every multivalued property in every population change refused at admit with STRUCTURAL_REFUSAL: Property '<name>' must be a list. The paper cell run-04 hit it on six ResearchContributor entities carrying affiliation as a one-item list; the plan and the operation both still carried the list, and the refusal came from _replay_envelopes. No earlier admitted population carried a list-valued property, which is why the defect survived. _staged_properties thaws the whole value at the four sites. _freeze, the canonical serialization and the validator are unchanged, so operations still compare and hash frozen on both sides of the population trace check. An AST guard in test_repository_guards asserts all four staged.create_* calls pass _staged_properties, because a population with no list-valued property replays either way and nothing else catches a shallow copy."
+}
