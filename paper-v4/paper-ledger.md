@@ -3602,3 +3602,40 @@ Cost, from `results/usage.json`: ontology attempt 01 189,045; ontology attempt 0
 Non-claim: admission is structural acceptance, not adequacy. No preliminary
 review exists yet. The comparison with run-04 (146 local rows) and run-08 (8
 rows) is the iteration's analysis and is recorded separately.
+
+### E-0143, run-09's preliminary review and the iteration's analysis
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-09/review-record.preliminary.md`
+(sha256:4d5db905…), its four per-question blocks beside it, the private launch
+log and usage record, and `handover/2026-09-05-v43-rca.md`.
+
+Review: four fresh Claude Opus 5 sessions, one per question (210, 547, 359 and
+350 rows), each judging only its rows under protocol v2 and the v3 task;
+merged into one record by the overseer and validated as one, actor
+`actor:claude-preliminary-run-09`, completed 2026-09-05T06:50:01Z. The split is
+a recorded deviation from one session judging every row, forced by 1,466 rows.
+Responsiveness: CQ-01 RESPONSIVE, CQ-02 PARTIAL, CQ-03 RESPONSIVE, CQ-04
+PARTIAL. Support: 1,450 SUPPORTED, 16 PARTIAL, none UNSUPPORTED, none
+NOT_EVALUABLE. All 1,162 rows carrying a statement digest recomputed
+DIGEST_OK; all 1,466 rows DERIVATION_LOCAL; no SUBJECT_NOT_IN_BLOCK. The
+reviewers flagged, without downgrading: twenty records whose modality differs
+from their formalizing assertion's; caption-derived rows inside a question
+scope that excludes figures; and a step the task does not describe, resolving
+an ENTITY row's bare subject id to a name through the query result. Cost:
+1,210,367 tokens across the four sessions. Ratification pending.
+
+Analysis (the RCA): the subject element did what its hypothesis said, the
+questions are reachable through structure with honest provenance, 405
+structural rows against run-04's 146 local ones and run-08's 8; the ENTITY
+kind is a flood of 1,061 supported non-answers that tripled the review, and a
+binding restricted to subject-bearing types through their subject returns 630
+already-judged rows (618 SUPPORTED, 12 PARTIAL); and a modality drift of 20
+records appeared that the earlier cells did not have. Iteration 2 is decided
+there: one source of truth for a record's modality, the two recurring returns
+stated in the diagnostic and the skill, and harness v4.4 with the ENTITY
+restriction.
+
+Non-claim: one cell per iteration; the effect sizes are one observation each.
+The preliminary record is not paper evidence until ratified.
