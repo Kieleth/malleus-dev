@@ -1,0 +1,527 @@
+{
+ "question_id": "CQ-01",
+ "question_responsiveness": "RESPONSIVE",
+ "responsiveness_rationale": "The rows name the campaign that acquired the microseismicity data, carry the instrument network as a record of its own, and give the deployed instrument count with a scope that says it is the deployed network, so each requested part of the question is addressed by rows rather than left to inference. Further counted rows separate the usable instruments and the detection thresholds from the deployment figure, so the several numbers present do not compete for the same slot. Many other rows return organisations, software and methods that the question did not ask for; that is over-return within the question's type sets and does not stop the requested parts from being answered.",
+ "source_locators": [
+  "page:2:block:002",
+  "page:6:block:002"
+ ],
+ "rows": [
+  {
+   "row_index": 0,
+   "source_support": "PARTIAL",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The block names the cruise, so the campaign identity holds, but the roughly three weeks it gives is the continuous recording period of the seismic data, not the length of the cruise, and the row carries no qualifier marking that difference."
+  },
+  {
+   "row_index": 1,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:008"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The data-availability block names the cruise reports as an available resource and prints the same fleet campaign address the row carries as its access locator."
+  },
+  {
+   "row_index": 2,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The sample-compilation block names the PetDB database and prints the same web address the row carries."
+  },
+  {
+   "row_index": 3,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:008",
+    "page:8:block:009"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The deposit sentence names the Zenodo database and its identifier runs across the two cited blocks, which together give the digits the row records as the DOI."
+  },
+  {
+   "row_index": 4,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The results block introduces the ocean-bottom seismometers by the abbreviation the row uses as the instrument name."
+  },
+  {
+   "row_index": 5,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The code-availability block names Global Mapper, which is the only field this row projects."
+  },
+  {
+   "row_index": 6,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The code-availability block names the GMT 6 toolbox, matching the name this row projects."
+  },
+  {
+   "row_index": 7,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:003"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The focal-mechanism block names the HASH package as the tool used, matching the row's name."
+  },
+  {
+   "row_index": 8,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The relocation block names the hypoDD program as the tool used, matching the row's name."
+  },
+  {
+   "row_index": 9,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The earthquake-location block names the NonLinLoc program, matching the row's name."
+  },
+  {
+   "row_index": 10,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The seismic-data block names the SEISAN package as the environment the trigger ran in, matching the row's name."
+  },
+  {
+   "row_index": 11,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The velocity-model evaluation block names the VELEST program, matching the row's name."
+  },
+  {
+   "row_index": 12,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The magnitude block names the ZMAP software as the tool used for the catalogue statistics, matching the row's name."
+  },
+  {
+   "row_index": 13,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The results block says the hypocenters were relocated with a double-difference location method, which is the method name the row carries."
+  },
+  {
+   "row_index": 14,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The magnitude block says magnitudes were determined with the local magnitude scale, which is the method name the row carries."
+  },
+  {
+   "row_index": 15,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The results block says hypocenters were obtained with a non-linear earthquake location algorithm, which is the method name the row carries."
+  },
+  {
+   "row_index": 16,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The earthquake-location block names the non-linear oct-tree search algorithm used for the initial hypocenters."
+  },
+  {
+   "row_index": 17,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The results block names the short-term-average over long-term-average trigger used for automatic arrival detection."
+  },
+  {
+   "row_index": 18,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The Vp/Vs block names Wadati diagrams as the technique that yielded the ratio, matching the row's name."
+  },
+  {
+   "row_index": 19,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The degassing-depth block names the CO2 solubility model used to derive the saturation pressure, matching the row's name."
+  },
+  {
+   "row_index": 20,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:007"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The solubility calculation block attributes the model to Iacono-Marziano and colleagues, matching the row's name."
+  },
+  {
+   "row_index": 21,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The discussion block names thermal modelling as the source of the mantle temperature estimate, matching the row's name."
+  },
+  {
+   "row_index": 22,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The results block says a refraction profile was used to find the best one-dimensional velocity model, which is the model the row names."
+  },
+  {
+   "row_index": 23,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:009"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The depth-resolution block labels the fastest velocity model as Model 1, matching the row's name."
+  },
+  {
+   "row_index": 24,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:003"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The velocity-model block labels the selected best-fitting model as Model 5, matching the row's name."
+  },
+  {
+   "row_index": 25,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:10:block:044"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The funding block lists the Regional Council of Brittany among the funders, giving the organisation name the row carries."
+  },
+  {
+   "row_index": 26,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The affiliation block lists the Italian institute of environmental geology and geoengineering under the name the row carries."
+  },
+  {
+   "row_index": 27,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:10:block:044"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The funding block names the European Research Council among the funders, giving the organisation name the row carries."
+  },
+  {
+   "row_index": 28,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The affiliation block lists the Geo-Ocean joint research unit under the name and unit number the row carries."
+  },
+  {
+   "row_index": 29,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The affiliation block lists the Paris geophysics institute under the name the row carries."
+  },
+  {
+   "row_index": 30,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:10:block:044"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The funding block names the ISblue project as a funder, giving the name the row carries."
+  },
+  {
+   "row_index": 31,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:10:block:044"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The funding block names the Chinese national science foundation as a funder, giving the name the row carries."
+  },
+  {
+   "row_index": 32,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The affiliation block lists the Second Institute of Oceanography under the name the row carries."
+  },
+  {
+   "row_index": 33,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:11:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The publisher note names Springer Nature, giving the organisation name the row carries."
+  },
+  {
+   "row_index": 34,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:10:block:044"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The funding block names the French oceanographic fleet infrastructure under the name the row carries."
+  },
+  {
+   "row_index": 35,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The affiliation block lists the University of Modena under the name the row carries."
+  },
+  {
+   "row_index": 36,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:006"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The affiliation block lists Universite Paris Cite under the name the row carries."
+  },
+  {
+   "row_index": 37,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The code-availability block names Global Mapper and prints the same address the row carries as its access locator."
+  },
+  {
+   "row_index": 38,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:010",
+    "page:8:block:011"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The code-availability block names the GMT 6 toolbox and its address runs across the two cited blocks, which together give the locator the row carries."
+  },
+  {
+   "row_index": 39,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:003",
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The focal-mechanism block names the HASH package and the code-availability block gives the same version number and address the row carries."
+  },
+  {
+   "row_index": 40,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:006",
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The relocation block names the hypoDD program and the code-availability block gives the same version number and address the row carries."
+  },
+  {
+   "row_index": 41,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:004",
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The location block names NonLinLoc and the code-availability block gives the same address the row carries."
+  },
+  {
+   "row_index": 42,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:002",
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The seismic-data block names the SEISAN package and the code-availability block gives the same address the row carries."
+  },
+  {
+   "row_index": 43,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:004",
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The evaluation block names VELEST and the code-availability block gives the same address the row carries."
+  },
+  {
+   "row_index": 44,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:002",
+    "page:8:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The magnitude block names ZMAP and the code-availability block gives the same repository address the row carries."
+  },
+  {
+   "row_index": 45,
+   "source_support": "PARTIAL",
+   "source_locators": [
+    "page:10:block:044",
+    "page:2:block:002"
+   ],
+   "rationale": "DERIVATION_LOCAL The funding block names both endpoints in one funding sentence, and that block is also one the target organisation is formalized from. The block supports funding of the cruise's ship time specifically, while the row asserts an unqualified funding relation to the campaign and projects no slot for that narrower scope."
+  },
+  {
+   "row_index": 46,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:006"
+   ],
+   "rationale": "DERIVATION_LOCAL The relocation block names the double-difference relocations and the program that produced them, so the use relation and both endpoint names rest on the same sentence, which is also a block each endpoint is formalized from."
+  },
+  {
+   "row_index": 47,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:004"
+   ],
+   "rationale": "DERIVATION_LOCAL The location block describes the oct-tree search as belonging to the named program, which supports the part-of relation, and the same block formalizes both endpoints."
+  },
+  {
+   "row_index": 48,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:006",
+    "page:8:block:010"
+   ],
+   "rationale": "DERIVATION_LOCAL The relocation block carries the use relation and both endpoint names, and the code-availability block supplies the version and address this row projects on the target."
+  },
+  {
+   "row_index": 49,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:004",
+    "page:8:block:010"
+   ],
+   "rationale": "DERIVATION_LOCAL The location block carries the part-of relation and both endpoint names, and the code-availability block supplies the address this row projects on the target."
+  },
+  {
+   "row_index": 50,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states the minimum number of seismometers that had to record an event for it to be kept, which is the threshold and lower bound the row carries, and the subject is the instrument network that sentence is about."
+  },
+  {
+   "row_index": 51,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK Both cited blocks state that the deployed network held nineteen seismometers, which is the count and the scope the row carries, and the network is the subject of those sentences."
+  },
+  {
+   "row_index": 52,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The relocation block states how many instruments each relocated event was recorded on, giving the lower bound the row carries, and the sentence is about the instrument network."
+  },
+  {
+   "row_index": 53,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The results block states how many of the seismometers were usable for automatic detection, which is the count and scope the row carries, about the same instrument network."
+  },
+  {
+   "row_index": 54,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The velocity-model block states how many one-dimensional models were built, which is the count and scope the row carries, and the subject is the velocity model the study went on to select."
+  },
+  {
+   "row_index": 55,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK Same record as the counted-observation row above: the methods block gives the detection threshold and its lower bound, and the sentence is about the instrument network."
+  },
+  {
+   "row_index": 56,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK This projection drops the count, so what remains to check is the located sentence and the subject; the results block carries the deployment sentence the record points to and it is about the instrument network."
+  },
+  {
+   "row_index": 57,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The focal-mechanism block gives the instrument spacing that limits the solutions, matching the length, unit and approximate qualification the row carries, about the same network."
+  },
+  {
+   "row_index": 58,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK Same record as the counted-observation row above: the relocation block gives the lower bound on recording instruments per event, about the instrument network."
+  },
+  {
+   "row_index": 59,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK This projection drops the count, leaving the located sentence and the subject; the results block carries the usable-instrument sentence the record points to and it is about the network."
+  },
+  {
+   "row_index": 60,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK This projection drops the count, leaving the located sentence and the subject; the velocity-model block carries the model-construction sentence and it is about the velocity model."
+  },
+  {
+   "row_index": 61,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK Same record again under the seismic-observation case: the methods block gives the detection threshold and its lower bound, about the instrument network."
+  },
+  {
+   "row_index": 62,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK Same record again under the seismic-observation case: the relocation block gives the lower bound on recording instruments per event, about the instrument network."
+  }
+ ]
+}

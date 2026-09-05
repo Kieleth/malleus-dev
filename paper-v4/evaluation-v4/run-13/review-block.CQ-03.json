@@ -1,0 +1,1441 @@
+{
+  "question_id": "CQ-03",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "Rows carry the depth of the deep earthquakes beneath the central magmatic segment as a bounded interval in kilometres, with the observation marked measured, and they carry the calculated CO2 range for the primary melts of that same segment in weight per cent, marked calculated and estimated and labelled with the element the estimate rests on. Unit, bound qualification and estimate status sit on the same row as the values, and the segment is identified through a typed subject reference whose name and character are themselves supported, so every part the question asks for is addressed. Two qualifications: the narrowing to primary rather than pre-eruptive melts is carried in a free-text quantity description rather than a typed link, and the answer-bearing rows sit among many rows on unrelated matters. Both are precision costs, not gaps in coverage.",
+  "source_locators": [
+    "page:2:block:004",
+    "page:2:block:006",
+    "page:5:block:005",
+    "page:8:block:006",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The data-availability block that carries both projected values names the cruise reports and gives the campaign website address."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005",
+        "page:8:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block naming the PetDB database also gives its web address, so the name and the access locator both hold."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008",
+        "page:8:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The data-availability block names the Zenodo deposit and the deposit identifier runs across it and the block that follows; read together they give the identifier as projected."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block on the segment descriptions records basalts observed on the sea floor, which carries the projected name."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block compiling the geochemical analyses introduces mid-ocean ridge basalts under this abbreviation."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block setting out the shear-zone explanation names mylonite shear zones in the mantle, which carries the projected name."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block reports peridotites observed on the sea floor, which carries the projected name."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block stating the authors' preferred explanation names ascending melt, which carries the projected name."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block that estimates CO2 for the two segments names pre-eruptive melts and separates them from melts in equilibrium with the mantle source, which carries the name and the stage."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block on the corrected element concentrations names primary melts and describes them as being in equilibrium with the mantle source, which carries the name and the stage."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block stating the authors' preferred explanation names ascending melt, which carries the projected name."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block that estimates CO2 for the two segments names pre-eruptive melts and separates them from melts in equilibrium with the mantle source, which carries the name and the stage."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block on the corrected element concentrations names primary melts and describes them as being in equilibrium with the mantle source, which carries the name and the stage."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The results block states that the hypocenters were relocated by a double-difference location method, which is the projected name."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The magnitude block states that magnitudes were determined on the local magnitude scale, the projected name."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The results block states that a non-linear earthquake location algorithm produced the hypocenters, the projected name."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The earthquake-location block names the non-linear oct-tree search algorithm used for the initial hypocenters."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The results block names the short-term-average over long-term-average trigger used for automatic detection."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block attributes the velocity-ratio estimate to Wadati diagrams, the projected name."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block applies a CO2 solubility model to the melt, which carries the projected name."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block names the Iacono-Marziano model used for the theoretical solubility calculation."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block attributes the temperature estimate beneath the segment axis to thermal modelling, which carries the projected name."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The results block names the one-dimensional velocity model chosen for the travel-time calculation, which carries the projected name."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The depth-resolution block identifies the fastest of the tested models by this label, which is the projected name."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block identifies the selected average velocity model by this label, which is the projected name."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block applies a CO2 solubility model to the melt, which carries the projected name."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block names the Iacono-Marziano model used for the theoretical solubility calculation."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block attributes the temperature estimate beneath the segment axis to thermal modelling, which carries the projected name."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The results block names the one-dimensional velocity model chosen for the travel-time calculation, which carries the projected name."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The depth-resolution block identifies the fastest of the tested models by this label, which is the projected name."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block identifies the selected average velocity model by this label, which is the projected name."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introducing the global volatile to trace-element trends gives this ratio with its central value and uncertainty; the text layer breaks the formula with a space that a reader closes. The row's projection withholds the record's assertion locator and statement digest, so no digest token can be written here."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The same block gives this ratio with its central value and uncertainty, again with the formula broken by the text layer. The row's projection withholds the record's assertion locator and statement digest, so no digest token can be written here."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block gives the velocity ratio obtained from Wadati diagrams with numerator and denominator as projected. The block hedges the value as approximate and the projection carries no hedge, which does not change what the row claims. The projection also withholds the record's assertion locator and statement digest, so no digest token can be written here."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block names the ridge segment between the two transforms, which carries the projected name."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block names the ridge-transform-intersection subsection and calls it amagmatic, which carries both projected values."
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block names the segment and the discussion block reading its axial morphology calls it magmatic, so name and character both hold."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block names the segment south of the second discontinuity and the following block calls it magmatic, so name and character both hold."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block on the segment descriptions records basalts observed on the sea floor, which carries the projected name."
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block compiling the geochemical analyses introduces mid-ocean ridge basalts under this abbreviation."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block setting out the shear-zone explanation names mylonite shear zones in the mantle, which carries the projected name."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The introduction block reports peridotites observed on the sea floor, which carries the projected name."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-caption block listing what is plotted against CO2 names melt inclusions, the projected name."
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The same figure-caption block names the basalt samples along the two segments, the projected name."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The same figure-caption block names popping rocks among the plotted sample kinds."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first figure's caption block names the rock samples plotted on the bathymetric map, the projected name."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block applies a CO2 solubility model to the melt, which carries the projected name."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block names the Iacono-Marziano model used for the theoretical solubility calculation."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The background block that defines the brittle-ductile boundary gives both the abbreviation and the boundary kind as projected."
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-caption block identifies the dashed line as an isotherm at the projected temperature, which carries the name and the boundary kind."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block naming the lithosphere-asthenosphere boundary gives the abbreviation and the boundary kind as projected."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-caption block names the expected Moho interface, which carries the name and the discontinuity kind."
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The opening background block names the oceanic crust as a layer distinct from the mantle, which carries name and layer kind."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The background block on the brittle-ductile boundary names the lithosphere as the layer above the partially molten material, carrying name and layer kind."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The opening background block names the mantle as the layer the melt derives from, carrying name and layer kind."
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The discussion block attributes the temperature estimate beneath the segment axis to thermal modelling, which carries the projected name."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The results block names the one-dimensional velocity model chosen for the travel-time calculation, which carries the projected name."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The depth-resolution block identifies the fastest of the tested models by this label, which is the projected name."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block identifies the selected average velocity model by this label, which is the projected name."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:005",
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The assertion that formalises the adjacency sits in a methods block on the sample compilation, and neither endpoint draws its name or its character from that block. The adjacency of the two segments is stated there all the same, and the introduction and segment-description blocks cited with it carry the projected names and magmatic characters."
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005",
+        "page:1:block:005",
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The figure-caption block that formalises the sampling relation is also where the sample record takes its name, and it places those basalt samples along the segment. The segment's magmatic character comes from the discussion block cited with it."
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005",
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The same figure-caption block formalises the relation and names the sample record, placing those samples along the southern segment. That segment's magmatic character comes from the segment-description block cited with it."
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states that the two corrected element concentrations were computed for melts in equilibrium with a magnesian olivine and used to estimate CO2 in primary melts, and it names those melts."
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reads the depth of the microseismicity as evidence that ascending melt sits, fractionates and evolves at those depths; the ascending melt is named there and is what the sentence is about."
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that the published geochemical analyses of the ridge basalts inside the network footprint were compiled, and it names that material."
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block cites the observation of basalts on the sea floor as further support for a magmatically robust segment, and names the material. The captured statement is a fragment of that sentence and matches the block as captured."
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that sea-floor basalts are mostly degassed, which is what the record asserts, and it names the material."
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states that the two corrected element concentrations were computed for melts in equilibrium with a magnesian olivine and used to estimate CO2 in primary melts, and it names those melts."
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reads the depth of the microseismicity as evidence that ascending melt sits, fractionates and evolves at those depths; the ascending melt is named there and is what the sentence is about."
+    },
+    {
+      "row_index": 69,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block supports the statement itself: the dashed lines in the schematic carry isotherms taken from a simulated thermal model. The model is named there only as where those lines came from, not as what the sentence is about, so the record's attachment to the thermal model as its subject is only partly supported."
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block describes choosing among the constructed one-dimensional models on located-event count and residual, so both the statement and its attachment to the velocity model hold."
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block compares the selected model against the minimum model and reports the selected one locating more events; the velocity model is what the sentence is about."
+    },
+    {
+      "row_index": 72,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block supports the statement itself: the dashed lines in the schematic carry isotherms taken from a simulated thermal model. The model is named there only as where those lines came from, not as what the sentence is about, so the record's attachment to the thermal model as its subject is only partly supported."
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block describes choosing among the constructed one-dimensional models on located-event count and residual, so both the statement and its attachment to the velocity model hold."
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block compares the selected model against the minimum model and reports the selected one locating more events; the velocity model is what the sentence is about."
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block concludes that the tested ratio setting gives the lowest residuals and the most locations, and the ratio is what the sentence is about."
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block concludes that the tested ratio setting gives the lowest residuals and the most locations, and the ratio is what the sentence is about."
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the orientation of the deep events beneath the segment axis and their parallelism to the axial normal faults; the segment is named and is where the events lie."
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block concludes from the location tests that these deep events below the segment's ridge axis are required by the data rather than artifacts; the segment is named there."
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states the fourth and preferred possibility, tying the deep microseismicity beneath the segment to degassing from the ascending melt. The hypothesised modality, the preferred disposition and the projected description all come from that sentence, and the segment is named in it."
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that no active vents have been observed on the segment axis, which is the negated content the record carries, and it names the segment."
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that no events are seen below the stated depth beneath the segment ridge axis, matching the negated content, and it names the segment."
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block puts forward the small pressure rise from degassing of the ascending melt as inducing the events beneath the segment axis, which is the hypothesised content, and it names the segment."
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block cautions that the microseismicity record is a brief snapshot and speaks of the processes along this supersegment, which is the subject as named."
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports normal velocity ratios from tomography in the present segment, and names it."
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that the published geochemical analyses of the ridge basalts inside the network footprint were compiled, and it names that material."
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block cites the observation of basalts on the sea floor as further support for a magmatically robust segment, and names the material. The captured statement is a fragment of that sentence and matches the block as captured."
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that sea-floor basalts are mostly degassed, which is what the record asserts, and it names the material."
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The background block states how the boundary is defined from the maximum earthquake depth at slow and ultraslow ridges, so the boundary is what the sentence is about and is named in it."
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The figure-caption block says the thick line stands for the boundary constrained by the maximum earthquake depth, so the sentence is about the boundary and names it."
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states the expectation that the boundary shallows southward away from the intersection, which is a claim about the boundary and names it."
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block suggests that melt present at the lithosphere-asthenosphere boundary may owe to a combination of the two volatiles; the boundary is named and is where the claim is located."
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The abstract block carries the suggestion that deep mantle earthquakes follow from CO2 degassing and the volume change it produces, and the discussion block cited with it is where the explanation is called the preferred one, which supports the projected disposition. The mantle is named in the abstract block and is where the earthquakes are placed."
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that the migrating melt keeps degassing and produces earthquakes in the mantle over a depth interval; the mantle is named and is where the claim is located."
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The opening background block states that oceanic crust forms from mantle-derived melt, which is a claim about the crust and names it."
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that the volume change from degassing, under extensional stress, raises strain rates locally and sets off deep earthquakes within the mantle; the mantle is named and is where the triggering is placed."
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reads the crustal thickness as placing most of these events in the mantle with a few scattered in the crust; the mantle is named and is where the events are placed."
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports a modelled temperature at the relevant depths and concludes the mantle beneath the segment axis is hot; the mantle is named and is the subject of that conclusion."
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that how these melts reach the surface through the mantle's upper part is not understood; the mantle is named and bounds the claim."
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reads the sea-floor observations as showing exhumed mantle and supporting a tectonic origin for the subsection; the mantle is named and its presence is what the sentence asserts."
+    },
+    {
+      "row_index": 100,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block supports the statement itself: the dashed lines in the schematic carry isotherms taken from a simulated thermal model. The model is named there only as where those lines came from, not as what the sentence is about, so the record's attachment to the thermal model as its subject is only partly supported."
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block describes choosing among the constructed one-dimensional models on located-event count and residual, so both the statement and its attachment to the velocity model hold."
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block compares the selected model against the minimum model and reports the selected one locating more events; the velocity model is what the sentence is about."
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states how many one-dimensional P-wave models were constructed, matching the projected count and its scope; the models are what is counted and are named there."
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states how many one-dimensional P-wave models were constructed, matching the projected count and its scope; the models are what is counted and are named there."
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The figure-caption block gives the crustal thickness beneath the segment with its uncertainty and an approximation marker, matching the projected bounds, unit and qualification; the segment is named and is where the thickness is measured."
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the depth of the deep earthquakes observed beneath the segment axis as an interval, matching the projected bounds and unit; the segment is named and is where the events lie."
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The observations block places the deep microseismicity beneath the segment ridge axis over an approximate depth interval, matching the projected bounds, unit and qualification; the segment is named."
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block describes the depth-test subset and the interval its events span, matching the projected bounds and unit; the segment is named and is where those events lie."
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same methods block gives the size of that subset and the cross-section it was drawn along, matching the projected count and scope; the segment is named."
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the depth reached by the off-axis shallow microseismicity west of the segment axis as an upper bound, matching the projected bound, unit and qualification; the segment is named."
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the thickness of the older crust on the western ridge flank with its uncertainty, matching the projected value and unit; the crust is what is measured and is named."
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states how many one-dimensional P-wave models were constructed, matching the projected count and its scope; the models are what is counted and are named there."
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the barium enrichment of the segment's samples as a lower bound in the projected unit; the segment is named and scopes the measurement."
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the calculated CO2 content of the melts generated along the segment as an interval in the projected unit and marks it calculated; the segment is named."
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the calculated CO2 interval for the southern segment in the projected unit; that segment is named there."
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the estimated pre-eruptive CO2 range for the segment after fractional crystallisation, matching the projected bounds and unit; the segment is named."
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states the minimum CO2 concentration in the primary melts along the segment, matching the projected lower bound, unit and open-bound qualification; the segment is named."
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the barium-based pre-eruptive CO2 range for the segment, matching the projected bounds, unit and estimation basis; the segment is named."
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the barium-based pre-eruptive CO2 range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the barium-corrected primary-melt CO2 range for the segment, matching the projected bounds, unit and estimation basis and marking the values estimated; the segment is named."
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the barium-corrected primary-melt range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-based pre-eruptive CO2 range for the segment, matching the projected bounds, unit and basis; the segment is named."
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-based pre-eruptive range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 124,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-corrected primary-melt range for the segment, matching the projected bounds, unit and basis; the segment is named."
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-corrected primary-melt range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium enrichment of the segment's samples as a lower bound in the projected unit; the segment is named and scopes the measurement."
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the water content proposed at the base of the boundary as an upper bound in the projected unit and attributes it to a modelling argument, which supports the modelled determination; the boundary is named."
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states how many one-dimensional P-wave models were constructed, matching the projected count and its scope; the models are what is counted and are named there."
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states how many one-dimensional P-wave models were constructed, matching the projected count and its scope; the models are what is counted and are named there."
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the interval of velocity ratios used in the location tests, matching the projected bounds; the ratio is what the sentence is about and the row claims no unit for it."
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the interval of velocity ratios used in the location tests, matching the projected bounds; the ratio is what the sentence is about and the row claims no unit for it."
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the barium enrichment of the segment's samples as a lower bound in the projected unit; the segment is named and scopes the measurement."
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the calculated CO2 content of the melts generated along the segment as an interval in the projected unit and marks it calculated; the segment is named."
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the calculated CO2 interval for the southern segment in the projected unit; that segment is named there."
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the estimated pre-eruptive CO2 range for the segment after fractional crystallisation, matching the projected bounds and unit; the segment is named."
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states the minimum CO2 concentration in the primary melts along the segment, matching the projected lower bound, unit and open-bound qualification; the segment is named."
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the barium-based pre-eruptive CO2 range for the segment, matching the projected bounds, unit and estimation basis; the segment is named."
+    },
+    {
+      "row_index": 138,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the barium-based pre-eruptive CO2 range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block gives the barium-corrected primary-melt CO2 range for the segment, matching the projected bounds, unit and estimation basis and marking the values estimated; the segment is named."
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the barium-corrected primary-melt range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-based pre-eruptive CO2 range for the segment, matching the projected bounds, unit and basis; the segment is named."
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-based pre-eruptive range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 143,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-corrected primary-melt range for the segment, matching the projected bounds, unit and basis; the segment is named."
+    },
+    {
+      "row_index": 144,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-corrected primary-melt range for the southern segment, matching the projected bounds, unit and basis; that segment is named."
+    },
+    {
+      "row_index": 145,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The figure-caption block gives the crustal thickness beneath the segment with its uncertainty and an approximation marker, matching the projected bounds, unit and qualification; the segment is named and is where the thickness is measured."
+    },
+    {
+      "row_index": 146,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the depth of the deep earthquakes observed beneath the segment axis as an interval, matching the projected bounds and unit; the segment is named and is where the events lie."
+    },
+    {
+      "row_index": 147,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The observations block places the deep microseismicity beneath the segment ridge axis over an approximate depth interval, matching the projected bounds, unit and qualification; the segment is named."
+    },
+    {
+      "row_index": 148,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block describes the depth-test subset and the interval its events span, matching the projected bounds and unit; the segment is named and is where those events lie."
+    },
+    {
+      "row_index": 149,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same methods block gives the size of that subset and the cross-section it was drawn along, matching the projected count and scope; the segment is named."
+    },
+    {
+      "row_index": 150,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the depth reached by the off-axis shallow microseismicity west of the segment axis as an upper bound, matching the projected bound, unit and qualification; the segment is named."
+    },
+    {
+      "row_index": 151,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium enrichment of the segment's samples as a lower bound in the projected unit; the segment is named and scopes the measurement."
+    },
+    {
+      "row_index": 152,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the segment's length with an approximation marker, matching the projected value, unit and qualification, and names the segment."
+    },
+    {
+      "row_index": 153,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the southern segment's length, matching the projected value and unit, and names that segment."
+    },
+    {
+      "row_index": 154,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The introduction block gives the approximate length of the ridge segment between the two transforms, matching the projected value, unit and qualification, and names the segment."
+    },
+    {
+      "row_index": 155,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reads the microseismicity beneath the southern discontinuity as putting the boundary at the projected depth with an approximation marker; the boundary is what the sentence is about and is named."
+    },
+    {
+      "row_index": 156,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block sets out the cold and thick lithosphere explanation, under which the boundary would lie at the projected approximate depth; the hypothesised framing and the boundary as subject both come from that sentence."
+    },
+    {
+      "row_index": 157,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reads the off-axis shallow microseismicity as keeping the boundary above the projected depth, matching the upper bound and its qualification; the boundary is named."
+    },
+    {
+      "row_index": 158,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The background block gives the isotherm the maximum earthquake depth corresponds to, with its uncertainty, matching the projected value and unit; the boundary being defined is named there."
+    },
+    {
+      "row_index": 159,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the melt fraction proposed at the base of the boundary with an approximation marker, matching the projected value, unit and qualification; the boundary is named."
+    },
+    {
+      "row_index": 160,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the water content proposed at the base of the boundary as an upper bound in the projected unit and attributes it to a modelling argument, which supports the modelled determination; the boundary is named."
+    },
+    {
+      "row_index": 161,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the approximate temperature at which melt is present for anhydrous peridotites at the boundary, matching the projected value, unit and qualification; the boundary is named."
+    },
+    {
+      "row_index": 162,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the thickness of the older crust on the western ridge flank with its uncertainty, matching the projected value and unit; the crust is what is measured and is named."
+    },
+    {
+      "row_index": 163,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block places the earthquakes produced by continued degassing in the mantle over the projected depth interval, matching bounds and unit, and names the mantle."
+    },
+    {
+      "row_index": 164,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The background block gives the depth interval at which extensive dry melting begins under mantle upwelling, matching the projected bounds and unit; the mantle is named."
+    },
+    {
+      "row_index": 165,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the age of the cold lithosphere behind the cold-edge effect near the intersection, matching the projected value and unit, and names the lithosphere."
+    },
+    {
+      "row_index": 166,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states the lower bound on the temperature of the hot mantle in which these earthquakes occur, matching the projected bound, unit and qualification, and names the mantle."
+    },
+    {
+      "row_index": 167,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the modelled temperature interval at the relevant depths beneath the segment axis, matching the projected bounds, unit and modelled determination, and names the mantle."
+    },
+    {
+      "row_index": 168,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the age below which a magmatically accreted crust counts as young, matching the projected upper bound and unit, and names the crust."
+    },
+    {
+      "row_index": 169,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block states how many one-dimensional P-wave models were constructed, matching the projected count and its scope; the models are what is counted and are named there."
+    },
+    {
+      "row_index": 170,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The figure-caption block gives the crustal thickness beneath the segment with its uncertainty and an approximation marker, matching the projected bounds, unit and qualification; the segment is named and is where the thickness is measured."
+    },
+    {
+      "row_index": 171,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the depth of the deep earthquakes observed beneath the segment axis as an interval, matching the projected bounds and unit; the segment is named and is where the events lie."
+    },
+    {
+      "row_index": 172,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The observations block places the deep microseismicity beneath the segment ridge axis over an approximate depth interval, matching the projected bounds, unit and qualification; the segment is named."
+    },
+    {
+      "row_index": 173,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The methods block describes the depth-test subset and the interval its events span, matching the projected bounds and unit; the segment is named and is where those events lie."
+    },
+    {
+      "row_index": 174,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the depth reached by the off-axis shallow microseismicity west of the segment axis as an upper bound, matching the projected bound, unit and qualification; the segment is named."
+    },
+    {
+      "row_index": 175,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the thickness of the older crust on the western ridge flank with its uncertainty, matching the projected value and unit; the crust is what is measured and is named."
+    }
+  ]
+}

@@ -4573,3 +4573,87 @@ Cost, from `results/usage.json`: ontology attempt 01 168,092; population
 
 Non-claim: admission is structural acceptance. No preliminary review exists
 yet; the review judges the rows as rows.
+
+### E-0160, correction to E-0155 and E-0157: eight of run-12's fifteen projected subjects were in-word matches of a three-letter tag
+
+Date: 2026-09-05
+
+Sources: `handover/2026-09-05-v46-rca.md` (correction section), the overseer
+scratchpad script `rca13_letter.py` run against
+`private/paper-v4-v4-run-12/results/population-plan.json` and the retained
+captures of runs 11, 12 and 13.
+
+E-0155 read the fifteen PROJECTED derivations and called thirteen wrong; E-0157
+and the v4.6 RCA attributed them to a sentence naming its instrument as often
+as its subject. The subjects are wrong as read. The attribution is not: eight
+of the fifteen were matched by the Core-15 comparison, whitespace removed and
+case-folded, finding the entity's tag inside another word (RTI in "vertical"
+and "portion", OCC in "occur", MAR in "mark", OBS in "observations"). Of the
+seven named as a word, three attach a record to its software, one is marginal
+and three are plausible. The check tested by script: a form occurs as a word
+when it is not adjacent to a letter on either side, whitespace ignored inside
+the form, so the text layer's glued citation digits ("lithosphere13") still
+count. Under that rule the producer-set subjects of runs 11, 12 and 13 would
+have been refused 1, 0 and 2 times (run-11: "axial valley" once; run-13:
+"velocity model" against "velocity models" twice), and run-13's census would
+read 26 attachable, 43 ambiguous, 89 unnamed instead of 33, 49, 76.
+
+Non-claim: the review records of runs 12 and 13 are untouched; they judge rows,
+and a row whose subject was matched inside a word was judged PARTIAL on the
+reading, which is the same outcome. The principle recorded in the v4.6 RCA
+stands on the producer's own report of narrowed spans and on three software
+attachments, not on thirteen.
+
+### E-0161, run-13 (v4.7) preliminary review: RESPONSIVE on all four questions, 497 SUPPORTED, 18 PARTIAL, none UNSUPPORTED
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-13/review-block.CQ-01.json` to
+`review-block.CQ-04.json` (two fresh Opus 5 sessions, CQ-01 with CQ-02 and
+CQ-03 with CQ-04, dispatched 14:15Z under task v4 and protocol v2 with the
+instruction to judge a SUBJECT row on whether the block supports that the
+record is about the subject shown, a tag counting as the subject occurring),
+merged and validated as `review-record.preliminary.md`
+(`sha256:8d61af9b035caa8625d2edfd53e053c817fb0319f3d927e0f032c6e12a97230c`), manifest
+`sha256:920bf083a0a4b5070452de282a118d83ad4a048fee290ed221720ecb94040f49`.
+
+Results: CQ-01 RESPONSIVE, 61 SUPPORTED, 2 PARTIAL; CQ-02 RESPONSIVE, 118 and
+9; CQ-03 RESPONSIVE, 173 and 3; CQ-04 RESPONSIVE, 145 and 4. 515 rows, no
+UNSUPPORTED, no NOT_EVALUABLE. Every digest token DIGEST_OK (13 and 97 rows in
+the first pair; every SUBJECT row, 114 and 105, in the second). RELATION rows:
+CQ-01 five local; CQ-02 seven local and two non-local, both SUPPORTED because
+the relation's own sentence names both endpoints; CQ-03 and CQ-04 share one
+non-local relation (RC3 adjacent to RC2, formalized in the sample-compilation
+block). The first cell of the matrix RESPONSIVE on all four questions
+(run-12 P R R P, run-11 R R R P, run-10 P R R P, run-09 R P R P).
+
+The eighteen PARTIAL rows: two qualifiers absent (a campaign duration that is
+the recording period, a FUNDED_BY that funds ship time), one semantic (a solidus
+temperature read as the temperature at which melt is present), and fifteen
+subject-aboutness findings where the subject's name is in the block but the
+sentence uses it as figure furniture, a locational reference, a direction
+marker or the provenance of a figure's lines (the thermal model behind
+Figure 6's isotherms five times, the Romanche transform twice).
+
+What the reviewers could not decide under the task, for ratification:
+- The aboutness threshold. The second session's rule: SUPPORTED when the block
+  predicates the record's content of the subject or places the phenomenon at,
+  in or beneath the subject as a studied object; PARTIAL when the subject is
+  provenance, instrument or direction. A stricter reading demotes about ninety
+  locus-style observation rows; a looser one demotes none.
+- Both RESPONSIVE labels on CQ-03 and CQ-04 carry a qualification: the
+  answer-bearing rows are a minority of the return, the narrowing to primary
+  melts lives in free-text quantity_kind, and the degassing-to-trigger chain
+  is spread over unlinked rows. Read as precision cost; a reading of "material
+  ambiguity" would make both PARTIAL.
+- Subtype re-projection in the harness: software tools return under the
+  Instrument ENTITY case, observations under three cases at once, and three
+  QuantityRatio records return under the Ratio ENTITY case with Ratio's
+  projection, which hides the digest their records carry; 30 of CQ-02's 127
+  rows re-project records judged earlier in the same question.
+- Vocabulary: OPEN_LOWER_BOUND used for both "at least" and "more than";
+  NEGATED on a hedged inference encodes polarity, not epistemic strength.
+- One captured statement is clipped one word before its predicate; the digest
+  is correct for the clipped bytes and the block carries the completion.
+
+Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
