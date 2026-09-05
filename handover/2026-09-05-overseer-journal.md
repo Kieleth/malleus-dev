@@ -127,3 +127,17 @@ Luis ratified run-08's review as recorded (E-0139) and approved the four items o
 - Paper-11 (Opus): run-09 harness (v4.3) from run-08's: binding schema v3 with RELATION, ENTITY and SUBJECT case kinds, all type-only and frozen at acceptance; review protocol v2 with seven materials (adds the retained capture and the query trace summary); review task v3 template; pin.py; E-0140. Run-09 is measured against run-04's 146 local-relation rows.
 
 Order after both land: re-pin run-09 with `pin.py --commit <post-Core-13>`, verify, stage, launch the Opus 5 producer, gate, citation check, type sets and binding at acceptance, phase two, runner (set the accepted attempt in the runner script), usage from the launch log, freeze, review under protocol v2, ratification, comparison.
+
+## Night loop, from 2026-09-05T04:10Z: Luis's standing instruction and the rules I hold myself to
+
+Instruction, in his words: "continue iterating in loop one change at the time and rerunning, till we find more elegant ways to improve malleus, I want RCA every run, understanding, deep, even if it hurts, and finding novel ways to continue, log/journal, have fun, and remember less is more, many times is about stepping back, reducing complexity and finding a more elegant unified way to achieve things."
+
+Rules for the loop:
+1. One change per iteration, named before the cell runs, with the hypothesis it tests written here first.
+2. Every cell: gate, citation check, binding at acceptance, phase two, runner, freeze, fresh preliminary review, then the RCA against every earlier cell from the artifacts, with numbers computed by script and the mechanism stated. Reviews stay PRELIMINARY; Luis ratifies in the morning.
+3. Core changes: one Opus agent at a time on the ledger, RED then GREEN, additive, every frozen cell still pinned by `git show`. Harness changes: a new run directory, the old ones untouched.
+4. Commit with explicit paths, push main after a green gate. Private artifacts stay private; the leak ladder runs on every public file.
+5. Prefer removing a rule to adding one. Before each change, ask whether an existing check already implies it; after each RCA, ask which two checks are one check.
+6. Nothing irreversible, nothing destructive, no ratification by me, no pushing to any branch but main.
+
+A candidate unification to test when the data supports it: the derivation rule's content checks (verbatim statement, statement digest, subject named in the statement, disposition from a disposing sentence, locality of relation endpoints) are all instances of one rule, "what a pointer derives must be visible in the statement it points at". If one check over every derived scalar (name, number, enum label, subject name) subsumes the rest, four reasons become one and the skill loses four sentences. To be tried after run-09, not before.
