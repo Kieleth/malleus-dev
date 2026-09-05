@@ -616,3 +616,88 @@ def test_document_adapter_keeps_the_six_capture_modalities() -> None:
         "NEGATED",
         "STATED",
     }
+
+
+def test_document_census_reports_derivation_locality_and_fan_out() -> None:
+    """Run-04's derivation rule bound every value to an assertion and never
+    asked what the assertion said. One sentence on the data-acquisition
+    paragraph carried 36 formalization targets for twelve relations it names
+    no endpoint of, and the capture's largest hubs formalize 47, 23 and 12
+    distinct records from single sentences on one reference-list block. The
+    census reports both axes and refuses neither."""
+
+    result = _adapt()
+    census = json.loads(result.canonical_census_bytes)
+
+    assert set(census) == {
+        "assertions",
+        "blocks",
+        "blocks_reviewed",
+        "blocks_total",
+        "capture_sha256",
+        "derivation",
+        "gaps_by_kind",
+    }
+    assert census["derivation"] == {
+        "assertion_fan_out": {"asr:001": 3, "asr:002": 0, "asr:003": 0},
+        "fan_out_distribution": {"0": 2, "3": 1},
+        "non_local_relations": 0,
+        "relation_locality": {"inspection-of:P-7:2026-03-02": "LOCAL"},
+        "top_hubs": [
+            {
+                "assertion": "asr:001",
+                "block": "page:1:block:001",
+                "records": 3,
+            }
+        ],
+    }
+
+
+def test_document_census_names_a_relation_derived_away_from_its_endpoints() -> None:
+    """A relation hung on a neighbouring sentence is reported, never refused."""
+
+    reading, capture, _, _ = _inputs()
+    moved = [
+        item
+        for item in capture["assertions"][0]["formalized_by"]
+        if item["record_id"] == "inspection-of:P-7:2026-03-02"
+    ]
+    capture["assertions"][0]["formalized_by"] = [
+        item
+        for item in capture["assertions"][0]["formalized_by"]
+        if item["record_id"] != "inspection-of:P-7:2026-03-02"
+    ]
+    capture["assertions"][2]["formalized_by"] = moved
+
+    result = _adapt(reading=reading, capture=capture)
+    derivation = json.loads(result.canonical_census_bytes)["derivation"]
+
+    assert derivation["relation_locality"] == {
+        "inspection-of:P-7:2026-03-02": "NON_LOCAL"
+    }
+    assert derivation["non_local_relations"] == 1
+    assert derivation["assertion_fan_out"] == {"asr:001": 2, "asr:002": 0, "asr:003": 1}
+    assert derivation["fan_out_distribution"] == {"0": 1, "1": 1, "2": 1}
+    assert derivation["top_hubs"] == [
+        {"assertion": "asr:001", "block": "page:1:block:001", "records": 2},
+        {"assertion": "asr:003", "block": "page:1:block:002", "records": 1},
+    ]
+
+
+def test_document_census_calls_an_underived_relation_underived() -> None:
+    """A relation no assertion formalizes is neither local nor non-local."""
+
+    reading, capture, plan, _ = _inputs()
+    capture["assertions"][0]["formalized_by"] = [
+        item
+        for item in capture["assertions"][0]["formalized_by"]
+        if item["record_id"] != "inspection-of:P-7:2026-03-02"
+    ]
+
+    result = _adapt(reading=reading, capture=capture)
+    derivation = json.loads(result.canonical_census_bytes)["derivation"]
+
+    assert derivation["relation_locality"] == {
+        "inspection-of:P-7:2026-03-02": "UNDERIVED"
+    }
+    assert derivation["non_local_relations"] == 0
