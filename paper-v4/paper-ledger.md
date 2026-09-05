@@ -3834,38 +3834,6 @@ review exists yet. Relations fell to 11 from run-09's 219; whether the subject
 element absorbed them or the producer under-derived is the iteration's
 analysis, recorded separately.
 
-### E-0148, run-10's preliminary review and the iteration's analysis
-
-Date: 2026-09-05
-
-Sources: `paper-v4/evaluation-v4/run-10/review-record.preliminary.md`
-(sha256:2278bbeb…), its four question blocks written by two fresh sessions,
-the private launch log and usage record, and `handover/2026-09-05-v44-rca.md`.
-
-Review: two fresh Claude Opus 5 sessions (CQ-01 with CQ-02, 215 rows; CQ-03
-with CQ-04, 337 rows) under protocol v2 and the v3 task, merged by the overseer
-into one record and validated as one, actor `actor:claude-preliminary-run-10`,
-completed 2026-09-05T08:56:38Z; the split is a recorded deviation.
-Responsiveness: CQ-01 PARTIAL, CQ-02 RESPONSIVE, CQ-03 RESPONSIVE, CQ-04
-PARTIAL. Support: 542 SUPPORTED, 10 PARTIAL, none UNSUPPORTED, none
-NOT_EVALUABLE. All 249 rows carrying a statement digest recomputed DIGEST_OK; no
-SUBJECT_NOT_IN_BLOCK. Each PARTIAL question misses one required semantic that
-sits on a source-asserted record with no subject, unreachable by construction
-under the restricted binding. Cost: 498,191 tokens across the two sessions.
-Ratification pending.
-
-Analysis (the RCA): the change under test held, modality drift 0 of 174
-against run-09's 20 of 212; the range clarification and the naming sentence
-each removed the return they targeted; the ENTITY restriction cut the review
-by 59 per cent at unchanged support and priced the missing subjects, 49 per
-cent coverage, in two PARTIAL verdicts. Two review-surface defects: the
-locality token misapplied to SUBJECT rows, and hedged categorical values with
-no modality slot. Iteration 3 is decided there: the subject check accepts an
-entity's tags with whitespace ignored (Core-15), run-11 on the same harness.
-
-Non-claim: one cell per iteration; the preliminary record is not paper
-evidence until ratified.
-
 ### E-0147, run-11 opens v4.5: the subject check accepts an entity's other names
 
 Date: 2026-09-05
@@ -3875,8 +3843,8 @@ Sources: `paper-v4/experiment-v4/run-11/run-contract.json`,
 `bind_from_surface.py`, `native_query.py`, `offline_validation.py`,
 `offline-validation.json`, `test_contract.py`, `test_pipeline.py`,
 `paper-v4/evaluation-v4/run-11/review-record.blank.md`,
-`handover/2026-09-05-overseer-journal.md` (iteration 2's two sections) and
-E-0144 to E-0146.
+`handover/2026-09-05-overseer-journal.md` (iteration 2's two sections),
+`handover/2026-09-05-v44-rca.md` and E-0144 to E-0148.
 
 Iteration: run-11 is the sixth iteration of the v4 protocol, `v4.5`. The
 protocol shape does not change, the producer does not change, and this time the
@@ -3927,8 +3895,8 @@ One entry is this iteration's, and it is Core's:
    added and `expected_reasons` is empty; what moves is the comparison and the
    refusal's message. The skill states that the source's other forms of a name go
    in `tags`. `tags` is an existing root slot every Entity already carries, so
-   there is no new slot, no pack version and no ontology change. Cause: the
-   overseer journal's iteration 2 sections and E-0146. State at the pin:
+   there is no new slot, no pack version and no ontology change. Cause: `handover/2026-09-05-v44-rca.md` sections 2 and 4, decision 20, and
+   E-0148, which closed iteration 2 and decided this one. State at the pin:
    `PENDING_AT_PIN`. Because the expectation is empty, a subset check on the enum
    would read LANDED against a commit where Core has written nothing, so the pin
    sets `pin_status` from two byte comparisons against the v4.4 coordinate
@@ -3945,7 +3913,7 @@ evidence about v4.5.
 Measurement: run-11 is measured against run-10's 552 admitted rows (51, 164, 165,
 172; 378 SUBJECT, 158 ENTITY, 16 RELATION, 213 witnesses) and against the 35 of
 130 subjects run-10's first runner attempt refused. The overseer classified those
-35 from the artifacts: 14 genuinely unnamed in their sentence, 7 aliases, 8
+35 from the artifacts, recorded in the v4.4 RCA: 14 genuinely unnamed in their sentence, 7 aliases, 8
 partial names, 6 whitespace artefacts of the text layer. Expected: the 21
 aliases, partial names and whitespace artefacts no longer refuse; the 14
 genuinely unnamed still do. The contract records both figures, their bases and
@@ -3965,3 +3933,35 @@ named, and the 21 that should stop refusing are the overseer's classification of
 run-10's records, not a count Core-15 will reproduce. Whether any of it holds is
 open, and run-11 is one cell that will be one observation, not a measurement,
 until it has run to ratification.
+
+### E-0148, run-10's preliminary review and the iteration's analysis
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-10/review-record.preliminary.md`
+(sha256:2278bbeb…), its four question blocks written by two fresh sessions,
+the private launch log and usage record, and `handover/2026-09-05-v44-rca.md`.
+
+Review: two fresh Claude Opus 5 sessions (CQ-01 with CQ-02, 215 rows; CQ-03
+with CQ-04, 337 rows) under protocol v2 and the v3 task, merged by the overseer
+into one record and validated as one, actor `actor:claude-preliminary-run-10`,
+completed 2026-09-05T08:56:38Z; the split is a recorded deviation.
+Responsiveness: CQ-01 PARTIAL, CQ-02 RESPONSIVE, CQ-03 RESPONSIVE, CQ-04
+PARTIAL. Support: 542 SUPPORTED, 10 PARTIAL, none UNSUPPORTED, none
+NOT_EVALUABLE. All 249 rows carrying a statement digest recomputed DIGEST_OK; no
+SUBJECT_NOT_IN_BLOCK. Each PARTIAL question misses one required semantic that
+sits on a source-asserted record with no subject, unreachable by construction
+under the restricted binding. Cost: 498,191 tokens across the two sessions.
+Ratification pending.
+
+Analysis (the RCA): the change under test held, modality drift 0 of 174
+against run-09's 20 of 212; the range clarification and the naming sentence
+each removed the return they targeted; the ENTITY restriction cut the review
+by 59 per cent at unchanged support and priced the missing subjects, 49 per
+cent coverage, in two PARTIAL verdicts. Two review-surface defects: the
+locality token misapplied to SUBJECT rows, and hedged categorical values with
+no modality slot. Iteration 3 is decided there: the subject check accepts an
+entity's tags with whitespace ignored (Core-15), run-11 on the same harness.
+
+Non-claim: one cell per iteration; the preliminary record is not paper
+evidence until ratified.

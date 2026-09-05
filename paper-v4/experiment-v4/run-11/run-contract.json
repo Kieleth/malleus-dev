@@ -198,7 +198,8 @@
         },
         "pin_status": "PENDING_AT_PIN",
         "detail": "The document adapter's subject check accepts the subject entity's name the way the reading spells it: its name or any of its tags, whitespace collapsed and case folded on both sides, must occur in a statement that formalizes the record. SUBJECT_NOT_NAMED still refuses a subject no form of whose name is in the statement, so the enum does not move and no reason is added; what moves is the comparison and the refusal's message. The skill states that the source's other forms of a name go in tags. tags is an existing root slot every Entity already carries, so there is no new slot, no pack version and no ontology change. The pin script records the adapter's and the skill's digests against the v4.4 coordinate 2026244, the SUBJECT_NOT_NAMED message text verbatim beside that coordinate's, and every refusal reason the enum gained after it, which must be none. pin_status is the two byte comparisons and nothing else: expected_reasons is empty, so a subset check would read LANDED before Core had written a line.",
-        "why": "handover/2026-09-05-overseer-journal.md, the two iteration 2 sections, and E-0146. Run-10's first runner attempt refused 35 of 130 subjects with one aggregated SUBJECT_NOT_NAMED, against run-09's 98 of 129, and the names were the source's own designators, so run-09's naming sentence had already held. The overseer classified all 35 from the artifacts: 14 are genuinely unnamed in their sentence, 7 are aliases (the entity named Mid-Atlantic Ridge where the sentence writes the MAR), 8 are partial names (Oceanic crust named, crust written) and 6 are whitespace artefacts of the text layer (CO2 named, CO 2 printed). Twenty-one of the thirty-five are the check being more literal than names are, not a producer naming something the source does not. The repair run-10's producer made was five renames to the repeated form and sixteen subjects dropped with typed gaps, which is the protocol paying a producer round for a string comparison."
+        "why": "handover/2026-09-05-v44-rca.md sections 2 and 4, decision 20, approved in E-0148, and the overseer journal's two iteration 2 sections. Run-10's first runner attempt refused 35 of 130 subjects with one aggregated SUBJECT_NOT_NAMED, against run-09's 98 of 129, and the names were the source's own designators, so run-09's naming sentence had already held. The overseer classified all 35 from the artifacts: 14 are genuinely unnamed in their sentence, 7 are aliases (the entity named Mid-Atlantic Ridge where the sentence writes the MAR), 8 are partial names (Oceanic crust named, crust written) and 6 are whitespace artefacts of the text layer (CO2 named, CO 2 printed). Twenty-one of the thirty-five are the check being more literal than names are, not a producer naming something the source does not. The repair run-10's producer made was five renames to the repeated form and sixteen subjects dropped with typed gaps, which is the protocol paying a producer round for a string comparison.",
+        "decision": 20
       },
       {
         "id": "ENTITY_KIND_RESTRICTED",
@@ -512,12 +513,14 @@
           "WHITESPACE_ARTEFACT": 6
         },
         "expected": "THE_TWENTY_ONE_ALIAS_PARTIAL_AND_WHITESPACE_SUBJECTS_NO_LONGER_REFUSE_THE_FOURTEEN_UNNAMED_STILL_DO",
-        "classes_source": "handover/2026-09-05-overseer-journal.md"
+        "classes_source": "handover/2026-09-05-v44-rca.md"
       },
       "sources": [
         "paper-v4/experiment-v4/run-10/results/launch-log.json",
+        "handover/2026-09-05-v44-rca.md",
         "handover/2026-09-05-overseer-journal.md",
-        "E-0146"
+        "E-0146",
+        "E-0148"
       ],
       "reason": "Run-10 is the cell run-11 repeats with one Core change and no harness delta, so its 552 rows are the row figure this cell moves against and its 35 refused subjects are the figure the change is aimed at. The rows are the admitted outcome of the v4.4 binding on run-10's graph, not an offline projection; the refused subjects are run-10's first runner attempt, before the producer's naming repair, which is the only place the subject check is observed refusing."
     },
@@ -541,11 +544,12 @@
         "run_id": "run-10",
         "path": "paper-v4/experiment-v4/run-10",
         "requested_model": "opus",
-        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_IN_PROGRESS",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
         "ledger_entries": [
           "E-0144",
           "E-0145",
-          "E-0146"
+          "E-0146",
+          "E-0148"
         ],
         "superseded": false
       }

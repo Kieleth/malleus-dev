@@ -97,7 +97,7 @@ CHANGE_IDS = tuple(sorted(V4_5_CHANGE_IDS + CARRIED_CHANGE_IDS))
 # The v4.4 cell this iteration follows, and the commits the earlier ones ran at.
 # The four carried Core entries are read at fixed commits, never at the v4.5
 # coordinate.
-V4_4_CELL = ("run-10", "opus", "ADMITTED_AND_REPLAYED_REVIEW_IN_PROGRESS")
+V4_4_CELL = ("run-10", "opus", "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY")
 V4_3_CELL = ("run-09", "opus", "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY")
 V4_2_CELL = ("run-08", "opus", "ADMITTED_AND_REPLAYED_REVIEW_RATIFIED")
 V4_2_COMMIT = "f59477154a2b20f9ffbf6b1f72f6104ee2e1f6c5"
@@ -429,6 +429,8 @@ def test_the_cell_is_measured_against_run_10s_rows_and_its_refused_subjects() ->
     assert sum(MEASURED_ROWS_BY_KIND.values()) == MEASURED_ROWS
     assert measured["reason"].strip()
     assert "E-0146" in measured["sources"]
+    assert "E-0148" in measured["sources"]
+    assert "handover/2026-09-05-v44-rca.md" in measured["sources"]
     assert "handover/2026-09-05-overseer-journal.md" in measured["sources"]
     assert (
         "paper-v4/experiment-v4/run-10/results/launch-log.json" in measured["sources"]
@@ -510,6 +512,7 @@ def test_the_change_list_names_one_new_change_and_carries_fifteen() -> None:
     assert aliases["pin_evidence"] == (
         "ADAPTER_AND_SKILL_BYTES_AGAINST_THE_V4_4_COORDINATE"
     )
+    assert aliases["decision"] == 20
     assert aliases["subject"] == (
         "src/malleus/_contract_pipeline/document.py,"
         " .claude/skills/malleus-acolyte/SKILL.md"
@@ -1477,7 +1480,7 @@ def test_the_active_gate_collects_run_11() -> None:
 
 def test_the_paper_ledger_opens_the_v4_5_iteration() -> None:
     ledger = PAPER_LEDGER.read_text(encoding="utf-8")
-    entry = ledger.split("### E-0147,")[-1]
+    entry = ledger.split("### E-0147,")[-1].split("\n### E-")[0]
 
     assert "### E-0147," in ledger
     for phrase in (
