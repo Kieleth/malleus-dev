@@ -5253,3 +5253,145 @@ carried only by the tool's own name; text-layer artifacts (a ligature, a
 hyphenated line break, a split URL, "CO 2") read as a person would.
 
 Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
+
+### E-0170, run-16 opens the first matrix cell on the settled protocol: Sonnet 5 at v4.9
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-16/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`native_query.py`, `offline-validation.json`, `test_contract.py`,
+`test_pipeline.py`, `paper-v4/evaluation-v4/run-16/review-record.blank.md`,
+`handover/2026-09-05-v49-rca.md`, and E-0126, E-0131, E-0132 and E-0166 to
+E-0169.
+
+Cell: run-16 is the second cell of v4.9 and the first matrix cell since run-07.
+The protocol does not move, the harness does not move and Core does not move.
+What moves is the producer's model: requested model `sonnet`, model family
+Claude Sonnet 5, model id claude-sonnet-5, reasoning effort the harness default
+and neither pinned nor observed. Every other key of run-15's producer block
+reaches this cell unchanged, and `run-16/test_pipeline.py` compares the two
+blocks key by key, so only those three may differ. The scope block says it
+plainly: `matrix_cell` SECOND_OF_V4_9, `variable` PRODUCER_MODEL_ONLY,
+`harness` IDENTICAL_TO_RUN_15, `harness_matched_cell` run-15,
+`model_matched_cell` run-05. This is run-05's relation to run-04 repeated eight
+iterations later, on a harness that has since been rebuilt. Run-16 supersedes
+nothing; run-15 stays the first cell of v4.9.
+
+Harness: byte for byte run-15's. `native_query.py` carries no run id and is
+copied without a substitution, which is a stronger statement than any earlier
+cell could make about its executor. Six scripts and the spawn message are
+run-15's with the run id moved. `offline_validation.py` joins that list, because
+this cell edits neither the binder nor the executor and so has nothing to
+measure on top. `pin.py` takes one more table: the reference cell steps from
+run-14 to run-15, the interface ordinal from 15 to 16, and two sentences are
+repaired because the blanket step would otherwise make them say something
+untrue. Both tables reverse to run-15's bytes and `test_pipeline.py` reverses
+them, so an edit in neither table fails rather than travelling with the cell.
+
+Coordinates: `pin.py --commit dc5254795a78648591d3a1b0bcf602af8d443dc1` pins that
+commit, tree `a712e938be28e4929e50f3a6a419f94ec57d3d0a`, governance head
+`OVR-000413` at `sha256:b2196bcc…`, the v4.8 head and the coordinate run-14 and
+run-15 both ran at. The gate status reads `PINNED_TO_THE_V4_9_CORE_COORDINATE`.
+The pin still reads the adapter by AST at the pinned commit and refuses if the
+word-bounded predicate is not at both subject sites or a membership test against
+a statement is back at either; it records `_occurs_as_word` at both and an empty
+list of substring sites. None of the eight declared inputs moved against
+run-15's manifest, the skill included. The interface coordinates are new:
+`capture:paper-v4:yu-2025:v4:16` and `plan:paper-v4:yu-2025:v4:16`, the runner
+will execute under `actor:overseer-run-16` with the reading artifact
+`artifact:selected-reading:yu-2025:v4:16`, and the private workspace is
+`private/paper-v4-v4-run-16/producer`.
+
+All twenty-two of run-15's `changes` entries are carried forward and marked
+`carried_from: run-15`. Eight are Core's and are read at fixed commits, the
+newest of them, `CORE_18_NAME_AS_WORD`, between the v4.7 and the v4.8
+coordinates, exactly as run-15 read it. Fourteen are the harness's, and
+`ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION` is now among them: run-15's executor
+delta is carried inside an executor this cell copied, and its measurement stays
+where it was made, on run-13's and run-14's frozen results before run-15 ran.
+
+One entry is this cell's, and it is the producer's:
+
+1. `SONNET_5_PRODUCER_AT_V4_9`, kind `MODEL_CELL`, subject the contract's own
+   producer block, `defect_of: none`. The three model fields and nothing else.
+   The harness delta is NONE and the Core delta is NONE; the spawn message is
+   run-15's with the run id moved, the installed skill is the same declared
+   bytes at the same commit, and the executor is run-15's byte for byte. The
+   change is visible to the producer in the only sense that matters, because a
+   producer is the model that runs it, and to nothing else: no input, no message
+   and no file it reads differs from run-15's. Cause:
+   `handover/2026-09-05-v49-rca.md`. Three Opus cells at a stable Core found no
+   Core defect; what they found is producer variance, a reviewer threshold and
+   two design properties of the type-only binding. With Core stable since
+   `dc52547` and the harness at v4.9, the matrix cells are what the paper needs
+   next, and a further Core change now would restart comparability across the
+   three Opus cells.
+
+The review surface does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell it
+is instantiated to changes. The blank record for run-16 is run-15's with the run
+id moved and nothing else.
+
+The offline validation is carried whole. `offline_validation.py` re-runs the
+v4.4 ENTITY restriction and the v4.9 collapse on run-09's frozen record and
+returns run-15's counts unchanged, because neither the binder nor the executor
+moved: 630 of run-09's 1,466 rows kept (58, 319, 131, 122), 618 SUPPORTED, 12
+PARTIAL, none unjudged, and those 630 become 463 under one row per witness per
+question (54, 168, 123, 118), 167 re-projections removed, 456 SUPPORTED and 7
+PARTIAL, with no collapsed row carrying a label the survivor did not. Every
+total and every per-question figure equals run-15's record key for key, which is
+what "no harness delta" means where it can be counted.
+
+Measurement: run-16 is measured against run-15, the harness-matched cell, and
+against run-05, the prior Sonnet 5 cell. Run-15: 433 admitted rows (28, 104,
+154, 147; 192 ENTITY, 24 RELATION, 217 SUBJECT) over 160 witnesses and 351
+traced records, 351 records in the graph (315 entities, 1 event, 35 relations),
+358 assertions over 186 of 186 blocks, subject coverage 80 of 144, refused once
+at the ontology gate and admitted at the first runner attempt, producer 351,253
+tokens; preliminary review E-0169, P R P P, 427 SUPPORTED, 6 PARTIAL, no
+UNSUPPORTED, unratified. Run-05: 74 records (47 entities, 1 event, 26
+relations), 66 assertions over 27 of 186 blocks, one gap, refused once at the
+gate and admitted at the first runner attempt, 29 rows (2, 5, 9, 13) over 44
+witnesses, producer 382,952 tokens; review ratified as recorded at E-0132, R P R
+P, 24 SUPPORTED, 5 PARTIAL, no UNSUPPORTED. Run-05 is not a control: it ran at
+v4.1, at Core commit `8b806f7`, under an earlier skill and pack set and a spawn
+message whose stop rule was rewritten at `STOP_RULE_CLARIFIED`, with a
+hand-picked binding of four questions by six cases. What it bounds is this
+cell's expectation.
+
+Expected, stated before the run: a Sonnet 5 producer under the v4.9 skill covers
+more than 27 of 186 blocks, which is where run-05 stopped by choice; it returns
+at most twice at the gate and at most twice at the runner, the caps the manifest
+declares; and its rows judge with no UNSUPPORTED, as every cell from run-13 on
+has done. Falsifier: any of the three failing. Each is read off this cell's own
+frozen files and needs no comparison to decide, so a cell that stops at 27
+blocks again, exhausts a return cap, or returns one UNSUPPORTED row refuses the
+expectation as stated.
+
+Two corrections to earlier entries, made here because run-16's contract reads
+those cells' frozen files and the files are what bind. E-0168 and the v4.9 RCA
+table give run-15's witness count as 160 and 162 respectively; run-15's frozen
+`query-trace-summary.json` records 160 witnesses and 160 records, and the
+contract carries 160. E-0131 gives run-05's witness count as 4; run-05's frozen
+`query-trace-summary.json` records 44, and the contract carries 44 with the
+correction beside it. Neither closed cell is edited.
+
+A harness debt is closed. E-0169 found that `paper-v4/evaluation-v4/review.py`
+had accepted only query-result v2 and refused the v3 record run-15's executor
+wrote, because the schema was bumped at run-15 and the validator was not, and
+because no cell's tests had ever run the validator on a record. Run-16's
+`test_contract.py` runs the validator's schema check on a fixture built and
+digested in the test, at both accepted names and at a third it must refuse, and
+reads the accepted set against the executor's own `RESULT_SCHEMA`, so a later
+bump that misses the validator fails at the cell rather than at a merge. Nothing
+private enters the fixture.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-16, and
+`ontology-run/` and `results/` carry only a keepfile. Nothing here is a claim
+about either model. One cell per model is one observation, and a difference
+between two single sessions is not a measurement of either; run-05 and run-16
+are five iterations apart, so the pair bounds an expectation and not a
+comparison. Whether the expectation holds is open, and run-16 is one cell that
+will be one observation, not a measurement, until it has run to ratification.
