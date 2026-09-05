@@ -46,6 +46,7 @@ __all__ = (
 
 _GRAMMAR = "malleus.population-plan/private-v0"
 _DIGEST_PREFIX = "sha256:"
+_SUBJECT_SLOT = "subject"
 _HEX = frozenset("0123456789abcdef")
 _ROOT_FIELDS = frozenset(
     {
@@ -140,6 +141,7 @@ class PopulationPlanStatus(str, Enum):
 class PopulationPlanRefusalReason(str, Enum):
     ABSENT_PATH = "ABSENT_PATH"
     DANGLING_ENDPOINT = "DANGLING_ENDPOINT"
+    DANGLING_SUBJECT = "DANGLING_SUBJECT"
     DUPLICATE_ARTIFACT_ID = "DUPLICATE_ARTIFACT_ID"
     DUPLICATE_CHANGE_SET_ID = "DUPLICATE_CHANGE_SET_ID"
     DUPLICATE_PLAN_ID = "DUPLICATE_PLAN_ID"
@@ -1048,6 +1050,24 @@ def compile_population_plan(
                 raise _refuse(
                     PopulationPlanRefusalReason.DANGLING_ENDPOINT,
                     f"relation {relation['id']} has absent {endpoint_name}: {endpoint}",
+                )
+    for family in records.values():
+        for record in family:
+            assert isinstance(record, dict)
+            properties = record.get("properties")
+            subject = (
+                properties.get(_SUBJECT_SLOT)
+                if isinstance(properties, dict)
+                else None
+            )
+            if (
+                isinstance(subject, str)
+                and subject not in by_id
+                and subject not in base_changes
+            ):
+                raise _refuse(
+                    PopulationPlanRefusalReason.DANGLING_SUBJECT,
+                    f"record {record['id']} has absent subject: {subject}",
                 )
     for participation in records.get("event_participations", []):
         assert isinstance(participation, dict)

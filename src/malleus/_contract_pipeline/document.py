@@ -44,11 +44,15 @@ _EVALUATING_MODALITY_EXCLUDED = "HYPOTHESISED"
 _RELATION_FAMILY = "relations"
 _CENSUS_TOP_HUBS = 5
 _STATEMENT_DIGEST_SLOT = "statement_sha256"
+_SUBJECT_SLOT = "subject"
+_NAME_SLOT = "name"
 _DERIVATION_RULE = (
     "a record's assertion_locator names an assertion of this capture, its "
-    "statement_sha256 is the SHA-256 of that assertion's statement bytes, and "
+    "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
     "a slot the contract declares evaluative is formalized by at least one "
-    "assertion whose modality is not HYPOTHESISED"
+    "assertion whose modality is not HYPOTHESISED, and the name of a "
+    "record's subject occurs in the statement of an assertion that "
+    "formalizes that subject"
 )
 _FORMALIZATION_FIELDS = {"path", "record_id"}
 _GAP_FIELDS = {"kind", "statement"}
@@ -71,6 +75,7 @@ class DocumentAssertionRefusalReason(str, Enum):
     MALFORMED_READING = "MALFORMED_READING"
     NOT_VERBATIM = "NOT_VERBATIM"
     READING_MISMATCH = "READING_MISMATCH"
+    SUBJECT_NOT_NAMED = "SUBJECT_NOT_NAMED"
     UNKNOWN_ASSERTION_LOCATOR = "UNKNOWN_ASSERTION_LOCATOR"
     UNKNOWN_BLOCK = "UNKNOWN_BLOCK"
     UNKNOWN_FORMALIZATION_TARGET = "UNKNOWN_FORMALIZATION_TARGET"
@@ -486,6 +491,62 @@ def _evaluative_defects(
     return defects
 
 
+def _subject_defects(
+    records_by_id: dict[str, dict[str, object]],
+    formalized: dict[str, dict[str, list[tuple[str, str]]]],
+    statements: dict[str, str],
+) -> list[_Defect]:
+    """Collect every subject the sentence that asserts it does not name.
+
+    The subject entity's ``name``, whitespace-collapsed and case-folded, must
+    occur in the statement of at least one assertion formalizing the record's
+    ``subject`` path. The name is read from this change set, which is all the
+    adapter is handed: a subject naming no record here may still resolve in
+    the base state, so the adapter claims nothing about it and the plan
+    compiler refuses one that resolves nowhere.
+    """
+
+    defects: list[_Defect] = []
+    for record_id in sorted(records_by_id):
+        subject = _record_properties(records_by_id[record_id]).get(_SUBJECT_SLOT)
+        if not isinstance(subject, str) or not subject:
+            continue
+        target = records_by_id.get(subject)
+        if target is None:
+            continue
+        name = _record_properties(target).get(_NAME_SLOT)
+        if not isinstance(name, str) or not _normalise(name):
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED,
+                    record_id,
+                    f"record {record_id} names subject {subject}, which "
+                    "carries no name",
+                )
+            )
+            continue
+        wanted = _normalise(name).casefold()
+        formalizing = formalized.get(record_id, {}).get(_SUBJECT_SLOT, [])
+        if any(
+            wanted in _normalise(statements[assertion_id]).casefold()
+            for assertion_id, _ in formalizing
+        ):
+            continue
+        named = (
+            ", ".join(sorted(assertion_id for assertion_id, _ in formalizing))
+            or "no assertion"
+        )
+        defects.append(
+            _Defect(
+                DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED,
+                record_id,
+                f"record {record_id} names subject {subject}, whose name "
+                f"{name} is absent from the statement of {named}",
+            )
+        )
+    return defects
+
+
 def _checked_assertions(
     assertions: list[object],
 ) -> tuple[tuple[dict[str, object], str, str, str], ...]:
@@ -669,6 +730,9 @@ def adapt_document_assertions(
             _evaluative_slots(contract_view),
             formalized,
         )
+    )
+    derivation_defects.extend(
+        _subject_defects(records_by_id, formalized, statements)
     )
     if derivation_defects:
         raise _refuse_derivations(derivation_defects)

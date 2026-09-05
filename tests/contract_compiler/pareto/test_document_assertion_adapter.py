@@ -414,8 +414,10 @@ def test_document_adapter_refuses_a_statement_digest_the_assertion_denies() -> N
         f"{_digest(statement.encode('utf-8'))} [DIGEST_MISMATCH]; "
         "a record's assertion_locator names an assertion of this capture, its "
         "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
-        "and a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED"
+        "a slot the contract declares evaluative is formalized by at "
+        "least one assertion whose modality is not HYPOTHESISED, and the name "
+        "of a record's subject occurs in the statement of an assertion that "
+        "formalizes that subject"
     )
 
 
@@ -558,8 +560,10 @@ def test_document_adapter_refuses_a_disposition_no_assertion_evaluates() -> None
         "[EVALUATIVE_SLOT_NOT_EVALUATED]; "
         "a record's assertion_locator names an assertion of this capture, its "
         "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
-        "and a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED"
+        "a slot the contract declares evaluative is formalized by at "
+        "least one assertion whose modality is not HYPOTHESISED, and the name "
+        "of a record's subject occurs in the statement of an assertion that "
+        "formalizes that subject"
     )
 
 
@@ -729,6 +733,11 @@ def test_document_adapter_refuses_a_subject_carrying_no_name() -> None:
     api = _api()
     capture, records = _subjected()
     del records["entities"][0]["properties"]["name"]
+    capture["assertions"][0]["formalized_by"] = [
+        item
+        for item in capture["assertions"][0]["formalized_by"]
+        if item["record_id"] != "asset:P-7"
+    ]
 
     with pytest.raises(api.DocumentAssertionRefusal) as refusal:
         _adapt_records(capture, records)
