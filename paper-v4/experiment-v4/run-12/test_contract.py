@@ -1572,6 +1572,10 @@ def test_the_v4_task_writes_the_locality_token_on_relation_rows_only() -> None:
     assert "**Derivation locality, every row.**" in prior
     assert "**Derivation locality, every row.**" not in task
     assert "the subject check is the locality" in _plain(task)
+    # The subject token's position moves with the locality token's scope. A
+    # task that still calls it the third would have a reviewer writing three.
+    assert "the third token of that row's `rationale`" in prior
+    assert "the third token" not in task
     # The duties that do not move are still worded as v3 worded them.
     for span in (
         "## What you judge",

@@ -130,7 +130,8 @@ reported nothing either.
 **Subject in the block, `SUBJECT` and `ENTITY` rows only.** State whether the
 subject named in the row occurs in the block the witness's derivation reaches.
 Write one of `SUBJECT_IN_BLOCK`, `SUBJECT_NOT_IN_BLOCK` or `NO_SUBJECT_IN_ROW` as
-the third token of that row's `rationale`. `NO_SUBJECT_IN_ROW` is the honest
+the next token of that row's `rationale`, which is the second on these rows now
+that the locality token is not written on them. `NO_SUBJECT_IN_ROW` is the honest
 token for an `ENTITY` row whose projection carries no subject at all. Read the
 occurrence as a person would: the subject's name, whitespace collapsed, appearing
 in the block's prose. This is the axis run-08 could not report, because its graph
