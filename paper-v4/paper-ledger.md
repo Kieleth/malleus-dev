@@ -3033,3 +3033,48 @@ error in its cell table and is corrected in the same commit as this entry.
 Neither correction changes a result, a digest or a judgment. Both were found by
 a fresh sweep of the record against the artifacts, which is the check that
 should have run before the entries were written.
+
+### E-0135, run-04's review is ratified as recorded
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-04/review-record.human.md` (sha256:e7d89762ba8e356c665f68a7b1a99bd2e6f47ef5f0593e95263962bc1eecd564),
+its preliminary form, the frozen inputs at
+`paper-v4/evaluation-v4/run-04/review-input-manifest.json`, and the private
+launch log and usage record.
+
+Review: a fresh Claude Opus 5 session (CLAUDE_PRELIMINARY,
+`actor:claude-preliminary-run-04`) judged all 240 rows against the selected
+reading alone and completed at 2026-09-05T01:29:34Z. Responsiveness: CQ-01,
+CQ-02 and CQ-03 RESPONSIVE, CQ-04 PARTIAL. Support: 237 rows SUPPORTED, 3
+PARTIAL, none UNSUPPORTED, none NOT_EVALUABLE. The three PARTIAL rows are one
+witness recurring across three questions: a structure's status recorded flat
+where the reading only says the absence of seismicity suggests it. CQ-04 is
+PARTIAL because the preferred mechanism returns fully typed (hypothesised,
+disposition preferred, the alternatives returned as not supported) while no
+record expresses the volume change, the pressure increase or the extensional
+stress the question names. The validator accepted the record on its first run.
+
+The reviewer recorded three points the allowed surface did not let it settle:
+claim records carry a locator and a statement digest and no text, so claim rows
+were judged on the record's name plus the block the locator reaches; the twelve
+CONCERNS_FEATURE relations and the five mechanism relations each resolve
+through one locator to one general block, and their pairings were judged on the
+reading as the task directs; and one NOT_SUPPORTED disposition rests on a block
+two past the block its derivation reaches, holding on the reading and not on
+the derivation alone.
+
+Ratification: Luis ratified the record as recorded, in chat on 2026-09-05, and
+ordered a root-cause analysis of each of the three points. The human record
+carries HUMAN_RATIFIED, RATIFIED_AS_RECORDED, completed at 2026-09-05T01:34:13Z, and validates
+with human ratification required. This is the second ratified review record of
+the paper, after run-05's (E-0132, as corrected by E-0134); run-04 is the Opus 5
+cell of record unless a later cell under revised packs supersedes it.
+
+Cost: review 322,049 harness-reported tokens (Opus 5), recorded in the private
+usage record beside the producer's 371,026; the public `results/usage.json`
+stays at its frozen producer-only content.
+
+Non-claim: the three unsettled points are analysed in a separate record and may
+name defects in the review surface, the adapter or the producer; nothing in this
+entry prejudges them.
