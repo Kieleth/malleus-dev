@@ -1810,6 +1810,15 @@ class TestSkillsAreInstallable:
             "requires `invention_search` beside it",
             "`none_found: true` and `search`",
             (
+                "A vocabulary you cannot vouch for from the declared inputs or "
+                "from certain knowledge is not a citation"
+            ),
+            (
+                "A fabricated vocabulary or URL is a worse outcome than an "
+                "honest gap"
+            ),
+            "Citation truth is checked at review",
+            (
                 "each entry carries exactly `vocabulary`, `vocabulary_url` "
                 "and `borrowed_terms`"
             ),
