@@ -1,0 +1,1728 @@
+{
+  "question_id": "CQ-01",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "CQ-01 asks four things: the observing system, the campaign, how many instruments went in, and how the data were acquired. All four are carried by named rows. The observing system is the instrument record at row 30, described as a network of ocean-bottom seismometers, on page:2:block:002. The campaign appears as four Campaign rows, rows 0 to 3; row 2 is the cruise itself and row 1 dates the passive experiment to two months of 2019 and ties it to that cruise, on page:6:block:002. The instrument count is carried with its value at rows 12 and 202, nineteen deployed, while rows 13 and 203 give the seventeen that returned usable data, each with a count scope saying which is which, so the two numbers cannot be confused. Acquisition is carried by row 199, which links the instrument network to the cruise on page:2:block:002, and is filled out by the recording duration at row 3 and the instrument spacing at row 108. The binding is type-only, so most of the rows are CO2 concentrations, segment geometry, isotherms, affiliations and software entries with no bearing on this question; that is over-return by the binding, not a failure to answer, and it leaves none of the four requested parts ambiguous. One method note on the subject axis: a SUBJECT row carries its subject's name in its own projection, but an ENTITY row carries the subject only as an identifier, so for those I resolved the identifier to a name through that same record's projection elsewhere in the query result, which is itself a bound material, and then looked for that name in the block. Two residuals for the ratifier: the observing system has no proper name in the source, so the row names it by instrument type and puts the network in a description slot; and the rows that project a counted record under the Observation type, rows 38 to 56 among them, repeat a quantity's name without its number, which would mislead anyone reading those rows without the counted projection of the same record.",
+  "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002",
+    "page:1:block:005",
+    "page:10:block:043"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Campaign record campaign:microseismicity-study. The block its derivation reaches carries the setting paragraph's opening, which announces a microseismicity study on the equatorial Atlantic ridge, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects campaign:obs-experiment, with a temporal precision of month. That comes from the methods' opening, which dates the passive experiment to two months of 2019 and ties it to the cruise, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Campaign record campaign:smarties. The cited block holds the acknowledgement of the ship's company for the 2019 cruise, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:10:block:043",
+        "page:10:block:044",
+        "page:10:block:046",
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects campaign:smarties-recording, with a duration of ~21 days, a temporal precision of day. What the block reached carries is the results' recording duration and instrument spacing, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:all-mechanisms, with a count of 6. The derivation lands on the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:identified-760, with a count of 760. The block its derivation reaches carries the methods' detection step, which gives the total registered in the phase database and the minimum number of instruments each kept event had to appear on, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:located-514, with a count of 514. That comes from the results' count of events located around the transform-ridge intersection, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rti, is named in that block.",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:location-categories, with a count of 4. The cited block holds the results' classification of locations into four quality categories, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:003"
+      ]
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:magnitude-groups, with a count of 3. What the block reached carries is the methods' split of the catalogue into three geographic groups and the b values found for them, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:mar-events, with a count of 317. The derivation lands on the second figure's own tally of events along the ridge profile, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The locator is the figure tally; a second derivation reaches the methods sentence that gives the same total for the ridge profile in prose, and both blocks are cited.",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:min-obs-per-event, with a count of 5. The block its derivation reaches carries the methods' detection step, which gives the total registered in the phase database and the minimum number of instruments each kept event had to appear on, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:new-mechanisms, with a count of 3. That comes from the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:obs-deployed, with a count of 19. The cited block holds the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, instrument:obs-network, is named in that block.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:obs-useful, with a count of 17. What the block reached carries is the results' automatic detection step and the number of instruments that gave usable data, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, instrument:obs-network, is named in that block.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:relocated-276, with a count of 276. The derivation lands on the methods' relocation settings and outcome, including the iterations, the separation limit, the events replaced and the per-profile totals, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:relocated-364, with a count of 364. The block its derivation reaches carries the methods' double-difference step, with the number of well-constrained events relocated and the residual, uncertainty and gap they satisfy, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:006"
+      ]
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:relocation-iterations, with a count of 5. That comes from the methods' relocation settings and outcome, including the iterations, the separation limit, the events replaced and the per-profile totals, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:romanche-events, with a count of 197. The cited block holds the second figure's own tally of events along the transform profile, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The locator is the figure tally; a second derivation reaches the methods sentence that gives the same total for the transform profile in prose, and both blocks are cited.",
+      "source_locators": [
+        "page:3:block:003",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:subsections, with a count of 4. What the block reached carries is the setting paragraph's length for the studied ridge portion and its division into four named subsections, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:subset-360-size, with a count of 360. The derivation lands on the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, dataset:subset-360, is named in that block.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:subset-45-size, with a count of 45. The block its derivation reaches carries the methods' forced-depth test, built on a subset of events from the deep band along one cross-section, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, dataset:subset-45, is named in that block.",
+      "source_locators": [
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:velest-iterations, with a count of 6. That comes from the methods' outcome of that check after a stated number of iterations, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:velocity-models, with a count of 5. The cited block holds the methods' construction of several 1-D P-wave models from the refraction profile and the depth to which that profile constrains velocity, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Dataset record dataset:earthquake-catalog. What the block reached carries is the data-availability sentence placing the event catalogue and the picked arrivals in a public repository, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:008"
+      ]
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Dataset record dataset:petdb. The derivation lands on the fifth figure's caption, which names the whole-rock database the compilation draws on, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:6:block:005",
+        "page:8:block:005"
+      ]
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects dataset:raw-seismic, with the location given for it. The block its derivation reaches carries the data-availability sentence pointing at the cruise website for the raw records and reports, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:008"
+      ]
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Dataset record dataset:refraction-profile. That comes from the results' use of an active-source refraction profile to pick the 1-D velocity model behind the travel times, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Dataset record dataset:subset-360. The cited block holds the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Dataset record dataset:subset-45. What the block reached carries is the methods' forced-depth test, built on a subset of events from the deep band along one cross-section, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Dataset record dataset:supplementary-data-1. The derivation lands on the methods' compilation of whole-rock samples from the public database, restricted to the footprint of the instrument network, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:8:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Instrument record instrument:obs-network. The block its derivation reaches carries the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:2:block:007",
+        "page:5:block:004",
+        "page:6:block:002",
+        "page:8:block:003",
+        "page:8:block:005"
+      ]
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Method record method:double-difference. That comes from the results' pairing of a non-linear location algorithm with a subsequent double-difference relocation, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Method record method:first-motion. The cited block holds the methods' use of first-motion polarities from unfiltered vertical-component waveforms for the mechanisms, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Method record method:local-magnitude. What the block reached carries is the methods' local magnitude scale and its terms, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The description reproduces the formula as the text layer renders it and says so, so it claims no more than the block shows.",
+      "source_locators": [
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Method record method:nonlinear-location. The derivation lands on the results' pairing of a non-linear location algorithm with a subsequent double-difference relocation, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Method record method:oct-tree. The block its derivation reaches carries the methods' initial location step and the search algorithm it used, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:004"
+      ]
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Method record method:sta-lta. That comes from the results' automatic detection step and the number of instruments that gave usable data, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Method record method:wadati. The cited block holds the methods' Vp/Vs determination and the span of ratios tried in the sensitivity test, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:002"
+      ]
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:all-mechanisms. What the block reached carries is the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:identified-760. The derivation lands on the methods' detection step, which gives the total registered in the phase database and the minimum number of instruments each kept event had to appear on, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:located-514. The block its derivation reaches carries the results' count of events located around the transform-ridge intersection, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rti, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:location-categories. That comes from the results' classification of locations into four quality categories, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:2:block:003"
+      ]
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:magnitude-groups. The cited block holds the methods' split of the catalogue into three geographic groups and the b values found for them, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:mar-events. What the block reached carries is the second figure's own tally of events along the ridge profile, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked. The locator is the figure tally; the second cited block states the same total in prose.",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:min-obs-per-event. The derivation lands on the methods' detection step, which gives the total registered in the phase database and the minimum number of instruments each kept event had to appear on, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:new-mechanisms. The block its derivation reaches carries the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:obs-deployed. That comes from the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, instrument:obs-network, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:obs-useful. The cited block holds the results' automatic detection step and the number of instruments that gave usable data, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, instrument:obs-network, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:relocated-276. What the block reached carries is the methods' relocation settings and outcome, including the iterations, the separation limit, the events replaced and the per-profile totals, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:relocated-364. The derivation lands on the methods' double-difference step, with the number of well-constrained events relocated and the residual, uncertainty and gap they satisfy, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:7:block:006"
+      ]
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:relocation-iterations. The block its derivation reaches carries the methods' relocation settings and outcome, including the iterations, the separation limit, the events replaced and the per-profile totals, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:romanche-events. That comes from the second figure's own tally of events along the transform profile, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked. The locator is the figure tally; the second cited block states the same total in prose.",
+      "source_locators": [
+        "page:3:block:003",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:subsections. The cited block holds the setting paragraph's length for the studied ridge portion and its division into four named subsections, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:subset-360-size. What the block reached carries is the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, dataset:subset-360, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:subset-45-size. The derivation lands on the methods' forced-depth test, built on a subset of events from the deep band along one cross-section, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, dataset:subset-45, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:velest-iterations. The block its derivation reaches carries the methods' outcome of that check after a stated number of iterations, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:velocity-models. That comes from the methods' construction of several 1-D P-wave models from the refraction profile and the depth to which that profile constrains velocity, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:abs:co2-primary, with a range of about 0.4 to 3 wt%. The cited block holds the abstract's summary of the geochemical syntheses, which puts an unusually large CO2 load in the primary melts and gives its range, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:abs:deep-eq-depth, with a range of 10 to 20 km. What the block reached carries is the abstract's headline result, earthquakes in the mantle beneath the ridge axis at depths far below the brittle-ductile boundary, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:b-value, with a value of 0.87. The derivation lands on the methods' catalogue statistics, the completeness magnitude and the b value, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:b-values-groups, with a range of 0.89 to 0.93. The block its derivation reaches carries the methods' split of the catalogue into three geographic groups and the b values found for them, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:bdb-at-ntd2, with a value of about 10 km. That comes from the discussion's reading of the microseismicity under the southern discontinuity as fixing the brittle-ductile boundary there, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:bdb, is named in that block.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:bdb-isotherm-700, with a value of 700 °C with an uncertainty of 100 °C. The cited block holds the introduction's convention that the maximum earthquake depth, tied to a stated isotherm, defines the brittle-ductile boundary at slow ridges, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:bdb, is named in that block.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:bdb-isotherms-600-800, with a range of 600 to 800 °C. What the block reached carries is the discussion's first competing explanation, a very cold thick lithosphere that would push the boundary down to the depth of the corresponding isotherms, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:bdb, is named in that block.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:bdb-shallow-offaxis, with an upper bound of 10 km. The derivation lands on the discussion's use of the shallow off-axis events west of the segment to argue the boundary stays shallow out to a young crustal age, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:bdb, is named in that block.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:brittle-thickness-expected, with an upper bound of 10 km. The block its derivation reaches carries the results' spreading rate and the maximum earthquake depth and brittle thickness expected at that rate, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:brittle-thickness-ntds, with an upper bound of 10 km. That comes from the results' inference about how thick the brittle lithosphere is at the segment boundaries, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-ba-rc2, with a range of 0.7 to 4.6 wt%. The cited block holds the methods' pre-eruptive CO2 ranges from the two trace-element proxies, for both segments, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-ba-rc3, with a range of 0.06 to 0.8 wt%. What the block reached carries is the methods' pre-eruptive CO2 ranges from the two trace-element proxies, for both segments, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc3, is named in that block.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-ba90-rc2, with a range of 0.4 to 3 wt%. The derivation lands on the methods' primary-melt CO2 ranges from the two Fo90-corrected proxies, for both segments, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-ba90-rc3, with a range of 0.04 to 0.5 wt%. The block its derivation reaches carries the methods' primary-melt CO2 ranges from the two Fo90-corrected proxies, for both segments, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc3, is named in that block.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-gas-loss, with a range of 80 to 90%. That comes from the discussion's account of CO2 solubility falling with pressure, so that most of the dissolved load has left the melt by the sea floor, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:5:block:003"
+      ]
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-preeruptive-rc2, with a range of 0.7 to 4.6 wt%. The cited block holds the results' pre-eruptive CO2 range for the segment after correcting for fractional crystallisation, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-rb-rc2, with a range of 0.9 to 4.3 wt%. What the block reached carries is the methods' pre-eruptive CO2 ranges from the two trace-element proxies, for both segments, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-rb-rc3, with a range of 0.07 to 1 wt%. The derivation lands on the methods' pre-eruptive CO2 ranges from the two trace-element proxies, for both segments, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc3, is named in that block.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-rb90-rc2, with a range of 0.5 to 2.8 wt%. The block its derivation reaches carries the methods' primary-melt CO2 ranges from the two Fo90-corrected proxies, for both segments, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-rb90-rc3, with a range of 0.05 to 0.7 wt%. That comes from the methods' primary-melt CO2 ranges from the two Fo90-corrected proxies, for both segments, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc3, is named in that block.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-rc2-minimum, with a lower bound of 0.4 wt%. The cited block holds the methods' floor on primary-melt CO2 along the studied segment, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-rc2-primary, with a range of 0.4 to 3 wt%. What the block reached carries is the results' comparison of calculated melt CO2 between the segment carrying the deep earthquakes and the segment to its south, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:co2-rc3-primary, with a range of 0.04 to 0.7 wt%. The derivation lands on the results' comparison of calculated melt CO2 between the segment carrying the deep earthquakes and the segment to its south, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc3, is named in that block.",
+      "source_locators": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:cold-bdb-depth, with a value of about 20 km. The block its derivation reaches carries the discussion's first competing explanation, a very cold thick lithosphere that would push the boundary down to the depth of the corresponding isotherms, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:bdb, is named in that block.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:cold-lithosphere-age, with a value of 45 Ma. That comes from the results' contrast between the expected southward shallowing of the boundary and the deep events actually seen beneath the segment axis, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:lithosphere, is named in that block.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:criteria-met-fraction, with a value of about 78%. The cited block holds the methods' share of located events that satisfy at least two of those criteria, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:008"
+      ]
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:criterion-arrivals, with a lower bound of 8. What the block reached carries is the methods' three criteria for calling a location well constrained, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:008"
+      ]
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:criterion-gap, with an upper bound of 180°. The derivation lands on the methods' three criteria for calling a location well constrained, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:008"
+      ]
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:criterion-s-distance, with a value of 1.4. The block its derivation reaches carries the methods' three criteria for calling a location well constrained, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:008"
+      ]
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:crustal-age-13ma, with a value of about 1.3 Ma. That comes from the discussion's use of the shallow off-axis events west of the segment to argue the boundary stays shallow out to a young crustal age, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:crust, is named in that block. The block refers to the crust adjectivally, in naming a crustal age, rather than as a bare noun.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:crustal-thickness-west-flank, with a value of 5.4 km with an uncertainty of 0.3 km. The cited block holds the results' refraction-derived crustal thickness on the western flank, and what it implies about where the events sit, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:crust, is named in that block.",
+      "source_locators": [
+        "page:2:block:006",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:deep-eq-alignment, with a value of about 150°. What the block reached carries is the discussion's note that deep events under the segment axis lie along a direction matching the main axial normal faults instead of clustering, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:4:block:003"
+      ]
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:deep-eq-bsf-range, with a range of 10 to 19 km. The derivation lands on the sixth figure's caption, which states the depth range of the deep events under the ridge axis and reads them as degassing-driven, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:mar, is named in that block.",
+      "source_locators": [
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:deep-rc2-depth, with a range of about 10 to 20 km. The block its derivation reaches carries the results' three key depth observations along the four subsections, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:degassing-depth-window, with a range of 10 to 20 km. That comes from the discussion's expectation that melt keeps degassing on its way up and seeds earthquakes across a mantle depth window, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:mantle, is named in that block.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:depth-shift-uncertainty, with a value of about 2.6 km. The cited block holds the methods' depth-resolution test, where axial events stay in the same depth band and the shifts fall inside the average depth uncertainty, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:depth-uncertainty-limit, with an upper bound of 10 km. What the block reached carries is the methods' quality envelope for the located catalogue and its mean horizontal and vertical errors, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:dry-melting-depth, with a range of 60 to 70 km. The derivation lands on the introduction's two melting depths, the volatile-present onset and the start of extensive dry melting, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:equatorial-co2-average, with a value of about 2800 ppm. The block its derivation reaches carries the discussion's recall of earlier estimates of CO2 concentration across equatorial Atlantic segments, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:equatorial-atlantic, is named in that block.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:equatorial-co2-max, with a value of about 8799 ppm. That comes from the discussion's recall of earlier estimates of CO2 concentration across equatorial Atlantic segments, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:equatorial-atlantic, is named in that block.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:error-ellipsoid-confidence, with a value of 68%. The cited block holds the methods' description of the confidence ellipsoid the location code returns, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, software:nonlinloc-program, is named in that block.",
+      "source_locators": [
+        "page:7:block:005"
+      ]
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:expected-depth-slow, with an upper bound of 8 km. What the block reached carries is the introduction's thermally modelled expectation for maximum earthquake depth at slow and at ultraslow ridges, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:expected-depth-ultraslow, with an upper bound of 12 km. The derivation lands on the introduction's thermally modelled expectation for maximum earthquake depth at slow and at ultraslow ridges, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:expected-max-depth-here, with an upper bound of 10 km. The block its derivation reaches carries the results' spreading rate and the maximum earthquake depth and brittle thickness expected at that rate, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:fm-fault-plane-uncertainty, with an upper bound of 45°. That comes from the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:fm-misfit, with an upper bound of 20%. The cited block holds the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:fm-polarities, with a lower bound of 8. What the block reached carries is the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:fm-probability, with a lower bound of 60%. The derivation lands on the methods' selection thresholds for focal mechanisms and the count of new and total solutions they yield, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:full-spreading-rate, with a value of about 32 mm/yr. The block its derivation reaches carries the results' spreading rate and the maximum earthquake depth and brittle thickness expected at that rate, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The block gives the rate without repeating that it is this study area; the surrounding results are about no other, and it is twice the half-rate the setting paragraph gives.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:hot-mantle-temperature, with a lower bound of 1100 °C. That comes from the discussion's conclusion that accretion at the segment is magmatic and the host mantle is hot, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:mantle, is named in that block.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:iceland-depths, with a lower bound of 10 km. The cited block holds the discussion's third competing explanation, drawing on magmatic-tectonic sequences elsewhere and the depths reported for them, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:4:block:002"
+      ]
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:instrument-spacing, with a value of about 30 km. What the block reached carries is the results' recording duration and instrument spacing, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002",
+        "page:8:block:003"
+      ]
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:isotherm-750-line, with a value of 750 °C. The derivation lands on the fourth figure's caption, which identifies the isotherm drawn as a dashed line, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:isotherm-750, is named in that block.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:lithospheric-age-contours, with a value of 10 Ma. The block its derivation reaches carries the first figure's caption, which explains the lithospheric-age contours and their spacing, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:2:block:007"
+      ]
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:low-frequency-threshold, with a lower bound of 5 Hz. That comes from the discussion's spectral observation that some deep events lack energy above a threshold frequency, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:5:block:008"
+      ]
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:magnitude-completeness, with a value of 1.5. The cited block holds the methods' catalogue statistics, the completeness magnitude and the b value, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:mar-coverage, with a value of 120 km. What the block reached carries is the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:mar, is named in that block.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:mar-half-spreading, with a value of 16 mm/yr. The derivation lands on the setting paragraph's half-spreading rate for the ridge here, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:mar, is named in that block.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:max-event-separation, with a value of 6 km. The block its derivation reaches carries the methods' relocation settings and outcome, including the iterations, the separation limit, the events replaced and the per-profile totals, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:mayotte-depths, with a lower bound of 30 km. That comes from the discussion's third competing explanation, drawing on magmatic-tectonic sequences elsewhere and the depths reported for them, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:mayotte, is named in that block.",
+      "source_locators": [
+        "page:4:block:002"
+      ]
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:mean-horizontal-error, with a value of about 2.8 km. The cited block holds the methods' quality envelope for the located catalogue and its mean horizontal and vertical errors, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:mean-vertical-error, with a value of about 2.9 km. What the block reached carries is the methods' quality envelope for the located catalogue and its mean horizontal and vertical errors, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:median-valley-width, with a value of 10 km. The derivation lands on the tectonics paragraph's length, median-valley width and neo-volcanic ridge orientation for the northern segment, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:median-valley, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:melt-fraction-lab, with a value of about 1.1%. The block its derivation reaches carries the closing section's citation of the melt fraction and water content proposed to explain reflections at the lithosphere-asthenosphere boundary, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:lab, is named in that block.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:model1-velocity, with a lower bound of 7.2 km/s. That comes from the methods' remark that the fastest of the trial models puts an implausibly high P velocity at shallow depth for crust of that age, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, model:model-1, is named in that block.",
+      "source_locators": [
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:neovolcanic-orientation, with a value of 154°. The cited block holds the tectonics paragraph's length, median-valley width and neo-volcanic ridge orientation for the northern segment, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:neovolcanic-ridge, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:no-earthquakes-below-20, with a lower bound of 20 km. What the block reached carries is the discussion's note that nothing is seen below a certain depth under the segment axis, and the temperature offered as the reason, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 124,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:ntd1-length, with a value of about 35 km. The derivation lands on the tectonics paragraph's length, orientation and faulting for the first discontinuity, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:ntd1, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:ntd1-orientation, with a value of 76°. The block its derivation reaches carries the tectonics paragraph's length, orientation and faulting for the first discontinuity, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:ntd1, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:ntd2-deeper, with an upper bound of 10 km. That comes from the results' note that events under the southern discontinuity reach somewhat greater depth, as expected for a slow-slipping discontinuity, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:ntd2, is named in that block.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:ntd2-depth, with a range of 4 to 10 km. The cited block holds the results' three key depth observations along the four subsections, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:ntd2, is named in that block.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:ntd2-depth-range, with an upper bound of 10 km. What the block reached carries is the results' statement of where the expected shallow depth range is actually observed, under the core complex and under the southern discontinuity, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:ntd2, is named in that block.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:ntd2-offset, with a value of about 33 km. The derivation lands on the tectonics paragraph's offset, orientation and faulting for the second discontinuity, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:ntd2, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:ntd2-orientation, with a value of 110°. The block its derivation reaches carries the tectonics paragraph's offset, orientation and faulting for the second discontinuity, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:ntd2, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:occ-depth-range, with an upper bound of 6 km. That comes from the results' statement of where the expected shallow depth range is actually observed, under the core complex and under the southern discontinuity, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:occ, is named in that block.",
+      "source_locators": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:offaxis-shallow-depth, with an upper bound of 6 km. The cited block holds the discussion's use of the shallow off-axis events west of the segment to argue the boundary stays shallow out to a young crustal age, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:offaxis-swarm-depth, with an upper bound of 10 km. What the block reached carries is the discussion's attribution of the shallow swarm-like activity west of the axis to off-axis magmatism, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:5:block:001"
+      ]
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:pore-pressure-trigger, with a range of 2 to 3 bars. The derivation lands on the discussion's appeal to the small pore-pressure rise known to be enough to trigger earthquakes, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:5:block:003"
+      ]
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:profile-halfwidth, with a value of 10 km. The block its derivation reaches carries the second figure's caption, which states the swath half-width used for the depth profiles, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:3:block:005"
+      ]
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:quality-a-uncertainty, with an upper bound of 5 km. That comes from the second figure's legend, which sets the uncertainty admitted by each location-quality class, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:3:block:004"
+      ]
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:quality-d-uncertainty, with a range of 5 to 10 km. The cited block holds the second figure's legend, which sets the uncertainty admitted by each location-quality class, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The legend puts class D above five and up to ten kilometres; the row carries the two bounds and claims nothing about which end is inclusive.",
+      "source_locators": [
+        "page:3:block:004"
+      ]
+    },
+    {
+      "row_index": 138,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:rc2-ba, with a lower bound of 89 ppm. What the block reached carries is the results' report that samples from the northern segment carry incompatible trace-element concentrations above stated thresholds, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:rc2-deep-earthquakes, with a range of 16 to 19 km. The derivation lands on the results' contrast between the expected southward shallowing of the boundary and the deep events actually seen beneath the segment axis, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:rc2-length, with a value of about 22 km. The block its derivation reaches carries the tectonics paragraph's length, median-valley width and neo-volcanic ridge orientation for the northern segment, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:rc2-rb, with a lower bound of 8 ppm. That comes from the results' report that samples from the northern segment carry incompatible trace-element concentrations above stated thresholds, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:rc3-length, with a value of 50 km. The cited block holds the tectonics paragraph's length and orientation for the southern segment, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc3, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 143,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:rc3-orientation, with a value of about 165°. What the block reached carries is the tectonics paragraph's length and orientation for the southern segment, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc3, is named in that block.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 144,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:refraction-depth-range, with an upper bound of 60 km. The derivation lands on the methods' construction of several 1-D P-wave models from the refraction profile and the depth to which that profile constrains velocity, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 145,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:relocation-rms, with an upper bound of 0.25 s. The block its derivation reaches carries the methods' double-difference step, with the number of well-constrained events relocated and the residual, uncertainty and gap they satisfy, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:006"
+      ]
+    },
+    {
+      "row_index": 146,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:relocation-uncertainty, with a value of 2.1 km. That comes from the second figure's legend value for location uncertainty, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The locator is a bare legend value; the second cited block supplies the sentence that identifies it as the average horizontal uncertainty after relocation.",
+      "source_locators": [
+        "page:3:block:003",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 147,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:relocation-uncertainty-limit, with an upper bound of 5 km. The cited block holds the methods' double-difference step, with the number of well-constrained events relocated and the residual, uncertainty and gap they satisfy, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:006"
+      ]
+    },
+    {
+      "row_index": 148,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:rms-limit, with an upper bound of 0.3 s. What the block reached carries is the methods' quality envelope for the located catalogue and its mean horizontal and vertical errors, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:001"
+      ]
+    },
+    {
+      "row_index": 149,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:romanche-chain-length, with a value of about 200 km. The derivation lands on the setting paragraph's placement of the study area on the ridge segment between the two transforms, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:mar-romanche-chain, is named in that block.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 150,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:romanche-coverage, with a value of 140 km. The block its derivation reaches carries the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:romanche-tf, is named in that block.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 151,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:saturation-depth, with a value of about 25 km. That comes from the results' solubility calculation, which puts saturation and the onset of degassing at a stated pressure, depth and temperature, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 152,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:saturation-pressure, with a value of about 0.7 GPa. The cited block holds the results' solubility calculation, which puts saturation and the onset of degassing at a stated pressure, depth and temperature, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 153,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:saturation-temperature, with a value of 1250 °C. What the block reached carries is the results' solubility calculation, which puts saturation and the onset of degassing at a stated pressure, depth and temperature, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 154,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:shading-threshold, with a value of 10 km. The derivation lands on the third figure's caption, which sets the depth at which the shading of the sections changes, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:4:block:007"
+      ]
+    },
+    {
+      "row_index": 155,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:shallow-rti-depth, with a range of 0 to 6 km. The block its derivation reaches carries the results' three key depth observations along the four subsections, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rti, is named in that block.",
+      "source_locators": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 156,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:solidus-anhydrous, with a value of about 1250 °C. That comes from the closing section's statement that volatiles lower the dry solidus so melt persists at sub-solidus temperatures at that boundary, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:asthenosphere, is named in that block. The subject reference resolves to a record named for the rock, which the block names, rather than to the layer its identifier suggests.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 157,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:solubility-calc-temperature, with a value of 1200 °C. The cited block holds the methods' solubility calculation and the parameters fed to it, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 158,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:studied-portion-length, with a value of about 120 km. What the block reached carries is the setting paragraph's length for the studied ridge portion and its division into four named subsections, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 159,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:subsection-length, with a range of 20 to 50 km. The derivation lands on the setting paragraph's length for the studied ridge portion and its division into four named subsections, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 160,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:subset-360-gap, with an upper bound of 180°. The block its derivation reaches carries the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, dataset:subset-360, is named in that block.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 161,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:swir-highest-co2, with a value of 1.9 wt%. That comes from the discussion's citation of the largest melt CO2 content reported before this work, at the Southwest Indian Ridge, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:swir, is named in that block.",
+      "source_locators": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 162,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:temperature-10-20km, with a range of 1100 to 1200 °C. The cited block holds the discussion's thermal-model temperatures for the depth interval under the segment axis, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 163,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:temperature-below-20km, with a lower bound of 1200 °C. What the block reached carries is the discussion's note that nothing is seen below a certain depth under the segment axis, and the temperature offered as the reason, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:rc2, is named in that block.",
+      "source_locators": [
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 164,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:transect-halfwidth, with a value of 5 km. The derivation lands on the third figure's caption, which gives the swath half-width for the transects across the core complex, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:occ, is named in that block.",
+      "source_locators": [
+        "page:4:block:006"
+      ]
+    },
+    {
+      "row_index": 165,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:velocity-perturbation, with a value of 0.1 km/s. The block its derivation reaches carries the methods' velocity perturbation test, applied uniformly at all depths, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 166,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:volatile-melting-depth, with a range of about 150 to 300 km. That comes from the introduction's two melting depths, the volatile-present onset and the start of extensive dry melting, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 167,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL NO_SUBJECT_IN_ROW The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:vpvs-test-range, with a range of 1.5 to 2.5. The cited block holds the methods' Vp/Vs determination and the span of ratios tried in the sensitivity test, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:002"
+      ]
+    },
+    {
+      "row_index": 168,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:water-content-lab, with an upper bound of 332 ppm. What the block reached carries is the closing section's citation of the melt fraction and water content proposed to explain reflections at the lithosphere-asthenosphere boundary, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:lab, is named in that block.",
+      "source_locators": [
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 169,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:western-cluster-depth, with a range of about 2 to 6 km. The derivation lands on the results' western cluster with its shallow depths, used to argue the deep events are not a location artefact, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:axial-valley, is named in that block.",
+      "source_locators": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 170,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:young-crust-age, with an upper bound of 7.5 Ma. The block its derivation reaches carries the methods' remark that the fastest of the trial models puts an implausibly high P velocity at shallow depth for crust of that age, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The subject the row attaches this to, feature:crust, is named in that block.",
+      "source_locators": [
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 171,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:brittany. That comes from the funding paragraph's list of the graduate-school project, the national programme and the regional council that funded the research, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 172,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:cnr-igag. The cited block holds the author affiliation footnote, which lists each institution with its city and country, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The name is the full affiliation string, city and country included, as the footnote gives it.",
+      "source_locators": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "row_index": 173,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:erc. What the block reached carries is the funding paragraph's entry for the European Research Council grants, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 174,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:french-government. The derivation lands on the funding paragraph's list of the graduate-school project, the national programme and the regional council that funded the research, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 175,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:geo-ocean. The block its derivation reaches carries the author affiliation footnote, which lists each institution with its city and country, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The name is the full affiliation string, city and country included, as the footnote gives it.",
+      "source_locators": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "row_index": 176,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:ipgp. That comes from the author affiliation footnote, which lists each institution with its city and country, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The name is the full affiliation string, city and country included, as the footnote gives it.",
+      "source_locators": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "row_index": 177,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:isblue. The cited block holds the funding paragraph's list of the graduate-school project, the national programme and the regional council that funded the research, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 178,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:nsfc. What the block reached carries is the funding paragraph's entry for the Chinese national foundation grants to the first author, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 179,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:sio-hangzhou. The derivation lands on the author affiliation footnote, which lists each institution with its city and country, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The name is the full affiliation string, city and country included, as the footnote gives it.",
+      "source_locators": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "row_index": 180,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:springer-nature. The block its derivation reaches carries the publisher's neutrality note in the back matter, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:11:block:004"
+      ]
+    },
+    {
+      "row_index": 181,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:tgir-fleet. That comes from the funding paragraph's statement that the cruise's shipping time came through the French oceanographic fleet infrastructure, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 182,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:unimore. The cited block holds the author affiliation footnote, which lists each institution with its city and country, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The name is the full affiliation string, city and country included, as the footnote gives it.",
+      "source_locators": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "row_index": 183,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:zenodo. What the block reached carries is the data-availability sentence placing the event catalogue and the picked arrivals in a public repository, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The block names the repository the catalogue went into; whether that repository is well typed as an organisation is a modelling question, outside what is judged here.",
+      "source_locators": [
+        "page:8:block:008"
+      ]
+    },
+    {
+      "row_index": 184,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the Organization record org:zjnsf. The derivation lands on the funding paragraph's entry for the Zhejiang provincial foundation grant, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 185,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects software:global-mapper, with the location given for it. The block its derivation reaches carries the code-availability entry for the structural-analysis package and where to obtain it, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 186,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the SoftwarePackage record software:gmt. That comes from the code-availability entry for the plotting toolbox, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. The block truncates the download location at a line break; the row asserts no location, so nothing rests on it.",
+      "source_locators": [
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 187,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects software:hash, with the location given for it, its version. The cited block holds the code-availability entry for the focal-mechanism package, with its version and download location, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:8:block:003",
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 188,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects software:hypodd, with the location given for it, its version. What the block reached carries is the code-availability entry for the double-difference relocation program, with its version and download location, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 189,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the SoftwarePackage record software:hypodd-program. The derivation lands on the methods' double-difference step, with the number of well-constrained events relocated and the residual, uncertainty and gap they satisfy, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:7:block:006"
+      ]
+    },
+    {
+      "row_index": 190,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects software:nonlinloc, with the location given for it. The block its derivation reaches carries the code-availability entry for the location code and where to obtain it, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 191,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the SoftwarePackage record software:nonlinloc-program. That comes from the methods' initial location step and the search algorithm it used, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:7:block:004",
+        "page:7:block:005"
+      ]
+    },
+    {
+      "row_index": 192,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects software:seisan, with the location given for it. The cited block holds the code-availability entry for the phase-picking software and where to obtain it, which is where the row comes from. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 193,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the SoftwarePackage record software:seisan-package. What the block reached carries is the methods' automatic detection step, run on the vertical components of the instruments that returned usable data, matching the row. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:6:block:002",
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 194,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects software:velest, with the location given for it. The derivation lands on the code-availability entry for the 1-D velocity inversion program and where to obtain it, which states it. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 195,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects the SoftwarePackage record software:velest-program. The block its derivation reaches carries the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, and that is what the row restates. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 196,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The record carries no assertion locator and no statement digest, so no digest comparison applies. The row projects software:zmap, with the location given for it. That comes from the code-availability entry for the catalogue-analysis software used for b-value and completeness, in the block the derivation lands on. The row attaches the record to nothing else, so the blocks that formalise it are the blocks it is judged on and locality holds by construction. The projection carries no subject reference at all. Several blocks formalise this record and every one of them is cited.",
+      "source_locators": [
+        "page:8:block:002",
+        "page:8:block:010"
+      ]
+    },
+    {
+      "row_index": 197,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The record carries no assertion locator and no statement digest, so no digest comparison applies. The row pairs campaign:smarties with org:tgir-fleet under FUNDED_BY. The cited block holds the funding paragraph's statement that the cruise's shipping time came through the French oceanographic fleet infrastructure, which is where the row comes from. The assertion that formalises the relation also formalises both endpoints, so the pointer rests where the pairing itself is stated. The block scopes the funding to the cruise shipping time; the row asserts only that a funding relation runs between these two, which the block does state.",
+      "source_locators": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "row_index": 198,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The record carries no assertion locator and no statement digest, so no digest comparison applies. The row pairs dataset:earthquake-catalog with org:zenodo under DEPOSITED_IN. What the block reached carries is the data-availability sentence placing the event catalogue and the picked arrivals in a public repository, matching the row. The assertion that formalises the relation also formalises both endpoints, so the pointer rests where the pairing itself is stated.",
+      "source_locators": [
+        "page:8:block:008"
+      ]
+    },
+    {
+      "row_index": 199,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The record carries no assertion locator and no statement digest, so no digest comparison applies. The row pairs instrument:obs-network with campaign:smarties under PART_OF_CAMPAIGN. The derivation lands on the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, which states it. The assertion that formalises the relation also formalises both endpoints, so the pointer rests where the pairing itself is stated.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 200,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:subset-360-size, with a count of 360. The block its derivation reaches carries the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, and that is what the row restates. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, dataset:subset-360, is named in that block.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 201,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:subset-45-size, with a count of 45. That comes from the methods' forced-depth test, built on a subset of events from the deep band along one cross-section, in the block the derivation lands on. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, dataset:subset-45, is named in that block.",
+      "source_locators": [
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 202,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:obs-deployed, with a count of 19. The cited block holds the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, which is where the row comes from. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, instrument:obs-network, is named in that block.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 203,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects counted:obs-useful, with a count of 17. What the block reached carries is the results' automatic detection step and the number of instruments that gave usable data, matching the row. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, instrument:obs-network, is named in that block.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 204,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:subset-360-size. The derivation lands on the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, which states it. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, dataset:subset-360, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 205,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:subset-45-size. The block its derivation reaches carries the methods' forced-depth test, built on a subset of events from the deep band along one cross-section, and that is what the row restates. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, dataset:subset-45, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 206,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:subset-360-gap, with an upper bound of 180°. That comes from the methods' velocity-model check, built on a sub-dataset selected by arrival count and station gap, in the block the derivation lands on. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, dataset:subset-360, is named in that block.",
+      "source_locators": [
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 207,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:obs-deployed. The cited block holds the results' acquisition sentence, which names the instrument network, its size, the cruise and the lengths of transform and ridge it covered, which is where the row comes from. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, instrument:obs-network, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 208,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects the Observation record counted:obs-useful. What the block reached carries is the results' automatic detection step and the number of instruments that gave usable data, matching the row. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, instrument:obs-network, is named in that block. This projection has no count slot, so the row names the quantity without carrying the number the same record carries under its counted type; nothing it does assert is left unbacked.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "row_index": 209,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The SHA-256 of the located statement recomputes to the digest the record carries. The row projects obs:error-ellipsoid-confidence, with a value of 68%. The derivation lands on the methods' description of the confidence ellipsoid the location code returns, which states it. The record and the subject it points at are formalised in the same block, so the evidence pointer does not travel away from the pairing. The subject the row attaches this to, software:nonlinloc-program, is named in that block.",
+      "source_locators": [
+        "page:7:block:005"
+      ]
+    }
+  ]
+}
