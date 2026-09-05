@@ -3374,3 +3374,145 @@ Cost: review 123,865 harness-reported tokens, recorded beside the producer's
 Non-claim: the labels are the honest reading of an 8-row result; they say the
 query surface reached almost nothing, not that the graph holds nothing. The
 analysis of why is E-0138's and the RCA's, not this entry's.
+
+### E-0140, run-09 opens v4.3: the subject becomes an element, the query surface gains two case kinds, the review surface gains two materials
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-09/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `native_query.py`, `test_contract.py`,
+`test_pipeline.py`, `paper-v4/evaluation-v4/review-protocol-v2.json`,
+`paper-v4/evaluation-v4/review-task-v3.template.md`,
+`paper-v4/evaluation-v4/run-09/review-record.blank.md`,
+`handover/2026-09-05-v42-rca.md`, `handover/2026-09-05-overseer-journal.md`
+and E-0136 to E-0139.
+
+Iteration: run-09 is the fourth iteration of the v4 protocol, `v4.3`. The
+protocol shape does not change and neither does the producer: one document, one
+producer loop, one question-blind session with two phases, two diagnostic
+returns, two additive revision rounds, no fallback and no hand repair. The
+producer block is run-08's key for key, the spawn message is run-08's bytes with
+the run id substituted, and the runner, the gate, the workspace builder and the
+usage deriver are run-08's bytes with the same substitution and nothing else,
+which `test_pipeline.py` proves by comparing them. What changes is what a
+source-asserted record may carry, what the query binding can reach, and what the
+review manifest binds. Run-04 to run-08 are the five cells this iteration
+follows; none is superseded, repaired or reinterpreted, and the frozen artifacts
+of every closed cell are digest-pinned by `run-09/test_contract.py`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default and
+neither pinned nor observed. The model is run-04's and run-08's, so the model is
+not the variable.
+
+Coordinates: provisional. `pin.py --commit e6aa68f` pins Core commit
+`e6aa68f6d7107e5b733e2caad0c33a2e16b3debc`, tree
+`1daaa35b710cb92663fd95436a6e809ff1448d5b`, governance head `OVR-000402` at
+`sha256:2990cac4…`, which is the v4.2 governance coordinate: Core-13 has not
+landed. The interface coordinates are new: `capture:paper-v4:yu-2025:v4:9` and
+`plan:paper-v4:yu-2025:v4:9`. The private workspace is
+`private/paper-v4-v4-run-09/producer`. At this pin none of the eight declared
+inputs has moved against run-08's manifest, the reading included; the research
+pack and the acolyte skill are the two expected to move when Core-13 lands, and
+the manifest computes that against run-08's rather than asserting it. The gate
+status reads `PROVISIONALLY_PINNED_PENDING_CORE_13` and the overseer re-pins with
+one command.
+
+Nine of the thirteen `changes` entries are run-08's, carried forward and marked
+`carried_from: run-08`. The two Core entries among them are read at the v4.2
+coordinate `f594771`, which is a fixed commit, so a refusal reason or a pack
+version Core-13 lands cannot be attributed to Core-11 or Core-12: `PACKS_0_3_0`
+records the versions the pinned commit carries beside the versions v4.2 expected,
+and `CORE_12_DERIVATION_CHECKS` records the three reasons the enum gained between
+its own baseline and `f594771` plus whether they are still in force here.
+
+Four entries are this iteration's. One is Core's:
+
+1. `SUBJECT_ELEMENT`. The research pack's `SourceAsserted` mixin gains an
+   optional single `subject` reference, ranged on `Entity`, to the thing the
+   assertion is about, checked at capture by name: the subject entity's name,
+   whitespace collapsed and case folded, must occur in a statement that
+   formalizes the record, and a `SUBJECT_NOT_NAMED` refusal names every record
+   that fails, aggregated. Subject coverage joins the census as a reported axis,
+   neither gated nor refused. Core-13, expected at research 0.5.0. Not landed at
+   the pinned commit: the contract records the expected version and reason name,
+   the empty observed sets and `PENDING_AT_PIN`, and the pin script fills both
+   from the enum and the pack when it is re-run. Cause: the v4.2 RCA follow-up 1,
+   approved in E-0139. Run-08's graph held 131 observations and 85 claims and not
+   one relation from any of them to a feature, a sample, a campaign or another
+   claim, while 23 of its 131 observations carried the subject as text inside
+   `quantity_kind`.
+
+Three are the harness's:
+
+2. `QUERY_CASE_KINDS_V3`. The native query binding moves to
+   `malleus.paper-v4.native-query-binding/v3` with three case kinds, all
+   type-only and value-blind. `RELATION` is run-08's shape. `ENTITY` names one
+   record type and its projected fields and no relation, so every admitted record
+   of that type is a row whose witness is itself. `SUBJECT` names a
+   source-asserted record type and a subject entity type, and every record of the
+   first whose `subject` resolves to a record of the second is a row projecting
+   both. `native_query.py` executes all three, keeps the source-free guard, the
+   forbidden-attempt counters, the witness tracer and the executor body as the
+   bytes every cell from run-02 onward ran, and traces every witness of every
+   kind. `bind_from_surface.py` expands the evaluator's one judgement, the type
+   set per question, into all three: `RELATION` as now, `ENTITY` for every type in
+   the set, and `SUBJECT` for every ordered pair of a subject-bearing type in the
+   set with an entity type in the set. `cases_sha256` still digests the queries
+   alone and the binding stays frozen at ontology acceptance exactly as run-08's,
+   with only `bound_after_replay_receipt_sha256` moving after the replay. Cause:
+   the v4.2 RCA follow-up 2, approved in E-0139, and E-0138. Run-08 returned 5, 2,
+   0 and 1 rows from 2,084 cases because the only surface it could reach was
+   relations, while 34 depth quantities and 20 CO2 quantities sat in the graph
+   unattached.
+3. `REVIEW_PROTOCOL_V2`. A second frozen protocol file,
+   `paper-v4/evaluation-v4/review-protocol-v2.json`, written before this cell's
+   producer runs, listing seven review materials: run-08's five plus
+   `retained_capture` and `query_trace_summary`. The fixed identities, the
+   judgment labels, the question ids, the authorship and the forbidden record
+   fields are the v1 file's, unchanged. `review.py` needs no change and gets
+   none: it compares a manifest's material names with the `review_materials` of
+   whichever protocol bytes it is given, so the seven-material manifest validates
+   against this file and a five-material manifest is refused, which
+   `test_contract.py` exercises rather than asserts. Run-02 to run-08 keep the v1
+   file and its digest, and `test_review_v4.py`'s run-02 pins are untouched.
+   Cause: the two review-surface debts run-08's reviewer recorded (E-0139).
+4. `REVIEW_TASK_V3`. `paper-v4/evaluation-v4/review-task-v3.template.md`, with
+   the same seven placeholders as v2 and instantiated at freeze. It keeps every
+   duty of run-08's task: the statement read through the retained capture, the
+   statement digest recomputed per located claim, and the derivation-locality
+   token per row. It adds the three row kinds and what each witness is, says that
+   a `SUBJECT` or an `ENTITY` row is judged on the block the witness's own
+   derivation reaches, and requires a third fixed token on those rows stating
+   whether the subject named in the row occurs in that block:
+   `SUBJECT_IN_BLOCK`, `SUBJECT_NOT_IN_BLOCK` or `NO_SUBJECT_IN_ROW`. `RELATION`
+   rows carry two tokens and no third. The tokens stay at the head of `rationale`
+   because the record grammar is closed at four row keys and the validator is
+   frozen. Cause: rows with no relation cannot be judged by a task that tells the
+   reviewer to find the relation's formalizing block, and whether a record is
+   attached to the right thing is exactly what a reviewer can check on the reading
+   and the adapter's name check cannot.
+
+Measurement: run-09 is measured against run-04's 146 local-relation rows, not
+against its 240. Of run-04's 240 rows, 94 rested on `NON_LOCAL` relations, most
+of them hung on two hub sentences that name none of their endpoints; the reviewer
+supported those rows on the reading, so the answers were right and the evidence
+pointers were not. The contract records the figure, its basis and its sources,
+and `test_contract.py` pins all three.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-09, and
+`ontology-run/` and `results/` carry only a keepfile. Core-13 is the moving part
+pinned at this coordinate and it is not in the pinned bytes, so the coordinate is
+provisional and the cell is not ready for a producer until the overseer re-pins
+and the gate status reads `PINNED_TO_THE_V4_3_CORE_COORDINATE`. A subject
+reference at the pack level is not evidence that producers will use it; two more
+case kinds are not evidence that the rows they return are better rows, and a
+binding that can reach every record of a type will return more rows whether or
+not any of them answers anything; a seven-material manifest is not evidence that
+the review was better bound in substance. Run-09's row count will not be
+comparable with run-08's eight, because the surface changed and not only the
+graph. Whether any of it holds is open, and run-09 is one cell that will be one
+observation, not a measurement, until it has run to ratification.

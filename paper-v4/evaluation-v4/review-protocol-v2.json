@@ -1,0 +1,96 @@
+{
+  "schema": "malleus.paper-v4.source-grounded-review-protocol/v2",
+  "status": "FROZEN_BEFORE_V4_PRODUCER",
+  "protocol_file": "paper-v4/evaluation-v4/review-protocol-v2.json",
+  "protocol_file_version": "v2",
+  "supersedes": {
+    "protocol_file": "paper-v4/evaluation-v4/review-protocol.json",
+    "sha256": "sha256:7cee52a7d6ea5018fe8443e621c72280b05c2bb5cc1e4a2eeaa27208665ed379",
+    "still_binds": [
+      "run-02",
+      "run-03",
+      "run-04",
+      "run-05",
+      "run-06",
+      "run-07",
+      "run-08"
+    ],
+    "difference": "REVIEW_MATERIALS_FIVE_TO_SEVEN_AND_NOTHING_ELSE"
+  },
+  "frozen_before": "THE_RUN_09_PRODUCER",
+  "purpose": [
+    "SOURCE_SUPPORT",
+    "QUESTION_RESPONSIVENESS"
+  ],
+  "evidence_surface": {
+    "authoritative": "SELECTED_READING_TEXT_LAYER",
+    "locator_kind": "SELECTED_READING_BLOCK_ID",
+    "graph_claim_path": "QUERY_ROW_TO_TRACE_POPULATION_RECORD_TO_CAPTURE_ASSERTION",
+    "source_pdf_role": "OPTIONAL_PROJECTION_FIDELITY_CROSS_CHECK_ONLY"
+  },
+  "fixed_identities": {
+    "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+    "competency_questions_sha256": "sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86"
+  },
+  "question_ids": [
+    "CQ-01",
+    "CQ-02",
+    "CQ-03",
+    "CQ-04"
+  ],
+  "judgments": {
+    "source_support": [
+      "SUPPORTED",
+      "PARTIAL",
+      "UNSUPPORTED",
+      "NOT_EVALUABLE"
+    ],
+    "question_responsiveness": [
+      "RESPONSIVE",
+      "PARTIAL",
+      "NOT_RESPONSIVE",
+      "NOT_EVALUABLE"
+    ]
+  },
+  "authorship": {
+    "preliminary_evaluator_kind": "CODEX_PRELIMINARY",
+    "ratifier_evaluator_kind": "HUMAN_AUTHOR",
+    "ratifier_actor_id": "actor:luis"
+  },
+  "review_materials": [
+    "selected_reading",
+    "competency_questions",
+    "query_binding",
+    "query_result",
+    "population_trace",
+    "retained_capture",
+    "query_trace_summary"
+  ],
+  "review_materials_added": {
+    "retained_capture": "The review task has named the retained capture as an input since run-02 and the manifest could not list it, because the manifest's materials list is fixed by this file. It was bound only transitively, through the trace's evidence digest. Run-08's reviewer recorded that as a debt.",
+    "query_trace_summary": "The same debt for the per-witness trace: the task sends the reviewer to it by path and the manifest bound it only through stage_identities."
+  },
+  "withheld_from_producer": [
+    "competency_questions",
+    "query_binding",
+    "answer_oracle",
+    "canonical_answer",
+    "automated_score",
+    "manuscript_results"
+  ],
+  "forbidden_record_fields": [
+    "accuracy",
+    "answer",
+    "answer_key",
+    "answers",
+    "automated_score",
+    "canonical_answer",
+    "correctness",
+    "exact_match",
+    "numeric_score",
+    "oracle",
+    "oracle_sha256",
+    "score"
+  ]
+}
