@@ -412,8 +412,9 @@ def test_document_adapter_refuses_a_statement_digest_the_assertion_denies() -> N
         f"record asset:P-7 names assertion asr:001 with statement digest "
         f"{wrong}, and that assertion's statement digests to "
         f"{_digest(statement.encode('utf-8'))} [DIGEST_MISMATCH]; "
-        "a record's assertion_locator names an assertion of this capture, its "
-        "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
+        "a record's assertion_locator names an assertion of this capture, a "
+        "statement_sha256 comes with the locator that checks it and is the "
+        "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
         "least one assertion whose modality is not HYPOTHESISED, and the name "
         "of a record's subject occurs in the statement of an assertion that "
@@ -471,6 +472,54 @@ def test_document_adapter_leaves_an_undigested_locator_alone() -> None:
     result = _adapt_records(capture, records)
 
     assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_refuses_a_digest_no_locator_can_check() -> None:
+    """Core-12 left a digest nobody can check passing admission.
+
+    `statement_sha256` binds a record to the words behind it and the adapter
+    recomputes it from the located assertion. With no `assertion_locator`
+    there is no assertion to recompute from, so the digest asserts something
+    the capture cannot deny: it is not a weaker binding, it is none.
+    """
+
+    api = _api()
+    capture, records = _located()
+    del records["entities"][0]["properties"]["assertion_locator"]
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.DIGEST_NOT_LOCATED
+    )
+    assert (
+        "record asset:P-7 carries a statement digest and no assertion_locator "
+        "[DIGEST_NOT_LOCATED]"
+    ) in refusal.value.detail
+
+
+def test_document_adapter_leaves_a_record_with_neither_field_alone() -> None:
+    """A record that claims no assertion claims no digest either; nothing to check."""
+
+    _, capture, plan, _ = _inputs()
+
+    result = _adapt_records(capture, deepcopy(plan["records"]))
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == plan["records"]
+
+
+def test_derivation_census_reads_only_what_it_is_handed() -> None:
+    """The census counts derivations, blocks and record families; it never
+    looked a record up by id, and the argument said it might."""
+
+    document = import_module("malleus._contract_pipeline.document")
+
+    assert tuple(signature(document._derivation_census).parameters) == (
+        "derivations",
+        "block_by_assertion",
+        "record_data",
+    )
 
 
 def _research_view():
@@ -558,8 +607,9 @@ def test_document_adapter_refuses_a_disposition_no_assertion_evaluates() -> None
         "record inspection:P-7:2026-03-02 evaluative slot "
         "hypothesis_disposition is formalized by asr:003 HYPOTHESISED "
         "[EVALUATIVE_SLOT_NOT_EVALUATED]; "
-        "a record's assertion_locator names an assertion of this capture, its "
-        "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
+        "a record's assertion_locator names an assertion of this capture, a "
+        "statement_sha256 comes with the locator that checks it and is the "
+        "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
         "least one assertion whose modality is not HYPOTHESISED, and the name "
         "of a record's subject occurs in the statement of an assertion that "
@@ -687,8 +737,9 @@ def test_document_adapter_refuses_a_subject_the_statement_does_not_name() -> Non
         "document capture derivations are not accepted: "
         "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
         "P-7 is absent from the statement of asr:003 [SUBJECT_NOT_NAMED]; "
-        "a record's assertion_locator names an assertion of this capture, its "
-        "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
+        "a record's assertion_locator names an assertion of this capture, a "
+        "statement_sha256 comes with the locator that checks it and is the "
+        "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
         "least one assertion whose modality is not HYPOTHESISED, and the name "
         "of a record's subject occurs in the statement of an assertion that "
