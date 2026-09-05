@@ -4291,6 +4291,173 @@ yet. The verdict on projection above is the overseer's reading of fifteen
 derivations, recorded before the review so that the review cannot be accused
 of shaping it; the review judges the rows as rows.
 
+### E-0156, run-13 opens v4.7: projection is withdrawn and the census reports what is attachable
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-13/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `native_query.py`, `offline_validation.py`,
+`offline-validation.json`, `test_contract.py`, `test_pipeline.py`,
+`paper-v4/evaluation-v4/review-task-v4.template.md`,
+`paper-v4/evaluation-v4/run-13/review-record.blank.md`,
+`handover/2026-09-05-overseer-journal.md` (iteration 4, gate and first runner
+attempt; iteration 4, admitted and frozen), `handover/2026-09-05-v46-rca.md`
+and E-0153 to E-0155 and E-0157.
+
+Iteration: run-13 is the eighth iteration of the v4 protocol, `v4.7`. The
+protocol shape does not change and the producer does not change. The harness
+changes in one place and the producer never reads it: `native_query.py`
+projects the subject entity's `tags` beside whatever the binder named for the
+subject side of a SUBJECT row. Every other executable file and the spawn
+message are run-12's bytes with the run id substituted and nothing else, which
+`test_pipeline.py` proves file by file: seven by reconstructing run-12's text
+from this cell's, and the executor by stating the delta as three exact
+substitutions and reversing them back to run-12's bytes, so a fourth edit fails
+the test rather than travelling with the cell. Run-04 to run-12 are the nine
+cells this iteration follows; none is superseded, repaired or reinterpreted,
+and the frozen artifacts of every closed cell, run-12's included, are
+digest-pinned by `run-13/test_contract.py`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default
+and neither pinned nor observed. The model is run-04's, run-08's, run-09's,
+run-10's, run-11's and run-12's, so the model is not the variable.
+
+Coordinates: `pin.py --commit HEAD` pins commit
+`229024596d50f52a8c0a49d380ade59b0bdd1e1c`, tree
+`be2488de6e69e231d004eb3913f5499c381c2fa1`, governance head `OVR-000411` at
+`sha256:24ecdab8…`. Core-17 landed at `baacfa5` and `2290245` while this cell
+was being built, so the adapter and the skill are past the v4.6 coordinate and
+the gate status reads `PINNED_TO_THE_V4_7_CORE_COORDINATE`. The governance head
+the overseer status page renders is still the v4.6 one, `OVR-000411`: Core-17's
+governance entry is not in the pinned bytes, and the pin records the head as it
+stands rather than the head it expects. An earlier provisional pin, to
+`31830f021a904ec6170b902065b12537ce762aa1`, is superseded by this one and is
+recorded here only so the sequence is on the record. The interface coordinates
+are new: `capture:paper-v4:yu-2025:v4:13` and `plan:paper-v4:yu-2025:v4:13`,
+and the runner will execute under `actor:overseer-run-13`. The private
+workspace is `private/paper-v4-v4-run-13/producer`. At this pin none of the
+eight declared inputs has moved against run-12's manifest.
+
+All eighteen of run-12's `changes` entries are carried forward and marked
+`carried_from: run-12`. Six of them are Core's and are read at fixed commits so
+that nothing Core-17 lands can be attributed to an earlier task:
+`CORE_12_DERIVATION_CHECKS` at the v4.1 baseline, `PACKS_0_3_0` at run-08's
+expected versions, `SUBJECT_ELEMENT` at the v4.3 coordinate `f6c8c71`,
+`CORE_14_MODALITY_SOURCE_OF_TRUTH` between the v4.3 and the v4.4 coordinates,
+`CORE_15_SUBJECT_ALIASES` between the v4.4 coordinate `2026244` and the v4.5
+coordinate `9d789f2`, and `CORE_16_PROJECTED_SUBJECT`, which was run-12's
+change under test and is now read between the v4.5 coordinate and the v4.6
+coordinate `90abc79`. Core-16 is read at fixed commits for the reason Core-15
+was: Core-17 rewrites the same adapter and the same skill, so a comparison
+against this cell's pin would report Core-17's bytes as Core-16's.
+
+One correction travels with the carried Core-16 entry and is stated here
+because it is a defect in a frozen record. Run-12's `pin.py` read the subject
+census's keys by scanning the census function's body for the four literals.
+The adapter names its outcomes by module constant there, so the scan found
+none of them, and run-12's frozen contract records `census_keys_at_pin: []` at
+`90abc79`, a commit where Core-16 had landed and the census declared all four.
+Run-12 is frozen and is not edited. Run-13's `pin.py` resolves the adapter's
+own `_SUBJECT_OUTCOMES` tuple instead and refuses if that declaration is
+absent; at `90abc79` it reads `ambiguous`, `projected`, `proposed`, `unnamed`,
+which is what the carried entry now records.
+
+Two entries are this iteration's. One is Core's and one is the harness's:
+
+1. `CORE_17_PROJECTION_WITHDRAWN`. The document adapter stops deriving a
+   subject. A source-asserted record's subject is the one the producer set or
+   none, and the check Core-15 widened still holds it: the subject entity's
+   `name` or one of its `tags`, whitespace ignored, must occur in a statement
+   that formalizes the record. The census reports four outcomes in place of
+   Core-16's four: `proposed` is a subject the producer set, `attachable` is a
+   record whose subject is unset and whose formalizing statement names exactly
+   one entity of the capture, `ambiguous` is one whose statement names more
+   than one, and `unnamed` one whose statement names none. `attachable` is the
+   report that replaces the attachment: it counts what a projection would have
+   reached without reaching it. The axis stays reported and never refused, so
+   no refusal reason is added and none is removed, and `expected_reasons` is
+   empty. One skill sentence says the producer sets the subject or leaves it
+   unset and nothing derives it. `subject` is the slot Core-13 added and `tags`
+   an existing root slot, so there is no new slot, no pack version and no
+   ontology change. Cause: `handover/2026-09-05-overseer-journal.md`, iteration
+   4 admitted and frozen, decision 22, and E-0155. State at the pin:
+   `LANDED`. Because the expectation is empty, a subset check on the enum would
+   read LANDED against a commit where Core has written nothing, so the pin sets
+   `pin_status` from two byte comparisons against the v4.6 coordinate, the
+   adapter and the skill, and records the `SUBJECT_NOT_NAMED` message text
+   verbatim beside that coordinate's and the census's own outcome keys at the
+   pinned commit. Both files moved, the refusal message did not, and the census
+   declares `ambiguous`, `attachable`, `proposed` and `unnamed` with
+   `projected` gone.
+2. `SUBJECT_TAGS_PROJECTED`. A SUBJECT row's subject side projects `tags`
+   beside whatever the binder named for it, wherever the subject record carries
+   the slot. The edit is in the executor and not in the binder, and that is the
+   whole of it: `_project` already drops a field the record does not have, so a
+   subject with no tags projects exactly what it projected in run-12. The
+   binder's projection is per record type and its housekeeping set is what the
+   RELATION and ENTITY kinds project through as well, so adding `tags` there
+   would move every row of every kind and the case bytes with them. The case
+   field set is closed at the same keys, `output_fields` is unchanged,
+   `cases_sha256` still digests the queries alone, the binding schema stays
+   `malleus.paper-v4.native-query-binding/v4`, and the record side of a SUBJECT
+   row, the RELATION rows and the ENTITY rows are byte for byte what run-12's
+   executor returned. Cause: run-11's preliminary review, carried in the
+   overseer journal as the first item of the harness queue after run-12. Nine
+   SUBJECT rows were tokened `SUBJECT_NOT_IN_BLOCK` because the row showed the
+   entity's `name`, the full form, where the block wrote the abbreviation one
+   of the entity's `tags` carries. The check at capture is Core-15's and
+   accepts either form, so the adapter had already agreed the name is in the
+   block and the row was showing the reviewer less than the check had read.
+   The v4.6 RCA states the effect expected of it: the subject-in-block token no
+   longer flagging an abbreviation the entity's tag already carries. It is a
+   review-surface change and not a measurement change: no row is added, removed
+   or reordered.
+
+The review task does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell
+it is instantiated to changes. The blank record for run-13 is run-12's with the
+run id moved and nothing else.
+
+The offline validation is carried again. `offline_validation.py` re-runs
+run-10's computation of the v4.4 ENTITY restriction against this cell's binder
+and returns the same counts unchanged: 630 of run-09's 1,466 rows kept (58,
+319, 131, 122), 618 SUPPORTED, 12 PARTIAL, none unjudged. That is a regression
+check on a binder that did not move, not evidence about v4.7.
+
+Measurement: run-13 is measured against run-12's 408 admitted rows (48, 117,
+131, 112; 176 witnesses) and against run-12's subject coverage, 90 of 143 (75
+proposed, 15 projected, 5 ambiguous, 48 unnamed). Both figures are in run-12's
+own public launch log and `test_contract.py` recomputes both from it, including
+the four outcomes and the per-type breakdown. Run-12's launch log publishes no
+rows-by-kind split, so this cell records none rather than carrying a figure it
+cannot recompute. Expected, stated before the run: no derived subject at all,
+coverage at the producer's own proposed share near run-12's 75 of 143, and the
+`attachable` count reported as the honest measure of what the producer left
+unattached. Falsifier: none a cell can fire. The change removes a mechanism,
+and the test is that nothing it removed was worth keeping, which run-12's
+fifteen projections already showed: thirteen wrong by the overseer's reading of
+the plan's PROJECTED derivations, and 18 of the 26 rows falling on
+projected-subject records returned PARTIAL at review against 7 PARTIAL and 2
+UNSUPPORTED across the other 382 (E-0157).
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-13, and
+`ontology-run/` and `results/` carry only a keepfile. The gate reads the code,
+not the governance ledger: Core-17's own governance entry is not at this commit,
+so `PINNED_TO_THE_V4_7_CORE_COORDINATE` says the adapter and the skill moved and
+the census outcomes are the four, and says nothing about the entry that will
+record it. Run-12's 408 rows and its 90 of 143
+subjects are run-12's, on run-12's graph; they bound what this cell is compared
+against and say nothing about the graph run-13's producer will build. The
+`attachable` count Core-17 will report is a count of records whose statement
+names one entity, not a claim that any of those records is about that entity,
+which is the distinction the withdrawal exists to make. Whether any of it holds
+is open, and run-13 is one cell that will be one observation, not a
+measurement, until it has run to ratification.
+
 ### E-0157, run-12's preliminary review and the iteration's analysis
 
 Date: 2026-09-05

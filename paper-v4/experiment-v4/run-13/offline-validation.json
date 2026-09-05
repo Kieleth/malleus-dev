@@ -1,0 +1,139 @@
+{
+  "schema": "malleus.paper-v4.run-13-offline-validation/v1",
+  "run_id": "run-13",
+  "status": "COMPUTED",
+  "change_id": "ENTITY_KIND_RESTRICTED",
+  "rule": "one ENTITY case per type in a question's set that carries no subject on the surface; SUBJECT and RELATION expansion unchanged",
+  "executes": "NOTHING",
+  "measured_on": "run-09",
+  "inputs": {
+    "binder": {
+      "path": "paper-v4/experiment-v4/run-13/bind_from_surface.py",
+      "sha256": "sha256:179514239413f85f22c152e4240c34b5bea85443f9bd73dbdea7866dcc9275c4",
+      "binding_schema": "malleus.paper-v4.native-query-binding/v4"
+    },
+    "type_sets": {
+      "path": "paper-v4/experiment-v4/run-09/results/query-type-sets.json",
+      "sha256": "sha256:3eee06f9f52e327a8842168078545a892fb8cf5bc28e643b1e7d829c6c16d5a6"
+    },
+    "population_surface": {
+      "path": "paper-v4/experiment-v4/run-09/ontology-run/population-surface.json",
+      "sha256": "sha256:dce5f7f0994f0918b1cc32de7dd45787a8a3853a3ad2e3ddeafe24dea09d6257"
+    },
+    "executed_binding": {
+      "path": "paper-v4/experiment-v4/run-09/results/native-query-binding.json",
+      "sha256": "sha256:eadeb81ee026a5e3fecd2d63809e3a5b3af1d122192d065bda62cce493f48681",
+      "schema": "malleus.paper-v4.native-query-binding/v3"
+    },
+    "query_result": {
+      "path": "private/paper-v4-v4-run-09/query/query-result.json",
+      "sha256": "sha256:f00d8e89eb181766a802f3dc7a2cd8c5c733792506486140683b442664d89b5e",
+      "visibility": "PRIVATE"
+    },
+    "review_record": {
+      "path": "paper-v4/evaluation-v4/run-09/review-record.preliminary.md",
+      "sha256": "sha256:4d5db905d3afc79dabba4b33d556ee73c3c0682e6d918fa7f25822c43066e6b1",
+      "status": "PRELIMINARY_NOT_RATIFIED"
+    }
+  },
+  "questions": [
+    {
+      "question_id": "CQ-01",
+      "types": 8,
+      "subject_bearing_types": 2,
+      "cases_v3": 344,
+      "cases_v4": 342,
+      "cases_removed": 2,
+      "rows_v3": 210,
+      "rows_kept": 58,
+      "rows_removed": 152,
+      "rows_kept_by_kind": {
+        "ENTITY": 45,
+        "RELATION": 3,
+        "SUBJECT": 10
+      },
+      "rows_kept_by_label": {
+        "SUPPORTED": 58
+      }
+    },
+    {
+      "question_id": "CQ-02",
+      "types": 13,
+      "subject_bearing_types": 3,
+      "cases_v3": 897,
+      "cases_v4": 894,
+      "cases_removed": 3,
+      "rows_v3": 547,
+      "rows_kept": 319,
+      "rows_removed": 228,
+      "rows_kept_by_kind": {
+        "ENTITY": 86,
+        "RELATION": 62,
+        "SUBJECT": 171
+      },
+      "rows_kept_by_label": {
+        "PARTIAL": 8,
+        "SUPPORTED": 311
+      }
+    },
+    {
+      "question_id": "CQ-03",
+      "types": 14,
+      "subject_bearing_types": 3,
+      "cases_v3": 1036,
+      "cases_v4": 1033,
+      "cases_removed": 3,
+      "rows_v3": 359,
+      "rows_kept": 131,
+      "rows_removed": 228,
+      "rows_kept_by_kind": {
+        "ENTITY": 51,
+        "RELATION": 8,
+        "SUBJECT": 72
+      },
+      "rows_kept_by_label": {
+        "PARTIAL": 3,
+        "SUPPORTED": 128
+      }
+    },
+    {
+      "question_id": "CQ-04",
+      "types": 12,
+      "subject_bearing_types": 3,
+      "cases_v3": 768,
+      "cases_v4": 765,
+      "cases_removed": 3,
+      "rows_v3": 350,
+      "rows_kept": 122,
+      "rows_removed": 228,
+      "rows_kept_by_kind": {
+        "ENTITY": 43,
+        "RELATION": 6,
+        "SUBJECT": 73
+      },
+      "rows_kept_by_label": {
+        "PARTIAL": 1,
+        "SUPPORTED": 121
+      }
+    }
+  ],
+  "totals": {
+    "cases_v3": 3045,
+    "cases_v4": 3034,
+    "cases_removed": 11,
+    "rows_v3": 1466,
+    "rows_kept": 630,
+    "rows_removed": 836,
+    "rows_kept_by_kind": {
+      "ENTITY": 225,
+      "RELATION": 79,
+      "SUBJECT": 326
+    },
+    "rows_kept_by_label": {
+      "PARTIAL": 12,
+      "SUPPORTED": 618
+    },
+    "rows_kept_unjudged": 0
+  },
+  "non_claim": "These are run-09's rows under run-13's rule, not run-13's rows. No producer has run at this cell's coordinate and no graph of its own exists. The labels are run-09's preliminary reviewers' and are not ratified. What the numbers bound is the review, not the result."
+}
