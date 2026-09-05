@@ -2789,3 +2789,57 @@ fabricated citation was found by a search outside the protocol, and the same
 search has not been run on every citation in every cell. The thin capture is a
 valid protocol outcome. Nothing here compares the cell to run-04 or run-05, which
 had not reached results when this entry was written.
+
+### E-0130, run-07 closes: the paired Haiku cell ends where the unpaired one did
+
+Date: 2026-09-05
+
+Sources: `private/paper-v4-v4-run-07/launch-log.json`,
+`private/paper-v4-v4-run-07/usage.json`, the two checker reports under
+`private/paper-v4-v4-run-07/producer/check/`, the preserved pre-revision
+population under `private/paper-v4-v4-run-07/check-loop/`, the three refused
+runner attempts under `private/paper-v4-v4-run-07/refused-runner-attempt-0N/`,
+and the gate diagnostics under `private/paper-v4-v4-run-07/gate/`.
+
+Outcome: ontology accepted, population refused. The paired protocol placed a
+second Haiku 4.5 session in front of each gate, with one revision per phase.
+Phase one: the producer's first ontology cited two seismological vocabularies at
+real hosts; the checker listed both as UNVERIFIABLE from the declared inputs; the
+producer moved the terms to the honest none_found form with four invented terms;
+attempt 02 was accepted at 2,244 facts, `Earthquake` as an Event, every entity
+type a root or pack class. Phase two: the producer wrote 6 assertions and 19
+records; the checker found one non-verbatim statement and untargeted properties
+on every record, including values with no block at all (an event time, a
+latitude and longitude, a magnitude, two uncertainties); the producer's revision
+removed every untargeted property and every relation, leaving 5 assertions, 4
+entities, 3 events, 0 relations. The checker also marked the file's envelope
+conformant, citing the pinned skill's template, which is the template Core-9
+corrected on main after this cell's inputs were frozen at 8b806f7; a checker of
+the same family reading the same defective skill approves the defect the skill
+induces. The runner then refused three times: the envelope (five extra keys,
+one of them a self-written contract identity; return 1); two statements not
+verbatim, both listed in one refusal by the aggregated diagnostic Core-9 added,
+of which the checker had flagged neither (return 2); and a formalization target
+whose path names a field outside `properties`, a target the checker's report
+had marked satisfied (terminal). No fallback and no hand repair were used. The
+runner executed at main 1e5d4a9, Core files at Core-9's head 3b29309, against
+inputs pinned at 8b806f7; the execution commit is recorded per attempt.
+
+Cost, harness-reported tokens per stage, cumulative session figures differenced.
+Producer: ontology attempt 01 83,993; attempt 02 after check 14,719; population
+32,497; revision after check 21,017; correction 01 (envelope) 7,328; correction
+02 (verbatim) 7,405; producer total 166,959. Checker: ontology check 84,190;
+population check 14,191; checker total 98,381. Pair total 265,340, against
+137,734 for the unpaired Haiku cell run-06, which reached the same terminal
+state.
+
+What the pair did and did not do: it turned two unverifiable citations into an
+honest gap before the gate, and it removed invented values before the runner saw
+them. It did not catch the envelope, the two paraphrases the runner refused, or
+the mispathed target, and on each of those the report said the opposite. Two
+observations, one paired and one unpaired, measure nothing about pairing; what
+they show is one mechanism: the checker's authority is bounded by the skill it
+reads and by the same recall its producer has.
+
+Non-claim: no comparison with run-04 or run-05 is made here; neither had reached
+results when this entry was written.
