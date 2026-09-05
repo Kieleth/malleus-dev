@@ -1859,6 +1859,20 @@ class TestSkillsAreInstallable:
                 'overrides the global "smallest observation", "Build only what '
                 'changes the answer", and "Build less" rules for document capture'
             ),
+            (
+                "locate the span in the named block by a "
+                "whitespace-insensitive anchor and copy the block's own bytes"
+            ),
+            "never retype the text and never clean it up",
+            (
+                "verify every statement is a substring of its block after "
+                "whitespace collapse"
+            ),
+            (
+                "Every block ID in `assertions` and in `nothing_assertable` is "
+                "taken from the reading's own block inventory; never construct "
+                "one"
+            ),
             "neutral population plan",
             "every concrete Entity and Relation type",
             (
