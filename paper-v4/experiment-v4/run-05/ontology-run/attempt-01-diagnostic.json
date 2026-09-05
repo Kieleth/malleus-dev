@@ -1,0 +1,1 @@
+{"attempt":1,"detail":"IMPORT_READER_REFUSED","error_type":"SourceBoundaryRefusal","ontology_sha256":"sha256:46f648ff1cb3551ef9d3f88d13bfc3ce7e2fa8ea663e1b0eea1e2176ced799eb","reason":"IMPORT_READER_REFUSED","schema":"malleus.paper-v4.ontology-compile-attempt/v1","stage":"CONTRACT_COMPILATION","status":"REFUSED"}

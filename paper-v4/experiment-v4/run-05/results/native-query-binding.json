@@ -1,0 +1,694 @@
+{
+  "schema": "malleus.paper-v4.native-query-binding/v2",
+  "status": "FROZEN_AFTER_REPLAY",
+  "bound_by": "paper evaluator (overseer session), after population, admission, disposal, reopen and replay were frozen; types read from the accepted population surface only (gate/attempt-02/population-surface.json); the surface carries one relation type, ResearchRelation, and Event types cannot be relation endpoints, so no case binds Earthquake",
+  "bound_after_replay_receipt_sha256": "sha256:5895a803aa651793c26f37e7b4d4ce5c65306a4d02d30a2839b1df0ff8490611",
+  "queries": [
+    {
+      "id": "NQ-CQ-01",
+      "question_id": "CQ-01",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "Instrument",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Campaign",
+          "output_fields": {
+            "source": [
+              "name",
+              "description"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description",
+              "begins_at",
+              "ends_at",
+              "temporal_precision",
+              "count",
+              "count_scope"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "Campaign",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Instrument",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "begins_at",
+              "ends_at",
+              "temporal_precision",
+              "count",
+              "count_scope"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "source_record_type": "CountedObservation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Instrument",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator",
+              "count",
+              "count_scope"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "source_record_type": "CountedObservation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Campaign",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator",
+              "count",
+              "count_scope"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description",
+              "begins_at",
+              "ends_at",
+              "temporal_precision",
+              "count",
+              "count_scope"
+            ]
+          }
+        },
+        {
+          "ordinal": 5,
+          "source_record_type": "Method",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Campaign",
+          "output_fields": {
+            "source": [
+              "name",
+              "description"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name"
+            ]
+          }
+        },
+        {
+          "ordinal": 6,
+          "source_record_type": "Campaign",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Method",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "begins_at",
+              "ends_at",
+              "temporal_precision",
+              "count",
+              "count_scope"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-02",
+      "question_id": "CQ-02",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "Observation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "CountedObservation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator",
+              "count",
+              "count_scope"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "source_record_type": "Claim",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "source_record_type": "Observation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "SpreadingRidge",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 5,
+          "source_record_type": "RidgeSegment",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "SpreadingRidge",
+          "output_fields": {
+            "source": [
+              "name",
+              "description"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 6,
+          "source_record_type": "Claim",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "SpreadingRidge",
+          "output_fields": {
+            "source": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-03",
+      "question_id": "CQ-03",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "Observation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "Observation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Sample",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description"
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "source_record_type": "Observation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Claim",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "source_record_type": "Ratio",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "name",
+              "numerator_kind",
+              "denominator_kind",
+              "ratio_value",
+              "uncertainty"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name"
+            ]
+          }
+        },
+        {
+          "ordinal": 5,
+          "source_record_type": "Observation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Method",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name"
+            ]
+          }
+        },
+        {
+          "ordinal": 6,
+          "source_record_type": "Sample",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "name",
+              "description"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-04",
+      "question_id": "CQ-04",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "Claim",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Claim",
+          "output_fields": {
+            "source": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "Claim",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Observation",
+          "output_fields": {
+            "source": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "source_record_type": "Observation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Claim",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "source_record_type": "Claim",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name"
+            ]
+          }
+        },
+        {
+          "ordinal": 5,
+          "source_record_type": "Claim",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Source",
+          "output_fields": {
+            "source": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name"
+            ]
+          }
+        },
+        {
+          "ordinal": 6,
+          "source_record_type": "CountedObservation",
+          "relation_record_type": "ResearchRelation",
+          "target_record_type": "Claim",
+          "output_fields": {
+            "source": [
+              "name",
+              "description",
+              "quantity_kind",
+              "quantity_kind_class",
+              "value_lower",
+              "value_upper",
+              "unit",
+              "uncertainty",
+              "determination",
+              "assertion_modality",
+              "assertion_locator",
+              "count",
+              "count_scope"
+            ],
+            "relation": [
+              "relation_type",
+              "strength"
+            ],
+            "target": [
+              "name",
+              "statement",
+              "assertion_modality",
+              "claim_kind",
+              "assertion_confidence",
+              "assertion_locator",
+              "statement_sha256"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

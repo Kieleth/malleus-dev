@@ -1,0 +1,146 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v1",
+  "run": "run-05",
+  "protocol": "v4.1",
+  "launches": [
+    {
+      "ordinal": 1,
+      "phase": "ONTOLOGY",
+      "launched_at": "2026-09-04T23:36:55Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "sonnet",
+      "model_family": "Claude Sonnet 5",
+      "model_id": "claude-sonnet-5",
+      "spawn_message": "paper-v4/experiment-v4/run-05/spawn-message.md with the workspace path substituted by its absolute path",
+      "outcome": "ONTOLOGY_READY",
+      "usage_cumulative": {
+        "tokens": 215164,
+        "tool_uses": 24,
+        "duration_ms": 1584677
+      },
+      "usage_by_resume": [
+        {
+          "after": "ONTOLOGY_ATTEMPT_02",
+          "tokens": 229882,
+          "tool_uses": 7,
+          "duration_ms": 115548
+        },
+        {
+          "after": "POPULATION",
+          "tokens": 382952,
+          "tool_uses": 41,
+          "duration_ms": 1131683
+        }
+      ],
+      "phase_two": {
+        "dispatched_at": "2026-09-05T00:14:25Z",
+        "message": "run-04's phase-two message with the run's own coordinates",
+        "capture_id": "capture:paper-v4:yu-2025:v4:5",
+        "plan_id": "plan:paper-v4:yu-2025:v4:5",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ],
+        "reported_at": "2026-09-05T00:32:55Z"
+      }
+    }
+  ],
+  "environment_note": "producer reported `malleus-inquisitor` on PATH broken (editable install pointing at a Codex worktree /Users/luis/.codex/worktrees/808f/malleus-dev); it did not fall back; compilation is the parent's",
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:46f648ff1cb3551ef9d3f88d13bfc3ce7e2fa8ea663e1b0eea1e2176ced799eb",
+      "status": "REFUSED",
+      "stage": "CONTRACT_COMPILATION",
+      "reason": "IMPORT_READER_REFUSED",
+      "chained_cause": "REJECTED_SOURCE: schema root contains rejected field 'comments'",
+      "harness_finding": "compile_ontology_candidate.py records only str(error), which for SourceBoundaryRefusal is the bare reason; the actionable cause sits in __cause__ and was recovered by the overseer with the public facade; the diagnostic returned to the producer includes that chained cause verbatim",
+      "diagnostic_returned_to_producer_at": "2026-09-05T00:04:09Z",
+      "diagnostic_return_ordinal": 1,
+      "diagnostic_return_limit": 2
+    },
+    {
+      "attempt": 2,
+      "ontology_sha256": "sha256:8b7305bfecda20ecf7f59f661930c07dabc58b5065ac4a6828532001058afedf",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:fadbb51f5645063ba600f6ff8f1f150fe2613757581d59a2c47a5308716e5907",
+      "fact_count": 2913,
+      "accepted_at": "2026-09-05T00:13:25Z",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_record_types": 25,
+      "event_types": [
+        "Event",
+        "Earthquake"
+      ],
+      "citation_check": {
+        "by": "overseer, by hand, outside the protocol",
+        "checked_at": "2026-09-05T00:13:25Z",
+        "finding": "block 1 (structural features) is the honest none_found form; block 2 cites QuakeML at https://quakeml.org/ for Event and Magnitude; quakeml.org's TLS certificate is issued to quake.ethz.ch (ETH Zurich), see verification note below",
+        "verification_note": "quakeml.org's certificate names quake.ethz.ch; https://quake.ethz.ch/quakeml fetched by the overseer 2026-09-05: QuakeML is 'a flexible, extensible and modular XML representation of seismological data', maintained by a distributed team of seismologists (ETH Zurich host). The vocabulary is real; the homepage does not itself enumerate Event and Magnitude, so term membership is asserted from the overseer's knowledge of the QuakeML BED schema, not from the fetched page."
+      }
+    }
+  ],
+  "population": [
+    {
+      "runner_attempt": 1,
+      "transaction_time": "2026-09-05T00:33:07Z",
+      "execution_commit": "2f38112",
+      "core_note": "Core files at Core-9 head 3b29309 (skill and adapter fixes); the cell's pinned inputs stay at 8b806f7; Core-10 (tuple thaw) not yet landed and not needed: zero list-valued properties",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 47,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 26,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 74,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 65,
+          "PARTLY_FORMALIZED": 1,
+          "UNFORMALIZED": 0
+        },
+        "blocks_reviewed": 27,
+        "blocks_total": 186,
+        "capture_sha256": "sha256:3c8e26d8b21fd2ba0a730c2a405b669403e0c062ca6ae011e280d5ef1a86de8b",
+        "gaps_by_kind": {
+          "INTERVAL_NOT_EXPRESSIBLE": 1
+        }
+      },
+      "gaps_by_kind": {
+        "INTERVAL_NOT_EXPRESSIBLE": 1
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-05T00:33:34Z"
+    }
+  ],
+  "query": {
+    "bound_at": "2026-09-05T00:35:00Z",
+    "binding": "results/native-query-binding.json (type-only, from the accepted surface; 4 questions x 6 cases; one relation type on the surface)",
+    "bound_after_replay_receipt_sha256": "sha256:5895a803aa651793c26f37e7b4d4ce5c65306a4d02d30a2839b1df0ff8490611",
+    "result": "query/query-result.json",
+    "rows_by_question": {
+      "NQ-CQ-01": 2,
+      "NQ-CQ-02": 5,
+      "NQ-CQ-03": 9,
+      "NQ-CQ-04": 13
+    },
+    "rows_total": 29,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:3303aa621b39f65debac0c506a59233490346248954b951ec22578c92125f91c"
+  }
+}

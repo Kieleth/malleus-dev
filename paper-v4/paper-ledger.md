@@ -2843,3 +2843,57 @@ reads and by the same recall its producer has.
 
 Non-claim: no comparison with run-04 or run-05 is made here; neither had reached
 results when this entry was written.
+
+### E-0131, run-05 is admitted and replayed at the first runner attempt
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-05/ontology-run/`, `paper-v4/experiment-v4/run-05/results/`,
+`private/paper-v4-v4-run-05/` (launch log, usage, ledger, query result, withheld
+files), and `paper-v4/evaluation-v4/run-05/` (the frozen review inputs).
+
+Outcome: the Sonnet 5 cell reaches ADMITTED_AND_REPLAYED with zero structural
+returns at the population stage. Ontology attempt 01 was refused at
+CONTRACT_COMPILATION (IMPORT_READER_REFUSED, chained cause: the schema root
+carried a `comments` field the import reader rejects; the gate script recorded
+only the bare reason and the overseer recovered the cause with the public facade
+and returned it verbatim, one return of two). Attempt 02 was accepted at 2,913
+facts: 22 entity types, 2 event types (`Earthquake` and the root `Event`), one
+relation type. The population carried 66 assertions and 74 records (47 entities,
+1 event, 26 relations) with an empty `nothing_assertable`; the runner admitted it
+at attempt 1 under `actor:overseer-run-05` and the reopened replay reproduces the
+admitted receipt and export. Census: 65 assertions fully formalized, 1 partly, 0
+unformalized; 27 of 186 blocks reviewed; one typed gap, INTERVAL_NOT_EXPRESSIBLE
+(an open lower bound). Fourteen ledger events, 74 records traced to their
+assertions.
+
+Query: the type-only binding was written by the evaluator after the replay was
+frozen, from the accepted surface alone, 4 questions by 6 cases, and run over the
+reopened ledger with no forbidden attempt. Rows per question: CQ-01 2, CQ-02 5,
+CQ-03 9, CQ-04 13. The rows stay private (they project record fields
+that quote the reading); the trace summary for their 4 witnesses is public.
+
+Execution coordinate: the cell's inputs are pinned at `8b806f7` (contract
+`core_commit`); the runner executed at main `2f38112`, whose Core files are
+Core-9's head `3b29309` (skill and adapter fixes from the Haiku RCA). The skill
+change had no effect on this producer, which read the pinned copy; the adapter
+change (aggregated locator diagnostics) was in force and was not exercised, since
+no locator refused. Core-10 (the tuple thaw) had not landed and was not needed:
+the population carries no list-valued property. Recorded as an execution
+deviation, per attempt, in the public launch log.
+
+Withheld beyond run-02's set: both ontology attempts and the validated contract
+share a 60-character normalized run with the reading, the paper's title and
+citation inside the schema description. The frozen threshold is mechanical, so
+they stay private by identity; the population surface, grounding receipt and
+diagnostics are public, and `ontology-run/result.json` carries every digest.
+
+Cost, harness-reported tokens per stage, cumulative session figures differenced:
+ontology attempt 01 215,164; attempt 02 14,718; population 153,070; producer
+total 382,952. Public in `results/usage.json`.
+
+Non-claim: admission is structural acceptance, not adequacy. The review inputs
+are frozen at `paper-v4/evaluation-v4/run-05/review-input-manifest.json`; no
+preliminary review exists yet and nothing here is paper evidence until Luis
+ratifies a review record. No comparison with run-02 or run-04 is made: run-04's
+runner is blocked on Core-10, and one cell per model is one observation.

@@ -1,0 +1,124 @@
+{
+  "schema": "malleus.paper-v4.run-05-withheld-artifacts/v1",
+  "run_id": "run-05",
+  "reason": "Each file below reproduces text of the selected reading. Only its identity is public.",
+  "check": {
+    "method": "SHARED_NORMALIZED_CHARACTER_RUN_AGAINST_EVERY_READING_BLOCK",
+    "normalization": "UNICODE_WHITESPACE_COLLAPSED_TO_SINGLE_SPACE",
+    "ladder": [
+      40,
+      60,
+      80,
+      120,
+      200,
+      320
+    ],
+    "frozen_threshold": "NO_PUBLIC_FILE_SHARES_A_60_CHARACTER_RUN",
+    "public_files_measured": {
+      "census.json": 0,
+      "launch-log.json": 0,
+      "native-query-binding.json": 0,
+      "paper-events.json": 0,
+      "query-trace-summary.json": 0,
+      "run-result.json": 0,
+      "trace-summary.json": 0,
+      "transaction-time.txt": 0,
+      "usage.json": 0,
+      "ontology-run/result.json": 0,
+      "ontology-run/attempt-02-diagnostic.json": 0,
+      "ontology-run/population-surface.json": 0,
+      "ontology-run/grounding-receipt.json": 0,
+      "ontology-run/attempt-01-diagnostic.json": 0
+    }
+  },
+  "withheld": [
+    {
+      "name": "document-population.json",
+      "private_path": "private/paper-v4-v4-run-05/producer/work/document-population.json",
+      "sha256": "sha256:bccea679a5a4c390cc4b909134f54ec246cb19e8c6b43226a79777144c93c9f6",
+      "carries": "PRODUCER_CAPTURE_ASSERTIONS_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 80
+    },
+    {
+      "name": "export-records.json",
+      "private_path": "private/paper-v4-v4-run-05/results/export-records.json",
+      "sha256": "sha256:e804642120bbcbfc182386ce00111050c232bbcdbfead36556686a42b4009345",
+      "carries": "EXPORTED_RECORD_PROPERTY_VALUES_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 80
+    },
+    {
+      "name": "gaps.json",
+      "private_path": "private/paper-v4-v4-run-05/results/gaps.json",
+      "sha256": "sha256:a66aab97c4d7bfeec9b1e7b29f3c6115cb5e5d570be167ac0f147d3c772b3060",
+      "carries": "GAP_STATEMENTS_QUOTING_READING_FRAGMENTS",
+      "shared_run_chars_at_least": 0,
+      "public_substitute": "results/run-result.json gaps_by_kind"
+    },
+    {
+      "name": "history.jsonl",
+      "private_path": "private/paper-v4-v4-run-05/ledger/history.jsonl",
+      "sha256": "sha256:27718ccb3e1fa26d50eeaae6c2e577e22f4f2a584a311ef31262eefca75d29c1",
+      "carries": "RETAINED_SOURCE_AND_CAPTURE_BYTES_AS_JSON_ESCAPED_TEXT",
+      "shared_run_chars_at_least": 0,
+      "note": "The ladder reports 0 because the ledger stores the reading JSON-escaped. It is withheld by contract, not by the measurement.",
+      "public_substitute": "results/run-result.json ledger_head and ledger_event_count"
+    },
+    {
+      "name": "ontology-01.yaml",
+      "private_path": "private/paper-v4-v4-run-05/withheld-ontology-run/ontology-01.yaml",
+      "sha256": "sha256:46f648ff1cb3551ef9d3f88d13bfc3ce7e2fa8ea663e1b0eea1e2176ced799eb",
+      "carries": "SCHEMA_DESCRIPTION_QUOTING_THE_SOURCE_TITLE_AND_CITATION",
+      "shared_run_chars_at_least": 60,
+      "note": "The shared run is the paper's title and citation in the schema description, not prose; withheld by the frozen threshold all the same.",
+      "public_substitute": "ontology-run/result.json digests, ontology-run/population-surface.json and grounding-receipt.json"
+    },
+    {
+      "name": "ontology-02.yaml",
+      "private_path": "private/paper-v4-v4-run-05/withheld-ontology-run/ontology-02.yaml",
+      "sha256": "sha256:8b7305bfecda20ecf7f59f661930c07dabc58b5065ac4a6828532001058afedf",
+      "carries": "SCHEMA_DESCRIPTION_QUOTING_THE_SOURCE_TITLE_AND_CITATION",
+      "shared_run_chars_at_least": 60,
+      "note": "The shared run is the paper's title and citation in the schema description, not prose; withheld by the frozen threshold all the same.",
+      "public_substitute": "ontology-run/result.json digests, ontology-run/population-surface.json and grounding-receipt.json"
+    },
+    {
+      "name": "population-plan.json",
+      "private_path": "private/paper-v4-v4-run-05/results/population-plan.json",
+      "sha256": "sha256:67e75635f6f282db436bfd6f77a649b47eab1d7a2db0c5590ca2b49f4064ddbf",
+      "carries": "RECORD_PROPERTY_VALUES_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 80
+    },
+    {
+      "name": "query-result.json",
+      "private_path": "private/paper-v4-v4-run-05/query/query-result.json",
+      "sha256": "sha256:c003ed77aac1bb1ab2dadb22d022bc6177ff38d9263a2e34fe5261c626a8c167",
+      "carries": "PROJECTED_ROW_FIELDS_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 60,
+      "public_substitute": "results/query-trace-summary.json and the row counts in the review input manifest"
+    },
+    {
+      "name": "replay-receipt.json",
+      "private_path": "private/paper-v4-v4-run-05/results/replay-receipt.json",
+      "sha256": "sha256:5895a803aa651793c26f37e7b4d4ce5c65306a4d02d30a2839b1df0ff8490611",
+      "carries": "REPLAYED_RECORD_PROPERTY_VALUES_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 80,
+      "public_substitute": "results/run-result.json replay_receipt_sha256, ledger_head, ledger_event_count, graph"
+    },
+    {
+      "name": "retained-capture.json",
+      "private_path": "private/paper-v4-v4-run-05/ledger/retained-capture.json",
+      "sha256": "sha256:3c8e26d8b21fd2ba0a730c2a405b669403e0c062ca6ae011e280d5ef1a86de8b",
+      "carries": "RETAINED_CAPTURE_EVIDENCE_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 80
+    },
+    {
+      "name": "validated-contract.json",
+      "private_path": "private/paper-v4-v4-run-05/withheld-ontology-run/validated-contract.json",
+      "sha256": "sha256:e50b1e41ef9c62507af24984973cd787dc2993533699ef9b4c891a6f60afd43d",
+      "carries": "VALIDATED_CONTRACT_EMBEDDING_THE_ACCEPTED_ONTOLOGY_TEXT",
+      "shared_run_chars_at_least": 60,
+      "note": "The shared run is the paper's title and citation in the schema description, not prose; withheld by the frozen threshold all the same.",
+      "public_substitute": "ontology-run/result.json digests, ontology-run/population-surface.json and grounding-receipt.json"
+    }
+  ]
+}
