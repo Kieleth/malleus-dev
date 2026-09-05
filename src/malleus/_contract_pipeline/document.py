@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 from hashlib import sha256
 import json
+import re
 from types import MappingProxyType
 from typing import Any
 
@@ -65,7 +66,7 @@ _DERIVATION_RULE = (
     "SHA-256 of that assertion's statement bytes, "
     "a slot the contract declares evaluative is formalized by at least one "
     "assertion whose modality is not HYPOTHESISED, a name of a "
-    "record's subject, its name or one of its tags, occurs in the "
+    "record's subject, its name or one of its tags, occurs as a word in the "
     "statement of an assertion that formalizes that subject, and a "
     "record's assertion_modality is the modality of an assertion that "
     "formalizes it"
@@ -270,8 +271,37 @@ def _normalise(text: str) -> str:
     return " ".join(text.split())
 
 
-def _compact(text: str) -> str:
-    return "".join(text.split())
+_LETTER = r"[^\W\d_]"
+
+
+def _occurs_as_word(form: str, statement: str) -> bool:
+    """Whether one form of a subject occurs in a statement as a word.
+
+    The form's non-whitespace characters occur in the statement in order, with
+    any whitespace between them, case-folded on both sides, and the character
+    before the first and the character after the last are not letters. Digits,
+    punctuation, whitespace and the ends of the statement bound a word, so a
+    citation number the text layer glues on, "lithosphere13", still names its
+    entity, and a form the page spaces out, "R C 2" for RC2, still matches its
+    own bytes. A form inside another word does not name anything: eight of
+    run-12's fifteen projected subjects were the entity's three-letter tag
+    found inside a longer word, RTI inside "vertical", OCC inside "occur",
+    MAR inside "mark". Neither side is rewritten; the comparison alone ignores
+    the whitespace and the case.
+    """
+
+    return (
+        re.search(
+            f"(?<!{_LETTER})"
+            + r"\s*".join(
+                re.escape(character)
+                for character in "".join(form.casefold().split())
+            )
+            + f"(?!{_LETTER})",
+            statement.casefold(),
+        )
+        is not None
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -475,8 +505,8 @@ def _subject_outcomes(
     is checked as before. A record that leaves it unset is compared against
     the capture's entity records that carry a ``name`` and whose own type
     bears no subject, by the Core-15 rule, against the statement of every
-    assertion formalizing any field of the record, whitespace removed from
-    both sides and case-folded: exactly one entity named is ``attachable``,
+    assertion formalizing any field of the record, each form sought as a word
+    and never inside another one: exactly one entity named is ``attachable``,
     more than one ``ambiguous``, none ``unnamed``.
     """
 
@@ -496,10 +526,7 @@ def _subject_outcomes(
         if not isinstance(name, str) or not name:
             continue
         candidates.append(
-            (
-                _word(entity.get("id"), "record ID"),
-                [_compact(form).casefold() for form in _subject_names(entity)],
-            )
+            (_word(entity.get("id"), "record ID"), _subject_names(entity))
         )
 
     locators_by_record: dict[str, set[str]] = {}
@@ -518,11 +545,11 @@ def _subject_outcomes(
             continue
         named: set[str] = set()
         for locator in locators_by_record.get(record_id, ()):
-            statement = _compact(statements[locator]).casefold()
+            statement = statements[locator]
             named |= {
                 entity_id
                 for entity_id, forms in candidates
-                if any(form in statement for form in forms)
+                if any(_occurs_as_word(form, statement) for form in forms)
             }
         outcomes[record_id] = (
             _SUBJECT_ATTACHABLE
@@ -723,12 +750,13 @@ def _subject_defects(
     and "the MAR" thereafter. The subject entity carries its own forms, its
     ``name`` and each member of ``tags``, and at least one of them must occur
     in the statement of an assertion formalizing the record's ``subject``
-    path. Both sides drop whitespace and case-fold, so a name the text layer
-    breaks across a space or a line still matches its own bytes; neither side
-    is rewritten. The forms are read from this change set, which is all the
-    adapter is handed: a subject naming no record here may still resolve in
-    the base state, so the adapter claims nothing about it and the plan
-    compiler refuses one that resolves nowhere.
+    path, as a word and not inside another one. Whitespace between a form's
+    characters is ignored, so a name the text layer breaks across a space or a
+    line still matches its own bytes; neither side is rewritten. The forms are
+    read from this change set, which is all the adapter is handed: a subject
+    naming no record here may still resolve in the base state, so the adapter
+    claims nothing about it and the plan compiler refuses one that resolves
+    nowhere.
     """
 
     defects: list[_Defect] = []
@@ -750,12 +778,11 @@ def _subject_defects(
                 )
             )
             continue
-        wanted = [_compact(name).casefold() for name in names]
         formalizing = formalized.get(record_id, {}).get(_SUBJECT_SLOT, [])
         if any(
-            form in _compact(statements[assertion_id]).casefold()
+            _occurs_as_word(form, statements[assertion_id])
             for assertion_id, _ in formalizing
-            for form in wanted
+            for form in names
         ):
             continue
         named = (
@@ -764,14 +791,16 @@ def _subject_defects(
         )
         listed = ", ".join(names)
         tried = (
-            f"name {listed} is" if len(names) == 1 else f"names {listed} are"
+            f"name {listed} does not occur as a word"
+            if len(names) == 1
+            else f"names {listed} do not occur as words"
         )
         defects.append(
             _Defect(
                 DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED,
                 record_id,
                 f"record {record_id} names subject {subject}, whose {tried} "
-                f"absent from the statement of {named}",
+                f"in the statement of {named}",
             )
         )
     return defects

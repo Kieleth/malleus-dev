@@ -422,8 +422,9 @@ def test_document_adapter_refuses_a_statement_digest_the_assertion_denies() -> N
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
         "least one assertion whose modality is not HYPOTHESISED, a name "
-        "of a record's subject, its name or one of its tags, occurs in the "
-        "statement of an assertion that formalizes that subject, and a "
+        "of a record's subject, its name or one of its tags, occurs as a "
+        "word in the statement of an assertion that formalizes that subject, "
+        "and a "
         "record's assertion_modality is the modality of an assertion that "
         "formalizes it"
     )
@@ -619,8 +620,9 @@ def test_document_adapter_refuses_a_disposition_no_assertion_evaluates() -> None
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
         "least one assertion whose modality is not HYPOTHESISED, a name "
-        "of a record's subject, its name or one of its tags, occurs in the "
-        "statement of an assertion that formalizes that subject, and a "
+        "of a record's subject, its name or one of its tags, occurs as a "
+        "word in the statement of an assertion that formalizes that subject, "
+        "and a "
         "record's assertion_modality is the modality of an assertion that "
         "formalizes it"
     )
@@ -748,14 +750,16 @@ def test_document_adapter_refuses_a_subject_the_statement_does_not_name() -> Non
     assert refusal.value.detail == (
         "document capture derivations are not accepted: "
         "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
-        "P-7 is absent from the statement of asr:003 [SUBJECT_NOT_NAMED]; "
+        "P-7 does not occur as a word in the statement of asr:003 "
+        "[SUBJECT_NOT_NAMED]; "
         "a record's assertion_locator names an assertion of this capture, a "
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
         "least one assertion whose modality is not HYPOTHESISED, a name "
-        "of a record's subject, its name or one of its tags, occurs in the "
-        "statement of an assertion that formalizes that subject, and a "
+        "of a record's subject, its name or one of its tags, occurs as a "
+        "word in the statement of an assertion that formalizes that subject, "
+        "and a "
         "record's assertion_modality is the modality of an assertion that "
         "formalizes it"
     )
@@ -777,7 +781,7 @@ def test_document_adapter_refuses_a_subject_no_assertion_formalizes() -> None:
     )
     assert (
         "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
-        "P-7 is absent from the statement of no assertion"
+        "P-7 does not occur as a word in the statement of no assertion"
     ) in refusal.value.detail
 
 
@@ -972,7 +976,8 @@ def test_document_adapter_names_every_form_it_tried_for_a_subject() -> None:
     )
     assert (
         "record inspection:P-7:2026-03-02 names subject asset:P-7, whose "
-        "names P-9, pump P-8, P-6 are absent from the statement of asr:003"
+        "names P-9, pump P-8, P-6 do not occur as words in the statement of "
+        "asr:003"
     ) in refusal.value.detail
 
 
@@ -989,7 +994,7 @@ def test_document_adapter_names_the_subject_in_one_collapsed_line() -> None:
     assert "\n" not in refusal.value.detail
     assert (
         "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
-        "pump p-9 is absent from the statement of asr:003"
+        "pump p-9 does not occur as a word in the statement of asr:003"
     ) in refusal.value.detail
 
 
@@ -1106,8 +1111,9 @@ def test_document_adapter_refuses_a_modality_no_formalizing_assertion_carries() 
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
         "least one assertion whose modality is not HYPOTHESISED, a name "
-        "of a record's subject, its name or one of its tags, occurs in the "
-        "statement of an assertion that formalizes that subject, and a "
+        "of a record's subject, its name or one of its tags, occurs as a "
+        "word in the statement of an assertion that formalizes that subject, "
+        "and a "
         "record's assertion_modality is the modality of an assertion that "
         "formalizes it"
     )

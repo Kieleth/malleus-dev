@@ -331,8 +331,13 @@ fallback.
    introduction the source gives it goes in `description`; the subject check
    compares names against sentences, so a descriptive name fails it; the
    other forms the source uses for the same thing, an abbreviation or a bare
-   head noun, go in `tags`, and the check accepts any of them, whitespace
-   ignored on both sides.
+   head noun, go in `tags`, and the check accepts any of them the sentence
+   writes as a word: whitespace between its characters is ignored, a digit, a
+   punctuation mark, a space or an end of the sentence bounds it, and a form
+   inside another word names nothing. Where the source inflects the form,
+   "velocity models" for a subject named "velocity model", or the text layer
+   glues it to the word beside it, "valley" printed into the word that
+   follows, the form the source writes goes in `tags` too.
    A relation's endpoints are formalized by an assertion whose statement names
    both of them; a relation the reading only implies is a `RELATION_ABSENT`
    gap, not a derivation from a neighbouring sentence.

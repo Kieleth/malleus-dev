@@ -540,6 +540,48 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     was recorded; it is the only plan that does, and a plan carrying that
     field no longer compiles here.
 
+23. A name occurs as a word, in the document-assertion adapter, no pack
+    change. Decision 20 made the comparison a substring with whitespace
+    removed from both sides and decision 22 kept it, and a substring has no
+    word boundary. The run-13 RCA read what that admits, and a script
+    re-checked it against the retained captures of runs 11 to 13: of the
+    fifteen subjects run-12 projected, eight were the entity's three-letter
+    tag found inside a longer word, RTI inside "vertical" and "portion", OCC
+    inside "occur", MAR inside "mark", OBS inside "observations"; run-13's
+    census counts 33 records attachable and 49 ambiguous where a word-bounded
+    rule counts 26 and 43. "MAR occurs in this sentence" was true of
+    "primary" and of "Marziano", and neither says the sentence is about the
+    Mid-Atlantic Ridge. So the comparison gains one clause and nothing else.
+    A form, the subject's `name` or one of its `tags`, occurs in a statement
+    when its non-whitespace characters occur in the statement in order, with
+    any whitespace between them, case-folded on both sides, and the character
+    before the first and the character after the last are not letters. One
+    predicate serves both sites, the `SUBJECT_NOT_NAMED` check on a subject
+    the producer set and the census of a subject left unset, and both
+    substring tests go with it. Digits, punctuation, whitespace and the ends
+    of the statement bound a word, and the digit is deliberate: the text
+    layer prints a citation number hard against the word before it,
+    "lithosphere13" and "thermal model31", so a rule that made a digit a
+    letter would lose the name to the typesetting, which is the defect
+    decision 20 paid to fix. A form the page spaces out matches for the same
+    reason, "R C 2" for a record tagged RC2. The cost is the inflected form
+    and the glued one: the producer-set subjects of runs 11 to 13 pass the
+    word-bounded rule in all but three cases, run-11's "axial valley" against
+    a "valley" the text layer's ligature glues "floor" onto, and run-13's
+    "velocity model" against "velocity models" twice. Each is answered where
+    decision 20 put the source's other forms, in `tags`, and the skill clause
+    now says so. What it does not do: no stemming, no lemmatization, no edit
+    distance and no semantic judgment, so a plural the source writes is still
+    a form the producer writes down; the census outcome names stay
+    `proposed`, `attachable`, `ambiguous` and `unnamed`; the verbatim check,
+    the relation endpoint check and the rest of the derivation rule are
+    untouched; it adds no reason and removes none, the `SUBJECT_NOT_NAMED`
+    message now saying the form does not occur as a word and listing every
+    form it tried; and the pack is untouched, so `research` stays at 0.5.0
+    and every fixture and frozen paper cell keeps compiling. The evidence is
+    `paper-v4/paper-ledger.md` E-0160 and the correction section of
+    `handover/2026-09-05-v46-rca.md`.
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.

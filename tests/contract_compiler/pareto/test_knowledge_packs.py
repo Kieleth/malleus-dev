@@ -909,6 +909,35 @@ def test_governing_design_withdraws_the_projected_subject_decision() -> None:
     )
 
 
+def test_governing_design_records_the_word_bounded_name_decision() -> None:
+    """Decision 23 says what the substring let through, what a word boundary
+    costs the producer, and why a digit does not bound a name."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "23. A name occurs as a word",
+        "eight were the entity's three-letter tag found inside a longer word",
+        "run-13's census counts 33 records attachable and 49 ambiguous where "
+        "a word-bounded rule counts 26 and 43",
+        "the character before the first and the character after the last are "
+        "not letters",
+        "the digit is deliberate",
+        '"lithosphere13" and "thermal model31"',
+        'run-11\'s "axial valley"',
+        '"velocity model" against "velocity models" twice',
+        "no stemming, no lemmatization, no edit distance and no semantic "
+        "judgment",
+        "`proposed`, `attachable`, `ambiguous` and `unnamed`",
+        "`research` stays at 0.5.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("22. The projected subject is withdrawn") < (
+        normalized.index("23. A name occurs as a word")
+    )
+
+
 def test_governing_design_records_the_evaluative_slot_decision() -> None:
     """Decision 17 says which slots are evaluative and how a reader finds out."""
 
