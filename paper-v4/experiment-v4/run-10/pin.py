@@ -63,8 +63,11 @@ GROUNDING_RITE = "src/malleus/inquisition/pack-grounding.json"
 PROFILE_PATH = "src/malleus/profiles/source-assertion.json"
 
 # The seed scalar ranges the elaborator binds. The v4.3 RCA's second ride-along
-# asks the INVALID_RANGE refusal to name them; the pin records the refusal's
-# message text and whether any of these names is in it, and decides nothing.
+# asks the INVALID_RANGE refusal to name them. The pin records the refusal's
+# message text verbatim, whether that text moved off the v4.3 coordinate, and
+# whether one of these names is literally in it. Only the first two are facts
+# about the change: a message that names the ranges through a joined constant
+# reads false on the third, which is why the text itself is recorded beside it.
 SEED_SCALAR_RANGES = ("Boolean", "DateTime", "Float", "Integer", "String")
 
 # Name, tracked source path, workspace target. The eight are run-04's, in
@@ -440,6 +443,7 @@ def pin(commit_argument: str, reading: Path) -> dict[str, object]:
     modality = changes["CORE_14_MODALITY_SOURCE_OF_TRUTH"]
     modality["reasons"] = sorted(at_commit - at_v4_3)
     messages = invalid_range_messages(commit)
+    baseline_messages = invalid_range_messages(V4_3_COMMIT)
     modality["invalid_range"] = {
         "path": ELABORATOR,
         "sha256": _digest(_git_show(commit, ELABORATOR)),
@@ -447,7 +451,9 @@ def pin(commit_argument: str, reading: Path) -> dict[str, object]:
         "moved": _digest(_git_show(commit, ELABORATOR))
         != _digest(_git_show(V4_3_COMMIT, ELABORATOR)),
         "messages": messages,
-        "names_a_bound_scalar_range": _names_a_seed_scalar(messages),
+        "baseline_messages": baseline_messages,
+        "messages_moved": messages != baseline_messages,
+        "seed_scalar_name_literal_in_message": _names_a_seed_scalar(messages),
     }
     modality["skill"] = {
         "path": SKILL_PATH,
@@ -505,6 +511,9 @@ def pin(commit_argument: str, reading: Path) -> dict[str, object]:
         "core_14_reasons": modality["reasons"],
         "core_14_pin_status": modality["pin_status"],
         "core_14_invalid_range_moved": modality["invalid_range"]["moved"],
+        "core_14_invalid_range_messages_moved": modality["invalid_range"][
+            "messages_moved"
+        ],
         "core_14_skill_moved": modality["skill"]["moved"],
         "core_14_ride_alongs_landed": modality["ride_alongs_landed"],
         "core_gate_status": gate["status"],

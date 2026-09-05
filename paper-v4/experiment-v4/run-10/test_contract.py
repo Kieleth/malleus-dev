@@ -680,7 +680,16 @@ def test_the_pin_records_the_two_ride_alongs_without_gating_on_them() -> None:
         invalid_range["sha256"] != invalid_range["baseline_sha256"]
     )
     assert invalid_range["messages"] == pin.invalid_range_messages(_commit())
-    assert invalid_range["names_a_bound_scalar_range"] == any(
+    assert invalid_range["baseline_messages"] == pin.invalid_range_messages(
+        V4_3_COMMIT
+    )
+    assert invalid_range["messages_moved"] == (
+        invalid_range["messages"] != invalid_range["baseline_messages"]
+    )
+    # A message that names the bound ranges through a joined constant reads
+    # false here, which is why the text itself is on the record beside it and
+    # why the gate uses the bytes rather than this.
+    assert invalid_range["seed_scalar_name_literal_in_message"] == any(
         name in message
         for message in invalid_range["messages"]
         for name in pin.SEED_SCALAR_RANGES

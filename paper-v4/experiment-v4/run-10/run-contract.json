@@ -83,7 +83,12 @@
             "f\"{subject} has an unbound range\",",
             "\"scalar range graph is cyclic\","
           ],
-          "names_a_bound_scalar_range": false
+          "baseline_messages": [
+            "f\"{subject} has an unbound range\",",
+            "\"scalar range graph is cyclic\","
+          ],
+          "messages_moved": false,
+          "seed_scalar_name_literal_in_message": false
         },
         "skill": {
           "path": ".claude/skills/malleus-acolyte/SKILL.md",
@@ -92,7 +97,7 @@
           "moved": true
         },
         "pin_status": "LANDED",
-        "detail": "One idea: a record's modality has one source of truth, the assertion that formalizes it. The document adapter refuses a record whose assertion_modality no assertion formalizing its [\"properties\", \"assertion_modality\"] path carries, typed MODALITY_NOT_ASSERTED and aggregated with the other derivation defects, and the skill states it: an assertion carries one modality, a sentence that carries two is captured as two assertions. Two ride-alongs with separately measurable effects and no semantic change: the elaborator's INVALID_RANGE refusal names the bound scalar ranges rather than saying only that a range is unbound, and the skill's range note is corrected; and the skill states that an entity's name is the source's own designator. The pin script fills what the pinned commit carries: every refusal reason the enum gained after the v4.3 coordinate, the elaborator's INVALID_RANGE message text verbatim beside whether it names a bound scalar range, and the skill's digest beside the v4.3 coordinate's. pin_status is the subset check on expected_reasons alone. The gate additionally waits for both ride-alongs, observed as the elaborator and the skill moving off the v4.3 coordinate, because the iteration's falsifiers include either return recurring and a producer that runs before they land can observe neither.",
+        "detail": "One idea: a record's modality has one source of truth, the assertion that formalizes it. The document adapter refuses a record whose assertion_modality no assertion formalizing its [\"properties\", \"assertion_modality\"] path carries, typed MODALITY_NOT_ASSERTED and aggregated with the other derivation defects, and the skill states it: an assertion carries one modality, a sentence that carries two is captured as two assertions. Two ride-alongs with separately measurable effects and no semantic change: the elaborator's INVALID_RANGE refusal names the bound scalar ranges rather than saying only that a range is unbound, and the skill's range note is corrected; and the skill states that an entity's name is the source's own designator. The pin script fills what the pinned commit carries: every refusal reason the enum gained after the v4.3 coordinate, the elaborator's INVALID_RANGE message text verbatim beside the v4.3 coordinate's, whether it moved, and whether a bound scalar range is named literally in it, and the skill's digest beside the v4.3 coordinate's. The literal check is a reading of the text, not a fact about the change: a message that names the ranges through a joined constant reads false, so the text is recorded beside it and the gate uses the bytes. pin_status is the subset check on expected_reasons alone. The gate additionally waits for both ride-alongs, observed as the elaborator and the skill moving off the v4.3 coordinate, because the iteration's falsifiers include either return recurring and a producer that runs before they land can observe neither.",
         "why": "handover/2026-09-05-v43-rca.md sections 6, 7 and 8, and E-0143. Twenty of run-09's 212 source-asserted records carry an assertion_modality that no formalizing assertion carries, MEASURED in the capture against STATED on the record twelve times; run-04 and run-08 had zero. The record's modality is a copy of the assertion's, set by the producer a second time, and this cell's producer tagged the clause where the capture tagged the sentence. The reviewers judged all twenty on the prose and flagged them, which is a check the protocol should be making. The two ride-alongs are the two returns that recurred: both Opus cells on the current skill spent their first ontology attempt on a date or uri range, and run-09 spent its first runner attempt on names. Neither is a rule gap; both are the protocol not stating what it already checks.",
         "expected_reasons_history": {
           "provisional_name": "MODALITY_MISMATCH",
