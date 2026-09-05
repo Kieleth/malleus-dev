@@ -1,0 +1,676 @@
+id: https://malleus.dev/schema/projects/ridge_seismicity_volatiles
+name: ridge_seismicity_volatiles
+version: 0.1.0
+title: Mid-Ocean Ridge Seismicity and Melt Volatile Project Ontology
+description: >-
+  Project vocabulary for one retained reading that reports ocean-bottom
+  seismometer microseismicity along a slow-spreading mid-ocean ridge axis
+  together with the volatile geochemistry of basalt samples from the same
+  ridge segments.
+
+  What the project declares of its own: the named features of the sea floor
+  and the lithosphere the reading locates and measures, the seismic
+  occurrences it names, the people, organisations, published works, datasets,
+  software packages and numerical models it credits, and two relation
+  families, one structural and one scholarly.
+
+  What the project borrows: every reported number, bound, count and ratio is
+  carried by the metrology pack, every domain-time extent by the chronology
+  pack, and every attributed claim, observation, method, instrument, campaign,
+  sample and source by the research pack. A feature class stays thin on
+  purpose; what the reading says about a feature is carried by a research-pack
+  record that names the feature as its subject.
+
+  One line separates the two ways this ontology records what a source says
+  about a thing. A classificatory attribute the reading applies to a record,
+  such as the kind of a fault or the material of a sample, is an open string
+  slot holding the reading's own wording, the way metrology's quantity_kind
+  holds it. A proposition the reading asserts about a thing, such as a
+  segment's amagmatic origin, a fault's inactivity, or a hypothesis and its
+  disposition, is a research-pack Claim whose subject is that thing.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  ridge: https://malleus.dev/schema/projects/ridge_seismicity_volatiles/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+
+  GeologicRelationType:
+    description: >-
+      Structural and spatial predicates the reading states between two named
+      features. The list is deliberately short and grows by adding values.
+      Direction and position words the reading uses beyond the predicate are
+      retained in spatial_qualifier and never folded into a value here.
+    permissible_values:
+      PART_OF:
+        description: >-
+          The reading states that the source feature is a part or a
+          subdivision of the target feature.
+      LOCATED_IN:
+        description: >-
+          The reading places the source feature at, on, or within the target
+          feature without asserting parthood.
+      ADJACENT_TO:
+        description: >-
+          The reading places the source feature next to the target feature.
+          spatial_qualifier carries the reading's own directional wording.
+      BOUNDED_BY:
+        description: The reading states that the target feature bounds the source feature.
+      OFFSET_BY:
+        description: The reading states that the target feature offsets the source feature.
+      CUT_BY:
+        description: The reading states that the target feature cuts the source feature.
+      OVERLIES:
+        description: The reading places the source feature above the target feature.
+
+  ScholarlyRelationType:
+    description: >-
+      Predicates the reading states among the people, organisations, works,
+      datasets, software packages, models and campaigns it names. Credited
+      contribution is not here: it is the research pack's CONTRIBUTED_TO on a
+      ContributionRelation, which carries the CRediT role.
+    permissible_values:
+      AFFILIATED_WITH:
+        description: The reading states that a person belongs to an organisation.
+      FUNDED_BY:
+        description: >-
+          The reading states that an organisation funded a work, a campaign,
+          or a person's part in one.
+      USED:
+        description: >-
+          The reading states that a campaign or a work used a software
+          package, a numerical model, a method, an instrument, or a dataset.
+      DEPOSITED_IN:
+        description: The reading states that a dataset was deposited in a repository.
+      CORRESPONDENCE_FOR:
+        description: The reading names a person as the correspondent for a work.
+
+  SeismicEventType:
+    description: >-
+      The kind of seismic occurrence the reading names. Values are the
+      reading's own distinction between a named earthquake and a subevent it
+      reports within one.
+    permissible_values:
+      EARTHQUAKE:
+      SUBEVENT:
+
+# -------------------------------------------------------------------
+# Mixins
+# -------------------------------------------------------------------
+
+classes:
+
+  PublishedIdentity:
+    mixin: true
+    description: >-
+      Identifiers and locations a source reports as facts about a published
+      thing. These are domain facts the reading states, not protocol
+      provenance: the route back to a retained assertion is assertion_locator
+      on the research pack's SourceAsserted mixin, never one of these.
+    slots:
+      - doi
+      - access_url
+      - publication_year
+
+# -------------------------------------------------------------------
+# Features of the solid Earth and the sea floor
+# -------------------------------------------------------------------
+
+  GeologicFeature:
+    is_a: Entity
+    description: >-
+      A named feature of the solid Earth or the sea floor that the reading
+      locates, describes, or reports a number about. Thin on purpose: a
+      quantity the reading states about a feature is an Observation whose
+      subject is the feature, and a proposition it asserts about a feature is
+      a Claim whose subject is the feature.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Submarine geology and sea-floor morphology
+          taxonomy: DDC 551.46
+          none_found: true
+          search: >-
+            The IHO-IOC B-6 terminology for undersea feature names, the
+            OGC/CGI GeoSciML feature and structure vocabularies, the NASA/JPL
+            SWEET realm ontologies, and OGC GeoSPARQL were each considered as
+            the seminal vocabulary for named sea-floor and lithospheric
+            features. This session works only from the declared inputs and
+            holds no verifiable copy of any of them, so it can vouch for
+            neither their canonical locations nor the exact spelling of their
+            terms, and it declines to cite what it cannot check. The malleus
+            root's own BFO alignment supplies independent continuant and
+            names no geological kind. No imported pack declares a feature
+            concept: metrology carries quantities, chronology carries time,
+            and research carries claims, observations, methods, instruments,
+            campaigns, samples, sources and evidence. The class and its
+            subtypes are therefore local, and each subtype name is the
+            reading's own term for the kind it names.
+          invented_terms:
+            - GeologicFeature
+            - SpreadingRidge
+            - RidgeSegment
+            - Fault
+            - TransformFault
+            - NonTransformDiscontinuity
+            - RidgeTransformIntersection
+            - OceanicCoreComplex
+            - VolcanicStructure
+            - HydrothermalField
+            - LithosphericBoundary
+            - LithosphericLayer
+            - TectonicPlate
+            - MeltBody
+            - GeographicRegion
+            - fault_kind
+
+  SpreadingRidge:
+    is_a: GeologicFeature
+    description: A mid-ocean ridge or spreading centre the reading names.
+
+  RidgeSegment:
+    is_a: GeologicFeature
+    description: >-
+      A named subsection of a spreading ridge axis, including a supersegment
+      the reading names as one.
+
+  Fault:
+    is_a: GeologicFeature
+    description: >-
+      A fault or a fault set the reading names. fault_kind holds the reading's
+      own wording for the kind.
+    slots:
+      - fault_kind
+
+  TransformFault:
+    is_a: Fault
+    description: A named oceanic transform fault.
+
+  NonTransformDiscontinuity:
+    is_a: GeologicFeature
+    description: >-
+      A named non-transform discontinuity that offsets a ridge axis. Not a
+      fault: the reading distinguishes it from both transform faults and the
+      normal faults within it.
+
+  RidgeTransformIntersection:
+    is_a: GeologicFeature
+    description: A named intersection of a ridge axis with a transform fault.
+
+  OceanicCoreComplex:
+    is_a: GeologicFeature
+    description: A named oceanic core complex.
+
+  VolcanicStructure:
+    is_a: GeologicFeature
+    description: >-
+      A volcanic edifice, cone, neo-volcanic ridge, seamount, or volcanic
+      terrain the reading names.
+
+  HydrothermalField:
+    is_a: GeologicFeature
+    description: A hydrothermal vent field, mound, or massif the reading names.
+
+  LithosphericBoundary:
+    is_a: GeologicFeature
+    description: >-
+      A named interface within the lithosphere or between the lithosphere and
+      the asthenosphere, such as a brittle-ductile boundary, a Moho, or a
+      lithosphere-asthenosphere boundary, and a named isothermal surface the
+      reading uses to define one.
+
+  LithosphericLayer:
+    is_a: GeologicFeature
+    description: >-
+      A named layer or shell such as the oceanic crust, the mantle, the
+      lithosphere, or the asthenosphere.
+
+  TectonicPlate:
+    is_a: GeologicFeature
+    description: A named lithospheric plate.
+
+  MeltBody:
+    is_a: GeologicFeature
+    description: >-
+      A body of melt or magma the reading names and locates at a stage it
+      distinguishes, such as a primary melt in equilibrium with its mantle
+      source or a pre-eruptive melt that has undergone fractional
+      crystallisation. The distinction between stages is a Claim whose subject
+      is the melt body, never a reading of the record's name.
+
+  GeographicRegion:
+    is_a: GeologicFeature
+    description: >-
+      A named ocean, sea region, island, or land area the reading uses to
+      place a feature or a study.
+
+# -------------------------------------------------------------------
+# Seismic occurrences
+# -------------------------------------------------------------------
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+      - SourceAsserted
+    description: >-
+      A single seismic occurrence the reading names, carrying the one quantity
+      the reading states for it, such as a magnitude. Populations of
+      earthquakes are not events: a count the reading reports over a group is
+      a CountedObservation whose subject is the feature the group lies
+      beneath, and a depth range over a group is an Observation.
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          none_found: true
+          search: >-
+            QuakeML's Basic Event Description, the FDSN and IASPEI
+            observatory-practice terminology, and the USGS earthquake glossary
+            were considered as the seminal vocabulary for a seismic
+            occurrence, its hypocentre, and its magnitude. This session works
+            only from the declared inputs and holds no verifiable copy of any
+            of them, so it can vouch for neither their canonical locations nor
+            the exact spelling of their terms, and it declines to cite what it
+            cannot check. The malleus root's own alignment of Event to BFO
+            occurrent and PROV activity is generic and names no seismic
+            concept, and no imported pack declares an Event subtype. The class
+            name and its type values are therefore local.
+          invented_terms:
+            - SeismicEvent
+            - SeismicEventType
+
+# -------------------------------------------------------------------
+# People, organisations, works, data, software, models
+# -------------------------------------------------------------------
+
+  Person:
+    is_a: Entity
+    description: >-
+      A person the reading names as an author of a work, a contributor to a
+      campaign, or an acknowledged individual. name carries the person's name
+      as the reading gives it.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Bibliographic description and scholarly attribution
+          taxonomy: DDC 025.3
+          vocabularies:
+            - vocabulary: FOAF Vocabulary Specification
+              vocabulary_url: http://xmlns.com/foaf/spec/
+              borrowed_terms:
+                - Person
+                - name
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - creator
+                - contributor
+          invented_terms: []
+
+  Organization:
+    is_a: Entity
+    description: >-
+      An institution, funder, publisher, or data repository the reading names.
+      name carries the organisation's name as the reading gives it.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Bibliographic description and scholarly attribution
+          taxonomy: DDC 025.3
+          vocabularies:
+            - vocabulary: FOAF Vocabulary Specification
+              vocabulary_url: http://xmlns.com/foaf/spec/
+              borrowed_terms:
+                - Organization
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - publisher
+          invented_terms: []
+
+  SoftwarePackage:
+    is_a: Entity
+    mixins:
+      - PublishedIdentity
+    description: >-
+      A named software package, program, or toolbox the reading reports using,
+      with the version designation and the location the reading states for it.
+      Distinct from the research pack's Method, which names a method rather
+      than the program that implements one.
+    slots:
+      - software_version
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Computer programs and software description
+          taxonomy: DDC 005.3
+          vocabularies:
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - SoftwareApplication
+                - softwareVersion
+                - url
+          invented_terms:
+            - SoftwarePackage
+            - software_version
+            - access_url
+          invention_search: >-
+            Schema.org is cited for SoftwareApplication and softwareVersion,
+            which name a released program and its version designation. The
+            class is called SoftwarePackage because the reading names
+            packages, programs and toolboxes rather than applications, and
+            software_version and access_url are the local slot spellings of
+            softwareVersion and url. CodeMeta and SPDX were considered as the
+            specialised software-metadata vocabularies; this session holds no
+            verifiable copy of either and declines to cite what it cannot
+            check. No imported pack declares a software concept: the research
+            pack's Instrument is grounded in the VIM term measuring
+            instrument, which a data-processing package is not, and its Method
+            names a method rather than the program implementing one.
+
+  NumericalModel:
+    is_a: Entity
+    description: >-
+      A named parameterised model the reading uses or reports, such as a
+      one-dimensional velocity model, a thermal model, or a solubility model.
+      Distinct from the research pack's Method: the reading names models as
+      artifacts that a method selects among, fits, or applies.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Mathematical modelling and simulation
+          taxonomy: DDC 511.8
+          none_found: true
+          search: >-
+            The Open Modeling Foundation and CSDMS model-metadata
+            vocabularies, and the schema.org and CodeMeta software terms, were
+            considered as vocabularies that might name a scientific model as a
+            first-class thing. This session works only from the declared
+            inputs and holds no verifiable copy of any of them, so it can
+            vouch for neither their canonical locations nor the exact spelling
+            of their terms, and it declines to cite what it cannot check. No
+            imported pack declares the concept either: the research pack's
+            Method is grounded in the Frascati term method and its Instrument
+            in the VIM term measuring instrument, and neither names a
+            parameterised model. The class name is therefore local.
+          invented_terms:
+            - NumericalModel
+
+  BibliographicSource:
+    is_a: Source
+    mixins:
+      - PublishedIdentity
+    description: >-
+      A published work the reading names, either the reading's own article or
+      a work in its reference list. name carries the title as the reading
+      gives it. licence, inherited from the research pack's Source, carries
+      the licence the work declares for its own text, which is what decides
+      whether a Claim about it may reproduce a sentence.
+    slots:
+      - container_title
+      - volume_designation
+      - pagination
+      - received_date
+      - accepted_date
+
+  Dataset:
+    is_a: Source
+    mixins:
+      - PublishedIdentity
+    description: >-
+      A dataset, database, catalogue, or supplementary data item the reading
+      names as a place domain assertions were drawn from or deposited in.
+
+  RockSample:
+    is_a: Sample
+    description: >-
+      A rock sample or a sample set the reading names. sample_material holds
+      the reading's own wording for what the sample is. A record standing for
+      a set rather than one specimen is the reading's own unit and carries an
+      AGGREGATE_ONLY gap at capture.
+    slots:
+      - sample_material
+
+  CountedObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A count the reading reports and the scope counted, carrying the same
+      subject, modality, determination and time as any other observation.
+
+# -------------------------------------------------------------------
+# Relations
+# -------------------------------------------------------------------
+
+  GeologicRelation:
+    is_a: Relation
+    description: >-
+      A structural or spatial relation the reading states between two named
+      features. Both endpoints are features the reading names in the same
+      statement; a relation the reading only implies is a gap, not a
+      derivation from a neighbouring sentence.
+    slots:
+      - spatial_qualifier
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Spatial and structural relations between geological features
+          taxonomy: DDC 551.8
+          vocabularies:
+            - vocabulary: Basic Formal Ontology (BFO)
+              vocabulary_url: http://purl.obolibrary.org/obo/bfo.owl
+              borrowed_terms:
+                - part of
+          invented_terms:
+            - GeologicRelation
+            - GeologicRelationType
+            - LOCATED_IN
+            - ADJACENT_TO
+            - BOUNDED_BY
+            - OFFSET_BY
+            - CUT_BY
+            - OVERLIES
+            - spatial_qualifier
+          invention_search: >-
+            Basic Formal Ontology is cited for part of, the one predicate in
+            this family that a vocabulary the declared inputs themselves vouch
+            for already names: the malleus root declares the bfo prefix and
+            aligns Entity, Event and Signal to BFO independent continuant,
+            occurrent and quality. BFO supplies no predicate for one feature
+            bounding, offsetting, cutting or overlying another; those are the
+            reading's own structural wording. GeoSciML and OGC GeoSPARQL were
+            considered as the geological and topological vocabularies that
+            would name them, and this session holds no verifiable copy of
+            either and declines to cite what it cannot check, so LOCATED_IN
+            and ADJACENT_TO are recorded as local for the same reason.
+            spatial_qualifier exists so that the reading's own directional
+            wording is retained as stated rather than converted into a
+            bearing.
+
+  ScholarlyRelation:
+    is_a: Relation
+    description: >-
+      A relation the reading states among the people, organisations, works,
+      datasets, software packages, models and campaigns it names. Credited
+      contribution is not here: it is the research pack's ContributionRelation,
+      which carries the CRediT role.
+    slot_usage:
+      relation_type:
+        range: ScholarlyRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Provenance and scholarly attribution
+          taxonomy: DDC 025.3
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - used
+                - wasAttributedTo
+                - wasAssociatedWith
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - contributor
+                - publisher
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - affiliation
+                - funder
+          invented_terms:
+            - ScholarlyRelation
+            - ScholarlyRelationType
+            - DEPOSITED_IN
+            - CORRESPONDENCE_FOR
+            - FundingRelation
+            - grant_number
+          invention_search: >-
+            PROV-O is cited for used, which the malleus root itself already
+            leans on when it aligns Event to PROV activity and cites the PROV-O
+            wasInformedBy and wasAssociatedWith pattern; schema.org for
+            affiliation and funder, the two predicates the reading states
+            between a person and an institution and between a funder and a
+            work; and DCMI for contributor and publisher. None of the three
+            names depositing a dataset in a repository or naming a
+            correspondent for a work, which the reading states plainly, so
+            DEPOSITED_IN and CORRESPONDENCE_FOR are local. DataCite and the
+            OpenAIRE funding vocabularies were considered for the grant number
+            a funder states; this session holds no verifiable copy of either
+            and declines to cite what it cannot check, so FundingRelation and
+            grant_number are local too. The class name is local because this
+            family is one relation type over people, works and tools rather
+            than a rendering of any single borrowed predicate.
+
+  FundingRelation:
+    is_a: ScholarlyRelation
+    description: >-
+      Funding the reading states from an organisation to a work, a campaign,
+      or a person's part in one, carrying FUNDED_BY as its relation_type and
+      the grant or agreement number when the reading states one. The number is
+      unset when the reading names a funder without one.
+    slots:
+      - grant_number
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+
+  fault_kind:
+    range: string
+    description: >-
+      Kind of fault in the reading's own wording, such as normal, detachment,
+      high-angle, or inward dipping. Open on purpose: it is what the reading
+      said, and it is never rewritten to fit a classification.
+
+  spatial_qualifier:
+    range: string
+    description: >-
+      The reading's own directional or positional wording for a spatial
+      relation, such as south of, to the east, or on the eastern flank of.
+      Retained as stated and never converted into a bearing or a coordinate.
+
+  sample_material:
+    range: string
+    description: >-
+      What a sample is made of, in the reading's own wording, such as
+      peridotite, basalt, mid-ocean ridge basalt, or olivine melt inclusion.
+
+  software_version:
+    range: string
+    description: Version designation the reading states for a software package.
+
+  doi:
+    range: string
+    description: >-
+      Digital Object Identifier the reading states for a work or a dataset,
+      retained exactly as the reading gives it, whether bare or resolved.
+
+  access_url:
+    range: string
+    description: >-
+      Location the reading states for obtaining a work, a dataset, or a
+      software package, retained exactly as the reading spells it and never
+      normalised. A fact the reading reports about the thing, not a route back
+      to a retained assertion.
+
+  publication_year:
+    range: integer
+    description: Year of publication the reading states for a work or a dataset.
+
+  container_title:
+    range: string
+    description: >-
+      Journal, book, or series title the reading states as the container of a
+      work, as the reading abbreviates or spells it.
+
+  volume_designation:
+    range: string
+    description: >-
+      Volume designation the reading states for a work, retained as stated
+      rather than parsed into a number.
+
+  pagination:
+    range: string
+    description: >-
+      Page range, article number, or article identifier exactly as the reading
+      states it, retained without interpretation because the reading gives all
+      three in the same position.
+
+  received_date:
+    range: string
+    description: >-
+      Date the reading states a work was received, retained exactly as the
+      reading spells it, such as 23 February 2023, and never converted to a
+      calendar coordinate. A calendar coordinate for domain time is the
+      chronology pack's business, not a bibliographic slot's.
+
+  accepted_date:
+    range: string
+    description: >-
+      Date the reading states a work was accepted, retained exactly as the
+      reading spells it and never converted to a calendar coordinate.
+
+  grant_number:
+    range: string
+    description: >-
+      Grant, award, or agreement number the reading states for a funding
+      relation, retained exactly as stated.

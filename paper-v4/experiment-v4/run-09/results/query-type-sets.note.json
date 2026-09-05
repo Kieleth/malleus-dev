@@ -1,0 +1,11 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-05T05:40:40Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two; the producer never sees this file",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition: instrument, campaign, counts and observations plus method, software, dataset and organization",
+    "CQ-02": "named region, its earthquake population and a spatial relation: every ridge and seafloor structure type on the surface, the observation types and Claim; event types are not bound because events cannot be relation endpoints and the ENTITY kind reads entities",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the structure, sample, melt, layer, method, model and dataset types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim and the quantified, melt, structural, volcanic, hydrothermal, fault and model types the mechanism may be asserted about"
+  }
+}

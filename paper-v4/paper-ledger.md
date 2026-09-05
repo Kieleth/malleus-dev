@@ -3549,3 +3549,56 @@ exercised only by fixtures; whether a producer under the new sentence attaches
 its observations and claims to subjects, and whether the SUBJECT and ENTITY
 case kinds then reach them, is what run-09 measures, against run-04's 146
 local-relation rows.
+
+### E-0142, run-09 (v4.3) is admitted at the second runner attempt and the query reaches the graph three ways
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-09/ontology-run/`, `paper-v4/experiment-v4/run-09/results/`
+(the acceptance-time type sets and binding, the v2 launch log, the derived
+cost record), `private/paper-v4-v4-run-09/` (ledger, query result, the refused
+first runner attempt, withheld files), and `paper-v4/evaluation-v4/run-09/`
+(review inputs frozen under protocol v2).
+
+Ontology: attempt 01 refused at CONTRACT_COMPILATION (INVALID_RANGE: a slot
+with range `date`; the elaborator binds five seed scalar types and declared
+classes, and `date` and `uri` from the LinkML types file bind to nothing, the
+same refusal run-04 met at its attempt 01); attempt 02 accepted at
+4,327 facts, 36 entity types, 2 event types, 5 relation types, four of them
+carrying `subject` (Claim, Observation, CountedObservation, SeismicEvent). All
+five cited vocabularies verified before phase two.
+
+Population: 343 assertions over all 186 blocks (184 asserted, 2
+nothing-assertable), 775 records (553 entities, 3 events, 219 relations), 59
+typed gaps (AGGREGATE_ONLY 25, REQUIRED_FIELD_ABSENT_IN_SOURCE 12,
+RELATION_ABSENT 11, TYPE_ABSENT 9, INTERVAL_NOT_EXPRESSIBLE 2). Runner attempt 1
+refused at the adapter with one aggregated SUBJECT_NOT_NAMED over 98 of 129
+subjects: the producer had named entities by the reading's first descriptive
+mention and asserted about them by the reading's short designator. Returned as
+structural diagnostic 1 of 2. The producer renamed 32 entities to the source's
+designators (descriptions kept the introductions), re-pointed 15 subjects to
+the named segment, and dropped 23 (17 unnamed by any sentence, 6 split across a
+line break under the producer's stricter literal check). Runner attempt 2
+admitted with no further return under `actor:overseer-run-09`: fourteen ledger
+events, the reopened replay reproducing the admitted receipt and export, 775
+records traced. Census: 285 fully, 51 partly, 7 unformalized;
+9 of 219 relations non-local; largest hub 18 records (the byline);
+subject coverage 106 of 212 subject-bearing records.
+
+Query: the v3 binding was frozen at acceptance (3,045 cases: ENTITY, RELATION and
+SUBJECT kinds from four type sets) and executed unchanged after replay
+(`cases_sha256` equal). Rows: CQ-01 210, CQ-02 547, CQ-03 359, CQ-04 350,
+1,466 in all over 343 witnesses, no forbidden attempt: 1,061 through the ENTITY
+kind, 326 through SUBJECT, 79 through RELATION. The ENTITY kind returns every
+admitted record of every type in a question's set, which is a table, not an
+answer; the SUBJECT and RELATION rows are the ones that reach a question
+through structure.
+
+Execution coordinate: inputs pinned at `f6c8c71` (E-0141); the admitted runner
+executed at main `9f34ad2`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 189,045; ontology attempt 02 11,055; population 201,426; population correction 01 subject not named 37,536; producer total 439,062.
+
+Non-claim: admission is structural acceptance, not adequacy. No preliminary
+review exists yet. The comparison with run-04 (146 local rows) and run-08 (8
+rows) is the iteration's analysis and is recorded separately.

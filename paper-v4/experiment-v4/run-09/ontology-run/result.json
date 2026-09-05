@@ -1,0 +1,85 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-09",
+  "core": {
+    "commit": "f6c8c71fd95711fd8f1bec811dff94cd61e535a0",
+    "tree": "b7c6a5acc44e2d8ebf5fda356e8075b103afe672"
+  },
+  "producer_input_manifest_sha256": "sha256:86dd78cc5f01df88043e494d5fea0d41a52bb660dfcc108fd96cc4bd0846e76f",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 1,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:9bd30fc1dc197f5e17ca7fc449d6c780e77bb489691ac07a715f16ee0021b568",
+    "final_status_sha256": "sha256:bbf6b271336d67a772aee5e5b5ff4e2de8afc4e7b5179e8377a67256d6ae4253"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "REFUSED",
+      "stage": "CONTRACT_COMPILATION",
+      "reason": "INVALID_RANGE",
+      "detail": "INVALID_RANGE: https://malleus.dev/schema/projects/ridge_seismicity_volatiles/accepted_date has an unbound range",
+      "cause_chain": [
+        {
+          "detail": "INVALID_RANGE: https://malleus.dev/schema/projects/ridge_seismicity_volatiles/accepted_date has an unbound range",
+          "error_type": "ElaborationRefusal",
+          "reason": "INVALID_RANGE"
+        }
+      ],
+      "ontology_sha256": "sha256:1a3eb4c39308afa1847375bc07f2e4df2dc638a5b1b0086513d7acb1d87ae9b7",
+      "ontology_path": "paper-v4/experiment-v4/run-09/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-09/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:eba5d2b8e4b23aba9afe902995b198fb7525b679b1227a8881ba410661472ccb",
+      "diagnostic_returned_to_producer_at": "2026-09-05T05:37:32Z"
+    },
+    {
+      "attempt": 2,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:e4c1091666048e5b1dc99de060e020735f0e9982a685f01bfad55c4428035569",
+      "ontology_path": "paper-v4/experiment-v4/run-09/ontology-run/ontology-02.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-09/ontology-run/attempt-02-diagnostic.json",
+      "diagnostic_sha256": "sha256:94a0ad65f5f338cc36067dfa0e246e0f2dbd8b6b0b1a0c31586791170e5b877d",
+      "accepted_at": "2026-09-05T05:40:40Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:e4c1091666048e5b1dc99de060e020735f0e9982a685f01bfad55c4428035569",
+    "validated_contract_sha256": "sha256:1aea4a1cc3715995350f3d88a025f2bba8afb9ddb7c31758956c6ddcd994cd48",
+    "validated_fact_set_sha256": "sha256:50045f91912b21f5b95a98af4aa52166de9c1af948ff5e0e33741a700716635a",
+    "fact_count": 4327,
+    "grounding_receipt_sha256": "sha256:d829a7eeac8064b7386109eafbc0bd6163e551e1c8a0ebe5820a6880426d2eab",
+    "population_surface_sha256": "sha256:dce5f7f0994f0918b1cc32de7dd45787a8a3853a3ad2e3ddeafe24dea09d6257",
+    "population_surface_families": {
+      "ENTITY": 36,
+      "EVENT": 2,
+      "RELATION": 5
+    }
+  },
+  "accepted_ontology_sha256": "sha256:e4c1091666048e5b1dc99de060e020735f0e9982a685f01bfad55c4428035569",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-05T05:40:40Z",
+    "urls": 5,
+    "result": "FOAF, DCMI Terms, PROV-O and schema.org were fetched and verified earlier on 2026-09-05 for run-08 at the same URLs; BFO (purl.obolibrary.org/obo/bfo.owl) fetched now, see note",
+    "fabricated": 0,
+    "bfo_note": "http://purl.obolibrary.org/obo/bfo.owl is the OBO Foundry purl for the Basic Formal Ontology; fetched 2026-09-05, it redirects (302) to the BFO-ontology GitHub release file bfo_classes_only.owl at v2019-08-26, which is the ontology the block names; the OWL body was not parsed for the borrowed term"
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-09 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

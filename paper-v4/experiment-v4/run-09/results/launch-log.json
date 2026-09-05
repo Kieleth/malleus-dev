@@ -1,0 +1,304 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-09",
+  "protocol": "v4.3",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-05T05:20:29Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-09/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "POPULATION_READY",
+      "usage_cumulative": {
+        "tokens": 189045,
+        "tool_uses": 17,
+        "duration_ms": 981568
+      },
+      "usage_by_resume": [
+        {
+          "after": "ONTOLOGY_ATTEMPT_02",
+          "tokens": 200100,
+          "tool_uses": 21,
+          "duration_ms": 1103106
+        },
+        {
+          "after": "POPULATION",
+          "tokens": 401526,
+          "tool_uses": 55,
+          "duration_ms": 3043173
+        },
+        {
+          "after": "POPULATION_CORRECTION_01_SUBJECT_NOT_NAMED",
+          "tokens": 439062,
+          "tool_uses": 60,
+          "duration_ms": 3363012
+        }
+      ],
+      "execution": {
+        "pinned_commit": "f6c8c71fd95711fd8f1bec811dff94cd61e535a0",
+        "staged_at": "2026-09-05T05:20:29Z",
+        "interpreter": "VERIFIED by prepare_producer.py preflight"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-05T05:40:54Z",
+        "after_binding_frozen_at": "2026-09-05T05:40:40Z",
+        "message": "run-08's phase-two message with run-09's coordinates",
+        "capture_id": "capture:paper-v4:yu-2025:v4:9",
+        "plan_id": "plan:paper-v4:yu-2025:v4:9",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ]
+      },
+      "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures, so the derived cost record can difference them; tokens are the harness's own cumulative figure"
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:1a3eb4c39308afa1847375bc07f2e4df2dc638a5b1b0086513d7acb1d87ae9b7",
+      "status": "REFUSED",
+      "stage": "CONTRACT_COMPILATION",
+      "reason": "INVALID_RANGE",
+      "detail": "INVALID_RANGE: https://malleus.dev/schema/projects/ridge_seismicity_volatiles/accepted_date has an unbound range",
+      "cause_chain": [
+        {
+          "detail": "INVALID_RANGE: https://malleus.dev/schema/projects/ridge_seismicity_volatiles/accepted_date has an unbound range",
+          "error_type": "ElaborationRefusal",
+          "reason": "INVALID_RANGE"
+        }
+      ],
+      "note": "same defect class as run-04 attempt 01: a date slot declared without a range under a schema with no default_range",
+      "diagnostic_returned_to_producer_at": "2026-09-05T05:37:32Z",
+      "diagnostic_return_ordinal": 1,
+      "diagnostic_return_limit": 2
+    },
+    {
+      "attempt": 2,
+      "ontology_sha256": "sha256:e4c1091666048e5b1dc99de060e020735f0e9982a685f01bfad55c4428035569",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:50045f91912b21f5b95a98af4aa52166de9c1af948ff5e0e33741a700716635a",
+      "fact_count": 4327,
+      "accepted_at": "2026-09-05T05:40:40Z",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 36,
+        "EVENT": 2,
+        "RELATION": 5
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "ResearchRelation",
+        "FundingRelation",
+        "GeologicRelation",
+        "ScholarlyRelation"
+      ],
+      "subject_bearing_types": [
+        "Claim",
+        "Observation",
+        "CountedObservation",
+        "SeismicEvent"
+      ],
+      "phase_two_inputs_staged": [
+        "accepted/population-surface.json",
+        "accepted/diagnostic.json"
+      ],
+      "diagnostic_returns_used": 1,
+      "citation_check": {
+        "by": "overseer, before phase two",
+        "checked_at": "2026-09-05T05:40:40Z",
+        "urls": 5,
+        "result": "FOAF, DCMI Terms, PROV-O and schema.org were fetched and verified earlier on 2026-09-05 for run-08 at the same URLs; BFO (purl.obolibrary.org/obo/bfo.owl) fetched now, see note",
+        "fabricated": 0,
+        "bfo_note": "http://purl.obolibrary.org/obo/bfo.owl is the OBO Foundry purl for the Basic Formal Ontology; fetched 2026-09-05, it redirects (302) to the BFO-ontology GitHub release file bfo_classes_only.owl at v2019-08-26, which is the ontology the block names; the OWL body was not parsed for the borrowed term"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-05T06:13:38Z",
+      "execution_commit": "5e30089",
+      "core_note": "Core files at the pinned coordinate f6c8c71 (OVR-000408)",
+      "status": "REFUSED",
+      "stage": "DOCUMENT_ADAPTER",
+      "reason": "SUBJECT_NOT_NAMED",
+      "detail": "aggregated over 98 records; 31 subjects passed",
+      "overseer_reading": "entity names are the reading's full noun phrases with the short form in parentheses; the asserting sentences use the short form; for 47 of the 98 refused records the parenthesised short form does occur in the statement",
+      "structural_diagnostic_returned_to_producer_at": "2026-09-05T06:14:20Z",
+      "structural_diagnostic_return_ordinal": 1,
+      "structural_diagnostic_return_limit": 2,
+      "hand_repair": false,
+      "leftovers": "refused-runner-attempt-01/"
+    },
+    {
+      "attempt": 2,
+      "transaction_time": "2026-09-05T06:21:06Z",
+      "execution_commit": "9f34ad2",
+      "core_note": "Core files at the pinned coordinate f6c8c71 (OVR-000408); commits between are paper files",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 553,
+        "event_participations": 0,
+        "events": 3,
+        "relations": 219,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 775,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 285,
+          "PARTLY_FORMALIZED": 51,
+          "UNFORMALIZED": 7
+        },
+        "blocks_reviewed": 186,
+        "blocks_total": 186,
+        "capture_sha256": "sha256:a341e02bb78af88770b64077de328fcd73ff6e57c029cfc3cabb93cae8c4e171",
+        "gaps_by_kind": {
+          "AGGREGATE_ONLY": 25,
+          "INTERVAL_NOT_EXPRESSIBLE": 2,
+          "RELATION_ABSENT": 11,
+          "REQUIRED_FIELD_ABSENT_IN_SOURCE": 12,
+          "TYPE_ABSENT": 9
+        }
+      },
+      "derivation_census": {
+        "non_local_relations": 9,
+        "top_hubs": [
+          {
+            "assertion": "assertion:art:byline",
+            "block": "page:1:block:001",
+            "records": 18
+          },
+          {
+            "assertion": "assertion:setting:subsections",
+            "block": "page:1:block:005",
+            "records": 14
+          },
+          {
+            "assertion": "assertion:ref:36:head",
+            "block": "page:9:block:041",
+            "records": 11
+          },
+          {
+            "assertion": "assertion:ref:40:head",
+            "block": "page:9:block:046",
+            "records": 11
+          },
+          {
+            "assertion": "assertion:ref:54:head",
+            "block": "page:10:block:009",
+            "records": 11
+          }
+        ],
+        "fan_out_distribution": {
+          "0": 7,
+          "1": 117,
+          "11": 6,
+          "14": 1,
+          "18": 1,
+          "2": 54,
+          "3": 62,
+          "4": 19,
+          "5": 31,
+          "6": 11,
+          "7": 18,
+          "8": 3,
+          "9": 13
+        }
+      },
+      "subject_coverage": {
+        "by_type": {
+          "Claim": {
+            "total": 76,
+            "with_subject": 37,
+            "without_subject": 39
+          },
+          "CountedObservation": {
+            "total": 19,
+            "with_subject": 5,
+            "without_subject": 14
+          },
+          "Observation": {
+            "total": 114,
+            "with_subject": 64,
+            "without_subject": 50
+          },
+          "SeismicEvent": {
+            "total": 3,
+            "with_subject": 0,
+            "without_subject": 3
+          }
+        },
+        "total": 212,
+        "with_subject": 106,
+        "without_subject": 106
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 25,
+        "INTERVAL_NOT_EXPRESSIBLE": 2,
+        "RELATION_ABSENT": 11,
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE": 12,
+        "TYPE_ABSENT": 9
+      },
+      "structural_diagnostic_returns_used": 1,
+      "admitted_at": "2026-09-05T06:22:43Z"
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-05T05:40:40Z",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:3eee06f9f52e327a8842168078545a892fb8cf5bc28e643b1e7d829c6c16d5a6",
+    "type_sets_note": "query-type-sets.note.json",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:5c35693843cba6e494ee6da86b459879e87ba66a0cf8fed80f2073369bc81db2",
+    "cases_sha256": "sha256:0a4010e8655f9eff2e9a19dab8ad41be2e2ce4e9dbea7f072f0129b1b3cb656a",
+    "cases": 3045,
+    "cases_by_kind": {
+      "ENTITY": 47,
+      "RELATION": 2865,
+      "SUBJECT": 133
+    },
+    "phase_two_dispatched_after": true,
+    "executed_at": "2026-09-05T06:23:43Z",
+    "binding_executed": "results/native-query-binding.json",
+    "bound_after_replay_receipt_sha256": "sha256:cc981a80d3e460ad19089bdc71ebfb38638c3a98571d1cee069f21e50ef54b3d",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "rows_by_question": {
+      "NQ-CQ-01": 210,
+      "NQ-CQ-02": 547,
+      "NQ-CQ-03": 359,
+      "NQ-CQ-04": 350
+    },
+    "rows_total": 1466,
+    "witnesses_traced": 343,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:31a07b2f5fdf15b234c6c36d0e34fea803c801b89b53465cd7240d0aa7849cdf"
+  },
+  "review": {}
+}
