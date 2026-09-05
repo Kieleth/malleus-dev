@@ -222,6 +222,31 @@ def test_document_adapter_reports_every_locator_defect_in_one_refusal() -> None:
     )
 
 
+def test_document_adapter_reports_every_empty_assertion_in_one_refusal() -> None:
+    """Run-17's third attempt carried eight assertions with neither a
+    formalization target nor a gap, and the diagnostic named one. The producer
+    answered the one it was shown and returned. Every such assertion is named
+    in one refusal, as every locator defect already is.
+    """
+
+    api = _api()
+    reading, capture, _, _ = _inputs()
+    capture["assertions"][1]["gaps"] = []
+    capture["assertions"][2]["gaps"] = []
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt(reading=reading, capture=capture)
+
+    assert refusal.value.reason is api.DocumentAssertionRefusalReason.GAP_REQUIRED
+    assert refusal.value.detail == (
+        "document capture assertions are not accepted: "
+        "assertion has no formalization or gap: asr:002 [GAP_REQUIRED]; "
+        "assertion has no formalization or gap: asr:003 [GAP_REQUIRED]; "
+        "every assertion names at least one formalization target or one "
+        "typed gap"
+    )
+
+
 def test_document_adapter_reports_locator_defects_before_other_semantics() -> None:
     """A defect later in the capture never hides a non-verbatim statement."""
 
@@ -301,8 +326,8 @@ def test_document_census_keeps_review_and_formalisation_separate() -> None:
     census = json.loads(result.canonical_census_bytes)
 
     assert census["blocks"] == {
-        "page:1:block:001": "REVIEWED",
-        "page:1:block:002": "REVIEWED",
+        "page:1:block:001": "ASSERTED",
+        "page:1:block:002": "ASSERTED",
         "page:1:block:003": "UNTOUCHED",
     }
     assert census["assertions"] == {
@@ -310,6 +335,49 @@ def test_document_census_keeps_review_and_formalisation_separate() -> None:
         "PARTLY_FORMALIZED": 0,
         "UNFORMALIZED": 2,
     }
+
+
+def test_document_census_separates_an_asserted_block_from_a_declared_one() -> None:
+    """Run-16 declared 128 of 186 blocks nothing-assertable, 90 of them
+    reference entries the Opus cells captured as records, and `blocks_reviewed`
+    read 186 of 186 exactly as run-15's 185 asserted blocks did. A declaration
+    is a producer claim the census could not distinguish from absence, so the
+    map carries three labels and the census counts each; `blocks_reviewed`
+    stays as their sum."""
+
+    reading, capture, _, _ = _inputs()
+    capture["assertions"] = capture["assertions"][:2]
+
+    result = _adapt(reading=reading, capture=capture)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["blocks"] == {
+        "page:1:block:001": "ASSERTED",
+        "page:1:block:002": "UNTOUCHED",
+        "page:1:block:003": "DECLARED_NOTHING_ASSERTABLE",
+    }
+    assert census["blocks_asserted"] == 1
+    assert census["blocks_declared_nothing_assertable"] == 1
+    assert census["blocks_untouched"] == 1
+    assert census["blocks_reviewed"] == 2
+    assert census["blocks_total"] == 3
+
+
+def test_document_census_calls_a_declared_block_an_assertion_names_asserted() -> None:
+    """One assertion outweighs the declaration beside it: the label says what
+    the capture carries, not what the producer listed."""
+
+    reading, capture, _, _ = _inputs()
+    capture["nothing_assertable"] = ["page:1:block:001", "page:1:block:003"]
+
+    result = _adapt(reading=reading, capture=capture)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["blocks"]["page:1:block:001"] == "ASSERTED"
+    assert census["blocks_asserted"] == 2
+    assert census["blocks_declared_nothing_assertable"] == 1
+    assert census["blocks_untouched"] == 0
+    assert census["blocks_reviewed"] == 3
 
 
 def test_document_adapter_can_emit_a_gaps_only_plan() -> None:
@@ -1175,11 +1243,15 @@ def test_document_census_reports_derivation_locality_and_fan_out() -> None:
     assert set(census) == {
         "assertions",
         "blocks",
+        "blocks_asserted",
+        "blocks_declared_nothing_assertable",
         "blocks_reviewed",
         "blocks_total",
+        "blocks_untouched",
         "capture_sha256",
         "derivation",
         "gaps_by_kind",
+        "provenance_coverage",
         "subject_coverage",
     }
     assert census["derivation"] == {
@@ -1277,6 +1349,70 @@ def test_document_census_reports_subject_coverage_per_bearing_type() -> None:
         "unnamed": 2,
         "with_subject": 1,
         "without_subject": 2,
+    }
+
+
+def _locator_bearing() -> tuple[dict[str, object], dict[str, object]]:
+    """Two records of a type the pack declares source-asserted, one located."""
+
+    _, capture, _, _ = _inputs()
+    records = {
+        "entities": [
+            {
+                "id": "obs:co2",
+                "properties": {"name": "co2"},
+                "type": "Observation",
+            },
+            {
+                "id": "obs:depth",
+                "properties": {"assertion_locator": "asr:001", "name": "depth"},
+                "type": "Observation",
+            },
+        ],
+        "relations": [],
+    }
+    capture["assertions"][0]["formalized_by"] = [
+        {"path": ["properties", "name"], "record_id": "obs:depth"}
+    ]
+    return capture, records
+
+
+def test_document_census_reports_provenance_coverage_per_locator_type() -> None:
+    """Run-16 admitted 194 records and not one carried `assertion_locator` or
+    `statement_sha256`, so DIGEST_MISMATCH and DIGEST_NOT_LOCATED never ran and
+    the review wrote no digest token on any row; runs 13 to 15 carried 269, 203
+    and 142. The slots stay optional and the count makes the silence visible at
+    admission. Reported, never refused."""
+
+    capture, records = _locator_bearing()
+
+    result = _adapt_with_contract(capture, records)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["provenance_coverage"] == {
+        "by_type": {
+            "Observation": {"total": 2, "with_digest": 0, "with_locator": 1}
+        },
+        "total": 2,
+        "with_digest": 0,
+        "with_locator": 1,
+    }
+
+
+def test_document_census_knows_no_locator_bearing_type_without_a_contract() -> None:
+    """Which types carry the route back to an assertion is a contract question,
+    asked exactly as the subject axis asks its own."""
+
+    capture, records = _locator_bearing()
+
+    result = _adapt_records(capture, records)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["provenance_coverage"] == {
+        "by_type": {},
+        "total": 0,
+        "with_digest": 0,
+        "with_locator": 0,
     }
 
 

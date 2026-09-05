@@ -90,6 +90,7 @@ P1_REASONS = frozenset(
         "MALFORMED_PLAN",
         "MALFORMED_PROFILE_REFERENCE",
         "MALFORMED_SUPERSESSION",
+        "RECORDS_NOT_REHYDRATABLE",
         "SOURCES_REQUIRED",
         "SUPERSESSION_FORK",
         "SUPERSESSION_TYPE_MISMATCH",
@@ -1594,9 +1595,17 @@ def test_zero_records_returns_no_domain_change_with_complete_closures(
 
 
 @pytest.mark.parametrize("defect", ["unknown-type", "unexpected-record-field"])
-def test_compiler_surfaces_structural_contract_refusal_unchanged(
+def test_compiler_types_the_structural_refusal_and_keeps_its_detail(
     contract_pair, defect: str
 ) -> None:
+    """Run-17 met `ValueError: Cannot rehydrate graph from records: entities[2]
+    'entity:3': Unknown property ...` where every other refusal the matrix
+    cells met carried a typed reason. The boundary that rehydrates a
+    population's records raises one, and the detail is the graph gate's own
+    aggregated text, unabridged.
+    """
+
+    population = _population()
     compiled, partial = contract_pair
     plan = _plan(partial.identity)
     if defect == "unknown-type":
@@ -1606,15 +1615,17 @@ def test_compiler_surfaces_structural_contract_refusal_unchanged(
     with pytest.raises(ValueError) as direct:
         KnowledgeGraph.from_records(compiled.view, plan["records"])
 
-    with pytest.raises(ValueError) as compiled_refusal:
+    with pytest.raises(population.PopulationPlanRefusal) as compiled_refusal:
         _compile(plan, contract_pair)
 
-    assert type(compiled_refusal.value) is type(direct.value)
-    assert str(compiled_refusal.value) == str(direct.value)
+    assert compiled_refusal.value.reason is (
+        population.PopulationPlanRefusalReason.RECORDS_NOT_REHYDRATABLE
+    )
+    assert compiled_refusal.value.detail == str(direct.value)
 
 
 @pytest.mark.parametrize("defect", ["missing-type", "unknown-type"])
-def test_supersession_surfaces_structural_contract_refusal_unchanged(
+def test_supersession_types_the_structural_refusal_and_keeps_its_detail(
     tmp_path: Path, defect: str
 ) -> None:
     population = _population()
@@ -1634,15 +1645,17 @@ def test_supersession_surfaces_structural_contract_refusal_unchanged(
 
     with pytest.raises(ValueError) as direct:
         KnowledgeGraph.from_records(compiled.view, plan["records"])
-    with pytest.raises(ValueError) as compiled_refusal:
+    with pytest.raises(population.PopulationPlanRefusal) as compiled_refusal:
         _compile(
             plan,
             (compiled, partial),
             base_state=population.PopulationBaseState.from_replay(replay),
         )
 
-    assert type(compiled_refusal.value) is type(direct.value)
-    assert str(compiled_refusal.value) == str(direct.value)
+    assert compiled_refusal.value.reason is (
+        population.PopulationPlanRefusalReason.RECORDS_NOT_REHYDRATABLE
+    )
+    assert compiled_refusal.value.detail == str(direct.value)
 
 
 def test_base_state_from_replay_exposes_current_endpoints_only(tmp_path: Path) -> None:

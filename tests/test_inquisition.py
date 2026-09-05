@@ -1903,7 +1903,10 @@ class TestSkillsAreInstallable:
             ),
             "FAMILY_NOT_ADMITTED",
             "canonical_census_bytes",
-            "REVIEWED` or `UNTOUCHED",
+            (
+                "ASSERTED`, `DECLARED_NOTHING_ASSERTABLE` or `UNTOUCHED`, "
+                "counted each and summed as `blocks_reviewed`"
+            ),
             "FULLY_FORMALIZED`, `PARTLY_FORMALIZED`, or `UNFORMALIZED",
             "A reviewed block is not thereby formalized",
             "uncaptured assertions remain invisible",
@@ -1990,6 +1993,11 @@ class TestSkillsAreInstallable:
                 "subject coverage under `subject_coverage`: per type the "
                 "compiled contract declares as carrying `subject`, how many "
                 "records name one and how many do not"
+            ),
+            (
+                "provenance coverage under `provenance_coverage`: per type "
+                "carrying `assertion_locator`, how many records carry one and "
+                "how many carry a digest"
             ),
             "reported and never refused",
             "explicit evidence-bearing operation",
@@ -2349,10 +2357,13 @@ class TestSkillsAreInstallable:
         assert [gap["kind"] for gap in plan["gaps"]] == gap_kinds
         assert census["gaps_by_kind"] == {kind: 1 for kind in gap_kinds}
         assert census["blocks"] == {
-            "block:1": "REVIEWED",
+            "block:1": "ASSERTED",
             "block:2": "UNTOUCHED",
-            "block:3": "REVIEWED",
+            "block:3": "ASSERTED",
         }
+        assert census["blocks_asserted"] == 2
+        assert census["blocks_declared_nothing_assertable"] == 0
+        assert census["blocks_untouched"] == 1
         assert census["blocks_reviewed"] == 2
         assert census["blocks_total"] == 3
         assert census["assertions"] == {
@@ -2369,6 +2380,12 @@ class TestSkillsAreInstallable:
             "unnamed": 0,
             "with_subject": 0,
             "without_subject": 0,
+        }
+        assert census["provenance_coverage"] == {
+            "by_type": {},
+            "total": 0,
+            "with_digest": 0,
+            "with_locator": 0,
         }
 
     def test_nascent_playbook_names_live_python_and_cli_surfaces(
