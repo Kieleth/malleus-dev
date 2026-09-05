@@ -806,6 +806,30 @@ def test_governing_design_records_the_subject_element_decision() -> None:
     )
 
 
+def test_governing_design_records_the_asserted_modality_decision() -> None:
+    """Decision 19 says why a record's modality has one source of truth, and
+    names the simplification the check makes possible but does not take."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "19. One source of truth for a source-asserted record's modality",
+        "Twenty of run-09's 212 source-asserted records",
+        "MEASURED in the capture and STATED on the record twelve times",
+        "`MODALITY_NOT_ASSERTED`",
+        '`["properties", "assertion_modality"]` path',
+        "a sentence that carries two modalities is captured as two assertions",
+        "once the query projects the formalizing assertion's modality through "
+        "the trace",
+        "The pack is unchanged, so no version moves",
+    ):
+        assert phrase in normalized
+    assert normalized.index("18. The subject of a source-asserted record") < (
+        normalized.index("19. One source of truth for a source-asserted record")
+    )
+
+
 def test_governing_design_records_the_evaluative_slot_decision() -> None:
     """Decision 17 says which slots are evaluative and how a reader finds out."""
 

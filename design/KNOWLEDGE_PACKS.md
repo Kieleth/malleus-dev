@@ -358,6 +358,39 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     0.5.0 and every fixture and every frozen paper cell pinned at an earlier
     pack keeps compiling.
 
+19. One source of truth for a source-asserted record's modality, in the
+    document-assertion adapter, no pack change. Twenty of run-09's 212
+    source-asserted records carry an `assertion_modality` that no assertion
+    formalizing it carries, MEASURED in the capture and STATED on the record
+    twelve times. Run-04 and run-08 had none. The reviewers judged all twenty
+    on the prose and flagged them, so this is a copy that drifted and not an
+    invented value: this cell's producer tagged the clause where the capture
+    tagged the sentence, and both readings are of the same words. The record's
+    modality was always a second copy of the assertion's, written a second time
+    by the same producer, and only one of the two carries evidence. The
+    assertion is retained and the record is derived from it, so the assertion
+    is the source of truth and the record's slot is a projection of it. The
+    document-assertion adapter checks that, aggregated with the other
+    derivation defects and typed `MODALITY_NOT_ASSERTED`: when a record sets
+    `assertion_modality`, its value must equal the modality of at least one
+    assertion that formalizes that record's `["properties",
+    "assertion_modality"]` path, and the refusal names the record, its modality
+    and every formalizing assertion with its own. An assertion carries one
+    modality, so a sentence that carries two modalities is captured as two
+    assertions, and a record formalized from both is asserted under either.
+    Like `subject`, `assertion_modality` is one fixed name, so the check needs
+    no compiled contract and no declaration to be read. What it does not do: it
+    adds no modality, the six of `AssertionModality` are unchanged; it does not
+    judge whether the modality is the right reading of the sentence, only that
+    the record and the assertion behind it say the same thing; it does not
+    touch a record that leaves the slot unset, which stays the honest value for
+    a record no assertion tags; and it does not remove the slot, which is the
+    simplification it makes possible and defers. That removal is the eventual
+    shape: once the query projects the formalizing assertion's modality through
+    the trace, the record does not need to carry a modality at all, and this
+    check goes with the slot. The pack is unchanged, so no version moves and no
+    fixture or frozen paper cell moves with it.
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.

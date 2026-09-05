@@ -416,9 +416,10 @@ def test_document_adapter_refuses_a_statement_digest_the_assertion_denies() -> N
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED, and the name "
+        "least one assertion whose modality is not HYPOTHESISED, the name "
         "of a record's subject occurs in the statement of an assertion that "
-        "formalizes that subject"
+        "formalizes that subject, and a record's assertion_modality is the "
+        "modality of an assertion that formalizes it"
     )
 
 
@@ -611,9 +612,10 @@ def test_document_adapter_refuses_a_disposition_no_assertion_evaluates() -> None
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED, and the name "
+        "least one assertion whose modality is not HYPOTHESISED, the name "
         "of a record's subject occurs in the statement of an assertion that "
-        "formalizes that subject"
+        "formalizes that subject, and a record's assertion_modality is the "
+        "modality of an assertion that formalizes it"
     )
 
 
@@ -741,9 +743,10 @@ def test_document_adapter_refuses_a_subject_the_statement_does_not_name() -> Non
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED, and the name "
+        "least one assertion whose modality is not HYPOTHESISED, the name "
         "of a record's subject occurs in the statement of an assertion that "
-        "formalizes that subject"
+        "formalizes that subject, and a record's assertion_modality is the "
+        "modality of an assertion that formalizes it"
     )
 
 
@@ -834,6 +837,126 @@ def test_document_adapter_leaves_a_subject_outside_this_change_set_alone() -> (
     result = _adapt_records(capture, records)
 
     assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def _moded(
+    *,
+    modality: str = "STATED",
+    locator: str = "asr:001",
+    formalized: bool = True,
+    also: str | None = None,
+) -> tuple[dict[str, object], dict[str, object]]:
+    """The fixture with one record declaring its modality and the assertion for it.
+
+    ``asr:001`` is STATED, ``asr:002`` is MEASURED and ``asr:003`` is
+    HYPOTHESISED, so the three carry three different modalities to formalize
+    the record's ``assertion_modality`` from.
+    """
+
+    _, capture, plan, _ = _inputs()
+    records = deepcopy(plan["records"])
+    records["entities"][1]["properties"]["assertion_modality"] = modality
+    index = {"asr:001": 0, "asr:002": 1, "asr:003": 2}
+    for name in ([locator] if formalized else []) + (
+        [] if also is None else [also]
+    ):
+        position = index[name]
+        capture["assertions"][position]["formalized_by"] = list(
+            capture["assertions"][position]["formalized_by"]
+        ) + [
+            {
+                "path": ["properties", "assertion_modality"],
+                "record_id": "inspection:P-7:2026-03-02",
+            }
+        ]
+    return capture, records
+
+
+def test_document_adapter_accepts_a_modality_the_formalizing_assertion_carries() -> (
+    None
+):
+    """A record's modality is its formalizing assertion's, so the two agree."""
+
+    capture, records = _moded()
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_refuses_a_modality_no_formalizing_assertion_carries() -> (
+    None
+):
+    """Twenty of run-09's 212 source-asserted records carried a modality the
+    capture's own assertion denies: MEASURED in the capture, STATED on the
+    record, twelve times. The record's modality was a second copy, set by the
+    producer against the clause where the capture tagged the sentence. There
+    is one source of truth for it, the assertion that formalizes it."""
+
+    api = _api()
+    capture, records = _moded(modality="MEASURED")
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.MODALITY_NOT_ASSERTED
+    )
+    assert refusal.value.detail == (
+        "document capture derivations are not accepted: "
+        "record inspection:P-7:2026-03-02 assertion_modality MEASURED is "
+        "formalized by asr:001 STATED [MODALITY_NOT_ASSERTED]; "
+        "a record's assertion_locator names an assertion of this capture, a "
+        "statement_sha256 comes with the locator that checks it and is the "
+        "SHA-256 of that assertion's statement bytes, "
+        "a slot the contract declares evaluative is formalized by at "
+        "least one assertion whose modality is not HYPOTHESISED, the name "
+        "of a record's subject occurs in the statement of an assertion that "
+        "formalizes that subject, and a record's assertion_modality is the "
+        "modality of an assertion that formalizes it"
+    )
+
+
+def test_document_adapter_accepts_a_modality_one_of_its_assertions_carries() -> None:
+    """A record two assertions formalize takes the modality of either.
+
+    A sentence carrying two modalities is captured as two assertions, and a
+    record formalized from both is asserted under each of them.
+    """
+
+    capture, records = _moded(modality="MEASURED", locator="asr:002", also="asr:001")
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_refuses_a_modality_nothing_formalizes() -> None:
+    """A modality no assertion formalizes fails the same rule and says so."""
+
+    api = _api()
+    capture, records = _moded(formalized=False)
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.MODALITY_NOT_ASSERTED
+    )
+    assert (
+        "record inspection:P-7:2026-03-02 assertion_modality STATED is "
+        "formalized by no assertion"
+    ) in refusal.value.detail
+
+
+def test_document_adapter_leaves_a_record_declaring_no_modality_alone() -> None:
+    """The slot is optional; a record that does not set it is not checked."""
+
+    _, capture, plan, _ = _inputs()
+
+    result = _adapt_records(capture, deepcopy(plan["records"]))
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == plan["records"]
 
 
 def test_document_census_reports_derivation_locality_and_fan_out() -> None:

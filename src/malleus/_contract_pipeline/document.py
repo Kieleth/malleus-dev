@@ -46,14 +46,16 @@ _CENSUS_TOP_HUBS = 5
 _STATEMENT_DIGEST_SLOT = "statement_sha256"
 _SUBJECT_SLOT = "subject"
 _NAME_SLOT = "name"
+_MODALITY_SLOT = "assertion_modality"
 _DERIVATION_RULE = (
     "a record's assertion_locator names an assertion of this capture, a "
     "statement_sha256 comes with the locator that checks it and is the "
     "SHA-256 of that assertion's statement bytes, "
     "a slot the contract declares evaluative is formalized by at least one "
-    "assertion whose modality is not HYPOTHESISED, and the name of a "
+    "assertion whose modality is not HYPOTHESISED, the name of a "
     "record's subject occurs in the statement of an assertion that "
-    "formalizes that subject"
+    "formalizes that subject, and a record's assertion_modality is the "
+    "modality of an assertion that formalizes it"
 )
 _FORMALIZATION_FIELDS = {"path", "record_id"}
 _GAP_FIELDS = {"kind", "statement"}
@@ -75,6 +77,7 @@ class DocumentAssertionRefusalReason(str, Enum):
     GAP_REQUIRED = "GAP_REQUIRED"
     MALFORMED_CAPTURE = "MALFORMED_CAPTURE"
     MALFORMED_READING = "MALFORMED_READING"
+    MODALITY_NOT_ASSERTED = "MODALITY_NOT_ASSERTED"
     NOT_VERBATIM = "NOT_VERBATIM"
     READING_MISMATCH = "READING_MISMATCH"
     SUBJECT_NOT_NAMED = "SUBJECT_NOT_NAMED"
@@ -579,6 +582,45 @@ def _evaluative_defects(
     return defects
 
 
+def _modality_defects(
+    records_by_id: dict[str, dict[str, object]],
+    formalized: dict[str, dict[str, list[tuple[str, str]]]],
+) -> list[_Defect]:
+    """Collect every record modality no assertion behind it asserts.
+
+    An assertion carries one modality, and a record's ``assertion_modality``
+    is the modality of an assertion that formalizes it. A sentence carrying
+    two modalities is two assertions, so a record formalized from both is
+    asserted under either. The slot is optional and a record that leaves it
+    unset is not checked.
+    """
+
+    defects: list[_Defect] = []
+    for record_id in sorted(records_by_id):
+        declared = _record_properties(records_by_id[record_id]).get(_MODALITY_SLOT)
+        if not isinstance(declared, str) or not declared:
+            continue
+        formalizing = formalized.get(record_id, {}).get(_MODALITY_SLOT, [])
+        if any(modality == declared for _, modality in formalizing):
+            continue
+        named = (
+            ", ".join(
+                f"{assertion_id} {modality}"
+                for assertion_id, modality in sorted(formalizing)
+            )
+            or "no assertion"
+        )
+        defects.append(
+            _Defect(
+                DocumentAssertionRefusalReason.MODALITY_NOT_ASSERTED,
+                record_id,
+                f"record {record_id} assertion_modality {declared} is "
+                f"formalized by {named}",
+            )
+        )
+    return defects
+
+
 def _subject_defects(
     records_by_id: dict[str, dict[str, object]],
     formalized: dict[str, dict[str, list[tuple[str, str]]]],
@@ -825,6 +867,7 @@ def adapt_document_assertions(
     derivation_defects.extend(
         _subject_defects(records_by_id, formalized, statements)
     )
+    derivation_defects.extend(_modality_defects(records_by_id, formalized))
     if derivation_defects:
         raise _refuse_derivations(derivation_defects)
 

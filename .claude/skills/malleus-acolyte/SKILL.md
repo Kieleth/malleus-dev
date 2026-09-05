@@ -314,6 +314,9 @@ fallback.
    hypothesis, never from the sentence that raises it: `hypothesis_disposition`
    sits on the `Evaluative` mixin, and a slot that mixin declares refuses when
    only `HYPOTHESISED` assertions formalize it.
+   An assertion carries one modality, and a record's `assertion_modality` is
+   the modality of an assertion that formalizes it; a sentence that carries two
+   modalities is captured as two assertions.
    A quantity, count, ratio or claim the source reports about a named thing
    carries that thing as its `subject`, formalized by the sentence that names
    it; the subject is never folded into `quantity_kind` or the record's name;

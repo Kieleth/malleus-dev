@@ -1931,6 +1931,12 @@ class TestSkillsAreInstallable:
                 "raises it"
             ),
             (
+                "An assertion carries one modality, and a record's "
+                "`assertion_modality` is the modality of an assertion that "
+                "formalizes it; a sentence that carries two modalities is "
+                "captured as two assertions"
+            ),
+            (
                 "A quantity, count, ratio or claim the source reports about a "
                 "named thing carries that thing as its `subject`, formalized "
                 "by the sentence that names it"
