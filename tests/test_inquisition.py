@@ -1860,6 +1860,11 @@ class TestSkillsAreInstallable:
                 "`statement` stays empty unless the record's `Source` "
                 "declares a licence that permits reproducing the sentence"
             ),
+            (
+                "recomputes `statement_sha256` from the located assertion's "
+                "own statement bytes at capture"
+            ),
+            "a digest that is not that assertion's refuses",
             "Labels identify records",
             "document capture",
             "coverage of the retained reading is the objective",
@@ -1920,6 +1925,21 @@ class TestSkillsAreInstallable:
                 "carry it in `contribution_role` on a `ContributionRelation`, "
                 "whose values are the fourteen CRediT roles plus `OTHER`"
             ),
+            (
+                "A hypothesis disposition is captured from the sentence that "
+                "disposes of the hypothesis, never from the sentence that "
+                "raises it"
+            ),
+            (
+                "A relation's endpoints are formalized by an assertion whose "
+                "statement names both of them"
+            ),
+            (
+                "a relation the reading only implies is a `RELATION_ABSENT` "
+                "gap, not a derivation from a neighbouring sentence"
+            ),
+            "The census also reports derivation",
+            "reported and never refused",
             "explicit evidence-bearing operation",
             "typed gaps",
             "NO_DOMAIN_CHANGE",
