@@ -314,6 +314,11 @@ fallback.
    hypothesis, never from the sentence that raises it: `hypothesis_disposition`
    sits on the `Evaluative` mixin, and a slot that mixin declares refuses when
    only `HYPOTHESISED` assertions formalize it.
+   A quantity, count, ratio or claim the source reports about a named thing
+   carries that thing as its `subject`, formalized by the sentence that names
+   it; the subject is never folded into `quantity_kind` or the record's name;
+   a record whose subject the reading does not name in the formalizing
+   sentence leaves `subject` unset and the census counts it.
    A relation's endpoints are formalized by an assertion whose statement names
    both of them; a relation the reading only implies is a `RELATION_ABSENT`
    gap, not a derivation from a neighbouring sentence.
@@ -326,6 +331,9 @@ fallback.
    assertion formalizes, whether each relation is `LOCAL`, `NON_LOCAL` or
    `UNDERIVED` against the blocks that formalize its endpoints, the fan-out
    distribution, the top hubs and the count of non-local relation derivations.
+   It reports subject coverage under `subject_coverage`: per type the compiled
+   contract declares as carrying `subject`, how many records name one and how
+   many do not.
    Those are reported and never refused; one sentence carrying dozens of
    records is a signal to recheck what that sentence actually says, not a
    refusal. If the declared
@@ -482,6 +490,13 @@ The producer's output file, `document-population.json`:
               "target_id"
             ],
             "record_id": "relation:A:B"
+          },
+          {
+            "path": [
+              "properties",
+              "name"
+            ],
+            "record_id": "object:A"
           }
         ],
         "gaps": [
@@ -501,6 +516,13 @@ The producer's output file, `document-population.json`:
             "path": [
               "properties",
               "outcome"
+            ],
+            "record_id": "event:inspection:1"
+          },
+          {
+            "path": [
+              "properties",
+              "subject"
             ],
             "record_id": "event:inspection:1"
           }
@@ -524,7 +546,9 @@ The producer's output file, `document-population.json`:
     "entities": [
       {
         "id": "object:A",
-        "properties": {},
+        "properties": {
+          "name": "object A"
+        },
         "type": "ProjectObject"
       },
       {
@@ -537,7 +561,8 @@ The producer's output file, `document-population.json`:
       {
         "id": "event:inspection:1",
         "properties": {
-          "outcome": "PASSED"
+          "outcome": "PASSED",
+          "subject": "object:A"
         },
         "type": "ProjectInspectionEvent"
       }

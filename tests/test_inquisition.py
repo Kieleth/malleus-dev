@@ -2228,7 +2228,9 @@ class TestSkillsAreInstallable:
             "path": ["properties", "subject"],
             "record_id": "event:inspection:1",
         } in capture["assertions"][1]["formalized_by"]
-        assert "object A" in capture["assertions"][1]["statement"]
+        statement = capture["assertions"][1]["statement"]
+        assert "object A" not in statement
+        assert "object a" in statement.casefold()
         assert set(template["records"]["entities"][0]) == {
             "id",
             "properties",
