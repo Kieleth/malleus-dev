@@ -4,8 +4,8 @@
   "status": "FROZEN",
   "producer_workspace": "private/paper-v4-v4-run-09/producer",
   "core": {
-    "commit": "e6aa68f6d7107e5b733e2caad0c33a2e16b3debc",
-    "tree": "1daaa35b710cb92663fd95436a6e809ff1448d5b"
+    "commit": "f6c8c71fd95711fd8f1bec811dff94cd61e535a0",
+    "tree": "b7c6a5acc44e2d8ebf5fda356e8075b103afe672"
   },
   "interface_coordinates": {
     "capture_id": "capture:paper-v4:yu-2025:v4:9",
@@ -84,7 +84,7 @@
       "name": "MALLEUS_NASCENT_PROJECT_SKILL",
       "source": ".claude/skills/malleus-acolyte/SKILL.md",
       "target": ".claude/skills/malleus-acolyte/SKILL.md",
-      "sha256": "sha256:2845e91a084d1c624598fd2dc4bf5e8ef0b9641193e9cd8da0667fb823bb621f"
+      "sha256": "sha256:f19f905761d97809b9ef731ff5a9cf6bf6ccd3e9a1756f7f8c3a8fca49356f89"
     },
     {
       "name": "SELECTED_READING",
@@ -120,7 +120,7 @@
       "name": "RESEARCH_PACK",
       "source": "ontology/packs/research.yaml",
       "target": "inputs/research.yaml",
-      "sha256": "sha256:937bf8e16a50caba9a3dd9b7af4c3792eb4d25afc089e7589ab19810b3aac919"
+      "sha256": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b"
     },
     {
       "name": "SOURCE_ASSERTION_PROFILE",
@@ -132,14 +132,15 @@
   "moved_since": {
     "reference_run": "run-08",
     "reference_manifest": "paper-v4/experiment-v4/run-08/producer-input-manifest.json",
-    "moved": [],
+    "moved": [
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "RESEARCH_PACK"
+    ],
     "unchanged": [
       "CHRONOLOGY_PACK",
       "LINKML_TYPES",
-      "MALLEUS_NASCENT_PROJECT_SKILL",
       "MALLEUS_ROOT",
       "METROLOGY_PACK",
-      "RESEARCH_PACK",
       "SELECTED_READING",
       "SOURCE_ASSERTION_PROFILE"
     ]

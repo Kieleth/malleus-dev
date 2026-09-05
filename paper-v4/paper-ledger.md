@@ -3516,3 +3516,36 @@ the review was better bound in substance. Run-09's row count will not be
 comparable with run-08's eight, because the surface changed and not only the
 graph. Whether any of it holds is open, and run-09 is one cell that will be one
 observation, not a measurement, until it has run to ratification.
+
+### E-0141, run-09 is pinned to the v4.3 Core coordinate
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-09/run-contract.json` and
+`producer-input-manifest.json` as rewritten by `pin.py --commit f6c8c71`, the
+governance ledger through OVR-000408, and E-0140.
+
+Coordinates: Core commit `f6c8c71fd95711fd8f1bec811dff94cd61e535a0`, tree
+`b7c6a5acc44e2d8ebf5fda356e8075b103afe672`, governance head `OVR-000408`
+(`sha256:d240b272…`). This replaces E-0140's provisional pin. SUBJECT_ELEMENT is
+landed: research 0.5.0 carries `subject` on `SourceAsserted` (single, optional,
+Entity-ranged, grounded on RDF 1.1's subject); the document adapter refuses
+`SUBJECT_NOT_NAMED` when the subject's whitespace-collapsed, case-folded name is
+absent from every statement formalizing the subject path, and
+`DIGEST_NOT_LOCATED` for a digest with no locator (Core-12's residual); the plan
+compiler refuses `DANGLING_SUBJECT` beside `DANGLING_ENDPOINT`, since only it
+sees the change set and the base state together; the census reports
+`subject_coverage` per subject-bearing type; the skill carries one sentence on
+the subject. Core-13 took six governance entries (OVR-000403 to 408), two of
+them corrections of its own evidence and count; the corrected count is the
+RCA's: 55 science relations in run-04, 34 of them local, against run-08's none.
+
+Declared inputs against run-08: two of eight moved, the research pack and the
+skill; the reading, the Malleus root, the LinkML types, metrology, chronology
+and the source-assertion profile are unchanged.
+
+Non-claim: no producer has run at this coordinate. The subject element has been
+exercised only by fixtures; whether a producer under the new sentence attaches
+its observations and claims to subjects, and whether the SUBJECT and ENTITY
+case kinds then reach them, is what run-09 measures, against run-04's 146
+local-relation rows.
