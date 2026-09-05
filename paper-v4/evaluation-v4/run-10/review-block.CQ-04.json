@@ -1,0 +1,1517 @@
+{
+  "question_id": "CQ-04",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The preferred mechanism is present and is marked as a hypothesis rather than as fact: one row carries the authors' suggestion that degassing-driven volume change causes the deep mantle earthquakes, with a preferred disposition and a proposed-mechanism kind, and it reaches both the abstract block and the discussion block where that possibility is named as the authors' own. Ascending melt, the degassing, the volume change, the pressure rise and the triggering of the earthquakes are all present across the rows, and the three rejected explanations come back carrying not-supported dispositions, which is the contrast the question asks for. One required element is missing. The extensional stress the volume change is said to act against appears in the reading, but the record formalising that sentence is a claim with no subject, so it falls outside every case this type-only binding expands and reaches no row. The rows therefore answer most of the question and leave one part of the mechanism unrepresented.",
+  "source_locators": [
+    "page:1:block:001",
+    "page:3:block:003",
+    "page:5:block:002",
+    "page:5:block:003",
+    "page:7:block:012"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names barium among the trace elements whose ratio to carbon dioxide the authors rely on, which is all this row's single name projection asserts.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names carbon dioxide throughout as the volatile under study, which carries the row's bare name projection.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block lists water beside carbon dioxide among the volatiles, in the same spaced form the row projects, so the name holds.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the forsterite-90 olivine composition that the equilibrium melt concentrations are referred to, which matches the row's name.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names rubidium as one of the two trace elements the ratio proxy uses, which is what the row's name asserts.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the Chain transform as one of the two bounding the studied ridge stretch.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The first cited block gives the fault's westward dipping detachment character and the second gives the authors' reading that it is no longer active, so all three projected fields are covered; the source hedges the inactivity as a suggestion and the row states it flat.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the first discontinuity as marked by faults on the two strikes the row's fault kind carries.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the second discontinuity as affected by normal faults on the two strikes the row projects.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the core complex surface as cut by normal faults on the strikes the row carries and reads the deformation there as recent and active; the row's active status states that reading without the source's hedge.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the faults bounding the segment with the dip and orientation the row's fault kind carries.",
+      "source_locators": [
+        "page:4:block:001"
+      ]
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the Romanche transform, which is the row's whole content.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block reports an extinct vent field on the flank of the first discontinuity, which supports both the name and the inactive status.",
+      "source_locators": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block marks an inactive hydrothermal mound inferred from the dive observations, covering the row's name and status.",
+      "source_locators": [
+        "page:2:block:007"
+      ]
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block introduces the brittle-ductile boundary and the abbreviation the row projects as its name.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block introduces the lithosphere-asthenosphere boundary and the abbreviation the row carries.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block names the Moho interface drawn in the schematic, which matches the row's name.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block opens on the oceanic crust and how it forms, so the row's bare name is carried.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the brittle, cooled lithosphere that sits over partly molten material, which supports the row's name.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the mantle as the source of the melt, which is all the row asserts.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the ascending melt as what the degassing comes from, matching the row's name.",
+      "source_locators": [
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block speaks of these melts and of the pre-eruptive concentrations estimated for them, which carries both the row's name and its material kind.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block reports the carbon dioxide quantity in the primary melts, so the row's name is carried.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block identifies the average velocity model as the fifth and best fitting of five one-dimensional models and says it was kept for the subsequent location and focal mechanism work, which covers the row's name and its description.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the carbon dioxide solubility model used to place saturation, matching the row's name.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the solubility model of Iacono-Marziano as the basis of the calculation, matching the row's name.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block attributes the temperature range at depth to thermal modelling, which is the row's name.",
+      "source_locators": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 27,
+      "source_support": "PARTIAL",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block supports a one-dimensional velocity model chosen so that travel times could be computed for the locations, but it never restricts that model to compressional velocities; the description's P-wave qualifier is absent from the cited block, so only part of the projection is supported.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the ridge-transform intersection segment by the label the row projects.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the short ridge segment by the label the row projects.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the segment south of the second discontinuity by the label the row projects.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the Chain transform as one of the two bounding the studied ridge stretch.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the Romanche transform, which is the row's whole content.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the Icelandic volcano among the comparison cases, matching the row.",
+      "source_locators": [
+        "page:4:block:002"
+      ]
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the Icelandic peninsula among the comparison cases, matching the row.",
+      "source_locators": [
+        "page:4:block:002"
+      ]
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The methods block names the seamount whose depth datum was updated in the compilation, matching the row.",
+      "source_locators": [
+        "page:8:block:004"
+      ]
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the neo-volcanic ridge in the median valley of the segment, which matches the row's name.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The methods block names the massif included in the compilation for reference, matching the row.",
+      "source_locators": [
+        "page:8:block:004"
+      ]
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block names the volcanic cones shaded on the map, matching the row's name.",
+      "source_locators": [
+        "page:4:block:007"
+      ]
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL The block states that the deep microseismicity sits under the segment's ridge axis, which is the relation the row asserts; the same block carries the depth range, the unit and the measured character of the source observation, and the segment endpoint is named there as well as in its own block.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The block says the intersection segment is bounded on its eastern side by the westward dipping detachment fault, which gives the relation and both endpoints; the fault's inactive status comes from the second cited block.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The block says the segment is bounded by the high-angle inward dipping faults the row's target projects, which is exactly the relation asserted.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:001"
+      ]
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL The block states that the deep microseismicity sits under the segment's ridge axis, which is the relation the row asserts; the same block carries the depth range, the unit and the measured character of the source observation, and the segment endpoint is named there as well as in its own block.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence sits in the cited block and says carbon dioxide behaves at depth like the most incompatible trace elements, which is what the row's name and background-statement kind assert.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The abstract block carries the located sentence proposing that degassing-driven volume change causes the deep mantle earthquakes, and the discussion block cited beside it is where the authors name this possibility as the one they prefer, so the name, the proposed-mechanism kind and the preferred disposition all hold.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence is the caption line in the cited block describing carbon dioxide content plotted against rubidium and against barium, which matches the row's name and its figure-statement kind.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The located sentence closes the abstract block with a forward-looking statement about melt below the boundary, which fits the row's projected-consequence kind and its hypothesised modality.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence in the methods block calls the two ratios a good stand-in for the concentration, which is the row's name and its background-statement kind.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The located sentence reads the absence of deep microseismicity near the termination as showing the detachment is no longer active, which is the row's interpretation.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence attributes the enriched basalts and their high volatile contents, as earlier studies read them, to limited melting of an already enriched source near the transform, which matches the row's prior-interpretation kind.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence reads the shallow events under the dome as breaks on the steep normal faults cutting its surface, which is the row's interpretation.",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:005"
+      ]
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence states the expectation that the boundary shallows away from the intersection, which matches the row's expectation kind and hypothesised modality.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence puts melt at the boundary down to the two volatiles together, hedged as a suggestion, which is what the row's name and interpretation kind carry.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The located sentence reports an earlier study's proposal that volatiles both focus melt under the axis and drive it aside towards the boundary, which matches the row's prior-interpretation kind.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block raises the cold thick lithosphere as one explanation and then argues against it from the segment's volcanic morphology, so both the candidate-explanation kind and the not-supported disposition are carried; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block places the deep events in the mantle below ten kilometres, which is the row's interpretation; the source qualifies this as where most of them sit, with a few scattered in the crust, and the row's name does not restate that qualification.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence states the hydrothermal cooling hypothesis and the rest of the block withdraws it for want of active venting near the segment, which supports both the candidate-explanation kind and the not-supported disposition.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence states the shear-zone strain hypothesis and the block then says the observations do not bear it out, which matches the row's kind and its disposition.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:003"
+      ]
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence in the first cited block states the magmatic-tectonic hypothesis, and the second cited block is where the authors set the melt-movement mechanism aside for these events, so the not-supported disposition holds.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:4:block:002",
+        "page:5:block:001"
+      ]
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence offers melt freezing where the lithosphere bottoms out as a possible outcome, which fits the row's projected-consequence kind and hypothesised modality.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reads the off-axis shallow swarm as probably tied to magmatism in the crust away from the axis, which is the row's interpretation; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:5:block:001"
+      ]
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block concludes that the mantle under the segment axis is hot, which is what the row's name and interpretation kind assert.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence is the caption line describing the plotted primary-melt carbon dioxide contours, which matches the row's figure-statement kind.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block reads the deep earthquakes as volume change from degassing of the ascending melts in hot ductile mantle, which is the row's interpretation; this projection has no statement digest.",
+      "source_locators": [
+        "page:5:block:002",
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence infers from the depth of the microseismicity that ascending melt sits, fractionates and evolves at those depths, which is the row's interpretation.",
+      "source_locators": [
+        "page:5:block:002",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence separates primary melts in equilibrium with their source from the pre-eruptive melts that have crystallised on the way up, which matches the row's background-statement kind.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence concludes from the resolution tests that the deep events are demanded by the observations rather than produced by the location procedure, which is the row's interpretation.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:001"
+      ]
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block explains the lack of events below twenty kilometres by temperatures too high for rupture to nucleate, offered as a possibility, which fits the row's interpretation kind; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence concludes that magmatism governs crustal accretion at the segment, which is the row's interpretation.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence records that no active venting has been seen on the segment axis, which matches the row's negated modality and observation kind.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence records that the segment shows nothing indicating detachment faulting, which matches the row's negated modality.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:001"
+      ]
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence reads the volcanic morphology of the axial valley as showing the segment is magmatic in origin, which is the row's interpretation.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence in the methods block states that the samples of the studied segment and its southern neighbour were analysed, which matches the row's method-statement kind.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:005"
+      ]
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block ends by suggesting that the small pressure rise from degassing of the ascending melt brings on the earthquakes under the segment axis, which is the row's proposed mechanism; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:003"
+      ]
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence reports that earlier tomography found ordinary velocity ratios at the segment, which matches the row's prior-observation kind.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:003"
+      ]
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence attributes the enriched basalts and their high volatile contents, as earlier studies read them, to limited melting of an already enriched source near the transform, which matches the row's prior-interpretation kind.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block projects continued degassing during ascent producing earthquakes across the depth interval the row bounds, in the unit it carries, and the hypothesised modality matches the conditional wording.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The abstract block reports the carbon dioxide quantity of the primary melts over the bounds and in the unit the row carries and marks it approximate as the row does; the calculated modality matches its derivation from sample geochemistry.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the barium enrichment of the segment's samples as a floor in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived pre-eruptive estimate for the segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived primary-melt estimate for the segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the calculated carbon dioxide content of melts generated along the segment over the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the rubidium-derived pre-eruptive estimate for the segment at the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the rubidium-derived primary-melt estimate for the segment at the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the estimated pre-eruptive concentrations for the segment over the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence states a floor on the primary-melt concentration along the segment, which the row records as an open lower bound in the same unit.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence reports the rubidium enrichment of the segment's samples as a floor in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived pre-eruptive estimate for the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived primary-melt estimate for the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the calculated carbon dioxide content of melts from the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the rubidium-derived pre-eruptive estimate for the southern segment at the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the rubidium-derived primary-melt estimate for the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the sub-solidus temperature for dry peridotite at the boundary as the approximate value the row carries.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the boundary depth the cold-lithosphere explanation would imply, approximate and in the unit the row carries, and the hypothesised modality matches its conditional framing.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block ties that same boundary depth to the temperature range the row bounds; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The located sentence in the same block ties the maximum earthquake depth to the isotherm and the tolerance the row carries.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depth under which the boundary stays shallow away from the axis, which the row records as an open upper bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block ties the drawn boundary to the isotherm value the row carries.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the melt fraction the earlier work needs at the base of the boundary, approximate and in the unit the row carries.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the water content proposed there as a ceiling, which the row records as an open upper bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence puts the boundary under the southern discontinuity at the approximate depth the row carries.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the age of the crust on the western flank that the row records; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the crustal age up to which the boundary stays shallow, approximate and in the unit the row carries; the block names the crust only in adjectival form, which is how the subject occurs there.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the thickness of that western flank crust with the tolerance the row carries.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block gives the crustal thickness under the segment with the same tolerance, marked approximate as the row marks it.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the age of the cold lithosphere behind the edge effect, in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the modelled temperature range across that depth interval, which the row bounds and marks modelled.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block concludes that the earthquakes occur in mantle hotter than the floor the row records as an open lower bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the age below which accreted crust is treated as young, which the row records as an open upper bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the length of the segment, approximate and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the length of the southern segment in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the southern segment's bearing, which the row records as an approximate angle east of north; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the temperature floor inferred below twenty kilometres under the segment axis, which the row records as an open lower bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the bearing of the neo-volcanic ridge in the median valley, which the row records as an angle east of north; this projection has no statement digest.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the length of the eastern part of the transform the network covered, in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the number of events located along the transform, so the quantity the row names and its measured character are supported; this projection carries no count, so the row itself states no value.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the sub-solidus temperature for dry peridotite at the boundary as the approximate value the row carries.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the boundary depth the cold-lithosphere explanation would imply, approximate and in the unit the row carries, and the hypothesised modality matches its conditional framing.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block ties that same boundary depth to the temperature range the row bounds; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The located sentence in the same block ties the maximum earthquake depth to the isotherm and the tolerance the row carries.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depth under which the boundary stays shallow away from the axis, which the row records as an open upper bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block ties the drawn boundary to the isotherm value the row carries.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the melt fraction the earlier work needs at the base of the boundary, approximate and in the unit the row carries.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the water content proposed there as a ceiling, which the row records as an open upper bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 124,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence puts the boundary under the southern discontinuity at the approximate depth the row carries.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The abstract block reports the deep earthquakes across the depth interval the row bounds, in the unit it carries, and the measured modality matches the observational framing.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block projects continued degassing during ascent producing earthquakes across the depth interval the row bounds, in the unit it carries, and the hypothesised modality matches the conditional wording.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the age of the crust on the western flank that the row records; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the crustal age up to which the boundary stays shallow, approximate and in the unit the row carries; the block names the crust only in adjectival form, which is how the subject occurs there.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the thickness of that western flank crust with the tolerance the row carries.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block gives the crustal thickness under the segment with the same tolerance, marked approximate as the row marks it.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the age of the cold lithosphere behind the edge effect, in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the modelled temperature range across that depth interval, which the row bounds and marks modelled.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block concludes that the earthquakes occur in mantle hotter than the floor the row records as an open lower bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the age below which accreted crust is treated as young, which the row records as an open upper bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The abstract block reports the carbon dioxide quantity of the primary melts over the bounds and in the unit the row carries and marks it approximate as the row does; the calculated modality matches its derivation from sample geochemistry.",
+      "source_locators": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the bearing along which the deep events under the segment axis line up, approximate as the row records it.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:003"
+      ]
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence records that nothing is seen below that depth under the segment's ridge axis, which matches the row's negated modality and its open lower bound.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 138,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the depth the off-axis shallow microseismicity reaches west of the segment axis, which the row records as an open upper bound.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the barium enrichment of the segment's samples as a floor in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived pre-eruptive estimate for the segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived primary-melt estimate for the segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the calculated carbon dioxide content of melts generated along the segment over the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 143,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the rubidium-derived pre-eruptive estimate for the segment at the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 144,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the rubidium-derived primary-melt estimate for the segment at the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 145,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the depth range of the deep earthquakes observed under the segment axis that the row bounds, in the unit it carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 146,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the approximate depth range over which the deep microseismicity sits under the segment's own ridge axis, in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 147,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the length of the segment, approximate and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 148,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the estimated pre-eruptive concentrations for the segment over the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 149,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence states a floor on the primary-melt concentration along the segment, which the row records as an open lower bound in the same unit.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 150,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence reports the rubidium enrichment of the segment's samples as a floor in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 151,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived pre-eruptive estimate for the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 152,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium-derived primary-melt estimate for the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 153,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the calculated carbon dioxide content of melts from the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 154,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the rubidium-derived pre-eruptive estimate for the southern segment at the bounds and in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 155,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the rubidium-derived primary-melt estimate for the southern segment over the bounds and in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 156,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the length of the southern segment in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 157,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the southern segment's bearing, which the row records as an approximate angle east of north; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 158,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the temperature floor inferred below twenty kilometres under the segment axis, which the row records as an open lower bound; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 159,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the length of the eastern part of the transform the network covered, in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 160,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the number of events located along the transform, so the quantity the row names and its measured character are supported; this projection carries no count, so the row itself states no value.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 161,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the bearing of the neo-volcanic ridge in the median valley, which the row records as an angle east of north; this projection has no statement digest.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 162,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the length of the eastern part of the transform the network covered, in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 163,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the number of events located along the transform, which is the count and the scope the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:007"
+      ]
+    },
+    {
+      "row_index": 164,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The abstract block reports the deep earthquakes across the depth interval the row bounds, in the unit it carries, and the measured modality matches the observational framing.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 165,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the bearing along which the deep events under the segment axis line up, approximate as the row records it.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:003"
+      ]
+    },
+    {
+      "row_index": 166,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence records that nothing is seen below that depth under the segment's ridge axis, which matches the row's negated modality and its open lower bound.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 167,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the depth the off-axis shallow microseismicity reaches west of the segment axis, which the row records as an open upper bound.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 168,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the depth range of the deep earthquakes observed under the segment axis that the row bounds, in the unit it carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 169,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The located sentence gives the approximate depth range over which the deep microseismicity sits under the segment's own ridge axis, in the unit the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 170,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the length of the eastern part of the transform the network covered, in the unit the row carries; this projection has no statement digest.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 171,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the number of events located along the transform, which is the count and the scope the row carries.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:007"
+      ]
+    }
+  ]
+}

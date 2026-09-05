@@ -1,0 +1,1330 @@
+{
+  "question_id": "CQ-02",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "The rows name the subsections of the studied ridge portion and single out the short segment as the one the deep microseismicity sits under. A typed relation places the deep-microseismicity observation beneath that segment, and the observations attached to the segment give the depth band and say in their own names that the events lie under its ridge axis, with a separate record for the deeper events. The second half of the question is answered as well: the rows put the shallow off-axis cluster west of that same axis, the shallow events at the intersection outside corner and the normal-depth events beneath the southern discontinuity, so the position of the deep events relative to the axis is read off the rows rather than inferred. The same observations come back more than once because a record is returned under each observation type case it satisfies, which repeats the answer without changing it. Two qualifications worth recording, neither of which withholds the answer: a few of the supporting rows rest on figure caption or figure label blocks, and the ridge axis appears only inside the observations' own naming rather than as a record the relation points at.",
+  "source_locators": [
+    "page:2:block:004",
+    "page:1:block:005",
+    "page:2:block:006"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the Chain transform as one of the two transforms the ridge segment runs between; under this case the row projects only that name."
+    },
+    {
+      "row_index": 1,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block gives the fault and its westward dipping character, but the inactive status the row states flat is offered in the later block as something the absence of deep microseismicity suggests, so the row carries the conclusion without the hedge the reading puts on it."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The subsection block gives the fault set of the first discontinuity with the two strikes the row carries."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The subsection block gives the normal faults affecting the second discontinuity with the two strikes the row carries."
+    },
+    {
+      "row_index": 4,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The subsection block gives the strikes of the normal faults cutting the core complex surface, but it presents recent tectonic activity as what those faults are suggestive of, while the row states an active status outright."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The discussion block gives the high-angle inward dipping faults with the orientation the row carries."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the Romanche transform; under this case the row projects only the name."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block places the study in the equatorial Atlantic Ocean, which is the region the row names."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block comparing magmatic-tectonic settings names Iceland."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block comparing magmatic-tectonic settings names Mayotte, offshore in the western Indian Ocean."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block introduces the brittle-ductile boundary under the abbreviation the row carries as its name."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block on volatiles and melt introduces the lithosphere-asthenosphere boundary under the abbreviation the row carries."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure block for the schematic section names the expected Moho interface."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The discussion block names the axial valley whose floor it describes."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure block listing the shaded units names the hummocky seafloor."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The subsection block gives the median valley of the short segment."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure block lists the corrugated surface of the core complex among the tectonic elements it marks."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The observations block names the faulted dome of the core complex."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The discussion block names the core complex termination."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the oceanic core complex east of the ridge axis under the abbreviation the row carries."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the first non-transform discontinuity."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the second non-transform discontinuity."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the intersection subsection."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the short ridge segment between the two discontinuities."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the segment lying south of the second discontinuity."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the eastern ridge-transform intersection under the abbreviation the row carries."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block on ultraslow ridges names the Gakkel Ridge."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The compilation block names the Knipovich Ridge."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the Mid-Atlantic Ridge under the abbreviation the row carries."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The discussion block names the Southwest Indian Ridge under the abbreviation the row carries."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the Chain transform, and this case returns it as a transform fault."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block names the Romanche transform, and this case returns it as a transform fault."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The subsection block states that the core complex surface is cut by those striking normal faults, which is the relation the row carries between the two records."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL The figure block presents the corrugated surface as one of the core complex's own marked features, which supports the part-of relation."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL The observations block places the deep microseismicity beneath the ridge axis of the short segment and gives the approximate depth band the source projection carries."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The figure caption block places the core complex on the outside corner of the ridge, which is the relation the row carries; both endpoint records are formalized in the introduction block, hence the non-local reading."
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The introduction block says the intersection subsection is bounded to the east by the detachment fault, which supports the bounding relation between the two records."
+    },
+    {
+      "row_index": 37,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The block bounds the axial valley of the short segment by those inward dipping faults, while the row makes the segment itself the bounded record, which shifts what the reading says is bounded."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The subsection block places the short segment immediately south of the first discontinuity, which is what the adjacency relation states; both endpoints are formalized in the introduction block."
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The introduction block places the southern segment immediately south of the second discontinuity, which is what the adjacency relation states."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL The same pairing as the earlier relation row, returned again under the seismological observation case; the observations block states both the depth band and the position beneath the segment's ridge axis."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The retained statement is the block's own sentence, the fault it is about is named there, and the interpretation label matches a conclusion the reading presents as suggested by an absence of deep events rather than established."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The statement matches the block, which attributes the enriched-source reading to earlier geochemical work, so the prior-interpretation label holds; the transform is named in that block while its own record is formalized in the introduction block."
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block attributes the shallow events beneath the dome to ruptures on the high-angle normal faults and hedges the attribution, which the interpretation label carries; the subject faults are named in the block."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states the southward shallowing of the boundary as an expectation, which is what the hypothesised modality and the expectation label carry; the boundary is named in the block."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block presents the combined carbon dioxide and water explanation for melt at the boundary as something the authors' analysis and earlier work suggest, matching the interpretation label."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block attributes the focusing and flushing of melt to an earlier study, matching the prior-interpretation label, and names the boundary the claim is about."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block describes the valley floor as the retained statement does and presents it as an observation rather than an inference, which matches the label."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block presents the eastward relocation of the axis as something the earthquake distribution and the tectonic observations suggest, which the interpretation label carries; the dome is named in the block."
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block records that no evidence of a current eruption is seen in the valley, which matches the negated modality and the observation label."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block concludes from the resolution tests that the deep events beneath the segment axis are well constrained and required by the data, which is the claim the row carries."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block offers higher temperature at greater depth as a possible reason no earthquakes are seen deeper, which is what this claim names; the record carries no located statement and no digest, so there is nothing to recompute."
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block draws the conclusion that magmatism dominates crustal accretion at the segment, matching the retained statement and its interpretation label."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block records that no active vents have been observed on the segment axis, matching the negated modality and the observation label."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states that the segment shows no evidence of detachment faulting, matching the negated modality; the retained statement is the block's opening sentence."
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block infers a magmatic origin for the segment from its axial morphology, matching the retained statement and the interpretation label."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block states which two segments the samples were analysed for, matching the retained statement and the method label."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:003"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block proposes the small pressure rise from degassing of the ascending melt as what induces the events beneath the segment axis, which is what this claim names; the record carries no located statement and no digest."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block reports normal velocity ratios for the segment from earlier tomography, matching the retained statement and the prior-observation label."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure caption block fixes the zero of the depth profiles at the intersection, matching the retained statement and the figure label."
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block opens the discussion with the departure from the relationship between boundary depth and spreading rate; the retained sentence breaks at the page boundary and completes in the following block, which is cited with it."
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block concludes from the shallow cluster on the western side of the valley that the unexpected event depths are not a location artefact, which is what this claim names; the record carries no located statement and no digest."
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same claim as the earlier row, returned again under the transform-fault subject case; the block carries the statement and names the transform."
+    },
+    {
+      "row_index": 63,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the temperature figure for anhydrous peridotite at the boundary, but it places melt at sub-solidus temperatures, that is below that figure, whereas the row frames the quantity as the temperature at which melt is present and gives it as a single point."
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the boundary depth that the cold and thick lithosphere explanation would imply and presents it as one explanation among others, which the hypothesised modality carries."
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the isotherm range that such a boundary depth would correspond to; the record carries no located statement and no digest."
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The introduction block gives the isotherm, with the tolerance the row carries as its uncertainty, that the maximum earthquake depth is taken to mark."
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states that the boundary stays shallow up to a young crustal age near the ridge, which is the open upper bound the row carries."
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure block gives the isotherm the plotted boundary is drawn to correspond to."
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the melt fraction an earlier study proposed as required at the base of the boundary, which the modelled framing matches."
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same block gives the water content proposed alongside that melt fraction, as the upper bound the row carries."
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reads the boundary depth beneath the second discontinuity off the microseismicity that reaches that depth, which matches the value and the derived framing."
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003",
+        "page:4:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the width of the axial valley; the sentence breaks at the page boundary and names the segment in the following block, which is cited with it. The negated modality belongs to that sentence, which is rejecting a hypothesis, and not to the width itself, which the reading asserts."
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL SUBJECT_IN_BLOCK The subsection block gives the width of the median valley of the short segment."
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the length of the first discontinuity."
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the bearing of the first discontinuity."
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the ridge offset at the second discontinuity."
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the bearing of the second discontinuity."
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the length of the short segment."
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the length of the southern segment."
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the bearing of the southern segment."
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the temperature expected below twenty kilometres as a lower bound, which is how the row carries it, and presents it as coming from a thermal model."
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The introduction block gives the half-spreading rate of the ridge in the study area."
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The introduction block gives the length of the ridge segment between the two transforms."
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block gives the length of the eastern part of the transform that the network covered."
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block reports events located along the transform, which is the quantity this projection names; under this case no count is projected and everything the row does state is in the block."
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the average concentration earlier studies report for several segments of the region."
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same block gives the upper figure of that reported range."
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the depth floor of the magmatic-tectonic seismicity offshore the island, which is the open lower bound the row carries."
+    },
+    {
+      "row_index": 89,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same observation as the earlier row, returned again under the generic observation case; the block gives the figure for anhydrous peridotite but places melt below it, not at it, so the quantity's framing and its single point value overreach the prose."
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the boundary depth implied by the cold-lithosphere explanation and marks it as one explanation, which the hypothesised modality carries."
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the isotherm range that such a boundary depth would correspond to; the record carries no located statement and no digest."
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The introduction block gives the isotherm, with its tolerance, that the maximum earthquake depth is taken to mark."
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states that the boundary stays shallow near the ridge up to a young crustal age, which is the bound the row carries."
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure block gives the isotherm the plotted boundary corresponds to."
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the melt fraction an earlier study proposed as required at the base of the boundary."
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the water content proposed with it as an upper bound."
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reads the boundary depth beneath the second discontinuity off the microseismicity reaching that depth."
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003",
+        "page:4:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the width of the axial valley and the sentence completes in the following block, which names the segment and is cited with it; the negated modality belongs to the hypothesis the sentence rejects, not to the width."
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL SUBJECT_IN_BLOCK The subsection block gives the width of the median valley of the short segment."
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports a cluster on the western side of the valley with the shallow focal depths the row carries."
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depth limit of the events observed beneath the core complex, as the open upper bound the row carries."
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the length of the first discontinuity."
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives its bearing."
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states how deep the events beneath the second discontinuity reach, which is the approximate upper limit the row carries."
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depth limit of the events beneath the second discontinuity as the open upper bound the row carries."
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The observations block gives the depth band of the normal-depth events beneath the southern discontinuity."
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the ridge offset at the second discontinuity."
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives its bearing."
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the bearing along which the deep events beneath the segment axis are aligned."
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block records that no events are seen deeper than twenty kilometres beneath the segment axis, which matches the negated modality and the open lower bound."
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depth limit of the shallow off-axis microseismicity west of the segment axis."
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the barium enrichment of the segment samples as the lower bound the row carries."
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the pre-eruptive concentration range estimated from barium for this segment."
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the primary-melt range estimated from the barium-based proxy for this segment."
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the calculated volatile content of melts generated along this segment as the range the row carries."
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the pre-eruptive concentration range estimated from rubidium for this segment."
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the primary-melt range estimated from the rubidium-based proxy for this segment."
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depths of the deep earthquakes observed beneath the segment axis as the band the row carries."
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The observations block gives the approximate depth band of the deep microseismicity beneath the segment's ridge axis."
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the length of the segment."
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the estimated pre-eruptive concentration range for the segment, which matches the value and the estimated framing."
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block states the floor of the primary-melt concentration along the segment, which is the open lower bound the row carries."
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the rubidium enrichment of the segment samples as the lower bound the row carries."
+    },
+    {
+      "row_index": 124,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the pre-eruptive range estimated from barium for the southern segment."
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the primary-melt range estimated from the barium-based proxy for the southern segment."
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the calculated volatile content for the southern segment as the range the row carries."
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the pre-eruptive range estimated from rubidium for the southern segment."
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the primary-melt range estimated from the rubidium-based proxy for the southern segment."
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the length of the southern segment."
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The subsection block gives the bearing of the southern segment."
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the temperature expected below twenty kilometres as a lower bound and presents it as model-derived."
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block reports the earthquakes located in the vicinity of the intersection region, which is the quantity this projection names; the count itself is not projected under this case."
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The observations block gives the depth band of the majority of shallow earthquakes on the outside corner of the intersection."
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure block gives the depth band below the sea floor of the deep earthquakes beneath the ridge axis."
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The introduction block gives the half-spreading rate of the ridge in the study area."
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block gives the length of the ridge axis the network covered."
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block is the figure's own histogram labelling and carries the ridge total as text; the same total is stated in prose in the relocation block, which is cited with it. The count itself is not projected under this case."
+    },
+    {
+      "row_index": 138,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The relocation block states how many events were located along the ridge; the count is not projected under this case."
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The introduction block gives the length of the ridge segment between the two transforms."
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the highest melt concentration previously reported at that ridge, which is the value and the prior framing the row carries."
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same coverage observation, returned again under the transform-fault subject case; the results block gives the covered length of the eastern part of the transform."
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The relocation block reports events located along the transform; no count is projected under this case."
+    },
+    {
+      "row_index": 143,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same coverage observation again under the seismological case; the results block gives the covered length."
+    },
+    {
+      "row_index": 144,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The relocation block gives the number of events located along the transform, matching the count and the scope the row carries."
+    },
+    {
+      "row_index": 145,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the depth floor of the seismicity offshore the island, which the record and its subject are both formalized from."
+    },
+    {
+      "row_index": 146,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the shallow focal depths of the cluster on the western side of the valley."
+    },
+    {
+      "row_index": 147,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depth limit of the events beneath the core complex."
+    },
+    {
+      "row_index": 148,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states how deep the events beneath the second discontinuity reach."
+    },
+    {
+      "row_index": 149,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives their depth limit as an open upper bound."
+    },
+    {
+      "row_index": 150,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The observations block gives the depth band of the normal-depth events beneath the southern discontinuity."
+    },
+    {
+      "row_index": 151,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the bearing along which the deep events beneath the segment axis are aligned."
+    },
+    {
+      "row_index": 152,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block records that no events are seen deeper than twenty kilometres beneath the segment axis."
+    },
+    {
+      "row_index": 153,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depth limit of the shallow off-axis microseismicity west of the segment axis."
+    },
+    {
+      "row_index": 154,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the depths of the deep earthquakes observed beneath the segment axis."
+    },
+    {
+      "row_index": 155,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The observations block gives the approximate depth band of the deep microseismicity beneath the segment's ridge axis."
+    },
+    {
+      "row_index": 156,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block gives the number of earthquakes located in the vicinity of the intersection region, matching the count and the scope the row carries."
+    },
+    {
+      "row_index": 157,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The observations block gives the depth band of the majority of shallow earthquakes at the outside corner of the intersection."
+    },
+    {
+      "row_index": 158,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure block gives the depth band below the sea floor of the deep earthquakes beneath the ridge axis."
+    },
+    {
+      "row_index": 159,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block gives the length of the ridge axis covered by the network."
+    },
+    {
+      "row_index": 160,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The count comes from the figure's histogram labelling in that block, and the same total is stated in prose in the relocation block, which is cited with it; both match the count and its scope."
+    },
+    {
+      "row_index": 161,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The relocation block gives the number of events located along the ridge, matching the count and the scope the row carries."
+    },
+    {
+      "row_index": 162,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block gives the covered length of the eastern part of the transform."
+    },
+    {
+      "row_index": 163,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The relocation block gives the number of events located along the transform, matching the count and its scope."
+    }
+  ]
+}
