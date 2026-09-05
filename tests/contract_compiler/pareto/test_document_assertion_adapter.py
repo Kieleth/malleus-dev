@@ -618,6 +618,147 @@ def test_document_adapter_keeps_the_six_capture_modalities() -> None:
     }
 
 
+def _subjected(
+    *,
+    subject: str = "asset:P-7",
+    name: str | None = None,
+    locator: str = "asr:001",
+) -> tuple[dict[str, object], dict[str, object]]:
+    """The fixture with one record naming its subject, and the assertion for it.
+
+    ``asr:001`` reads "Pump P-7 was inspected on 2026-03-02." and names the
+    asset; ``asr:003`` reads "The technician suspects bearing wear." and names
+    nothing the records carry.
+    """
+
+    _, capture, plan, _ = _inputs()
+    records = deepcopy(plan["records"])
+    records["entities"][1]["properties"]["subject"] = subject
+    if name is not None:
+        records["entities"][0]["properties"]["name"] = name
+    index = {"asr:001": 0, "asr:002": 1, "asr:003": 2}[locator]
+    capture["assertions"][index]["formalized_by"] = list(
+        capture["assertions"][index]["formalized_by"]
+    ) + [
+        {
+            "path": ["properties", "subject"],
+            "record_id": "inspection:P-7:2026-03-02",
+        }
+    ]
+    return capture, records
+
+
+def test_document_adapter_accepts_a_subject_the_formalizing_statement_names() -> None:
+    """Run-08 made 131 observations and attached none of them to a feature.
+
+    The pack now carries the attachment, and the adapter accepts it when the
+    sentence that formalizes it names the subject: the asset is called P-7 and
+    asr:001 reads "Pump P-7 was inspected on 2026-03-02."
+    """
+
+    capture, records = _subjected()
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_refuses_a_subject_the_statement_does_not_name() -> None:
+    """23 of run-08's observations put the feature inside quantity_kind text.
+
+    A subject hung on a sentence that never mentions it is the same defect one
+    layer up: the pointer exists and what it points at does not say so.
+    """
+
+    api = _api()
+    capture, records = _subjected(locator="asr:003")
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED
+    )
+    assert refusal.value.detail == (
+        "document capture derivations are not accepted: "
+        "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
+        "P-7 is absent from the statement of asr:003 [SUBJECT_NOT_NAMED]; "
+        "a record's assertion_locator names an assertion of this capture, its "
+        "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
+        "a slot the contract declares evaluative is formalized by at "
+        "least one assertion whose modality is not HYPOTHESISED, and the name "
+        "of a record's subject occurs in the statement of an assertion that "
+        "formalizes that subject"
+    )
+
+
+def test_document_adapter_refuses_a_subject_no_assertion_formalizes() -> None:
+    """A subject nothing formalizes fails the same rule and says so."""
+
+    api = _api()
+    _, capture, plan, _ = _inputs()
+    records = deepcopy(plan["records"])
+    records["entities"][1]["properties"]["subject"] = "asset:P-7"
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED
+    )
+    assert (
+        "record inspection:P-7:2026-03-02 names subject asset:P-7, whose name "
+        "P-7 is absent from the statement of no assertion"
+    ) in refusal.value.detail
+
+
+def test_document_adapter_matches_a_subject_name_past_spacing_and_case() -> None:
+    """Both sides collapse whitespace and case-fold; neither side is rewritten."""
+
+    capture, records = _subjected(name="pump\n  p-7")
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+    assert records["entities"][0]["properties"]["name"] == "pump\n  p-7"
+
+
+def test_document_adapter_refuses_a_subject_carrying_no_name() -> None:
+    """A subject with no name is a subject no statement can be checked against."""
+
+    api = _api()
+    capture, records = _subjected()
+    del records["entities"][0]["properties"]["name"]
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED
+    )
+    assert (
+        "record inspection:P-7:2026-03-02 names subject asset:P-7, which "
+        "carries no name"
+    ) in refusal.value.detail
+
+
+def test_document_adapter_leaves_a_subject_outside_this_change_set_alone() -> (
+    None
+):
+    """The adapter is handed one change set and reads names from it alone.
+
+    A subject that resolves in the base state has no name here to compare, and
+    a subject that resolves nowhere is the plan compiler's DANGLING_SUBJECT,
+    where the base state is in scope. The adapter claims neither.
+    """
+
+    capture, records = _subjected(subject="asset:P-9")
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
 def test_document_census_reports_derivation_locality_and_fan_out() -> None:
     """Run-04's derivation rule bound every value to an assertion and never
     asked what the assertion said. One sentence on the data-acquisition

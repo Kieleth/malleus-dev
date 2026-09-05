@@ -721,6 +721,112 @@ def test_population_lowering_refuses_dangling_endpoint(
     )
 
 
+SUBJECT_SCHEMA = b"""\
+id: https://example.malleus.dev/pareto-history
+name: pareto_history
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  test: https://example.malleus.dev/pareto-history/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  LinkKind:
+    permissible_values:
+      LINKS:
+slots:
+  label:
+    range: string
+  subject:
+    range: Entity
+classes:
+  LeftObject:
+    is_a: Entity
+    slots:
+      - label
+      - subject
+    slot_usage:
+      label:
+        required: true
+  RightObject:
+    is_a: Entity
+    slots:
+      - label
+    slot_usage:
+      label:
+        required: true
+  ObjectLink:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: LinkKind
+        required: true
+        equals_string: LINKS
+      source_id:
+        range: LeftObject
+        required: true
+      target_id:
+        range: RightObject
+        required: true
+"""
+
+
+def _subject_pair():
+    """A contract whose LeftObject carries an Entity-ranged subject reference."""
+
+    compiled = _generic_compilation(SUBJECT_SCHEMA)
+    partial = _effective(
+        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
+    )
+    return compiled, partial
+
+
+def _subject_plan(subject: str):
+    pair = _subject_pair()
+    plan = _plan(pair[1].identity)
+    plan["records"]["entities"][0]["properties"]["subject"] = subject
+    plan["derivations"].append(
+        {
+            "record_id": "left-1",
+            "path": ["properties", "subject"],
+            "source_id": "source-generic",
+            "locator": "row:0:subject",
+        }
+    )
+    return plan, pair
+
+
+def test_population_lowering_accepts_a_subject_named_in_the_change_set() -> None:
+    """Core-13. A subject is a reference to a record, like a relation endpoint,
+    and one that resolves in the same change set lowers unchanged."""
+
+    plan, pair = _subject_plan("right-1")
+
+    result = _compile(plan, pair)
+
+    assert result.status is _population().PopulationPlanStatus.CHANGE_SET
+
+
+def test_population_lowering_refuses_a_subject_that_resolves_nowhere() -> None:
+    """The document adapter is handed one change set and reads a subject's name
+    from it alone, so it cannot tell a base-state subject from a typo. The plan
+    compiler sees the change set and the base state together, which is where
+    the endpoint check already lives, so the resolution check belongs here."""
+
+    population = _population()
+    plan, pair = _subject_plan("right-404")
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, pair)
+
+    assert (
+        refusal.value.reason is population.PopulationPlanRefusalReason.DANGLING_SUBJECT
+    )
+    assert refusal.value.detail == "record left-1 has absent subject: right-404"
+
+
 def test_population_lowering_refuses_unknown_supersession(contract_pair) -> None:
     population = _population()
     _, partial = contract_pair
