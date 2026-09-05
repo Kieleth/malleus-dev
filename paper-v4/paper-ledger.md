@@ -4213,3 +4213,25 @@ about run-11's records, not a count Core-16 will reproduce, and a projected
 subject is a subject the compiler derived, not a subject the review has agreed
 is right. Whether any of it holds is open, and run-12 is one cell that will be
 one observation, not a measurement, until it has run to ratification.
+
+### E-0154, run-12 is pinned to the v4.6 Core coordinate
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-12/run-contract.json` and
+`producer-input-manifest.json` as rewritten by `pin.py --commit 90abc79`, the
+governance ledger through OVR-000411, and E-0153.
+
+Coordinates: Core commit `90abc7916a92511e9c5202b591bc60fafab332d3` (the head after Core-16's
+commits and its governance entry OVR-000411), replacing E-0153's provisional
+pin. Core-16 landed: when a source-asserted record's subject is unset and
+exactly one entity of the capture is named (name or tag, whitespace ignored) in
+a statement that formalizes the record, the document adapter sets the subject
+and records the derivation as projected; the census reports proposed,
+projected, ambiguous and unnamed; nothing refuses (decision 21). One skill
+sentence says so. One declared input moved against run-11: the skill.
+
+Non-claim: no producer has run at this coordinate. Expected effect, stated
+before the run: subject coverage above run-11's 91 of 248, with projected
+subjects judged SUPPORTED at the same rate as proposed ones; the falsifier is
+projected subjects judged wrong more often than proposed ones.

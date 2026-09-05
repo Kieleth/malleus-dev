@@ -4,8 +4,8 @@
   "status": "FROZEN",
   "producer_workspace": "private/paper-v4-v4-run-12/producer",
   "core": {
-    "commit": "712bcbf779ade453287105eb2ce1bc0b6e3237a1",
-    "tree": "a6a085dc38285608ba83067b9e8f0116b8d3bee1"
+    "commit": "90abc7916a92511e9c5202b591bc60fafab332d3",
+    "tree": "b08660005989862b0ee594bf65fe8a3c402dfd0d"
   },
   "interface_coordinates": {
     "capture_id": "capture:paper-v4:yu-2025:v4:12",
@@ -84,7 +84,7 @@
       "name": "MALLEUS_NASCENT_PROJECT_SKILL",
       "source": ".claude/skills/malleus-acolyte/SKILL.md",
       "target": ".claude/skills/malleus-acolyte/SKILL.md",
-      "sha256": "sha256:0509df9a6b28ee093e5d08d5d8214a7e9ce10a4a598c8e525c83c306195c2691"
+      "sha256": "sha256:8a136ff5b9db629ee4b4c626c2c0a71a4a9b304000e8f621e6dfd06651fdcd96"
     },
     {
       "name": "SELECTED_READING",
@@ -132,11 +132,12 @@
   "moved_since": {
     "reference_run": "run-11",
     "reference_manifest": "paper-v4/experiment-v4/run-11/producer-input-manifest.json",
-    "moved": [],
+    "moved": [
+      "MALLEUS_NASCENT_PROJECT_SKILL"
+    ],
     "unchanged": [
       "CHRONOLOGY_PACK",
       "LINKML_TYPES",
-      "MALLEUS_NASCENT_PROJECT_SKILL",
       "MALLEUS_ROOT",
       "METROLOGY_PACK",
       "RESEARCH_PACK",
