@@ -1,0 +1,104 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:9dfdd4b20e7518582acfdc91957f756f41d1b72d748496bc196edb24cab65ceb",
+        "before_digest": "sha256:022041359239ea345c4d5f33e8bc7aa478c58b439910200fe261ab72e08bd367",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:f9cd23c29593864ef757b8e61fa91bbedf7afc7194a1d414b329fbcc9c847fb5",
+        "before_digest": "sha256:35e060c8a3b802cd3e7358138e0ecb05f1a91dae73d6d1cc7c6dce8781025514",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:592db0dc3d1ba773332b09c073f3e158d81f6bbcb4d55c13b75d8ed4e31689b1",
+        "before_digest": "sha256:dae9b29e7ff6b412bb373760b617f24e9d2843be168a75a24260af0cbe20198d",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/document-census.json"
+      },
+      {
+        "after_digest": "sha256:229db892765e9005b1a3f5c767a102c13e28a9ba00c5fe989e7488c7f95774fc",
+        "before_digest": "sha256:d28b76a0b6db2bc86bfcae44503d49f3282f2de047deed1c2ffe4c8a6ca59103",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:0d3922344de2245310e6255e4c7e703d36be8669f44a755a1f0af4c6b642885b",
+        "before_digest": "sha256:a2bf48502d19600630bfcb03ff57639e676b833d22c88e80324478254d46a95f",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:d5d66dfa92d2055cf0782fb708d2da9f54e768a25f60c0c3ecdadd141dab229e",
+        "before_digest": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:3acb2cd1059fc6b2e4d19b0af609713d716ed83ea7f0c5c66b79a392ef974df7",
+        "before_digest": "sha256:97903ab5e917ac9f8c1336e54a7026f592a4747590d79aecce71b1d242614f2c",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:53e646b25511dfb495c3d1eb9213d7b208209a8d826bcde550d6d442c5d945fc",
+        "before_digest": "sha256:1acc6d7d5aec82188c0693dfebe997aaf11be295708d2c53a432da458ec0aef4",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:6c06a07d8480e5a45da5ad350cba8712fbee43b9ac1b5c238f61ff38652e5f41",
+        "before_digest": "sha256:52d76c58b0c278b49ad634f99236a7d95b47941370a9f8d13748646cd57a4dfb",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:6a2bfc7995fa4f638676edb135d96e3a8f08a5a778742d31fe62f6feb5bd3cfb",
+        "before_digest": "sha256:6194b8c47fe6f30d3fce14ce79da5c41f77361ae9b435ae19737df90108e320a",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:660ed28c32caf3ad54bf512f4dff6e9a22ce15f8c89b4182b79f6b152fc6e5ff",
+  "entry_id": "OVR-000414",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b2196bccaa4415451d4b10afe95cfc3ca8ab3b4bfd7d5486274ef692c0967036",
+  "recorded_at": "2026-09-05T17:42:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "0f4da9a893077514f114f8881ea17ac46036ed58",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c53d982cbb48c07121a1784ad9276f5236690307",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 414,
+  "subject": {
+    "id": "what-the-protocol-reports",
+    "type": "DOCUMENT"
+  },
+  "summary": "Four reports are corrected: the census separates an asserted block from a declared one, counts locators and digests, the rehydration boundary raises a typed reason, and GAP_REQUIRED names every empty assertion.",
+  "why": "Run-16 read 186 of 186 blocks reviewed where 58 carried assertions and 128 were declarations, 90 of them reference entries the Opus cells captured as records, so one label stood for the capture's evidence and for a producer claim the census cannot check. Its 194 records carried no assertion_locator and no statement_sha256, where runs 13 to 15 carried 269, 203 and 142, so DIGEST_MISMATCH and DIGEST_NOT_LOCATED never ran and the review wrote no digest token, with no number saying so. Run-17's runner met an untyped ValueError from graph rehydration where every other refusal the cells met carried a reason, and its third attempt had eight assertions with neither a formalization target nor a gap while the diagnostic named one. None of the four changes what is admitted. Decision 24 in design/KNOWLEDGE_PACKS.md carries the evidence figures. The census digest of the inspection_note_capture_v1 fixture moves with the first two items, 802 bytes to 981, and its manifest is repinned."
+}
