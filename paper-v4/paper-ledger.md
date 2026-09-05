@@ -3865,3 +3865,103 @@ entity's tags with whitespace ignored (Core-15), run-11 on the same harness.
 
 Non-claim: one cell per iteration; the preliminary record is not paper
 evidence until ratified.
+
+### E-0147, run-11 opens v4.5: the subject check accepts an entity's other names
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-11/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `native_query.py`, `offline_validation.py`,
+`offline-validation.json`, `test_contract.py`, `test_pipeline.py`,
+`paper-v4/evaluation-v4/run-11/review-record.blank.md`,
+`handover/2026-09-05-overseer-journal.md` (iteration 2's two sections) and
+E-0144 to E-0146.
+
+Iteration: run-11 is the sixth iteration of the v4 protocol, `v4.5`. The
+protocol shape does not change, the producer does not change, and this time the
+harness does not change either. Every executable file and the spawn message are
+run-10's bytes with the run id substituted and nothing else, and
+`native_query.py` is run-10's bytes with nothing substituted at all, which
+`test_pipeline.py` proves file by file: seven by reconstructing run-10's text
+from this cell's, one by comparing the bytes. Run-04 to run-10 are the seven
+cells this iteration follows; none is superseded, repaired or reinterpreted, and
+the frozen artifacts of every closed cell, run-10's included, are digest-pinned
+by `run-11/test_contract.py`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default and
+neither pinned nor observed. The model is run-04's, run-08's, run-09's and
+run-10's, so the model is not the variable.
+
+Coordinates: provisional. `pin.py --commit HEAD` pins commit
+`2c2b7b9efd952e6261980c50f66022da3b61b39e`, tree
+`a6965f7cf2bb5163c286f9c9537ff0ffc452152a`, governance head `OVR-000409` at
+`sha256:f2482862…`, which is still the v4.4 governance coordinate: Core-15 has
+not landed. The commit is a paper commit and its Core files are the v4.4
+coordinate `2026244`'s, byte for byte. The interface coordinates are new:
+`capture:paper-v4:yu-2025:v4:11` and `plan:paper-v4:yu-2025:v4:11`, and the
+runner will execute under `actor:overseer-run-11`. The private workspace is
+`private/paper-v4-v4-run-11/producer`. At this pin none of the eight declared
+inputs has moved against run-10's manifest. The gate status reads
+`PROVISIONALLY_PINNED_PENDING_CORE_15` and the overseer re-pins with one command
+after Core-15 lands.
+
+All fifteen of run-10's `changes` entries are carried forward and marked
+`carried_from: run-10`. Four of them are Core's and are read at fixed commits so
+that nothing Core-15 lands can be attributed to an earlier task:
+`CORE_12_DERIVATION_CHECKS` at the v4.1 baseline, `PACKS_0_3_0` at run-08's
+expected versions, `SUBJECT_ELEMENT` at the v4.3 coordinate `f6c8c71`, and
+`CORE_14_MODALITY_SOURCE_OF_TRUTH`, which was run-10's change under test and is
+now read between the v4.3 and the v4.4 coordinates, its two ride-alongs with it.
+Each records whether its reasons are still in force here.
+
+One entry is this iteration's, and it is Core's:
+
+1. `CORE_15_SUBJECT_ALIASES`. The document adapter's subject check accepts the
+   subject entity's name the way the reading spells it: its `name` or any of its
+   `tags`, whitespace collapsed and case folded on both sides, must occur in a
+   statement that formalizes the record. `SUBJECT_NOT_NAMED` still refuses a
+   subject no form of whose name is in the statement, so no refusal reason is
+   added and `expected_reasons` is empty; what moves is the comparison and the
+   refusal's message. The skill states that the source's other forms of a name go
+   in `tags`. `tags` is an existing root slot every Entity already carries, so
+   there is no new slot, no pack version and no ontology change. Cause: the
+   overseer journal's iteration 2 sections and E-0146. State at the pin:
+   `PENDING_AT_PIN`. Because the expectation is empty, a subset check on the enum
+   would read LANDED against a commit where Core has written nothing, so the pin
+   sets `pin_status` from two byte comparisons against the v4.4 coordinate
+   `2026244`, the adapter and the skill, and records the `SUBJECT_NOT_NAMED`
+   message text verbatim beside that coordinate's. Both read unmoved here.
+
+The harness delta is none. `ENTITY_KIND_RESTRICTED` is carried, and its offline
+validation is carried with it: `offline_validation.py` re-runs run-10's
+computation against this cell's binder and returns run-10's counts unchanged,
+630 of run-09's 1,466 rows kept (58, 319, 131, 122), 618 SUPPORTED, 12 PARTIAL,
+none unjudged. That is a regression check on a binder that did not move, not
+evidence about v4.5.
+
+Measurement: run-11 is measured against run-10's 552 admitted rows (51, 164, 165,
+172; 378 SUBJECT, 158 ENTITY, 16 RELATION, 213 witnesses) and against the 35 of
+130 subjects run-10's first runner attempt refused. The overseer classified those
+35 from the artifacts: 14 genuinely unnamed in their sentence, 7 aliases, 8
+partial names, 6 whitespace artefacts of the text layer. Expected: the 21
+aliases, partial names and whitespace artefacts no longer refuse; the 14
+genuinely unnamed still do. The contract records both figures, their bases and
+their sources, and `test_contract.py` pins them and recomputes the row figures
+from run-10's own launch log.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-11, and
+`ontology-run/` and `results/` carry only a keepfile. Core-15 is the moving part
+and it is not in the pinned bytes, so the coordinate is provisional and the cell
+is not ready for a producer until the overseer re-pins and the gate status reads
+`PINNED_TO_THE_V4_5_CORE_COORDINATE`. Run-10's 552 rows and 35 refused subjects
+are run-10's, on run-10's graph; they bound what this cell is compared against
+and say nothing about the graph run-11's producer will build. A check that
+refuses fewer subjects is not evidence that the subjects it admits are better
+named, and the 21 that should stop refusing are the overseer's classification of
+run-10's records, not a count Core-15 will reproduce. Whether any of it holds is
+open, and run-11 is one cell that will be one observation, not a measurement,
+until it has run to ratification.
