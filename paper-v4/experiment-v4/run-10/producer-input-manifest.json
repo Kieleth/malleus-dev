@@ -1,0 +1,173 @@
+{
+  "schema": "malleus.paper-v4.producer-input-manifest/v1",
+  "run_id": "run-10",
+  "status": "FROZEN",
+  "producer_workspace": "private/paper-v4-v4-run-10/producer",
+  "core": {
+    "commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
+    "tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d"
+  },
+  "interface_coordinates": {
+    "capture_id": "capture:paper-v4:yu-2025:v4:10",
+    "plan_id": "plan:paper-v4:yu-2025:v4:10",
+    "source_id": "source:yu-2025-mid-atlantic-ridge"
+  },
+  "history_profile": {
+    "profile_id": "source-assertion",
+    "profile_identity": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+    "semantic_unit": "COMPOSITION",
+    "origin": "PARTIAL_IMPORT"
+  },
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "workspace_layout": "CLAUDE",
+    "session": "FRESH_SINGLE_SESSION",
+    "spawned_by": "OVERSEER",
+    "inputs": [
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "SELECTED_READING",
+      "MALLEUS_ROOT",
+      "LINKML_TYPES",
+      "SHIPPED_GROUNDED_PACKS",
+      "SOURCE_ASSERTION_PROFILE"
+    ],
+    "forbidden_inputs": [
+      "COMPETENCY_QUESTIONS",
+      "QUERY_BINDING",
+      "ANSWER_ORACLE",
+      "PRIOR_ONTOLOGY",
+      "PRIOR_POPULATION",
+      "PRIOR_RESULT",
+      "MANUSCRIPT",
+      "REPOSITORY_DOCUMENTATION",
+      "NETWORK"
+    ],
+    "network": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "fallback": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 2,
+    "max_ontology_revision_rounds": 2,
+    "revision_trigger": "SOURCE_LOCATED_TYPED_GAP",
+    "terminal_rule": "STOP_WHEN_EVERY_BLOCK_IS_REVIEWED_OR_NOTHING_ASSERTABLE_OR_THE_NEXT_ADDITION_WOULD_REQUIRE_INVENTION",
+    "spawn_message": "ISOLATION_ONLY_NO_MODELLING_INSTRUCTION_PLUS_STOP_RULE_CLARIFICATION"
+  },
+  "input_bytes": {
+    "tracked": "GIT_SHOW_AT_CORE_COMMIT",
+    "untracked": "PRIVATE_PATH",
+    "untracked_inputs": [
+      "SELECTED_READING"
+    ]
+  },
+  "interpreter_preflight": {
+    "checked_by": "paper-v4/experiment-v4/run-10/prepare_producer.py",
+    "lock": "paper-v4/environment/requirements-cp312-macos-arm64.lock",
+    "packages": [
+      "linkml",
+      "linkml-runtime"
+    ],
+    "recorded_in": "producer-input-receipt.json under interpreter"
+  },
+  "skill_installer": {
+    "method": "WRITE_DECLARED_BYTES_AT_CORE_COMMIT",
+    "reason": "the live skill tree is expected to move; the run consumes the bytes recorded in this manifest",
+    "installed_tree": ".claude/skills",
+    "target": ".claude/skills/malleus-acolyte/SKILL.md"
+  },
+  "declared_inputs": [
+    {
+      "name": "MALLEUS_NASCENT_PROJECT_SKILL",
+      "source": ".claude/skills/malleus-acolyte/SKILL.md",
+      "target": ".claude/skills/malleus-acolyte/SKILL.md",
+      "sha256": "sha256:4cfd5f2aab9a085f44ded0ec04547db6e20c679d14593f78c44e661e3ca6dfe2"
+    },
+    {
+      "name": "SELECTED_READING",
+      "source": "private/paper-v4-text-layer/selected-reading.json",
+      "target": "inputs/selected-reading.json",
+      "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+    },
+    {
+      "name": "MALLEUS_ROOT",
+      "source": "ontology/malleus.yaml",
+      "target": "inputs/malleus.yaml",
+      "sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
+    },
+    {
+      "name": "LINKML_TYPES",
+      "source": "paper-v4/experiment-v2/run-inputs/linkml-types.yaml",
+      "target": "inputs/linkml-types.yaml",
+      "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+    },
+    {
+      "name": "METROLOGY_PACK",
+      "source": "ontology/packs/metrology.yaml",
+      "target": "inputs/metrology.yaml",
+      "sha256": "sha256:be843436a99ea38c1147d8b4296e560348fe34fa8ec5a23d176868239cd01fef"
+    },
+    {
+      "name": "CHRONOLOGY_PACK",
+      "source": "ontology/packs/chronology.yaml",
+      "target": "inputs/chronology.yaml",
+      "sha256": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1"
+    },
+    {
+      "name": "RESEARCH_PACK",
+      "source": "ontology/packs/research.yaml",
+      "target": "inputs/research.yaml",
+      "sha256": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b"
+    },
+    {
+      "name": "SOURCE_ASSERTION_PROFILE",
+      "source": "src/malleus/profiles/source-assertion.json",
+      "target": "inputs/profile-source-assertion.json",
+      "sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46"
+    }
+  ],
+  "moved_since": {
+    "reference_run": "run-09",
+    "reference_manifest": "paper-v4/experiment-v4/run-09/producer-input-manifest.json",
+    "moved": [
+      "MALLEUS_NASCENT_PROJECT_SKILL"
+    ],
+    "unchanged": [
+      "CHRONOLOGY_PACK",
+      "LINKML_TYPES",
+      "MALLEUS_ROOT",
+      "METROLOGY_PACK",
+      "RESEARCH_PACK",
+      "SELECTED_READING",
+      "SOURCE_ASSERTION_PROFILE"
+    ]
+  },
+  "forbidden_inputs": [
+    "COMPETENCY_QUESTIONS",
+    "QUERY_BINDING",
+    "ANSWER_ORACLE",
+    "PRIOR_ONTOLOGY",
+    "PRIOR_POPULATION",
+    "PRIOR_RESULT",
+    "MANUSCRIPT",
+    "REPOSITORY_DOCUMENTATION",
+    "NETWORK"
+  ],
+  "session": {
+    "fresh": true,
+    "single_session": true,
+    "delegation": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 2,
+    "max_additive_revision_rounds": 2,
+    "fallback": "FORBIDDEN"
+  },
+  "outputs": {
+    "ontology_pattern": "work/ontology-attempt-NN.yaml",
+    "population": "work/document-population.json",
+    "session_log": "work/session-log.md",
+    "status": "work/status.json"
+  }
+}

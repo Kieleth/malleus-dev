@@ -3639,3 +3639,126 @@ restriction.
 
 Non-claim: one cell per iteration; the effect sizes are one observation each.
 The preliminary record is not paper evidence until ratified.
+
+### E-0144, run-10 opens v4.4: the ENTITY kind is restricted to types without a subject, and the modality gets one source of truth
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-10/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `native_query.py`, `offline_validation.py`,
+`offline-validation.json`, `test_contract.py`, `test_pipeline.py`,
+`paper-v4/evaluation-v4/run-10/review-record.blank.md`,
+`handover/2026-09-05-v43-rca.md` and E-0140 to E-0143.
+
+Iteration: run-10 is the fifth iteration of the v4 protocol, `v4.4`. The
+protocol shape does not change and neither does the producer: one document, one
+producer loop, one question-blind session with two phases, two diagnostic
+returns, two additive revision rounds, no fallback and no hand repair. The
+producer block is run-09's key for key, the spawn message is run-09's bytes with
+the run id substituted, and the runner, the gate, the workspace builder and the
+usage deriver are run-09's bytes with the same substitution and nothing else,
+which `test_pipeline.py` proves by comparing them. `native_query.py` is run-09's
+bytes with the accepted schema string substituted and nothing else, which the
+same file proves by reconstructing run-09's from this one. Run-04 to run-09 are
+the six cells this iteration follows; none is superseded, repaired or
+reinterpreted, and the frozen artifacts of every closed cell are digest-pinned by
+`run-10/test_contract.py`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default and
+neither pinned nor observed. The model is run-04's, run-08's and run-09's, so the
+model is not the variable.
+
+Coordinates: provisional. `pin.py --commit e7919a7` pins Core commit
+`e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2`, tree
+`d7b8fa29666fe7fb9703824c3157546caa18c55d`, governance head `OVR-000408` at
+`sha256:d240b272…`, which is still the v4.3 governance coordinate: Core-14's
+governance entry is not written at this commit. The interface coordinates are
+new: `capture:paper-v4:yu-2025:v4:10` and `plan:paper-v4:yu-2025:v4:10`, and the
+runner will execute under `actor:overseer-run-10`. The private workspace is
+`private/paper-v4-v4-run-10/producer`. At this pin one of the eight declared
+inputs has moved against run-09's manifest, the acolyte skill; the reading, the
+Malleus root, the LinkML types, the three packs and the source-assertion profile
+are unchanged. The gate status reads `PROVISIONALLY_PINNED_PENDING_CORE_14` and
+the overseer re-pins with one command.
+
+Twelve of the fifteen `changes` entries are run-09's, carried forward and marked
+`carried_from: run-09`. A thirteenth, `SUBJECT_ELEMENT`, is carried and read at
+the v4.3 coordinate `f6c8c71`, which is a fixed commit, so a refusal reason
+Core-14 lands cannot be attributed to Core-13; `PACKS_0_3_0` and
+`CORE_12_DERIVATION_CHECKS` are read at their own fixed commits for the same
+reason, and each records whether its reasons are still in force here.
+
+Two entries are this iteration's. One is Core's:
+
+1. `CORE_14_MODALITY_SOURCE_OF_TRUTH`. A record's modality has one source of
+   truth, the assertion that formalizes it. The document adapter refuses a record
+   whose `assertion_modality` no assertion formalizing its `["properties",
+   "assertion_modality"]` path carries, aggregated with the other derivation
+   defects; the skill states it. Two ride-alongs with separately measurable
+   effects and no semantic change: the elaborator's `INVALID_RANGE` refusal names
+   the bound scalar ranges and the skill's range note is corrected, and the skill
+   states that an entity's name is the source's own designator. Cause: the v4.3
+   RCA sections 6, 7 and 8, approved in E-0143. Twenty of run-09's 212
+   source-asserted records carried a modality no formalizing assertion carries,
+   MEASURED in the capture against STATED on the record twelve times; run-04 and
+   run-08 had zero. State at the pin: the check is landed as
+   `MODALITY_NOT_ASSERTED` and the skill has moved; neither ride-along has, so
+   `pin_status` is `LANDED` and the gate stays provisional, because a producer
+   that runs before the elaborator's message moves can observe neither of the two
+   returns the iteration set out to close. The contract opened naming the refusal
+   `MODALITY_MISMATCH`, formed on Core-12's `DIGEST_MISMATCH`; Core landed it
+   under another name, the pin recorded that name, and the expectation was
+   corrected against Core's bytes rather than the bytes against the expectation.
+   `expected_reasons_history` carries both names.
+
+One is the harness's:
+
+2. `ENTITY_KIND_RESTRICTED`. `bind_from_surface.py` emits an `ENTITY` case only
+   for the types in a question's set that do not carry `subject` on the surface.
+   `SUBJECT` and `RELATION` expansion is unchanged, so a source-asserted record
+   is still returned when it is attached, projecting the thing it is about, and
+   an unattached one is returned by nothing. The case count becomes
+   `len(types without subject) + len(types)² × len(relations) + len(bearing) ×
+   len(entities)`, and the binding schema moves to
+   `malleus.paper-v4.native-query-binding/v4`. The binding is still frozen at
+   ontology acceptance, `cases_sha256` still digests the queries alone, and the
+   producer still never sees the file. Cause: the v4.3 RCA section 5, approved in
+   E-0143. 1,061 of run-09's 1,466 rows came through the unrestricted `ENTITY`
+   kind, 1,052 of them SUPPORTED and none of them an answer, and they tripled the
+   review: 1.21 million tokens across four sessions against 322 thousand for
+   run-04.
+
+Offline validation: the change is a removal, so it is measurable before a
+producer exists. `offline_validation.py` expands run-09's frozen type sets
+against run-09's frozen surface with this cell's rule, executes nothing, selects
+from run-09's frozen query result the rows whose case the rule keeps, and joins
+them to the labels in run-09's preliminary record. Of run-09's 1,466 rows, 630
+are kept: 58 for CQ-01, 319 for CQ-02, 131 for CQ-03 and 122 for CQ-04. Of the
+630, 618 are SUPPORTED and 12 are PARTIAL, and none is unjudged. By kind the kept
+rows are 326 SUBJECT, 225 ENTITY and 79 RELATION; eleven of run-09's 3,045 cases
+are removed. `offline-validation.json` carries the counts and no row content, and
+`test_contract.py` pins them and recomputes the record from the frozen inputs
+rather than reading it back.
+
+Measurement: run-10 is measured against run-09's 630 restricted rows, not against
+its 1,466, and against run-04's 146 local-relation rows. The contract records both
+figures, their bases and their sources, and `test_contract.py` pins them.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-10, and
+`ontology-run/` and `results/` carry only a keepfile. Core-14 is the moving part
+pinned at this coordinate: its check is in the pinned bytes and its two
+ride-alongs are not, so the coordinate is provisional and the cell is not ready
+for a producer until the overseer re-pins and the gate status reads
+`PINNED_TO_THE_V4_4_CORE_COORDINATE`. The 630 rows are run-09's rows under
+run-10's rule, not run-10's rows: they bound the review this binding would ask
+for on run-09's graph and say nothing about the graph run-10's producer will
+build. The labels joined to them are run-09's preliminary reviewers' and are not
+ratified. A binding that returns fewer rows is not evidence that the rows it
+returns are better rows, and a modality check at capture is not evidence that a
+producer will tag its clauses as the capture tags its sentences. Whether any of
+it holds is open, and run-10 is one cell that will be one observation, not a
+measurement, until it has run to ratification.
