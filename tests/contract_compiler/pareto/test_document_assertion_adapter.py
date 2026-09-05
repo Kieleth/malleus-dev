@@ -345,3 +345,127 @@ def test_document_adapter_can_emit_a_gaps_only_plan() -> None:
             ),
         }
     ]
+
+
+def _located(
+    *,
+    digest: str | None = None,
+    locator: str = "asr:001",
+) -> tuple[dict[str, object], dict[str, object]]:
+    """The fixture capture and records with one located, digested claim."""
+
+    _, capture, plan, _ = _inputs()
+    records = deepcopy(plan["records"])
+    statement = str(capture["assertions"][0]["statement"])
+    properties = records["entities"][0]["properties"]
+    properties["assertion_locator"] = locator
+    properties["statement_sha256"] = (
+        _digest(statement.encode("utf-8")) if digest is None else digest
+    )
+    return capture, records
+
+
+def _adapt_records(capture: dict[str, object], records: dict[str, object]):
+    api = _api()
+    reading, _, plan, _ = _inputs()
+    return api.adapt_document_assertions(
+        reading_bytes=_canonical(reading),
+        capture_bytes=_canonical(capture),
+        capture_id="capture:inspection-note",
+        plan_id=str(plan["plan_id"]),
+        contract_identity=str(plan["contract_identity"]),
+        records=records,
+        supersessions=plan["supersessions"],
+    )
+
+
+def test_document_adapter_recomputes_the_located_statement_digest() -> None:
+    """A correct digest is the one the adapter computes from the statement."""
+
+    capture, records = _located()
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_refuses_a_statement_digest_the_assertion_denies() -> None:
+    """Run-04's 104 located claims all carried a correct digest; nothing checked one.
+
+    The digest is the only field binding a claim record to the words behind
+    it, and a producer that writes the digest of some other text passes
+    admission untouched. The adapter now recomputes it from the located
+    assertion's own statement bytes.
+    """
+
+    api = _api()
+    wrong = "sha256:" + "0" * 64
+    capture, records = _located(digest=wrong)
+    statement = str(capture["assertions"][0]["statement"])
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is api.DocumentAssertionRefusalReason.DIGEST_MISMATCH
+    assert refusal.value.detail == (
+        "document capture derivations are not accepted: "
+        f"record asset:P-7 names assertion asr:001 with statement digest "
+        f"{wrong}, and that assertion's statement digests to "
+        f"{_digest(statement.encode('utf-8'))} [DIGEST_MISMATCH]; "
+        "a record's assertion_locator names an assertion of this capture, its "
+        "statement_sha256 is the SHA-256 of that assertion's statement bytes, "
+        "and a slot the contract declares evaluative is formalized by at "
+        "least one assertion whose modality is not HYPOTHESISED"
+    )
+
+
+def test_document_adapter_refuses_a_locator_that_names_no_assertion() -> None:
+    """A dangling locator is a different defect and carries its own reason."""
+
+    api = _api()
+    capture, records = _located(locator="asr:404")
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.UNKNOWN_ASSERTION_LOCATOR
+    )
+    assert (
+        "record asset:P-7 names unknown assertion asr:404 "
+        "[UNKNOWN_ASSERTION_LOCATOR]"
+    ) in refusal.value.detail
+
+
+def test_document_adapter_reports_every_digest_defect_in_one_refusal() -> None:
+    """Both derivation defects arrive sorted, in one refusal, not one per run."""
+
+    api = _api()
+    wrong = "sha256:" + "1" * 64
+    capture, records = _located(digest=wrong)
+    records["entities"][1]["properties"]["assertion_locator"] = "asr:404"
+    records["entities"][1]["properties"]["statement_sha256"] = wrong
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is api.DocumentAssertionRefusalReason.DIGEST_MISMATCH
+    assert "record asset:P-7 names assertion asr:001" in refusal.value.detail
+    assert (
+        "record inspection:P-7:2026-03-02 names unknown assertion asr:404"
+        in refusal.value.detail
+    )
+    assert refusal.value.detail.index("[DIGEST_MISMATCH]") < (
+        refusal.value.detail.index("[UNKNOWN_ASSERTION_LOCATOR]")
+    )
+
+
+def test_document_adapter_leaves_an_undigested_locator_alone() -> None:
+    """A locator with no digest still has to resolve; nothing else is claimed."""
+
+    capture, records = _located()
+    del records["entities"][0]["properties"]["statement_sha256"]
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
