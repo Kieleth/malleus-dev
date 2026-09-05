@@ -291,13 +291,12 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     adding a slot to the mixin.
 
 18. The subject of a source-asserted record, in `research`, additive. Run-04
-    linked its observations and claims to what they were about 27 times, 13
-    `CONCERNS_FEATURE`, 3 `LIES_BENEATH` and 11 `LOCATED_WITHIN`, and answered
-    240 query rows. Run-08, the same model on the same reading under the same
-    eight-input isolation, made no science relation at all and answered 8. The
-    attachment did not disappear, it moved into free text: 23 of run-08's 131
-    observations carry the feature inside `quantity_kind`, against 2 of
-    run-04's 71. One sentence on page 2 carries the whole case. Run-04 made
+    made 55 science relations, neither bibliographic nor contribution, 34 of
+    them LOCAL, and answered 240 query rows. Run-08, the same model on the
+    same reading under the same eight-input isolation, made none and answered
+    8. The attachment did not disappear, it moved into free text: 23 of
+    run-08's 131 observations carry the feature inside `quantity_kind`,
+    against 2 of run-04's 71. One sentence on page 2 carries the whole case. Run-04 made
     three `EarthquakeSet` entities and three LOCAL `LIES_BENEATH` relations
     from it; run-08 made three depth observations whose `quantity_kind` reads
     "depth of deep microseismicity beneath the ridge axis of the segment RC2",

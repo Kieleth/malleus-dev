@@ -707,12 +707,12 @@ def test_compiled_evaluative_mixin_names_the_slots_the_adapter_reads() -> None:
 
 
 def test_research_carries_the_subject_of_a_source_asserted_record() -> None:
-    """Decision 18. Run-04 attached observations to what they were about 27
-    times through three relation types; run-08, same model and same reading,
-    attached none and put the feature inside `quantity_kind` text 23 times out
-    of 131 observations. Neither ontology had a predicate for "this record is
-    about that thing" and neither did the pack. The slot is that attachment,
-    ranged on Entity exactly as a relation endpoint is."""
+    """Decision 18. Run-04 made 55 science relations, 34 of them local; run-08,
+    same model and same reading, made none and put the feature inside
+    `quantity_kind` text 23 times out of 131 observations. Neither ontology
+    had a predicate for "this record is about that thing" and neither did the
+    pack. The slot is that attachment, ranged on Entity exactly as a relation
+    endpoint is."""
 
     source = yaml.safe_load(
         bundled_ontology_path("packs", "research.yaml").read_bytes()
@@ -791,6 +791,8 @@ def test_governing_design_records_the_subject_element_decision() -> None:
         "`SourceAsserted` mixin",
         "23 of run-08's 131 observations carry the feature inside "
         "`quantity_kind`",
+        "55 science relations, neither bibliographic nor contribution, 34 of "
+        "them LOCAL",
         "94 of run-04's 240 query rows",
         "`SUBJECT_NOT_NAMED`",
         "whitespace-collapsed and case-folded",
