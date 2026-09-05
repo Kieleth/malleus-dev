@@ -3238,3 +3238,38 @@ coverage rises; a value qualifier and a role vocabulary are not evidence that th
 gaps they address disappear. Whether any of that happens is open, and run-08 is
 one cell that will be one observation, not a measurement, until it has run to
 ratification.
+
+### E-0137, run-08 is pinned to the v4.2 Core coordinate
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-08/run-contract.json` and
+`producer-input-manifest.json` as rewritten by `pin.py --commit f594771`, the
+governance ledger through OVR-000402, and E-0136.
+
+Coordinates: Core commit `f59477154a2b20f9ffbf6b1f72f6104ee2e1f6c5`, tree
+`169e820a2ad8d183f7d3e2e66908ccef426eab1c`, governance head `OVR-000402`
+(`sha256:2990cac4…`). This replaces E-0136's provisional pin at `dfd3e3a`. The
+two Core changes the iteration was scoped for are both landed at this commit:
+PACKS_0_3_0 with metrology at 0.3.0 (the value qualification) and research at
+0.4.0 rather than 0.3.0, because Core-12 revised research once more to declare
+`hypothesis_disposition` as an evaluative slot through an `Evaluative` mixin the
+adapter reads; the change id keeps the name it was scoped under and the
+contract records the landed versions. CORE_12_DERIVATION_CHECKS with three
+refusal reasons in the document adapter, `DIGEST_MISMATCH`,
+`EVALUATIVE_SLOT_NOT_EVALUATED` and `UNKNOWN_ASSERTION_LOCATOR`, aggregated,
+and the derivation-locality and fan-out axes beside the census, reported and
+not refused.
+
+Declared inputs against run-04: three of eight moved, the metrology pack, the
+research pack and the acolyte skill (Core-9's separation of the output file
+from the adapter call, the verbatim method, the honest-citation rule, and
+Core-12's three sentences on what a pointer must point at); the reading, the
+Malleus root, the LinkML types, the chronology pack and the source-assertion
+profile are unchanged and the manifest's `moved_since` block says so. The
+reading remains the control.
+
+Non-claim: no producer has run at this coordinate. Everything E-0136 declines
+to claim still holds. The skill's movement is a declared input change of this
+iteration, not a variable isolated from the pack and adapter changes; run-08
+against run-04 measures the iteration, not any one of its parts.

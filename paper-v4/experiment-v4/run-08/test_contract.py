@@ -251,7 +251,7 @@ def test_the_change_list_names_the_nine_differences_from_the_v4_1_cells() -> Non
     assert changes["PACKS_0_3_0"]["core_task"] == "Core-11"
     assert changes["PACKS_0_3_0"]["expected_versions"] == {
         "metrology": "0.3.0",
-        "research": "0.3.0",
+        "research": "0.4.0",
     }
     assert changes["CORE_12_DERIVATION_CHECKS"]["core_task"] == "Core-12"
     assert changes["CORE_12_DERIVATION_CHECKS"]["expected_reasons"] == [
