@@ -38,6 +38,14 @@ _ASSERTION_FIELDS = {
     "statement",
 }
 _ASSERTION_TIME_FIELDS = {"assertion_time", "domain_time"}
+_LOCATOR_SLOT = "assertion_locator"
+_STATEMENT_DIGEST_SLOT = "statement_sha256"
+_DERIVATION_RULE = (
+    "a record's assertion_locator names an assertion of this capture, its "
+    "statement_sha256 is the SHA-256 of that assertion's statement bytes, and "
+    "a slot the contract declares evaluative is formalized by at least one "
+    "assertion whose modality is not HYPOTHESISED"
+)
 _FORMALIZATION_FIELDS = {"path", "record_id"}
 _GAP_FIELDS = {"kind", "statement"}
 _MODALITIES = {
@@ -51,12 +59,14 @@ _MODALITIES = {
 
 
 class DocumentAssertionRefusalReason(str, Enum):
+    DIGEST_MISMATCH = "DIGEST_MISMATCH"
     FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
     GAP_REQUIRED = "GAP_REQUIRED"
     MALFORMED_CAPTURE = "MALFORMED_CAPTURE"
     MALFORMED_READING = "MALFORMED_READING"
     NOT_VERBATIM = "NOT_VERBATIM"
     READING_MISMATCH = "READING_MISMATCH"
+    UNKNOWN_ASSERTION_LOCATOR = "UNKNOWN_ASSERTION_LOCATOR"
     UNKNOWN_BLOCK = "UNKNOWN_BLOCK"
     UNKNOWN_FORMALIZATION_TARGET = "UNKNOWN_FORMALIZATION_TARGET"
     UNKNOWN_GAP_KIND = "UNKNOWN_GAP_KIND"
@@ -260,6 +270,62 @@ def _refuse_defects(defects: list[_Defect]) -> DocumentAssertionRefusal:
     )
 
 
+def _refuse_derivations(defects: list[_Defect]) -> DocumentAssertionRefusal:
+    """One refusal for every derivation whose content the capture denies."""
+
+    ordered = sorted(defects, key=lambda defect: defect.order)
+    return DocumentAssertionRefusal(
+        ordered[0].reason,
+        "document capture derivations are not accepted: "
+        + "; ".join(defect.render() for defect in ordered)
+        + "; "
+        + _DERIVATION_RULE,
+    )
+
+
+def _record_properties(record: dict[str, object]) -> dict[str, object]:
+    properties = record.get("properties")
+    return properties if isinstance(properties, dict) else {}
+
+
+def _digest_defects(
+    records_by_id: dict[str, dict[str, object]],
+    statements: dict[str, str],
+) -> list[_Defect]:
+    """Recompute every located statement digest against the capture's own text."""
+
+    defects: list[_Defect] = []
+    for record_id in sorted(records_by_id):
+        properties = _record_properties(records_by_id[record_id])
+        locator = properties.get(_LOCATOR_SLOT)
+        if not isinstance(locator, str) or not locator:
+            continue
+        if locator not in statements:
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.UNKNOWN_ASSERTION_LOCATOR,
+                    record_id,
+                    f"record {record_id} names unknown assertion {locator}",
+                )
+            )
+            continue
+        declared = properties.get(_STATEMENT_DIGEST_SLOT)
+        if not isinstance(declared, str) or not declared:
+            continue
+        recomputed = _digest(statements[locator].encode("utf-8"))
+        if declared != recomputed:
+            defects.append(
+                _Defect(
+                    DocumentAssertionRefusalReason.DIGEST_MISMATCH,
+                    record_id,
+                    f"record {record_id} names assertion {locator} with "
+                    f"statement digest {declared}, and that assertion's "
+                    f"statement digests to {recomputed}",
+                )
+            )
+    return defects
+
+
 def _checked_assertions(
     assertions: list[object],
 ) -> tuple[tuple[dict[str, object], str, str, str], ...]:
@@ -421,6 +487,13 @@ def adapt_document_assertions(
             else "UNFORMALIZED"
         )
         counts[key] += 1
+
+    statements = {
+        assertion_id: statement for _, assertion_id, _, statement in checked
+    }
+    derivation_defects = _digest_defects(records_by_id, statements)
+    if derivation_defects:
+        raise _refuse_derivations(derivation_defects)
 
     capture_id = _word(capture_id, "capture ID")
     plan_id = _word(plan_id, "plan ID")
