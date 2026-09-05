@@ -787,6 +787,7 @@ def test_document_census_reports_derivation_locality_and_fan_out() -> None:
         "capture_sha256",
         "derivation",
         "gaps_by_kind",
+        "subject_coverage",
     }
     assert census["derivation"] == {
         "assertion_fan_out": {"asr:001": 3, "asr:002": 0, "asr:003": 0},
@@ -800,6 +801,87 @@ def test_document_census_reports_derivation_locality_and_fan_out() -> None:
                 "records": 3,
             }
         ],
+    }
+
+
+def _subject_bearing() -> tuple[dict[str, object], dict[str, object]]:
+    """Records typed against the research pack, one of which names its subject.
+
+    ``Observation`` and ``Claim`` wear ``SourceAsserted`` and so carry the
+    subject slot; ``Instrument`` does not, which is what the census population
+    is the difference of.
+    """
+
+    _, capture, _, _ = _inputs()
+    records = {
+        "entities": [
+            {
+                "id": "instrument:ovg",
+                "properties": {"name": "Pump P-7"},
+                "type": "Instrument",
+            },
+            {
+                "id": "obs:depth",
+                "properties": {"name": "depth", "subject": "instrument:ovg"},
+                "type": "Observation",
+            },
+            {
+                "id": "obs:co2",
+                "properties": {"name": "co2"},
+                "type": "Observation",
+            },
+            {
+                "id": "claim:mechanism",
+                "properties": {"name": "mechanism"},
+                "type": "Claim",
+            },
+        ],
+        "relations": [],
+    }
+    capture["assertions"][0]["formalized_by"] = [
+        {"path": ["properties", "subject"], "record_id": "obs:depth"}
+    ]
+    return capture, records
+
+
+def test_document_census_reports_subject_coverage_per_bearing_type() -> None:
+    """Run-08 held 131 observations and 85 claims and attached none of them to
+    what they were about. Coverage of the attachment is the number that would
+    have shown it at capture, so it joins the census as its own axis: per type
+    the compiled contract declares as carrying `subject`, how many records name
+    one and how many do not. Reported, never refused."""
+
+    capture, records = _subject_bearing()
+
+    result = _adapt_with_contract(capture, records)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["subject_coverage"] == {
+        "by_type": {
+            "Claim": {"total": 1, "with_subject": 0, "without_subject": 1},
+            "Observation": {"total": 2, "with_subject": 1, "without_subject": 1},
+        },
+        "total": 3,
+        "with_subject": 1,
+        "without_subject": 2,
+    }
+
+
+def test_document_census_knows_no_subject_bearing_type_without_a_contract() -> None:
+    """Which types may carry a subject is a contract question. With no compiled
+    contract the adapter asks nothing and the axis is empty; the refusal still
+    runs, because `subject` is one fixed name and needs no declaration."""
+
+    capture, records = _subject_bearing()
+
+    result = _adapt_records(capture, records)
+    census = json.loads(result.canonical_census_bytes)
+
+    assert census["subject_coverage"] == {
+        "by_type": {},
+        "total": 0,
+        "with_subject": 0,
+        "without_subject": 0,
     }
 
 

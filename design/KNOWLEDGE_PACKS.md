@@ -339,7 +339,8 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     hidden: a sentence naming the thing only by a pronoun, an abbreviation or
     a synonym refuses, and the honest answers are to formalize the subject
     from the sentence that does name it, or to leave `subject` unset. The
-    census carries the coverage, under `subjects` beside `derivation`: per
+    census carries the coverage, under `subject_coverage` beside
+    `derivation`: per
     record type the compiled contract declares as carrying `subject`, the
     count with a subject, the count without, and the total, reported and never
     refused. What it does not do: it does not check that the subject is an
