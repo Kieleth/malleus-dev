@@ -9,7 +9,8 @@ pinned to the v1 protocol: schema `.../review-protocol/v1`, status
 protocol frozen for v4 is `.../review-protocol/v2`, status
 `FROZEN_BEFORE_V4_PRODUCER`, with `withheld_from_producer`, a
 `graph_claim_path` in the evidence surface, `population_trace` among the review
-materials, and a query result at `malleus.paper-v4.query-result/v2` whose
+materials, and a query result at `malleus.paper-v4.query-result/v2` or `/v3`
+(v3, from run-15, carries `case_ordinals` and one row per witness) whose
 inputs name a ledger head. Every one of those refuses in the v1 validator, so
 this module carries the v2 grammar instead.
 
@@ -30,7 +31,9 @@ PROTOCOL_SCHEMA = "malleus.paper-v4.source-grounded-review-protocol/v2"
 PROTOCOL_STATUS = "FROZEN_BEFORE_V4_PRODUCER"
 MANIFEST_SCHEMA = "malleus.paper-v4.source-grounded-review-inputs/v2"
 REVIEW_SCHEMA = "malleus.paper-v4.source-grounded-review/v2"
-QUERY_RESULT_SCHEMA = "malleus.paper-v4.query-result/v2"
+QUERY_RESULT_SCHEMAS = frozenset(
+    {"malleus.paper-v4.query-result/v2", "malleus.paper-v4.query-result/v3"}
+)
 FROZEN_MANIFEST_STATUS = "FROZEN_FOR_REVIEW"
 # Codex is unavailable, so run-02's preliminary reviewer is a fresh Claude
 # session. The protocol is frozen and says CODEX_PRELIMINARY; the manifest
@@ -416,7 +419,7 @@ def _query_rows(source: bytes, manifest: Mapping[str, Any]) -> dict[str, int]:
     if _digest(source) != stage["query_result_sha256"]:
         _refuse("query result differs from the frozen review inputs")
     result = _object(_json(source, "query result"), "query result")
-    if result.get("schema") != QUERY_RESULT_SCHEMA:
+    if result.get("schema") not in QUERY_RESULT_SCHEMAS:
         _refuse("query result schema differs")
     if result["inputs"]["query_binding_sha256"] != stage["query_binding_sha256"]:
         _refuse("query result does not bind the frozen query binding")

@@ -1,0 +1,852 @@
+{
+  "question_id": "CQ-02",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "The rows name the ridge subsection the deep microseismicity is associated with and place those events beneath its ridge axis with a depth band, both carried by rows whose own fields say so rather than left to inference: one observation gives the approximate band beneath that segment's ridge axis and another the narrower band observed beneath the same axis, each with the segment as its subject, and a third puts the shallow off-axis activity west of that axis. The segment is also returned as an entity in its own right and as a neighbour of the two discontinuities that bound it, which fixes which subsection is meant. Both requested parts are therefore answered directly. Much of the block is unrelated matter, comparison sites and melt chemistry among it, and the event population itself is not returned as its own record, but neither costs the reader the answer.",
+  "source_locators": [
+    "page:2:block:004",
+    "page:2:block:006",
+    "page:3:block:001",
+    "page:1:block:005"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this volcano among the magmatic-tectonic comparisons, and the row carries nothing but that name."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block speaks of the axial valley floor near the detachment termination, so the feature the row names is present in the prose its derivation reaches."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block defines the brittle-ductile boundary and introduces the abbreviation, so both the name and the feature kind the row carries are supported."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this transform as one of the two bounding the ridge segment studied."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block opens on oceanic crust formed from mantle-derived melt, so the feature the row names is in the prose."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the eastern boundary of the intersection segment as a westward dipping detachment fault, matching both the name and the feature kind."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block places the study in the equatorial Atlantic Ocean, which is the whole content of the row."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this peninsula among the Icelandic magmatic-tectonic comparisons."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this ridge as one of the ultraslow settings at which deep earthquakes in the mantle have already been reported."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports an extinct hydrothermal vent field on the eastern flank of the first discontinuity, supporting both the name and the feature kind."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says the seismicity of this country occurs in thickened crust, so the place name the row carries is in the prose unbroken."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure caption block reports an inactive hydrothermal mound inferred from the dive observations, which is the name the row carries."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block compares the sub-lithospheric reflections with those seen beneath this young plate, naming it as the row does."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block lists a seamount of this ridge among the sites whose maximum depths were updated."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block spells out the lithosphere-asthenosphere boundary and introduces the abbreviation, giving both the name and the feature kind the row carries."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block contrasts the cooled brittle layer with the partly molten material under it, so the feature the row names is in the prose."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The abstract block places the reported deep earthquakes in the mantle, so the feature the row names is in the prose its derivation reaches."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block gives the ridge's full name and the abbreviation the row carries as the record name."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this island offshore of which the deep magmatic-tectonic seismicity was observed."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure caption block calls this an expected interface drawn as a dashed line, giving both the name and the feature kind the row carries."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes a neo-volcanic ridge with the same strike the row records as the orientation."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block has normal faults cutting the complex's surface and the second calls those faults high-angle, so the name and the feature kind are each supported in a block the record's derivations reach."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block introduces the two non-transform discontinuities and names this one; the second gives its strike, which is the orientation the row records."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block names the second discontinuity and its kind; the second gives the strike the row records as the orientation."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the oceanic core complex east of the axis and gives its abbreviation, supporting both the name and the feature kind."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says this massif sits at a non-transform discontinuity and was included for reference, so the name the row carries is in the prose."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this subsection when it divides the studied ridge into four parts."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this short segment when it divides the studied ridge into four parts."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block names the segment south of the second discontinuity; the second gives its length and the strike the row records as the orientation."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:10:block:040"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block names this transform as one of the two bounding the segment; the feature kind comes from the bibliographic block the record's own derivation reaches, which spells the name out as a transform fault."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block spells out the ridge-transform intersection and gives the abbreviation, supporting both the name and the feature kind."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes semi-brittle high-temperature mylonite shear zones in the mantle, which is both the name and the feature kind the row records."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block spells out the Southwest Indian Ridge and gives the abbreviation the row carries as the record name."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The block that formalizes the relation names both endpoints in one sentence, placing the ridge in that ocean, and the containment the row asserts is exactly what it says."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation's block says normal faults heavily cut the complex's surface and names both endpoints; the second block supplies the high-angle qualifier the target projection carries."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL The caption block that formalizes the relation puts the complex at the ridge's outside corner and names both endpoints."
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation's block says the intersection segment is bounded to the east by that detachment and names both endpoints, including the segment's own label."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation's block places this segment immediately south of the first discontinuity, which supports the adjacency and names both endpoints."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation's block calls the southern segment the adjacent one to the studied segment, naming both endpoints in the same sentence."
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation's block names the segment south of the second discontinuity, which supports the adjacency and carries both endpoints."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation's block puts the extinct vent field on the eastern flank of the first discontinuity and names both endpoints."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement has the axis moving eastward, away from the complex's termination and under its faulted dome, so the complex is the feature the claim is predicated around rather than an incidental mention, and the direction the row records is the one stated."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement offers a cold and thick lithosphere as one explanation for the deep events and the block then argues against it, which matches the hypothesised modality and the not-supported disposition the row records."
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement is about whether the unexpectedly deep events beneath this ridge's axis are a location artifact and concludes they are not, so the claim is predicated on events at the subject feature."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement infers from the absence of deep events near the termination that this detachment is inactive, which is the subject and the question of present activity the row records."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement places most of these earthquakes in the mantle below ten kilometres, which is the subject and the placement the row records."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement offers vigorous hydrothermal circulation cooling the lithosphere as a hypothesis for the large depths, and the rest of the block withdraws it, matching the modality and disposition the row records."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement offers association with magmatic-tectonic activity as the third possibility for these mantle earthquakes and the argument that follows rejects it, matching the modality and disposition the row records."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement concludes that magmatism dominates crustal accretion at this segment, which is the subject and the content the row records."
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement attributes the melt present at this boundary to a combination of the two volatiles, which is the subject and the hypothesised cause the row records."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement has the ascending melt residing in the mantle at the observed depths, which is the subject and the content the row records."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement offers localized high strain in mylonite shear zones as another hypothesis and the block then says the observations do not support it, matching the modality and disposition the row records."
+    },
+    {
+      "row_index": 52,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement supports the content, that the microseismicity record is a brief snapshot which may not represent activity over years. What it does not support is that this is a record about the ridge: the thing the statement predicates the temporal reach of is the dataset, and the ridge is named only as what the dataset informs about."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the same total and indexes it to the vicinity of this intersection region, so the count is predicated on the subject rather than merely mentioning it."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the same number of events located along this ridge, in the same sentence that names it, and the row carries no statement digest to check."
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the same number of events located along this transform, in the same sentence that names it, and the row carries no statement digest to check."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement puts the boundary at about ten kilometres beneath the second discontinuity, matching the value, the unit and the approximate qualification."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement says the boundary would lie about twenty kilometres deep under the cold-lithosphere explanation, which is the value and the conditional framing the row records."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the isotherm the maximum earthquake depth is taken to correspond to as a central value with a symmetric tolerance, which is the range and the uncertainty the row records."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement says the boundary stays shallower than ten kilometres off axis, matching the upper bound and the open lower end the row records."
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement caps the brittle lithosphere at roughly ten kilometres at the segment boundaries, matching the bound; the subject occurs in the block with a hyphenated line break, which the row's own tag list carries."
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the average concentration reported across several segments of this region, matching the value, the unit and the approximate qualification."
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the primary-melt range from the barium proxy for this segment, and the row's bounds and unit are the ones stated."
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located statement gives the barium-proxy primary-melt range for the southern segment, and the row's bounds and unit are the ones stated for it."
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the pre-eruptive range from the barium proxy for this segment, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the pre-eruptive barium-proxy range for the southern segment, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the calculated volatile content of the melts generated along this segment, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located statement gives the calculated content for the southern segment as the contrast, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the highest concentration reached across those segments as a ceiling, which is the upper bound and the open lower end the row records."
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the primary-melt range from the rubidium proxy for this segment, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located statement gives the rubidium-proxy primary-melt range for the southern segment, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the pre-eruptive range from the rubidium proxy for this segment, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the pre-eruptive rubidium-proxy range for the southern segment, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement dates the crust of the western flank in the same clause that gives its thickness, and the age and unit the row records are the ones stated."
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the thickness of that crust with a symmetric tolerance, matching the value and the uncertainty the row records; the figure caption block the record also reaches repeats it for this segment."
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located caption statement gives the depth band of the deep earthquakes beneath this ridge's axis below the sea floor, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement has the migrating melt continuing to degas and producing earthquakes in the mantle across the band the row records, and the row's hypothesised modality matches the conditional wording."
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the half-spreading rate of this ridge in the study area, matching the value and the unit the row records."
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement places these earthquakes in hot mantle above the temperature the row records, which is the open lower bound it carries."
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the depths of the two comparison sites in this country as greater than the value the row records; the place name is split by a line break in the block and the row's tag list carries that broken form."
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement pairs the hypothetical boundary depth with the isotherm range the row records, matching its bounds and unit."
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement attributes the cold-edge effect near the intersection to lithosphere of the age the row records, so the value and the indexing to that setting are both stated."
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement reports the modelled temperature over the depth interval the row's name gives and concludes the mantle there is hot, matching the value range, the unit and the modelled determination."
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the length of this ridge's axis covered by the network, matching the value and the unit the row records."
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the approximate length of the ridge segment between the two transforms, matching the value, the unit and the approximate qualification."
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the depths offshore this island as greater than the value the row records, which is the open lower bound it carries."
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the width of the median valley of that segment, matching the value and the unit; the subject occurs in the block under the tag the row lists."
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement reports the melt fraction proposed at the base of this boundary, matching the value, the unit and the approximate qualification."
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the length of this discontinuity, matching the value, the unit and the approximate qualification."
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement says the earthquakes beneath this discontinuity reach down to about the depth the row records as its upper bound."
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement bounds the depths observed beneath this discontinuity below the value the row records, matching the open upper bound."
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the normal depth band of the earthquakes beneath this southern discontinuity, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the ridge offset at this discontinuity, matching the value, the unit and the approximate qualification."
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located statement bounds the depths observed beneath the complex below the value the row records, matching the open upper bound."
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives shallow focal depths for the cluster observed west of the axial valley, matching the row's bounds, unit and approximate qualification."
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement says the off-axis shallow microseismicity west of this segment's axis reaches down to the value the row records as its upper bound."
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the estimated pre-eruptive concentration range for this segment, matching the row's bounds, unit and estimated determination."
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the depth band of the deep earthquakes observed beneath this segment's axis, matching the row's bounds and unit."
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement puts the deep microseismicity at the approximate band the row records beneath this segment's ridge axis, matching the bounds, the unit and the approximation."
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the length of this segment, matching the value, the unit and the approximate qualification."
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the length of this segment, matching the value and the unit the row records."
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement gives the length of the eastern part of this transform covered by the network, matching the value and the unit."
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement reports the highest melt concentration previously reported at this ridge, matching the value and the unit the row records."
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located statement caps the water content proposed at the base of this boundary at the value the row records, matching the open upper bound and the unit."
+    }
+  ]
+}

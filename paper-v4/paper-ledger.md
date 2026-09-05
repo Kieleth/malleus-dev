@@ -5191,3 +5191,65 @@ Cost, from `results/usage.json`: ontology attempt 01 163,709; attempt 02
 
 Non-claim: admission is structural acceptance. No preliminary review exists
 yet; the review judges the rows as rows.
+
+### E-0169, run-15 (v4.9) preliminary review: PARTIAL, RESPONSIVE, PARTIAL, PARTIAL; 427 SUPPORTED, 6 PARTIAL, none UNSUPPORTED
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-15/review-block.CQ-01.json` to
+`review-block.CQ-04.json` (two fresh Opus 5 sessions, CQ-01 with CQ-02 and
+CQ-03 with CQ-04, dispatched 18:31Z under task v4 and protocol v2 with the
+aboutness instruction and the note that rows are one per witness with
+`case_ordinals`), merged and validated as `review-record.preliminary.md`
+(`sha256:241ed8d2cb808e7ea8869a7e2f0c34d8a05666f3e9829e0a23d58504a0408858`),
+manifest
+`sha256:784f8e3761575b59d7e376dfc846d4376d8a9400eb2985bb4e393f0e9f684dcb`.
+
+Results: CQ-01 PARTIAL, 27 SUPPORTED, 1 PARTIAL; CQ-02 RESPONSIVE, 103 and 1;
+CQ-03 PARTIAL, 152 and 2; CQ-04 PARTIAL, 145 and 2. 433 rows, no UNSUPPORTED,
+no NOT_EVALUABLE; the lowest PARTIAL share of any cell (6 in 433). Every digest
+token DIGEST_OK (214 rows carry one). Every RELATION row DERIVATION_LOCAL (8 in
+each of CQ-02, CQ-03, CQ-04; none in CQ-01), matching the census's zero
+non-local relations. The two ratio records that returned as ENTITY rows now
+carry their own type's fields, subject and digest included, which E-0165
+recorded as hidden under a parent projection.
+
+The six PARTIAL rows are three findings: a detection threshold the reading
+states as strictly above six carried as a minimum of six; a claim about the
+temporal reach of the dataset whose subject is the ridge (in three questions);
+an isotherm the reading gives as 700 plus or minus 100 expanded to 600 to 800
+with 100 carried again as uncertainty (in two questions).
+
+Why three questions are PARTIAL, in the reviewers' words: CQ-01 because the
+observing network is only an instrument record with a bare name, no row ties
+the campaign or the instruments to the microseismicity data, and four
+instrument counts sit unmarked beside each other; CQ-03 because the returned
+set carries three competing depth intervals and CO2 values from two proxies
+with nothing marking the central pairing, the qualification run-13's reviewer
+read as a precision cost and labelled RESPONSIVE; CQ-04 because no row
+addresses volume change or extensional stress, the sentence stating them
+formalizing only the mantle's name, and because the pore-pressure observation
+the capture names as that sentence's target is unreachable: its subject is
+unset, and a subject-bearing record without a subject has no ENTITY case
+under the v4.4 restriction.
+
+One structural fact the second session reported: CQ-04's 147 witnesses are
+CQ-03's 154 less seven ratio and sample rows, in the same order, byte-identical
+in record and witness. The type sets are nested, so the type-only binding
+returns nested answer sets, and the per-row verdicts coincide by construction.
+
+A harness defect found at the merge: `paper-v4/evaluation-v4/review.py`,
+untouched since run-02, accepted only query-result schema v2 and refused the
+v3 result Paper-17 introduced; it now accepts v2 or v3 (two lines and a
+docstring line), the merge re-ran, and the validator's line is the one above.
+Run-15's tests did not exercise the validator on a real record; the next
+harness cell's do.
+
+What the reviewers could not decide under the task, for ratification: the
+aboutness line (a stricter reading moves about twenty CQ-02 rows and a dozen
+CQ-03 and CQ-04 rows where the subject is the locus of a measurement); a
+feature kind reachable only through a bibliography block; a software version
+carried only by the tool's own name; text-layer artifacts (a ligature, a
+hyphenated line break, a split URL, "CO 2") read as a person would.
+
+Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
