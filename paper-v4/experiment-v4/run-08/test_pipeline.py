@@ -374,13 +374,26 @@ def test_no_paper_module_names_a_core_protocol_internal() -> None:
             assert symbol not in text, f"{name} names {symbol}"
 
 
-def test_the_runner_is_run_04s_with_only_the_run_id_changed() -> None:
-    """v4.2 changes what the harness records, never how the run executes."""
+def test_the_runner_is_run_04s_with_the_run_id_and_one_adapter_argument() -> None:
+    """v4.2 changes what the harness records and passes the compiled contract
+    view to the document adapter, so Core-12's evaluative-slot check is in
+    force; the adapter defaults that argument to None for older runners, and a
+    runner that omits it would silently skip EVALUATIVE_SLOT_NOT_EVALUATED."""
 
     here = (HERE / "run.py").read_text(encoding="utf-8")
     prior = (RUN_04 / "run.py").read_text(encoding="utf-8")
+    expected = prior.replace("run-04", "run-08").replace(
+        '        supersessions=population["supersessions"],\n    )\n'
+        "    plan = json.loads(adapted.canonical_plan_bytes)",
+        '        supersessions=population["supersessions"],\n'
+        "        contract_view=retention.contract_view,\n    )\n"
+        "    plan = json.loads(adapted.canonical_plan_bytes)",
+    )
 
-    assert here == prior.replace("run-04", "run-08")
+    assert here != prior.replace("run-04", "run-08")
+    assert here == expected
+    # once for the plan compiler, as in run-04, and once for the adapter
+    assert here.count("contract_view=retention.contract_view") == 2
 
 
 def test_native_query_is_byte_identical_to_every_prior_cell() -> None:

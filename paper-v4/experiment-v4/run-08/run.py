@@ -190,6 +190,7 @@ def execute(arguments: argparse.Namespace) -> dict[str, object]:
         contract_identity=retention.partial_contract.identity,
         records=population["records"],
         supersessions=population["supersessions"],
+        contract_view=retention.contract_view,
     )
     plan = json.loads(adapted.canonical_plan_bytes)
     census = json.loads(adapted.canonical_census_bytes)
