@@ -3331,3 +3331,46 @@ entry establishes is that the derivation rule's tightened reach removed the
 hub-derived subject links of run-04 without the producer replacing them by
 local derivations or by gaps, and that the query surface cannot see an answer
 that is not a relation.
+
+### E-0139, run-08's review is ratified as recorded; the four follow-ups are approved
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-08/review-record.human.md` (sha256:676d9b534927353c6829b30765e62167a44425eae7790cf7a4ebe44fc0a19f5a),
+its preliminary form, the frozen inputs at
+`paper-v4/evaluation-v4/run-08/review-input-manifest.json`, the private launch
+log and usage record, and `handover/2026-09-05-v42-rca.md`.
+
+Review: a fresh Claude Opus 5 session (CLAUDE_PRELIMINARY,
+`actor:claude-preliminary-run-08`) judged the 8 rows and completed at
+2026-09-05T03:58:01Z. Responsiveness: CQ-01 PARTIAL, CQ-02 NOT_RESPONSIVE,
+CQ-03 NOT_RESPONSIVE (no row), CQ-04 NOT_RESPONSIVE. Support: 5 SUPPORTED, 3
+PARTIAL, none UNSUPPORTED, none NOT_EVALUABLE; each PARTIAL carries as settled
+an attribute the reading hedges. Every row is derivation-local with the
+formalizing block a subset of the endpoint blocks. The statement-digest duty
+was vacuous: no returned row carries a locator, because the claim, count and
+ratio cases returned nothing. The validator accepted the record on its first
+call.
+
+Ratification: Luis ratified the record as recorded, in chat on 2026-09-05, and
+in the same decision approved the four follow-ups of the v4.2 root-cause
+analysis: a subject reference as a first-class derived element of source-asserted
+records at the pack level with a mechanical name check; entity-level and
+subject-following query case kinds, type-only and value-blind; one skill
+sentence against folding a subject into `quantity_kind` text; and a run-09
+Opus 5 cell under v4.3 measured against run-04's 146 local-relation rows rather
+than its 240. The human record carries HUMAN_RATIFIED, RATIFIED_AS_RECORDED,
+completed at 2026-09-05T04:04:15Z, and validates with human ratification required. This is the
+third ratified review record of the paper (run-05, run-04, run-08).
+
+Review-surface debts recorded by the reviewer: the retained capture and the
+query trace summary are inputs the task names and the manifest does not list in
+`materials`, whose list the frozen protocol fixes; both are bound transitively.
+A protocol revision listing seven materials is scheduled for the v4.3 harness.
+
+Cost: review 123,865 harness-reported tokens, recorded beside the producer's
+340,313 in the private usage record.
+
+Non-claim: the labels are the honest reading of an 8-row result; they say the
+query surface reached almost nothing, not that the graph holds nothing. The
+analysis of why is E-0138's and the RCA's, not this entry's.
