@@ -3078,3 +3078,163 @@ stays at its frozen producer-only content.
 Non-claim: the three unsettled points are analysed in a separate record and may
 name defects in the review surface, the adapter or the producer; nothing in this
 entry prejudges them.
+
+### E-0136, run-08 opens v4.2: the binding moves to acceptance, the stop rule is clarified, two Core changes are pinned
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-08/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `usage_from_launch_log.py`, `test_contract.py`,
+`test_pipeline.py`, `paper-v4/evaluation-v4/review-task.template.md`,
+`handover/2026-09-05-run-04-review-rca.md` and
+`handover/2026-09-05-deep-sweep.md` (D-01, D-07 to D-10, D-14, D-19, D-20,
+D-22).
+
+Iteration: run-08 is the third iteration of the v4 protocol, `v4.2`. The
+protocol shape does not change: one document, one producer loop, one
+question-blind session with two phases, two diagnostic returns, two additive
+revision rounds, no fallback and no hand repair. What changes is when the query
+binding is written, what the spawn message says about stopping, what the gate
+and the workspace builder record, and what the cell publishes. Run-04, run-05,
+run-06 and run-07 are the four v4.1 cells this iteration follows; none is
+superseded, repaired or reinterpreted, and the frozen artifacts of all four
+closed cells are digest-pinned by `run-08/test_contract.py` so this run cannot
+disturb them.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default
+and neither pinned nor observed. The model is run-04's, so the model is not the
+variable. Every key of the producer block is run-04's except the two the
+clarified stop rule moves, `terminal_rule` and `spawn_message`, and the contract
+test compares them key by key.
+
+Coordinates: provisional. `pin.py --commit dfd3e3a` pins Core commit
+`dfd3e3a76db0932e23b6c3dc78d88fbd39bef5c0`, tree
+`22c8f661a6714ee5a63b8d61b5fc72275dfa8964`, governance head `OVR-000401` at
+`sha256:6474ec9b…`, which is Core-11 landed and its governance entry written.
+The interface coordinates are new: `capture:paper-v4:yu-2025:v4:8` and
+`plan:paper-v4:yu-2025:v4:8`. The private workspace is
+`private/paper-v4-v4-run-08/producer`. Three of the eight declared inputs moved
+against run-04's manifest and five did not: the skill is now
+`sha256:98abcad3…` (Core-9's fixes, which run-04's pinned copy predates),
+metrology `sha256:be843436…` at 0.3.0, research `sha256:85603a48…` at 0.3.0.
+The selected reading stays `sha256:f3885c7b…` and is the control, along with the
+Malleus root, the LinkML types, chronology and the packaged source-assertion
+profile. The manifest records the moved and unchanged sets itself, computed
+against run-04's manifest rather than asserted.
+
+The pin is provisional by design. `pin.py` reads the seven tracked declared
+inputs with `git show <commit>:<path>` and the reading from its private path,
+writes the manifest, and fills the contract's execution baseline, the governance
+head as the overseer status page renders it at that commit, every verified
+piece's digests, the pack versions, and the document adapter's refusal reasons
+that are new since the v4.1 coordinate `8b806f7`. Nothing in the contract or the
+tests is typed by hand, and `test_contract.py` recomputes every one of those
+facts at whatever commit the contract names, so the overseer re-pins after
+Core-12 lands by running one command. The gate status currently reads
+`PROVISIONALLY_PINNED_PENDING_CORE_12`.
+
+What changes since v4.1, and why, in nine entries the contract lists under
+`changes`. Two are Core's:
+
+1. `PACKS_0_3_0`. metrology gains a value qualifier beside the quantity value and
+   research gains the CRediT contribution roles (Core-11). Landed at the pinned
+   commit, both at 0.3.0. Cause: 25 of run-04's 61 typed gaps are the
+   approximation limit, which also produced run-05's 0.7 GPa PARTIAL at review,
+   and 2 more are the absent contribution-role vocabulary.
+2. `CORE_12_DERIVATION_CHECKS`. A `DIGEST_MISMATCH` refusal in the document
+   adapter, modality-disposition consistency for pack-declared evaluative
+   fields, and derivation-locality and fan-out as reported census axes
+   (Core-12). Not landed at the pinned commit: the contract records the expected
+   reason name, the empty observed set and `PENDING_AT_PIN`, and the pin script
+   fills the reason names from the enum when it is re-run. Cause: the run-04
+   review RCA. All 104 located claims carried a correct statement digest and
+   nothing recomputed one; one assertion carried 36 formalization targets for 12
+   relations whose endpoints it names nowhere; all five hypothesis dispositions
+   derive from the sentence that states the hypothesis rather than the one that
+   disposes of it.
+
+Seven are the harness's:
+
+3. `BINDING_FROZEN_AT_ACCEPTANCE`. The evaluator writes one file of type sets per
+   question from the accepted population surface at ontology acceptance, before
+   phase two exists, and `bind_from_surface.py` expands it into the exhaustive
+   binding: every ordered pair of a question's types under every relation type on
+   the surface, with a fixed field projection per type made of that type's
+   non-housekeeping slots, carrying `bound_at_stage: ONTOLOGY_ACCEPTANCE`. Its
+   digest goes in the launch log at acceptance and the query runs it unchanged
+   after replay; only `bound_after_replay_receipt_sha256` moves from `PENDING` to
+   the receipt digest, and `cases_sha256` digests the queries alone so the
+   executed binding is provably the pinned one. The producer never sees it.
+   Cause: deep sweep D-01. Run-04's own `bound_by` records that a hand-picked
+   draft was replaced after it returned no row for CQ-03 and that a second
+   draft's CQ-04 type set was cut once its 75 citation rows were visible.
+4. `STOP_RULE_CLARIFIED`. One sentence after "Stop when another addition would
+   require invention": reviewing the next block is not invention, and the run
+   stops only when every block is REVIEWED or listed in `nothing_assertable`.
+   Nothing else in the message changes and the existing guards still pass: no
+   modelling instruction, no question-derived string. Cause: deep sweep D-22.
+   Run-05 reviewed 27 of 186 blocks against run-02's and run-04's 186.
+5. `GATE_SURFACES_CHAINED_CAUSE`. `compile_ontology_candidate.py` records every
+   link of the raised error's `__cause__` chain in `diagnostic.json`, reason and
+   detail per link. Cause: deep sweep D-14. Run-05's attempt-01 diagnostic
+   carries `IMPORT_READER_REFUSED` and nothing else, and the sentence naming the
+   rejected field had to be read out of two other files.
+6. `INTERPRETER_PREFLIGHT`. `prepare_producer.py` refuses before it writes
+   anything unless it runs on the repository `.venv` with the `linkml` and
+   `linkml-runtime` versions the paper environment lock names, and records the
+   check in the receipt. Cause: deep sweep D-10. The base conda python at
+   `linkml-runtime` 1.10.0 refuses only at the gate, after the ontology phase is
+   spent.
+7. `LAUNCH_LOG_V2`. One launch-log shape for the whole cell,
+   `malleus.paper-v4.producer-launch-log/v2`, published as-is in `results/` at
+   freeze: `launches[]` with usage per resume, `gate[]`, `runner[]` with an
+   execution commit per attempt, `query{}` and `review{}`. Cause: deep sweep
+   D-09. Six cells declared `/v1` over four incompatible shapes.
+8. `PUBLIC_COST_RECORD`. `results/usage.json` is a required member of the frozen
+   set and is derived from the launch log by `usage_from_launch_log.py`, stage
+   figures differenced from the cumulative harness readings, with a review block
+   beside the producer stages. Cause: deep sweep D-19. Four of six cells publish
+   no cost artifact.
+9. `REVIEW_TASK_V2`. `paper-v4/evaluation-v4/review-task.template.md` carries
+   placeholders for the run id, the rows per question and the witness count, and
+   is instantiated at freeze. Two additions to run-04's task: the reviewer may
+   read the located assertion's statement through the retained capture and must
+   check each claim's `statement_sha256` against it, and for each row the
+   reviewer states whether the formalizing assertion's block is the block cited.
+   Both findings are written as fixed leading tokens in `rationale` because the
+   record grammar is closed at four row keys and the validator is frozen. The
+   citation-veracity check of the accepted ontology's grounding blocks stays an
+   overseer step before phase two, recorded in the launch log, because the
+   reviewer has no network. Cause: the run-04 review RCA points 1 and 2, deep
+   sweep D-11, and run-05's task carrying run-02's row counts.
+
+Harness: `run.py` is run-04's bytes with only the run id and result schema
+string changed, and `native_query.py` is byte-identical to every prior cell.
+`test_pipeline.py` proves both, and proves that the gate, the workspace builder
+and the spawn message are run-04's bytes outside the declared delta regions: it
+cuts each declared region out and compares the remainder. It also exercises each
+delta rather than asserting it, on Core's neutral inspection-note fixture: a
+refusal with a chained cause writes every link; a refusal without one writes a
+single link and no chained cause; the preflight refuses a foreign interpreter and
+a version the lock does not name, and writes nothing when it does; the binding
+built at acceptance and the binding built after the replay share a
+`cases_sha256`, and the second executes through `native_query.py` against the
+replayed graph; and the usage record is differenced from the cumulative figures
+and refuses a launch log of another shape. No paper reading, ontology, capture or
+result enters that test and no model runs.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-08, and
+`ontology-run/` and `results/` carry only a keepfile. Core-11 and Core-12 are the
+moving parts pinned at this coordinate: Core-11 is in the pinned bytes and
+Core-12 is not, so the coordinate is provisional and the cell is not ready for a
+producer until the overseer re-pins after Core-12 lands and the gate status reads
+`PINNED_TO_THE_V4_2_CORE_COORDINATE`. A binding frozen before rows exist is not
+evidence that its rows are better; a clarified stop rule is not evidence that
+coverage rises; a value qualifier and a role vocabulary are not evidence that the
+gaps they address disappear. Whether any of that happens is open, and run-08 is
+one cell that will be one observation, not a measurement, until it has run to
+ratification.
