@@ -1,0 +1,355 @@
+id: https://malleus.dev/schema/projects/ridge_geoscience
+name: ridge_geoscience
+version: 0.1.0
+title: Ridge Geoscience Project Ontology
+description: >-
+  Proposed project vocabulary for the material the retained reading reports:
+  named submarine geologic features, the earth materials the reading names,
+  a named seismic occurrence, structural relations between those things, and
+  the people and organizations a work credits. Works, campaigns, instruments,
+  methods, samples, source-attributed observations, ratios, counts and claims
+  are taken from the research, metrology and chronology packs rather than
+  redeclared here. This is a proposal, not accepted knowledge.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  ridge: https://malleus.dev/schema/projects/ridge_geoscience/
+
+default_prefix: ridge
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+  GeologicRelationType:
+    description: >-
+      Structural and spatial predicates holding between two named geologic
+      things. Every value is a generic predicate; the bodies it holds between
+      are data. The list grows by adding values, never by redefining one.
+    permissible_values:
+      PART_OF:
+        description: The source states the first body is a part or subdivision of the second.
+      BOUNDED_BY:
+        description: The source states the second body bounds or terminates the first.
+      LOCATED_IN:
+        description: The source states the first body lies within the extent of the second.
+      LOCATED_ON:
+        description: The source states the first body lies on the surface of the second.
+      ADJACENT_TO:
+        description: The source states the two bodies neighbour one another without stating containment.
+      UNDERLIES:
+        description: The source states the first body lies beneath the second.
+      OVERLIES:
+        description: The source states the first body lies above the second.
+      COMPOSED_OF:
+        description: The source states the first body is made of the second.
+      OFFSET_BY:
+        description: The source states the second body displaces or offsets the first.
+      CUT_BY:
+        description: The source states the second body cuts or dissects the first.
+      INTERSECTS:
+        description: The source states the two bodies meet or cross.
+
+# -------------------------------------------------------------------
+# Classes derived directly from a Malleus root (each carries grounding)
+# -------------------------------------------------------------------
+
+classes:
+  GeologicFeature:
+    is_a: Entity
+    description: >-
+      A named geologic or physiographic body the source refers to in its own
+      sentences: a spreading ridge or one of its segments, a transform fault or
+      a discontinuity, a core complex, a valley, a volcanic construction, a
+      plate, an ocean, or a named interface such as a mechanical boundary or a
+      thermal surface. It is the thing observations in this material are about,
+      and it endures, so it extends Entity rather than Event.
+    slots:
+      - feature_kind
+      - orientation
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Marine geology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Marine geology"
+          vocabularies:
+            - vocabulary: W3C Semantic Sensor Network Ontology (SOSA/SSN)
+              vocabulary_url: https://www.w3.org/TR/vocab-ssn/
+              borrowed_terms:
+                - feature of interest
+          invented_terms:
+            - GeologicFeature
+            - feature_kind
+            - orientation
+          invention_search: >-
+            SOSA/SSN's feature of interest names the thing whose property an
+            observation estimates, which is exactly the role these bodies play
+            in the retained material, so that term is borrowed. It does not
+            name a submarine geologic body, the kind such a body is, or the
+            orientation a source states for one. The vocabularies this session
+            can vouch for are the ones the declared inputs cite: SOSA/SSN, W3C
+            Time, QUDT quantity kinds, JCGM 200:2012 (VIM), the OECD Frascati
+            Manual, SEPIO, the Micropublications semantic model, W3C RDF 1.1
+            Concepts, DCMI Metadata Terms and ANSI/NISO Z39.104-2022 (CRediT).
+            None of them names a geologic body. Geoscience vocabularies that
+            would are recalled and not verifiable here: GeoSciML and its
+            GeologicFeature, GeologicUnit and GeologicStructure classes, the
+            IUGS-CGI geoscience terminology registers, and the SWEET ontology.
+            This session has no network access and the declared inputs carry
+            none of their identifiers, URLs or term spellings, so citing one
+            would mean supplying a standard number and a URL from recall rather
+            than from evidence. They are named here instead of cited, and the
+            class name and its two open slots are recorded as local.
+
+  EarthMaterial:
+    is_a: Entity
+    description: >-
+      A material the source names and reports properties of: a rock, a glass, a
+      mineral, a silicate melt, or a dissolved volatile species. It is named and
+      persists in the source's account, so it extends Entity; the quantities
+      reported of it are separate Observation records that carry it as subject.
+    slots:
+      - material_kind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Petrology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Petrology"
+          none_found: true
+          search: >-
+            The vocabularies this session can vouch for are the ones the
+            declared inputs cite: W3C SOSA/SSN, W3C Time, QUDT quantity kinds,
+            JCGM 200:2012 (VIM), the OECD Frascati Manual, SEPIO, the
+            Micropublications semantic model, W3C RDF 1.1 Concepts, DCMI
+            Metadata Terms and ANSI/NISO Z39.104-2022 (CRediT). None of them
+            names a rock, a glass, a mineral, a silicate melt or a dissolved
+            volatile species. QUDT names kinds of quantity, not the substance a
+            quantity is reported of, and SOSA/SSN's Sample is the specimen taken
+            from a material rather than the material itself, which is why Sample
+            is used for the specimens here and is not reused for this class.
+            Vocabularies that would name a material are recalled and not
+            verifiable here: GeoSciML's earth-material package, the IUGS-CGI
+            Simple Lithology vocabulary, and the SWEET ontology. This session
+            has no network access and the declared inputs carry none of their
+            identifiers, URLs or term spellings, so no vocabulary is cited. The
+            class name and its one open slot are local.
+          invented_terms:
+            - EarthMaterial
+            - material_kind
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+    description: >-
+      A single seismic occurrence the source names and can refer back to, such
+      as a named past earthquake. It happens rather than endures, so it extends
+      Event. It wears Quantified because the magnitude a source states is a
+      property of the occurrence itself and cannot be carried by an Observation,
+      whose subject is declared to range over Entity.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geophysics > Seismology"
+          none_found: true
+          search: >-
+            The vocabularies this session can vouch for are the ones the
+            declared inputs cite: W3C SOSA/SSN, W3C Time, QUDT quantity kinds,
+            JCGM 200:2012 (VIM), the OECD Frascati Manual, SEPIO, the
+            Micropublications semantic model, W3C RDF 1.1 Concepts, DCMI
+            Metadata Terms and ANSI/NISO Z39.104-2022 (CRediT). None of them
+            names an earthquake or any seismic occurrence. W3C Time names
+            instants and intervals, which the chronology pack already borrows,
+            but a temporal entity is a position in time rather than a thing that
+            happens at one. Vocabularies that would name the occurrence are
+            recalled and not verifiable here: the QuakeML seismological exchange
+            schema, the SWEET ontology, and the event vocabularies of the
+            international seismological data centres. This session has no
+            network access and the declared inputs carry none of their
+            identifiers, URLs or term spellings, so no vocabulary is cited and
+            the class name is local.
+          invented_terms:
+            - SeismicEvent
+
+  GeologicRelation:
+    is_a: Relation
+    description: >-
+      A typed structural or spatial edge between two named geologic things,
+      carrying the predicate the source states and nothing the source infers.
+      Endpoints are Entity records, as the Malleus root declares them.
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Structural geology"
+          none_found: true
+          search: >-
+            The vocabularies this session can vouch for are the ones the
+            declared inputs cite: W3C SOSA/SSN, W3C Time, QUDT quantity kinds,
+            JCGM 200:2012 (VIM), the OECD Frascati Manual, SEPIO, the
+            Micropublications semantic model, W3C RDF 1.1 Concepts, DCMI
+            Metadata Terms and ANSI/NISO Z39.104-2022 (CRediT). W3C RDF 1.1
+            Concepts names the subject, predicate and object positions of a
+            triple but supplies no predicate vocabulary, and the research pack's
+            own ResearchRelationType covers claim, campaign, sampling,
+            instrument, support, challenge, reporting and contribution
+            predicates, none of which is a containment, bounding, stacking,
+            composition, offset or cutting relation between two geologic bodies;
+            that pack enum is closed, so it is extended by a new class here
+            rather than weakened. Vocabularies that would name these predicates
+            are recalled and not verifiable here: OGC GeoSPARQL's topological
+            relation vocabularies, the RCC-8 region connection calculus, and
+            GeoSciML's geologic-structure relations. This session has no network
+            access and the declared inputs carry none of their identifiers, URLs
+            or term spellings, so no vocabulary is cited. The class name and the
+            enum name are local.
+          invented_terms:
+            - GeologicRelation
+            - GeologicRelationType
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person or an organization a work names as a contributor to it, a funder
+      of it, or a party the work credits. The Malleus root carries agency as a
+      mixin trait, so a concrete class is declared here to hold such a party as
+      a record. agent_type stays unset unless the source itself says which kind
+      of party it is.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research contributorship and attribution
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: http://www.w3.org/ns/prov#
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - contributor
+          invented_terms:
+            - ResearchAgent
+          invention_search: >-
+            PROV-O names Agent, Person and Organization, and the Malleus root
+            declares the prov namespace and states that its Agent mixin is
+            aligned with PROV:Agent, so those terms are borrowed rather than
+            recalled. DCMI Metadata Terms names contributor, which is the role
+            most of these parties hold in the retained material. Neither supplies
+            a concrete class that a Malleus Entity can extend, because Malleus
+            carries agency as a mixin, so one local class name is minted to hold
+            the party as a record. It adds no slot of its own, so no further term
+            is invented. CRediT, cited by the research pack, names the roles such
+            a party holds; those roles are carried by the pack's
+            ContributionRelation and are not redeclared here.
+
+# -------------------------------------------------------------------
+# Classes derived through pack types (no grounding block by the rite's rule)
+# -------------------------------------------------------------------
+
+  BibliographicSource:
+    is_a: Source
+    description: >-
+      A work, database, or repository deposit a source names, carrying the
+      identifiers and availability locators that source states for it. The
+      identifiers are facts the source reports about the work, not protocol
+      provenance.
+    slots:
+      - doi
+      - resource_url
+      - publication_year
+
+  SoftwareTool:
+    is_a: Method
+    description: >-
+      A named program or package a source states it used, with the version and
+      the availability locator the source states for it.
+    slots:
+      - resource_url
+      - software_version
+
+  CountObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A source-attributed observation whose reported value is an integer count
+      over a stated scope, rather than a bounded quantity in a unit.
+
+  RatioObservation:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A source-attributed ratio. The numerator and denominator kinds stay in the
+      source's own wording, and the mixin carries the modality, the subject, and
+      the route back to the retained assertion.
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  feature_kind:
+    range: string
+    description: >-
+      What kind of body the source says this is, in the source's own wording.
+      Open on purpose and never rewritten to fit a controlled list.
+
+  material_kind:
+    range: string
+    description: >-
+      What kind of material the source says this is, in the source's own
+      wording. Open on purpose and never rewritten to fit a controlled list.
+
+  orientation:
+    range: string
+    description: >-
+      Orientation or strike the source states for a body, in the source's own
+      notation and retained without conversion to a numeric bearing.
+
+  doi:
+    range: string
+    description: Digital object identifier as the source writes it.
+
+  resource_url:
+    range: string
+    description: >-
+      Address at which the source states the work, dataset, or program is
+      available, as the source writes it.
+
+  publication_year:
+    range: integer
+    description: Year of publication as the source states it.
+
+  software_version:
+    range: string
+    description: Version of a named program as the source states it.

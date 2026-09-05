@@ -5140,3 +5140,54 @@ before the run: rows fall by the within-question repeats and nothing else;
 no digest hidden by a parent projection. Falsifier: a row count that falls by
 anything else, or a witness the executor refuses because the binding names no
 projection for its own type.
+
+### E-0168, run-15 (v4.9) is admitted at the first runner attempt; no witness returns twice in a question
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-15/ontology-run/`, `paper-v4/experiment-v4/run-15/results/`,
+`private/paper-v4-v4-run-15/` (ledger, query result, population plan, the
+refused first ontology attempt, withheld files), `paper-v4/evaluation-v4/run-15/`
+(review inputs under protocol v2 and task v4).
+
+Ontology: attempt 01 refused at contract compilation (IMPORT_READER_REFUSED,
+cause REJECTED_SOURCE: the schema root carried `default_prefix`, the same
+class of refusal as run-05's `comments`), returned as diagnostic 1 of 2;
+attempt 02, attempt 01 minus that line, accepted: 3,221 facts, 20 entity
+types, 2 event types, 3 relation types, 4 subject-bearing types. Five root
+extensions, three of them grounded in the none_found form with a search note
+naming the vocabularies the producer recalled and would not cite unverified;
+three cited vocabularies (SOSA/SSN, the PROV namespace, DCMI Terms), all
+confirmed today, none fabricated.
+
+Population: 358 assertions over 185 of 186 blocks (1 declared
+nothing-assertable), 351 records (315 entities, 1 event, 35 relations), 17
+typed gaps (11 TYPE_ABSENT, 3 RELATION_ABSENT, 3 INTERVAL_NOT_EXPRESSIBLE).
+Runner attempt 1 admitted under `actor:overseer-run-15`: fourteen ledger
+events, replay reproducing admission, 351 traced; no return at the runner.
+Census: 343 fully, 7 partly, 8 unformalized; 0 of 35 relations non-local,
+the first cell with none; largest hubs 24 and 21, the two author-contribution
+sentences. Subject coverage 80 of 144, all proposed by the producer: 20
+attachable, 18 ambiguous, 26 unnamed. The 79 references are
+BibliographicSource records with a year and, five of them, a DOI, and no
+name; the producer reports catching and correcting its own reference parser
+(a phantom entry from a URL tail, two entries dropped) before writing.
+
+Query: the v4 binding frozen at acceptance (709 cases: 14 ENTITY, 603
+RELATION, 92 SUBJECT; the type sets name no agent or reference catalogue, the
+lesson of E-0165) executed unchanged after replay under the v4.9 executor:
+CQ-01 28, CQ-02 104, CQ-03 154, CQ-04 147, 433 rows (192 ENTITY, 217 SUBJECT,
+24 RELATION) over 160 witnesses, no forbidden attempt; 21 rows carry more than
+one producing case; no witness appears twice in one question, which is the
+change under test holding; query-result schema v3 with `case_ordinals`.
+
+Execution coordinate: inputs pinned at `dc52547` (E-0167), the Core
+coordinate run-14 ran at; the runner executed at main `044bc9d`, whose Core
+files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 163,709; attempt 02
+6,170; population 181,374; producer total 351,253 (run-14: 439,761; run-13:
+383,284).
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet; the review judges the rows as rows.

@@ -1,0 +1,21 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-05T17:55:25Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the one feature type, the observation types, Claim",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the feature, material, sample and method types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim, the observation types, the feature and material types, Method"
+  },
+  "translation": {
+    "run-14 GeologicFeature": "GeologicFeature (feature_kind is a string here)",
+    "run-14 RockSample": "Sample and EarthMaterial",
+    "run-14 SoftwareApplication": "SoftwareTool (a Method subtype)",
+    "run-14 ReportedRatio": "RatioObservation",
+    "run-14 SeismicitySet": "no counterpart on this surface"
+  },
+  "lesson_applied": "a type set names no catalogue type the question does not ask for: ResearchAgent (the agents) and BibliographicSource (the references) are in no set, where run-14's sets carried ResearchAgent in CQ-01 and BibliographicWork in CQ-01 and CQ-03 and returned 84 reference rows twice and 44 agent rows once (E-0165). Run-13's DataResource had three records; on surfaces where one type holds datasets and references the evaluator leaves it out.",
+  "left_out": "SeismicEvent (EVENT family, magnitude as slots, no subject) is in no set, as the event type was in runs 12 to 14",
+  "note": "run-14's sets translated to run-15's surface with the catalogue lesson applied; the same questions"
+}

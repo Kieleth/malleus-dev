@@ -1,0 +1,37 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "CountObservation",
+    "Observation",
+    "Method",
+    "SoftwareTool"
+  ],
+  "CQ-02": [
+    "GeologicFeature",
+    "CountObservation",
+    "Observation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "CountObservation",
+    "RatioObservation",
+    "QuantityValue",
+    "Ratio",
+    "GeologicFeature",
+    "EarthMaterial",
+    "Sample",
+    "Method",
+    "Claim"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "CountObservation",
+    "RatioObservation",
+    "GeologicFeature",
+    "EarthMaterial",
+    "Method"
+  ]
+}

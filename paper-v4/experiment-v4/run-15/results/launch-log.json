@@ -1,0 +1,322 @@
+{
+ "schema": "malleus.paper-v4.producer-launch-log/v2",
+ "run": "run-15",
+ "protocol": "v4.9",
+ "launches": [
+  {
+   "ordinal": 1,
+   "role": "PRODUCER",
+   "phase": "ONTOLOGY",
+   "first_stage": "ONTOLOGY_ATTEMPT_01",
+   "launched_at": "2026-09-05T17:40:15Z",
+   "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+   "requested_model": "opus",
+   "model_family": "Claude Opus 5",
+   "model_id": "claude-opus-5",
+   "spawn_message": "paper-v4/experiment-v4/run-15/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+   "outcome": "POPULATION_READY",
+   "execution": {
+    "pinned_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+    "paper_commit": "044bc9d",
+    "staged_at": "2026-09-05T17:40:15Z",
+    "interpreter": "VERIFIED by prepare_producer.py preflight"
+   },
+   "producer_status_string": "POPULATION_WRITTEN",
+   "usage_cumulative": {
+    "tokens": 163709,
+    "tool_uses": 15,
+    "duration_ms": 711368
+   },
+   "usage_by_resume": [
+    {
+     "after": "ONTOLOGY_ATTEMPT_02",
+     "tokens": 169879,
+     "tool_uses": 18,
+     "duration_ms": 766124
+    },
+    {
+     "after": "POPULATION",
+     "tokens": 351253,
+     "tool_uses": 62,
+     "duration_ms": 2455199
+    }
+   ],
+   "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures",
+   "producer_observations": [
+    "the producer reports a builder script held outside the workspace (location not stated) that refused to emit until its own checks passed; nothing outside work/ in the repository was touched"
+   ],
+   "phase_two": {
+    "dispatched_at": "2026-09-05T17:55:35Z",
+    "dispatched_at_source": "the harness transcript's timestamp of the SendMessage call",
+    "after_binding_frozen_at": "2026-09-05T17:55:25Z",
+    "message": "run-14's phase-two message with run-15's coordinates, fact count and accepted attempt 02",
+    "capture_id": "capture:paper-v4:yu-2025:v4:15",
+    "plan_id": "plan:paper-v4:yu-2025:v4:15",
+    "staged": [
+     "producer/accepted/population-surface.json",
+     "producer/accepted/diagnostic.json"
+    ]
+   }
+  }
+ ],
+ "gate": [
+  {
+   "attempt": 1,
+   "ontology_sha256": "sha256:274feb9faad5dba6f1fd4ac89954e3ba0d10980899c52db1bf6ea7f92f0fb6b1",
+   "status": "REFUSED",
+   "stage": "CONTRACT_COMPILATION",
+   "reason": "IMPORT_READER_REFUSED",
+   "refused_at": "2026-09-05T17:52:46Z",
+   "cause_chain": [
+    {
+     "detail": "IMPORT_READER_REFUSED",
+     "error_type": "SourceBoundaryRefusal",
+     "reason": "IMPORT_READER_REFUSED"
+    },
+    {
+     "detail": "REJECTED_SOURCE: schema root contains rejected field 'default_prefix'",
+     "error_type": "CollaboratorRefusal",
+     "reason": "None"
+    },
+    {
+     "detail": "REJECTED_SOURCE: schema root contains rejected field 'default_prefix'",
+     "error_type": "LinkMLAdapterRefusal",
+     "reason": "REJECTED_SOURCE"
+    }
+   ],
+   "chained_cause": "None: REJECTED_SOURCE: schema root contains rejected field 'default_prefix'; REJECTED_SOURCE: REJECTED_SOURCE: schema root contains rejected field 'default_prefix'",
+   "overseer_reading": "the schema root carries default_prefix (and a prefixes map), which the LinkML adapter rejects as a root field; runs 13 and 14 wrote neither; the producer's own shape checks covered grounding blocks, ranges and references, not the root field set",
+   "diagnostic_returned_to_producer_at": "2026-09-05T17:53:21Z",
+   "diagnostic_return_ordinal": 1,
+   "diagnostic_return_limit": 2,
+   "hand_repair": false
+  },
+  {
+   "attempt": 2,
+   "ontology_sha256": "sha256:6276889fdc8d4d22eaa8e525c7baab8974ee207c12f16a8dcfcbdfb9e728e80d",
+   "status": "ACCEPTED",
+   "validated_fact_set_sha256": "sha256:13f1304fa4e80ae6db7c12e42cb56d8fa0551767c00f2a4d8baa66ebf16c40dd",
+   "fact_count": 3221,
+   "accepted_at": "2026-09-05T17:54:32Z",
+   "families_admitted": [
+    "entities",
+    "events",
+    "relations"
+   ],
+   "surface_families": {
+    "ENTITY": 20,
+    "EVENT": 2,
+    "RELATION": 3
+   },
+   "event_types": [
+    "Event",
+    "SeismicEvent"
+   ],
+   "relation_types": [
+    "ContributionRelation",
+    "ResearchRelation",
+    "GeologicRelation"
+   ],
+   "subject_bearing_types": [
+    "Claim",
+    "Observation",
+    "CountObservation",
+    "RatioObservation"
+   ],
+   "note": "accepted at attempt 02 after one diagnostic return (default_prefix at the schema root); attempt 02 is attempt 01 minus that line; nine project classes, five root extensions (GeologicFeature, EarthMaterial, SeismicEvent, GeologicRelation, ResearchAgent), three of them grounded in the none_found form with a search note; SeismicEvent carries magnitude as slots and bears no subject",
+   "producer_observations": [
+    "the producer made no ambient probe and asked the parent nothing",
+    "three grounding blocks take the none_found form naming GeoSciML, QuakeML, GeoSPARQL, SWEET, RCC-8 and the IUGS-CGI registers as recalled and unverified, where runs 13 and 14 cited URLs from recall"
+   ],
+   "phase_two_inputs_staged": [
+    "accepted/population-surface.json",
+    "accepted/diagnostic.json"
+   ],
+   "diagnostic_returns_used": 1,
+   "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-05T17:55:00Z",
+    "checked_at_precision": "minute, from the session clock",
+    "urls": 3,
+    "fabricated": 0,
+    "fabricated_basis": "the three cited vocabularies are real and define the borrowed terms; the three uncited blocks declare none_found and name no URL",
+    "result": "www.w3.org/TR/vocab-ssn fetched in run-13's check today (sosa:FeatureOfInterest defined); www.w3.org/ns/prov# fetched now: the PROV namespace index, defining Agent, Person, Organization; www.dublincore.org/specifications/dublin-core/dcmi-terms fetched now: defines contributor ('An entity responsible for making contributions to the resource')",
+    "unverified": []
+   }
+  }
+ ],
+ "runner": [
+  {
+   "attempt": 1,
+   "transaction_time": "2026-09-05T18:24:23Z",
+   "execution_commit": "044bc9d",
+   "core_note": "Core files at the pinned coordinate dc52547 (OVR-000413); commits between are paper files",
+   "status": "ADMITTED_AND_REPLAYED",
+   "graph": {
+    "entities": 315,
+    "event_participations": 0,
+    "events": 1,
+    "relations": 35,
+    "signals": 0
+   },
+   "ledger_event_count": 14,
+   "records_traced": 351,
+   "reopen_matches_admitted": {
+    "export_records": true,
+    "receipt": true
+   },
+   "census": {
+    "assertions": {
+     "FULLY_FORMALIZED": 343,
+     "PARTLY_FORMALIZED": 7,
+     "UNFORMALIZED": 8
+    },
+    "blocks_reviewed": 186,
+    "blocks_total": 186,
+    "capture_sha256": "sha256:59a33e57db8d5b0e592cbb00fec3d636aa82f09f3fc1aafc7275b88d793b5252",
+    "gaps_by_kind": {
+     "INTERVAL_NOT_EXPRESSIBLE": 3,
+     "RELATION_ABSENT": 3,
+     "TYPE_ABSENT": 11
+    }
+   },
+   "derivation_census": {
+    "non_local_relations": 0,
+    "top_hubs": [
+     {
+      "assertion": "assertion:349",
+      "records": 24
+     },
+     {
+      "assertion": "assertion:348",
+      "records": 21
+     },
+     {
+      "assertion": "assertion:231",
+      "records": 9
+     },
+     {
+      "assertion": "assertion:003",
+      "records": 8
+     },
+     {
+      "assertion": "assertion:036",
+      "records": 8
+     }
+    ],
+    "fan_out_distribution": {
+     "0": 8,
+     "1": 198,
+     "2": 68,
+     "3": 41,
+     "4": 16,
+     "5": 12,
+     "6": 6,
+     "7": 3,
+     "8": 3,
+     "9": 1,
+     "21": 1,
+     "24": 1
+    }
+   },
+   "subject_coverage": {
+    "ambiguous": 18,
+    "attachable": 20,
+    "by_type": {
+     "Claim": {
+      "ambiguous": 0,
+      "attachable": 1,
+      "proposed": 15,
+      "total": 17,
+      "unnamed": 1,
+      "with_subject": 15,
+      "without_subject": 2
+     },
+     "CountObservation": {
+      "ambiguous": 3,
+      "attachable": 6,
+      "proposed": 7,
+      "total": 21,
+      "unnamed": 5,
+      "with_subject": 7,
+      "without_subject": 14
+     },
+     "Observation": {
+      "ambiguous": 15,
+      "attachable": 12,
+      "proposed": 56,
+      "total": 103,
+      "unnamed": 20,
+      "with_subject": 56,
+      "without_subject": 47
+     },
+     "RatioObservation": {
+      "ambiguous": 0,
+      "attachable": 1,
+      "proposed": 2,
+      "total": 3,
+      "unnamed": 0,
+      "with_subject": 2,
+      "without_subject": 1
+     }
+    },
+    "proposed": 80,
+    "total": 144,
+    "unnamed": 26,
+    "with_subject": 80,
+    "without_subject": 64
+   },
+   "gaps_by_kind": {
+    "INTERVAL_NOT_EXPRESSIBLE": 3,
+    "RELATION_ABSENT": 3,
+    "TYPE_ABSENT": 11
+   },
+   "structural_diagnostic_returns_used": 0,
+   "admitted_at": "2026-09-05T18:24:23Z"
+  }
+ ],
+ "query": {
+  "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "bound_at": "2026-09-05T17:55:25Z",
+  "type_sets": "query-type-sets.json",
+  "type_sets_sha256": "sha256:81d37ec63712b470eb474e1dff6aaf2466a8df9725c243ea1376a45b0606740b",
+  "type_sets_note": "query-type-sets.note.json",
+  "binding_at_acceptance": "query-binding.acceptance.json",
+  "binding_at_acceptance_sha256": "sha256:8927fa38ffa623e0eb11169eb23ec272b523f4f24b800b94144828366b10f9b6",
+  "cases_sha256": "sha256:8a0522bee84b5f63390266ea9792497b1bbdf06453fe7a454908cd7e6fa0a721",
+  "cases": 709,
+  "cases_by_kind": {
+   "ENTITY": 14,
+   "RELATION": 603,
+   "SUBJECT": 92
+  },
+  "phase_two_dispatched_after": true,
+  "executed_at": "2026-09-05T18:25:10Z",
+  "binding_executed": "results/native-query-binding.json",
+  "bound_after_replay_receipt_sha256": "sha256:ec97fde2c15c40589f945e4b8d820fb2f9b784a5e0c40f42a76b36051a78f594",
+  "cases_sha256_matches_acceptance": true,
+  "result": "query/query-result.json",
+  "result_schema": "malleus.paper-v4.query-result/v3",
+  "rows_by_question": {
+   "NQ-CQ-01": 28,
+   "NQ-CQ-02": 104,
+   "NQ-CQ-03": 154,
+   "NQ-CQ-04": 147
+  },
+  "rows_total": 433,
+  "rows_by_kind": {
+   "ENTITY": 192,
+   "RELATION": 24,
+   "SUBJECT": 217
+  },
+  "rows_from_more_than_one_case": 21,
+  "witness_repeated_within_a_question": 0,
+  "forbidden_attempts": {
+   "embedding_import": 0,
+   "file_read": 0,
+   "network": 0
+  },
+  "graph_state_digest": "sha256:9857aa52bdc7e7822392ad083c1d5c0e3c675188dec447365127e306a89eec42"
+ },
+ "review": {}
+}
