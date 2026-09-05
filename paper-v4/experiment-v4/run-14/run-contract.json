@@ -389,48 +389,44 @@
         "why": "handover/2026-09-05-overseer-journal.md, iteration 5 RCA before the review, decision 23, and E-0160. Run-13's 33 attachable records were read one by one against the entity each names: 14 name a tool, model or instrument, and the tag LAB was found sitting inside \"available\". Measured by script over the retained captures of runs 11 to 13, eight of run-12's fifteen projected subjects were in-word matches of three-letter tags: RTI in \"vertical\" and \"portion\", OCC in \"occur\", MAR in \"mark\", OBS in \"observations\". E-0155 and E-0157 read those thirteen subjects as wrong and attributed them to a sentence naming its instrument as often as its subject; the subjects are wrong as read and the attribution is not, which E-0160 corrects. Of the seven matched as a word, three attach a record to its software, one is marginal and three are plausible, so the attribution rests on three or four cases and not on thirteen. The comparison strips whitespace and tests substring; it has no word boundary, and the check has been reading in-word matches as names since Core-15. This is the loop's third clarification of an existing check, after ranges and names and after tags, and the three keep finding the same thing: the rule was right and the comparison was loose.",
         "adapter": {
           "path": "src/malleus/_contract_pipeline/document.py",
-          "sha256": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
+          "sha256": "sha256:a2bf48502d19600630bfcb03ff57639e676b833d22c88e80324478254d46a95f",
           "baseline_sha256": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
-          "moved": false,
+          "moved": true,
           "messages": [
             "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
-            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"in the statement of {named}\","
           ],
           "baseline_messages": [
             "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
             "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
           ],
-          "messages_moved": false
+          "messages_moved": true
         },
         "skill": {
           "path": ".claude/skills/malleus-acolyte/SKILL.md",
-          "sha256": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f",
+          "sha256": "sha256:022041359239ea345c4d5f33e8bc7aa478c58b439910200fe261ab72e08bd367",
           "baseline_sha256": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f",
-          "moved": false
+          "moved": true
         },
         "sites_at_pin": {
           "_subject_defects": {
             "calls": [
-              "_compact",
+              "_occurs_as_word",
               "_record_properties",
               "_subject_names"
             ],
-            "statement_membership_tests": [
-              "form in _compact(statements[assertion_id]).casefold()"
-            ]
+            "statement_membership_tests": []
           },
           "_subject_outcomes": {
             "calls": [
-              "_compact",
               "_items",
               "_obj",
+              "_occurs_as_word",
               "_record_properties",
               "_subject_names",
               "_word"
             ],
-            "statement_membership_tests": [
-              "form in statement"
-            ]
+            "statement_membership_tests": []
           }
         },
         "sites_at_the_v4_7_coordinate": {
@@ -458,13 +454,12 @@
             ]
           }
         },
-        "bounded_predicate": [],
-        "bounded_predicate_at_both_sites": false,
-        "substring_test_left_at": [
-          "_subject_defects",
-          "_subject_outcomes"
+        "bounded_predicate": [
+          "_occurs_as_word"
         ],
-        "substring_test_absent": false,
+        "bounded_predicate_at_both_sites": true,
+        "substring_test_left_at": [],
+        "substring_test_absent": true,
         "census_keys_at_pin": [
           "ambiguous",
           "attachable",
@@ -473,12 +468,12 @@
         ],
         "census_keys_present": true,
         "observed": {
-          "ADAPTER_MOVED_SINCE_THE_V4_7_COORDINATE": false,
-          "SKILL_MOVED_SINCE_THE_V4_7_COORDINATE": false,
-          "ONE_PREDICATE_AT_BOTH_SUBJECT_SITES": false,
-          "NO_SUBSTRING_TEST_LEFT_AT_EITHER_SITE": false
+          "ADAPTER_MOVED_SINCE_THE_V4_7_COORDINATE": true,
+          "SKILL_MOVED_SINCE_THE_V4_7_COORDINATE": true,
+          "ONE_PREDICATE_AT_BOTH_SUBJECT_SITES": true,
+          "NO_SUBSTRING_TEST_LEFT_AT_EITHER_SITE": true
         },
-        "pin_status": "PENDING_AT_PIN"
+        "pin_status": "LANDED"
       },
       {
         "id": "ENTITY_KIND_RESTRICTED",
@@ -1122,16 +1117,16 @@
     "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
   },
   "core_gate": {
-    "status": "PROVISIONALLY_PINNED_PENDING_CORE_18",
+    "status": "PINNED_TO_THE_V4_8_CORE_COORDINATE",
     "verification_owner": "OVERSEER_BEFORE_PRODUCER_SPAWN",
     "pinned_by": "paper-v4/experiment-v4/run-14/pin.py",
     "execution_baseline": {
-      "core_commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-      "core_tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448"
+      "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+      "core_tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a"
     },
     "governance_head": {
-      "entry_id": "OVR-000412",
-      "head_hash": "sha256:623436a4387d3659c961d87de7f8139f59a6fc625cdf7ce64daaa5dda2981d71"
+      "entry_id": "OVR-000413",
+      "head_hash": "sha256:b2196bccaa4415451d4b10afe95cfc3ca8ab3b4bfd7d5486274ef692c0967036"
     },
     "required_pieces": [
       "FULL_DOMAIN_HISTORY_PROFILE",
@@ -1143,8 +1138,8 @@
     ],
     "verified_pieces": {
       "AGGREGATE_REFUSAL_DIAGNOSTICS": {
-        "core_commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-        "core_tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448",
+        "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "core_tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a",
         "paper_audit": "DIGEST_PINNED",
         "governance_entry": "OVR-000395",
         "shape": "ONE_SORTED_DEFECT_SET_PER_REFUSAL",
@@ -1152,11 +1147,11 @@
         "rite_module_sha256": "sha256:d2d76fe0181f74d5352b7535d19d7a6925ae0ca45ccb8393c0eaf1b64b06ba11"
       },
       "DERIVATION_CONTENT_CHECKS": {
-        "core_commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-        "core_tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448",
+        "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "core_tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a",
         "paper_audit": "DIGEST_PINNED",
         "document_adapter_path": "src/malleus/_contract_pipeline/document.py",
-        "document_adapter_sha256": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
+        "document_adapter_sha256": "sha256:a2bf48502d19600630bfcb03ff57639e676b833d22c88e80324478254d46a95f",
         "refusal_reasons": [
           "DIGEST_MISMATCH",
           "DIGEST_NOT_LOCATED",
@@ -1178,8 +1173,8 @@
         ]
       },
       "EVENT_FAMILY_ADMISSION": {
-        "core_commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-        "core_tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448",
+        "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "core_tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a",
         "paper_audit": "DIGEST_PINNED",
         "profile_id": "source-assertion",
         "event_role": [
@@ -1194,8 +1189,8 @@
         "plan_compiler_sha256": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28"
       },
       "FULL_DOMAIN_HISTORY_PROFILE": {
-        "core_commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-        "core_tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448",
+        "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "core_tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a",
         "paper_audit": "DIGEST_PINNED",
         "profile_id": "source-assertion",
         "profile_path": "src/malleus/profiles/source-assertion.json",
@@ -1203,8 +1198,8 @@
         "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
       },
       "GROUNDED_PACKS_AND_PACK_GROUNDING": {
-        "core_commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-        "core_tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448",
+        "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "core_tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a",
         "paper_audit": "DIGEST_PINNED",
         "grounding_rite_sha256": "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709",
         "pack_sha256": {
@@ -1219,11 +1214,11 @@
         }
       },
       "NASCENT_PROJECT_PLAYBOOK": {
-        "core_commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-        "core_tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448",
+        "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "core_tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a",
         "paper_audit": "DIGEST_PINNED",
         "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
-        "skill_sha256": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f"
+        "skill_sha256": "sha256:022041359239ea345c4d5f33e8bc7aa478c58b439910200fe261ab72e08bd367"
       }
     }
   },

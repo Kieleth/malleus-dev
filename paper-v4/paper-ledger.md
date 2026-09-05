@@ -4813,3 +4813,33 @@ build. The counts E-0160 computed under the word-bounded rule are counts on
 run-13's retained capture by a scratchpad script, not a prediction of run-14's
 census. Whether any of it holds is open, and run-14 is one cell that will be one
 observation, not a measurement, until it has run to ratification.
+
+### E-0163, run-14 is pinned to the v4.8 Core coordinate
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-14/run-contract.json` and
+`producer-input-manifest.json` as rewritten by `pin.py --commit dc52547`, the
+governance ledger through OVR-000413, and E-0162.
+
+Coordinates: Core commit `dc5254795a78648591d3a1b0bcf602af8d443dc1` (the head after Core-18's
+two commits and its governance entry OVR-000413), replacing E-0162's
+provisional pin at `68e7baa`, which read Core-18 as PENDING. Core-18 landed:
+one module-level predicate, `_occurs_as_word`, compares a subject's name or
+tag against a statement at both sites (the SUBJECT_NOT_NAMED check and the
+subject census); a form occurs when its non-whitespace characters occur in
+order with any whitespace between them, case-folded on both sides, and the
+character before the first and after the last is not a letter; the
+whitespace-free substring helper is deleted (decision 23). The skill says an
+inflected or glued form goes in tags. One declared input moved against
+run-13: the skill. Pack versions unchanged (metrology 0.3.0, chronology 0.1.0,
+research 0.5.0). The pin reads the adapter by AST and records the predicate
+name and an empty list of substring sites.
+
+Non-claim: no producer has run at this coordinate. Expected effect, stated
+before the run: the census's attachable and ambiguous counts fall to what a
+word-bounded rule gives (26 and 43 on run-13's capture against 33 and 49); a
+proposed subject whose form occurs only inside another word is refused; an
+inflected or glued form costs the producer a tag, which on run-13's capture
+would have been two returns in one. Falsifier: a return at the runner for a
+subject a reader would say the sentence names as a word.

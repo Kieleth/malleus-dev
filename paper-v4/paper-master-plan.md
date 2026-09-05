@@ -326,6 +326,18 @@ Use one protocol figure and compact result tables only where they reduce prose. 
    review of run-02's and run-05's frozen inputs, compared label by label with
    the ratified records. Protocol untouched; the ratified record is the
    reference.
+9. After the loop settles the Opus 5 cell of record (Luis, 2026-09-05 14:35Z,
+   queued for the next loop, not to steer this one): more competency
+   questions beyond CQ-01 to CQ-04, and cells that split tasks across models.
+10. A Malleus experiment rather than a paper cell unless it comes out clean:
+   pairs of adversarial Haiku 4.5 sessions, each pair holding one reading
+   block, a summary of the whole paper, and the compiled population surface
+   as a tool, to learn whether quality holds when the producer is small and
+   the scope is one paragraph. The paired-checker cell (run-07) is the
+   nearest prior; its checker was bounded by the pinned skill.
+11. Recreate the small-shop baseline on the current Core for calibration and
+   add questions to it; the logistics shop is the paper's calibration set
+   (1.4.x).
 
 ## Submission gate
 

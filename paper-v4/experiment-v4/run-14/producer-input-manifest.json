@@ -4,8 +4,8 @@
   "status": "FROZEN",
   "producer_workspace": "private/paper-v4-v4-run-14/producer",
   "core": {
-    "commit": "68e7baaa7a3acb642877c361124a439bbea09e85",
-    "tree": "315d5c9c6b14a847d8a92994c51f4f76619e6448"
+    "commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+    "tree": "a712e938be28e4929e50f3a6a419f94ec57d3d0a"
   },
   "interface_coordinates": {
     "capture_id": "capture:paper-v4:yu-2025:v4:14",
@@ -84,7 +84,7 @@
       "name": "MALLEUS_NASCENT_PROJECT_SKILL",
       "source": ".claude/skills/malleus-acolyte/SKILL.md",
       "target": ".claude/skills/malleus-acolyte/SKILL.md",
-      "sha256": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f"
+      "sha256": "sha256:022041359239ea345c4d5f33e8bc7aa478c58b439910200fe261ab72e08bd367"
     },
     {
       "name": "SELECTED_READING",
@@ -132,11 +132,12 @@
   "moved_since": {
     "reference_run": "run-13",
     "reference_manifest": "paper-v4/experiment-v4/run-13/producer-input-manifest.json",
-    "moved": [],
+    "moved": [
+      "MALLEUS_NASCENT_PROJECT_SKILL"
+    ],
     "unchanged": [
       "CHRONOLOGY_PACK",
       "LINKML_TYPES",
-      "MALLEUS_NASCENT_PROJECT_SKILL",
       "MALLEUS_ROOT",
       "METROLOGY_PACK",
       "RESEARCH_PACK",
