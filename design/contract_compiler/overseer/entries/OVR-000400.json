@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "thaw-change-set-properties-before-staged-writes"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000398"
+  },
+  "entry_hash": "sha256:dab66ab3f2a4a49d8ca4554b5a59d39248a136dc937b04e70c9d94c946c54676",
+  "entry_id": "OVR-000400",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:41a90827966f5a0b2ad6b85dbde47b813d6064bc5dc08fe93d1e2f0aeda0527b",
+  "recorded_at": "2026-09-05T02:50:00Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000398",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000399",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 400,
+  "subject": {
+    "id": "thaw-change-set-properties-before-staged-writes",
+    "type": "DOCUMENT"
+  },
+  "summary": "Correct the affiliation count in OVR-000398.",
+  "why": "OVR-000398 says the paper cell run-04 hit the refusal on six ResearchContributor entities carrying affiliation as a one-item list. Five carry a one-item list and person:yu-zhiteng carries three, verified on 2026-09-05 from the run's own population file. The defect, the fix and the guard are unchanged: a tuple reached the ontology validator, which accepts only a list for a multivalued slot, and the three-item value refused for the same reason as the five. Only the count in the why is wrong. The superseded block pins four documents, so this correction requires a replacement that re-pins them under the exact sentence."
+}

@@ -1,0 +1,85 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:98abcad33abc43d5143d539116b9b24efab0da242beb652005990edf64d59cb9",
+        "before_digest": "sha256:e232d66c37a5b05216daf3522a8186ed80a739a738d0642192dfaaa26b2c144d",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:b0f2e58d31c5a54b780e6e3f8b01db5bade54b52f738ffccbf2e2101752a8dcc",
+        "before_digest": "sha256:f4afc82949a41c806ee5f42b311b78c41e475bc42816ad941742cb9bf14094c0",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:be843436a99ea38c1147d8b4296e560348fe34fa8ec5a23d176868239cd01fef",
+        "before_digest": "sha256:c6c205d1d027eb116c4e0c79fb3d3cd71d60dcb7b68b0f14654fde1e2e15bc0a",
+        "change": "MODIFIED",
+        "path": "ontology/packs/metrology.yaml"
+      },
+      {
+        "after_digest": "sha256:85603a48eab90a52466094170bcbca31cb025b639b275883f062f80a590a24f2",
+        "before_digest": "sha256:5ca437c55a17b0d116a464c472500dca8261eb758bbf72355e0b04ec6dbf6706",
+        "change": "MODIFIED",
+        "path": "ontology/packs/research.yaml"
+      },
+      {
+        "after_digest": "sha256:6967a688a2b9e4db03eea7ea3bd86c2dae2c2254ab5690a34f4a1f3905c407ac",
+        "before_digest": "sha256:290d302220f8f4215f72cc853654965638eb568b8bfbd98f76591256a68a6882",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:712e1e083210f46d5a08c9ff3afb9049f866578ded1a71229a605cb3bc436560",
+        "before_digest": "sha256:a08003a1de879efc0e82d9597232685d7bc00c3e597b804f92bb461304feb5f3",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:41a90827966f5a0b2ad6b85dbde47b813d6064bc5dc08fe93d1e2f0aeda0527b",
+  "entry_id": "OVR-000399",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c8895cbee23c12abf75a9f094436b2043a8b20cbe7900a825d9d1f0a443b8fdf",
+  "recorded_at": "2026-09-05T02:45:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "155e54cdcf92639f05d1a3671c9ab56483ed69d1",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "70eace636f0f1a0ef5ffb3172cb692077b4db3bc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000398",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 399,
+  "subject": {
+    "id": "knowledge-pack-value-qualification-and-contributor-roles",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record how a source states a number, and carry the CRediT contributor roles.",
+  "why": "Run-04 declared 25 of its 61 typed gaps as INTERVAL_NOT_EXPRESSIBLE, each saying the source marks the value as approximate while the records carry an exact bound pair; run-05 declared one for a temperature stated only as above a threshold. Decision 15 puts optional enum ValueQualification on metrology's Quantified mixin beside value_upper: EXACT, APPROXIMATE, OPEN_LOWER_BOUND, OPEN_UPPER_BOUND, ORDER_OF_MAGNITUDE. An open bound leaves its absent end unset, which the shape already permitted. QUDT, UCUM, ISO 80000 and the VIM carry no term for how a source qualifies a stated number, so the enum is local and invention_search says so. Run-04 also declared 2 TYPE_ABSENT gaps for the contribution each author is credited with. Decision 16 adds enum ContributorRole, the fourteen CRediT roles of ANSI/NISO Z39.104-2022 with their own definitions plus a local OTHER, on optional slot contribution_role, on the new Contribution mixin, worn by the new ContributionRelation whose relation_type is the new CONTRIBUTED_TO. CRediT has no classes, so both shape names are invented and recorded. Both packs are additive at 0.3.0, the rites are unchanged, and paper-v4's frozen cells read them by git show."
+}
