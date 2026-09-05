@@ -5115,3 +5115,28 @@ counts on run-14's and run-13's graphs, made by re-running this cell's executor
 against their frozen ledgers; they say nothing about the graph run-15's producer
 will build. Whether the removal holds is open, and run-15 is one cell that will
 be one observation, not a measurement, until it has run to ratification.
+
+### E-0167, run-15's pin verified by the overseer at the v4.8 Core coordinate, unchanged
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-15/run-contract.json` and
+`producer-input-manifest.json`, `pin.py --commit dc52547` run again by the
+overseer after E-0166, the governance ledger through OVR-000413.
+
+Run-15 isolates a harness change and pins the Core coordinate run-14 ran at:
+Core commit `dc5254795a78648591d3a1b0bcf602af8d443dc1`, governance head
+OVR-000413, Core-18's predicate read by AST at both sites. The overseer's
+re-run of the pin rewrote nothing: the contract and the manifest are the bytes
+Paper-17 committed at `4c2352e`. No declared input moved against run-14, the
+skill included. The one change is the executor: one row per distinct witness
+per question, projected with the record's own type, `case_ordinals` in place
+of `case_ordinal`, query-result schema v3 (E-0166; on run-13's and run-14's
+frozen results the removal takes 515 rows to 363 and 919 to 875, and returns
+the digest a parent-type projection had hidden on three ratio records).
+
+Non-claim: no producer has run under this harness. Expected effect, stated
+before the run: rows fall by the within-question repeats and nothing else;
+no digest hidden by a parent projection. Falsifier: a row count that falls by
+anything else, or a witness the executor refuses because the binding names no
+projection for its own type.
