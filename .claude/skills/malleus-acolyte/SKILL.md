@@ -227,6 +227,16 @@ fallback.
    `borrowed_terms` is a nonempty list of unique strings, and no two entries
    repeat one name and URL pair.
 
+   A vocabulary you cannot vouch for from the declared inputs or from certain
+   knowledge is not a citation: take the `none_found: true` and `search` form
+   instead, name the invented terms, and record what you searched. A fabricated
+   vocabulary or URL is a worse outcome than an honest gap, and the shape
+   pressure runs the other way, because the cited form needs a standard number
+   and a URL and recall will supply plausible ones. The rite reads the block's
+   shape and never follows the URL, so it accepts a standard that does not
+   exist. Citation truth is checked at review, by a reader who follows the URL
+   and reads the terms; the rite cannot do it and does not claim to.
+
 4. **Propose the project ontology.** Import `linkml:types`, the Malleus root, and
    only the selected packs. Derive domain records from Malleus roles directly or
    through pack types. Keep instances out of schema vocabulary: source values,
