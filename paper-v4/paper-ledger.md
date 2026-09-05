@@ -4235,3 +4235,58 @@ Non-claim: no producer has run at this coordinate. Expected effect, stated
 before the run: subject coverage above run-11's 91 of 248, with projected
 subjects judged SUPPORTED at the same rate as proposed ones; the falsifier is
 projected subjects judged wrong more often than proposed ones.
+
+### E-0155, run-12 (v4.6) is admitted at the second runner attempt; the projected subject is wrong thirteen times in fifteen
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-12/ontology-run/`, `paper-v4/experiment-v4/run-12/results/`,
+`private/paper-v4-v4-run-12/` (ledger, query result, population plan with its
+projected derivations, the refused first attempt, withheld files),
+`paper-v4/evaluation-v4/run-12/` (review inputs under protocol v2 and task v4).
+
+Ontology: accepted at attempt 01, 4,710 facts, 37 entity types, 2 event types,
+4 relation types, 4 subject-bearing types; eight cited vocabularies, seven
+verified today and one DOI resolved to its article id behind an authorization
+wall.
+
+Population: 362 assertions over all 186 blocks (4 nothing-assertable), 333
+records (310 entities, 1 event, 22 relations), 62 typed gaps (52 of them
+MODALITY_NOT_EXPRESSIBLE, a closed-set kind no earlier producer used). Runner
+attempt 1 refused on two subjects whose provenance sat on the sentence that
+raises a hypothesis rather than the one that names the segment; the producer
+repaired four such records across the capture (return 1 of 2). Attempt 2
+admitted under `actor:overseer-run-12`: fourteen ledger events, replay
+reproducing admission, 333 traced. Census: 301 fully, 57 partly, 4
+unformalized; 5 of 22 relations non-local; largest hub 7. Subject coverage 90
+of 143: 75 proposed, 15 projected, 5 ambiguous, 48 unnamed.
+
+The projection, read record by record by the overseer from the plan's
+PROJECTED derivations: a relocation count attached to the HypoDD program, an
+identification count to the SEISAN database, an error ellipsoid to NonLinLoc,
+expected depths beneath slow- and ultraslow-spreading ridges to the OCC, mean
+location errors to the RTI from a sentence that names it nowhere in the
+record's own span, a snapshot caveat to the MAR, a claim about other factors to
+the OBS array, a profile interval marker to the MAR. Two of fifteen are
+plausibly what the record is about (a Vp/Vs claim to the Vp/Vs ratio, a
+refraction depth to the refraction profile). A sentence that names exactly one
+entity names its instrument, its database or its reference frame as often as
+its subject. And the producer, knowing the rule, reported that it narrowed
+eight formalizing spans so those sentences would name nothing, which trades
+evidence for the absence of a wrong subject. The review surface cannot catch
+either effect: a projected subject occurs in its block by construction.
+
+Query: the v4 binding frozen at acceptance (2,607 cases) executed unchanged
+after replay: CQ-01 48, CQ-02 117, CQ-03 131, CQ-04 112, 408 rows over 176
+witnesses, no forbidden attempt.
+
+Execution coordinate: inputs pinned at `90abc79` (E-0154); the runner executed
+at main `12b87f7`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 170,047; population
+191,297; correction 12,711; producer total 374,055.
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet. The verdict on projection above is the overseer's reading of fifteen
+derivations, recorded before the review so that the review cannot be accused
+of shaping it; the review judges the rows as rows.

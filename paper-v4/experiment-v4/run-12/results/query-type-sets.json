@@ -1,0 +1,58 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "SeismicObservation",
+    "Observation",
+    "Method",
+    "SoftwareTool",
+    "Dataset",
+    "Organization"
+  ],
+  "CQ-02": [
+    "RidgeSegment",
+    "MidOceanRidge",
+    "RidgeTransformIntersection",
+    "NonTransformDiscontinuity",
+    "Fault",
+    "ShearZone",
+    "MarineRegion",
+    "OceanicCoreComplex",
+    "LithosphericInterface",
+    "SeismicObservation",
+    "Observation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "SeismicObservation",
+    "GeochemicalObservation",
+    "QuantityValue",
+    "Ratio",
+    "RidgeSegment",
+    "RockSampleSet",
+    "MeltBody",
+    "GeologicUnit",
+    "LithosphericInterface",
+    "Method",
+    "NumericalModel",
+    "Claim",
+    "Sample",
+    "Dataset"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "GeochemicalObservation",
+    "SeismicObservation",
+    "MeltBody",
+    "RidgeSegment",
+    "LithosphericInterface",
+    "GeologicUnit",
+    "VolcanicFeature",
+    "HydrothermalFeature",
+    "Fault",
+    "ShearZone",
+    "NumericalModel"
+  ]
+}

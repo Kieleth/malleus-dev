@@ -1,0 +1,296 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-12",
+  "protocol": "v4.6",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-05T11:09:47Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-12/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "POPULATION_READY",
+      "usage_cumulative": {
+        "tokens": 170047,
+        "tool_uses": 16,
+        "duration_ms": 846781
+      },
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 361344,
+          "tool_uses": 44,
+          "duration_ms": 2663053
+        },
+        {
+          "after": "POPULATION_CORRECTION_01_SUBJECT_NOT_NAMED",
+          "tokens": 374055,
+          "tool_uses": 48,
+          "duration_ms": 2801982
+        }
+      ],
+      "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures",
+      "execution": {
+        "pinned_commit": "90abc7916a92511e9c5202b591bc60fafab332d3",
+        "staged_at": "2026-09-05T11:09:47Z",
+        "interpreter": "VERIFIED by prepare_producer.py preflight"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-05T11:25:38Z",
+        "after_binding_frozen_at": "2026-09-05T11:25:13Z",
+        "message": "run-11's phase-two message with run-12's coordinates",
+        "capture_id": "capture:paper-v4:yu-2025:v4:12",
+        "plan_id": "plan:paper-v4:yu-2025:v4:12",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ]
+      }
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:1ad071c0b748f300258c0bf6db0a2d7fac1e836bfe99c286afc34e70aaf97b3e",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:de4fe54df8eaa27bda4e9a8829a05849ed667c128721aa4b9598146bb2b8c47a",
+      "fact_count": 4710,
+      "accepted_at": "2026-09-05T11:25:13Z",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 37,
+        "EVENT": 2,
+        "RELATION": 4
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "ResearchRelation",
+        "GeologicRelation",
+        "ScholarlyRelation"
+      ],
+      "subject_bearing_types": [
+        "Claim",
+        "Observation",
+        "GeochemicalObservation",
+        "SeismicObservation"
+      ],
+      "note": "accepted at attempt 01; 30 project classes, seven root extensions, abstract GeologicFeature with fourteen subtypes",
+      "phase_two_inputs_staged": [
+        "accepted/population-surface.json",
+        "accepted/diagnostic.json"
+      ],
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "overseer, before phase two",
+        "checked_at": "2026-09-05T11:25:38Z",
+        "urls": 8,
+        "result": "geosciml.org fetched now: the IUGS CGI home of the GeoSciML data model; doi.org/10.1038/207343a0 resolves (302) to nature.com/articles/207343a0, the article the block cites (Wilson 1965), the article page itself sits behind an authorization redirect (idp.nature.com) and its title was not read; the DOI resolves to a real Nature article id, which is as far as the check reached; quakeml.org, schema.datacite.org, schema.org, DCMI Terms, PROV-O and credit.niso.org verified earlier on 2026-09-05 for run-05, run-08 and Core-11",
+        "fabricated": 0,
+        "unread": [
+          "https://doi.org/10.1038/207343a0: resolved, title not read"
+        ]
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-05T11:56:31Z",
+      "execution_commit": "80237a2",
+      "core_note": "Core files at the pinned coordinate 90abc79 (OVR-000411)",
+      "status": "REFUSED",
+      "stage": "DOCUMENT_ADAPTER",
+      "reason": "SUBJECT_NOT_NAMED",
+      "detail": "2 records (claim:cold-thick-lithosphere, claim:hydrothermal-cooling) name subject RC2 where their formalizing sentences do not",
+      "overseer_reading": "the producer's own check missed two; 75 explicit subjects otherwise pass",
+      "structural_diagnostic_returned_to_producer_at": "2026-09-05T11:56:53Z",
+      "structural_diagnostic_return_ordinal": 1,
+      "structural_diagnostic_return_limit": 2,
+      "hand_repair": false,
+      "leftovers": "refused-runner-attempt-01/"
+    },
+    {
+      "attempt": 2,
+      "transaction_time": "2026-09-05T11:59:32Z",
+      "execution_commit": "12b87f7",
+      "core_note": "Core files at the pinned coordinate 90abc79 (OVR-000411); commits between are paper files",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 310,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 22,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 333,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 301,
+          "PARTLY_FORMALIZED": 57,
+          "UNFORMALIZED": 4
+        },
+        "blocks_reviewed": 186,
+        "blocks_total": 186,
+        "capture_sha256": "sha256:7d5de04ac0e41f0b5ab689346396f380158d0f166017213927c188cebf0b50dd",
+        "gaps_by_kind": {
+          "AGGREGATE_ONLY": 1,
+          "INTERVAL_NOT_EXPRESSIBLE": 2,
+          "MODALITY_NOT_EXPRESSIBLE": 52,
+          "RELATION_ABSENT": 6,
+          "TYPE_ABSENT": 1
+        }
+      },
+      "derivation_census": {
+        "non_local_relations": 5,
+        "top_hubs": [
+          {
+            "assertion": "assertion:019",
+            "block": "page:1:block:005",
+            "records": 7
+          },
+          {
+            "assertion": "assertion:021",
+            "block": "page:1:block:005",
+            "records": 6
+          },
+          {
+            "assertion": "assertion:174",
+            "block": "page:10:block:044",
+            "records": 6
+          },
+          {
+            "assertion": "assertion:034",
+            "block": "page:2:block:001",
+            "records": 5
+          },
+          {
+            "assertion": "assertion:182",
+            "block": "page:10:block:046",
+            "records": 5
+          }
+        ],
+        "fan_out_distribution": {
+          "0": 4,
+          "1": 293,
+          "2": 44,
+          "3": 13,
+          "4": 2,
+          "5": 3,
+          "6": 2,
+          "7": 1
+        }
+      },
+      "subject_coverage": {
+        "ambiguous": 5,
+        "by_type": {
+          "Claim": {
+            "ambiguous": 1,
+            "projected": 4,
+            "proposed": 16,
+            "total": 28,
+            "unnamed": 7,
+            "with_subject": 20,
+            "without_subject": 8
+          },
+          "GeochemicalObservation": {
+            "ambiguous": 0,
+            "projected": 0,
+            "proposed": 19,
+            "total": 20,
+            "unnamed": 1,
+            "with_subject": 19,
+            "without_subject": 1
+          },
+          "Observation": {
+            "ambiguous": 2,
+            "projected": 2,
+            "proposed": 21,
+            "total": 37,
+            "unnamed": 12,
+            "with_subject": 23,
+            "without_subject": 14
+          },
+          "SeismicObservation": {
+            "ambiguous": 2,
+            "projected": 9,
+            "proposed": 19,
+            "total": 58,
+            "unnamed": 28,
+            "with_subject": 28,
+            "without_subject": 30
+          }
+        },
+        "projected": 15,
+        "proposed": 75,
+        "total": 143,
+        "unnamed": 48,
+        "with_subject": 90,
+        "without_subject": 53
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 1,
+        "INTERVAL_NOT_EXPRESSIBLE": 2,
+        "MODALITY_NOT_EXPRESSIBLE": 52,
+        "RELATION_ABSENT": 6,
+        "TYPE_ABSENT": 1
+      },
+      "structural_diagnostic_returns_used": 1,
+      "admitted_at": "2026-09-05T12:00:26Z"
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-05T11:25:13Z",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:b01826fbc2fc845eb0923f50bafdc982d30c59a6e9184bc1d0c86b05db14d7e1",
+    "type_sets_note": "query-type-sets.note.json",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:236c61762cc85763176e4a125f80e420d797d75bc344f728b03a8dadaa4d4265",
+    "cases_sha256": "sha256:8b03d16cdb1dbe85f6ec913cea8e914e338c3d47c15f86901d269a9e45e8cd8d",
+    "cases": 2607,
+    "cases_by_kind": {
+      "ENTITY": 35,
+      "RELATION": 2408,
+      "SUBJECT": 164
+    },
+    "phase_two_dispatched_after": true,
+    "executed_at": "2026-09-05T12:00:49Z",
+    "binding_executed": "results/native-query-binding.json",
+    "bound_after_replay_receipt_sha256": "sha256:ec39f475d60715f4e7cabf32990826064aec0819dcd41cc1f116674978b75234",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "rows_by_question": {
+      "NQ-CQ-01": 48,
+      "NQ-CQ-02": 117,
+      "NQ-CQ-03": 131,
+      "NQ-CQ-04": 112
+    },
+    "rows_total": 408,
+    "witnesses_traced": 176,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:e5fa45b0245c0cf1bb6ebf56fd12b741dd6df47d2e2d0065168d4357244cd3e5"
+  },
+  "review": {}
+}

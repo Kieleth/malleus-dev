@@ -1,0 +1,12 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-05T11:25:13Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the ridge and seafloor structure types, the seismic and generic observation types, Claim",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the structure, sample, melt, unit, interface, method, model and dataset types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim, the quantified, melt, structural, volcanic, hydrothermal, fault, shear-zone and model types"
+  },
+  "note": "run-10's sets translated to run-12's type names; the same questions, the same judgement"
+}

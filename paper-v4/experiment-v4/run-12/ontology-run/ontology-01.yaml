@@ -1,0 +1,700 @@
+id: https://malleus.dev/schema/projects/ridge_microseismicity
+name: ridge_microseismicity
+version: 0.1.0
+title: Ridge Microseismicity and Melt Volatiles Project Ontology
+description: >-
+  Project vocabulary for a source-attributed capture of one published study
+  that reports ocean-bottom seismometer microseismicity, structural
+  observations, and melt CO2 estimates along a slow-spreading mid-ocean ridge
+  and its adjacent transform faults. Every class, slot, and enum here is
+  proposed from the retained reading alone; nothing in it is accepted
+  knowledge.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  ridge: https://malleus.dev/schema/projects/ridge_microseismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+#
+# Each value below is a distinction the reading itself draws. Source
+# values, sample identifiers, segment names, and numbers are data and
+# never appear here.
+# -------------------------------------------------------------------
+
+enums:
+  SpreadingRateClass:
+    description: >-
+      Class of spreading rate the source assigns to a ridge. The source uses
+      these four wordings and no others.
+    permissible_values:
+      FAST:
+      INTERMEDIATE:
+      SLOW:
+      ULTRASLOW:
+
+  FaultKind:
+    description: >-
+      Kind of fault the source names. The list grows by adding values, never
+      by redefining one.
+    permissible_values:
+      NORMAL:
+      DETACHMENT:
+      TRANSFORM:
+
+  DepthReference:
+    description: >-
+      The datum a stated depth is measured from. The source states depths
+      both below the sea floor and below sea level, and the two are not
+      interchangeable.
+    permissible_values:
+      BELOW_SEA_FLOOR:
+      BELOW_SEA_LEVEL:
+
+  LocationQuality:
+    description: >-
+      The location quality category the source assigns to an earthquake
+      location under its own declared criteria. Unset is the honest value
+      when the source assigns none.
+    permissible_values:
+      A:
+      B:
+      C:
+      D:
+
+  MeltStage:
+    description: >-
+      The stage of melt evolution a reported concentration refers to. The
+      source distinguishes melt in equilibrium with its mantle source from
+      melt after fractional crystallisation, and the two carry different
+      numbers.
+    permissible_values:
+      PRIMARY:
+        description: Melt in equilibrium with its mantle source.
+      PRE_ERUPTIVE:
+        description: Melt after fractional crystallisation and before eruption.
+
+  SampledMaterial:
+    description: >-
+      The material a reported sample set consists of, in the classes the
+      source names. OTHER records a material the list does not name.
+    permissible_values:
+      BASALT:
+      PERIDOTITE:
+      MID_OCEAN_RIDGE_BASALT:
+      POPPING_ROCK:
+      MELT_INCLUSION:
+      OTHER:
+
+  SeismicEventType:
+    description: >-
+      The kind of seismic occurrence the source names. Values are the
+      source's own wordings.
+    permissible_values:
+      EARTHQUAKE:
+      SUBEVENT:
+      LONG_PERIOD_EVENT:
+
+  GeologicRelationType:
+    description: >-
+      Typed edges between two geologic features that the source states in one
+      sentence naming both.
+    permissible_values:
+      PART_OF:
+      BOUNDED_BY:
+      OFFSET_BY:
+      ADJACENT_TO:
+      CUT_BY:
+      UNDERLIES:
+
+  ScholarlyRelationType:
+    description: >-
+      Typed edges the source states between agents, works, awards, artifacts,
+      and the material they were drawn from.
+    permissible_values:
+      FUNDED_BY:
+      USED_TOOL:
+      DEPOSITED_IN:
+      COMPILED_FROM:
+
+# -------------------------------------------------------------------
+# Classes
+#
+# Seven classes derive from a Malleus root directly and each carries its
+# own grounding block. Every other class derives through a pack type or
+# through one of those seven.
+# -------------------------------------------------------------------
+
+classes:
+
+  GeologicFeature:
+    is_a: Entity
+    abstract: true
+    description: >-
+      A named body, structure, surface, or region of the solid Earth or sea
+      floor that the source refers to. Abstract: a feature no subclass covers
+      is a typed gap, not a member of a catch-all.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and plate tectonics
+          taxonomy: DDC 551.1
+          vocabularies:
+            - vocabulary: GeoSciML, IUGS CGI Geoscience Markup Language
+              vocabulary_url: http://www.geosciml.org/
+              borrowed_terms:
+                - Geologic Feature
+                - Geologic Unit
+                - Geologic Structure
+                - Mapped Feature
+            - vocabulary: >-
+                Wilson, J. T. (1965). A new class of faults and their bearing
+                on continental drift. Nature 207, 343-347
+              vocabulary_url: https://doi.org/10.1038/207343a0
+              borrowed_terms:
+                - fault
+                - transform fault
+                - ridge
+                - fracture zone
+          invented_terms:
+            - MeltBody
+            - MidOceanRidge
+            - RidgeSegment
+            - NonTransformDiscontinuity
+            - RidgeTransformIntersection
+            - OceanicCoreComplex
+            - ShearZone
+            - VolcanicFeature
+            - HydrothermalFeature
+            - LithosphericInterface
+            - TectonicPlate
+            - MarineRegion
+          invention_search: >-
+            GeoSciML and the Wilson 1965 paper cited above were checked for
+            the compound names this ontology needs. GeoSciML names Geologic
+            Feature, Geologic Unit, Geologic Structure and Mapped Feature,
+            which the base class and GeologicUnit take, and Wilson names
+            fault, transform fault, ridge and fracture zone, which Fault
+            takes. Neither names a ridge segment, a non-transform
+            discontinuity, a ridge-transform intersection, an oceanic core
+            complex, a shear zone, a melt body, a lithospheric interface, a
+            tectonic plate or a marine region as a class. Those names are
+            standard in the marine-geology literature and are used by the
+            reading itself, but they are not taken from a cited vocabulary,
+            so they are recorded here as local.
+
+  GeologicUnit:
+    is_a: GeologicFeature
+    description: >-
+      A body of Earth material the source names, such as the crust, the
+      mantle, the lithosphere, or the asthenosphere.
+
+  MeltBody:
+    is_a: GeologicUnit
+    description: >-
+      A body of melt or magma the source names, at any stage of ascent,
+      including a reservoir or a melt lens.
+
+  MidOceanRidge:
+    is_a: GeologicFeature
+    description: A spreading centre the source names as a whole.
+
+  RidgeSegment:
+    is_a: GeologicFeature
+    description: >-
+      A named portion of a spreading centre between discontinuities.
+    slots:
+      - spreading_rate_class
+
+  NonTransformDiscontinuity:
+    is_a: GeologicFeature
+    description: A named ridge-axis offset that is not a transform fault.
+
+  RidgeTransformIntersection:
+    is_a: GeologicFeature
+    description: A named intersection between a ridge axis and a transform fault.
+
+  Fault:
+    is_a: GeologicFeature
+    description: A named fault or fault set.
+    slots:
+      - fault_kind
+
+  ShearZone:
+    is_a: GeologicFeature
+    description: >-
+      A named zone of localised ductile or semi-brittle strain, distinct from
+      a fault because the source treats it as a separate deformation regime.
+
+  OceanicCoreComplex:
+    is_a: GeologicFeature
+    description: >-
+      A named exhumed footwall dome bounded by a detachment fault.
+
+  VolcanicFeature:
+    is_a: GeologicFeature
+    description: >-
+      A named volcanic edifice, cone, seamount, massif, or volcanic terrain.
+
+  HydrothermalFeature:
+    is_a: GeologicFeature
+    description: A named hydrothermal vent field, mound, or vent site.
+
+  LithosphericInterface:
+    is_a: GeologicFeature
+    description: >-
+      A named interface within or at the base of the lithosphere, such as a
+      brittle-ductile boundary, a crust-mantle interface, or a
+      lithosphere-asthenosphere boundary.
+
+  TectonicPlate:
+    is_a: GeologicFeature
+    description: A named lithospheric plate.
+
+  MarineRegion:
+    is_a: GeologicFeature
+    description: >-
+      A named ocean, basin, valley, fracture zone, or bathymetric area that
+      the source uses to locate other features.
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+    description: >-
+      One seismic occurrence the source names individually. Populations of
+      earthquakes the source reports only in aggregate are counted on a
+      SeismicObservation instead, because the source names no individual
+      member of them.
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: QuakeML, seismological data exchange format
+              vocabulary_url: https://quakeml.org/
+              borrowed_terms:
+                - event
+                - origin
+                - magnitude
+                - pick
+                - focal mechanism
+          invented_terms:
+            - SeismicEvent
+            - SeismicEventType
+          invention_search: >-
+            QuakeML models an earthquake as an event carrying origins,
+            magnitudes, picks and focal mechanisms, and those terms are
+            borrowed above. It names no class under a compound name for a
+            seismic occurrence held as a graph record, so the class name
+            SeismicEvent and the enum name SeismicEventType are local and are
+            recorded here. The three enum values are the reading's own
+            wordings.
+
+  ResearchAgent:
+    is_a: Entity
+    abstract: true
+    mixins:
+      - Agent
+    description: >-
+      A person or an organisation the source credits, funds, or names as
+      acting in the work.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Provenance and attribution in research information
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology, 2013 Recommendation
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+                - wasAttributedTo
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - creator
+                - contributor
+                - publisher
+          invented_terms:
+            - ResearchAgent
+          invention_search: >-
+            PROV-O names Agent, Person and Organization, and Person and
+            Organization are taken from it unchanged. DCMI names creator,
+            contributor and publisher. Neither names an abstract base for a
+            research agent, so that base class name is local and is recorded
+            here.
+
+  Person:
+    is_a: ResearchAgent
+    description: An individual the source names.
+    slots:
+      - contact_email
+
+  Organization:
+    is_a: ResearchAgent
+    description: >-
+      An institution, agency, funder, programme, or facility the source
+      names.
+
+  ResearchArtifact:
+    is_a: Entity
+    abstract: true
+    description: >-
+      A dataset, software tool, or numerical model the source names and
+      locates. Distinct from Method, which is how something was done, and
+      from Instrument, which measures.
+    slots:
+      - access_url
+      - artifact_identifier
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research data and research software description
+          taxonomy: DDC 005
+          vocabularies:
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - Dataset
+                - SoftwareApplication
+                - softwareVersion
+                - url
+            - vocabulary: DataCite Metadata Schema
+              vocabulary_url: https://schema.datacite.org/
+              borrowed_terms:
+                - identifier
+                - resourceType
+                - relatedIdentifier
+          invented_terms:
+            - ResearchArtifact
+            - SoftwareTool
+            - NumericalModel
+          invention_search: >-
+            Schema.org names Dataset, which the Dataset subclass takes
+            unchanged, and SoftwareApplication and softwareVersion, which the
+            software_version slot follows. DataCite names identifier,
+            resourceType and relatedIdentifier, which artifact_identifier
+            follows. Neither names a generic research artifact, a research
+            software tool under that name, or a numerical model as a class,
+            so those three names are local and are recorded here.
+
+  Dataset:
+    is_a: ResearchArtifact
+    description: A named data collection, catalogue, or database.
+    slots:
+      - repository_name
+
+  SoftwareTool:
+    is_a: ResearchArtifact
+    description: A named software package, program, or toolbox.
+    slots:
+      - software_version
+
+  NumericalModel:
+    is_a: ResearchArtifact
+    description: >-
+      A named model whose output the source uses, such as a velocity model, a
+      thermal model, or a solubility model.
+    slots:
+      - model_designation
+
+  FundingAward:
+    is_a: Entity
+    description: >-
+      A grant or award the source names, carrying the identifier the source
+      states for it.
+    slots:
+      - award_identifier
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research funding metadata
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: DataCite Metadata Schema
+              vocabulary_url: https://schema.datacite.org/
+              borrowed_terms:
+                - fundingReference
+                - funderName
+                - awardNumber
+                - awardTitle
+            - vocabulary: >-
+                ANSI/NISO Z39.104-2022, CRediT, Contributor Roles Taxonomy
+              vocabulary_url: https://credit.niso.org/
+              borrowed_terms:
+                - Funding acquisition
+          invented_terms:
+            - FundingAward
+          invention_search: >-
+            DataCite names fundingReference, funderName, awardNumber and
+            awardTitle, and award_identifier follows awardNumber. CRediT
+            names Funding acquisition as a contributor role. Both describe an
+            award as a property of something else rather than as a class of
+            its own, so the class name FundingAward is local and is recorded
+            here.
+
+  GeologicRelation:
+    is_a: Relation
+    description: >-
+      A typed edge between two named geologic features, populated only where
+      one sentence of the source names both endpoints.
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and plate tectonics
+          taxonomy: DDC 551.1
+          vocabularies:
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - isPartOf
+                - hasPart
+          invented_terms:
+            - GeologicRelation
+            - GeologicRelationType
+            - BOUNDED_BY
+            - OFFSET_BY
+            - ADJACENT_TO
+            - CUT_BY
+            - UNDERLIES
+          invention_search: >-
+            DCMI Metadata Terms names isPartOf and hasPart, which PART_OF
+            follows. GeoSciML, cited on GeologicFeature, models geologic
+            structures and mapped features rather than a typed edge between
+            two named features, and the Wilson 1965 paper describes ridge
+            offsets in prose without minting a predicate. No vocabulary among
+            those checked names a bounding, offsetting, adjacency, cutting or
+            underlying relation between two named geologic features, so the
+            relation class, its enum, and those five values are local and are
+            recorded here.
+
+  ScholarlyRelation:
+    is_a: Relation
+    description: >-
+      A typed edge the source states between agents, works, awards,
+      artifacts, and the material a compilation was drawn from, populated
+      only where one sentence names both endpoints.
+    slot_usage:
+      relation_type:
+        range: ScholarlyRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research information and scholarly communication metadata
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology, 2013 Recommendation
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - used
+                - wasDerivedFrom
+                - wasAttributedTo
+            - vocabulary: DataCite Metadata Schema
+              vocabulary_url: https://schema.datacite.org/
+              borrowed_terms:
+                - fundingReference
+                - awardNumber
+          invented_terms:
+            - ScholarlyRelation
+            - ScholarlyRelationType
+            - DEPOSITED_IN
+          invention_search: >-
+            PROV-O names used, which USED_TOOL follows, and wasDerivedFrom,
+            which COMPILED_FROM follows. DataCite names fundingReference and
+            awardNumber, which FUNDED_BY follows. Neither names the
+            deposition of a dataset in a named repository as a predicate, and
+            neither names this relation family or its enum, so those three
+            names are local and are recorded here.
+
+  # ---------------------------------------------------------------
+  # Derived through pack types. These carry no grounding block.
+  # ---------------------------------------------------------------
+
+  Publication:
+    is_a: Source
+    description: >-
+      A published work the source cites or is itself, carrying the
+      bibliographic identifiers the source states as facts about it.
+    slots:
+      - doi
+      - journal_name
+      - journal_volume
+      - article_number
+      - publication_year
+      - received_date
+      - accepted_date
+
+  SeismicObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A source-attributed seismological observation: a depth, a magnitude, a
+      residual, an uncertainty, a spacing, or a count of events over a stated
+      scope.
+    slots:
+      - depth_reference
+      - location_quality
+
+  GeochemicalObservation:
+    is_a: Observation
+    description: >-
+      A source-attributed geochemical observation, carrying the melt stage
+      the reported concentration refers to and the proxy element the source
+      estimated it from.
+    slots:
+      - melt_stage
+      - proxy_element
+
+  RockSampleSet:
+    is_a: Sample
+    mixins:
+      - Counted
+    description: >-
+      A set of rock samples the source reports as a group. The source names
+      no individual specimen, so a set is the smallest thing it identifies
+      and a per-specimen record would be invented.
+    slots:
+      - sampled_material
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  spreading_rate_class:
+    range: SpreadingRateClass
+    description: >-
+      Class of spreading rate the source assigns to this ridge or segment.
+      Unset when the source states a rate but no class.
+
+  fault_kind:
+    range: FaultKind
+    description: Kind of fault, as the source names it.
+
+  depth_reference:
+    range: DepthReference
+    description: >-
+      Datum a stated depth is measured from. Unset is the honest value when
+      the source does not state one.
+
+  location_quality:
+    range: LocationQuality
+    description: >-
+      Location quality category the source assigns under its own declared
+      criteria.
+
+  melt_stage:
+    range: MeltStage
+    description: >-
+      Stage of melt evolution a reported concentration refers to. Unset when
+      the reported value is a measurement on erupted material rather than an
+      estimate for a melt.
+
+  proxy_element:
+    range: string
+    description: >-
+      The trace element or corrected element concentration the source
+      estimated a value from, in the source's own wording. Open on purpose:
+      it is what the source said and it is never rewritten.
+
+  sampled_material:
+    range: SampledMaterial
+    description: Material the sample set consists of, in the classes the source names.
+
+  doi:
+    range: string
+    description: Digital Object Identifier as the source states it.
+
+  journal_name:
+    range: string
+    description: Name of the publishing journal as the source states it.
+
+  journal_volume:
+    range: string
+    description: Volume designation as the source states it.
+
+  article_number:
+    range: string
+    description: Article number or page range as the source states it.
+
+  publication_year:
+    range: integer
+    description: Year of publication as the source states it.
+
+  received_date:
+    range: string
+    description: >-
+      Date the work was received, retained exactly as the source words it and
+      without conversion, because the source states a calendar day and not an
+      instant.
+
+  accepted_date:
+    range: string
+    description: >-
+      Date the work was accepted, retained exactly as the source words it and
+      without conversion, for the same reason.
+
+  contact_email:
+    range: string
+    description: Contact address the source publishes for this person.
+
+  award_identifier:
+    range: string
+    description: >-
+      Grant, award, or agreement number as the source states it, following
+      DataCite awardNumber.
+
+  access_url:
+    range: string
+    description: >-
+      Location the source publishes for this artifact, as the source states
+      it. A locator, never evidence that what is at the end of it is
+      authentic or unchanged.
+
+  artifact_identifier:
+    range: string
+    description: >-
+      Identifier the source states for this artifact, such as a DOI or an
+      accession.
+
+  repository_name:
+    range: string
+    description: Name of the repository or database holding this dataset.
+
+  software_version:
+    range: string
+    description: Version designation the source states for this software.
+
+  model_designation:
+    range: string
+    description: >-
+      The label the source uses to distinguish this model from its
+      alternatives.
