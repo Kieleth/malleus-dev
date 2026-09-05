@@ -76,23 +76,23 @@
         "ride_alongs_gate": "PIN_STATUS_IS_THE_REASON_ONLY_THE_GATE_ALSO_WAITS_FOR_THEM",
         "invalid_range": {
           "path": "src/malleus/_contract_pipeline/elaborate.py",
-          "sha256": "sha256:fb5863741a6d252eef628e81a65a77fe8b57aa8f9deb9ee396e9aab4957bf140",
+          "sha256": "sha256:714cf83f07b4f9552bb956cd6f2ceeee5bc90e7985ae7cc0bd6212c4a760a524",
           "baseline_sha256": "sha256:fb5863741a6d252eef628e81a65a77fe8b57aa8f9deb9ee396e9aab4957bf140",
-          "moved": false,
+          "moved": true,
           "messages": [
-            "f\"{subject} has an unbound range\",",
+            "f\"{subject} has an unbound range {constraint.range_id}; a \" f\"range binds as one of the seed scalars {_SEED_SCALAR_NAMES}\" \", or a class or enum declared in the closure\",",
             "\"scalar range graph is cyclic\","
           ],
           "baseline_messages": [
             "f\"{subject} has an unbound range\",",
             "\"scalar range graph is cyclic\","
           ],
-          "messages_moved": false,
+          "messages_moved": true,
           "seed_scalar_name_literal_in_message": false
         },
         "skill": {
           "path": ".claude/skills/malleus-acolyte/SKILL.md",
-          "sha256": "sha256:4cfd5f2aab9a085f44ded0ec04547db6e20c679d14593f78c44e661e3ca6dfe2",
+          "sha256": "sha256:9f37686fd809dfac4fd2eac6fd570cf51fa4029dd16435b9a35b30e54467eba6",
           "baseline_sha256": "sha256:f19f905761d97809b9ef731ff5a9cf6bf6ccd3e9a1756f7f8c3a8fca49356f89",
           "moved": true
         },
@@ -107,10 +107,10 @@
           "note": "The contract was opened before Core-14 landed and named the refusal it expected. Core landed the check under another name and the pin recorded that name in reasons, which is what the subset check is for; the expectation was then corrected against Core's bytes rather than the bytes against the expectation. From this pin forward the subset check is a regression guard: a rename or a removal returns the entry to PENDING_AT_PIN."
         },
         "ride_alongs_observed": {
-          "ELABORATOR_MOVED_SINCE_THE_V4_3_COORDINATE": false,
+          "ELABORATOR_MOVED_SINCE_THE_V4_3_COORDINATE": true,
           "SKILL_MOVED_SINCE_THE_V4_3_COORDINATE": true
         },
-        "ride_alongs_landed": false
+        "ride_alongs_landed": true
       },
       {
         "id": "ENTITY_KIND_RESTRICTED",
@@ -506,16 +506,16 @@
     "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
   },
   "core_gate": {
-    "status": "PROVISIONALLY_PINNED_PENDING_CORE_14",
+    "status": "PINNED_TO_THE_V4_4_CORE_COORDINATE",
     "verification_owner": "OVERSEER_BEFORE_PRODUCER_SPAWN",
     "pinned_by": "paper-v4/experiment-v4/run-10/pin.py",
     "execution_baseline": {
-      "core_commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-      "core_tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d"
+      "core_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+      "core_tree": "fa16913d79615aa977fa974fe614bfdcfff28444"
     },
     "governance_head": {
-      "entry_id": "OVR-000408",
-      "head_hash": "sha256:d240b27209fa3d2799e475cf19bc92081a88d925ad9216cc56e6c5d15bc586cc"
+      "entry_id": "OVR-000409",
+      "head_hash": "sha256:f24828629a19e320e6e71a39dc234403d28de5a5348268afacad8a831c56d642"
     },
     "required_pieces": [
       "FULL_DOMAIN_HISTORY_PROFILE",
@@ -527,8 +527,8 @@
     ],
     "verified_pieces": {
       "AGGREGATE_REFUSAL_DIAGNOSTICS": {
-        "core_commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-        "core_tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d",
+        "core_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "core_tree": "fa16913d79615aa977fa974fe614bfdcfff28444",
         "paper_audit": "DIGEST_PINNED",
         "governance_entry": "OVR-000395",
         "shape": "ONE_SORTED_DEFECT_SET_PER_REFUSAL",
@@ -536,8 +536,8 @@
         "rite_module_sha256": "sha256:d2d76fe0181f74d5352b7535d19d7a6925ae0ca45ccb8393c0eaf1b64b06ba11"
       },
       "DERIVATION_CONTENT_CHECKS": {
-        "core_commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-        "core_tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d",
+        "core_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "core_tree": "fa16913d79615aa977fa974fe614bfdcfff28444",
         "paper_audit": "DIGEST_PINNED",
         "document_adapter_path": "src/malleus/_contract_pipeline/document.py",
         "document_adapter_sha256": "sha256:50b84d715b7f9d493ab39e6579c85e524b837fa4b7ceed95c071a4bc7505af78",
@@ -562,8 +562,8 @@
         ]
       },
       "EVENT_FAMILY_ADMISSION": {
-        "core_commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-        "core_tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d",
+        "core_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "core_tree": "fa16913d79615aa977fa974fe614bfdcfff28444",
         "paper_audit": "DIGEST_PINNED",
         "profile_id": "source-assertion",
         "event_role": [
@@ -578,8 +578,8 @@
         "plan_compiler_sha256": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28"
       },
       "FULL_DOMAIN_HISTORY_PROFILE": {
-        "core_commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-        "core_tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d",
+        "core_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "core_tree": "fa16913d79615aa977fa974fe614bfdcfff28444",
         "paper_audit": "DIGEST_PINNED",
         "profile_id": "source-assertion",
         "profile_path": "src/malleus/profiles/source-assertion.json",
@@ -587,8 +587,8 @@
         "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
       },
       "GROUNDED_PACKS_AND_PACK_GROUNDING": {
-        "core_commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-        "core_tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d",
+        "core_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "core_tree": "fa16913d79615aa977fa974fe614bfdcfff28444",
         "paper_audit": "DIGEST_PINNED",
         "grounding_rite_sha256": "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709",
         "pack_sha256": {
@@ -603,11 +603,11 @@
         }
       },
       "NASCENT_PROJECT_PLAYBOOK": {
-        "core_commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-        "core_tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d",
+        "core_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "core_tree": "fa16913d79615aa977fa974fe614bfdcfff28444",
         "paper_audit": "DIGEST_PINNED",
         "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
-        "skill_sha256": "sha256:4cfd5f2aab9a085f44ded0ec04547db6e20c679d14593f78c44e661e3ca6dfe2"
+        "skill_sha256": "sha256:9f37686fd809dfac4fd2eac6fd570cf51fa4029dd16435b9a35b30e54467eba6"
       }
     }
   },

@@ -4,8 +4,8 @@
   "status": "FROZEN",
   "producer_workspace": "private/paper-v4-v4-run-10/producer",
   "core": {
-    "commit": "e7919a7d3f87bb0edc5378a0a9d8c94fb05e0cc2",
-    "tree": "d7b8fa29666fe7fb9703824c3157546caa18c55d"
+    "commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+    "tree": "fa16913d79615aa977fa974fe614bfdcfff28444"
   },
   "interface_coordinates": {
     "capture_id": "capture:paper-v4:yu-2025:v4:10",
@@ -84,7 +84,7 @@
       "name": "MALLEUS_NASCENT_PROJECT_SKILL",
       "source": ".claude/skills/malleus-acolyte/SKILL.md",
       "target": ".claude/skills/malleus-acolyte/SKILL.md",
-      "sha256": "sha256:4cfd5f2aab9a085f44ded0ec04547db6e20c679d14593f78c44e661e3ca6dfe2"
+      "sha256": "sha256:9f37686fd809dfac4fd2eac6fd570cf51fa4029dd16435b9a35b30e54467eba6"
     },
     {
       "name": "SELECTED_READING",

@@ -3762,3 +3762,24 @@ returns are better rows, and a modality check at capture is not evidence that a
 producer will tag its clauses as the capture tags its sentences. Whether any of
 it holds is open, and run-10 is one cell that will be one observation, not a
 measurement, until it has run to ratification.
+
+### E-0145, run-10 is pinned to the v4.4 Core coordinate
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-10/run-contract.json` and
+`producer-input-manifest.json` as rewritten by `pin.py --commit 2026244`, the
+governance ledger through OVR-000409, and E-0144.
+
+Coordinates: Core commit `2026244` (the head after Core-14's three commits and
+its single governance entry OVR-000409), replacing E-0144's provisional pin.
+Core-14 landed: MODALITY_NOT_ASSERTED in the document adapter (a
+source-asserted record's modality must be one its formalizing assertion
+carries; decision 19); the INVALID_RANGE refusal names the range that failed
+to bind and the ranges that do; the skill's range note corrected; the skill
+says what a name is. One declared input moved against run-09: the skill. The
+one v4.4 harness delta, ENTITY_KIND_RESTRICTED, was validated offline against
+run-09's judged rows (630 kept, 618 SUPPORTED, 12 PARTIAL).
+
+Non-claim: no producer has run at this coordinate. The falsifiers are stated in
+`handover/2026-09-05-v43-rca.md` section 8.
