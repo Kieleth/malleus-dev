@@ -4910,3 +4910,64 @@ answer; it then took the three decisions itself and said so.
 
 Non-claim: admission is structural acceptance. No preliminary review exists
 yet; the review judges the rows as rows.
+
+### E-0165, run-14 (v4.8) preliminary review: PARTIAL, RESPONSIVE, RESPONSIVE, PARTIAL; 897 SUPPORTED, 22 PARTIAL, none UNSUPPORTED
+
+Date: 2026-09-05
+
+Sources: `paper-v4/evaluation-v4/run-14/review-block.CQ-01.json` to
+`review-block.CQ-04.json` (two fresh Opus 5 sessions, CQ-01 with CQ-02 and
+CQ-03 with CQ-04, dispatched 16:24Z under task v4 and protocol v2 with the
+aboutness instruction and one sentence for bibliographic ENTITY rows), merged
+and validated as `review-record.preliminary.md`
+(`sha256:166cb47708dad8068df083977b071b136f153d31c7e7d22ebdda0787c15baf61`),
+manifest
+`sha256:c3c1215967133eea3cf4a2d349b0d09cdf05bc572a5a49c907b04a19b53d7af7`.
+
+Results: CQ-01 PARTIAL, 187 SUPPORTED, 3 PARTIAL; CQ-02 RESPONSIVE, 189 and 6;
+CQ-03 RESPONSIVE, 316 and 7; CQ-04 PARTIAL, 205 and 6. 919 rows, no
+UNSUPPORTED, no NOT_EVALUABLE. Every digest token DIGEST_OK (137 SUBJECT rows
+in the first pair, 273 in the second). RELATION rows: CQ-01 26 local, 4
+non-local (the cruise-participation credits); CQ-02 11 and 5, among them the
+core RC2-to-population pairing, whose relation derives from the observations
+block while its endpoints derive from the abstract; CQ-03 13 and 7; CQ-04 11
+and 5. No non-local relation lowered a support label.
+
+Why two questions are PARTIAL, in the reviewers' words: CQ-01 because the
+observation network is never a record (it exists only in a count's free-text
+scope and in the instrument-type record) and the deployed and usable counts
+are separated only by prose in a scope field; CQ-04 because no projected field
+of any of its 211 rows carries the extensional-stress condition, which sits in
+a claim's statement reachable through the capture and dropped by the Claim
+projection (name, kind, modality, disposition, locator, digest, subject).
+Run-13's producer named that claim so its row carried the condition; run-14's
+did not. With Claim.statement left empty under the licence, a claim row's
+content is its name.
+
+The twenty-two PARTIAL rows: a north-south qualifier on the Chain transform
+the reading never states (four rows across two questions), a massif projected
+as a volcanic edifice where the block says nothing volcanic (three rows), a
+ratio projected bare where the block gives it as approximate, a work kind read
+from a reference entry's form where the form does not carry it, an initial
+sitting in an uncited block, a database projected as an organization, a
+relation flattening "west of" to "located in", a description joining two
+captions, and nine subject-fit rows where the value characterizes a figure's
+plotting convention or the microseismicity record and the feature is named
+only as the line a profile follows.
+
+What the reviewers could not decide under the task, for ratification:
+- The aboutness line, stated by both sessions: SUPPORTED where the record's
+  content characterizes the subject, including locative subjects (earthquakes
+  in the mantle); PARTIAL where the value characterizes a figure or the data.
+  A stricter line moves roughly forty more rows.
+- Whether `work_kind` on a bibliographic entity is a claim the reading states:
+  both sessions read it from the entry's form; all 84 bibliographic rows per
+  question rest on that reading.
+- Initials in the contribution and funding blocks resolved through the byline
+  block, cited alongside; judged on the derivation block alone those rows
+  would be PARTIAL.
+- CQ-03's precision: 84 of its 323 rows are reference entries and about forty
+  are features with no quantity, admitted by the type-only binding; the
+  protocol's labels have no slot for precision.
+
+Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.

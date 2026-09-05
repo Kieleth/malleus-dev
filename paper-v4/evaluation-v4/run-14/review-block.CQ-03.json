@@ -1,0 +1,2837 @@
+{
+  "question_id": "CQ-03",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "The rows carry both halves the question asks for, and they carry them in projected fields rather than only in the prose behind them. The earthquake depth range is returned as an observation over the deep-earthquake set, with a lower and an upper bound, a length unit, and a measured modality and determination; the calculated primary-melt CO2 range is returned as an observation over the studied ridge segment, with bounds, a mass-fraction unit, a calculated modality and an estimated determination. Because every quantity row also carries the record it is a quantity of, the bounded quantity, the unit, the quantity subject and the observed-or-calculated status are all readable on single rows without inference. The set is heavily diluted by rows of unrelated types, chiefly reference entries, which the type-only binding admits, but that is precision rather than responsiveness: nothing the question asks for is missing from the rows, and the rows that carry it are individually unambiguous about which range belongs to which subject and which status it holds.",
+  "source_locators": [
+    "page:1:block:001",
+    "page:2:block:004",
+    "page:2:block:006",
+    "page:5:block:005",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:012",
+        "page:8:block:013"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:014"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:015"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:016"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:017"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:001",
+        "page:9:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:003",
+        "page:9:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the page range, the year and the DOI in the form the row records, and its shape is that of a chapter in a monograph series. The row projects no subject."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:008"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:012"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:013"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:014",
+        "page:9:block:015"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the page range, the year and the DOI exactly as the row projects them, and it is laid out as a chapter in a monograph series. The row projects no subject."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:016"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:017",
+        "page:9:block:018"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:019"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:020",
+        "page:9:block:021"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:022"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the page range, the year and the DOI exactly as the row projects them, and it is laid out as a conference abstract. The row projects no subject."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:023",
+        "page:9:block:024"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the year and the DOI in the form the row records, and its shape is that of a work of the kind projected. The row projects no subject."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:025",
+        "page:9:block:026"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:028"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:029"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the page range and the year as projected and is a chapter in a monograph series. The row projects no subject."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:030"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:031"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the page range, the year and the DOI in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:031",
+        "page:9:block:032"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:033"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:034"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:035"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:036"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:037",
+        "page:9:block:038"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:039"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:040"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:041"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:042"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:043"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:044",
+        "page:9:block:045"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:046",
+        "page:9:block:047"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:048"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:049"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:050"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:051"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:052"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:053",
+        "page:9:block:054"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:9:block:055"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:001",
+        "page:9:block:056"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:004",
+        "page:10:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:006",
+        "page:10:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:008"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:012"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:013",
+        "page:10:block:014"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:015"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:016"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:017"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:018"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:019"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:020"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:021"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:023"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:024"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:025"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:026"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:027",
+        "page:10:block:028"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the page range and the year as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:029"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:030"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:032",
+        "page:10:block:033"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the year and the DOI in the cited reference entry match the projection, and the entry is a preprint. The row projects no subject."
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:034"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:035",
+        "page:10:block:036"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited block's reference entry states the title, the journal or container, the volume, the year and the DOI as projected and is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:037"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The reference entry in the cited block carries the title, the journal or container, the volume, the page range and the year exactly as the row projects them, and it is laid out as a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:038",
+        "page:10:block:039"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited reference gives the title, the journal or container, the volume, the page range and the year in the form the row records, and its shape is that of a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:040"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, the journal or container, the volume, the page range and the year in the cited reference entry match the projection, and the entry is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:041",
+        "page:10:block:042"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The row's the title, the journal or container, the volume, the page range and the year are all present in the cited reference entry, which is a journal article. The row projects no subject."
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:045",
+        "page:10:block:048",
+        "page:11:block:003",
+        "page:11:block:005",
+        "page:11:block:006",
+        "page:1:block:001",
+        "page:1:block:006",
+        "page:2:block:008",
+        "page:3:block:006",
+        "page:4:block:008",
+        "page:5:block:011",
+        "page:6:block:006",
+        "page:7:block:013",
+        "page:8:block:018",
+        "page:9:block:056"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The title, DOI and article label come from the first block, the journal, volume, page and year from the running footers, and the licence from the licensing block, so every projected field is stated in the cited blocks. The row projects no subject."
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The data-availability block says the raw seismic data and cruise reports are available on the cruise website, which supports the name and treating them as a dataset. The row projects no subject."
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005",
+        "page:8:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The methods block says the MORB samples were compiled from the PetDB database and the figure caption shows what it supplies for MORB whole rocks, which supports the name, the database kind and the description. The row projects no subject."
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:11:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The additional-information block says the online version contains supplementary material at the article DOI, which is the name, the DOI and the kind projected. The row projects no subject."
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008",
+        "page:8:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The data-availability blocks say the earthquake catalogue and picked arrivals were deposited in Zenodo and carry the deposit DOI across the block break. The row projects no subject."
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names Askja as a volcano in Iceland, which is the name and the volcanic-edifice kind the row projects. The row projects no subject."
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces axial melt lenses at fast- and intermediate-spreading ridges, giving both the name and the melt-body kind. The row projects no subject."
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes a median valley along the RC2 ridge segment, which carries the name and the axial-valley kind. The row projects no subject."
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block defines the brittle-ductile boundary and its abbreviation, and treats it as a boundary within the lithosphere. The row projects no subject."
+    },
+    {
+      "row_index": 88,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names Chain as one of the two transform faults bounding the MAR segment, so the name and the fault kind hold, but nowhere in the reading is Chain said to be the southern of the two, and the row projects that as its description. The row projects no subject."
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block treats oceanic crust as the layer formed from mantle melt at spreading centres, matching the name and the layer kind. The row projects no subject."
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes a westward dipping detachment fault bounding the RTI segment, giving the name and the fault kind. The row projects no subject."
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both cited blocks place the study in the equatorial Atlantic Ocean and treat it as an ocean region. The row projects no subject."
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports an extinct hydrothermal vent field on the eastern flank of NTD1, which is the name, the kind and the description the row projects. The row projects no subject."
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names Fagradalsfjall as a peninsula in Iceland, supporting the name and a landmass classification. The row projects no subject."
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names Gakkel Ridge among ultraslow-spreading ridges, which gives both the name and the spreading-ridge kind. The row projects no subject."
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure caption in the block reports an inactive hydrothermal mound seen on the Nautile dives, matching the name, the hydrothermal kind and the description. The row projects no subject."
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block places Askja and Fagradalsfjall in Iceland, supporting the name and a landmass classification. The row projects no subject."
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block refers to reflections beneath the young Juan de Fuca plate, giving the name and the plate kind. The row projects no subject."
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names Knipovich Ridge as one of the ridges whose depth data were updated, supporting the name and the spreading-ridge kind. The row projects no subject."
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks give the lithosphere-asthenosphere boundary and its abbreviation and treat it as a boundary surface. The row projects no subject."
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both cited blocks discuss the brittle lithosphere and its thickness, which supports the name and the layer kind. The row projects no subject."
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the Logachev Seamount of Knipovich Ridge; a seamount is a volcanic edifice, which is the kind projected. The row projects no subject."
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block treats the mantle as the source of the melt beneath spreading centres, which supports the name and the layer kind. The row projects no subject."
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block invokes an enriched mantle source near the Romanche transform to explain the enriched basalts, matching the name, the kind and the description. The row projects no subject."
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks name the Mid-Atlantic Ridge and its abbreviation and treat it as the spreading ridge under study. The row projects no subject."
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks refer to the MAR segment between the two transforms and later call it a supersegment, supporting the name and the ridge-segment kind. The row projects no subject."
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block refers to offshore Mayotte Island, supporting the name and a landmass classification. The row projects no subject."
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks discuss the melt and its behaviour beneath the ridge, supporting the name and the melt-body kind. The row projects no subject."
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010",
+        "page:7:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The schematic-figure blocks label the Moho and call it the expected Moho interface, which is the name and the boundary kind. The row projects no subject."
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block refers to high-temperature hydrated mylonite shear zones along transform faults, giving the name and the shear-zone kind. The row projects no subject."
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports an oriented neo-volcanic ridge in the RC2 valley, supporting the name and the volcanic-edifice kind. The row projects no subject."
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes normal faults cutting the OCC surface, supporting the name and the fault kind. The row projects no subject."
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the first non-transform discontinuity and names it NTD1. The row projects no subject."
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the second non-transform discontinuity and names it NTD2. The row projects no subject."
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces a prominent oceanic core complex and its abbreviation on the eastern side of the ridge axis. The row projects no subject."
+    },
+    {
+      "row_index": 115,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block places the Rainbow massif at a non-transform discontinuity, which supports the name but says nothing about it being volcanic; the volcanic-edifice kind the row projects is not stated there. The row projects no subject."
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the RTI segment RC1 and treats it as one of the ridge subsections. The row projects no subject."
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names a short ridge segment RC2 among the four subsections. The row projects no subject."
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the ridge segment south of NTD2 as RC3. The row projects no subject."
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the Romanche transform fault as one of the two bounding transforms. The row projects no subject."
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the eastern Romanche ridge-transform intersection and its abbreviation, and the figure caption repeats it. The row projects no subject."
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports peridotites observed on the sea floor, which supports the name and treating the sea floor as a surface. The row projects no subject."
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the Southwest Indian Ridge and its abbreviation as a spreading ridge. The row projects no subject."
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-caption block marks volcanic cones on the RC2 map, supporting the name and the volcanic-edifice kind. The row projects no subject."
+    },
+    {
+      "row_index": 124,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says a one-dimensional velocity model was sought to compute travel times, which is the name the row projects. The row projects no subject."
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block applies a CO2 solubility model to the melt, which is the name projected. The row projects no subject."
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:2:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both cited blocks refer to the depth resolution tests carried out on the locations. The row projects no subject."
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says the hypocentres were relocated with a double-difference location method. The row projects no subject."
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says focal mechanisms were determined from P-phase first-motion polarities. The row projects no subject."
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says the CO2 concentrations were computed after correcting for fractional crystallisation. The row projects no subject."
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says magnitudes were determined on the local magnitude scale ML. The row projects no subject."
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says a non-linear earthquake location algorithm produced the hypocentres. The row projects no subject."
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the non-linear oct-tree search algorithm used for the initial locations. The row projects no subject."
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both cited blocks name the short-term-average/long-term-average trigger algorithm used for detection. The row projects no subject."
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-caption block attributes the isotherms to a simulated thermal model. The row projects no subject."
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says Wadati diagrams yielded the Vp/Vs ratio. The row projects no subject."
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both cited blocks give the CO2/Ba ratio with the same central value and the same uncertainty, and attribute it to undegassed MORBs and melt inclusions, which is what the row projects. The row projects no subject."
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both cited blocks give the CO2/Rb ratio with the same central value and the same uncertainty, and attribute it to undegassed MORBs and melt inclusions, which is what the row projects. The row projects no subject."
+    },
+    {
+      "row_index": 138,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block does say the Wadati diagrams yield a Vp/Vs ratio used to estimate S-wave velocity in the inversion, but it gives that ratio as approximate, and the row projects a bare value with no uncertainty and no approximation marker. The row projects no subject."
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The abstract block says regional basaltic rock samples and their geochemical analyses were synthesised, which is the name, the basalt kind and the description projected. The row projects no subject."
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks report basalts observed on the sea floor and label them on the sample map. The row projects no subject."
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block refers to olivine melt inclusions used to define the global volatile trends. The row projects no subject."
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says published geochemical analyses of MORB samples inside the network were compiled, and spells out mid-ocean ridge basalts. The row projects no subject."
+    },
+    {
+      "row_index": 143,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006",
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks report peridotites observed on the sea floor and label them on the sample map. The row projects no subject."
+    },
+    {
+      "row_index": 144,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports pillow basalts alongside peridotites on the sea floor at NTD1. The row projects no subject."
+    },
+    {
+      "row_index": 145,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-caption block lists popping rocks among the plotted sample groups. The row projects no subject."
+    },
+    {
+      "row_index": 146,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The abstract block says regional basaltic rock samples and their geochemical analyses were synthesised, which is the name, the basalt kind and the description projected. The row projects no subject."
+    },
+    {
+      "row_index": 147,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks report basalts observed on the sea floor and label them on the sample map. The row projects no subject."
+    },
+    {
+      "row_index": 148,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block refers to olivine melt inclusions used to define the global volatile trends. The row projects no subject."
+    },
+    {
+      "row_index": 149,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block says published geochemical analyses of MORB samples inside the network were compiled, and spells out mid-ocean ridge basalts. The row projects no subject."
+    },
+    {
+      "row_index": 150,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006",
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The cited blocks report peridotites observed on the sea floor and label them on the sample map. The row projects no subject."
+    },
+    {
+      "row_index": 151,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports pillow basalts alongside peridotites on the sea floor at NTD1. The row projects no subject."
+    },
+    {
+      "row_index": 152,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-caption block lists popping rocks among the plotted sample groups. The row projects no subject."
+    },
+    {
+      "row_index": 153,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports the located earthquakes of this study, which is the set the row names and the measured modality it projects. The row projects no subject."
+    },
+    {
+      "row_index": 154,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The abstract block reports deep earthquakes in the mantle along the ridge axis as an observation of this study. The row projects no subject."
+    },
+    {
+      "row_index": 155,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the subset of events at 10 to 20 km along the cross-section whose depths were held fixed, matching the name and the description. The row projects no subject."
+    },
+    {
+      "row_index": 156,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-2 block carries the MAR label and the event total for that profile, which is the set the row names and describes. The row projects no subject."
+    },
+    {
+      "row_index": 157,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports normal-depth earthquakes beneath the southern NTD2 as one of the three key observations. The row projects no subject."
+    },
+    {
+      "row_index": 158,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports off-axis shallow microseismicity west of the RC2 axis. The row projects no subject."
+    },
+    {
+      "row_index": 159,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports the shallow earthquakes on the outside corner of the RTI as one of the three key observations. The row projects no subject."
+    },
+    {
+      "row_index": 160,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The figure-2 block carries the transform label and the event total for that profile, which is the set the row names and describes. The row projects no subject."
+    },
+    {
+      "row_index": 161,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the sub-dataset assembled for the minimum-1-D velocity search, matching the name and the description. The row projects no subject."
+    },
+    {
+      "row_index": 162,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports an earthquake cluster observed on the western side of the axial valley. The row projects no subject."
+    },
+    {
+      "row_index": 163,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block the relation is derived from says the axial valley floor is cut by ridge-parallel normal faults, which is exactly the pairing and the cutting relation projected; the endpoints are introduced a page earlier, so the relation's own block is not one of theirs."
+    },
+    {
+      "row_index": 164,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL The block names the Logachev Seamount of Knipovich Ridge, which states the part-whole pairing, and it is also the block that introduces both endpoints."
+    },
+    {
+      "row_index": 165,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The block says the surface of the core complex is heavily cut by normal faults, which is the pairing and the cutting relation; that block also formalises the faults."
+    },
+    {
+      "row_index": 166,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL The figure-caption block places the core complex on the outside corner of the ridge, which supports locating it in the ridge; the same block also formalises the ridge."
+    },
+    {
+      "row_index": 167,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The block says the RTI segment is bounded to the east by a detachment fault, and it introduces both endpoints as well."
+    },
+    {
+      "row_index": 168,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block places segment RC2 immediately south of NTD1, which supports adjacency; both endpoints are introduced in the earlier segment-naming block, not in this one."
+    },
+    {
+      "row_index": 169,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The block names RC3 as the ridge segment south of NTD2, which supports adjacency and also introduces both endpoints."
+    },
+    {
+      "row_index": 170,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL The block places the MAR segment between the Romanche and Chain transforms, so the bounding pairing holds and the block also introduces both endpoints, but the row's target projection describes Chain as the southern of the two and the reading never says which of the pair is southern."
+    },
+    {
+      "row_index": 171,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL The block places the MAR segment between the Romanche and Chain transforms, which supports this bounding pairing, and it introduces both endpoints."
+    },
+    {
+      "row_index": 172,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL The block puts the extinct vent field on the eastern flank of NTD1, which supports the containment pairing, and it also formalises the vent field."
+    },
+    {
+      "row_index": 173,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006",
+        "page:2:block:001",
+        "page:3:block:003"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block reports pillow basalts and peridotites present on the sea floor, which supports the hosting pairing; both endpoints are formalised in earlier blocks."
+    },
+    {
+      "row_index": 174,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006",
+        "page:2:block:001",
+        "page:3:block:003"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block reports pillow basalts and peridotites present on the sea floor, which supports the hosting pairing; both endpoints are formalised in earlier blocks."
+    },
+    {
+      "row_index": 175,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005",
+        "page:8:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The methods block says the MORB samples were compiled from the PetDB database, which is the reporting pairing, and that block also formalises the database."
+    },
+    {
+      "row_index": 176,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005",
+        "page:8:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The methods block says the MORB samples were compiled from the PetDB database, which is the reporting pairing, and that block also formalises the database."
+    },
+    {
+      "row_index": 177,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL The block reports the earthquake cluster on the western side of the axial valley, which supports locating it in the valley, and it also formalises the cluster."
+    },
+    {
+      "row_index": 178,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block states that the deep microseismicity lies beneath the ridge axis of segment RC2, which is the pairing projected; neither endpoint is formalised in that block."
+    },
+    {
+      "row_index": 179,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:007",
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block says events of that count were located along the ridge, which supports the pairing; the event set is formalised from the figure block and the ridge from the title and caption blocks, so not from this one."
+    },
+    {
+      "row_index": 180,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL The block reports normal-depth earthquakes occurring beneath the southern NTD2, which is the pairing, and it also formalises the event set."
+    },
+    {
+      "row_index": 181,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004",
+        "page:3:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The block puts the majority of shallow earthquakes on the outside corner of the RTI, which supports the pairing, and it also formalises the event set."
+    },
+    {
+      "row_index": 182,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:003",
+        "page:7:block:007"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block says events of that count were located along the Romanche transform, which supports the pairing; neither endpoint is formalised in that block."
+    },
+    {
+      "row_index": 183,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:045",
+        "page:10:block:048",
+        "page:11:block:003",
+        "page:11:block:005",
+        "page:11:block:006",
+        "page:1:block:001",
+        "page:1:block:006",
+        "page:2:block:008",
+        "page:3:block:006",
+        "page:4:block:008",
+        "page:5:block:011",
+        "page:6:block:006",
+        "page:7:block:013",
+        "page:8:block:018",
+        "page:9:block:056"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, the paper itself, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 184,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, OCC, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 185,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, BDB, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 186,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, lithosphere, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 187,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 188,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:5:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, mantle, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 189,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, detachment fault, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 190,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, mantle source, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 191,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, mantle, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 192,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:005",
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, lithosphere, is named in that same block, so the claim is anchored to it there. The block goes on to set the idea aside, which is the disposition projected."
+    },
+    {
+      "row_index": 193,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006",
+        "page:5:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 194,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, RC2, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 195,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, mantle, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 196,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 197,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, LAB, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 198,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:002",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 199,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:005",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, lithosphere, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 200,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:003",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 201,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:4:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, crust, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 202,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 203,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a negative finding, which matches the modality projected. The subject shown, RC2, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 204,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a negative finding, which matches the modality projected. The subject shown, RC2, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 205,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a negative finding, which matches the modality projected. The subject shown, median valley, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 206,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, RC2, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 207,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:006",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, Mid-Atlantic Ridge, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 208,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, mantle, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 209,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:003",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 210,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, RC2, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 211,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a negative finding, which matches the modality projected. The subject shown, RC2, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 212,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block does carry the limitation the row states and does name the supersegment, but what it qualifies is the microseismicity record, not the supersegment, so the block supports the claim without supporting that the record is about the subject shown"
+    },
+    {
+      "row_index": 213,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, mylonite shear zones, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 214,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, SWIR, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 215,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, melt, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 216,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, depth resolution tests, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 217,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, 1-D velocity model, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 218,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:3:block:003",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, basalts, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 219,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:3:block:003",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, basalts, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 220,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there. The block also marks it as the authors' preferred explanation, which is the disposition projected."
+    },
+    {
+      "row_index": 221,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there. The block goes on to set the idea aside, which is the disposition projected."
+    },
+    {
+      "row_index": 222,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a measurement, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 223,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 224,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 225,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:008"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 226,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:4:block:002",
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there. The block goes on to set the idea aside, which is the disposition projected."
+    },
+    {
+      "row_index": 227,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:5:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 228,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:5:block:008"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 229,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:8:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a plain statement, which matches the modality projected. The subject shown, deep earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 230,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:5:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, off-axis shallow microseismicity, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 231,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The assertion the locator reaches is the sentence this claim summarises and the block frames it as a hypothesis, which matches the modality projected. The subject shown, shallow earthquakes, is named in that same block, so the claim is anchored to it there."
+    },
+    {
+      "row_index": 232,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 5 the row projects, for 1-D P-wave velocity models constructed from the refraction profile. The subject shown, 1-D velocity model, is named in the same block."
+    },
+    {
+      "row_index": 233,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 45 the row projects, for events at 10 to 20 km depth along cross-section cc'. The subject shown, subset, is named in the same block."
+    },
+    {
+      "row_index": 234,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 760 the row projects, for earthquakes identified and registered into the SEISAN database. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 235,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a measurement. The block gives the count of 514 the row projects, for earthquakes located in the vicinity of the Romanche RTI region. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 236,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 4 the row projects, for categories the earthquake locations were classified into. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 237,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 317 the row projects, for events shown along the Mid-Atlantic Ridge profile. The subject shown, events, is named in the same block."
+    },
+    {
+      "row_index": 238,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:7:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 364 the row projects, for well-constrained events for which double-difference relocations were determined. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 239,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 197 the row projects, for events shown along the Romanche transform fault profile. The subject shown, events, is named in the same block."
+    },
+    {
+      "row_index": 240,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 360 the row projects, for earthquakes in the sub-dataset used with VELEST. The subject shown, sub-dataset, is named in the same block."
+    },
+    {
+      "row_index": 241,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count of 276 the row projects, for events well relocated and used in the final catalog. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 242,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.4 to 3.0 wt% the row projects and frames it as a calculation. The block gives it as approximate, which the row carries. It is derived in the block, matching the status projected. The subject shown, melt, is named in the same block."
+    },
+    {
+      "row_index": 243,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 1250 °C the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, LAB, is named in the same block."
+    },
+    {
+      "row_index": 244,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 89 ppm the row projects and frames it as a measurement. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 245,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 20 km the row projects and frames it as a hypothesis. The block gives it as approximate, which the row carries. The subject shown, BDB, is named in the same block."
+    },
+    {
+      "row_index": 246,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 700 °C the row projects and frames it as a plain statement. The block also gives the stated uncertainty the row carries. The subject shown, BDB, is named in the same block."
+    },
+    {
+      "row_index": 247,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 10 km the row projects and frames it as a measurement. The block gives it as approximate, which the row carries. It is measured in the block, matching the status projected. The subject shown, BDB, is named in the same block."
+    },
+    {
+      "row_index": 248,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 10 km the row projects and frames it as a plain statement. The block gives it as a one-sided bound, which the row carries. The subject shown, BDB, is named in the same block."
+    },
+    {
+      "row_index": 249,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 0.4 wt% the row projects and frames it as a calculation. The block gives it as a one-sided bound, which the row carries. It is estimated in the block, matching the status projected. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 250,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.7 to 4.6 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 251,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.06 to 0.8 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC3, is named in the same block."
+    },
+    {
+      "row_index": 252,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.4 to 3.0 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 253,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.04 to 0.5 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC3, is named in the same block."
+    },
+    {
+      "row_index": 254,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:005",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.4 to 3.0 wt% the row projects and frames it as a calculation. It is derived in the block, matching the status projected. The subject shown, melt, is named in the same block."
+    },
+    {
+      "row_index": 255,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.04 to 0.7 wt% the row projects and frames it as a calculation. It is derived in the block, matching the status projected. The subject shown, RC3, is named in the same block."
+    },
+    {
+      "row_index": 256,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.9 to 4.3 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 257,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.07 to 1.0 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC3, is named in the same block."
+    },
+    {
+      "row_index": 258,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.5 to 2.8 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 259,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.05 to 0.7 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, RC3, is named in the same block."
+    },
+    {
+      "row_index": 260,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 600 to 800 °C the row projects and frames it as a hypothesis. The subject shown, BDB, is named in the same block."
+    },
+    {
+      "row_index": 261,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:002",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 120 km the row projects and frames it as a plain statement. The subject shown, Mid-Atlantic Ridge, is named in the same block."
+    },
+    {
+      "row_index": 262,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 140 km the row projects and frames it as a plain statement. The subject shown, Romanche TF, is named in the same block."
+    },
+    {
+      "row_index": 263,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 8 Ma the row projects and frames it as a plain statement. The subject shown, crust, is named in the same block."
+    },
+    {
+      "row_index": 264,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006",
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 5.4 km the row projects and frames it as a plain statement. The block also gives the stated uncertainty the row carries. The subject shown, crust, is named in the same block."
+    },
+    {
+      "row_index": 265,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 60 to 70 km the row projects and frames it as a plain statement. The subject shown, mantle, is named in the same block."
+    },
+    {
+      "row_index": 266,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 2800 ppm the row projects and frames it as a calculation. The block gives it as approximate, which the row carries. It is estimated in the block, matching the status projected. The subject shown, equatorial Atlantic Ocean, is named in the same block."
+    },
+    {
+      "row_index": 267,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 8799 ppm the row projects and frames it as a calculation. The block gives it as a one-sided bound, which the row carries. It is estimated in the block, matching the status projected. The subject shown, equatorial Atlantic Ocean, is named in the same block."
+    },
+    {
+      "row_index": 268,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 16 mm/yr the row projects and frames it as a plain statement. The subject shown, Mid-Atlantic Ridge, is named in the same block."
+    },
+    {
+      "row_index": 269,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 1100 °C the row projects and frames it as a plain statement. The block gives it as a one-sided bound, which the row carries. The subject shown, mantle, is named in the same block."
+    },
+    {
+      "row_index": 270,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 10 km the row projects and frames it as a plain statement. The block gives it as a one-sided bound, which the row carries. The subject shown, Iceland, is named in the same block."
+    },
+    {
+      "row_index": 271,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:5:block:010",
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 750 °C the row projects and frames it as a plain statement. The subject shown, BDB, is named in the same block."
+    },
+    {
+      "row_index": 272,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:005",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 45 Ma the row projects and frames it as a plain statement. The subject shown, lithosphere, is named in the same block."
+    },
+    {
+      "row_index": 273,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 30 km the row projects and frames it as a plain statement. The block gives it as a one-sided bound, which the row carries. The subject shown, Mayotte, is named in the same block."
+    },
+    {
+      "row_index": 274,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 10 km the row projects and frames it as a plain statement. The subject shown, median valley, is named in the same block."
+    },
+    {
+      "row_index": 275,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 1.1 % the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, LAB, is named in the same block."
+    },
+    {
+      "row_index": 276,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 1100 to 1200 °C the row projects and frames it as a plain statement. It is modelled in the block, matching the status projected. The subject shown, mantle, is named in the same block."
+    },
+    {
+      "row_index": 277,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 35 km the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, NTD1, is named in the same block."
+    },
+    {
+      "row_index": 278,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 10 km the row projects and frames it as a measurement. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, NTD2, is named in the same block."
+    },
+    {
+      "row_index": 279,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 10 km the row projects and frames it as a measurement. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, NTD2, is named in the same block."
+    },
+    {
+      "row_index": 280,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 33 km the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, NTD2, is named in the same block."
+    },
+    {
+      "row_index": 281,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 6 km the row projects and frames it as a measurement. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, OCC, is named in the same block."
+    },
+    {
+      "row_index": 282,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0.7 to 4.6 wt% the row projects and frames it as a calculation. It is estimated in the block, matching the status projected. The subject shown, melt, is named in the same block."
+    },
+    {
+      "row_index": 283,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:007",
+        "page:3:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the half-width the row projects with its unit, but it gives it as a plotting convention for the depth profiles of a figure; the ridge is named only as the line the profile follows, so the block does not support the ridge being what this measurement is about"
+    },
+    {
+      "row_index": 284,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 8 ppm the row projects and frames it as a measurement. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 285,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 22 km the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, RC2, is named in the same block."
+    },
+    {
+      "row_index": 286,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 50 km the row projects and frames it as a plain statement. The subject shown, RC3, is named in the same block."
+    },
+    {
+      "row_index": 287,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 0.7 GPa the row projects and frames it as a calculation. The block gives it as approximate, which the row carries. It is modelled in the block, matching the status projected. The subject shown, melt, is named in the same block."
+    },
+    {
+      "row_index": 288,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 200 km the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, MAR supersegment, is named in the same block."
+    },
+    {
+      "row_index": 289,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 1.9 wt% the row projects and frames it as a plain statement. The subject shown, SWIR, is named in the same block."
+    },
+    {
+      "row_index": 290,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the transect half-width and unit the row projects, but as a plotting convention for two figure transects; the core complex is named only as what the transects run along and across, not as what the measurement is about"
+    },
+    {
+      "row_index": 291,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 150 to 300 km the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, mantle, is named in the same block."
+    },
+    {
+      "row_index": 292,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 332 ppm the row projects and frames it as a plain statement. The block gives it as a one-sided bound, which the row carries. The subject shown, LAB, is named in the same block."
+    },
+    {
+      "row_index": 293,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:7:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 7.5 Ma the row projects and frames it as a plain statement. The block gives it as a one-sided bound, which the row carries. The subject shown, crust, is named in the same block."
+    },
+    {
+      "row_index": 294,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, 1-D velocity model, is named in the same block."
+    },
+    {
+      "row_index": 295,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, subset, is named in the same block."
+    },
+    {
+      "row_index": 296,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 297,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a measurement. The block gives the count this record was drawn from. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 298,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 299,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, events, is named in the same block."
+    },
+    {
+      "row_index": 300,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:7:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 301,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, events, is named in the same block."
+    },
+    {
+      "row_index": 302,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, sub-dataset, is named in the same block."
+    },
+    {
+      "row_index": 303,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is where this count is stated and the block frames it as a plain statement. The block gives the count this record was drawn from. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 304,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 10 to 20 km the row projects and frames it as a measurement. It is measured in the block, matching the status projected. The subject shown, deep earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 305,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:7:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 2.6 km the row projects and frames it as a measurement. The block gives it as approximate, which the row carries. It is measured in the block, matching the status projected. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 306,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 2.1 km the row projects and frames it as a measurement. The block gives it as approximate, which the row carries. It is measured in the block, matching the status projected. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 307,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 10 to 20 km the row projects and frames it as a measurement. The block gives it as approximate, which the row carries. It is measured in the block, matching the status projected. The subject shown, deep earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 308,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 10 to 19 km the row projects and frames it as a hypothesis. It is measured in the block, matching the status projected. The subject shown, deep earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 309,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 16 to 19 km the row projects and frames it as a measurement. It is measured in the block, matching the status projected. The subject shown, deep earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 310,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 10 to 20 km the row projects and frames it as a plain statement. The subject shown, subset, is named in the same block."
+    },
+    {
+      "row_index": 311,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:008"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 5 Hz the row projects and frames it as a hypothesis. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, deep earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 312,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 4 to 10 km the row projects and frames it as a measurement. It is measured in the block, matching the status projected. The subject shown, normal-depth earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 313,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 6 km the row projects and frames it as a measurement. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, off-axis shallow microseismicity, is named in the same block."
+    },
+    {
+      "row_index": 314,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:5:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the upper bound 10 km the row projects and frames it as a hypothesis. The block gives it as a one-sided bound, which the row carries. The subject shown, off-axis shallow microseismicity, is named in the same block."
+    },
+    {
+      "row_index": 315,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:7:block:008"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the value 78 % the row projects and frames it as a plain statement. The block gives it as approximate, which the row carries. The subject shown, earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 316,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the lower bound 10 km the row projects and frames it as a measurement. The block gives it as a one-sided bound, which the row carries. It is measured in the block, matching the status projected. The subject shown, deep earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 317,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 0 to 6 km the row projects and frames it as a measurement. It is measured in the block, matching the status projected. The subject shown, shallow earthquakes, is named in the same block."
+    },
+    {
+      "row_index": 318,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion states the range 2 to 6 km the row projects and frames it as a measurement. The block gives it as approximate, which the row carries. It is measured in the block, matching the status projected. The subject shown, earthquake cluster, is named in the same block."
+    },
+    {
+      "row_index": 319,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion gives this ratio with the numerator, denominator, central value and uncertainty the row projects, framed as a calculation. The subject shown, MORB samples, is named in the same block."
+    },
+    {
+      "row_index": 320,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion gives this ratio with the numerator, denominator, central value and uncertainty the row projects, framed as a calculation. The subject shown, MORB samples, is named in the same block."
+    },
+    {
+      "row_index": 321,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion gives this ratio with the numerator, denominator, central value and uncertainty the row projects, framed as a calculation. The subject shown, MORB samples, is named in the same block."
+    },
+    {
+      "row_index": 322,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion gives this ratio with the numerator, denominator, central value and uncertainty the row projects, framed as a calculation. The subject shown, MORB samples, is named in the same block."
+    }
+  ]
+}
