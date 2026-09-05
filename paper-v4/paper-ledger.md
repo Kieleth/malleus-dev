@@ -3273,3 +3273,61 @@ Non-claim: no producer has run at this coordinate. Everything E-0136 declines
 to claim still holds. The skill's movement is a declared input change of this
 iteration, not a variable isolated from the pack and adapter changes; run-08
 against run-04 measures the iteration, not any one of its parts.
+
+### E-0138, run-08 is admitted and replayed at the first attempt of every stage, and answers almost nothing
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-08/ontology-run/`, `paper-v4/experiment-v4/run-08/results/`
+(including the acceptance-time type sets and binding, the v2 launch log and
+the derived cost record), `private/paper-v4-v4-run-08/` (ledger, query result,
+withheld files), and `paper-v4/evaluation-v4/run-08/` (frozen review inputs).
+
+Outcome, structural: the first cell accepted at ontology attempt 01
+(4,950 facts; 37 entity types, 2 event types with `SeismicEvent`, 4 relation
+types; all nine cited vocabularies verified by the overseer before phase two;
+the four the producer could not vouch for were declared as an honest search,
+not cited) and admitted at runner attempt 1 under `actor:overseer-run-08` with zero
+structural returns: 418 entities, 1 event, 26 relations, 445 records traced, fourteen ledger events,
+the reopened replay reproducing the admitted receipt and export. Census: 349
+assertions over all 186 blocks (182 asserted, 4 declared nothing-assertable),
+323 fully formalized, 17 partly, 9 unformalized; 27 typed gaps (RELATION_ABSENT 16,
+REQUIRED_FIELD_ABSENT_IN_SOURCE 6, TYPE_ABSENT 3, AGGREGATE_ONLY 1,
+INTERVAL_NOT_EXPRESSIBLE 1). The metrology value qualification was used on 108
+of 131 observations (approximate 27, open lower bound 13, open upper bound 21,
+exact 47), and the interval gaps fell from run-04's 26 to 1. Every located
+claim's statement digest was recomputed at capture under Core-12 and none
+refused; the five hypothesis dispositions derive from disposing sentences.
+Derivation census: 6 of 26 relations non-local, the largest hub formalizing
+10 records (run-04: 47).
+
+Outcome, questions: the binding was frozen at ontology acceptance (2,084 cases
+from four type sets written from the surface; `cases_sha256` of the executed
+binding equals the acceptance binding's; the launch log carries both digests
+with the acceptance timestamp preceding the phase-two dispatch) and returned
+CQ-01 5, CQ-02 2, CQ-03 0, CQ-04 1 rows over 24 witnesses, no forbidden attempt.
+The graph holds 131 observations (34 of them depth quantities, 20 CO2
+quantities) and 85 claims, and not one relation from any observation or claim
+to a feature, a sample, a campaign or another claim: the 26 relations are
+contribution, funding, archive, software and feature-to-feature links. The
+research pack's CLAIM_CONCERNS, SUPPORTS, CHALLENGES and OBSERVED_WITH types
+were on the surface and unused; the 16 RELATION_ABSENT gaps concern
+affiliations, contributions and unnamed discontinuities, not the missing
+subject links; the session log gives no reason. A type-only binding over
+relations therefore reaches almost nothing the questions ask, while the
+answers exist as unattached records.
+
+Execution coordinate: inputs pinned at `f594771` (E-0137); the runner executed
+at main `1db4902`, whose Core files are the pinned coordinate's (the commits
+between are paper files). Recorded per attempt in the public launch log.
+
+Cost, from `results/usage.json` derived by `usage_from_launch_log.py`: ontology
+attempt 01 179,245; population 161,068; producer total 340,313.
+
+Non-claim: admission is structural acceptance, not adequacy. No preliminary
+review exists yet. The comparison with run-04 is the analysis Luis ordered and
+is recorded separately; one cell per iteration is one observation. What this
+entry establishes is that the derivation rule's tightened reach removed the
+hub-derived subject links of run-04 without the producer replacing them by
+local derivations or by gaps, and that the query surface cannot see an answer
+that is not a relation.

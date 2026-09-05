@@ -1,0 +1,221 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-08",
+  "protocol": "v4.2",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "launched_at": "2026-09-05T03:01:33Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-08/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "POPULATION_READY",
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 340313,
+          "tool_uses": 58,
+          "duration_ms": 1513569
+        }
+      ],
+      "phase_two": {
+        "dispatched_at": "2026-09-05T03:19:17Z",
+        "after_binding_frozen_at": "2026-09-05T03:19:01Z",
+        "message": "run-04's phase-two message with run-08's coordinates and the v4.2 stop-rule sentence",
+        "capture_id": "capture:paper-v4:yu-2025:v4:8",
+        "plan_id": "plan:paper-v4:yu-2025:v4:8",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ]
+      },
+      "execution": {
+        "pinned_commit": "f59477154a2b20f9ffbf6b1f72f6104ee2e1f6c5",
+        "staged_at": "2026-09-05T03:01:33Z",
+        "interpreter": "VERIFIED by prepare_producer.py preflight, recorded in producer-input-receipt.json",
+        "harness_fix_before_phase_two": {
+          "at": "2026-09-05T03:10:17Z",
+          "what": "run.py passes contract_view=retention.contract_view to adapt_document_assertions so EVALUATIVE_SLOT_NOT_EVALUATED is in force; found in Core-12's report (adapter argument defaults to None); the producer was already running phase one, which the runner does not touch",
+          "commit": "see git log after f37ecf4"
+        }
+      },
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "usage_cumulative": {
+        "tokens": 179245,
+        "tool_uses": 21,
+        "duration_ms": 913693
+      }
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:36936af46311f0e3b517539a6dfc9432ffee71ba79a6dbd68b74b223f4353567",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:e968e62506b621a75b3283d7ec869c901ee547dc1036fec38b3dba49b44e3eb0",
+      "fact_count": 4950,
+      "accepted_at": "2026-09-05T03:17:33Z",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 37,
+        "EVENT": 2,
+        "RELATION": 4
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "ResearchRelation",
+        "GeospatialRelation",
+        "ScholarlyRelation"
+      ],
+      "note": "first cell accepted at attempt 01",
+      "phase_two_inputs_staged": [
+        "accepted/population-surface.json",
+        "accepted/diagnostic.json"
+      ],
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "overseer, WebFetch of every vocabulary_url in the accepted ontology, before phase two",
+        "checked_at": "2026-09-05T03:18:26Z",
+        "urls": 9,
+        "result": "all nine resolve to the vocabulary the grounding block names: W3C vocab-org (Organization Ontology), W3C vocab-ssn (SOSA/SSN: Sensor, Observation, Platform), DataCite Metadata Schema, schema.org Grant, schema.org SoftwareApplication, W3C PROV-O (Agent, Person, Organization), FOAF (Person, name), W3C OWL-Time (Instant, Interval), DCMI Terms (creator, date, identifier)",
+        "term_membership": "each block's borrowed terms were checked against the fetched page's stated definitions for the terms the prompt named; not every borrowed term was individually read",
+        "fabricated": 0,
+        "unverifiable_declared_by_producer": "GeoSciML/CGI, IHO B-6, NASA GCMD, SWEET, QuakeML, USGS glossary, GeoSPARQL, RCC8: not cited, recorded in invention_search with 16 invented terms on EarthFeature"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-05T03:44:50Z",
+      "execution_commit": "1db4902",
+      "core_note": "Core files at the pinned coordinate f594771 (OVR-000402); the commits between are paper files only",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 418,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 26,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 445,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 323,
+          "PARTLY_FORMALIZED": 17,
+          "UNFORMALIZED": 9
+        },
+        "blocks_reviewed": 186,
+        "blocks_total": 186,
+        "capture_sha256": "sha256:e8256c971e68f749882aba77a2bbf013de15ecc89eaf694a4c0cbf607f6d4403",
+        "gaps_by_kind": {
+          "AGGREGATE_ONLY": 1,
+          "INTERVAL_NOT_EXPRESSIBLE": 1,
+          "RELATION_ABSENT": 16,
+          "REQUIRED_FIELD_ABSENT_IN_SOURCE": 6,
+          "TYPE_ABSENT": 3
+        }
+      },
+      "derivation_census": {
+        "non_local_relations": 6,
+        "top_hubs": [
+          {
+            "assertion": "assertion:0325",
+            "block": "page:10:block:044",
+            "records": 10
+          },
+          {
+            "assertion": "assertion:0326",
+            "block": "page:10:block:044",
+            "records": 9
+          },
+          {
+            "assertion": "assertion:0100",
+            "block": "page:4:block:002",
+            "records": 8
+          },
+          {
+            "assertion": "assertion:0003",
+            "block": "page:1:block:001",
+            "records": 7
+          },
+          {
+            "assertion": "assertion:0023",
+            "block": "page:1:block:005",
+            "records": 5
+          }
+        ],
+        "fan_out_distribution": {
+          "0": 9,
+          "1": 249,
+          "10": 1,
+          "2": 53,
+          "3": 21,
+          "4": 10,
+          "5": 3,
+          "7": 1,
+          "8": 1,
+          "9": 1
+        }
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 1,
+        "INTERVAL_NOT_EXPRESSIBLE": 1,
+        "RELATION_ABSENT": 16,
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE": 6,
+        "TYPE_ABSENT": 3
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-05T03:45:52Z"
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-05T03:19:01Z",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:4d490399a6ee9906a2324dc48d793b970ba054afb6a0f1d43e7589bb24835a15",
+    "type_sets_note": "query-type-sets.note.json",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:47d7e2e607411f2502ac2c40caabcade3fdac8fa18d2163d1eb1082f412c1107",
+    "cases_sha256": "sha256:d87363c2ec8a9c1b13ae4a4fe86546cb553ae9098abea2b49a543b2dccc44138",
+    "cases": 2084,
+    "phase_two_dispatched_after": true,
+    "executed_at": "2026-09-05T03:46:09Z",
+    "binding_executed": "results/native-query-binding.json",
+    "bound_after_replay_receipt_sha256": "sha256:6caec26b3bf5c051550670c96cf275f13f6aec48113bcf13451597acc2039b1c",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "rows_by_question": {
+      "NQ-CQ-01": 5,
+      "NQ-CQ-02": 2,
+      "NQ-CQ-03": 0,
+      "NQ-CQ-04": 1
+    },
+    "rows_total": 8,
+    "witnesses_traced": 24,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:1103c9781b810a1948779e2a677314a6d1fe8888c158406208318982cdee91ed"
+  },
+  "review": {}
+}

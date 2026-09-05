@@ -1,0 +1,55 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "CountObservation",
+    "Observation",
+    "Method",
+    "SoftwareApplication",
+    "DataResource",
+    "Organization"
+  ],
+  "CQ-02": [
+    "RidgeSegment",
+    "SpreadingRidge",
+    "RidgeTransformIntersection",
+    "NonTransformDiscontinuity",
+    "TransformFault",
+    "GeographicArea",
+    "GeologicInterface",
+    "SeafloorFeature",
+    "OceanicCoreComplex",
+    "Observation",
+    "CountObservation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "CountObservation",
+    "AssertedRatio",
+    "QuantityValue",
+    "Ratio",
+    "RidgeSegment",
+    "RockSample",
+    "MeltBody",
+    "GeologicUnit",
+    "Method",
+    "NumericalModel",
+    "Claim",
+    "Sample"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "CountObservation",
+    "AssertedRatio",
+    "MeltBody",
+    "RidgeSegment",
+    "GeologicInterface",
+    "GeologicUnit",
+    "VolcanicFeature",
+    "HydrothermalField",
+    "FaultStructure",
+    "NumericalModel"
+  ]
+}

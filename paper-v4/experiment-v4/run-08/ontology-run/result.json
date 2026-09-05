@@ -1,0 +1,66 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-08",
+  "core": {
+    "commit": "f59477154a2b20f9ffbf6b1f72f6104ee2e1f6c5",
+    "tree": "169e820a2ad8d183f7d3e2e66908ccef426eab1c"
+  },
+  "producer_input_manifest_sha256": "sha256:e23298bce42c0a40015d4bdc53f9daf10ca71847f604ef5169a98f64bd07d479",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:08f7ebb9222b548fad9d7dd87356006f359c5f25d09b3c49b329c4e7f3b7102d",
+    "final_status_sha256": "sha256:cfb80fcc6a12ff5ae95b38683079da0f2be92bef6a71928427ad3e5bd19540ec"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:36936af46311f0e3b517539a6dfc9432ffee71ba79a6dbd68b74b223f4353567",
+      "ontology_path": "paper-v4/experiment-v4/run-08/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-08/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:2c556e6347361e5ee91cd34eb6e55737b71ebe3798713a5a856d0c18c2c6a57b",
+      "accepted_at": "2026-09-05T03:17:33Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:36936af46311f0e3b517539a6dfc9432ffee71ba79a6dbd68b74b223f4353567",
+    "validated_contract_sha256": "sha256:1553f5b4349ae507b8325f4aeac9b3fb444c5021c6bf150de6b780c2024e8b58",
+    "validated_fact_set_sha256": "sha256:e968e62506b621a75b3283d7ec869c901ee547dc1036fec38b3dba49b44e3eb0",
+    "fact_count": 4950,
+    "grounding_receipt_sha256": "sha256:a71a150b09993082f32cc3b5f9b751be5cab9ed3ef9e33fb45af0a4566d67719",
+    "population_surface_sha256": "sha256:87eee6de3c76f0a793a64745fc93c834d8fe2c6cbeac57909ea19390489b3b0d",
+    "population_surface_families": {
+      "ENTITY": 37,
+      "EVENT": 2,
+      "RELATION": 4
+    }
+  },
+  "accepted_ontology_sha256": "sha256:36936af46311f0e3b517539a6dfc9432ffee71ba79a6dbd68b74b223f4353567",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, WebFetch of every vocabulary_url in the accepted ontology, before phase two",
+    "checked_at": "2026-09-05T03:18:26Z",
+    "urls": 9,
+    "result": "all nine resolve to the vocabulary the grounding block names: W3C vocab-org (Organization Ontology), W3C vocab-ssn (SOSA/SSN: Sensor, Observation, Platform), DataCite Metadata Schema, schema.org Grant, schema.org SoftwareApplication, W3C PROV-O (Agent, Person, Organization), FOAF (Person, name), W3C OWL-Time (Instant, Interval), DCMI Terms (creator, date, identifier)",
+    "term_membership": "each block's borrowed terms were checked against the fetched page's stated definitions for the terms the prompt named; not every borrowed term was individually read",
+    "fabricated": 0,
+    "unverifiable_declared_by_producer": "GeoSciML/CGI, IHO B-6, NASA GCMD, SWEET, QuakeML, USGS glossary, GeoSPARQL, RCC8: not cited, recorded in invention_search with 16 invented terms on EarthFeature"
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-08 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}
