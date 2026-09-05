@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/packs/research
 name: malleus_research
-version: 0.2.0
+version: 0.3.0
 title: Malleus Research Knowledge Pack
 description: >-
   Optional reusable vocabulary for attributed claims, observations, methods,
@@ -61,15 +61,38 @@ annotations:
           vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
           borrowed_terms:
             - license
+        - vocabulary: ANSI/NISO Z39.104-2022, CRediT, Contributor Roles Taxonomy
+          vocabulary_url: https://credit.niso.org/
+          borrowed_terms:
+            - Conceptualization
+            - Data curation
+            - Formal analysis
+            - Funding acquisition
+            - Investigation
+            - Methodology
+            - Project administration
+            - Resources
+            - Software
+            - Supervision
+            - Validation
+            - Visualization
+            - Writing – original draft
+            - Writing – review & editing
       invented_terms:
         - Campaign
+        - Contribution
+        - ContributionRelation
         - Instrument
       invention_search: >-
         The cited SOSA/SSN, VIM, Frascati, SEPIO, and Micropublications
         vocabularies were checked for exact generic Campaign and Instrument
         classes. SOSA/SSN uses Sensor, VIM uses measuring instrument, and no
         exact generic Campaign class was found. The accepted pack keeps the
-        shorter local class names and records that choice here.
+        shorter local class names and records that choice here. CRediT names
+        the fourteen roles and defines each, and ContributorRole follows its
+        naming, but it is a term list with no classes, so the mixin
+        Contribution and the class ContributionRelation that carry a role in a
+        graph are local shapes and are recorded here.
 
 enums:
   AssertionModality:
@@ -82,6 +105,81 @@ enums:
       CONTESTED:
       NEGATED:
 
+  ContributorRole:
+    description: >-
+      The role in which a source credits a contributor to a work. Every value
+      except OTHER is a role of the CRediT Contributor Roles Taxonomy,
+      ANSI/NISO Z39.104-2022, carrying that taxonomy's own definition. OTHER is
+      local and records a contribution the taxonomy does not name. A record
+      carries the role the source declares, never one inferred from the work.
+    permissible_values:
+      CONCEPTUALIZATION:
+        description: >-
+          Ideas; formulation or evolution of overarching research goals and
+          aims.
+      DATA_CURATION:
+        description: >-
+          Management activities to annotate (produce metadata), scrub data and
+          maintain research data (including software code, where it is
+          necessary for interpreting the data itself) for initial use and later
+          re-use.
+      FORMAL_ANALYSIS:
+        description: >-
+          Application of statistical, mathematical, computational, or other
+          formal techniques to analyze or synthesize study data.
+      FUNDING_ACQUISITION:
+        description: >-
+          Acquisition of the financial support for the project leading to this
+          publication.
+      INVESTIGATION:
+        description: >-
+          Conducting a research and investigation process, specifically
+          performing the experiments, or data/evidence collection.
+      METHODOLOGY:
+        description: >-
+          Development or design of methodology; creation of models.
+      PROJECT_ADMINISTRATION:
+        description: >-
+          Management and coordination responsibility for the research activity
+          planning and execution.
+      RESOURCES:
+        description: >-
+          Provision of study materials, reagents, materials, patients,
+          laboratory samples, animals, instrumentation, computing resources, or
+          other analysis tools.
+      SOFTWARE:
+        description: >-
+          Programming, software development; designing computer programs;
+          implementation of the computer code and supporting algorithms;
+          testing of existing code components.
+      SUPERVISION:
+        description: >-
+          Oversight and leadership responsibility for the research activity
+          planning and execution, including mentorship external to the core
+          team.
+      VALIDATION:
+        description: >-
+          Verification, whether as a part of the activity or separate, of the
+          overall replication/reproducibility of results/experiments and other
+          research outputs.
+      VISUALIZATION:
+        description: >-
+          Preparation, creation and/or presentation of the published work,
+          specifically visualization/data presentation.
+      WRITING_ORIGINAL_DRAFT:
+        description: >-
+          Preparation, creation and/or presentation of the published work,
+          specifically writing the initial draft (including substantive
+          translation).
+      WRITING_REVIEW_AND_EDITING:
+        description: >-
+          Preparation, creation and/or presentation of the published work by
+          those from the original research group, specifically critical review,
+          commentary or revision – including pre- or post-publication stages.
+      OTHER:
+        description: >-
+          The source states a contribution the taxonomy does not name.
+
   ResearchRelationType:
     description: Generic relation predicates supplied by the research pack.
     permissible_values:
@@ -92,6 +190,7 @@ enums:
       SUPPORTS:
       CHALLENGES:
       REPORTED_BY:
+      CONTRIBUTED_TO:
 
 classes:
   SourceAsserted:
@@ -106,6 +205,15 @@ classes:
       - assertion_confidence
       - assertion_locator
       - statement_sha256
+
+  Contribution:
+    mixin: true
+    description: >-
+      A record carrying the role in which a source credits a contributor.
+      Worn by a relation so the role travels with the credited contribution
+      rather than with the person, who may be credited differently elsewhere.
+    slots:
+      - contribution_role
 
   Claim:
     is_a: Entity
@@ -167,6 +275,16 @@ classes:
       relation_type:
         range: ResearchRelationType
 
+  ContributionRelation:
+    is_a: ResearchRelation
+    mixins:
+      - Contribution
+    description: >-
+      A credited contribution from a contributor to a work, campaign, or
+      dataset, carrying CONTRIBUTED_TO as its relation_type. contribution_role
+      is optional, so a source that credits a person without stating the part
+      they played is recorded without inventing one.
+
 slots:
   assertion_modality:
     range: AssertionModality
@@ -179,6 +297,13 @@ slots:
   claim_kind:
     range: string
     description: Project-defined refinement of a claim.
+  contribution_role:
+    range: ContributorRole
+    description: >-
+      Optional CRediT role in which the source credits this contribution. A
+      contributor credited under several roles carries one relation per role.
+      Unset is the honest value when the source names a contributor without
+      stating the part they played.
   assertion_locator:
     range: string
     description: >-

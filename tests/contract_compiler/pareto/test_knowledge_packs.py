@@ -279,7 +279,7 @@ def test_metrology_classifies_quantity_kinds_against_the_qudt_vocabulary() -> No
     assert tuple(values) == QUDT_QUANTITY_KINDS + ("OTHER",)
     assert qudt["vocabulary_url"] == QUDT_QUANTITY_KIND_NAMESPACE
     assert tuple(qudt["borrowed_terms"]) == QUDT_QUANTITY_KINDS
-    assert source["version"] == "0.2.0"
+    assert source["version"] == "0.3.0"
 
 
 def test_metrology_keeps_the_source_wording_beside_the_classification() -> None:
@@ -424,7 +424,12 @@ def test_research_grounding_assigns_only_supported_term_groups() -> None:
     assert {"Agent", "Campaign", "Instrument"}.isdisjoint(
         term for terms in vocabularies.values() for term in terms
     )
-    assert grounding["invented_terms"] == ["Campaign", "Instrument"]
+    assert grounding["invented_terms"] == [
+        "Campaign",
+        "Contribution",
+        "ContributionRelation",
+        "Instrument",
+    ]
     assert grounding["invention_search"]
 
 
@@ -456,7 +461,7 @@ def test_research_carries_a_locator_and_a_digest_rather_than_source_text() -> No
     assert dcmi["vocabulary_url"] == (
         "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"
     )
-    assert source["version"] == "0.2.0"
+    assert source["version"] == "0.3.0"
 
 
 def test_compiled_claim_keeps_statement_optional_beside_locator_and_digest() -> None:

@@ -1,6 +1,6 @@
 # Knowledge packs, typed gaps, and the revision loop
 
-Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Decisions 13 and 14, taken on 2026-09-04 after run-02, ship in `metrology` and `research` at version 0.2.0; both are additive. Sections marked "open" remain undecided.
+Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Decisions 13 and 14, taken on 2026-09-04 after run-02, ship in `metrology` and `research` at version 0.2.0; both are additive. Decisions 15 and 16, taken on 2026-09-05 after run-04 and run-05, ship in the same two packs at version 0.3.0; both are additive. Sections marked "open" remain undecided.
 
 ## Why
 
@@ -46,7 +46,7 @@ These are shapes for discussion, not schemas. Slot names follow the borrowed voc
 
 ### metrology
 
-- Mixin `Quantified`: `quantity_kind` (string, open, the source's own wording), `quantity_kind_class` (enum `QuantityKindClass`, optional, fifteen QUDT names plus OTHER), `value_lower` (float), `value_upper` (float, equal to lower for an exact value), `unit` (string, UCUM code where one exists), `uncertainty` (float, optional), `determination` (enum `Determination`: MEASURED, DERIVED, ESTIMATED, MODELLED).
+- Mixin `Quantified`: `quantity_kind` (string, open, the source's own wording), `quantity_kind_class` (enum `QuantityKindClass`, optional, fifteen QUDT names plus OTHER), `value_lower` (float), `value_upper` (float, equal to lower for an exact value), `value_qualification` (enum `ValueQualification`, optional, how the source states the number: EXACT, APPROXIMATE, OPEN_LOWER_BOUND, OPEN_UPPER_BOUND, ORDER_OF_MAGNITUDE), `unit` (string, UCUM code where one exists), `uncertainty` (float, optional), `determination` (enum `Determination`: MEASURED, DERIVED, ESTIMATED, MODELLED).
 - Mixin `Counted`: `count` (integer), `count_scope` (string).
 - Class `Ratio` (Entity): `numerator_kind`, `denominator_kind`, `value`, `uncertainty`.
 - Class `QuantityValue` (Entity, wears `Quantified`) for projects that want quantities as nodes.
@@ -64,7 +64,8 @@ These are shapes for discussion, not schemas. Slot names follow the borrowed voc
 - Class `Claim` (Entity, wears `SourceAsserted`): `statement` (root slot, optional and empty unless the record's `Source` declares a permitting licence), `claim_kind`. Seeded from Recon's `Claim`; the reviewer-workflow slots stay in Recon.
 - Class `Observation` (Entity, wears `Quantified`, `TemporalExtent`, `SourceAsserted`).
 - Classes `Method`, `Instrument`, `Campaign` (wears `TemporalExtent`, `Counted` for instrument counts), `Sample`, `Source` (a work or document, `licence` as the source declares it), `Evidence` (root `locator`, source digest).
-- Relations: CLAIM_CONCERNS (Claim to any entity), OBSERVED_WITH (Observation to Instrument or Method), PART_OF_CAMPAIGN, SAMPLED_FROM, SUPPORTS and CHALLENGES (Evidence or Claim to Claim, after Micropublications), REPORTED_BY (any record to Source).
+- Mixin `Contribution`: `contribution_role` (enum `ContributorRole`, optional, the fourteen CRediT roles plus OTHER). Class `ContributionRelation` (`ResearchRelation`, wears `Contribution`) carries a credited contribution; one relation per role.
+- Relations: CLAIM_CONCERNS (Claim to any entity), OBSERVED_WITH (Observation to Instrument or Method), PART_OF_CAMPAIGN, SAMPLED_FROM, SUPPORTS and CHALLENGES (Evidence or Claim to Claim, after Micropublications), REPORTED_BY (any record to Source), CONTRIBUTED_TO (a contributor to a work, campaign, or dataset).
 
 Two layers of epistemics, kept apart on purpose: `assertion_modality` is what the source says and how strongly, and it lives in the domain graph where a query can read it. Assent's `EpistemicDecision` is whether we accept the record of what the source said, and it lives in the ledger. Neither leaks into the other.
 
@@ -193,6 +194,65 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     source can be a PDF text layer, a malleus-ocr bundle, a recon record, or a time
     span in a wav file. Retention does not change. The assertion stays where it
     already was, in the retained capture, and the locator is what reaches it.
+15. How the source states its number, in `metrology`, additive. A bound pair says
+    a value lies between two numbers and says nothing else. 25 of run-04's 61 typed
+    gaps are INTERVAL_NOT_EXPRESSIBLE carrying one sentence, that the source marks
+    the value as approximate and the records carry the stated number as an exact
+    bound pair and cannot carry the approximation. Run-05 declared a gap for a mantle
+    temperature the source states only as above 1100 degrees Celsius, because
+    `value_lower` and `value_upper` are a closed pair, and a reviewer in the same run
+    marked a hedged value PARTIAL for the same reason. Both producers were right to
+    declare a gap rather than invent an interval, and both losses are of one fact:
+    how the source stated the number. So the pack ships an optional enum,
+    `ValueQualification`, whose slot `value_qualification` sits in the `Quantified`
+    mixin beside `value_upper`, with five forms, EXACT, APPROXIMATE,
+    OPEN_LOWER_BOUND, OPEN_UPPER_BOUND and ORDER_OF_MAGNITUDE. An open bound leaves
+    its absent end unset, which the shape already permits and which the qualification
+    now explains. The grounding search came back empty. QUDT carries
+    standardUncertainty and relativeStandardUncertainty, which quantify a
+    measurement's dispersion rather than a source's hedge, and minInclusive and
+    maxInclusive, which constrain a datatype rather than describe a stated bound.
+    VIM 4.6 defines nominal quantity value as a rounded or approximate value
+    characterizing a measuring instrument, not a reported measurement. UCUM codes
+    units and discards annotations by definition. ISO 80000-2 supplies the relation
+    sign read as is approximately equal to, a mathematical symbol. There is no term
+    for how a source qualifies a stated number in any of them, so the enum and its
+    five values are local and the pack records that in `invention_search`, the way
+    `research` records Campaign and Instrument. What it does not do: it never
+    changes the number, the unit or the bounds, it turns no approximation into an
+    invented interval and no interval into a point, it makes no claim about the
+    value's accuracy, and it does not replace `uncertainty`, which stays for an
+    uncertainty the source reports. There is no OTHER: `Determination` has none
+    either, unset is the honest value when the form is unclear, and a form the five
+    do not cover is a gap to declare, which is how the list grows. The change is
+    additive, so the pack is version 0.3.0 and the list grows by adding values
+    rather than by redefining one.
+16. Contribution roles in `research`, from CRediT, additive. Run-04 declared two
+    TYPE_ABSENT gaps saying the source states a specific contribution for each
+    author and the accepted ontology carries no contribution-role vocabulary, so
+    only the fact of contribution was formalized and the part each person played
+    was not. That run's own project ontology had coined a three-value contributor
+    role for byline position, author, corresponding author, acknowledged, which
+    answers a different question and cannot carry what a person did. The published
+    answer exists: the CRediT Contributor Roles Taxonomy, ANSI/NISO Z39.104-2022,
+    fourteen roles each with its own definition, at https://credit.niso.org/. The
+    pack ships enum `ContributorRole` with those fourteen roles in the pack's enum
+    spelling, each carrying the taxonomy's own definition as its description, plus a
+    local OTHER for a contribution the taxonomy does not name. No role is coined,
+    and the fourteen published names are the borrowed terms in the pack's grounding.
+    The role hangs on the contribution and not on the person, because one person is
+    credited differently on different works: the optional slot `contribution_role`
+    sits on a new `Contribution` mixin, worn by a new `ContributionRelation`, a
+    `ResearchRelation` whose `relation_type` is the new `CONTRIBUTED_TO`. A
+    contributor credited under several roles carries one relation per role. CRediT
+    is a term list with no classes, so `Contribution` and `ContributionRelation`
+    are local shapes and the pack's `invention_search` says so. What it does not
+    do: it does not model authorship order, corresponding authorship, affiliation
+    or degree of contribution, none of which CRediT defines either; it does not
+    require a role, so a source that names a contributor without stating the part
+    they played is recorded without inventing one; and it makes no claim that the
+    role the source states is true. The change is additive, so the pack is version
+    0.3.0.
 
 ## Open
 
@@ -210,4 +270,7 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
 - OECD, Frascati Manual 2015, Guidelines for Collecting and Reporting Data on Research and Experimental Development, including the Fields of Research and Development classification. https://www.oecd.org/en/publications/frascati-manual-2015_9789264239012-en.html
 - Brush, Shefchek, Haendel, SEPIO: A Semantic Model for the Integration and Analysis of Scientific Evidence, ICBO 2016. https://ceur-ws.org/Vol-1747/IT605_ICBO2016.pdf
 - Clark, Ciccarese, Goble, Micropublications: a semantic model for claims, evidence, arguments and annotations in biomedical communications, Journal of Biomedical Semantics 5:28, 2014. https://link.springer.com/article/10.1186/2041-1480-5-28
+- NISO, ANSI/NISO Z39.104-2022, CRediT, Contributor Roles Taxonomy. https://credit.niso.org/
+- ISO 80000-2:2019, Quantities and units, Part 2: Mathematics. https://www.iso.org/standard/64973.html
+- Regenstrief Institute, The Unified Code for Units of Measure (UCUM). https://ucum.org/
 - Wikipedia, Outline of academic disciplines. https://en.wikipedia.org/wiki/Outline_of_academic_disciplines

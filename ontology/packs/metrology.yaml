@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/packs/metrology
 name: malleus_metrology
-version: 0.2.0
+version: 0.3.0
 title: Malleus Metrology Knowledge Pack
 description: >-
   Optional reusable vocabulary for quantities, bounds, units, uncertainty,
@@ -50,9 +50,55 @@ annotations:
             - MassFraction
             - Count
             - Angle
-      invented_terms: []
+      invented_terms:
+        - ValueQualification
+      invention_search: >-
+        No vocabulary among QUDT, UCUM, ISO 80000 and the VIM cited above
+        names how a source qualifies the number it states. The QUDT schema
+        carries standardUncertainty and relativeStandardUncertainty, which
+        quantify a measurement's dispersion rather than a source's hedge, and
+        minInclusive and maxInclusive, which constrain a datatype rather than
+        describe a stated bound. VIM 4.6 defines nominal quantity value as a
+        rounded or approximate value characterizing a measuring instrument,
+        not a reported measurement, and VIM defines no term for an
+        open-ended statement. UCUM codes units and discards annotations by
+        definition. ISO 80000-2 supplies the relation sign read as is
+        approximately equal to, a mathematical symbol rather than a
+        qualification of a reported value. The enum name and its five values
+        are therefore local.
 
 enums:
+  ValueQualification:
+    description: >-
+      How the source qualifies the number it states. It records the form of
+      the statement and never the number: value_lower, value_upper and unit
+      stay exactly as the source gives them. Leaving it unset is the honest
+      value when the source's form is unclear. The list is deliberately short
+      and grows by adding values, never by redefining one.
+    permissible_values:
+      EXACT:
+        description: >-
+          The source states the number without qualification. value_lower and
+          value_upper carry it as a closed pair.
+      APPROXIMATE:
+        description: >-
+          The source marks the number as approximate. The bounds carry the
+          stated number unchanged; the approximation is recorded here and is
+          never converted into an invented interval.
+      OPEN_LOWER_BOUND:
+        description: >-
+          The source states only a lower bound. value_lower carries the stated
+          number and value_upper stays absent, because the source states no
+          upper bound and inventing one would report something it does not
+          say.
+      OPEN_UPPER_BOUND:
+        description: >-
+          The source states only an upper bound. value_upper carries the
+          stated number and value_lower stays absent, for the same reason.
+      ORDER_OF_MAGNITUDE:
+        description: >-
+          The source states the number only to an order of magnitude.
+
   QuantityKindClass:
     description: >-
       Controlled classification of a reported quantity. Every value except
@@ -95,6 +141,7 @@ classes:
       - quantity_kind_class
       - value_lower
       - value_upper
+      - value_qualification
       - unit
       - uncertainty
       - determination
@@ -141,6 +188,14 @@ slots:
   value_upper:
     range: float
     description: Upper bound, equal to value_lower for an exact value.
+  value_qualification:
+    range: ValueQualification
+    description: >-
+      Optional record of how the source states the number: exact, approximate,
+      open at one end, or only to an order of magnitude. It qualifies the
+      statement, never the value, so the bounds and the unit stay as the source
+      gives them. An open bound leaves the absent end unset, which the shape
+      permits. Unset is the honest value when the source's form is unclear.
   unit:
     range: string
     description: Measurement unit, preferably a UCUM code where one exists.

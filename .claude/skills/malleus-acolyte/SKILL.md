@@ -297,7 +297,17 @@ fallback.
    operation. When a captured quantity fits one of the QUDT names in
    `metrology`'s `QuantityKindClass`, set `quantity_kind_class` to it and keep
    the source's own wording in `quantity_kind`, which stays open and is never
-   rewritten to fit the class; free text alone is readable and not comparable. Inspect the returned `canonical_census_bytes`; continue reviewing
+   rewritten to fit the class; free text alone is readable and not comparable.
+   When the source qualifies the number it states, set `value_qualification`
+   to how the source states it: `APPROXIMATE`, `OPEN_LOWER_BOUND` with
+   `value_upper` left absent, `OPEN_UPPER_BOUND` with `value_lower` left
+   absent, `ORDER_OF_MAGNITUDE`, or `EXACT`. A bound pair alone cannot carry a
+   hedge or an open end, and the qualification never changes the number or the
+   unit. When the source states the part a contributor played in the work,
+   carry it in `contribution_role` on a `ContributionRelation`, whose values
+   are the fourteen CRediT roles plus `OTHER`, one relation per role; the role
+   is the one the source declares, never one inferred from the work.
+   Inspect the returned `canonical_census_bytes`; continue reviewing
    and capturing source-supported material across both census axes. Each block is
    `REVIEWED` or `UNTOUCHED`; each captured assertion is `FULLY_FORMALIZED`,
    `PARTLY_FORMALIZED`, or `UNFORMALIZED`. A reviewed block is not thereby
