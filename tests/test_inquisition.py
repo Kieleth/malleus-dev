@@ -1951,6 +1951,13 @@ class TestSkillsAreInstallable:
                 "counts it"
             ),
             (
+                "An entity's `name` is the form the source uses to refer to "
+                "it in its sentences, the shortest one the reading repeats, "
+                "and the descriptive introduction the source gives it goes in "
+                "`description`; the subject check compares names against "
+                "sentences, so a descriptive name fails it"
+            ),
+            (
                 "A relation's endpoints are formalized by an assertion whose "
                 "statement names both of them"
             ),

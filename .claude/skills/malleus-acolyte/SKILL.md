@@ -322,6 +322,10 @@ fallback.
    it; the subject is never folded into `quantity_kind` or the record's name;
    a record whose subject the reading does not name in the formalizing
    sentence leaves `subject` unset and the census counts it.
+   An entity's `name` is the form the source uses to refer to it in its
+   sentences, the shortest one the reading repeats, and the descriptive
+   introduction the source gives it goes in `description`; the subject check
+   compares names against sentences, so a descriptive name fails it.
    A relation's endpoints are formalized by an assertion whose statement names
    both of them; a relation the reading only implies is a `RELATION_ABSENT`
    gap, not a derivation from a neighbouring sentence.
