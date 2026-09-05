@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/packs/research
 name: malleus_research
-version: 0.4.0
+version: 0.5.0
 title: Malleus Research Knowledge Pack
 description: >-
   Optional reusable vocabulary for attributed claims, observations, methods,
@@ -57,6 +57,10 @@ annotations:
             - Evidence
             - support
             - challenge
+        - vocabulary: W3C RDF 1.1 Concepts and Abstract Syntax
+          vocabulary_url: https://www.w3.org/TR/rdf11-concepts/
+          borrowed_terms:
+            - subject
         - vocabulary: DCMI Metadata Terms
           vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
           borrowed_terms:
@@ -102,7 +106,14 @@ annotations:
         two things, not the source's own disposition of its own hypothesis.
         No term was found for it, so the enum HypothesisDisposition and the
         mixin Evaluative that marks which slots carry such a value are local
-        and are recorded here.
+        and are recorded here. The same vocabularies were checked for what a
+        record's assertion is about. SOSA/SSN defines feature of interest,
+        the thing whose property an observation estimates, which fits an
+        observation and not a claim, a count or an asserted ratio, and RDF 1.1
+        Concepts defines subject as the position a statement is about, for
+        every statement and not only a measurement. The pack borrows the RDF
+        term, so subject is cited rather than invented and feature of interest
+        is recorded here as the narrower term that was considered.
 
 enums:
   AssertionModality:
@@ -223,13 +234,14 @@ classes:
   SourceAsserted:
     mixin: true
     description: >-
-      Source-level modality, optional confidence, and the route and digest that
-      reach the retained assertion behind a record. Worn by every claim-bearing
-      record, so the route travels with the claim rather than with a copy of
-      its text.
+      Source-level modality, optional confidence, the entity the assertion is
+      about, and the route and digest that reach the retained assertion behind
+      a record. Worn by every claim-bearing record, so the route and the
+      subject travel with the claim rather than with a copy of its text.
     slots:
       - assertion_modality
       - assertion_confidence
+      - subject
       - assertion_locator
       - statement_sha256
 
@@ -350,6 +362,17 @@ slots:
       contributor credited under several roles carries one relation per role.
       Unset is the honest value when the source names a contributor without
       stating the part they played.
+  subject:
+    range: Entity
+    description: >-
+      The entity this record's assertion is about, named as a record id that
+      resolves in the same change set or the base state. Single and optional:
+      a record whose subject the reading does not name leaves it unset, and
+      the capture census counts it. The subject is never folded into
+      quantity_kind text or into the record's own name, and it is never the
+      record itself. The range is Entity, the same declaration a relation's
+      endpoints carry, so what an assertion is about stays a reference to a
+      thing rather than a sentence about one.
   assertion_locator:
     range: string
     description: >-

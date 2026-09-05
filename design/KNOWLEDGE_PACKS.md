@@ -1,6 +1,6 @@
 # Knowledge packs, typed gaps, and the revision loop
 
-Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Decisions 13 and 14, taken on 2026-09-04 after run-02, ship in `metrology` and `research` at version 0.2.0; both are additive. Decisions 15 and 16, taken on 2026-09-05 after run-04 and run-05, ship in the same two packs at version 0.3.0; both are additive. Decision 17, taken on 2026-09-05 after run-04's review RCA, ships in `research` at version 0.4.0 and is additive. Sections marked "open" remain undecided.
+Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Decisions 13 and 14, taken on 2026-09-04 after run-02, ship in `metrology` and `research` at version 0.2.0; both are additive. Decisions 15 and 16, taken on 2026-09-05 after run-04 and run-05, ship in the same two packs at version 0.3.0; both are additive. Decision 17, taken on 2026-09-05 after run-04's review RCA, ships in `research` at version 0.4.0 and is additive. Decision 18, taken on 2026-09-05 after the v4.2 RCA of run-04 against run-08, ships in `research` at version 0.5.0 and is additive. Sections marked "open" remain undecided.
 
 ## Why
 
@@ -61,7 +61,7 @@ These are shapes for discussion, not schemas. Slot names follow the borrowed voc
 
 - Enum `AssertionModality`, shared across every project that loads the pack: STATED, MEASURED, CALCULATED, HYPOTHESISED, CONTESTED, NEGATED. One coarse list so that "which records here are hypotheses" means the same thing in every graph. A project that needs finer distinctions adds a refinement slot beside it and never redefines a coarse value. The three producers' private enums (`ObservationBasis`, `DeterminationMode`, `LocationQuality`) are the evidence that this list must be shared.
 - Mixin `Evaluative`: `hypothesis_disposition` (enum `HypothesisDisposition`, optional, what the source does with a hypothesis it raised: PREFERRED, NOT_SUPPORTED, UNDECIDED). Worn by `Claim`. The mixin's slot list is the pack's declaration of which slots are evaluative, read from the compiled contract.
-- Mixin `SourceAsserted`: `assertion_modality` (enum above), `assertion_confidence` (float, optional), `assertion_locator` (string, optional, an opaque route back to the retained assertion), `statement_sha256` (string, optional, the digest of the exact retained assertion text). Any entity or relation can wear it, so "melt degassing triggers earthquakes" can enter a graph as HYPOTHESISED instead of being left out.
+- Mixin `SourceAsserted`: `assertion_modality` (enum above), `assertion_confidence` (float, optional), `subject` (Entity reference, single, optional, the thing the assertion is about), `assertion_locator` (string, optional, an opaque route back to the retained assertion), `statement_sha256` (string, optional, the digest of the exact retained assertion text). Any entity or relation can wear it, so "melt degassing triggers earthquakes" can enter a graph as HYPOTHESISED instead of being left out.
 - Class `Claim` (Entity, wears `SourceAsserted`): `statement` (root slot, optional and empty unless the record's `Source` declares a permitting licence), `claim_kind`. Seeded from Recon's `Claim`; the reviewer-workflow slots stay in Recon.
 - Class `Observation` (Entity, wears `Quantified`, `TemporalExtent`, `SourceAsserted`).
 - Classes `Method`, `Instrument`, `Campaign` (wears `TemporalExtent`, `Counted` for instrument counts), `Sample`, `Source` (a work or document, `licence` as the source declares it), `Evidence` (root `locator`, source digest).
@@ -289,6 +289,74 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     nothing about a slot no pack declares evaluative. The change is additive,
     so the pack is version 0.4.0 and the list of evaluative slots grows by
     adding a slot to the mixin.
+
+18. The subject of a source-asserted record, in `research`, additive. Run-04
+    linked its observations and claims to what they were about 27 times, 13
+    `CONCERNS_FEATURE`, 3 `LIES_BENEATH` and 11 `LOCATED_WITHIN`, and answered
+    240 query rows. Run-08, the same model on the same reading under the same
+    eight-input isolation, made no science relation at all and answered 8. The
+    attachment did not disappear, it moved into free text: 23 of run-08's 131
+    observations carry the feature inside `quantity_kind`, against 2 of
+    run-04's 71. One sentence on page 2 carries the whole case. Run-04 made
+    three `EarthquakeSet` entities and three LOCAL `LIES_BENEATH` relations
+    from it; run-08 made three depth observations whose `quantity_kind` reads
+    "depth of deep microseismicity beneath the ridge axis of the segment RC2",
+    and no entity and no relation. The value, the hedge, the units and the
+    provenance are right in both. Only the attachment is structure in one and
+    a substring in the other, and only structure is queryable. The v4.2
+    changes did not cause the loss; they removed the hub derivation that had
+    hidden the absence of a rule, and 94 of run-04's 240 query rows rested on
+    relations whose formalizing sentence names neither endpoint, so 146 rows
+    and not 240 are the honest baseline the 8 must be measured against. Nor
+    was the producer at fault: its ontology had no entity type for an
+    earthquake population, its `GeospatialRelation` is defined as a predicate
+    between two named Earth features, an observation is not a named Earth
+    feature, and the pack itself offered no slot for "this record is about
+    that thing". So the pack ships the attachment as a first-class derived
+    element rather than as a producer instruction: optional, single-valued
+    `subject` on the `SourceAsserted` mixin, so an observation, a count
+    observation, an asserted ratio and a claim all carry it without declaring
+    anything. Its range is `Entity`, the same declaration a relation's
+    endpoints already carry, and its value is a record id resolvable in the
+    same change set or the base state, never the record itself and never an
+    Event: relation endpoints stay Entity-to-Entity and so does this. The
+    grounding search found SOSA/SSN's feature of interest, which names the
+    thing an observation's property belongs to and fits neither a claim nor a
+    ratio, and RDF 1.1 Concepts' subject, the position of a statement that
+    names what the statement is about, for every statement rather than for a
+    measurement. The pack borrows the RDF term and records the narrower one it
+    passed over. The document-assertion adapter checks it, aggregated with the
+    other derivation defects and typed `SUBJECT_NOT_NAMED`: when a record sets
+    `subject`, the subject entity's `name`, whitespace-collapsed and
+    case-folded, must occur in the statement of at least one assertion that
+    formalizes that record's `["properties", "subject"]` path. The check is a
+    name substring and not a semantic judgment on purpose. A substring is
+    recomputable by a second implementation from the retained bytes alone, it
+    needs no model at admission, and it fails closed on exactly the defect
+    run-08 shows, a subject asserted from a sentence that does not mention it.
+    Whether a sentence is about a thing in any richer sense is a judgment, and
+    `COMMITTED` means the shape was valid. The cost is stated rather than
+    hidden: a sentence naming the thing only by a pronoun, an abbreviation or
+    a synonym refuses, and the honest answers are to formalize the subject
+    from the sentence that does name it, or to leave `subject` unset. The
+    census carries the coverage, under `subjects` beside `derivation`: per
+    record type the compiled contract declares as carrying `subject`, the
+    count with a subject, the count without, and the total, reported and never
+    refused. What it does not do: it does not check that the subject is an
+    Entity rather than an Event, exactly as nothing checks that today for a
+    relation endpoint; the adapter reads the subject's name from the change
+    set it is handed, so a subject that resolves only in the base state has
+    its name unchecked and only its resolution checked, by the plan compiler's
+    `DANGLING_SUBJECT`; it does not decide whether the subject is the right
+    one, only that the formalizing sentence names it; it adds no relation and
+    removes none, so a project modelling the attachment as a typed relation
+    keeps doing so and may do both; and it never rewrites `quantity_kind`,
+    which stays the source's own wording. With no compiled contract the
+    adapter knows no subject-bearing type and the census axis is empty, while
+    the refusal still runs, because `subject` is one fixed name and needs no
+    declaration to be read. The change is additive, so the pack is version
+    0.5.0 and every fixture and every frozen paper cell pinned at an earlier
+    pack keeps compiling.
 
 ## Open
 
