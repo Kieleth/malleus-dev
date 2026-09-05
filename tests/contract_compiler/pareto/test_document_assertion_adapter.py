@@ -365,9 +365,14 @@ def _located(
     return capture, records
 
 
-def _adapt_records(capture: dict[str, object], records: dict[str, object]):
+def _adapt_records(
+    capture: dict[str, object],
+    records: dict[str, object],
+    reading: dict[str, object] | None = None,
+):
     api = _api()
-    reading, _, plan, _ = _inputs()
+    fixture_reading, _, plan, _ = _inputs()
+    reading = fixture_reading if reading is None else reading
     return api.adapt_document_assertions(
         reading_bytes=_canonical(reading),
         capture_bytes=_canonical(capture),
@@ -416,10 +421,11 @@ def test_document_adapter_refuses_a_statement_digest_the_assertion_denies() -> N
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED, the name "
-        "of a record's subject occurs in the statement of an assertion that "
-        "formalizes that subject, and a record's assertion_modality is the "
-        "modality of an assertion that formalizes it"
+        "least one assertion whose modality is not HYPOTHESISED, a name "
+        "of a record's subject, its name or one of its tags, occurs in the "
+        "statement of an assertion that formalizes that subject, and a "
+        "record's assertion_modality is the modality of an assertion that "
+        "formalizes it"
     )
 
 
@@ -612,10 +618,11 @@ def test_document_adapter_refuses_a_disposition_no_assertion_evaluates() -> None
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED, the name "
-        "of a record's subject occurs in the statement of an assertion that "
-        "formalizes that subject, and a record's assertion_modality is the "
-        "modality of an assertion that formalizes it"
+        "least one assertion whose modality is not HYPOTHESISED, a name "
+        "of a record's subject, its name or one of its tags, occurs in the "
+        "statement of an assertion that formalizes that subject, and a "
+        "record's assertion_modality is the modality of an assertion that "
+        "formalizes it"
     )
 
 
@@ -678,6 +685,7 @@ def _subjected(
     *,
     subject: str = "asset:P-7",
     name: str | None = None,
+    tags: list[str] | None = None,
     locator: str = "asr:001",
 ) -> tuple[dict[str, object], dict[str, object]]:
     """The fixture with one record naming its subject, and the assertion for it.
@@ -692,6 +700,8 @@ def _subjected(
     records["entities"][1]["properties"]["subject"] = subject
     if name is not None:
         records["entities"][0]["properties"]["name"] = name
+    if tags is not None:
+        records["entities"][0]["properties"]["tags"] = tags
     index = {"asr:001": 0, "asr:002": 1, "asr:003": 2}[locator]
     capture["assertions"][index]["formalized_by"] = list(
         capture["assertions"][index]["formalized_by"]
@@ -743,10 +753,11 @@ def test_document_adapter_refuses_a_subject_the_statement_does_not_name() -> Non
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED, the name "
-        "of a record's subject occurs in the statement of an assertion that "
-        "formalizes that subject, and a record's assertion_modality is the "
-        "modality of an assertion that formalizes it"
+        "least one assertion whose modality is not HYPOTHESISED, a name "
+        "of a record's subject, its name or one of its tags, occurs in the "
+        "statement of an assertion that formalizes that subject, and a "
+        "record's assertion_modality is the modality of an assertion that "
+        "formalizes it"
     )
 
 
@@ -771,7 +782,7 @@ def test_document_adapter_refuses_a_subject_no_assertion_formalizes() -> None:
 
 
 def test_document_adapter_matches_a_subject_name_past_spacing_and_case() -> None:
-    """Both sides collapse whitespace and case-fold; neither side is rewritten."""
+    """Both sides drop whitespace and case-fold; neither side is rewritten."""
 
     capture, records = _subjected(name="pump\n  p-7")
 
@@ -779,6 +790,100 @@ def test_document_adapter_matches_a_subject_name_past_spacing_and_case() -> None
 
     assert json.loads(result.canonical_plan_bytes)["records"] == records
     assert records["entities"][0]["properties"]["name"] == "pump\n  p-7"
+
+
+def _broken() -> tuple[dict[str, object], dict[str, object], dict[str, object]]:
+    """The reading's text layer prints a space through the subject's name.
+
+    Six of run-10's 35 refused subjects were this: the entity is named "CO2"
+    and the page prints "CO 2". Here the asset is named "P-7" and the page
+    prints "P- 7", so the statement stays verbatim in the block it came from.
+    """
+
+    reading, capture, plan, _ = _inputs()
+    block = reading["pages"][0]["blocks"][0]
+    block["text"] = str(block["text"]).replace("P-7", "P- 7")
+    capture["assertions"][0]["statement"] = "Pump P- 7 was inspected on 2026-03-02."
+    capture["reading_sha256"] = _digest(_canonical(reading))
+    capture["assertions"][0]["formalized_by"] = list(
+        capture["assertions"][0]["formalized_by"]
+    ) + [
+        {
+            "path": ["properties", "subject"],
+            "record_id": "inspection:P-7:2026-03-02",
+        }
+    ]
+    records = deepcopy(plan["records"])
+    records["entities"][1]["properties"]["subject"] = "asset:P-7"
+    return reading, capture, records
+
+
+def test_document_adapter_accepts_a_subject_one_of_its_tags_names() -> None:
+    """Seven of run-10's 35 refused subjects were the source's short form.
+
+    The entity is named "Mid-Atlantic Ridge" and the sentence writes "the
+    MAR". The other forms the source uses for the same thing go in `tags`,
+    which every Entity already carries, and the check accepts any of them.
+    Here the asset is named "primary feed pump" and tagged "P-7", which is
+    what asr:001 writes.
+    """
+
+    capture, records = _subjected(name="primary feed pump", tags=["P-7"])
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_accepts_a_subject_named_only_by_a_tag() -> None:
+    """A subject with no `name` is named by a tag the statement writes."""
+
+    capture, records = _subjected(tags=["P-7"])
+    del records["entities"][0]["properties"]["name"]
+    capture["assertions"][0]["formalized_by"] = [
+        item
+        for item in capture["assertions"][0]["formalized_by"]
+        if item["record_id"] != "asset:P-7"
+    ]
+
+    result = _adapt_records(capture, records)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_matches_a_name_the_text_layer_broke() -> None:
+    """Eight of run-10's refusals were a name the page spells with a space.
+
+    The comparison drops whitespace from both sides, so a name the text layer
+    breaks still matches its own bytes. Neither side is rewritten.
+    """
+
+    reading, capture, records = _broken()
+
+    result = _adapt_records(capture, records, reading=reading)
+
+    assert json.loads(result.canonical_plan_bytes)["records"] == records
+
+
+def test_document_adapter_names_every_form_it_tried_for_a_subject() -> None:
+    """The refusal says which forms were tried, in the order the record has
+    them: its name first, then its tags."""
+
+    api = _api()
+    capture, records = _subjected(
+        name="P-9", tags=["pump P-8", "P-6"], locator="asr:003"
+    )
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt_records(capture, records)
+
+    assert refusal.value.reason is (
+        api.DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED
+    )
+    assert (
+        "record inspection:P-7:2026-03-02 names subject asset:P-7, whose "
+        "names P-9, pump P-8, P-6 are absent from the statement of asr:003"
+    ) in refusal.value.detail
 
 
 def test_document_adapter_names_the_subject_in_one_collapsed_line() -> None:
@@ -910,10 +1015,11 @@ def test_document_adapter_refuses_a_modality_no_formalizing_assertion_carries() 
         "statement_sha256 comes with the locator that checks it and is the "
         "SHA-256 of that assertion's statement bytes, "
         "a slot the contract declares evaluative is formalized by at "
-        "least one assertion whose modality is not HYPOTHESISED, the name "
-        "of a record's subject occurs in the statement of an assertion that "
-        "formalizes that subject, and a record's assertion_modality is the "
-        "modality of an assertion that formalizes it"
+        "least one assertion whose modality is not HYPOTHESISED, a name "
+        "of a record's subject, its name or one of its tags, occurs in the "
+        "statement of an assertion that formalizes that subject, and a "
+        "record's assertion_modality is the modality of an assertion that "
+        "formalizes it"
     )
 
 

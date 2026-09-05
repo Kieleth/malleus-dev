@@ -46,16 +46,18 @@ _CENSUS_TOP_HUBS = 5
 _STATEMENT_DIGEST_SLOT = "statement_sha256"
 _SUBJECT_SLOT = "subject"
 _NAME_SLOT = "name"
+_TAGS_SLOT = "tags"
 _MODALITY_SLOT = "assertion_modality"
 _DERIVATION_RULE = (
     "a record's assertion_locator names an assertion of this capture, a "
     "statement_sha256 comes with the locator that checks it and is the "
     "SHA-256 of that assertion's statement bytes, "
     "a slot the contract declares evaluative is formalized by at least one "
-    "assertion whose modality is not HYPOTHESISED, the name of a "
-    "record's subject occurs in the statement of an assertion that "
-    "formalizes that subject, and a record's assertion_modality is the "
-    "modality of an assertion that formalizes it"
+    "assertion whose modality is not HYPOTHESISED, a name of a "
+    "record's subject, its name or one of its tags, occurs in the "
+    "statement of an assertion that formalizes that subject, and a "
+    "record's assertion_modality is the modality of an assertion that "
+    "formalizes it"
 )
 _FORMALIZATION_FIELDS = {"path", "record_id"}
 _GAP_FIELDS = {"kind", "statement"}
@@ -255,6 +257,10 @@ def _path_exists(record: dict[str, object], path: list[object]) -> bool:
 
 def _normalise(text: str) -> str:
     return " ".join(text.split())
+
+
+def _compact(text: str) -> str:
+    return "".join(text.split())
 
 
 @dataclass(frozen=True, slots=True)
@@ -628,9 +634,13 @@ def _subject_defects(
 ) -> list[_Defect]:
     """Collect every subject the sentence that asserts it does not name.
 
-    The subject entity's ``name``, whitespace-collapsed and case-folded, must
-    occur in the statement of at least one assertion formalizing the record's
-    ``subject`` path. The name is read from this change set, which is all the
+    A source calls the same thing several things: "Mid-Atlantic Ridge" once
+    and "the MAR" thereafter. The subject entity carries its own forms, its
+    ``name`` and each member of ``tags``, and at least one of them must occur
+    in the statement of an assertion formalizing the record's ``subject``
+    path. Both sides drop whitespace and case-fold, so a name the text layer
+    breaks across a space or a line still matches its own bytes; neither side
+    is rewritten. The forms are read from this change set, which is all the
     adapter is handed: a subject naming no record here may still resolve in
     the base state, so the adapter claims nothing about it and the plan
     compiler refuses one that resolves nowhere.
@@ -644,11 +654,8 @@ def _subject_defects(
         target = records_by_id.get(subject)
         if target is None:
             continue
-        declared_name = _record_properties(target).get(_NAME_SLOT)
-        name = (
-            _normalise(declared_name) if isinstance(declared_name, str) else ""
-        )
-        if not name:
+        names = _subject_names(target)
+        if not names:
             defects.append(
                 _Defect(
                     DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED,
@@ -658,26 +665,51 @@ def _subject_defects(
                 )
             )
             continue
-        wanted = name.casefold()
+        wanted = [_compact(name).casefold() for name in names]
         formalizing = formalized.get(record_id, {}).get(_SUBJECT_SLOT, [])
         if any(
-            wanted in _normalise(statements[assertion_id]).casefold()
+            form in _compact(statements[assertion_id]).casefold()
             for assertion_id, _ in formalizing
+            for form in wanted
         ):
             continue
         named = (
             ", ".join(sorted(assertion_id for assertion_id, _ in formalizing))
             or "no assertion"
         )
+        listed = ", ".join(names)
+        tried = (
+            f"name {listed} is" if len(names) == 1 else f"names {listed} are"
+        )
         defects.append(
             _Defect(
                 DocumentAssertionRefusalReason.SUBJECT_NOT_NAMED,
                 record_id,
-                f"record {record_id} names subject {subject}, whose name "
-                f"{name} is absent from the statement of {named}",
+                f"record {record_id} names subject {subject}, whose {tried} "
+                f"absent from the statement of {named}",
             )
         )
     return defects
+
+
+def _subject_names(target: dict[str, object]) -> list[str]:
+    """Every form a subject carries, its ``name`` first and then its tags.
+
+    ``tags`` is a root slot every Entity already has, string-ranged and
+    multivalued, so a source's abbreviation or bare head noun needs no new
+    slot. A malformed ``tags`` contributes no form here and is the range
+    check's to refuse.
+    """
+
+    properties = _record_properties(target)
+    declared = [properties.get(_NAME_SLOT)]
+    tags = properties.get(_TAGS_SLOT)
+    if isinstance(tags, list):
+        declared.extend(tags)
+    forms = [
+        _normalise(value) for value in declared if isinstance(value, str)
+    ]
+    return [form for form in forms if form]
 
 
 def _checked_assertions(
