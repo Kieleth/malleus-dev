@@ -5728,3 +5728,58 @@ Non-claim: no producer has run under this cell. The expected effect and the
 falsifier are E-0174's: admission within two structural returns under the
 v4.9 skill where runs 06 and 07 at v4.1 were refused after two; a third
 refusal falsifies it.
+
+### E-0176, run-17 (Haiku 4.5 at v4.9) closes: ontology accepted, population refused after the diagnostic budget
+
+Date: 2026-09-05
+
+Sources: `private/paper-v4-v4-run-17/launch-log.json`,
+`private/paper-v4-v4-run-17/usage.json`, the three refused runner attempts
+under `private/paper-v4-v4-run-17/refused-runner-attempt-0N/` (each with the
+attempt's ledger and the diagnostic's exact bytes), the gate diagnostic under
+`private/paper-v4-v4-run-17/gate/attempt-01/`, and
+`handover/2026-09-05-run-17-haiku-rca.md`.
+
+Outcome: the Haiku 4.5 cell at the settled protocol ends with an accepted
+ontology and a refused population, as runs 06 and 07 did at v4.1, one stage
+later. Ontology attempt 01 accepted in 89 seconds at 2,687 facts: three
+project classes (a ridge segment, an aggregate earthquake event, a basalt
+sample), each with a grounding block citing an institution's home page
+(IUGG, ISC, IUGS) as a vocabulary for terms those pages do not carry; the
+organisations exist and nothing is fabricated in run-06's sense; the honest
+form for the case, `none_found` with a search note, which runs 15 and 16
+used, was not taken. The population carried 8 assertions over 7 blocks, 9
+records (5 segments, 1 campaign, 1 event, 2 relations), no nothing-assertable
+declaration and 178 blocks untouched, and closed with an offer to expand if
+the parent asked, a step the protocol does not have.
+
+The runner refused it three times. Attempt 1: all eight statements
+NOT_VERBATIM in one aggregated diagnostic (retyped sentences, the run-06
+defect); returned as diagnostic 1 of 2, and the correction produced byte
+spans, ligatures and letter-spacing included, which run-06's producer did not
+manage in two returns. Attempt 2: graph rehydration refused six properties
+the accepted surface does not declare, a missing required `event_type`, and
+two relation-type values outside the enum; the refusal reached the runner as
+a raw `ValueError` from `kg.py`, aggregated and exact in its text and untyped;
+returned as diagnostic 2 of 2 with the staged surface named. Attempt 3:
+GAP_REQUIRED, the second correction having stripped every assertion of its
+formalization targets and left none with a gap; the reason named the first
+assertion, and all eight are in that state by the overseer's count. Terminal.
+No fallback and no hand repair.
+
+Cost, from `usage.json`: ontology attempt 01 90,064; population 35,721;
+correction 1 15,965; correction 2 9,661; producer total 151,411.
+
+The expectation of E-0174 (admission within two structural returns under the
+v4.9 skill) did not hold; the falsifier, a third refusal, fired. What the
+v4.9 skill changed against v4.1 is visible in the attempts: the verbatim
+method reached the producer on a return and the block-inventory rule was
+never broken; what it did not reach is the producer's own validation against
+the staged surface and the rule that every assertion carries a target or a
+gap, which the Opus and Sonnet producers ran unasked.
+
+Two protocol observations recorded for Core-19 with the two from run-16: the
+rehydration refusal is untyped, and GAP_REQUIRED is not aggregated.
+
+Non-claim: this is one session on one document; it measures the protocol's
+reach into a small producer, not the model.
