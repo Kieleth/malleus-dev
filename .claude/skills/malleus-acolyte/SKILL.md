@@ -248,7 +248,10 @@ fallback.
    it is narrow: a claim-bearing record carries `assertion_locator`, the opaque
    route back to the retained assertion, and `statement_sha256`, the digest of
    its exact text, and `statement` stays empty unless the record's `Source`
-   declares a licence that permits reproducing the sentence.
+   declares a licence that permits reproducing the sentence. The adapter
+   recomputes `statement_sha256` from the located assertion's own statement
+   bytes at capture, so the locator must name an assertion of the same
+   capture and a digest that is not that assertion's refuses.
    Identifiers the source reports as facts about the
    domain are domain slots and belong in the ontology: a DOI, a dataset URL, a
    grant number, an accession. Labels identify records; they never carry an
@@ -307,11 +310,25 @@ fallback.
    carry it in `contribution_role` on a `ContributionRelation`, whose values
    are the fourteen CRediT roles plus `OTHER`, one relation per role; the role
    is the one the source declares, never one inferred from the work.
+   A hypothesis disposition is captured from the sentence that disposes of the
+   hypothesis, never from the sentence that raises it: `hypothesis_disposition`
+   sits on the `Evaluative` mixin, and a slot that mixin declares refuses when
+   only `HYPOTHESISED` assertions formalize it.
+   A relation's endpoints are formalized by an assertion whose statement names
+   both of them; a relation the reading only implies is a `RELATION_ABSENT`
+   gap, not a derivation from a neighbouring sentence.
    Inspect the returned `canonical_census_bytes`; continue reviewing
    and capturing source-supported material across both census axes. Each block is
    `REVIEWED` or `UNTOUCHED`; each captured assertion is `FULLY_FORMALIZED`,
    `PARTLY_FORMALIZED`, or `UNFORMALIZED`. A reviewed block is not thereby
-   formalized, and uncaptured assertions remain invisible. If the declared
+   formalized, and uncaptured assertions remain invisible. The census also
+   reports derivation, under `derivation`: how many distinct records each
+   assertion formalizes, whether each relation is `LOCAL`, `NON_LOCAL` or
+   `UNDERIVED` against the blocks that formalize its endpoints, the fan-out
+   distribution, the top hubs and the count of non-local relation derivations.
+   Those are reported and never refused; one sentence carrying dozens of
+   records is a signal to recheck what that sentence actually says, not a
+   refusal. If the declared
    capture remains partial, retain that limitation and never call it complete.
 7. **Compile, then admit.** For Core's default governed path, create the new
    ledger with `create_structural_history(..., compilation=compiled, ...)`, or
