@@ -1,0 +1,1317 @@
+{
+  "question_id": "CQ-03",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "Every part the question asks for is present in the rows and correctly bound to a subject. The earthquake-depth range for the segment the paper treats as central appears as an approximate 10 to 20 km observation and as an exact 16 to 19 km observation, each with the kilometre unit and a measured modality; the calculated primary-melt CO2 range appears as 0.4 to 3.0 wt% from barium and 0.5 to 2.8 wt% from rubidium, each with the weight-per-cent unit, a calculated modality and an estimated determination, and there is a separate open lower bound at 0.4 wt%. The residual is dilution rather than absence: the binding is type-only, so the same set also carries the adjacent segment's ranges, the pre-eruptive rather than primary values, and many quantities with no bearing on the question, and the rows do not themselves mark which pairing the question calls central. Each candidate is nonetheless separable by its subject reference and its quantity kind without leaving the row set.",
+  "source_locators": [
+    "page:1:block:001",
+    "page:2:block:004",
+    "page:2:block:006",
+    "page:5:block:005",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The data-availability block names the cruise reports together with the unprocessed seismic recordings, and carries the repository address the row projects."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The methods block names the database and gives the address the row projects."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008",
+        "page:8:block:009"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The data-availability block names the repository and begins the deposit identifier, which the following block completes; both are cited."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block that supplies the name uses it for the structure west of which the off-axis cluster sits; the projection carries nothing else to check."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The introduction block defines the brittle-ductile boundary and abbreviates it, which gives both the name and the boundary kind the row projects."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names this transform alongside the Romanche as the bound of the ridge segment studied."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks use the noun, one contrasting it with the lithosphere above and one dating and measuring the western flank."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the westward-dipping detachment bounding the intersection segment, which is the feature kind the row projects."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block places the study in this ocean region by name."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names this ridge alongside the Southwest Indian Ridge as an ultraslow case with deep mantle events."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block describes the inactive mound and the dive observations behind it, which is what the row's description asserts."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block reports the extinct vent field on the eastern flank of the northern discontinuity, giving both the name and the kind."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the high-angle inward-dipping faults and their orientation, which is what the row's description asserts."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block spells out the lithosphere-asthenosphere boundary and abbreviates it, giving the name and the boundary kind."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks use the noun, one for the brittle lithosphere above the melt and one for the cold 45 Ma lithosphere."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks use the noun for the layer the deep events are placed in."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the ridge in full and gives its abbreviation; the caption block repeats the expansion."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The caption block names the expected Moho interface, which is the kind the row projects."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the neo-volcanic ridge in the segment's median valley and gives its orientation."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block describes the normal faults cutting the core complex surface with the strikes the row's description carries."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block introduces the first non-transform discontinuity and names it, giving the name and the kind."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The same block introduces the second non-transform discontinuity and names it."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the oceanic core complex and abbreviates it, giving the name and the kind."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The methods block names this massif and places it at a non-transform discontinuity."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the intersection segment, which is the segment kind the row projects."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the short ridge segment between the two discontinuities, which is the kind the row projects."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The same block names the ridge segment south of the second discontinuity."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the transform; the caption block that supplies the row's feature kind calls the major structures of the region transform faults."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the eastern ridge-transform intersection and abbreviates it."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block uses the phrase for the region it then locates and measures."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:5:block:009"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW One cited block spells out the Southwest Indian Ridge with its abbreviation, the other uses the abbreviation."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block names the solubility model used to place the saturation pressure and depth."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:006",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW All three cited blocks name the double-difference relocation, in the results, in the methods and in the code list."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The methods block names the first-motion polarity approach used for the focal mechanisms."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The methods block names the local magnitude scale used for the magnitudes."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks name the non-linear location algorithm used for the initial hypocentres."
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks name the short-term over long-term average trigger used for detection."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks give the ratio as 81.3 with an uncertainty of 23 and identify the two elements, which is what the row projects."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks give the ratio as 991 with an uncertainty of 129 and identify the two elements."
+    },
+    {
+      "row_index": 39,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:7:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block gives the ratio as approximately 1.7 from Wadati diagrams; the row carries 1.7 flat, with no uncertainty and no approximation marker, so the source's hedge is dropped where the projection had a slot for imprecision."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block records basalts observed on the seafloor of the segment, which gives the name and the material."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block names melt inclusions as one of the sample groups plotted."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005",
+        "page:8:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The cited blocks name the compiled mid-ocean-ridge basalt samples and the network bounds they were drawn within."
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006",
+        "page:7:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block records peridotites observed on the seafloor of the intersection segment."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block names popping rocks as one of the plotted sample groups."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block records basalts observed on the seafloor; this projection carries the name alone."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block names melt inclusions among the plotted groups; this projection carries the name alone."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:6:block:005",
+        "page:8:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The cited blocks name the compiled mid-ocean-ridge basalt samples; this projection carries the name alone."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006",
+        "page:7:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The block records peridotites observed on the seafloor; this projection carries the name alone."
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The figure-caption block names popping rocks among the plotted groups; this projection carries the name alone."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL The block separates the cooled brittle layer from the partly molten material beneath it, which is the overlying relation and the qualifier the row carries; that same block formalises both endpoints."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The block says the core complex surface is cut by those normal faults; the relation's block is where the fault endpoint is formalised."
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL The caption block places the core complex on the outside corner of the ridge, giving the relation and the qualifier; that block also formalises the ridge endpoint."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The block bounds the intersection segment to the east by the detachment; the relation and both endpoints are formalised in that one block."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_NON_LOCAL The block places the segment south of the northern discontinuity, so the pairing holds on the reading; the relation's block is not among the blocks that formalise either endpoint, both of which are introduced a block earlier."
+    },
+    {
+      "row_index": 55,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The block says the inward-dipping faults bound the segment's axial valley rather than the segment itself, and the graph carries that valley as a feature of its own, so the endpoint the row names is a step removed from what the prose bounds; the relation's block does formalise the fault endpoint."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The block names the ridge segment lying south of the second discontinuity; the relation and both endpoints are formalised there."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL The block places the study area in the northern part of the ridge segment; the relation and both endpoints are formalised there."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL The block puts the extinct vent field on the eastern flank of the northern discontinuity; that block also formalises the vent-field endpoint."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the authors analysing samples from this segment and its southern neighbour, in the plain indicative the row's stated modality records, and names the segment."
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:006",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block describes the valley floor's bathymetric highs, faulting and basaltic constructions as observed fact, which matches the stated modality, and names the valley."
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block draws a suggestion that the ridge axis is shifting east beneath the core complex dome, which is the hedge the hypothesised modality and the suggestion kind record; the complex is named there."
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block frames the southward shallowing of the boundary as an expectation rather than a finding, which is what the hypothesised modality carries; the boundary is named by abbreviation."
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:006",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The abstract block carries the authors' own suggestion that deep mantle earthquakes follow from CO2 degassing; the hedge is explicit and the mantle is named."
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block sets out the fourth listed possibility as the one the authors prefer and ties the deep microseismicity beneath this segment to degassing from ascending melt; the preferred disposition, the possibility kind and the segment all come off that one sentence."
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block projects continued degassing as the melt rises and places the resulting earthquakes in the mantle between 10 and 20 km, in the conditional the hypothesised modality records."
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:002",
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block's opening states plainly how oceanic crust forms from mantle-derived melt at spreading centres; the subject noun is present."
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block reads the deep events under the axis of the ridge as a consequence of degassing-driven volume change, an interpretation rather than a measurement; the ridge appears there under its abbreviation, not its full name."
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the deep events aligned along a N150E trend parallel to the axial normal faults, and names the segment."
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block concludes from the resolution tests that the deep events are real and not artifacts, and names the segment in parentheses."
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001",
+        "page:5:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states the chain from degassing through volume change and extensional stress to deep mantle earthquakes in the indicative, which is what the stated modality records; the hypothesis framing for this mechanism sits in the block before it, not in this one."
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block denies that the maximum earthquake depth here follows the usual boundary-depth against spreading-rate relation; the sentence runs on into the next block but the denial is complete in this one."
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:006",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports the off-axis shallow cluster and concludes that the unexpected depths are not a location artifact; the located fragment stops at a line break that the same block completes, and the ridge appears abbreviated."
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block infers from absent deep microseismicity that this fault is inactive, a suggestion rather than a measurement, and names the fault."
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block places most of the deep events in the mantle below 10 km with scattered crustal events, hedged as a suggestion."
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:006",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block's opening fragment reads the seafloor peridotites as evidence of exhumed mantle; the sentence begins in the previous block but the assertion and the subject noun are both here."
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block rules the fastest velocity model out for locating events beneath the ridge axis, which is the negation the row records; the ridge appears abbreviated."
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block states that three segments are drawn southward from the transform, and names it."
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001",
+        "page:4:block:002",
+        "page:5:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The first cited block sets out the magmatic-tectonic possibility and the second records the authors rejecting it for these events, which is what the not-supported disposition asserts; the mantle is named in the first."
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block concludes that magmatism dominates crustal accretion at this segment and that the events sit in mantle above 1100 C; both parts are stated outright and the segment is named."
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block derives the 1100 to 1200 C range at 10 to 20 km from thermal modelling and concludes the mantle beneath the segment axis is hot, which is the calculated basis the row records."
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The abstract block projects the effect of high primary-melt CO2 on melt beneath the lithosphere-asthenosphere boundary; the boundary appears spelled out there rather than under the abbreviation the row's subject carries."
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block suggests the melt at the boundary could come from CO2 and water together, leaning on the authors' analysis and earlier work; the abbreviation is used in that block."
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block offers freezing at the lithosphere base as a possibility producing sub-horizontal reflections, which matches the conditional the modality records."
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reads the 10 to 20 km microseismicity as showing ascending melt residing, fractionating and evolving in the mantle, hedged as a suggestion."
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:003",
+        "page:2:block:006",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states the absence of a clear understanding of how the melts migrate in the upper mantle, which is the negation the row carries."
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:6:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block lists the five velocity models by their position relative to the transform, plainly and without hedging."
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001",
+        "page:3:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block raises the mylonite shear-zone hypothesis and, in the same block, records that the observations do not support it, which is what the not-supported disposition asserts."
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block states there are no observed active vents on this segment's axis, the negation the row records, and names the segment."
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:006",
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block denies evidence of a current eruption in the valley, resting it on low crustal microseismicity and seafloor morphology."
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block attributes the shallow events beneath the dome to ruptures on high-angle normal faults with a likelihood hedge, which the modality records."
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reads the hummocky morphology, the cones and the neo-volcanic ridge as showing this segment is magmatic, stated outright."
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001",
+        "page:3:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block says a strain-localised shear zone in the deep mantle can be expected during detachment development; the retained fragment opens with the previous sentence's reference marker but the assertion is intact."
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block carries the authors' suggestion that a small degassing-driven pressure rise induces the events beneath this ridge axis, and names the segment."
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block records the limitation plainly, that the microseismicity is a brief snapshot and activity may vary over years; the ridge appears abbreviated."
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:7:block:003"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports normal velocity ratios from tomography in this segment, stated without hedge."
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block attributes to earlier work the idea that volatiles flush melt away from the axis toward the boundary, which matches the hypothesised modality and names the boundary."
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The abstract block reports the deep events at 10 to 20 km in the mantle along the ridge axis; the bounds, the unit and the measured basis all come off that sentence and the ridge is named in full."
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block places the 20 km boundary depth inside an explanation the authors then set aside, so the approximate qualifier and the hypothesised modality both match; the boundary is named by abbreviation."
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the boundary as about 10 km beneath the southern discontinuity on the strength of the microseismicity, which matches the approximate bound and the measured basis."
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block bounds the boundary above at 10 km off-axis west of the segment, which is the open upper bound the row carries."
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the barium-based pre-eruptive estimate for this segment as 0.7 to 4.6 wt% and says in the same block that the estimate is for pre-eruptive melts, so the quantity kind and the estimated status both hold."
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same block gives the barium-based pre-eruptive estimate for the southern segment as 0.06 to 0.8 wt%, with that segment named."
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the primary-melt barium estimate for this segment as 0.4 to 3.0 wt%, calculated from the equilibrium concentrations; bounds, unit, subject and estimated status all come off it."
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same sentence gives the southern segment's primary-melt barium estimate as 0.04 to 0.5 wt%; the row's short label is a fragment of the block's own symbol, which leaves value, unit and subject exact."
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block gives the calculated volatile content of melts generated along this segment as 0.4 to 3.0 wt%; the label the row carries is the sentence's opening noun rather than the symbol, which changes nothing that is claimed."
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same sentence gives 0.04 to 0.7 wt% for the southern segment, named there for contrast."
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block puts the primary-melt concentration no lower than 0.4 wt% for this segment, which is the open lower bound the row carries."
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the rubidium-based pre-eruptive estimate for this segment as 0.9 to 4.3 wt%."
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same block gives 0.07 to 1.0 wt% for the southern segment."
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the primary-melt rubidium estimate for this segment as 0.5 to 2.8 wt%."
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same sentence gives 0.05 to 0.7 wt% for the southern segment."
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block dates the western-flank crust at 8 Ma; the retained fragment is short but value, unit and subject are all in that block."
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006",
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the western-flank crust as 5.4 km thick with a 0.3 km uncertainty from refraction work, and the caption block repeats it for the segment."
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The results block lists the deep microseismicity beneath this segment's axis at about 10 to 20 km, which is the approximate bounded quantity the row carries, with the segment named."
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports an average near 2800 ppm for segments in this ocean region from earlier ratio-based estimates; the row carries the average and not the maximum the same sentence also gives."
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the half-spreading rate as 16 mm/yr and names the ridge in the same block."
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The figure-caption block gives those events as 10 to 19 km below the sea floor under the axis of the ridge; the ridge appears there under its abbreviation."
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The caption block ties the boundary to the 750 C isotherm; the located fragment stops just before the number, which sits in the same block."
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the cold lithosphere as 45 Ma inside the cold-edge argument."
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:003",
+        "page:6:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports 514 located events around the intersection region and the methods block repeats the count; the intersection is named in the first."
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:3:block:001",
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block puts these earthquakes in mantle hotter than 1100 C, which is the open lower bound the row carries."
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives 120 km of ridge axis as covered by the network; the ridge appears abbreviated there."
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives 317 events located along the ridge and the figure-caption block carries the same total."
+    },
+    {
+      "row_index": 124,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_NOT_IN_BLOCK The block gives a 10 km width for the segment's median valley, so value, unit and segment hold, but it calls the structure the median valley and never the axial valley the row's subject is named for; the identification is made nowhere in this block."
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block reports about 1.1 per cent melt required at the boundary base as a modelled proposal from earlier work, which matches the hypothesised modality and the modelled determination."
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block denies any events below 20 km beneath this segment's axis, which is the negated open bound the row carries."
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same key-observations sentence gives 4 to 10 km for the events beneath the southern discontinuity, which is named there."
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the northern discontinuity as about 35 km long and names it."
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block bounds the events beneath the southern discontinuity above at 10 km."
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the maximum depth there as about 10 km, which it treats as expected for a slow-slipping discontinuity."
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the southern discontinuity a ridge offset of about 33 km."
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same sentence bounds the events beneath the core complex above at 6 km."
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block gives the off-axis cluster focal depths as about 2 to 6 km on the western side of the valley, which is named."
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives pre-eruptive concentrations of 0.7 to 4.6 wt% for this segment after fractional crystallisation, an estimate rather than a measurement."
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives barium above 89 ppm for this segment's samples, an open lower bound taken from measurement."
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the deep events beneath this segment's axis as 16 to 19 km, observed."
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives this segment as about 22 km long."
+    },
+    {
+      "row_index": 138,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:5:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same sentence gives rubidium above 8 ppm for this segment's samples."
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives the southern segment as 50 km long."
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002",
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives 140 km of the transform's eastern part as covered by the network and names it."
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007",
+        "page:3:block:003",
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives 197 events along the transform and the figure-caption block carries the same total."
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The same key-observations sentence gives 0 to 6 km for the shallow events at the intersection, which is named there."
+    },
+    {
+      "row_index": 143,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The block gives about 1250 C as the sub-solidus temperature at which melt is present at the boundary; the row's label is a hyphen-broken fragment of the block's own noun and does not change the quantity."
+    },
+    {
+      "row_index": 144,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The block reports the highest previously published melt CO2 at that ridge; the located fragment stops before the 1.9 wt% figure, which sits in the same block."
+    }
+  ]
+}

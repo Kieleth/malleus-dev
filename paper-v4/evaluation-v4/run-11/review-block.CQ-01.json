@@ -1,0 +1,519 @@
+{
+  "question_id": "CQ-01",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "The rows name the acquiring campaign and the seafloor seismometer network, carry the deployed instrument count with an explicit scope on the campaign record, tie the network to the campaign through a relation row, and describe the acquisition itself through the detection and location methods and the resulting data resources. Every part the question asks for is therefore addressed. The remaining rows are software packages, funding bodies and author affiliations that the type-only binding drew in and that bear on nothing the question asks; they are noise rather than a competing answer. The deployed count and the count of instruments that yielded usable data are separately scoped on separate records, so the two numbers do not conflict.",
+  "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002",
+    "page:2:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks name the cruise and state the same number of seafloor seismometers forming the deployed network, which is precisely the scope the row's count carries."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The data-availability block names the raw seismic recordings and cruise reports as an obtainable resource and gives the same access address the row projects."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The methods block names the rock-sample database and its web address exactly as the row projects them."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:008",
+        "page:8:block:009"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The repository is named in the first cited block and its digital object identifier runs across the block boundary into the second, so the two blocks together carry the projected identifier."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The results block introduces the seafloor seismometer network under the abbreviation the row uses as its name, and the figure caption block uses the same abbreviation for the deployed instruments."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block lists this mapping package among the software used for structural analysis, and the name is the whole of the row's projection."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010",
+        "page:8:block:011"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block names the plotting toolbox with its major version, which is the projected name."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:003",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The focal-mechanism block and the code-availability block both name this package, matching the row's only projected field."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:006",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The relocation block and the code-availability block both name this program, which is all the row projects."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:004",
+        "page:7:block:007",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The location and station-correction blocks and the code-availability block all name this program, matching the projected name."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:002",
+        "page:8:block:002",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Detection, magnitude and code-availability blocks all name this analysis package, which is the row's only claim."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The velocity-model block and the code-availability block both name this inversion program, matching the projection."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The magnitude block and the code-availability block both name this catalogue-analysis software, which is the whole projection."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The discussion block names the carbon-dioxide solubility model it applies to the melt, which is the projected method name."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The results block and the relocation block both describe relocating events by the differencing method the row names."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The focal-mechanism block describes determining mechanisms from first-motion polarities of the compressional phase, which is the projected method name."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The magnitude block names the local magnitude scale used, matching the projection."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The results block names a non-linear location algorithm for the hypocentres and the methods block describes the same non-linear search, so the projected name holds."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW Both cited blocks describe automatic arrival detection with the short-term over long-term average trigger the row names."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The title block's byline carries this author's name, and the byline is a list of people, which supports the projected agent type."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The acknowledgements block names this regional body among the funders, which supports both the name and the organisation type."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The byline carries this author's name among the people credited, supporting the name and the person type."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The affiliation block names this institute in full as an author affiliation, which supports the name and the organisation type."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The byline carries this author's name; the text layer spaces the letters out, but read as prose it is the same name, and the byline supports the person type."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The acknowledgements block names this funding council, supporting the name and the organisation type."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The acknowledgements block credits the national government among the funders under the name the row projects."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The affiliation block names this research unit with its identifier as an author affiliation, supporting name and organisation type."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006",
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The affiliation block gives this institute's full name and the acknowledgements block refers to it again by initials, supporting the projected name and type."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The acknowledgements block names this graduate-school project as a funder, supporting the projected name and type."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The byline lists this author fourth, with an affiliation marker attached, so the name and the person type both hold on that block."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The byline lists this author among the last three names, carrying an affiliation marker, which supports the name and the person type."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The byline opens its second line with this author's name and affiliation marker, supporting the name and the person type."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The acknowledgements block names this national funding body with its grant numbers, supporting name and organisation type."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:11:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The byline carries this author's name and the correspondence block repeats it, supporting name and person type."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The affiliation block names this institute as an author affiliation, supporting name and organisation type."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The acknowledgements block credits this national fleet infrastructure with funding the ship time, supporting name and organisation type."
+    },
+    {
+      "row_index": 36,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The affiliation block does place an Italian university among the author affiliations, so the organisation type holds, but the block names it with its city and the row's name field keeps only the generic first word, cut where the affiliation list breaks across a line. The identifying part of the name is not what the reading gives."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The affiliation block names this university as an author affiliation, supporting name and organisation type."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The acknowledgements block names this provincial funding body with its grant number, supporting name and organisation type."
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:11:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The byline carries the first author's name and the correspondence block repeats it, supporting name and person type."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block names this mapping package and gives the same download address the row projects; no version is claimed."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010",
+        "page:8:block:011"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block names the toolbox with its major version, and its download address runs across the block boundary into the following block, so the two blocks carry the whole projected address."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block gives this package's name, its version in parentheses and the address the row projects."
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:006",
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block gives this program's version and address and the relocation block names it in use, covering every projected field."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block names this location program and gives the address the row projects; no version is claimed."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block names this phase-picking package and gives the projected address."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block names this inversion program and gives the projected address."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "DERIVATION_LOCAL NO_SUBJECT_IN_ROW The code-availability block names this catalogue-analysis software and gives the projected address."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation and both endpoints are formalised from the same results block, which states that the microseismicity was acquired by the seismometer network during that cruise, so the network belongs to the campaign on the reading."
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:046",
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The contributions block credits this author, by initials, with taking part in data collection during the cruise, and the byline block ties those initials to a single author, so the contribution link holds."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:046",
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The contributions block credits this author's initials with participation in the cruise data collection, and the byline block resolves those initials to the named author, so the link holds on the reading."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:046",
+        "page:10:block:045"
+      ],
+      "rationale": "DERIVATION_LOCAL The sentence crediting the design of the project runs across a block boundary: the block the derivation reaches carries the predicate and the campaign, while the two sets of initials that are its subject sit at the end of the preceding block. Read together the two blocks support this author designing the campaign."
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:046",
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The contributions block lists this author's initials among those who took part in data collection during the cruise, and the byline resolves the initials."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:046",
+        "page:1:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The contributions block lists this author's initials among the cruise data collectors, and the byline resolves the initials to one author."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:046",
+        "page:10:block:045"
+      ],
+      "rationale": "DERIVATION_LOCAL As with the other design credit, the crediting sentence is split: the initials naming this author close the preceding block and the predicate about designing the project opens the block the derivation reaches. The pair supports the link."
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "rationale": "DERIVATION_LOCAL The acknowledgements block states that the ship time for the cruise was funded through this fleet infrastructure, which supports a funding link from that body to the campaign; the reading limits the funding to ship time and the row projects no narrower scope."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block gives the network's instrument spacing with the approximation marker the row keeps, in kilometres, so the value, unit and qualification hold. The token is non-local because the instrument record is formalised only from two page-two blocks, not from this one. The subject's short name appears in this block."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The methods block states the minimum number of seismometers an event had to be seen on during manual checking, which matches the row's open lower bound and its stated scope. The instrument record is formalised elsewhere, hence non-local, and the subject's short name occurs here."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:006"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_NON_LOCAL SUBJECT_IN_BLOCK The relocation block states that every relocated event was detected on more than six instruments, which is the row's open lower bound and scope. The subject record is formalised from page-two blocks, so the pointer is non-local, and the subject's short name appears in this block."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "rationale": "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK The results block gives the number of usable instruments used for automatic detection as an exact count, and the methods block repeats the same number; the subject record is also formalised from the first of these blocks, and the subject's short name appears there."
+    }
+  ]
+}
