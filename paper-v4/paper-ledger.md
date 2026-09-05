@@ -3783,3 +3783,53 @@ run-09's judged rows (630 kept, 618 SUPPORTED, 12 PARTIAL).
 
 Non-claim: no producer has run at this coordinate. The falsifiers are stated in
 `handover/2026-09-05-v43-rca.md` section 8.
+
+### E-0146, run-10 (v4.4) is admitted at the second runner attempt; 552 rows, 378 of them through subjects
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-10/ontology-run/`, `paper-v4/experiment-v4/run-10/results/`
+(type sets and binding at acceptance, v2 launch log, derived cost record),
+`private/paper-v4-v4-run-10/` (ledger, query result, the refused first runner
+attempt with its diagnostic text, withheld files), `paper-v4/evaluation-v4/run-10/`
+(review inputs under protocol v2).
+
+Ontology: accepted at attempt 01, 5,408 facts, 41 entity types, 2 event types,
+4 relation types, 7 subject-bearing types. The producer's log states it avoided
+`date` and `uri` ranges because the compiler refuses them: the corrected note's
+expected effect held (run-04 and run-09 each spent an attempt there). Three
+cited vocabularies, all verified today.
+
+Population: 347 assertions over all 186 blocks (184 asserted, 2
+nothing-assertable), 433 records (420 entities, 2 events, 11 relations), 48
+typed gaps (RELATION_ABSENT 21, REQUIRED_FIELD_ABSENT_IN_SOURCE 16,
+AGGREGATE_ONLY 6, TYPE_ABSENT 4, INTERVAL_NOT_EXPRESSIBLE 1). Runner attempt 1
+refused at the adapter with one aggregated SUBJECT_NOT_NAMED over 35 of 130
+subjects (run-09: 98 of 129); the names were the source's designators, so the
+naming sentence held, and the refused subjects fell into four classes measured
+by the overseer: 14 unnamed in their sentence, 7 aliases (the full name where
+the sentence writes the abbreviation), 8 partial names, 6 whitespace artefacts
+of the text layer. Returned as structural diagnostic 1 of 2; the producer
+corrected five names to the repeated form, dropped sixteen subjects with typed
+gaps, re-pointed two. Runner attempt 2 admitted under `actor:overseer-run-10`
+with no further return: fourteen ledger events, the reopened replay reproducing
+the admitted receipt and export, 433 records traced. Census: 300 fully, 34
+partly, 13 unformalized; 2 of 11 relations non-local; largest hub 7 records;
+subject coverage 114 of 235. Modality drift (the change under test): to be
+measured against the record; the adapter's MODALITY_NOT_ASSERTED did not fire.
+
+Query: the v4 binding frozen at acceptance (3,829 cases: ENTITY only for the
+types without a subject, SUBJECT, RELATION) executed unchanged after replay
+(`cases_sha256` equal): CQ-01 51, CQ-02 164, CQ-03 165, CQ-04 172, 552 rows over
+213 witnesses, 378 SUBJECT, 158 ENTITY, 16 RELATION, no forbidden attempt.
+
+Execution coordinate: inputs pinned at `2026244` (E-0145); the admitted runner
+executed at main `4e6209c`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 181,088; population
+212,169; correction 33,806; producer total 427,063.
+
+Non-claim: admission is structural acceptance, not adequacy. No preliminary
+review exists yet. Relations fell to 11 from run-09's 219; whether the subject
+element absorbed them or the producer under-derived is the iteration's
+analysis, recorded separately.

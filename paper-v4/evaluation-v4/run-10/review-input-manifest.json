@@ -1,0 +1,81 @@
+{
+  "schema": "malleus.paper-v4.source-grounded-review-inputs/v2",
+  "status": "FROZEN_FOR_REVIEW",
+  "run_id": "run-10",
+  "review_protocol_sha256": "sha256:88b69f6e80a3b9eac3a2c990178186df9c52fed3ced5c4e020162b0c202fa795",
+  "fixed_identities": {
+    "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+    "competency_questions_sha256": "sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86"
+  },
+  "stage_identities": {
+    "accepted_ontology_sha256": "sha256:2da666c18c84ec1e5bab2286492f0acaeb28365557bd5d5d5b9d1d7454e5a9e8",
+    "ledger_head": "sha256:cc657b57d99a63f9ec5f8a25e90bf687093c7b91bce23aa4138bb1648b93b334",
+    "replay_receipt_sha256": "sha256:6b1061c2d6eb31474035e0b4545cdc897793c28bf5691ea608076f331a3e7aaa",
+    "query_binding_sha256": "sha256:1dd9245d801167b666139036fec0c8332532f2e78147c37551d0122f87a7006a",
+    "query_result_sha256": "sha256:deb0e24df52742b27990183d26c7d75cd25523d9b045b6330c83135995dc637c",
+    "query_trace_summary_sha256": "sha256:ebaf2fffd78ba048f0312796e8be7c9584e6f08d7a4156b4d76e4e380d444e6e",
+    "population_trace_summary_sha256": "sha256:91490c4b3893ad69ee07dc4e629730ce11cdc1519da07017d930b053cd7e11b8"
+  },
+  "materials": [
+    {
+      "name": "selected_reading",
+      "path": "private/paper-v4-text-layer/selected-reading.json",
+      "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+      "visibility": "PRIVATE"
+    },
+    {
+      "name": "competency_questions",
+      "path": "paper-v4/experiment-v4/competency-questions.json",
+      "sha256": "sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "query_binding",
+      "path": "paper-v4/experiment-v4/run-10/results/native-query-binding.json",
+      "sha256": "sha256:1dd9245d801167b666139036fec0c8332532f2e78147c37551d0122f87a7006a",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "query_result",
+      "path": "private/paper-v4-v4-run-10/query/query-result.json",
+      "sha256": "sha256:deb0e24df52742b27990183d26c7d75cd25523d9b045b6330c83135995dc637c",
+      "visibility": "PRIVATE"
+    },
+    {
+      "name": "population_trace",
+      "path": "paper-v4/experiment-v4/run-10/results/trace-summary.json",
+      "sha256": "sha256:91490c4b3893ad69ee07dc4e629730ce11cdc1519da07017d930b053cd7e11b8",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "retained_capture",
+      "path": "private/paper-v4-v4-run-10/ledger/retained-capture.json",
+      "sha256": "sha256:c185b5f4105b670873f498da43dd614bde23528fd7f5ee99289d372c0d55195f",
+      "visibility": "PRIVATE"
+    },
+    {
+      "name": "query_trace_summary",
+      "path": "paper-v4/experiment-v4/run-10/results/query-trace-summary.json",
+      "sha256": "sha256:ebaf2fffd78ba048f0312796e8be7c9584e6f08d7a4156b4d76e4e380d444e6e",
+      "visibility": "PUBLIC"
+    }
+  ],
+  "rows_per_question": {
+    "CQ-01": 51,
+    "CQ-02": 164,
+    "CQ-03": 165,
+    "CQ-04": 172
+  },
+  "authorship": {
+    "preliminary_evaluator_kind": "CLAUDE_PRELIMINARY",
+    "ratifier_evaluator_kind": "HUMAN_AUTHOR",
+    "ratifier_actor_id": "actor:luis",
+    "deviation": {
+      "from": "CODEX_PRELIMINARY",
+      "to": "CLAUDE_PRELIMINARY",
+      "reason": "The protocol was frozen before the v4 producer ran and names Codex as the preliminary reviewer. Codex is unavailable: its tokens were exhausted on 2026-09-04 and the overseer session took both roles over, recorded in handover/2026-09-04-overseer-takeover.md. The run-10 contract, like run-02's, already says the preliminary inspector is a fresh Claude session. The reviewer is therefore a fresh Claude session recording CLAUDE_PRELIMINARY, and the substitution is recorded here instead of edited into the frozen protocol.",
+      "protocol_edited": false
+    }
+  }
+}
