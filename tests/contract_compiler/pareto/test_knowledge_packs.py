@@ -706,6 +706,104 @@ def test_compiled_evaluative_mixin_names_the_slots_the_adapter_reads() -> None:
     )
 
 
+def test_research_carries_the_subject_of_a_source_asserted_record() -> None:
+    """Decision 18. Run-04 attached observations to what they were about 27
+    times through three relation types; run-08, same model and same reading,
+    attached none and put the feature inside `quantity_kind` text 23 times out
+    of 131 observations. Neither ontology had a predicate for "this record is
+    about that thing" and neither did the pack. The slot is that attachment,
+    ranged on Entity exactly as a relation endpoint is."""
+
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
+
+    assert source["classes"]["SourceAsserted"]["slots"] == [
+        "assertion_modality",
+        "assertion_confidence",
+        "subject",
+        "assertion_locator",
+        "statement_sha256",
+    ]
+    assert source["slots"]["subject"]["range"] == "Entity"
+    assert "multivalued" not in source["slots"]["subject"]
+    assert "required" not in source["slots"]["subject"]
+    assert source["version"] == "0.5.0"
+
+
+def test_compiled_subject_reaches_every_record_wearing_source_asserted() -> None:
+    """Observations, claims and asserted ratios wear the mixin, so all three
+    carry the subject without declaring anything; a type that does not wear it
+    carries no subject and the census population is exactly that difference."""
+
+    view = _compiler().compile_linkml_contract(
+        root_locator="research",
+        sources=_pack_sources(),
+    ).view
+
+    for holder in ("Claim", "Observation"):
+        constraint = view.get_slot_constraint(holder, "subject")
+        assert constraint is not None
+        assert constraint.required is False
+        assert constraint.multivalued is False
+        assert constraint.inlined is False
+        assert constraint.range_id.rsplit("/", 1)[-1] == "Entity"
+        assert view.has_mixin(holder, "SourceAsserted")
+    assert "subject" in view.effective_slots("SourceAsserted")
+    assert "subject" not in view.effective_slots("Instrument")
+    assert view.has_mixin("Instrument", "SourceAsserted") is False
+
+
+def test_project_observation_subclass_reaches_the_subject() -> None:
+    """A project deriving from Observation must reach the slot unchanged."""
+
+    sources = _pack_sources()
+    sources["project"] = b"""\
+id: https://example.org/subject-bearing-project
+name: subject_bearing_project
+imports:
+  - linkml:types
+  - malleus
+  - research
+classes:
+  DepthObservation:
+    is_a: Observation
+"""
+
+    compiled = _compiler().compile_linkml_contract(
+        root_locator="project",
+        sources=sources,
+    )
+
+    assert "subject" in compiled.view.effective_slots("DepthObservation")
+
+
+def test_governing_design_records_the_subject_element_decision() -> None:
+    """Decision 18 says why the attachment is a slot and why the check is a
+    name substring rather than a judgment about what a sentence is about."""
+
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "18. The subject of a source-asserted record, in `research`",
+        "`subject`",
+        "`SourceAsserted` mixin",
+        "23 of run-08's 131 observations carry the feature inside "
+        "`quantity_kind`",
+        "94 of run-04's 240 query rows",
+        "`SUBJECT_NOT_NAMED`",
+        "whitespace-collapsed and case-folded",
+        "not a semantic judgment",
+        "reported and never refused",
+        "0.5.0",
+    ):
+        assert phrase in normalized
+    assert normalized.index("17. Evaluative slots in `research`") < (
+        normalized.index("18. The subject of a source-asserted record")
+    )
+
+
 def test_governing_design_records_the_evaluative_slot_decision() -> None:
     """Decision 17 says which slots are evaluative and how a reader finds out."""
 
