@@ -4084,3 +4084,132 @@ rationales say what they judged.
 The overseer wrote the claim into the entry before checking it against the
 artifact, which is the error E-0134 recorded once already. The check that
 should precede such a sentence is one script over the frozen result.
+### E-0153, run-12 opens v4.6: the adapter derives the subject the sentence names
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-12/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`bind_from_surface.py`, `native_query.py`, `offline_validation.py`,
+`offline-validation.json`, `test_contract.py`, `test_pipeline.py`,
+`paper-v4/evaluation-v4/review-task-v4.template.md`,
+`paper-v4/evaluation-v4/run-12/review-record.blank.md`,
+`handover/2026-09-05-overseer-journal.md` (iteration 4, decided),
+`handover/2026-09-05-v44-rca.md` section 5, `handover/2026-09-05-v45-rca.md`
+and E-0147 to E-0152.
+
+Iteration: run-12 is the seventh iteration of the v4 protocol, `v4.6`. The
+protocol shape does not change and the producer does not change. The harness
+changes in one place, and it is a place the producer never reads: the review
+task. Every executable file and the spawn message are run-11's bytes with the
+run id substituted and nothing else, and `native_query.py` is run-11's bytes
+with nothing substituted at all, which `test_pipeline.py` proves file by file:
+seven by reconstructing run-11's text from this cell's, one by comparing the
+bytes. Run-04 to run-11 are the eight cells this iteration follows; none is
+superseded, repaired or reinterpreted, and the frozen artifacts of every closed
+cell, run-11's included, are digest-pinned by `run-12/test_contract.py`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default and
+neither pinned nor observed. The model is run-04's, run-08's, run-09's,
+run-10's and run-11's, so the model is not the variable.
+
+Coordinates: provisional. `pin.py --commit HEAD` pins commit
+`712bcbf779ade453287105eb2ce1bc0b6e3237a1`, tree
+`a6a085dc38285608ba83067b9e8f0116b8d3bee1`, governance head `OVR-000410` at
+`sha256:59309997…`, which is still the v4.5 governance coordinate: Core-16 has
+not landed. The commit is a paper commit and its Core files are the v4.5
+coordinate `9d789f2`'s, byte for byte. The interface coordinates are new:
+`capture:paper-v4:yu-2025:v4:12` and `plan:paper-v4:yu-2025:v4:12`, and the
+runner will execute under `actor:overseer-run-12`. The private workspace is
+`private/paper-v4-v4-run-12/producer`. At this pin none of the eight declared
+inputs has moved against run-11's manifest. The gate status reads
+`PROVISIONALLY_PINNED_PENDING_CORE_16` and the overseer re-pins with one command
+after Core-16 lands.
+
+All sixteen of run-11's `changes` entries are carried forward and marked
+`carried_from: run-11`. Five of them are Core's and are read at fixed commits so
+that nothing Core-16 lands can be attributed to an earlier task:
+`CORE_12_DERIVATION_CHECKS` at the v4.1 baseline, `PACKS_0_3_0` at run-08's
+expected versions, `SUBJECT_ELEMENT` at the v4.3 coordinate `f6c8c71`,
+`CORE_14_MODALITY_SOURCE_OF_TRUTH` between the v4.3 and the v4.4 coordinates,
+and `CORE_15_SUBJECT_ALIASES`, which was run-11's change under test and is now
+read between the v4.4 coordinate `2026244` and the v4.5 coordinate `9d789f2`.
+Core-15 is read at fixed commits for a reason this cell has and run-11 did not:
+Core-16 rewrites the same adapter and the same skill, so a comparison against
+this cell's pin would report Core-16's bytes as Core-15's. Its expectation is
+empty, so no enum check is possible in either direction, and the entry records
+that instead of a vacuous subset result.
+
+Two entries are this iteration's. One is Core's and one is the harness's:
+
+1. `CORE_16_PROJECTED_SUBJECT`. The document adapter derives the subject of a
+   source-asserted record whose `subject` slot is unset. Where exactly one
+   entity of the capture is named, by its `name` or any of its `tags` with
+   whitespace ignored, in a statement that formalizes the record, the adapter
+   sets the subject to that entity and records the derivation as projected from
+   that assertion. A subject the producer set is recorded as proposed and still
+   passes the name check Core-15 widened; a statement naming more than one
+   capture entity is ambiguous and the slot stays unset; a statement naming none
+   is unnamed. The census reports all four dispositions on the subject-coverage
+   axis, which stays reported and never refused, so no refusal reason is added
+   and `expected_reasons` is empty. One skill sentence says so and tells the
+   producer to set the subject only where the sentence names more than one
+   entity. `subject` is the slot Core-13 added and `tags` an existing root slot,
+   so there is no new slot, no pack version and no ontology change. Cause:
+   `handover/2026-09-05-overseer-journal.md`, iteration 4 decided, and E-0151.
+   State at the pin: `PENDING_AT_PIN`. Because the expectation is empty, a
+   subset check on the enum would read LANDED against a commit where Core has
+   written nothing, so the pin sets `pin_status` from two byte comparisons
+   against the v4.5 coordinate, the adapter and the skill, and records the
+   `SUBJECT_NOT_NAMED` message text verbatim beside that coordinate's and which
+   of the four census keys the subject census declares at the pinned commit.
+   Both files read unmoved here and the census declares none of the four keys.
+2. `REVIEW_TASK_V4`. The derivation-locality token, `DERIVATION_LOCAL` or
+   `DERIVATION_NON_LOCAL`, is written on `RELATION` rows only. A `SUBJECT` row
+   carries the subject-in-block token and the digest token where the record
+   carries a digest; an `ENTITY` row carries the digest token where applicable
+   and no locality token. Every other duty of v3 is kept, the placeholders are
+   the same seven, and the frozen review protocol does not move: this is a task
+   change and not a protocol change. Cause: `handover/2026-09-05-v44-rca.md`
+   section 5. The token was defined for relation rows, whether the relation's
+   block is among its endpoints' blocks, and applied to every row; a subject
+   entity is introduced once in a document and referred to everywhere after, so
+   232 of run-10's 552 rows read `DERIVATION_NON_LOCAL` for that reason alone.
+   For a `SUBJECT` row the subject check is the locality, and the template says
+   so in its own words. The blank record for run-12 is run-11's with the run id
+   moved and the same three passages rewritten, because it is the file the
+   reviewer copies and it would otherwise tell the reviewer to write a token
+   the task no longer asks for.
+
+The offline validation is carried again. `offline_validation.py` re-runs
+run-10's computation of the v4.4 ENTITY restriction against this cell's binder
+and returns the same counts unchanged: 630 of run-09's 1,466 rows kept (58,
+319, 131, 122), 618 SUPPORTED, 12 PARTIAL, none unjudged. That is a regression
+check on a binder that did not move, not evidence about v4.6.
+
+Measurement: run-12 is measured against run-11's 457 admitted rows (60, 123,
+145, 129; 262 SUBJECT, 160 ENTITY, 35 RELATION, 183 witnesses) and against
+run-11's subject coverage, 91 of 248 (Observation 52 of 143, Claim 39 of 102,
+AttributedRatio 0 of 3). Both figures are in run-11's own public launch log and
+`test_contract.py` recomputes both from it. Run-11 refused no subject at all,
+which is why the second figure is a coverage census and not a refusal count.
+Expected: coverage above sixty per cent at the same or fewer producer tokens.
+Falsifier: projected subjects judged wrong more often than proposed ones at
+review, which would mean a sentence naming one entity is not enough to know
+what a record is about.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-12, and
+`ontology-run/` and `results/` carry only a keepfile. Core-16 is the moving part
+and it is not in the pinned bytes, so the coordinate is provisional and the cell
+is not ready for a producer until the overseer re-pins and the gate status reads
+`PINNED_TO_THE_V4_6_CORE_COORDINATE`. Run-11's 457 rows and its 91 of 248
+subjects are run-11's, on run-11's graph; they bound what this cell is compared
+against and say nothing about the graph run-12's producer will build. The 77
+unattached records the overseer counted on run-11's population file are a fact
+about run-11's records, not a count Core-16 will reproduce, and a projected
+subject is a subject the compiler derived, not a subject the review has agreed
+is right. Whether any of it holds is open, and run-12 is one cell that will be
+one observation, not a measurement, until it has run to ratification.

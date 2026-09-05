@@ -327,13 +327,16 @@ BLANK_TOKEN_PARAGRAPH_V3 = """Each `rationale` opens with the fixed tokens the t
 `DIGEST_MISMATCH` where the record carries a statement digest, then
 `DERIVATION_LOCAL` or `DERIVATION_NON_LOCAL`, then, on a `SUBJECT` or an
 `ENTITY` row only, one of `SUBJECT_IN_BLOCK`, `SUBJECT_NOT_IN_BLOCK` or
-`NO_SUBJECT_IN_ROW`; then the reason in your own words."""
+`NO_SUBJECT_IN_ROW`; then the reason in your own words. The `rows` grammar is
+closed at four keys and the validator is frozen, which is why every finding
+lives at the head of the text field."""
 BLANK_TOKEN_PARAGRAPH_V4 = """Each `rationale` opens with the fixed tokens the task defines: `DIGEST_OK` or
 `DIGEST_MISMATCH` where the record carries a statement digest, then, on a
 `RELATION` row only, `DERIVATION_LOCAL` or `DERIVATION_NON_LOCAL`, and on a
 `SUBJECT` or an `ENTITY` row only, one of `SUBJECT_IN_BLOCK`,
 `SUBJECT_NOT_IN_BLOCK` or `NO_SUBJECT_IN_ROW`; then the reason in your own
-words."""
+words. The `rows` grammar is closed at four keys and the validator is frozen,
+which is why every finding lives at the head of the text field."""
 BLANK_EXAMPLE_RATIONALE_V3 = (
     "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK one or two sentences in your"
     " own words"
@@ -1228,13 +1231,14 @@ def test_interface_coordinates_are_new_and_reuse_no_earlier_run() -> None:
             RUN_07,
             RUN_08,
             RUN_09,
+            RUN_10,
             RUN_11,
         )
     ]
 
     assert coordinates == {
-        "capture_id": "capture:paper-v4:yu-2025:v4:11",
-        "plan_id": "plan:paper-v4:yu-2025:v4:11",
+        "capture_id": "capture:paper-v4:yu-2025:v4:12",
+        "plan_id": "plan:paper-v4:yu-2025:v4:12",
         "source_id": "source:yu-2025-mid-atlantic-ridge",
     }
     for prior in earlier:
@@ -1567,7 +1571,7 @@ def test_the_v4_task_writes_the_locality_token_on_relation_rows_only() -> None:
     assert "**Derivation locality, `RELATION` rows only.**" in task
     assert "**Derivation locality, every row.**" in prior
     assert "**Derivation locality, every row.**" not in task
-    assert "the subject check is the locality" in task
+    assert "the subject check is the locality" in _plain(task)
     # The duties that do not move are still worded as v3 worded them.
     for span in (
         "## What you judge",
@@ -1633,7 +1637,7 @@ def test_the_blank_record_template_is_run_11s_with_the_token_scope_moved() -> No
         assert token in record, token
     # The scope is stated here too, and the example row is a SUBJECT row, which
     # under v4 carries no locality token.
-    assert "on a `RELATION` row only" in record
+    assert "on a `RELATION` row only" in _plain(record)
     assert "DIGEST_OK SUBJECT_IN_BLOCK" in record
     assert "DIGEST_OK DERIVATION_LOCAL SUBJECT_IN_BLOCK" not in record
 
