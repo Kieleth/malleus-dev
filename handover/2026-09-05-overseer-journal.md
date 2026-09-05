@@ -91,3 +91,25 @@ Reading: 26 of 61 gaps are two pack limits (approximation and event-date precisi
 - A record that carries `statement_sha256` and no `assertion_locator` is not checked by DIGEST_MISMATCH, because nothing in the capture can check it. A producer could escape the digest check that way. Candidate for the next Core entry: refuse a digest with no locator, or require the locator whenever the digest is present, decided at the pack.
 - `_derivation_census` in the document adapter takes an unused `records_by_id` parameter; found after OVR-000402 sealed and run-08 pinned the commit. One line for whoever holds the next ledger entry.
 - The adapter's new `contract_view` argument defaults to None so older runners keep working; a runner that omits it silently skips EVALUATIVE_SLOT_NOT_EVALUATED. Run-08's runner was run-04's bytes and omitted it; fixed before phase two (commit 05f9c5e) and pinned in run-08's pipeline test. Any future runner must pass it; a harness test that greps for the argument is the cheap guard.
+
+## Run-08 (v4.2, Opus 5) against run-04 (v4.1, Opus 5), 2026-09-05
+
+| measure | run-04 (v4.1, packs 0.2.0, Core 8b806f7 + Core-10 at run) | run-08 (v4.2, packs 0.3.0/0.4.0, Core-9 to Core-12) |
+|---|---|---|
+| ontology | accepted at attempt 02, one return | accepted at attempt 01, no return |
+| population | admitted at runner attempt 2 (attempt 1 refused on the Core-10 defect) | admitted at runner attempt 1 |
+| assertions / blocks | 349 / 186 of 186 | 349 / 186 of 186 (182 asserted, 4 nothing-assertable) |
+| graph | 256 entities, 3 events, 144 relations | 418 entities, 1 event, 26 relations |
+| typed gaps | 61 (26 intervals, 21 required-field, 8 aggregate, 5 type, 1 relation) | 27 (16 relation, 6 required-field, 3 type, 1 aggregate, 1 interval) |
+| value qualification | n/a | 108 of 131 observations |
+| largest hub / non-local relations | 47 records / not measured | 10 records / 6 of 26 |
+| binding | exhaustive, revised twice after seeing rows (900 cases) | frozen at acceptance, executed unchanged (2,084 cases) |
+| rows CQ-01 to CQ-04 | 17 / 69 / 83 / 71 | 5 / 2 / 0 / 1 |
+| producer tokens | 371,026 | 340,313 |
+
+Reading. Every structural measure moved the right way: fewer returns, fewer gaps, hedges carried, digests recomputed, dispositions from disposing sentences, no hubs, a binding that cannot have seen a row. The question rows collapsed. The cause is on disk: run-08's graph holds 131 observations and 85 claims with no relation from any of them to a feature, a sample, a campaign or another claim. Its 26 relations are contribution, funding, archive, software and feature-to-feature links. The research pack's CLAIM_CONCERNS, SUPPORTS, CHALLENGES and OBSERVED_WITH were on the surface and unused; the 16 RELATION_ABSENT gaps are about affiliations and unnamed discontinuities, not about the missing subject links; the session log does not mention them. Run-04 had those links only by hanging them on hub sentences, which Core-12 now names as non-local and the skill now calls a gap. The producer, told that an implied relation is a gap, neither derived the relations that single sentences do support (a depth beneath a named segment's axis is one sentence) nor recorded the rest as gaps; it dropped them. And the query surface is relation-only, so an answer that exists as an unattached observation (34 depth quantities, 20 CO2 quantities) cannot be reached.
+
+Three consequences, for decision:
+1. The subject link is not optional. Observations and claims need an edge to what they are about, or the graph is a bag of typed facts. This is Luis's anchors point in its sharpest form; the design should make the subject edge a required, derived part of an observation or claim (from the sentence that states both, else a gap the census counts), not a producer choice.
+2. The query surface should reach entities. A case kind that projects a type's fields without a relation (type-only, still value-blind) would have returned every depth and CO2 observation for CQ-03. Cheap; a binding-schema change and a native_query.py change for the next harness.
+3. The comparison is one cell against one cell under a different harness, packs and skill; nothing here isolates a cause beyond what the artifacts state.
