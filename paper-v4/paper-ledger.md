@@ -6180,3 +6180,66 @@ the producer consumes.
 Non-claim: no producer has run under this cell. The expected effect and the
 falsifier are E-0180's: admission within two structural returns under the v4.10
 skill where run-17 at v4.9 was refused after two; a third refusal falsifies it.
+
+### E-0182, run-18 (Haiku 4.5 at v4.10) closes: ontology accepted, population refused after the diagnostic budget; the pre-flight list did not carry the producer
+
+Date: 2026-09-06
+
+Sources: `private/paper-v4-v4-run-18/launch-log.json`,
+`private/paper-v4-v4-run-18/usage.json`, the three refused runner attempts
+under `private/paper-v4-v4-run-18/refused-runner-attempt-0N/` (each with the
+attempt's ledger and the diagnostic's exact bytes), the gate diagnostic under
+`private/paper-v4-v4-run-18/gate/attempt-01/`, and
+`handover/2026-09-06-v410-rca.md`.
+
+Outcome: the Haiku 4.5 cell at the Core-20 coordinate ends with an accepted
+ontology and a refused population, as run-17 did at v4.9. The expectation of
+E-0180 (admission within two structural returns) did not hold; the falsifier,
+a third refusal, fired.
+
+Ontology attempt 01 accepted in 255 seconds at 2,614 facts: seventeen project
+classes each with a grounding block, the research pack not imported, so no
+Claim, Observation, Source, Campaign or Method type and no subject-bearing
+type. Eight cited URLs: three real vocabularies (JCGM 200:2012, read from the
+fetched PDF, defines "measuring instrument" at 3.1; SOSA/SSN; the W3C Basic
+Geo vocabulary, which defines no "location"), five institution home pages
+cited as vocabularies for terms they do not carry, one host unreachable on
+transport; nothing fabricated. The producer ran the ambient
+malleus-inquisitor, whose root-currency rite read the repository's root
+ontology, a file outside the declared inputs with the same bytes as the staged
+one; recorded as an isolation observation.
+
+Population: 26 assertions over 23 blocks, 163 blocks declared
+nothing-assertable, 22 records (11 entities, 6 events, 5 relations). Under
+Core-19's census that reads 23 asserted, 163 declared, 0 untouched. The
+runner refused it three times. Attempt 1: READING_MISMATCH, the capture's
+digest being that of a re-serialisation rather than the supplied bytes, a
+check the pre-flight list names in one line and the producer reported having
+run; returned as diagnostic 1 of 2. Attempt 2, the digest fixed: NOT_VERBATIM
+on 18 of 26 assertions in one aggregated diagnostic; returned as diagnostic 2
+of 2. Attempt 3, the producer reporting all 18 corrected: NOT_VERBATIM on 11,
+of which, measured against their blocks without quoting them, one differs by
+a ligature or letter-spacing alone, eight are near misses (similarity 0.92 to
+0.94 after whitespace collapse: retyped sentences a few characters off), and
+two are paraphrases. Terminal. No fallback and no hand repair. A relation
+type the surface does not declare (EarthquakeLocatedAt, twice) never reached
+the adapter's later checks.
+
+Cost, from `usage.json`: ontology attempt 01 94,950; population 45,117;
+correction 1 7,739; correction 2 14,113; producer total 161,919 (run-17:
+151,411).
+
+Against run-17 at v4.9: three times the assertions, every block accounted for
+by a declaration, the same terminal outcome one defect class earlier in the
+order. Run-17's producer turned all eight paraphrases into byte spans on one
+return; this one turned 7 of 18. The list named the check first and the
+method by reference; the producer did not run it, before or after the return.
+What the two cells measure together: the protocol admits nothing wrong from a
+small producer and names each defect exactly, and neither a rule nor a list
+of the adapter's checks substitutes for a validator the producer runs on its
+own file, which the Opus producers wrote unasked and the Haiku producers did
+not.
+
+Non-claim: one session on one document per cell; the list's effect on the
+Opus and Sonnet producers, who did build validators from the rules, is not
+measured (no cell of theirs has run at v4.10).
