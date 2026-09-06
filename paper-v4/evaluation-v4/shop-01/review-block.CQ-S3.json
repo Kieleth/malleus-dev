@@ -1,0 +1,34 @@
+{
+  "question_id": "CQ-S3",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The question has two parts. Which inventory unit order O1 contains is not answered: the returned rows are ENTITY rows only, one of the Order type and one of the InventoryUnit type, and no row asserts any link between them. The binding's relation cases for this question all carry PaymentInvoiceRelation as the relation record type, so no containment relation between an Order and an InventoryUnit could be returned by these cases, and the graph holds a single record of each of the two types, so their appearing side by side follows from a type-only case rather than from a statement that one contains the other. The allowed source surface does carry an items field on warehouse.jsonl row:0 beside the order field; whether those identifiers denote inventory units is not stated by the rows and is not something this review decides. What product the returned inventory unit is is addressed on the face of the rows, through the product_code projection, although that projection's derivation locator does not resolve, as row 0 records. Part of the question is addressed and part is not.",
+  "source_locators": [
+    "warehouse.jsonl row:1:order",
+    "warehouse.jsonl row:0:order",
+    "warehouse.jsonl row:0:items[0]",
+    "inventory-units.csv row:2:inventory_unit_id",
+    "inventory-units.csv row:0:product_code"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "inventory-units.csv row:2:inventory_unit_id",
+        "inventory-units.csv row:2:product_code",
+        "inventory-units.csv row:0:inventory_unit_id",
+        "inventory-units.csv row:0:product_code"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW Both derivations of this witness name row:2 of inventory-units.csv, but under the convention this task fixes, where row:0 is the first row after the header, that file's last row is row:0, so there is no row at the named index to open and the cited rows supply nothing. Both named fields are in the header, and row:0 carries under each of them the value the record projects on the matching path, so what fails is the index rather than the field. The record's projection carries no subject and the binding declares no subject-bearing record type."
+    },
+    {
+      "row_index": 1,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "warehouse.jsonl row:1:order",
+        "warehouse.jsonl row:0:order"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW This witness derives properties.name from row:1:order of warehouse.jsonl, and that file's last row is row:0, so the named row is not there to open. The order field of row:0 does carry the value the record projects. The retained warehouse plan indexes this same single-line file as row:1 throughout its gap entries, so the producer counted physical lines from one while this task counts from zero; the value is present in the file either way, but the locator as written reaches no row. The projection carries no subject."
+    }
+  ]
+}

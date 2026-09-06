@@ -1,0 +1,100 @@
+{
+  "question_id": "CQ-S4",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The records half, judged from the rows as the task directs: the rows return every current record and relation the graph holds, spanning each entity type in the question's type set and the one relation type on the surface, with no filter on source, because the binding is type-only and no case names a source. The warehouse-derived records are therefore present among the rows, but the rows do not identify which of them those are. The derivation half, judged from trace-summary.json as the task directs: the trace does carry a source_id and a locator for every record, and the records whose source is source:small-shop:warehouse are actor:R4 at row:1:actor and order:O1 at row:1:order. Both locators name a row past warehouse.jsonl's only row, so the locators the question asks for are supplied but do not resolve against the file; the same fields at row:0 carry the values those two records project. One half is answered outside the rows and the other is not isolated by them.",
+  "source_locators": [
+    "warehouse.jsonl row:1:actor",
+    "warehouse.jsonl row:1:order",
+    "warehouse.jsonl row:0:actor",
+    "warehouse.jsonl row:0:order"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "warehouse.jsonl row:1:actor",
+        "warehouse.jsonl row:0:actor"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW The witness derives properties.name from row:1:actor of warehouse.jsonl, whose last row is row:0 under this task's convention, so the cited row does not exist and supports nothing. The actor field of row:0 carries the value the record projects, so the miss is one row of index, not a missing field. The projection carries no subject."
+    },
+    {
+      "row_index": 1,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "inventory-units.csv row:2:inventory_unit_id",
+        "inventory-units.csv row:2:product_code",
+        "inventory-units.csv row:0:inventory_unit_id",
+        "inventory-units.csv row:0:product_code"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW Same witness and same two derivations as CQ-S3 row 0, judged again here as its own row: row:2 of inventory-units.csv is past that file's last row, which is row:0 once the header is excluded as the task directs. Row:0 carries both named fields with the values the record projects, so the file supports the projection and the pointer does not reach it. No subject appears in the projection."
+    },
+    {
+      "row_index": 2,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "invoices.csv row:2:invoice_id",
+        "invoices.csv row:0:invoice_id"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW The name derives from row:2:invoice_id of invoices.csv, whose last data row is row:1 once the header is excluded, so the named row is past the end of the file. The invoice_id field of row:0 carries the value this record projects. The retained invoices-payments plan numbers the same file's data rows as row:2 and row:3, which is a header-inclusive count from one and not the count this task sets. The projection carries no subject."
+    },
+    {
+      "row_index": 3,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "invoices.csv row:3:invoice_id",
+        "invoices.csv row:1:invoice_id"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW row:3:invoice_id names a row two past the last data row of invoices.csv, so nothing opens there. The value this record projects on properties.name is present in the file, in the invoice_id field of row:1, under the same one-off-by-the-header shift that the sibling invoice row shows. No subject in the projection."
+    },
+    {
+      "row_index": 4,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "warehouse.jsonl row:1:order",
+        "warehouse.jsonl row:0:order"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW Same witness and derivation as CQ-S3 row 1, judged again here: warehouse.jsonl holds one row, row:0, and the derivation names row:1, so the cited row is absent. The order field of row:0 carries the projected value. The projection carries no subject."
+    },
+    {
+      "row_index": 5,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "payments.jsonl row:1:payment_id",
+        "payments.jsonl row:0:payment_id"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW payments.jsonl holds a single line, so its only row is row:0 and the derivation's row:1:payment_id opens nothing. The payment_id field of row:0 carries the value the record projects on properties.name. The projection carries no subject."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "supplier-order-history.jsonl row:1:supplier_order_id",
+        "supplier-order-history.jsonl row:1:product_code"
+      ],
+      "rationale": "VALUE_MATCHES_ROW NO_SUBJECT_IN_ROW Both derivations name row:1 of supplier-order-history.jsonl, which under this task's zero-based convention is the file's second line and does exist. Its supplier_order_id and product_code fields carry exactly the values the record projects on properties.name and properties.product_code, so the cited row supports both projected claims. One qualifier: the retained supplier-orders plan indexes this file's two lines as row:1 and row:2, so the line this review opened is not the line the producer counted, and because both lines repeat the same identifier and the same product code, this match cannot discriminate between the two conventions. The projection carries no subject."
+    },
+    {
+      "row_index": 7,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "payments.jsonl row:1:payment_id",
+        "payments.jsonl row:1:invoice_ids[0]",
+        "payments.jsonl row:0:payment_id",
+        "payments.jsonl row:0:invoice_ids[0]"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE DERIVATION_LOCAL All three derivations of this relation name row:1 of payments.jsonl, and that file's only row is row:0, so none of them opens and the cited rows support neither endpoint nor the relation property. Locality holds as declared: the row named for the relation's own source_id and target_id paths is the same file and index the source endpoint payment:P1 derives from, so the row that formalizes the relation is among the rows that derive an endpoint. A separate fact, not part of the judgment above: at the resolvable row:0 the invoice_ids[0] element carries an invoice identifier while the path it feeds, properties.relation_type, carries the relation type constant, so correcting the index alone would not turn that one derivation into a value match."
+    },
+    {
+      "row_index": 8,
+      "source_support": "UNSUPPORTED",
+      "source_locators": [
+        "payments.jsonl row:1:payment_id",
+        "payments.jsonl row:1:invoice_ids[1]",
+        "payments.jsonl row:0:payment_id",
+        "payments.jsonl row:0:invoice_ids[1]"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE DERIVATION_LOCAL The second relation's derivations name the same absent row:1 of payments.jsonl, on the second element of invoice_ids for the relation property and the target endpoint and on payment_id for the source endpoint, so nothing opens at the cited index. Locality is as declared, for the same reason as the sibling relation row: the relation's own row is the row its source endpoint derives from. The second element of invoice_ids does exist at row:0, and the note made on the sibling row about that element feeding properties.relation_type applies here too."
+    }
+  ]
+}

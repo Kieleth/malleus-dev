@@ -7664,3 +7664,68 @@ or harness entry to open, not a producer fault.
 Non-claim: admission is structural acceptance. No review exists yet, and
 when it does it is a record the frozen validator refuses to read; whether
 protocol v3 admits a row surface is Luis's.
+
+### E-0204, shop-01 preliminary review: PARTIAL on all four questions; 2 SUPPORTED, 5 PARTIAL, 10 UNSUPPORTED of 17; the expectation's second half falsified by an undeclared row-numbering convention and a review token stricter than the grammar
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/shop-01/review-block.CQ-S1.json` to
+`review-block.CQ-S4.json` (two fresh Opus 5 sessions, CQ-S1 with CQ-S2 and
+CQ-S3 with CQ-S4, dispatched 20:40Z under the row-surface task), merged as
+`review-record.preliminary.md`
+(`sha256:a55dd22f4d1b7e726decaa274cef5352dd3634b1cf24609f0f028e49d98a9958`)
+with a mechanical grammar check and no validator, because no frozen
+protocol binds a row surface (E-0201); manifest
+`sha256:8345df5f8bd77d28a2abe7e68620d6fce2c467fa48de7474f88bff4aa7b9236e`;
+the overseer's locator check over the four retained plans and the five
+source files.
+
+Results: CQ-S1 PARTIAL, 0 SUPPORTED, 5 PARTIAL; CQ-S2 PARTIAL, 1 SUPPORTED;
+CQ-S3 PARTIAL, 2 UNSUPPORTED; CQ-S4 PARTIAL, 1 SUPPORTED, 8 UNSUPPORTED. 17
+rows: 2 SUPPORTED, 5 PARTIAL, 10 UNSUPPORTED, 0 NOT_EVALUABLE. Row tokens:
+15 LOCATOR_NOT_RESOLVABLE, 2 VALUE_MATCHES_ROW; every RELATION row
+DERIVATION_LOCAL; every ENTITY row NO_SUBJECT_IN_ROW. The expectation of
+E-0201 held on its first half (one structural return) and is falsified on
+its second (no UNSUPPORTED row).
+
+The finding: the producer numbers rows from 1 by physical line with the
+CSV header as line 1, and said so, in its report and in the plans' own gap
+locators; the review task numbers from 0 by data row with the header
+excluded, as the fixture's hand-written plans do; no declared input, the
+skill, and Core state a convention, and Core resolves no locator
+(Paper-26's finding, E-0202). Under the task's convention 13 of the 15
+derivation locators name a row past the end of the file. The two sessions
+labelled that one fact two ways: the first PARTIAL, because the values are
+in the file under the named field one or two rows earlier; the second
+UNSUPPORTED, because a cited row that does not exist supports nothing.
+
+The overseer's check, computed and not judged: 15 derivations; under the
+producer's convention 15 resolve and 9 values equal the record's; under the
+task's 2 resolve and 2 equal. Six never equal under either: the two
+relations' `relation_type`, a constant pointed at `invoice_ids[k]`, and
+their four endpoint identifiers, `payment:P1` and `invoice:I1` derived from
+`P1` and `I1` by prefixing. The fixture's own retained plan derives
+ORDER_CONTAINS_UNIT from the warehouse row's activity field in the same
+way, so the task's VALUE_MATCHES_ROW token reads equality where the
+grammar means derivation; the fixture would fail its own review.
+
+Responsiveness, in the sessions' words: CQ-S1 asks which invoices the
+payment settled and the rows carry a reference relation, a modelling
+reading the task puts out of scope; CQ-S2's row carries no quantity and the
+trace no supersession, both as the producer declined them; CQ-S3's rows
+carry no containment relation, the binding's only relation type being the
+payment one; CQ-S4's rows do not resolve.
+
+What the cell measured, then: not the producer's faithfulness to the rows,
+which the check above puts at 9 of 15 exact and 15 of 15 derived under its
+own stated convention, but the protocol's silence on how a row is numbered
+and the review's silence on what a derivation is. Both are the protocol's
+to fix (E-0202's locator resolution at admission; a declared convention in
+the plan grammar; a derivation token in the review task), and neither can
+be fixed by re-labelling this record.
+
+Non-claim: the record stands as the two sessions gave it and nothing is
+re-graded here. Whether an unresolvable locator is PARTIAL, UNSUPPORTED or
+NOT_EVALUABLE, whether the producer's convention or the task's is the
+cell's, and whether the cell is re-reviewed under a declared convention,
+are Luis's.

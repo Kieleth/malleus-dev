@@ -1,0 +1,63 @@
+{
+  "question_id": "CQ-S1",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The five rows name payment P1, the two invoices, and two relations running from P1 to each invoice, so the which-invoices part of the question is answered directly and nothing extraneous is returned. What the rows carry between the payment and the invoices is a reference relation, which is what the payments source states by listing invoice identifiers on the payment; the source states no settlement, and the question asks which invoices the payment settled, so that part is addressed only as far as the source reaches. Separately, every one of the five rows cites a row index past the end of the file it names, so no returned row's evidence pointer opens.",
+  "source_locators": [
+    "payments.jsonl row:0:payment_id",
+    "payments.jsonl row:0:invoice_ids[0]",
+    "payments.jsonl row:0:invoice_ids[1]",
+    "invoices.csv row:0:invoice_id",
+    "invoices.csv row:1:invoice_id"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "invoices.csv row:2:invoice_id",
+        "invoices.csv row:0:invoice_id"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW invoices.csv carries a header line and two data rows, so on this task's convention its only rows are 0 and 1 and there is no row 2 to open. The invoice identifier the record holds on properties.name does sit in this file under the named field, two rows below the index the derivation gives, so the source surface backs the value while the pointer misses it. The projection is a name only and declares no subject."
+    },
+    {
+      "row_index": 1,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "invoices.csv row:3:invoice_id",
+        "invoices.csv row:1:invoice_id"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW Row 3 is past the end of invoices.csv, whose last data row is 1. The identifier the record holds on properties.name occurs at row 1 under the named field, the same two-row offset as the preceding record, so the file supports the value and the derivation does not reach it. Nothing in the projection names a subject."
+    },
+    {
+      "row_index": 2,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "payments.jsonl row:1:payment_id",
+        "payments.jsonl row:0:payment_id"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE NO_SUBJECT_IN_ROW payments.jsonl is one line long, so its only row is 0 and row 1 does not exist. That single line does carry the payment identifier the record holds on properties.name under the named field, one row below the named index. The projection carries the name alone and no subject."
+    },
+    {
+      "row_index": 3,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "payments.jsonl row:1:payment_id",
+        "payments.jsonl row:1:invoice_ids[0]",
+        "payments.jsonl row:0:payment_id",
+        "payments.jsonl row:0:invoice_ids[0]"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE DERIVATION_LOCAL All three derivations of this relation name row 1 of payments.jsonl, a one-line file whose only row is 0, so none of them opens. Reading that one line instead, it carries the payment identifier under payment_id and the target invoice identifier as the first element of invoice_ids, so both endpoints are backed by the file; the field the derivation names for properties.relation_type holds an invoice identifier there and not the relation constant the record carries on that path, which is a second and separate mismatch. The row named as formalising the relation and the row named as deriving its source endpoint are the same payments row, so the derivation is local."
+    },
+    {
+      "row_index": 4,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "payments.jsonl row:1:payment_id",
+        "payments.jsonl row:1:invoice_ids[1]",
+        "payments.jsonl row:0:payment_id",
+        "payments.jsonl row:0:invoice_ids[1]"
+      ],
+      "rationale": "LOCATOR_NOT_RESOLVABLE DERIVATION_LOCAL This relation's three derivations also point at row 1 of a single-line payments.jsonl, so none can be opened. The file's one line does carry the payment identifier under payment_id and the second element of invoice_ids is the target invoice identifier, so the endpoints are backed; as with the sibling relation, the field named for properties.relation_type holds an invoice identifier rather than the constant the record carries there. Formalising row and source-endpoint row are the same payments row, so the derivation is local."
+    }
+  ]
+}

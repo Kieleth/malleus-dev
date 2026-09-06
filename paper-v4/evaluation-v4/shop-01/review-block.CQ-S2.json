@@ -1,0 +1,23 @@
+{
+  "question_id": "CQ-S2",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "Two halves, judged from two places as the task directs. The current half comes from the one returned row: it names supplier order B and its product code, which identifies the order, but it carries no quantity, and the question's current state is asked for with the ordered quantity. The superseded half comes from trace-summary.json, where the entry for supplier-order:B carries supersedes_record_id, superseded_by and valid_to all null, so the history holds no earlier state and that half of the question goes unanswered. The supplier order source does hold a second line for the same order under a different quantity, so the earlier state exists on the evidence surface and is absent from the answer.",
+  "source_locators": [
+    "supplier-order-history.jsonl row:1:supplier_order_id",
+    "supplier-order-history.jsonl row:1:product_code",
+    "supplier-order-history.jsonl row:1:quantity",
+    "supplier-order-history.jsonl row:0:supplier_order_id",
+    "supplier-order-history.jsonl row:0:quantity"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "supplier-order-history.jsonl row:1:supplier_order_id",
+        "supplier-order-history.jsonl row:1:product_code"
+      ],
+      "rationale": "VALUE_MATCHES_ROW NO_SUBJECT_IN_ROW supplier-order-history.jsonl has two lines, so row 1 exists on this task's convention and both named fields open. The order identifier and the product code in that row are the values the record carries on properties.name and properties.product_code. The file's other row repeats those same two values, so the row-index offset that makes every other derivation in this block unopenable does not change the comparison here. The projection names no subject."
+    }
+  ]
+}
