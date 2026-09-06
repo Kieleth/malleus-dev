@@ -256,6 +256,54 @@ identified projector derives the accepted temporal graph by replay. This is a
 governed compiler target, not a claim that a public artifact class or generic
 runtime cutover ships today.
 
+## What the capture census proves
+
+The optional document adapter counts mappings the producer supplied. It does
+not decide whether the graph expresses everything the source says. Read the
+existing receipt values this way; the values and receipt format are unchanged:
+
+| Receipt value | Meaning |
+|---|---|
+| `FULLY_FORMALIZED` | Mapped fields, no declared gaps |
+| `PARTLY_FORMALIZED` | Mapped fields and declared gaps |
+| `UNFORMALIZED` | No mapped fields |
+
+Semantic completeness is not assessed. The classification depends on whether
+an assertion has `formalized_by` targets and declared `gaps`. Even a
+`FULLY_FORMALIZED` assertion may have an omitted relationship. The separate
+block axis counts assertions, declarations that nothing is assertable, and
+untouched blocks. Uncaptured assertions are invisible to this accounting.
+
+For example, our synthetic Shop note says:
+
+> The clerk reports stock of 2 units and a request for 2 units.
+> This stock count supports the claim that the request can be filled.
+
+Mapping the two quantities and the claim text, with no declared gap, produces
+`FULLY_FORMALIZED` even if the producer omits the support relationship. Add the
+source-supported relationship and it survives admission, reopening, and replay.
+Supply a relationship with a missing endpoint and compilation refuses before
+writing. Checking a supplied edge is different from discovering a missing one.
+
+Distinguish a proposition identity, an optional label, and its statement or
+retained evidence reference. The example's claim has an ID and statement but
+no invented name. A relationship needs explicit direction and endpoints plus
+retained context and attribution. A source can refer back to a proposition
+without repeating two endpoint labels in one sentence. Co-occurrence alone
+does not justify an edge, and structural admission does not establish truth.
+The adopter supplies the interpretation; Core validates the declared structure
+and provenance paths, not semantic entailment or completeness.
+
+The executable conformance fixture uses public compiler, document-adapter,
+structural-history, query, and trace APIs:
+
+```bash
+python -m pytest -q tests/contract_compiler/pareto/test_capture_coverage_boundary.py
+```
+
+This is a synthetic boundary test, not an extension of the frozen Small Shop
+source dataset or historical receipts, and not an automatic semantic evaluator.
+
 ## Optional grounded knowledge packs
 
 Malleus ships three small LinkML packs under `ontology/packs`: `metrology`,

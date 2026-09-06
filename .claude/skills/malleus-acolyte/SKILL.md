@@ -338,15 +338,41 @@ fallback.
    "velocity models" for a subject named "velocity model", or the text layer
    glues it to the word beside it, "valley" printed into the word that
    follows, the form the source writes goes in `tags` too.
-   A relation's endpoints are formalized by an assertion whose statement names
-   both of them; a relation the reading only implies is a `RELATION_ABSENT`
-   gap, not a derivation from a neighbouring sentence.
+   Distinguish a proposition identity, an optional label, and its content.
+   A producer-assigned record ID identifies a proposition; it is not a name
+   the source gave it. Do not invent a `name` to make a claim usable as an
+   endpoint. Carry its statement in a declared field or keep an exact retained
+   evidence reference through the capture and plan derivations. A label, when
+   present, does not replace that content or evidence.
+   For a source-supported relationship, make its direction and endpoints
+   explicit and preserve retained context and attribution. The source may
+   refer back to a proposition without repeating a name for it. Capture enough
+   verbatim context to support the mapping; do not require both endpoint
+   labels in one sentence. Co-occurrence alone supports no relationship.
+   The producer owns this interpretation. The adapter checks supplied mappings
+   and retained bytes, not whether the source entails an edge or whether an
+   edge is missing. Structural admission does not establish the proposition
+   or relationship as true.
    Inspect the returned `canonical_census_bytes`; continue reviewing
    and capturing source-supported material across both census axes. Each block is
    `ASSERTED`, `DECLARED_NOTHING_ASSERTABLE` or `UNTOUCHED`, counted each and
    summed as `blocks_reviewed`; each captured assertion is `FULLY_FORMALIZED`,
-   `PARTLY_FORMALIZED`, or `UNFORMALIZED`. A reviewed block is not thereby
-   formalized, and uncaptured assertions remain invisible. The census also
+   `PARTLY_FORMALIZED`, or `UNFORMALIZED`. Read these unchanged receipt values
+   as mapping accounting:
+
+   | Receipt value | Meaning |
+   |---|---|
+   | `FULLY_FORMALIZED` | Mapped fields, no declared gaps |
+   | `PARTLY_FORMALIZED` | Mapped fields and declared gaps |
+   | `UNFORMALIZED` | No mapped fields |
+
+   Semantic completeness is not assessed. These counts depend on supplied
+   `formalized_by` targets and declared `gaps`, not a comparison of all source
+   meaning with the graph. Mapping a count while omitting a stated relationship
+   can still produce `FULLY_FORMALIZED`. Inspect the source against the proposed
+   records and relationships; the counter cannot do that review for you.
+   A reviewed block is not thereby formalized, and uncaptured assertions remain
+   invisible. The census also
    reports derivation, under `derivation`: how many distinct records each
    assertion formalizes, whether each relation is `LOCAL`, `NON_LOCAL` or
    `UNDERIVED` against the blocks that formalize its endpoints, the fan-out
@@ -741,8 +767,9 @@ restated.
   `UNKNOWN_ORIGIN`, `GROUNDING_REQUIRED` and `UNSUPPORTED_VALID_TIME`.
 <!-- malleus-preflight-refusals:end -->
 
-A clean pass is not a complete capture. The census is what says how much of
-the reading you covered, and the list above says nothing about it.
+A clean pass is not a complete capture. The census counts declared block
+review and supplied assertion mappings and gaps. Neither it nor the refusal
+list measures all the meaning preserved from the reading.
 
 ### Current structured-source plan template
 

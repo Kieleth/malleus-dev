@@ -1980,14 +1980,11 @@ class TestSkillsAreInstallable:
                 "to the word beside it, \"valley\" printed into the word that "
                 "follows, the form the source writes goes in `tags` too"
             ),
-            (
-                "A relation's endpoints are formalized by an assertion whose "
-                "statement names both of them"
-            ),
-            (
-                "a relation the reading only implies is a `RELATION_ABSENT` "
-                "gap, not a derivation from a neighbouring sentence"
-            ),
+            "proposition identity, an optional label, and its content",
+            "direction and endpoints",
+            "retained context and attribution",
+            "Co-occurrence alone supports no relationship",
+            "Semantic completeness is not assessed",
             "The census also reports derivation",
             (
                 "subject coverage under `subject_coverage`: per type the "
