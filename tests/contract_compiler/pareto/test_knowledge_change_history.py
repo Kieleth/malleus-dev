@@ -185,11 +185,12 @@ def _anchor(
     event: bytes,
     retained: bytes,
     role: str,
+    media_type: str = "application/octet-stream",
 ) -> None:
     result = history.append_anchor(
         machine_event=event,
         retained_bytes=retained,
-        media_type="application/octet-stream",
+        media_type=media_type,
         role=role,
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",

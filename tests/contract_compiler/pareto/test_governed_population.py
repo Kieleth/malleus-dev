@@ -118,6 +118,9 @@ SHOP_BASE = (
     / "research/ontology_driven_kg_realization/fixtures"
     / "small_shop_fulfilment/input/tbox/small-shop.yaml"
 )
+NEUTRAL_MEDIA_TYPE = "application/octet-stream"
+LOCATOR_CSV = b"supplier_order_id,product_code,quantity\nB,Y,1\n"
+LOCATOR_ARRAY = b'{"supplier_order_id":"B","items":["Y1"]}\n'
 
 
 def _digest(source: bytes) -> str:
@@ -1317,7 +1320,13 @@ def _shop_history(tmp_path: Path):
         ),
     )
     for event, content, role in anchors:
-        _anchor(history, event, content, role)
+        _anchor(
+            history,
+            event,
+            content,
+            role,
+            "application/x-ndjson" if role == "RETAINED_SOURCE" else NEUTRAL_MEDIA_TYPE,
+        )
     return history, partial, source
 
 
@@ -1462,3 +1471,203 @@ def test_small_shop_e4_e7_reopens_as_one_current_state_version(
     assert reopened.retained_bytes("plan:shop:B:e7") == _canonical(e7)
     assert reopened.graph.export_records() == admitted.graph.export_records()
     assert reopened.receipt == admitted.receipt
+
+
+def _locator_history(tmp_path: Path):
+    """The shop history plus one CSV and one array-bearing JSONL source."""
+
+    history, partial, source = _shop_history(tmp_path)
+    extra = (
+        ("source:locator-csv", LOCATOR_CSV, "text/csv"),
+        ("source:locator-array", LOCATOR_ARRAY, "application/x-ndjson"),
+        ("source:locator-prose", b"an inspection note\n", "text/plain"),
+    )
+    for source_id, content, media_type in extra:
+        artifact_id = source_id.replace("source:", "artifact:", 1)
+        _anchor(
+            history,
+            _artifact_event(artifact_id, content),
+            content,
+            "SOURCE_ARTIFACT",
+            media_type,
+        )
+        _anchor(
+            history,
+            _event(
+                "SOURCE_REGISTERED",
+                artifact_id=artifact_id,
+                source_id=source_id,
+                source_identity=_digest(content),
+            ),
+            content,
+            "RETAINED_SOURCE",
+            media_type,
+        )
+    return history, partial, source
+
+
+def _locator_plan(
+    contract_identity: str,
+    source_identity: str,
+    *,
+    plan_id: str,
+    derivations: tuple[tuple[str, str, str], ...],
+    gaps: tuple[tuple[str, str], ...] = (),
+) -> dict[str, object]:
+    record_id = "supplier-order-state:B:e4"
+    return {
+        "adapter": {"adapter_id": "small-shop-row-mapping", "version": "0"},
+        "contract_identity": contract_identity,
+        "derivations": [
+            {
+                "locator": locator,
+                "path": ["properties", field],
+                "record_id": record_id,
+                "source_id": source_id,
+            }
+            for field, source_id, locator in derivations
+        ],
+        "evidence": [],
+        "gaps": [
+            {
+                "kind": "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+                "locator": locator,
+                "source_id": source_id,
+                "statement": "The row states no delivery date.",
+            }
+            for source_id, locator in gaps
+        ],
+        "grammar": "malleus.population-plan/private-v0",
+        "history_profile": {
+            "profile_id": "state-version",
+            "sha256": PROFILE_IDENTITIES["state-version"],
+        },
+        "plan_id": plan_id,
+        "records": {
+            "entities": [
+                {
+                    "id": record_id,
+                    "properties": {
+                        "ordered_quantity": 1,
+                        "product_code": "Y",
+                        "source_occurrence_id": "e4",
+                        "supplier_order_id": "B",
+                    },
+                    "type": "SupplierOrderState",
+                }
+            ],
+            "relations": [],
+        },
+        "sources": [
+            {"sha256": source_identity, "source_id": "source:supplier-order-history"},
+            {"sha256": _digest(LOCATOR_CSV), "source_id": "source:locator-csv"},
+            {"sha256": _digest(LOCATOR_ARRAY), "source_id": "source:locator-array"},
+        ],
+        "supersessions": [],
+        "valid_time": {"kind": "ORDER_ONLY", "value": "e4"},
+    }
+
+
+def test_unresolvable_locators_refuse_together_before_any_write(
+    tmp_path: Path,
+) -> None:
+    """Core-22. Every locator resolves against the retained bytes of its
+    source, and every miss is named in one detail: E-0204's producer numbered
+    rows from 1 by physical line with the header as line 1, and 13 of its 15
+    locators named a row past the end of a file nobody had read."""
+
+    history, partial, source = _locator_history(tmp_path)
+    before = history.path.read_bytes()
+    plan = _locator_plan(
+        partial.identity,
+        _digest(source),
+        plan_id="plan:shop:B:unresolvable",
+        derivations=(
+            # The file holds two data rows, numbered 0 and 1.
+            ("supplier_order_id", "source:supplier-order-history", "row:2:supplier_order_id"),
+            ("product_code", "source:supplier-order-history", "row:0:sku"),
+            ("ordered_quantity", "source:locator-array", "row:0:items[1]"),
+            # A CSV header is not a row, so it has no number before row 0.
+            ("source_occurrence_id", "source:locator-csv", "row:-1:supplier_order_id"),
+        ),
+        gaps=(("source:supplier-order-history", "row:9:quantity"),),
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _prepare(history, plan, STATE_VERSION_PROFILE_DATA)
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.LOCATOR_NOT_RESOLVABLE
+    )
+    assert refusal.value.detail == (
+        "plan plan:shop:B:unresolvable carries locators its retained sources "
+        "do not resolve: "
+        "derivation supplier-order-state:B:e4:['properties', 'ordered_quantity'] "
+        "source:locator-array row:0:items[1]: names element 1 of the "
+        "1-element array items of row 0, "
+        "derivation supplier-order-state:B:e4:['properties', 'product_code'] "
+        "source:supplier-order-history row:0:sku: row 0 carries no field sku, "
+        "derivation supplier-order-state:B:e4:['properties', 'source_occurrence_id'] "
+        "source:locator-csv row:-1:supplier_order_id: locator is not row:N:field, "
+        "derivation supplier-order-state:B:e4:['properties', 'supplier_order_id'] "
+        "source:supplier-order-history row:2:supplier_order_id: names row 2 of "
+        "2 data rows, "
+        "gap 0 source:supplier-order-history row:9:quantity: names row 9 of "
+        "2 data rows; "
+        "a locator is row:N:field with N counting data rows from 0, field a CSV "
+        "header name or a JSONL top-level key, and field[i] element i of a JSON "
+        "array value"
+    )
+    assert history.path.read_bytes() == before
+
+
+def test_resolvable_locators_admit_over_csv_and_jsonl(tmp_path: Path) -> None:
+    """Core-22. The convention is the fixture's own: data rows counted from 0,
+    the CSV header excluded, a JSONL line a row, and `field[i]` an element."""
+
+    history, partial, source = _locator_history(tmp_path)
+    plan = _locator_plan(
+        partial.identity,
+        _digest(source),
+        plan_id="plan:shop:B:resolvable",
+        derivations=(
+            ("supplier_order_id", "source:supplier-order-history", "row:1:supplier_order_id"),
+            ("product_code", "source:locator-csv", "row:0:product_code"),
+            ("ordered_quantity", "source:locator-csv", "row:0:quantity"),
+            ("source_occurrence_id", "source:locator-array", "row:0:items[0]"),
+        ),
+    )
+
+    prepared = _prepare(history, plan, STATE_VERSION_PROFILE_DATA)
+
+    assert prepared.change_set is not None
+    assert prepared.compilation.status is population.PopulationPlanStatus.CHANGE_SET
+
+
+def test_locators_over_an_unstructured_source_stay_free_text(
+    tmp_path: Path,
+) -> None:
+    """Core-22. Resolution reads the declared media type. A reading is neither
+    `text/csv` nor `application/x-ndjson`, so a document capture's assertion
+    locators are what the document adapter checks and not what this resolves."""
+
+    history, partial, source = _locator_history(tmp_path)
+    plan = _locator_plan(
+        partial.identity,
+        _digest(source),
+        plan_id="plan:shop:B:prose",
+        derivations=(
+            ("supplier_order_id", "source:locator-prose", "asr:001"),
+            ("product_code", "source:locator-prose", "row:9:absent"),
+            ("ordered_quantity", "source:locator-prose", "page 4, paragraph 2"),
+            ("source_occurrence_id", "source:locator-prose", "asr:002"),
+        ),
+    )
+    plan["sources"] = [
+        {"sha256": _digest(b"an inspection note\n"), "source_id": "source:locator-prose"}
+    ]
+
+    prepared = _prepare(history, plan, STATE_VERSION_PROFILE_DATA)
+
+    assert prepared.change_set is not None
+    assert prepared.compilation.status is population.PopulationPlanStatus.CHANGE_SET
