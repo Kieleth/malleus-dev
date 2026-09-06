@@ -2175,6 +2175,45 @@ class TestSkillsAreInstallable:
         assert receipt.role == "PROJECT"
         assert receipt.grounded_subjects == ("ProjectSensorReading",)
 
+    def test_acolyte_preflight_list_is_the_adapters_own_refusal_reasons(self):
+        """Core-20. At a fixed protocol, what separated the producers of the
+        2026-09-05 matrix was what they checked before stopping. The skill
+        states each rule and never put them in one place as the list the
+        adapter refuses for, so a validator built by reading the prose covered
+        two of the rules in one cell and none of the record-level rules in
+        another. The list is the two enums; a list copied out of them drifts,
+        so derive it here and let the skill fail when Core moves."""
+        from malleus._contract_pipeline.document import (
+            DocumentAssertionRefusalReason,
+        )
+        from malleus._contract_pipeline.population import (
+            PopulationPlanRefusalReason,
+        )
+
+        reasons = {reason.name for reason in DocumentAssertionRefusalReason} | {
+            reason.name for reason in PopulationPlanRefusalReason
+        }
+        skill = (
+            self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        marker = "malleus-preflight-refusals"
+        start, end = f"<!-- {marker}:start -->", f"<!-- {marker}:end -->"
+        assert start in skill and end in skill, (
+            "the acolyte carries no pre-flight refusal list; a producer has "
+            "nothing to check its file against before it stops"
+        )
+        paragraph = skill.split(start, 1)[1].split(end, 1)[0]
+        named = set(re.findall(r"[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+", paragraph))
+        missing = sorted(reasons - named)
+        assert not missing, (
+            f"the pre-flight list omits refusal reasons Core carries: {missing}"
+        )
+        invented = sorted(named - reasons)
+        assert not invented, (
+            "the pre-flight list names refusals neither enum carries: "
+            f"{invented}"
+        )
+
     def test_installed_acolyte_keeps_the_nascent_project_playbook(
         self, tmp_path, capsys
     ):
