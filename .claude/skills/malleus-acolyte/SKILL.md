@@ -727,6 +727,11 @@ restated.
   two ID fields.
 - `UNLISTED_SOURCE`: every source a derivation or a gap names is one the plan
   lists.
+- `LOCATOR_NOT_RESOLVABLE`: every locator over a source retained as `text/csv`
+  or `application/x-ndjson` is `row:N:field` and reaches a field of a row the
+  retained bytes hold. A reading declares neither media type, so a capture's
+  assertion locators are checked by `UNKNOWN_ASSERTION_LOCATOR` instead and
+  never by this.
 - Not yours to check, because the parent supplies what they read and your file
   does not: `MALFORMED_READING`, `MALFORMED_PLAN`, `MALFORMED_IDENTITY`,
   `MALFORMED_PROFILE_REFERENCE`, `MALFORMED_RETENTION_EVENT`,
@@ -804,10 +809,11 @@ refusing:
   `RELATION_ABSENT`, `REQUIRED_FIELD_ABSENT_IN_SOURCE` and `TYPE_ABSENT`.
 - `supersessions`: `{record_id, supersedes_record_id}`, the first a record of
   this plan and the second a current record the history already holds.
-- `records`: `entities` and `relations`, plus `events` and
-  `event_participations` only under a profile whose Event role is nonempty. An
-  entity is `{id, type, properties}`; a relation adds `source_id` and
-  `target_id`.
+- `records`: `entities` and `relations`, plus `events` under a profile whose
+  Event role is nonempty, and `event_participations` under that same profile
+  and only when the compiled contract declares an `EventParticipation` type.
+  A nonempty envelope without both refuses `FAMILY_NOT_ADMITTED`. An entity is
+  `{id, type, properties}`; a relation adds `source_id` and `target_id`.
 
 **A derivation names the field, not the value.** Every key under a record's
 `properties`, and both endpoints of every relation, needs one; `id` and `type`
@@ -817,15 +823,30 @@ at the coded field that selected it, and an endpoint `order:O1` points at the
 `order_id` that reads `O1`. Equality is not the rule, and a reader who tests
 for it is testing something the grammar does not say.
 
-**A locator is free text.** Core requires a nonempty string and reads it no
-further; no locator is resolved against its row today, and neither Core nor
-this skill declares how rows are numbered. Two readers of one plan have
-already counted one file differently, physical lines with the header as line 1
-against data rows numbered from 0, and the same locator named a different row
-to each. So state the convention where a reader meets it, in the locator
-itself and in your report. A later Core change declares the convention and
-resolves the locator at admission; until it does, do not expect a reader to
-share yours.
+**A locator names a row and a field, and Core resolves it.** The convention is
+`row:N:field`. `N` counts data rows from 0. For a CSV the header line is not a
+row, so the first data line is row 0, and `field` is one of the header's own
+names. For a JSONL each non-empty line is a row, and `field` is a top-level key
+of that line's object. `field[i]` names element `i` of a JSON array value,
+counted from 0. Nothing else is a locator: no file name, no physical line
+number, no page, no prose.
+
+Core reads it. At admission the compiler parses the bytes retained under the
+source the derivation or the gap names, using the media type they were retained
+with, and refuses `LOCATOR_NOT_RESOLVABLE` when a locator names a row past the
+end, a field the row does not carry, an index past the array, or a source the
+declared media type cannot read. Every miss in the plan is named in one
+refusal, so read the whole list before you return. This runs for a source
+retained as `text/csv` or `application/x-ndjson`; a source retained as anything
+else carries no rows to resolve against and its locator stays the free text it
+was, which is what a reading is and why a document capture's assertion locators
+are unaffected.
+
+Two readers of one plan counted one file differently before this rule existed,
+physical lines with the header as line 1 against data rows numbered from 0, and
+the same locator named a different row to each. The convention above is the one
+the fixtures already used; it is now the one Core enforces, so a plan that
+numbers rows any other way refuses instead of being read two ways.
 
 The worked plan below populates the one data row of one CSV under the
 shipped `state-version` profile, as two entities and the relation between
@@ -848,7 +869,7 @@ The plan the adapter emits for it:
   "contract_identity": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
   "derivations": [
     {
-      "locator": "orders.csv:line 2:order_id",
+      "locator": "row:0:order_id",
       "path": [
         "properties",
         "name"
@@ -857,7 +878,7 @@ The plan the adapter emits for it:
       "source_id": "source:project:orders"
     },
     {
-      "locator": "orders.csv:line 2:unit_id",
+      "locator": "row:0:unit_id",
       "path": [
         "properties",
         "name"
@@ -866,7 +887,7 @@ The plan the adapter emits for it:
       "source_id": "source:project:orders"
     },
     {
-      "locator": "orders.csv:line 2:activity",
+      "locator": "row:0:activity",
       "path": [
         "properties",
         "relation_type"
@@ -875,7 +896,7 @@ The plan the adapter emits for it:
       "source_id": "source:project:orders"
     },
     {
-      "locator": "orders.csv:line 2:order_id",
+      "locator": "row:0:order_id",
       "path": [
         "source_id"
       ],
@@ -883,7 +904,7 @@ The plan the adapter emits for it:
       "source_id": "source:project:orders"
     },
     {
-      "locator": "orders.csv:line 2:unit_id",
+      "locator": "row:0:unit_id",
       "path": [
         "target_id"
       ],
@@ -900,7 +921,7 @@ The plan the adapter emits for it:
   "gaps": [
     {
       "kind": "TYPE_ABSENT",
-      "locator": "orders.csv:line 2:unit_price",
+      "locator": "row:0:unit_price",
       "source_id": "source:project:orders",
       "statement": "The row states a unit price and the contract declares no monetary type."
     }

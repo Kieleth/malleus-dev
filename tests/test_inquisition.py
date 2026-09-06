@@ -2553,6 +2553,22 @@ classes:
             "sha256:" + sha256(source_bytes).hexdigest()
         )
 
+        # Core-22. Every locator the example writes resolves against the
+        # source bytes the section prints, read by Core's own resolver under
+        # the CSV media type. A worked example that names a row the file does
+        # not hold teaches the convention wrong.
+        rows = population._data_rows("text/csv", source_bytes)
+        unresolved = sorted(
+            f"{item['locator']}: {failure}"
+            for key in ("derivations", "gaps")
+            for item in plan[key]
+            if (failure := population._unresolved(item["locator"], rows))
+        )
+        assert not unresolved, (
+            f"the worked plan names locators its own source does not "
+            f"resolve: {unresolved}"
+        )
+
         # The fixture contract is built through the public facade alone, so
         # this file stays runnable where it ships: the sdist carries it and
         # carries no other test package.

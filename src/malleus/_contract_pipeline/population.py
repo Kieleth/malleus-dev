@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
+import csv
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from hashlib import sha256
+import io
 import json
 from pathlib import Path
+import re
 from types import MappingProxyType
 
 from malleus._contract_pipeline.knowledge import (
@@ -121,6 +124,17 @@ _PROFILE_SEMANTIC_UNITS = frozenset(
     {"ASSERTION", "COMMITMENT", "COMPOSITION", "OCCURRENCE", "STATE_VERSION"}
 )
 _POPULATION_EVIDENCE_ROLES = frozenset({"RETAINED_EVIDENCE", "VALIDATED_CONTRACT"})
+_CSV_MEDIA_TYPE = "text/csv"
+_JSONL_MEDIA_TYPE = "application/x-ndjson"
+_STRUCTURED_MEDIA_TYPES = frozenset({_CSV_MEDIA_TYPE, _JSONL_MEDIA_TYPE})
+_LOCATOR = re.compile(
+    r"row:(?P<row>0|[1-9][0-9]*):(?P<field>[^\[\]]+)(?:\[(?P<index>0|[1-9][0-9]*)\])?"
+)
+_LOCATOR_RULE = (
+    "a locator is row:N:field with N counting data rows from 0, field a CSV "
+    "header name or a JSONL top-level key, and field[i] element i of a JSON "
+    "array value"
+)
 _GAP_KINDS = frozenset(
     {
         "AGGREGATE_ONLY",
@@ -149,6 +163,7 @@ class PopulationPlanRefusalReason(str, Enum):
     FAMILY_NOT_ADMITTED = "FAMILY_NOT_ADMITTED"
     FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
     IDENTITY_MISMATCH = "IDENTITY_MISMATCH"
+    LOCATOR_NOT_RESOLVABLE = "LOCATOR_NOT_RESOLVABLE"
     MALFORMED_EVIDENCE_REFERENCE = "MALFORMED_EVIDENCE_REFERENCE"
     MALFORMED_IDENTITY = "MALFORMED_IDENTITY"
     MALFORMED_PLAN = "MALFORMED_PLAN"
@@ -250,10 +265,18 @@ class _BaseRecord:
 
 @dataclass(frozen=True, slots=True)
 class PopulationBaseState:
-    """Immutable active records and the complete historical ID namespace."""
+    """Immutable active records, the historical ID namespace, retained sources.
+
+    The retained sources travel with the base state because the plan compiler
+    resolves each locator against the exact bytes retained under the source it
+    names, and it performs no I/O to reach them. A view built without them
+    resolves nothing; the governed path builds it from the replay, where every
+    listed source is retained before the change is composed.
+    """
 
     _members: tuple[_BaseRecord, ...]
     _historical_record_ids: frozenset[str]
+    _retained_sources: tuple[KnowledgeRetainedInput, ...] = ()
 
     @classmethod
     def empty(cls) -> PopulationBaseState:
@@ -290,6 +313,11 @@ class PopulationBaseState:
                 for record_id, (family, record) in exported.items()
             ),
             frozenset(history),
+            tuple(
+                member
+                for member in replay.retained_inputs
+                if member.role == "RETAINED_SOURCE"
+            ),
         )
 
     def _records(self) -> dict[str, list[dict[str, object]]]:
@@ -309,6 +337,9 @@ class PopulationBaseState:
 
     def _by_id(self) -> dict[str, _BaseRecord]:
         return {str(member.record["id"]): member for member in self._members}
+
+    def _sources(self) -> dict[str, KnowledgeRetainedInput]:
+        return {member.record_id: member for member in self._retained_sources}
 
 
 @dataclass(frozen=True, slots=True)
@@ -807,6 +838,95 @@ def _references(
     return tuple(references)
 
 
+def _data_rows(media_type: str, content: bytes) -> list[object]:
+    """Read one retained source's data rows under its declared media type.
+
+    A CSV header line is not a row and names the fields of the rows below it.
+    A JSONL row is one non-empty line. Bytes that do not read that way raise,
+    and the caller reports the source rather than the locator.
+    """
+
+    text = content.decode("utf-8")
+    if media_type == _CSV_MEDIA_TYPE:
+        lines = [line for line in csv.reader(io.StringIO(text)) if line]
+        if not lines:
+            raise ValueError("no header line")
+        header = lines[0]
+        return [dict(zip(header, line)) for line in lines[1:]]
+    return [json.loads(line) for line in text.split("\n") if line.strip()]
+
+
+def _unresolved(locator: str, rows: Sequence[object]) -> str | None:
+    """Name what a locator fails to reach in one source's rows, or nothing."""
+
+    match = _LOCATOR.fullmatch(locator)
+    if match is None:
+        return "locator is not row:N:field"
+    ordinal = int(match["row"])
+    if ordinal >= len(rows):
+        return f"names row {ordinal} of {len(rows)} data rows"
+    row = rows[ordinal]
+    if not isinstance(row, Mapping):
+        return f"row {ordinal} is not an object"
+    field = match["field"]
+    if field not in row:
+        return f"row {ordinal} carries no field {field}"
+    if match["index"] is None:
+        return None
+    value = row[field]
+    if not isinstance(value, list):
+        return f"field {field} of row {ordinal} is not an array"
+    index = int(match["index"])
+    if index >= len(value):
+        return (
+            f"names element {index} of the {len(value)}-element array "
+            f"{field} of row {ordinal}"
+        )
+    return None
+
+
+def _resolve_locators(
+    sites: Sequence[tuple[str, str, str]],
+    base_state: PopulationBaseState,
+    *,
+    plan_id: str,
+) -> None:
+    """Resolve every plan locator against the bytes retained under its source.
+
+    Only a source declaring a structured media type carries rows to resolve
+    against; a reading declares neither, and a document capture's assertion
+    locators are the document adapter's own to check. Every miss is reported
+    together, because a producer that answers one return at a time pays a
+    round trip for each.
+    """
+
+    retained = base_state._sources()
+    rows_by_source: dict[str, list[object] | str] = {}
+    misses: list[str] = []
+    for site, source_id, locator in sites:
+        member = retained.get(source_id)
+        if member is None or member.media_type not in _STRUCTURED_MEDIA_TYPES:
+            continue
+        rows = rows_by_source.get(source_id)
+        if rows is None:
+            try:
+                rows = _data_rows(member.media_type, bytes(member.content))
+            except ValueError:
+                rows = f"source is not readable as {member.media_type}"
+            rows_by_source[source_id] = rows
+        failure = (
+            rows if isinstance(rows, str) else _unresolved(locator, rows)
+        )
+        if failure is not None:
+            misses.append(f"{site} {source_id} {locator}: {failure}")
+    if misses:
+        raise _refuse(
+            PopulationPlanRefusalReason.LOCATOR_NOT_RESOLVABLE,
+            f"plan {plan_id} carries locators its retained sources do not "
+            "resolve: " + ", ".join(sorted(misses)) + "; " + _LOCATOR_RULE,
+        )
+
+
 def _aware_time(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None or parsed.utcoffset() is None:
@@ -1172,6 +1292,7 @@ def compile_population_plan(
             )
 
     derived: set[tuple[str, tuple[str, ...]]] = set()
+    locator_sites: list[tuple[str, str, str]] = []
     derivations = _array(
         root["derivations"],
         PopulationPlanRefusalReason.MALFORMED_PLAN,
@@ -1228,10 +1349,13 @@ def compile_population_plan(
                 PopulationPlanRefusalReason.UNLISTED_SOURCE,
                 f"derivation source is not listed: {source_id}",
             )
-        _text(
+        locator = _text(
             derivation["locator"],
             PopulationPlanRefusalReason.MALFORMED_PLAN,
             "derivation locator is required",
+        )
+        locator_sites.append(
+            (f"derivation {record_id}:{list(path)}", source_id, locator)
         )
         derived.add((record_id, path))
 
@@ -1261,7 +1385,7 @@ def compile_population_plan(
         PopulationPlanRefusalReason.MALFORMED_PLAN,
         "gaps must be an array",
     )
-    for raw_gap in gaps:
+    for ordinal, raw_gap in enumerate(gaps):
         gap = _object(
             raw_gap,
             PopulationPlanRefusalReason.MALFORMED_PLAN,
@@ -1298,11 +1422,14 @@ def compile_population_plan(
             PopulationPlanRefusalReason.MALFORMED_PLAN,
             "gap statement is required",
         )
-        _text(
+        locator = _text(
             gap["locator"],
             PopulationPlanRefusalReason.MALFORMED_PLAN,
             "gap locator is required",
         )
+        locator_sites.append((f"gap {ordinal}", source_id, locator))
+
+    _resolve_locators(locator_sites, base_state, plan_id=plan_id)
 
     valid_time = _valid_time(root["valid_time"])
     for prior_id in superseded_by_record.values():
@@ -1742,7 +1869,15 @@ def _trace_base_state(
             PopulationTraceRefusalReason.UNKNOWN_CHANGE_SET,
             f"accepted change is absent: {change_set_id}",
         )
-    return PopulationBaseState(tuple(active.values()), frozenset(historical))
+    return PopulationBaseState(
+        tuple(active.values()),
+        frozenset(historical),
+        tuple(
+            member
+            for member in replay.retained_inputs
+            if member.role == "RETAINED_SOURCE"
+        ),
+    )
 
 
 def _trace_profile(

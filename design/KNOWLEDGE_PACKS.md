@@ -810,6 +810,100 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     against the commit it pins.
 
 
+27. The population-plan locator is resolved at admission under a declared
+    row-numbering convention, in the plan compiler, the acolyte's
+    structured-source section and one guard. No pack change and no change to
+    either adapter. Decided on 2026-09-06 from the first cells that read rows
+    instead of prose. The evidence is `paper-v4/paper-ledger.md` E-0202 and
+    E-0204.
+
+    **What was undefined.** A derivation carried a `locator` and Core required
+    a nonempty string of it, nothing more: no locator was resolved against its
+    row, and neither Core nor the skill said how rows are numbered. E-0202
+    records the consequence, that the reviewer of a row cell was the first
+    thing in the whole path to compare a `row:N:field` against the row it
+    names. E-0204 records the cost. An isolated producer numbered rows from 1
+    by physical line with the CSV header as line 1 and said so in its report;
+    the fixture's own plans and the review task number data rows from 0 with
+    the header excluded; nobody had declared either. Under the task's
+    convention 13 of that cell's 15 locators named a row past the end of the
+    file, and two review sessions labelled the same fact two ways.
+
+    **The convention.** `row:N:field`, where `N` counts data rows from 0. For a
+    CSV the header line is not a row, so the first data line is row 0 and
+    `field` is one of the header's own names. For a JSONL each non-empty line
+    is a row and `field` is a top-level key of that line's object. `field[i]`
+    names element `i` of a JSON array value, counted from 0. Nothing else is a
+    locator. This is not a new convention: it is the one the Small Shop
+    fixture's five public-population plans, the object-event fixture's
+    `ret-040` and the two `inspection_note_capture_v1` row plans already
+    wrote, checked against their own sources and resolving without exception.
+    What moves is that it is now declared and enforced rather than assumed.
+
+    **What the compiler does.** At admission the plan compiler parses the bytes
+    retained under the source each derivation and each gap names, using the
+    media type those bytes were retained with, and refuses
+    `LOCATOR_NOT_RESOLVABLE` for a locator that is not `row:N:field`, that
+    names a row past the end, a field the row does not carry, an index past
+    the array, or a source the declared media type cannot read. Every miss in
+    the plan is named in one detail, the Core-7 lesson that a diagnostic
+    naming the first defect costs a return per defect: the detail names the
+    plan, then each site as the derivation's record and path or the gap's
+    ordinal, with its source, its locator and what failed, sorted, and closes
+    with the convention itself. The token is the one the paper's review
+    protocol v3 already uses for the same fact.
+
+    **Resolvability only.** The compiler compares no values. A derivation names
+    the field a value was derived from, which is often not the value:
+    a `relation_type` is a constant the ontology declares and its derivation
+    points at the coded field that selected it, and an endpoint `order:O1`
+    points at the `order_id` reading `O1`. The fixture's own hand-written
+    plans derive `ORDER_CONTAINS_UNIT` from a warehouse row's activity field
+    that way. E-0204's review token read equality where the grammar means
+    derivation; enforcing equality would refuse the fixture.
+
+    **Where the bytes come from.** The retained sources travel with
+    `PopulationBaseState`, built from the replay, so the compiler still
+    performs no I/O and the governed path still checks retention before it
+    composes a change. A base state built without them, which is what a bare
+    `compile_population_plan` over `PopulationBaseState.empty()` has, resolves
+    nothing and refuses nothing; the trace's re-compilation of a retained plan
+    carries them, so a plan that was admitted resolves again when it is
+    traced.
+
+    **The media type is the declaration.** Resolution runs for a source
+    retained as `text/csv` or `application/x-ndjson`. A source retained as
+    anything else carries no rows to resolve against and its locator stays the
+    free text it was. That boundary is what keeps the document-assertion path
+    whole: a reading is retained as neither, its derivation and gap locators
+    are assertion identifiers, and the document adapter already resolves those
+    against the retained capture under `UNKNOWN_ASSERTION_LOCATOR` and
+    `DIGEST_MISMATCH`. The literal alternative, refusing every locator whose
+    source declares neither media type, would refuse every document capture
+    Core admits today.
+
+    **The skill.** The structured-source section stated that a locator is free
+    text and that no convention exists, and told the producer to state its own.
+    It now states this one, names the refusal, and its worked plan writes
+    `row:0:order_id` where it wrote `orders.csv:line 2:order_id`. The guard
+    that compiles the worked plan now also resolves every locator in it
+    against the CSV bytes the section prints, using Core's own resolver, so an
+    example that teaches the convention wrong fails the suite. The pre-flight
+    list gains the reason, as Core-20's guard requires. One further sentence
+    the section left incomplete is finished: `event_participations` need both a
+    profile whose Event role is nonempty and an `EventParticipation` type in
+    the compiled contract.
+
+    **What it does not do.** It resolves no locator over an unstructured
+    source, compares no value against its field, reads no CSV dialect but the
+    default one, and gives a locator no meaning beyond the row and the field it
+    names. It adds one refusal reason and removes none. Admission is otherwise
+    unchanged: the Small Shop public-population fixture's five plans admit with
+    `evidence.json` byte-identical, and the pack is untouched, so `research`
+    stays at 0.5.0 and every frozen paper cell keeps compiling against the
+    commit it pins.
+
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.
