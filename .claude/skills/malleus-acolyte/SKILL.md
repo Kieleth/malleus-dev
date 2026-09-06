@@ -739,6 +739,232 @@ restated.
 A clean pass is not a complete capture. The census is what says how much of
 the reading you covered, and the list above says nothing about it.
 
+### Current structured-source plan template
+
+Step 6 sends a structured source down the other path: no reading, no capture,
+no assertion, no census. Your adapter emits the neutral population plan itself,
+which is the same artifact the document adapter emits at the end of its own
+work, so the plan compiler is the only gate the file meets. The list above is
+written for a document producer; here you write the plan, so seven reasons it
+hands to the parent are yours instead: `MALFORMED_PLAN`, `MALFORMED_IDENTITY`,
+`MALFORMED_PROFILE_REFERENCE`, `MALFORMED_EVIDENCE_REFERENCE`,
+`IDENTITY_MISMATCH`, `SOURCES_REQUIRED` and `UNSUPPORTED_VALID_TIME`.
+`FIELDS_NOT_CLOSED` is yours too and it closes the plan's root and every shape
+under it, not a capture object. The plan-compiler reasons of that list, from
+`UNDERIVED_FIELD` to `UNLISTED_SOURCE`, reach you unchanged. There is no census
+for rows, so no number reports your coverage of the source; count the rows you
+populated and the rows you left gapped, and say both.
+
+**The file is canonical bytes.** UTF-8, keys sorted at every level, separators
+`,` and `:` with no space after either, `ensure_ascii` false so a non-ASCII
+character stays itself, no trailing newline. In Python that is
+`json.dumps(plan, allow_nan=False, ensure_ascii=False, separators=(",", ":"),
+sort_keys=True).encode("utf-8")`. The example below is indented so it can be
+read; the file on disk is those bytes with the indentation gone. Core
+canonicalises the plan it is handed and history retains the canonical bytes
+under `plan_id`, so a file that is not already canonical carries a digest no
+retained artifact has, and a loader that reads the file's own bytes refuses it
+before the compiler sees it.
+
+**The grammar is a fixed string.** `grammar` carries exactly
+`malleus.population-plan/private-v0`. Any other value refuses
+`UNSUPPORTED_GRAMMAR`. It is the current private shape, not a stable wire.
+
+**The root has twelve keys and they are closed.** `adapter`,
+`contract_identity`, `derivations`, `evidence`, `gaps`, `grammar`,
+`history_profile`, `plan_id`, `records`, `sources`, `supersessions`,
+`valid_time`. None is optional and a thirteenth refuses; write an empty array
+for `derivations`, `evidence`, `gaps` or `supersessions` when there are none,
+and never drop the key.
+
+**Every shape below the root is closed too**, extra key and missing key both
+refusing:
+
+- `adapter`: `adapter_id` and `version`, nonempty strings, naming the code that
+  wrote this plan.
+- `sources`: an array of `{source_id, sha256}`, at least one, ids unique. The
+  digest is the SHA-256 of the exact bytes retained under that id, with the
+  `sha256:` prefix.
+- `evidence`: `{evidence_id, sha256}`, the same rule, and the array may be
+  empty.
+- `history_profile`: `{profile_id, sha256}`, where the digest is the profile's
+  own identity, the digest of its canonical bytes. It is not the digest of the
+  file your harness staged the profile in: staging can re-encode, and the
+  identity does not move with it. Read it from the profile object you were
+  given, `STATE_VERSION_PROFILE.identity`, and a plan carrying a staged file's
+  digest refuses `IDENTITY_MISMATCH`.
+- `valid_time`: `{kind, value}`, kind `INSTANT` with a timezone-aware ISO
+  instant, or `ORDER_ONLY` with a text order token that means only "after the
+  previous one". There is no third kind, and no kind says a change set has no
+  valid time; choose the one the source supports and record the choice.
+- `derivations`: `{locator, path, record_id, source_id}`, `path` a nonempty
+  array of field names that resolves in the named record.
+- `gaps`: `{kind, locator, source_id, statement}`, kind one of
+  `AGGREGATE_ONLY`, `INTERVAL_NOT_EXPRESSIBLE`, `MODALITY_NOT_EXPRESSIBLE`,
+  `RELATION_ABSENT`, `REQUIRED_FIELD_ABSENT_IN_SOURCE` and `TYPE_ABSENT`.
+- `supersessions`: `{record_id, supersedes_record_id}`, the first a record of
+  this plan and the second a current record the history already holds.
+- `records`: `entities` and `relations`, plus `events` and
+  `event_participations` only under a profile whose Event role is nonempty. An
+  entity is `{id, type, properties}`; a relation adds `source_id` and
+  `target_id`.
+
+**A derivation names the field, not the value.** Every key under a record's
+`properties`, and both endpoints of every relation, needs one; `id` and `type`
+need none. The field a value was derived from is often not the value: a
+`relation_type` is a constant your ontology declares and its derivation points
+at the coded field that selected it, and an endpoint `order:O1` points at the
+`order_id` that reads `O1`. Equality is not the rule, and a reader who tests
+for it is testing something the grammar does not say.
+
+**A locator is free text.** Core requires a nonempty string and reads it no
+further; no locator is resolved against its row today, and neither Core nor
+this skill declares how rows are numbered. Two readers of one plan have
+already counted one file differently, physical lines with the header as line 1
+against data rows numbered from 0, and the same locator named a different row
+to each. So state the convention where a reader meets it, in the locator
+itself and in your report. A later Core change declares the convention and
+resolves the locator at admission; until it does, do not expect a reader to
+share yours.
+
+The worked plan below populates two rows of one CSV under the shipped
+`state-version` profile. The source, byte for byte:
+
+<!-- malleus-nascent-structured-plan:start -->
+```csv
+order_id,unit_id,activity,unit_price
+O1,X1,contains,12.50
+```
+
+The plan the adapter emits for it:
+
+```json
+{
+  "adapter": {
+    "adapter_id": "project-row-adapter",
+    "version": "1"
+  },
+  "contract_identity": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "derivations": [
+    {
+      "locator": "orders.csv:line 2:order_id",
+      "path": [
+        "properties",
+        "name"
+      ],
+      "record_id": "order:O1",
+      "source_id": "source:project:orders"
+    },
+    {
+      "locator": "orders.csv:line 2:unit_id",
+      "path": [
+        "properties",
+        "name"
+      ],
+      "record_id": "unit:X1",
+      "source_id": "source:project:orders"
+    },
+    {
+      "locator": "orders.csv:line 2:activity",
+      "path": [
+        "properties",
+        "relation_type"
+      ],
+      "record_id": "link:O1:X1",
+      "source_id": "source:project:orders"
+    },
+    {
+      "locator": "orders.csv:line 2:order_id",
+      "path": [
+        "source_id"
+      ],
+      "record_id": "link:O1:X1",
+      "source_id": "source:project:orders"
+    },
+    {
+      "locator": "orders.csv:line 2:unit_id",
+      "path": [
+        "target_id"
+      ],
+      "record_id": "link:O1:X1",
+      "source_id": "source:project:orders"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "artifact:project:row-adapter-notes",
+      "sha256": "sha256:6259fe0c03d1bdbbf2496f8652875909d14badf276148f2936e485fb72b7c82a"
+    }
+  ],
+  "gaps": [
+    {
+      "kind": "TYPE_ABSENT",
+      "locator": "orders.csv:line 2:unit_price",
+      "source_id": "source:project:orders",
+      "statement": "The row states a unit price and the contract declares no monetary type."
+    }
+  ],
+  "grammar": "malleus.population-plan/private-v0",
+  "history_profile": {
+    "profile_id": "state-version",
+    "sha256": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"
+  },
+  "plan_id": "plan:project:orders:1",
+  "records": {
+    "entities": [
+      {
+        "id": "order:O1",
+        "properties": {
+          "name": "O1"
+        },
+        "type": "ProjectObject"
+      },
+      {
+        "id": "unit:X1",
+        "properties": {
+          "name": "X1"
+        },
+        "type": "ProjectObject"
+      }
+    ],
+    "relations": [
+      {
+        "id": "link:O1:X1",
+        "properties": {
+          "relation_type": "ORDER_CONTAINS_UNIT"
+        },
+        "source_id": "order:O1",
+        "target_id": "unit:X1",
+        "type": "ProjectLinksRelation"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "sha256": "sha256:586c49250668c0126df94a7ef11dec23ffe0785f4a9ad02c6fe48fa615e1b8a0",
+      "source_id": "source:project:orders"
+    }
+  ],
+  "supersessions": [],
+  "valid_time": {
+    "kind": "INSTANT",
+    "value": "2026-01-02T00:00:00Z"
+  }
+}
+```
+<!-- malleus-nascent-structured-plan:end -->
+
+Two values in it are coordinates the producer does not invent. The
+`contract_identity` above is a placeholder of the right shape: the parent
+computes `PartialEffectiveContract.identity` from the compiled contract and
+supplies it, and a plan carrying any other digest refuses `IDENTITY_MISMATCH`.
+The `history_profile.sha256` is the shipped `state-version` profile's identity,
+read from the profile itself. The plan then goes to
+`compile_population_plan(plan, partial_contract=..., contract_view=...,
+base_state=..., history_profile=...)`, or to `malleus-compiler populate`, and
+from there through step 7 unchanged: retain the source and evidence bytes
+first, then prepare, then admit.
+
 ## Standing orders (the playbook, condensed)
 
 1. Schema first, code second. When the human names a new domain concept,

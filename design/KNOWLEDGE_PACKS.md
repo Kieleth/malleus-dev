@@ -707,6 +707,108 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     `research` stays at 0.5.0 and every frozen paper cell keeps compiling
     against the commit it pins.
 
+26. The Small Shop public-population evidence is re-frozen and gated, and the
+    acolyte's structured-source path carries the plan grammar, in one fixture
+    file, one skill section, one testpath and one guard. No pack change, no
+    change to either adapter, no change to the compiler, and nothing moves in
+    what Core admits. Decided on 2026-09-06 from the first two cells that read
+    rows instead of prose. The evidence is `paper-v4/paper-ledger.md` E-0200,
+    E-0203 and E-0204.
+
+    **The stale fixture, re-frozen.** E-0200 re-ran the public-path Small Shop
+    driver at the current Core: the graph, the records, the queries and the
+    counts reproduce byte for byte, and six identities do not. They moved at
+    `e4fa5fd` (2026-09-05, "Name the range that failed to bind and the ranges
+    that do"), which re-pinned the digests of two of its own fixtures and not
+    this one. The repair is the file and not the code, so the driver is re-run
+    and `evidence.json` carries its bytes. The eight sections E-0200 names as
+    unchanged are byte-identical across the re-freeze: `claim`,
+    `contract_revision.count` and its two `identities`, `grammar`, `graph`,
+    `limitations`, `queries`, `record_counts` and `records`. The six that move
+    are the contract revision's `revision_identity`, from
+    `sha256:d74dcd6b…` to `sha256:06e2b1c8…`, and the history's
+    `acceptance_head` and `ledger_head`, both from `sha256:40aef471…` to
+    `sha256:a3aae362…`, `ledger_sha256` from `sha256:eb0cb36d…` to
+    `sha256:b471008f…`, `materialization_head` from `sha256:d4f83826…` to
+    `sha256:4c41d5b4…`, and `receipt_identity` from `sha256:125062cf…` to
+    `sha256:ca960d48…`. The knowledge the run derives is the same on both
+    sides.
+
+    **Why nothing was red.** `pyproject.toml` listed the `tests/` surfaces and
+    one research directory, `research/methodology_gedanken_e2e/tests`. This
+    fixture's `test_run.py` sits beside the runner it exercises and was never
+    listed, so it was collected only by naming its path, and its failure on
+    the evidence bytes was invisible to a bare `pytest` from the repository
+    root. A conformance fixture that no gate reads is a fixture that records
+    yesterday's Core. The directory joins `testpaths`, so the next change that
+    moves an identity fails here, at the fixture, rather than in a reading a
+    day later.
+
+    **The structured-source section.** The skill's whole instruction for a
+    structured source was one sentence: write a source-specific adapter that
+    emits the same neutral population plan. It named no grammar. E-0203 is the
+    first producer to walk that path, and two of its three runner refusals
+    trace to that silence, one of them through the parent: the plan loader
+    refused strict canonical bytes and a missing grammar key, coordinates the
+    parent had omitted because no declared input states them, and the compiler
+    then refused the root closure, `FIELDS_NOT_CLOSED`, because the skill
+    states none of the closed shapes and the fixture's own plans are a
+    forbidden input. The third was the parent's own error, `IDENTITY_MISMATCH`
+    on plans carrying the raw digest of the profile file as staged where the
+    compiler wants the profile's canonical identity. No modelling decision
+    changed across the four hand-offs and the counts are identical at each;
+    what the returns bought was the grammar, one refusal at a time. The
+    section now states it: the grammar string
+    `malleus.population-plan/private-v0`; the canonical bytes, UTF-8, sorted
+    keys, separators `,` and `:`, `ensure_ascii` false, no trailing newline;
+    the twelve closed root keys; the closed shapes below them, including that
+    `history_profile.sha256` is the profile's own identity and not a staged
+    file's digest; and the two valid-time kinds, carrying the one
+    expressiveness gap the producer named, that no kind says a change set has
+    no valid time.
+
+    **Two things the section says that no refusal teaches.** A derivation
+    names the field a value came from, which is often not the value: a
+    `relation_type` is a constant the ontology declares and its derivation
+    points at the coded field that selected it, and an endpoint `order:O1`
+    points at the `order_id` reading `O1`. E-0204's review token reads
+    equality where the grammar means derivation, and six of that cell's
+    fifteen derivations equal their field under no convention at all, two
+    `relation_type` constants and four endpoint identifiers formed by
+    prefixing; the fixture's own hand-written plan derives
+    `ORDER_CONTAINS_UNIT` from a warehouse row's activity field the same way,
+    so the fixture would fail that token. And a
+    `locator` is free text: Core requires a nonempty string, resolves nothing,
+    and declares no row-numbering convention. E-0204's producer counted
+    physical lines with the header as line 1 and said so; the review counted
+    data rows from 0, as the fixture's hand-written plans do; under the
+    review's convention 13 of the 15 locators name a row past the end of the
+    file. No declared input, the skill and Core state a convention, so the
+    section says it is undefined and tells the producer to state its own. It
+    does not invent one. Declaring the convention and resolving the locator at
+    admission is a later Core change.
+
+    **The guard.** A worked plan in a skill is prose until something runs it.
+    `test_structured_source_plan_example_compiles` parses the plan out of the
+    section, reads its closed sets from Core's own frozensets (`_ROOT_FIELDS`
+    for the root, `_GAP_KINDS` for the kinds, `PopulationPlanRefusalReason`
+    for the names the prose is allowed to use), recomputes the declared source
+    digest from the source bytes the section prints, canonicalises the plan
+    and compiles it with `compile_population_plan` against a small fixture
+    contract and the shipped `state-version` profile. An example the compiler
+    would refuse fails the suite. The `contract_identity` in the example is a
+    placeholder of the right shape, because the parent computes it and the
+    producer cannot know it; the guard substitutes the fixture contract's.
+
+    **What it does not do.** It adds no rule, no refusal reason and no
+    message; it changes no adapter and no compiler path; it states the plan
+    grammar where a producer meets it and states nothing the compiler does not
+    already enforce. It declares no row-numbering convention and resolves no
+    locator. It is not a census: rows have none, and the section says to count
+    the rows populated and the rows gapped instead. The pack is untouched, so
+    `research` stays at 0.5.0, and every frozen paper cell keeps compiling
+    against the commit it pins.
+
 
 ## Open
 
