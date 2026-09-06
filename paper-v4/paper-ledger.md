@@ -7782,3 +7782,41 @@ kind for "none stated" (Core-23), canonical profile staging in the harness
 Non-claim: the labels of the ratified records are as their sessions gave
 them; the reliability figures of E-0191 and the grading findings of E-0197
 and E-0204 stand beside them.
+
+### E-0206, the thirty-question set is frozen for v3 cells: five tiers of five and five controls, authored from the reading alone
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/competency-questions-v3.json`
+(`sha256:76d501cdb91741ede6ab51e36f1a567d59009f0b3ecf970cf7b19adf97c7490d`
+after freezing), written by a fresh Opus 5 session whose only inputs were
+the selected reading
+(`sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`)
+and the frozen v2 question file for its format; its self-check (104
+checks) and its report; Luis's ruling of 2026-09-06 (E-0205, item 4).
+
+The set: CQ-T1-01 to 05 (one field of one record), CQ-T2-01 to 05 (two
+records and their relation), CQ-T3-01 to 05 (a bounded value with unit,
+status and subject), CQ-T4-01 to 05 (a claim with modality and
+disposition), CQ-T5-01 to 05 (two or more rows read together), CQ-C-01 to
+05 (controls: two NOT_IN_SOURCE expecting coverage NONE, one
+EXCLUDED_SURFACE expecting NONE, two PARAPHRASE expecting the same coverage
+as CQ-T1-02 and CQ-T3-02). Every question carries three to six required
+semantics; no question carries a digit, a block id, a quoted passage or a
+value from the paper (the author's leak check: 305 distinct digit sequences
+in the reading, none in any question). Sections covered: acquisition,
+location method, the four subsections, the deep events, the mechanisms,
+the geochemistry, references and contributions.
+
+Author's caveats, carried as written: the no-digit rule forced descriptive
+names for the subsections and for the two volatile species, which puts a
+resolution step in front of some answers (CQ-T5-02 and CQ-T5-03 lean on it
+most); CQ-T2-04 may be answerable from a single row; the relation tier was
+the tightest to fill.
+
+Status: FROZEN_BEFORE_V3_CELLS, withheld from producers until post replay.
+The v2 file and CQ-01 to CQ-04 stay frozen for the v2 cells; nothing about
+runs 09 to 21 or shop-01 changes.
+
+Non-claim: no cell has been run against this set; whether the tiers
+separate cells is what the replicates will show.
