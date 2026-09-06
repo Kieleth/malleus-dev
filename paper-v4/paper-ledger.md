@@ -7871,3 +7871,46 @@ validator accepts `competency-questions-v3.json` (30 questions read).
 
 Non-claim: no review has run under v3. Whether shop-01 is re-reviewed under
 it is a ruling Luis has not given.
+
+### E-0208, Core-21 landed: the Small Shop public evidence re-frozen and gated; the skill states the structured-source plan grammar with a worked plan the compiler accepts
+
+Date: 2026-09-06
+
+Sources: Core commits e5ad722 (RED), 75c6291 (GREEN), 82dbb34 (OVR-000416),
+14680ea and 40cc425 (OVR-000417), all on main; governance entries
+OVR-000416 and OVR-000417; decision 26 in `design/KNOWLEDGE_PACKS.md`;
+Core-21's report; Luis's ruling of 2026-09-06 (E-0205, items 6 and 7).
+
+Change A (E-0200 closed): `research/.../small_shop/public_population/evidence.json`
+regenerated at the current Core; eight sections byte-identical across the
+re-freeze (claim, the contract revision's count and identities, grammar,
+graph, limitations, queries, record counts, records), six identities moved
+as E-0200 measured; the fixture's test directory added to pyproject's
+testpaths, so the fixture is gated from now on (it was never listed, which
+is why nothing was red). Core's suite in a throwaway worktree: 3,123 passed
+before, 3,126 after, the three being the two newly gated fixture tests and
+the new guard.
+
+Change B (E-0203 cause A closed): the skill carries "Current
+structured-source plan template" stating the grammar string, the canonical
+bytes, the twelve closed root keys, every closed shape below them, that
+`history_profile.sha256` is the profile's identity and not a staged file's
+digest, the two valid-time kinds and that no kind says a change set has no
+valid time, that a derivation names the field and not the value, and that
+the row-numbering convention is undefined pending Core-22; with a worked
+plan between markers that a guard test parses, canonicalises and compiles
+against a contract built through the public facade (OVR-000417, beyond the
+ruling: the first guard imported a fixture the sdist does not ship).
+
+Residual Core-21 reported and left: the section's `records` bullet says
+events and event participations are admitted under a profile whose Event
+role is nonempty, which is necessary and not sufficient for participations
+(an EventParticipation type is also required); assigned to Core-22.
+
+Dispatched on this entry: Core-22 (locator resolution at admission under
+the fixture's convention codified, `row:N:field` with N counting data rows
+from 0, the CSV header excluded, aggregated typed refusal
+LOCATOR_NOT_RESOLVABLE; the residual bullet). Core-23 (a valid-time kind
+for "none stated") follows it, one writer at a time.
+
+Non-claim: no paper cell changes; shop-01's record stands as reviewed.
