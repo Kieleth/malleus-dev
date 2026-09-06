@@ -1,6 +1,6 @@
 # Small Shop through Core's structural admission bundle
 
-Status: contract frozen before implementation.
+Status: the five contract tests pass through the shipped public helpers.
 
 This is a `CONFORMANCE_FIXTURE` for the optional compiler-enabled,
 state-version history path. It is not new protocol vocabulary or a new public
@@ -47,3 +47,31 @@ Ownership is this directory, one new test file, and the slice handover report.
 No paper, runtime, existing Shop fixture, skill, or shared governance file is
 reserved. Work starts at Core 8233b771a4f6ae8d248274fdda0185920f99421b in an
 isolated worktree. Fable retains locator/time work and the shared ledger head.
+
+## Run and inspect
+
+From a configured repository environment:
+
+```sh
+python -m research.ontology_driven_kg_realization.experiments.small_shop.default_admission.run --output /tmp/shop-default-demo
+python -m pytest -q tests/contract_compiler/pareto/test_small_shop_default_admission.py
+```
+
+Choose a new output directory. The runner refuses an existing directory, so it
+cannot overwrite a previous run. It writes `history.jsonl` and `evidence.json`.
+The evidence contains the current records, payment and supplier-order queries,
+and each record's plan, source references, and supersession links. Reopen the
+history independently with `KnowledgeChangeHistory.reopen(path).replay()`.
+
+`inputs.json` is fixture configuration, not a new protocol grammar. It lists
+the existing source and plan paths, the two ontologies, and the ordered steps.
+Its transaction timestamps are controlled test coordinates, not dates inferred
+from the source. All domain valid-time decisions remain exactly those in the
+old templates. The old mapping files are retained as evidence only; their
+embedded runtime settings are never selected as the new admission policy.
+
+The tests compare domain records with the predecessor, compare independent
+fresh runs byte for byte, inspect Core-generated checks, and trace every
+current and superseded record. A plan's only template edit is its current
+contract identity. Test discovery already includes the new test under
+`tests/`; no CI or packaging configuration changes are needed.

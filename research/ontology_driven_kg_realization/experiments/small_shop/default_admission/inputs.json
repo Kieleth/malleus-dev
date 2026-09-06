@@ -1,0 +1,50 @@
+{
+  "actor_id": "actor:small-shop-default-admission",
+  "ontologies": {
+    "base": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/tbox/small-shop.yaml",
+    "target": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_full_public_v1/input/tbox/small-shop.yaml"
+  },
+  "sources": {
+    "source:small-shop:inventory": {
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/inventory-units.csv",
+      "media_type": "text/csv"
+    },
+    "source:small-shop:invoices": {
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/sources/invoices.csv",
+      "media_type": "text/csv"
+    },
+    "source:small-shop:payments": {
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/sources/payments.jsonl",
+      "media_type": "application/x-ndjson"
+    },
+    "source:small-shop:supplier-orders": {
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl",
+      "media_type": "application/x-ndjson"
+    },
+    "source:small-shop:warehouse": {
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/warehouse.jsonl",
+      "media_type": "application/x-ndjson"
+    }
+  },
+  "evidence": {
+    "artifact:small-shop:baseline-mapping": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json",
+    "artifact:small-shop:correction-mapping": "research/ontology_driven_kg_realization/experiments/small_shop/correction/mapping.json",
+    "artifact:small-shop:settlement-mapping": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/settlement-mapping.json"
+  },
+  "plans": {
+    "ret010": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/ret010.json",
+    "invoice-base": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/invoice-base.json",
+    "payment-e30": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/payment-e30.json",
+    "supplier-e4": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e4.json",
+    "supplier-e7": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json"
+  },
+  "steps": [
+    {"plan": "ret010", "transaction_time": "2026-09-06T00:01:00Z"},
+    {"revision": "target", "transaction_time": "2026-09-06T00:02:00Z"},
+    {"plan": "invoice-base", "transaction_time": "2026-09-06T00:03:00Z"},
+    {"plan": "payment-e30", "transaction_time": "2026-09-06T00:04:00Z"},
+    {"plan": "supplier-e4", "transaction_time": "2026-09-06T00:05:00Z"},
+    {"plan": "supplier-e7", "transaction_time": "2026-09-06T00:06:00Z"}
+  ],
+  "bootstrap_time": "2026-09-06T00:00:00Z"
+}
