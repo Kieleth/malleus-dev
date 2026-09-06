@@ -47,12 +47,19 @@ def test_run_21_amended_sets_are_closed() -> None:
     assert SUBJECT.omissions(surface, contract, sets) == {}
 
 
-def test_run_20_sets_were_closed() -> None:
-    # Run-20 listed GeophysicalModel beside Method and CountObservation beside
-    # Observation, which is why the executor's rule never fired there.
+def test_run_20_sets_were_not_closed_per_question() -> None:
+    # Run-20 listed Method in every set, GeophysicalModel only in CQ-03 and
+    # CQ-04 and SoftwareTool only in CQ-01. The executor never refused,
+    # because its projection map is binding-wide: a type named in any
+    # question projects in every question. The reach was silent, and this
+    # check names it per question, which is what the set claims to state.
     surface, contract = _cell("run-20")
     sets = _load(HERE / "run-20/results/query-type-sets.json")
-    assert SUBJECT.omissions(surface, contract, sets) == {}
+    assert SUBJECT.omissions(surface, contract, sets) == {
+        "CQ-01": ["GeophysicalModel"],
+        "CQ-03": ["SoftwareTool"],
+        "CQ-04": ["SoftwareTool"],
+    }
 
 
 def test_ancestry_is_read_from_the_contract_and_not_the_surface() -> None:
