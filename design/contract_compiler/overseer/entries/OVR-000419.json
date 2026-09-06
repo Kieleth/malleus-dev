@@ -1,0 +1,72 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:621ed081b8bb601a8a22f66012d77561ebe6dd0f685199fd5057e943728ee3bd",
+        "after_digest": "sha256:ddc28bbc894dbcd5996bb668d2a72c1534070098394756144095b570c2eacb9d"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c8b1811ca8cf067a898437daf4bf81da6ef07ddfaf7465fd3bc17a2804a67d47",
+        "after_digest": "sha256:92f03e7de4cb5149f44de5b29c811871b14c589a5a8b4837cd2e607a20055557"
+      },
+      {
+        "path": "tests/test_inquisition.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:01e5d85868c02ac5d14b51854e15ac8068bbe09a4f7b48e60ee4fb42fd495d23",
+        "after_digest": "sha256:149565630b48beaa34020e61658337c9e7bd3db95bed84f988da2876e46fbec6"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_capture_coverage_boundary.py",
+        "change": "CREATED",
+        "after_digest": "sha256:3a49d670fce7de4eb42da4e2d6b3d01b966cefd77fe88344c9f64308ccc02bf2"
+      }
+    ]
+  },
+  "entry_id": "OVR-000419",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:65e9f063fc9ccaece6f2a1dda854fc604e7d45fc58a190e368e65afac59ef6ce",
+  "recorded_at": "2026-09-06T23:40:41Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "97baf9636273d15484251e2931fdfeae9e42001d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2ba6e7c84cf414ed105db1b12cb5c86a6744f81b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "229ab9d65b03fb22a82995a856ee8e96dddd5eb4",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 419,
+  "subject": {
+    "id": "capture-coverage-and-proposition-guidance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Explain capture accounting without claiming semantic completeness; ground proposition and relationship guidance in a public Shop replay test.",
+  "why": "Luis approved this bounded Core correction independently of the frozen Sol run. Existing FULLY_FORMALIZED, PARTLY_FORMALIZED and UNFORMALIZED receipt values remain unchanged: the guidance describes supplied mappings with or without declared gaps, not preserved source meaning. The synthetic Shop counterexample maps two quantities and a nameless proposition but omits a stated relationship and still counts FULLY_FORMALIZED. A supplied relationship survives admission and reopen; a dangling endpoint refuses without changing prior ledger bytes. The skill distinguishes proposition identity, optional label and statement or retained evidence, and replaces the same-sentence endpoint-name restriction with source-supported direction/endpoints and retained context/attribution. No runtime, wire, inference, truth, metrology, historical receipt or paper change is authorized by this entry. The report handover/2026-09-06-capture-coverage.md records RED/GREEN evidence and three pre-existing Small Shop evidence-regeneration failures reproduced on unchanged base 70eec64; those remain separate debt.",
+  "entry_hash": "sha256:24801d5f3460666237e790806ce0c5dab5f624994da82003cf46e6da7c169448"
+}
