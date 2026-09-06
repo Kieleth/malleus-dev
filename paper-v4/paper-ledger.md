@@ -6779,3 +6779,52 @@ on the review. First-attempt defects across the Opus cells: 0, 7, 0, 1.
 Non-claim: admission is structural acceptance. No preliminary review exists
 yet; the review judges the rows as rows. Whether this cell is the cell of
 record is Luis's.
+
+### E-0190, run-20 (Opus 5 at v4.10) preliminary review: RESPONSIVE, RESPONSIVE, PARTIAL, RESPONSIVE; 417 SUPPORTED, 17 PARTIAL, none UNSUPPORTED; 251 digests verified
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/run-20/review-block.CQ-01.json` to
+`review-block.CQ-04.json` (two fresh Opus 5 sessions, CQ-01 with CQ-02 and
+CQ-03 with CQ-04, dispatched 07:02Z under task v4 and protocol v2 with the
+aboutness instruction), merged and validated as
+`review-record.preliminary.md` (`sha256:2d797992ab8df89242ab2db1ff9ed245278919c1694f1f7dfd38c6851a5a8e8d`), manifest
+`sha256:fcb666332ebc5878643adb0f1b7cb3d61ce3443ec95bef74b9126da8cb3cd8b1`.
+
+Results: CQ-01 RESPONSIVE, 34 SUPPORTED, 0 PARTIAL; CQ-02 RESPONSIVE, 102
+and 3; CQ-03 PARTIAL, 151 and 7; CQ-04 RESPONSIVE, 130 and 7. 434 rows, no
+UNSUPPORTED, no NOT_EVALUABLE. Every digest token DIGEST_OK: 7 and 68 rows in
+the first pair, 95 and 81 in the second, 251 in all, the most of any cell.
+RELATION rows: CQ-01 one local; CQ-02 four local and three non-local; CQ-03
+five local and one non-local; CQ-04 two local and one non-local; no
+non-local relation lowered a label. Every SUBJECT row SUBJECT_IN_BLOCK. The
+expectation of E-0187 held on both parts: one return, no UNSUPPORTED row.
+
+Why CQ-03 is PARTIAL, in the second session's words: every requested part
+is reachable, and three deep-event depth bands and four concentration ranges
+come back with the same segment as subject and none marked as the answer,
+which that session read as material ambiguity; run-13's session read the
+same shape as a precision cost and labelled it RESPONSIVE, run-15's as
+PARTIAL. The reviewers' line on that question is one of the rulings open.
+CQ-04 is RESPONSIVE with the mechanism, its epistemic marking and the
+degassing chain on separate rows.
+
+The seventeen PARTIAL rows: seven records naming a figure the text layer
+carries no caption header for (substance supported, attribution
+unverifiable; the session names NOT_EVALUABLE as the alternative); four
+observations projecting a determination the prose does not back; a claim
+about a subsection's origin whose subject is the mantle and whose block
+names no subsection; a relation whose block calls the bounding faults
+high-angle and inward-dipping, never normal; a claim whose subject enters
+only as a proximity qualifier; a figure half-width whose subject is the
+line the transects run along. Not downgraded and flagged: determination and
+qualification labels the prose neither confirms nor contradicts; modality
+STATED over hedged prose in several claims; four ratio records returned
+under both the ENTITY and the SUBJECT case in CQ-03.
+
+Against the Opus cells before it: run-13 R R R R, 497 S / 18 P; run-14
+P R R P, 897 / 22; run-15 P R P P, 427 / 6; run-20 R R P R, 417 / 17 with
+every source-asserted record digest-bound.
+
+Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
+Whether run-20 is the cell of record is Luis's.

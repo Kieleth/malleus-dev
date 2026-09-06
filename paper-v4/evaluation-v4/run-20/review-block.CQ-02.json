@@ -1,0 +1,856 @@
+{
+ "question_id": "CQ-02",
+ "question_responsiveness": "RESPONSIVE",
+ "responsiveness_rationale": "Both requested parts are directly present. One row names the short ridge segment as a subsection of the studied ridge portion, and a group of rows attaches the deep microseismicity to it and places the events: beneath its ridge axis at roughly ten to twenty kilometres, more narrowly sixteen to nineteen kilometres in the results text, aligned along a direction parallel to the main axial faults, absent below twenty kilometres, and with the shallow off-axis activity kept separate to the west of the axis. The depth endpoints differ between the abstract, the results text and the figure caption, but each row carries its own scope and provenance and they do not conflict about where the events lie. Most of the remaining rows are other named features, other subsections and the melt geochemistry, which the type-only binding admits and which do not bear on this question.",
+ "source_locators": [
+  "page:1:block:005",
+  "page:2:block:004",
+  "page:2:block:006"
+ ],
+ "rows": [
+  {
+   "row_index": 0,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names deep-rooted detachment faults as one of the structures deeper earthquakes have been associated with, which carries the projected name."
+  },
+  {
+   "row_index": 1,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the normal faults that heavily cut the core complex surface, which carries the projected name."
+  },
+  {
+   "row_index": 2,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the equatorial ocean basin in which the studied ridge lies, which is the whole of this projection."
+  },
+  {
+   "row_index": 3,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:002",
+    "page:4:block:003"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW One cited block names the island, hyphen-broken across a line but plainly the same word, as the setting of two volcanic systems, and the other names it again unbroken."
+  },
+  {
+   "row_index": 4,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:002"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the offshore island in the western Indian Ocean whose deep seismicity is offered as a comparison, which carries the projected name."
+  },
+  {
+   "row_index": 5,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block locates the study area within the ridge segment between the two transforms, so the projected generic name rests on that sentence."
+  },
+  {
+   "row_index": 6,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block introduces the brittle-ductile boundary and gives the abbreviation the projection carries."
+  },
+  {
+   "row_index": 7,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:010"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block introduces the lithosphere-asthenosphere boundary and gives the abbreviation the projection carries."
+  },
+  {
+   "row_index": 8,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:011"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited figure-caption block names the expected crust-mantle interface drawn on the schematic, which carries the projected name."
+  },
+  {
+   "row_index": 9,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the sea floor as the datum for the expected earthquake depths, which carries the projected name."
+  },
+  {
+   "row_index": 10,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block introduces the oceanic core complex on the eastern side of the ridge axis and gives the abbreviation the projection carries."
+  },
+  {
+   "row_index": 11,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block enumerates the four subsections and names the first non-transform discontinuity, which carries the projected name."
+  },
+  {
+   "row_index": 12,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The same enumeration names the second non-transform discontinuity, which carries the projected name."
+  },
+  {
+   "row_index": 13,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the eastern ridge-transform intersection and gives the abbreviation the projection carries."
+  },
+  {
+   "row_index": 14,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The enumeration of subsections names the intersection segment by the label the projection carries."
+  },
+  {
+   "row_index": 15,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The enumeration of subsections names the short ridge segment by the label the projection carries."
+  },
+  {
+   "row_index": 16,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the ridge segment south of the second discontinuity by the label the projection carries."
+  },
+  {
+   "row_index": 17,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the axial valley floor beneath which deep microseismicity is absent, which carries the projected name."
+  },
+  {
+   "row_index": 18,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the bathymetric highs that characterise the axial valley floor, which carries the projected name."
+  },
+  {
+   "row_index": 19,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:006",
+    "page:4:block:007"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW Both cited figure-caption blocks name the corrugated surface as marked tectonic information, which carries the projected name."
+  },
+  {
+   "row_index": 20,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the hummocky volcanic axial morphology, hyphen-broken across a line as the projection preserves it, as evidence of magmatic origin."
+  },
+  {
+   "row_index": 21,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:007"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited figure-caption block names the hummocky seafloor shaded on the map, which carries the projected name."
+  },
+  {
+   "row_index": 22,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the median valley of the short ridge segment, which carries the projected name."
+  },
+  {
+   "row_index": 23,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:003"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the transform valley beneath which one of the velocity models was built, which carries the projected name."
+  },
+  {
+   "row_index": 24,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:009"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names this ultraslow-spreading ridge as one of the places where deep mantle earthquakes have been observed, which carries the projected name."
+  },
+  {
+   "row_index": 25,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:004"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names this ridge among the compiled maximum-depth sites whose data were updated, which carries the projected name."
+  },
+  {
+   "row_index": 26,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the Mid-Atlantic Ridge and gives the abbreviation the projection carries."
+  },
+  {
+   "row_index": 27,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names the Southwest Indian Ridge and gives the abbreviation the projection carries."
+  },
+  {
+   "row_index": 28,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW The cited block names this transform as one of the two bounding the ridge segment; the projection carries only the bare name, which the block supplies, though it supplies it inside a joint reference to both transforms."
+  },
+  {
+   "row_index": 29,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005",
+    "page:2:block:002",
+    "page:2:block:007"
+   ],
+   "rationale": "NO_SUBJECT_IN_ROW All three cited blocks name this transform, one of them with exactly the abbreviated form the projection carries."
+  },
+  {
+   "row_index": 30,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "DERIVATION_LOCAL The formalizing assertion sits in the block that also formalizes the target endpoint, and its sentence states that the core complex surface is heavily cut by those normal faults, which is exactly the cutting relation asserted here."
+  },
+  {
+   "row_index": 31,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:007"
+   ],
+   "rationale": "DERIVATION_NON_LOCAL The relation is formalized from a figure caption, while both endpoints are formalized in a body block on the previous page, so the relation's block is not one of theirs; the caption nonetheless states plainly that the core complex lies on the outside corner of the ridge, which supports the containment asserted."
+  },
+  {
+   "row_index": 32,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "DERIVATION_LOCAL The formalizing assertion sits in the block that also formalizes the source endpoint, and it states that the intersection segment is bounded to the east by a westward dipping detachment fault, which is the bounding relation asserted."
+  },
+  {
+   "row_index": 33,
+   "source_support": "PARTIAL",
+   "source_locators": [
+    "page:4:block:001"
+   ],
+   "rationale": "DERIVATION_NON_LOCAL The relation's block is neither endpoint's. Its sentence does support that this segment is bounded by faults, but it describes them only as high-angle inward-dipping faults with a given strike and never calls them normal faults, so the identity of the bounding structures with the normal-fault record the row points at is not carried by the cited prose."
+  },
+  {
+   "row_index": 34,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "DERIVATION_NON_LOCAL The relation is formalized in a discussion block while its endpoints are formalized in two earlier blocks, so the relation's block is neither of theirs; that block does state that the axial valley floor is cut by ridge-parallel normal faults, which is the cutting relation asserted."
+  },
+  {
+   "row_index": 35,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:006"
+   ],
+   "rationale": "DERIVATION_LOCAL The formalizing assertion sits in a block that also formalizes the source endpoint, and it refers to the corrugated surface as belonging to the core complex, which supports the part-whole relation asserted."
+  },
+  {
+   "row_index": 36,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "DERIVATION_LOCAL The formalizing assertion sits in the block that formalizes both endpoints, and it places the named ridge in the named ocean basin, which is the containment asserted."
+  },
+  {
+   "row_index": 37,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the detachment fault and states that it is inactive, inferred from the absence of deep microseismicity beneath the valley floor near the core complex termination, so the claim is a predication about the subject itself."
+  },
+  {
+   "row_index": 38,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the boundary and states the expectation that it shallows southward with distance from the intersection, which is exactly what the claim records about that subject."
+  },
+  {
+   "row_index": 39,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the boundary and proposes that melt present there could come from a combination of the two volatiles; the hypothesised modality matches the suggesting verb in the prose."
+  },
+  {
+   "row_index": 40,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the core complex twice, as the origin and as the destination of the axis relocation, so the subject is an essential term of the claim and not a passing mention."
+  },
+  {
+   "row_index": 41,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence attributes the shallow earthquakes beneath the core complex dome to ruptures on faults cutting its surface, so both the location and the cut surface belong to the subject."
+  },
+  {
+   "row_index": 42,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the direction along which the deep earthquakes beneath its axis are aligned; the sentence runs past the end of the block, but the alignment claim is complete within it."
+  },
+  {
+   "row_index": 43,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and states that the deep events beneath its ridge axis are well constrained and not artifacts, which is what the claim records."
+  },
+  {
+   "row_index": 44,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment, offers degassing from the ascending melt as an explanation of the deep microseismicity beneath it, and marks it as the authors' preferred possibility, which supports both the hypothesised modality and the preferred disposition."
+  },
+  {
+   "row_index": 45,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and states that magmatism dominates its crustal accretion, which is exactly the claim."
+  },
+  {
+   "row_index": 46,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment axis and denies any observation of active hydrothermal vents on it, which supports both the claim and its negated modality."
+  },
+  {
+   "row_index": 47,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and denies evidence for detachment faults there, which supports both the claim and its negated modality."
+  },
+  {
+   "row_index": 48,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment ridge axis and proposes the small degassing-driven pressure increase as the trigger of the earthquakes observed beneath it, matching the claim and its hypothesised modality."
+  },
+  {
+   "row_index": 49,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and reports normal velocity ratios there from tomography, which is what the claim records about that subject."
+  },
+  {
+   "row_index": 50,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the axial valley and denies evidence of a current eruption in it, which supports the claim and its negated modality."
+  },
+  {
+   "row_index": 51,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the ridge and denies that the maximum earthquake depth beneath this portion of it follows the depth-versus-spreading relationship; the sentence is cut by the page break in the text layer, but the negation and its subject are complete within the cited block."
+  },
+  {
+   "row_index": 52,
+   "source_support": "PARTIAL",
+   "source_locators": [
+    "page:5:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence does support the interpretation the claim records, that the enriched basalts and high volatile contents come from low-degree melting of an enriched source. The transform fault the row makes the subject enters that sentence only as a proximity qualifier on the mantle source; the claim is about the basalts, and the cited prose does not make it a claim about the fault."
+  },
+  {
+   "row_index": 53,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:003"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the number of earthquakes located in the vicinity of the named intersection region, so the region scopes the count and the count is genuinely about it."
+  },
+  {
+   "row_index": 54,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the number of events located along the named ridge, which is exactly the projected count and scope."
+  },
+  {
+   "row_index": 55,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the number of events located along the named transform, which is exactly the projected count and scope."
+  },
+  {
+   "row_index": 56,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:009"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the ocean basin and gives the average concentration reported across several of its segments, with the projected unit and approximation, and attributes it to ratio-based estimation, which matches the estimated determination."
+  },
+  {
+   "row_index": 57,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:009"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the highest concentration reached at those segments, which the row records as an upper bound with no lower bound, and that is how the prose expresses it."
+  },
+  {
+   "row_index": 58,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the island and gives the depth floor for the magmatic-tectonic activity observed there. The sentence as a whole frames a hypothesis about the ridge earthquakes, but the depth is reported as observed fact, and the capture carries a stated sub-span over exactly that clause."
+  },
+  {
+   "row_index": 59,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:4:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence names the offshore island and gives the depth floor for the activity observed there, again as reported fact inside a comparative clause covered by a stated sub-span."
+  },
+  {
+   "row_index": 60,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the boundary and puts it at the projected depth beneath the southern discontinuity, with the projected unit and approximation."
+  },
+  {
+   "row_index": 61,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the boundary and gives the depth it would have under the cold and thick lithosphere explanation, which is why the row is hypothesised rather than measured."
+  },
+  {
+   "row_index": 62,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the isotherm range that boundary depth corresponds to under that explanation, with the projected unit and endpoints."
+  },
+  {
+   "row_index": 63,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:004"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the boundary and gives the isotherm, with its stated tolerance, used to define it at slow- and ultraslow-spreading ridges, matching the projected value and uncertainty."
+  },
+  {
+   "row_index": 64,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:011"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located figure-caption sentence names the boundary drawn on the schematic and gives the isotherm it corresponds to, matching the projected value and unit."
+  },
+  {
+   "row_index": 65,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the boundary and states that it remains shallow, below the projected depth, off-axis west of the segment, which is exactly the bound the row records."
+  },
+  {
+   "row_index": 66,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the boundary and gives the melt proportion proposed as required at its base to explain the observed reflections, which is the projected value and its hypothesised standing."
+  },
+  {
+   "row_index": 67,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:6:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the water content accompanying that proposal as an upper bound, matching the projected value and qualification."
+  },
+  {
+   "row_index": 68,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the core complex and gives the depth bound of the earthquakes observed beneath it, matching the projected upper bound and unit."
+  },
+  {
+   "row_index": 69,
+   "source_support": "PARTIAL",
+   "source_locators": [
+    "page:4:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located figure caption does give the half-width within which earthquake depths are plotted on the two transects, so the value, unit and scope are carried. The core complex the row makes the subject is only what those transects run along and across; the quantity is a property of how the figure was drawn, and the cited caption does not make it a property of the feature."
+  },
+  {
+   "row_index": 70,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:004"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the southern discontinuity and gives the depth range of the normal-depth earthquakes beneath it, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 71,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the first discontinuity and gives its length, matching the projected value, unit and approximation."
+  },
+  {
+   "row_index": 72,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the second discontinuity and gives the depth down to which earthquakes beneath it extend, matching the projected value and approximation."
+  },
+  {
+   "row_index": 73,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the same discontinuity and gives the depth bound of the earthquakes observed beneath it, matching the projected upper bound and unit."
+  },
+  {
+   "row_index": 74,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the second discontinuity and gives its ridge offset, matching the projected value, unit and approximation."
+  },
+  {
+   "row_index": 75,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:004"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the intersection and gives the depth range of the majority of shallow earthquakes on its outside corner, so the region scopes the population and the range matches the projected endpoints."
+  },
+  {
+   "row_index": 76,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the calculated volatile content of the melts generated along it, matching the projected range and unit, and it is written as a calculated figure."
+  },
+  {
+   "row_index": 77,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the corresponding calculated content for the southern segment, matching the projected range and unit for that subject."
+  },
+  {
+   "row_index": 78,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the studied segment and states that the primary-melt concentration there is at least the projected value, which is exactly the lower bound the row records."
+  },
+  {
+   "row_index": 79,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the barium-based pre-eruptive range, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 80,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the southern segment and gives its barium-based pre-eruptive range, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 81,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the barium-derived primary-melt range, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 82,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the barium-derived primary-melt range for the southern segment, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 83,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the rubidium-based pre-eruptive range, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 84,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the southern segment and gives its rubidium-based pre-eruptive range, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 85,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the rubidium-derived primary-melt range, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 86,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:8:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the rubidium-derived primary-melt range for the southern segment, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 87,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the depth range of the deep earthquakes observed beneath its axis, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 88,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:004"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence is the key observation for this question: it names the segment and places the deep microseismicity, at the projected approximate depth range, beneath its ridge axis."
+  },
+  {
+   "row_index": 89,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:007"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment ridge axis and denies earthquakes deeper than the projected value beneath it, which supports both the bound and the negated modality."
+  },
+  {
+   "row_index": 90,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:3:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment axis and gives the depth down to which the off-axis microseismicity west of it extends, matching the projected upper bound; the capture carries a measured sub-span over exactly that observation clause."
+  },
+  {
+   "row_index": 91,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the estimated pre-eruptive concentration range for it, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 92,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:004"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives the barium abundance floor for all its samples, matching the projected lower bound and unit."
+  },
+  {
+   "row_index": 93,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the segment and gives its length, matching the projected value, unit and approximation."
+  },
+  {
+   "row_index": 94,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:004"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the rubidium abundance floor for those samples, matching the projected lower bound and unit."
+  },
+  {
+   "row_index": 95,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the southern segment and gives its length without an approximation marker, matching the projected exact value and unit."
+  },
+  {
+   "row_index": 96,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the median valley and gives its width as a compound modifier, matching the projected value and unit, and the valley is the bearer of that width."
+  },
+  {
+   "row_index": 97,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:006"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the axial valley and gives the shallow focal depths of the cluster on its western side, so the valley scopes which cluster is meant and the range matches the projected endpoints."
+  },
+  {
+   "row_index": 98,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:001"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located abstract sentence names the ridge and reports deep earthquakes at the projected depth range in the mantle along its axis, matching the projected endpoints and unit."
+  },
+  {
+   "row_index": 99,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the ridge axis and gives the length of it covered by the instrument network, matching the projected value and unit."
+  },
+  {
+   "row_index": 100,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:7:block:012"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located figure-caption sentence names the ridge axis and gives the depth range of the deep earthquakes beneath it, below the sea floor. The sentence goes on to interpret their cause, but the capture carries a measured sub-span over the depth clause alone, which is what this row records."
+  },
+  {
+   "row_index": 101,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the ridge and gives its half-spreading rate here, matching the projected value and unit."
+  },
+  {
+   "row_index": 102,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:1:block:005"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the ridge segment between the two transforms and gives its approximate length, matching the projected value, unit and approximation."
+  },
+  {
+   "row_index": 103,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:5:block:009"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the ridge and gives the highest melt concentration previously reported there, matching the projected value and unit."
+  },
+  {
+   "row_index": 104,
+   "source_support": "SUPPORTED",
+   "source_locators": [
+    "page:2:block:002"
+   ],
+   "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence names the transform and gives the length of its eastern part covered by the network, matching the projected value and unit."
+  }
+ ]
+}
