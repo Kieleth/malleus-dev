@@ -2473,12 +2473,8 @@ classes:
         and compile it, so a plan the compiler would refuse fails here rather
         than in a producer's fourth attempt."""
         from importlib import import_module
+        from importlib.resources import files
         from hashlib import sha256
-
-        from tests.contract_compiler.pareto.test_knowledge_change_history import (
-            _generic_compilation,
-        )
-        from tests.contract_compiler.pareto.test_protocol_machine import _effective
 
         compiler = import_module("malleus.compiler")
         population = import_module("malleus._contract_pipeline.population")
@@ -2557,9 +2553,22 @@ classes:
             "sha256:" + sha256(source_bytes).hexdigest()
         )
 
-        compiled = _generic_compilation(self.STRUCTURED_PLAN_CONTRACT)
-        partial = _effective(
-            validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
+        # The fixture contract is built through the public facade alone, so
+        # this file stays runnable where it ships: the sdist carries it and
+        # carries no other test package.
+        compiled = compiler.compile_linkml_contract(
+            root_locator="project",
+            sources={
+                "project": self.STRUCTURED_PLAN_CONTRACT,
+                "malleus": bundled_ontology_path("malleus.yaml").read_bytes(),
+                "linkml:types": files("linkml_runtime")
+                .joinpath("linkml_model", "model", "schema", "types.yaml")
+                .read_bytes(),
+            },
+        )
+        partial = compiler.compose_partial_effective_contract(
+            validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256,
+            normative_profile=compiler.STRUCTURAL_HISTORY_BUNDLE.normative_profile,
         )
         assert population._is_digest(plan["contract_identity"])
         assert plan["contract_identity"] != partial.identity
