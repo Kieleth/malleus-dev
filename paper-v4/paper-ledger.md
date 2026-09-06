@@ -6877,3 +6877,42 @@ Non-claim: two blocks, two re-judgements, one document; the figures are
 what they are and no more. Neither reliability block is part of the
 preliminary record of its cell; the recorded blocks and records are
 unchanged.
+
+### E-0192, a declaration audited: 111 of the 128 blocks run-16's producer declared nothing-assertable carry assertable content
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/run-16/reliability/declared-blocks.json`
+(`sha256:1df776ae33950000d51c7853232bdfb34dedc24bad4d7227ea06d13ce41dd2eb`),
+written by a fresh Opus 5 session that read the selected reading and the
+list of declared block ids and nothing else, judging each block under the
+protocol's rule (a block is nothing-assertable when it carries no sentence
+from which a source-supported record could be captured; a reference entry is
+assertable, a running header or figure furniture is not); the run-16 capture
+(E-0172).
+
+Result: of 128 declared blocks, 111 assertable and 17 not. By kind: 101
+reference entries or their segments, all assertable; 8 running headers, 2
+figure-furniture blocks, 2 licence or publisher boilerplate blocks and 5
+severed extraction fragments, none assertable; 4 caption-prose and 3
+acknowledgement blocks and 3 article-specific back-matter lines,
+assertable. The declaration collapses on pages 8 to 10: page 9 declared 56
+blocks and 54 are assertable, page 10 declared 46 and 44 are. Three calls
+the session names as its own: the five severed fragments (a bare digit
+string, a URL remnant) read not assertable though the rule's letter admits
+anything naming a quantity; the two boilerplate lines follow the rule's
+exemplar; the four back-matter lines read assertable because each carries a
+fact particular to the document.
+
+Reading: the Core-19 census reports the declaration and cannot check it;
+this is what checking it costs (one session, 89,605 tokens) and what it
+finds. The census's `blocks_declared_nothing_assertable` is a producer
+claim, true here for 17 of 128; the coverage figure the paper reports for
+run-16 is 58 blocks asserted of 169 assertable, not 58 of 58 with 128
+declared. Runs 13, 15 and 20 declared 2, 1 and 2 blocks, all map-panel
+furniture by the same rule. Whether the review samples declarations as a
+step is one of the rulings open; the number says the sample would not be
+idle on a producer that declares by page.
+
+Non-claim: one cell, one session; the audit file is not part of run-16's
+preliminary record, which is unchanged.

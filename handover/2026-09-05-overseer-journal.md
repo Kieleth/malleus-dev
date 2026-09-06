@@ -531,3 +531,11 @@ No ruling has come. The one measurement that needs none and bears on the record-
 ### Reliability measured (09:25Z)
 
 Run-20 CQ-03: PARTIAL both times; row agreement 147 of 158 (0.930), Cohen's kappa 0.118; of the recorded seven PARTIAL rows one survived the blind reading, and five other rows became PARTIAL. Run-13 CQ-03: recorded RESPONSIVE, blind PARTIAL for the reason runs 15, 19 and 20 gave; row agreement 174 of 176 (0.989), kappa 0.745. Every digest verified by every session; no UNSUPPORTED row anywhere. The support rate is stable and the PARTIAL set is not: a PARTIAL is a threshold judgement, and the threshold is the session's. Run-13's R R R R did not reproduce on CQ-03. E-0191; `paper-v4/evaluation-v4/reliability.py` committed as the measure. The loop pauses on Luis's rulings with the updated report.
+
+## Declared-blocks audit (2026-09-06T10:35Z): is a declaration true?
+
+No ruling has come. A second measurement that needs none: the census now counts a block declared nothing-assertable, and cannot check the declaration. Run-16's producer declared 128; by shape 90 looked like reference entries, which the Opus cells captured as records. One fresh session judges each of the 128 against the reading alone under the protocol's rule, block ids and one-word kinds only, into `paper-v4/evaluation-v4/run-16/reliability/declared-blocks.json`. The outcome is the count of declared blocks that carry assertable content, a number for the paper's coverage figure and for the ruling on whether the review should sample declarations. Dispatched 10:35Z.
+
+### Declared blocks audited (10:50Z)
+
+Run-16: 111 of 128 declared blocks assertable, 101 of them reference entries; the declaration true for 17 (running headers, figure furniture, boilerplate, severed fragments). The census reports the number and cannot check it; the audit cost one session. For the paper, run-16's coverage is 58 of 169 assertable blocks, not 186 of 186 reviewed. E-0192. The loop pauses on Luis's rulings.

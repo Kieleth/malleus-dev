@@ -1,0 +1,776 @@
+{
+  "run_id": "run-16",
+  "declared_blocks": 128,
+  "judged_by": "fresh Opus 5 session, blind to the producer's reasons",
+  "rule": "A block is nothing-assertable only when it carries no passage a reader could quote verbatim from which a source-supported record could be captured, that is, nothing naming a thing, a quantity, a relation, a claim or an attribution; a bibliographic entry is therefore assertable, while a running header, a folio number, figure axis furniture, a legend word list or licence boilerplate is not.",
+  "blocks": [
+    {
+      "block_id": "page:10:block:001",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:002",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:003",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:004",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:10:block:005",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:006",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:10:block:007",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:008",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:009",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:010",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:011",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:012",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:013",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:10:block:014",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:015",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:016",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:017",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:018",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:019",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:020",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:021",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:022",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons only"
+    },
+    {
+      "block_id": "page:10:block:023",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "middle segment of a bibliographic entry naming a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:024",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:025",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:026",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:027",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:10:block:028",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:029",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:030",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:031",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons only"
+    },
+    {
+      "block_id": "page:10:block:032",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "middle segment of a bibliographic entry naming a titled piece and a resolvable address"
+    },
+    {
+      "block_id": "page:10:block:033",
+      "assertable": false,
+      "kind": "OTHER",
+      "reason": "a severed identifier tail with no named piece, so nothing can be captured from it alone"
+    },
+    {
+      "block_id": "page:10:block:034",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:035",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:10:block:036",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet, a resolvable identifier and a date"
+    },
+    {
+      "block_id": "page:10:block:037",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:038",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:10:block:039",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:040",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:041",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:10:block:042",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:10:block:043",
+      "assertable": true,
+      "kind": "ACKNOWLEDGEMENT_OR_CREDIT",
+      "reason": "credits named parties and a dated expedition, so it carries attributions"
+    },
+    {
+      "block_id": "page:10:block:044",
+      "assertable": true,
+      "kind": "ACKNOWLEDGEMENT_OR_CREDIT",
+      "reason": "names sponsoring bodies, award identifiers and a numbered institutional credit"
+    },
+    {
+      "block_id": "page:10:block:047",
+      "assertable": true,
+      "kind": "OTHER",
+      "reason": "a one-sentence disclosure quotable as an attributable assertion"
+    },
+    {
+      "block_id": "page:10:block:048",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:11:block:001",
+      "assertable": true,
+      "kind": "OTHER",
+      "reason": "asserts that a companion deposit exists and gives its resolvable identifier"
+    },
+    {
+      "block_id": "page:11:block:002",
+      "assertable": true,
+      "kind": "ACKNOWLEDGEMENT_OR_CREDIT",
+      "reason": "names two people in a stated contact role"
+    },
+    {
+      "block_id": "page:11:block:003",
+      "assertable": true,
+      "kind": "OTHER",
+      "reason": "asserts how this document was assessed and that an accompanying record exists"
+    },
+    {
+      "block_id": "page:11:block:004",
+      "assertable": false,
+      "kind": "LICENCE_OR_BOILERPLATE",
+      "reason": "routine back-matter boilerplate carrying no fact specific to this document"
+    },
+    {
+      "block_id": "page:11:block:006",
+      "assertable": false,
+      "kind": "LICENCE_OR_BOILERPLATE",
+      "reason": "a rights line plus the repeated top-of-page identifier and folio number"
+    },
+    {
+      "block_id": "page:2:block:007",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "narrative opening sentence plus full descriptive caption text for figure 1"
+    },
+    {
+      "block_id": "page:2:block:008",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:3:block:005",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "descriptive caption sentences carrying distances and stated relations"
+    },
+    {
+      "block_id": "page:3:block:006",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:4:block:004",
+      "assertable": false,
+      "kind": "FIGURE_FURNITURE",
+      "reason": "axis ticks, coordinates and short map annotations, with no sentence"
+    },
+    {
+      "block_id": "page:4:block:005",
+      "assertable": false,
+      "kind": "FIGURE_FURNITURE",
+      "reason": "tick values, coordinates and short map annotations, with no sentence"
+    },
+    {
+      "block_id": "page:4:block:006",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "short keyed annotations followed by descriptive caption sentences for figure 3"
+    },
+    {
+      "block_id": "page:4:block:007",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "descriptive caption sentences carrying quantities and stated relations"
+    },
+    {
+      "block_id": "page:4:block:008",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:5:block:011",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:6:block:006",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:7:block:013",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:8:block:009",
+      "assertable": false,
+      "kind": "OTHER",
+      "reason": "a severed digit string identifying nothing on its own"
+    },
+    {
+      "block_id": "page:8:block:011",
+      "assertable": false,
+      "kind": "OTHER",
+      "reason": "a severed address tail identifying nothing on its own"
+    },
+    {
+      "block_id": "page:8:block:012",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "a short heading followed by the opening segment of a bibliographic entry naming a person and a titled piece"
+    },
+    {
+      "block_id": "page:8:block:013",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:8:block:014",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:8:block:015",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:8:block:016",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:8:block:017",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:8:block:018",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "repeated top-of-page identifier line ending in a folio number"
+    },
+    {
+      "block_id": "page:9:block:001",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:002",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:003",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:004",
+      "assertable": false,
+      "kind": "OTHER",
+      "reason": "a severed tail of one initial and a date, identifying nothing on its own"
+    },
+    {
+      "block_id": "page:9:block:005",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:006",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:007",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:008",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:009",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:010",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:011",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons only"
+    },
+    {
+      "block_id": "page:9:block:012",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "middle segment of a bibliographic entry naming a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:013",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:014",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons, a titled piece and a resolvable identifier"
+    },
+    {
+      "block_id": "page:9:block:015",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an issuing body, a place and a date"
+    },
+    {
+      "block_id": "page:9:block:016",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:017",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:018",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:019",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:020",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:021",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:022",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:023",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:024",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry giving a date and a resolvable identifier"
+    },
+    {
+      "block_id": "page:9:block:025",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:026",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:027",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons only"
+    },
+    {
+      "block_id": "page:9:block:028",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "middle segment of a bibliographic entry naming a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:029",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:030",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:031",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "two bibliographic entries run together, naming persons, titled pieces, outlets and dates"
+    },
+    {
+      "block_id": "page:9:block:032",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:033",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:034",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:035",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:036",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:037",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening portion of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:038",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:039",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:040",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:041",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:042",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:043",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:044",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:045",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:046",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:047",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "closing segment of a bibliographic entry naming an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:048",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:049",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:050",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:051",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:052",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:053",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry naming persons and a titled piece"
+    },
+    {
+      "block_id": "page:9:block:054",
+      "assertable": false,
+      "kind": "OTHER",
+      "reason": "a severed tail of digits with no named outlet, so nothing can be captured from it alone"
+    },
+    {
+      "block_id": "page:9:block:055",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "bibliographic entry naming persons, a titled piece, an outlet and a date"
+    },
+    {
+      "block_id": "page:9:block:056",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "opening segment of a bibliographic entry merged with the repeated top-of-page identifier; the entry carries the assertion"
+    }
+  ]
+}
