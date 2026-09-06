@@ -1,7 +1,7 @@
 # Small Shop through shipped structural admission
 
-Date: 2026-09-06. Status: implemented and tested on the isolated branch
-`codex/shop-default-admission`; not integrated into shared main or pushed.
+Date: 2026-09-06. Status: implemented, tested, and integrated into local `main`.
+Developed on isolated branch `codex/shop-default-admission`. Not pushed.
 
 ## Result
 
@@ -132,8 +132,27 @@ explicit anchor events. This slice does not implement source-locator resolution,
 a new time kind, Event population, Semantic Re-entry, a stable wire, or a second
 interpreter/projector. No replacement claim is made.
 
-The branch is isolated because the shared checkout and index have active
-Fable/paper work. No shared ledger sequence is reserved. Integration should
-take the three slice commits, rerun the five contract tests against the chosen
-Core tip, and preserve any independently accepted locator/time changes. Existing
-governance validates without this fixture acquiring a new shared authority.
+## Local integration receipt
+
+The operator approved integration. Main had advanced to
+`f61f0c7655f892da45b2d0030d98e20840e9f0ef`, with only existing overseer/paper
+journal changes since the fixture's base. These commits were merged into the
+isolated branch before testing, not edited by this slice.
+
+Tested integration: `f01bc691b39aca80cecfe3dc63d94f548545981a`,
+tree `6e9777e4aae83d26e092290f9c766d084e212a7e`. The broader command above
+again returned **882 passed, 3 failed**, with exactly the three previously
+reproduced baseline failures. All five new tests passed within that run.
+The standalone command regenerated the same history and evidence SHA-256
+values listed above. Ruff, format, diff, ledger, and integration checks passed.
+Executable fixture/test bytes remain identical to GREEN.
+
+Local main was fast-forwarded to that tested commit with an empty index.
+Relative to prior main, the integration adds exactly the five owned files.
+Existing uncommitted and untracked work remained outside the commit. This
+receipt-only follow-up changes no executable bytes. Nothing was pushed.
+
+Fable's locator resolution and unstated-domain-time work was still in flight,
+not part of this tested commit. Consume those exact accepted commits next and
+extend this fixture through RED/GREEN; do not implement a competing resolver
+or time representation. No shared governance sequence is reserved or changed.
