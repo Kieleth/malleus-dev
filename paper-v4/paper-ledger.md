@@ -7261,3 +7261,53 @@ The support fraction is the same to two places; the labels moved on CQ-01
 Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
 The replicate's variance is read in the RCA. Whether run-20 or run-21 is
 the cell of record is Luis's.
+
+### E-0198, iteration 10 (v4.11): a type set that lists a type without its surface subtypes is refused at bind time; seven frozen cells' sets were not closed and the executor never said so
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/type_set_closure.py` and
+`test_type_set_closure.py` (RED 6d4fba3, GREEN 8754b44); the frozen
+surfaces, validated contracts and type sets of runs 08 to 21; run-20's
+private query result; run-21's launch log (E-0196).
+
+Change: one module, one CLI, six tests, no Core change, no cell run.
+`omissions(surface, contract, type_sets)` reads the validated contract's
+`rdfs:subClassOf` facts, the closure the runner compiles, and names per
+question every surface type that descends from a listed type and is not
+listed. The CLI prints a typed diagnostic
+(`TYPE_SET_NOT_CLOSED_UNDER_SUBTYPES`) and exits 1. From v4.11 the cell's
+binder runs it before writing the acceptance binding; the next cell opened
+carries that call.
+
+Why: E-0196. The v4.9 executor reaches a case's type and its subtypes
+through the facade's typed query and projects each record by its own type;
+a type the binding never names is refused after admission. Run-21's first
+binding was refused that way, with no row in existence.
+
+Finding, measured by the module over the frozen cells: the executor's
+projection map is binding-wide, so a subtype named in any question projects
+in every question, and a per-question set was never a reach filter. Listing
+a parent reached every one of its subtypes in every question whether or not
+that question's set named it. Sets not closed per question: run-08 (CQ-01
+NumericalModel; CQ-04 TransformFault), run-09 (CQ-02 five feature
+subtypes), run-10 (CQ-01 three, CQ-02 one), run-12 (CQ-01 and CQ-02
+GeochemicalObservation), run-13 (CQ-01 five, CQ-02 one), run-15 (CQ-03 and
+CQ-04 SoftwareTool), run-20 (CQ-01 GeophysicalModel; CQ-03 and CQ-04
+SoftwareTool). Closed: runs 11, 14, 16, 19 and 21 (amended). In run-20's
+query result, CQ-01 carries 6 GeophysicalModel ENTITY rows and CQ-03 and
+CQ-04 carry 8 SoftwareTool ENTITY rows each, none named by that question's
+set; run-20's type-set note states GeophysicalModel is in CQ-03 and CQ-04
+only.
+
+What this changes and what it does not. The reviews judged rows on the
+reading and do not move: a reached row is a row, supported or not, whatever
+the set said. Row counts are comparable across cells as they stand, because
+the reach followed one rule everywhere. What was wrong was the description:
+the type-set notes' "left out" and "only in" sentences did not describe the
+executed reach wherever a listed parent had an unlisted subtype. From v4.11
+the set states what the question reaches, because the binder refuses
+otherwise.
+
+Non-claim: no row is added or removed by this entry, and no review label
+depends on it. Runs 11, 14, 16, 19 and 21 are unaffected.
