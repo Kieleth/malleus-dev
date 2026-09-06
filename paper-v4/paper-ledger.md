@@ -5962,3 +5962,178 @@ D-16's full fix, a walk over every
 tracked file under `paper-v4/` and `handover/` with an allowlist naming each
 file and its reason, is still unbuilt; this entry narrows the defect to the
 catalogue and does not close it.
+
+### E-0180, run-18 opens v4.10: the adapter's refusal list as the producer's pre-flight, on a Haiku 4.5 cell
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-18/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`native_query.py`, `offline-validation.json`, `test_contract.py`,
+`test_pipeline.py`, `paper-v4/evaluation-v4/run-18/review-record.blank.md`,
+`handover/2026-09-05-run-17-haiku-rca.md`,
+`handover/2026-09-05-overseer-journal.md` ("Core-19 landed", "Loop iteration 8
+decided"), and E-0174 to E-0177.
+
+Cell: run-18 is the first cell of v4.10 and the sixth on the settled protocol.
+The producer does not move, the harness does not move, the document does not
+move. What moves is Core. Two entries are this cell's own: Core-19, which
+landed at `8a6c3f384d02105ad880d0d91f85d8e45f85cff9` under OVR-000414 and
+decision 24, before this cell opened; and Core-20, decision 25, the change under
+test. Core-20 gives the acolyte skill one paragraph between two markers listing
+the adapter's and the plan compiler's refusal reasons as the producer's
+pre-flight, one line per reason with the check in plain words, and a guard in
+`tests/test_inquisition.py` derives the reason names from
+`DocumentAssertionRefusalReason` and `PopulationPlanRefusalReason` and asserts
+the paragraph carries each of them and no other. Nothing in the adapter changes,
+and no refusal reason is added or removed in either enum. The scope block says
+it plainly: `matrix_cell` FIRST_OF_V4_10, `variable`
+CORE_20_THE_SKILLS_PRE_FLIGHT_REFUSAL_LIST, `also_moved`
+CORE_19_LANDED_BEFORE_THIS_CELL_OPENED, `harness` IDENTICAL_TO_RUN_17,
+`harness_matched_cell` run-17, `model_matched_cells` run-06, run-07 and run-17.
+Run-18 supersedes nothing.
+
+Producer: unchanged from run-17. Requested model `haiku`, model id
+`claude-haiku-4-5-20251001`, model family Claude Haiku 4.5, reasoning effort
+the harness default and neither pinned nor observed. `test_pipeline.py` and
+`test_contract.py` both compare the producer block key by key against run-17's
+and require that nothing differs at all. The cell's own producer entry,
+`HAIKU_4_5_PRODUCER_AT_V4_10`, records a variable held rather than moved: the
+model is what makes Core-20 readable, because the producer the list is for is
+the one that failed without it.
+
+Harness: byte for byte run-17's. `native_query.py` carries no run id and is
+copied without a substitution. Six scripts, the spawn message and
+`offline_validation.py` are run-17's with the run id moved, read through one
+table that reverses. `pin.py` takes a second table, the reference cell stepping
+from run-16 to run-17 with the interface ordinal, the protocol version and the
+gate status moved and four passages repaired, and it is the first pin since
+run-08 that gains code rather than only prose: five blocks read Core-19 and
+Core-20, and each is delimited in the file by its own marker comments. The test
+removes every marked block, reverses both tables in reverse order and requires
+run-17's bytes exactly, so an edit in neither table and outside every marked
+block fails there rather than travelling with the cell.
+
+Coordinates: `pin.py --commit f220852551ea5f815a751bfd7d5b44e1271ebcbd` pins
+that commit, tree `b183c492e9e600845efa471f4af8aa68869eee1c`, governance head
+`OVR-000414` at `sha256:660ed28c…`. The gate status reads
+`PINNED_TO_THE_V4_10_CORE_COORDINATE`. Exactly one declared input moved against
+run-17's manifest, `MALLEUS_NASCENT_PROJECT_SKILL`, which is Core-20's own
+subject; the other seven, the reading included, are unchanged. The interface
+coordinates are new: `capture:paper-v4:yu-2025:v4:18` and
+`plan:paper-v4:yu-2025:v4:18`, the runner will execute under
+`actor:overseer-run-18` with the reading artifact
+`artifact:selected-reading:yu-2025:v4:18`, and the private workspace is
+`private/paper-v4-v4-run-18/producer`.
+
+What the pin read at that commit. Core-19 LANDED, on six observations, all
+resolved between run-17's coordinate `dc52547` and the pinned commit: the
+document adapter moved, the plan compiler moved, the block census declares
+ASSERTED, DECLARED_NOTHING_ASSERTABLE and UNTOUCHED where the earlier
+coordinate had no such function at all, the adapter writes
+`provenance_coverage` as a literal where it did not, the plan compiler's enum
+gained `RECORDS_NOT_REHYDRATABLE` and lost nothing, and the two module-level
+functions `_empty_assertion_defects` and `_refuse_gaps` are present where
+neither was. That last pair is how the aggregation of GAP_REQUIRED is recorded,
+and the entry says why: the document enum carries GAP_REQUIRED at both
+coordinates, so the enum difference cannot report it, and what the AST can see
+is the pre-pass and the refusal that renders it. The document enum gained
+nothing at all, which the entry records as an empty list rather than as a
+claim. Core-20 LANDED on the bytes: the skill's paragraph is between its
+markers, it names every one of the 48 reasons the two enums declare between
+them at the pinned commit, 17 of the document adapter's and 34 of the plan
+compiler's with three shared, and no reason neither enum carries, and `tests/test_inquisition.py` names both enum
+classes and the same marker. Its overseer entry has not been written; the pin
+records `governance_head_at_pin` OVR-000414 and `governance_entry_landed`
+false beside the status, and the overseer re-pins after OVR-000415 lands.
+Pin status is a statement about bytes and never about the ledger.
+
+All twenty-four of run-17's `changes` entries are carried forward and marked
+`carried_from: run-17`. Eight are Core's and are read at fixed commits, the
+newest of them, `CORE_18_NAME_AS_WORD`, between the v4.7 and the v4.8
+coordinates, exactly as run-17 read it; no carried entry reads past the v4.8
+coordinate, so nothing Core-19 or Core-20 landed can be attributed to one.
+Fourteen are the harness's. Two are closed cells' model records:
+`SONNET_5_PRODUCER_AT_V4_9`, whose subject stays run-16's producer block and
+whose fields stay Sonnet 5's, and `HAIKU_4_5_PRODUCER_AT_V4_9`, whose subject
+stays run-17's producer block and whose expectation that run refused. Neither is
+this cell's producer entry, and the contract and both test files say so.
+
+Three entries are this cell's:
+
+1. `CORE_19_HONEST_REPORTING`, kind `REPORTING`, decision 24, subject the
+   document adapter with the plan compiler beside it. `expected_reasons`
+   `["RECORDS_NOT_REHYDRATABLE"]`, on the basis that one reason is typed where
+   it was a raw `ValueError` from the graph gate and none is removed. Census
+   keys the three block labels and `provenance_coverage`, both axes reported
+   and never refused.
+2. `CORE_20_REFUSAL_LIST_PREFLIGHT`, kind `CLARIFICATION`, decision 25, subject
+   the acolyte skill with `tests/test_inquisition.py` beside it.
+   `expected_reasons` `[]`, because neither enum gains or loses a member and no
+   enum check is possible in either direction; the entry says so rather than
+   carrying a vacuous subset result. The reason list is derived from the two
+   enums at the pinned commit and is never typed into the contract, so a reason
+   Core adds after this cell opens makes the paragraph incomplete instead of
+   making the pin agree with it.
+3. `HAIKU_4_5_PRODUCER_AT_V4_10`, kind `MODEL_CELL`, subject the contract's own
+   producer block, `defect_of: none`. The three model fields are run-17's and
+   are held there; the harness delta is NONE and the Core delta is Core-19 and
+   Core-20.
+
+Measurement: run-18 is measured against run-17, the same producer model at the
+same harness one Core coordinate earlier, and against run-06 and run-07, the two
+Haiku 4.5 cells at v4.1. None of the three left a public result directory,
+because none of the three was admitted, so every figure is read from a private
+launch log, a private cost record or a refused capture and the contract names
+the path where it carries it. Run-17: ontology accepted at attempt 01 in 89
+seconds at 2,687 facts, no gate return; population refused three times after
+two structural returns, the first on eight aggregated NOT_VERBATIM statements,
+the second on an untyped `ValueError` from graph rehydration, the third on
+GAP_REQUIRED naming the first of eight empty assertions; 8 assertions over 7
+blocks, none declared nothing-assertable, 179 of 186 untouched, 9 records (6
+entities, 1 event, 2 relations), no source-asserted record and so no locator and
+no statement digest; producer 151,411 tokens over four stages. The 179 is
+E-0177's correction of the 178 E-0176 first reported from the producer's own
+count of eight blocks. Run-06 (Haiku 4.5, v4.1): ontology accepted at attempt 02
+at 2,216 facts, population refused three times after two structural returns,
+producer 137,734 tokens, E-0127 and E-0129. Run-07 (Haiku 4.5, v4.1-pair):
+ontology accepted at 2,244 facts after one checker loop, population refused
+three times after two structural returns, producer 166,959 tokens with 98,381
+for the checker and 265,340 for the pair, E-0128 and E-0130.
+
+The review surface does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell it
+is instantiated to changes. The blank record for run-18 is run-17's with the run
+id moved and nothing else.
+
+The offline validation is carried whole. `offline_validation.py` re-runs the
+v4.4 ENTITY restriction and the v4.9 collapse on run-09's frozen record and
+returns run-17's counts unchanged, because neither the binder nor the executor
+moved: 630 of run-09's 1,466 rows kept (58, 319, 131, 122), 618 SUPPORTED, 12
+PARTIAL, none unjudged, and those 630 become 463 under one row per witness per
+question (54, 168, 123, 118), 167 re-projections removed, 456 SUPPORTED and 7
+PARTIAL, with no collapsed row carrying a label the survivor did not. Every
+total and every per-question figure equals run-17's record key for key, which is
+what "no harness delta" means where it can be counted.
+
+Expected, stated before the run: under the v4.10 skill a Haiku 4.5 producer
+reaches admission within the two structural returns the manifest allows, where
+run-17 at v4.9 was refused after two. Falsifier: a third structural refusal,
+which is where run-06, run-07 and run-17 all ended. The expectation rests on
+run-17's own three refusals: all three name a check the pre-flight paragraph now
+states, and two of them, validating every field against the staged surface and
+giving every assertion a target or a gap, are the two the RCA names as rules the
+v4.9 skill stated without a method. Nothing is expected of coverage, of row
+counts or of the review. If the falsifier fires, it says a list does not
+substitute for a producer's own validator, and the paper's claim for small
+producers stops at the protocol admitting nothing wrong from them.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-18, and
+`ontology-run/` and `results/` carry only a keepfile. Nothing here is a claim
+about any model: three Haiku cells at three protocols are three observations,
+not a measurement of the model, and what changes across them is the protocol.
+A cell that is admitted will not have shown that the paragraph caused it, only
+that the outcome the loop predicted from it occurred. Core-20's overseer entry
+is not on the record at this pin, so the coordinate is a statement about bytes
+and the gate is re-read after it lands. Whether the expectation holds is open.
