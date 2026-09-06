@@ -1,0 +1,50 @@
+{
+  "schema": "malleus.paper-v4.competency-questions/v2",
+  "status": "FROZEN_BEFORE_PRODUCER",
+  "visibility": "WITHHELD_FROM_PRODUCER_UNTIL_POST_REPLAY",
+  "scope": {
+    "answer_surface": "REPLAY_DERIVED_NATIVE_GRAPH_QUERY_WITH_PROVENANCE_TRACE",
+    "source_support": "THE_FIVE_SMALL_SHOP_SOURCE_FILES",
+    "free_form_synthesis": "EXCLUDED"
+  },
+  "questions": [
+    {
+      "id": "CQ-S1",
+      "question": "Which invoices did payment P1 settle?",
+      "required_semantics": [
+        "payment",
+        "invoice",
+        "settlement_relation"
+      ]
+    },
+    {
+      "id": "CQ-S2",
+      "question": "What is the current state of supplier order B, and which earlier state did it supersede?",
+      "required_semantics": [
+        "supplier_order",
+        "current_state",
+        "superseded_state",
+        "ordered_quantity"
+      ]
+    },
+    {
+      "id": "CQ-S3",
+      "question": "Which inventory unit does sales order O1 contain, and what product is it?",
+      "required_semantics": [
+        "sales_order",
+        "inventory_unit",
+        "containment_relation",
+        "product"
+      ]
+    },
+    {
+      "id": "CQ-S4",
+      "question": "Which current records derive from the warehouse source, and by which locators?",
+      "required_semantics": [
+        "source",
+        "derivation_locator",
+        "current_record"
+      ]
+    }
+  ]
+}

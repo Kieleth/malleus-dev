@@ -7367,3 +7367,195 @@ Bisection: the identities hold through e7919a7 and move at e4fa5fd (2026-09-05 0
 Reading, as calibration: the paper's Core coordinate reproduces the structured consumer's graph exactly; what moved is a revision-record identity and the ledger digests that include it, at a commit whose own fixtures were re-frozen and whose entry did not name this one. The repair is one re-frozen evidence file and belongs to Core's stream; it is reported, not applied, here.
 
 Non-claim: nothing here judges the range-binding change itself; the shop's population plans carry no range that failed to bind.
+
+### E-0201, shop-01 opens: the same skill and the same Core given rows instead of prose
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/shop-01/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `run.py`,
+`contract_identity.py`, `pin.py`, `competency-questions.json`,
+`test_contract.py`, `test_pipeline.py`,
+`paper-v4/evaluation-v4/shop-01/review-task.md`, `review-record.blank.md`,
+`research/ontology_driven_kg_realization/experiments/small_shop/public_population/`,
+`.claude/skills/malleus-acolyte/SKILL.md` line 297, and E-0193 to E-0200.
+
+Cell: shop-01 is the first cell of the loop whose sources are not prose. Every
+closed cell from run-02 to run-21 reads one selected reading. This one reads the
+five Small Shop source files, verbatim, under the same installed skill at the
+same Core commit with the same producer block. Luis's instruction on 2026-09-06:
+what the document cells did not show is whether a model given rows and the same
+skill would produce an admissible population, and we need to do this, the same as
+for the PDF.
+
+Why it is not already answered. The Small Shop conformance fixture proves the
+structured path end to end, and E-0200 recreated it at the current Core: the
+graph, the records and the queries reproduce. What it does not prove is anything
+about a producer. Its five population plans are adopter-authored and were written
+by hand, so the fixture's own README says the plans are adopter-authored and no
+mapping language is claimed. Nothing in the record says a model can write them.
+The skill's whole instruction for this case is one sentence, at line 297: for
+structured sources, write a source-specific adapter that emits the same neutral
+population plan.
+
+The change under test: the source shape and nothing else. Rows instead of prose.
+The skill is the same declared bytes, `sha256:8278753a…`, at Core commit
+`c95dba7b86bb61487bda9a52458e1ea47cce20ab`, tree `39a9b9da…`, governance head
+`OVR-000415`, which is the coordinate run-18 to run-21 pinned. The producer block
+is run-21's key for key: `requested_model` opus, model family Claude Opus 5,
+model id claude-opus-5, the same harness, the same session rules, the same nine
+forbidden inputs. Two input names move because the sources did:
+`SELECTED_READING` becomes `SMALL_SHOP_SOURCE_FILES` and
+`SOURCE_ASSERTION_PROFILE` becomes `STATE_VERSION_PROFILE`. Twelve declared
+inputs instead of eight, and every one of them tracked, so the producer workspace
+is reproducible from the commit alone.
+
+Two things move with the source shape and neither is a second variable. The bound
+history profile is `state-version`, identity `sha256:b18f3129…`, because that is
+the profile the fixture itself declares for these five files:
+`public_population/run.py` admits all five of its plans under
+`STATE_VERSION_PROFILE`, and the cell declares the same bytes rather than
+choosing one for the producer. Its Event ontology role is empty, so the accepted
+surface reports `entities` and `relations` where run-21's reports `entities`,
+`events` and `relations`, and an event record is refused `FAMILY_NOT_ADMITTED`
+before the producer can write one. The second is the adapter stage: run-21's
+producer writes a document capture and Core's `adapt_document_assertions` turns
+it into one neutral plan; this producer writes the neutral plans itself, so there
+is no adapter to run.
+
+Harness: run-21's. `native_query.py` is byte for byte identical, because the
+executor reads a type-only binding and a replayed graph and neither knows whether
+the records came from prose or rows. `bind_from_surface.py` and
+`usage_from_launch_log.py` are run-21's under the run id table alone.
+`compile_ontology_candidate.py` takes one more substitution, the bound profile
+target. `prepare_producer.py` takes four more, all of them the removal of the one
+untracked input. `spawn-message.md` takes four, the input list, the phase-one
+subject, the phase-two output and the stop rule's last clause, which now names
+rows where run-21's names blocks. Every table reverses and `test_pipeline.py`
+reverses each one, so a second edit riding inside the source-shape move fails
+there. `pin.py` carries run-21's Core readers as one span under one table and
+writes this cell's manifest and gate block around them.
+
+Two files are new. `run.py` is run-21's runner with the adapter stage removed and
+a plan loop in its place: compile the closure, create the structural history,
+retain the five sources verbatim, then per plan compile it, name its retention
+events, prepare and admit it, then discard every handle, reopen, replay and
+compare. It is the admission path `public_population/run.py` walks, with one
+deviation stated in the contract: the fixture assembles its own protocol machine,
+policy and binding out of `experiments/small_shop/pareto/`, and this runner
+admits through the shipped structural bundle, which is what run-21's runner does
+and why no Core protocol internal is named in any file of this cell.
+`contract_identity.py` is the second: a neutral plan carries `contract_identity`
+and the plan compiler refuses `IDENTITY_MISMATCH` without it. A document producer
+never writes one, because the adapter does. This producer must, and it cannot
+compute one, because the identity binds the validated fact set to the shipped
+admission profile, which is not a declared input. The parent computes it between
+the gate and phase two and supplies it with the plan coordinate, the way run-21's
+capture and plan ids are supplied.
+
+Coordinates: `pin.py --commit c95dba7b86bb61487bda9a52458e1ea47cce20ab` pins that
+commit, tree `39a9b9da7dcd41660b8b10fb20b1b1d8e2261082`, governance head
+`OVR-000415` at `sha256:19353a94…`. The gate status reads
+`PINNED_TO_THE_V4_10_CORE_COORDINATE`. The six inputs shared with run-21 carry
+run-21's digests exactly, the skill included; the other six are this cell's own
+and the manifest says so rather than reporting them unchanged against a manifest
+that never carried them. Interface coordinates:
+`capture:paper-v4:small-shop:shop:1`, reserved because the plan path produces no
+capture record, and `plan:paper-v4:small-shop:shop:1`, which every plan id must
+sit under. The runner executes under `actor:overseer-shop-01` and the private
+workspace is `private/paper-v4-v4-shop-01/producer`.
+
+What the pin read at that commit. Core-19 LANDED on six observations: the
+document adapter moved off the v4.8 coordinate, the plan compiler moved, the
+block census declares ASSERTED, DECLARED_NOTHING_ASSERTABLE and UNTOUCHED, the
+adapter writes `provenance_coverage`, the plan compiler's enum gained
+`RECORDS_NOT_REHYDRATABLE` and lost nothing, and `_empty_assertion_defects` and
+`_refuse_gaps` are both present. Half of that entry is the document adapter's and
+does not bind this cell, and the entry says which half does:
+`RECORDS_NOT_REHYDRATABLE` is the plan compiler's. Core-20 LANDED on the bytes:
+the skill's pre-flight paragraph names every one of the 48 reasons the two enums
+declare between them and no reason neither carries, and `tests/test_inquisition.py`
+names both enum classes and the same marker. `governance_entry_landed` reads
+true. Both are carried from run-21 and neither is carried unread.
+
+The gate's required pieces move once, and the move is the honest one. Run-21
+requires `DERIVATION_CONTENT_CHECKS`, which is the document adapter's:
+`NOT_VERBATIM`, `DIGEST_MISMATCH`, `MODALITY_NOT_ASSERTED` and their kin. No plan
+the producer writes reaches any of them, so requiring it here would pin a
+mechanism this cell never runs. What binds is `PLAN_DERIVATION_CHECKS`, the plan
+compiler's own 34 reasons read from the enum at the pinned commit, with
+`ABSENT_PATH`, `UNDERIVED_FIELD`, `UNLISTED_SOURCE` and `UNRETAINED_SOURCE` named
+as the field-level four. `STRUCTURAL_HISTORY_BUNDLE` is added, pinning by digest
+the four shipped files the admission path is composed from.
+
+What the census cannot report for rows. There is none. `adapt_document_assertions`
+is the only thing in Core that emits a census and it takes a document capture;
+`compile_population_plan` emits none, so the runner writes no `census.json` and
+the contract says which fields have no reading rather than writing an empty file
+that looks like a measurement. `blocks_total`, `blocks_asserted`,
+`blocks_declared_nothing_assertable` and `blocks_untouched` have none, because
+there are no blocks. `assertions` and `assertions_by_formalization` have none,
+because there are no assertions. The whole subject axis, proposed, attachable,
+ambiguous and unnamed, has none, because a subject is a reference the reading
+names in a formalizing sentence. `provenance_coverage` has none in both halves:
+a row-derived record binds no `assertion_locator` and no `statement_sha256`. What
+survives as a count is read from the run result and the trace summary instead:
+records by family, derivations per record, gaps by kind, and sources per plan.
+Any cross-cell figure that reads a census field is therefore not comparable
+between this cell and any document cell, and the contract says so before the run.
+
+Questions: `paper-v4/experiment-v4/shop-01/competency-questions.json`, four,
+frozen before the producer and withheld from it. CQ-S1, which invoices payment P1
+settled. CQ-S2, the current state of supplier order B and the earlier state it
+superseded. CQ-S3, which inventory unit sales order O1 contains and what product
+it is. CQ-S4, which current records derive from the warehouse source and by which
+locators. Two of the four bind to current-graph types only, and the contract says
+so before any row exists. CQ-S2's superseded state is not in the replay-derived
+current graph, and CQ-S4's source id and locator live in the retained plan and
+the trace and not in the graph, so a type-only case cannot reach either. The
+executor was not extended: it is run-21's bytes. Both halves are judged by the
+reviewer from `results/trace-summary.json`, whose per-record
+`supersedes_record_id`, `superseded_by`, `valid_to` and `derivations` carry them,
+and the review task says which half comes from where.
+
+Review: `paper-v4/evaluation-v4/shop-01/review-task.md` is run-21's task with the
+evidence surface changed to the five source files and locators of the form
+`row:N:field`. One duty moves. Run-21's reviewer recomputes a statement digest
+per claim; a row-derived record binds no statement bytes, so there is nothing to
+recompute. What replaces it is the one check the reviewer can make that Core does
+not: open the row the locator names and compare the value. Core pins the source
+bytes, refuses `UNRETAINED_SOURCE` if they differ and `UNDERIVED_FIELD` if a
+property or an endpoint carries no derivation at all, but a derivation locator is
+free text to the plan compiler, so nothing in the pipeline has ever compared
+`row:0:order` with row 0 of `warehouse.jsonl`. The reviewer is the first thing
+that does.
+
+One thing did not translate and is open. No frozen review protocol binds this
+cell, and none was written. `paper-v4/evaluation-v4/review.py::validate_protocol`
+refuses any protocol whose authoritative evidence surface is not
+`SELECTED_READING_TEXT_LAYER` and whose locator kind is not
+`SELECTED_READING_BLOCK_ID`, requires `fixed_identities` to carry exactly
+`source_sha256`, `selected_reading_sha256` and `competency_questions_sha256`, and
+requires a record's question ids to equal the protocol's `CQ-01` to `CQ-04`. This
+cell's surface is five row-shaped files, its locators are rows and fields, and
+its questions are CQ-S1 to CQ-S4. Any protocol file this cell could write would
+be refused by the validator that makes a protocol worth having, so none was
+written and the frozen files were not edited. The decision is Luis's and is
+recorded in the run contract under `evaluation.review_protocol`: either the
+evaluation layer gains a v3 protocol and validator that admit a non-document
+evidence surface, or this cell's questions are renamed CQ-01 to CQ-04 and the v2
+protocol's fixed identities are re-read for it. The first changes a frozen
+validator; the second makes two cells' CQ-01 mean different questions. Until it
+is taken, shop-01's preliminary review record is not machine validated.
+Everything before the review runs and is tested.
+
+Expected: admission within two structural returns and no UNSUPPORTED row at
+review. Falsifier: a third structural refusal, or an UNSUPPORTED row at review.
+Nothing about record counts, row counts or tokens is expected in either
+direction: a document with 186 blocks and five source files with eight rows
+between them are not comparable by size, and the contract says so.
+
+Non-claim: this cell tests whether a model given rows and this skill writes an
+admissible population. It does not claim a mapping language, a source-to-plan
+compiler, or that the state-version profile is a general domain-history model.
+Those remain the fixture's own stated boundary and this cell does not move it.
