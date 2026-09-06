@@ -1,0 +1,6 @@
+{
+  "schema": "malleus.paper-v4.shop-01-withheld-artifacts/v1",
+  "run_id": "shop-01",
+  "reason": "Nothing is withheld: the five sources are the repository's own public fixtures, so every artifact this cell produced is published under ontology-run/ and results/, and run-21's reading ladder was not run because it measures reproduction of a private PDF text layer that no file of this cell can carry.",
+  "withheld": []
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "shop-01",
+  "core": {
+    "commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
+  },
+  "producer_input_manifest_sha256": "sha256:cc951642243335ac437839c1a55000eb76abe6e2b3f9784da3257f0c3942e8d9",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:aaec0b4fc3da9fa56bb6b97f5bd69753bb6986d14776c2e9a597813dda4c86fa",
+    "final_status_sha256": "sha256:8acfa8ffd23500ecf641f52c657d2d76a460f896fd7f8d61e147688f08cc2336"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:e795d73122109e75b1301660c347155cafdd8156a8c54f6c025bd4d35becdd1a",
+      "ontology_path": "paper-v4/experiment-v4/shop-01/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/shop-01/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:d1040ca7175f282d24add722ec5122166944b69ad7220945f549712324651092",
+      "accepted_at": "2026-09-06T19:42:44Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:e795d73122109e75b1301660c347155cafdd8156a8c54f6c025bd4d35becdd1a",
+    "validated_contract_sha256": "sha256:e3f9796e5abb01382af4bb0e12284b9185110d3b57480273b2edf8d9a4d74309",
+    "validated_fact_set_sha256": "sha256:954cff70571d35b55b5fdc483a2dfb3ac840fa63fe09ba1e1132ccd9a3f268c1",
+    "fact_count": 945,
+    "grounding_receipt_sha256": "sha256:aa9a68fa9e1925059c14db415f3186ee02e1857e9edcfe75776102c47607b57a",
+    "population_surface_sha256": "sha256:9de0fd563e41be3743b11a14d83e8b1932083c3c1f64f4788cb63dc6dc5e4f44",
+    "population_surface_families": {
+      "ENTITY": 7,
+      "EVENT": 1,
+      "RELATION": 1
+    },
+    "families_admitted": [
+      "entities",
+      "relations"
+    ]
+  },
+  "accepted_ontology_sha256": "sha256:e795d73122109e75b1301660c347155cafdd8156a8c54f6c025bd4d35becdd1a",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-06T19:44:15Z",
+    "checked_at_precision": "minute, from the session clock",
+    "urls": 2,
+    "fabricated": 0,
+    "result": "schema.org/IndividualProduct, schema.org/Order and schema.org/Invoice fetched: IndividualProduct (a subtype of Product), productID, Order, seller, Invoice and totalPaymentDue all defined; www.w3.org/TR/prov-o fetched: Agent (confirmed in run-21's check), Activity and wasAssociatedWith defined. Every borrowed term of every block confirmed",
+    "unverified": [],
+    "vocabulary_claims_unsupported": 0,
+    "fabricated_basis": "the two vocabularies are real and all ten distinct borrowed terms are types, properties or classes they declare"
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/shop-01 is blocked on the review-protocol decision recorded in run-contract.json under evaluation.review_protocol (E-0201), and Luis's ratification is pending; nothing here is paper evidence until ratified."
+}

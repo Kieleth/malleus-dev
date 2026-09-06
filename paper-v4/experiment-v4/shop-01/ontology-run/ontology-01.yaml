@@ -1,0 +1,256 @@
+id: https://malleus.dev/schema/projects/shop_records
+name: shop_records
+version: 0.1.0
+title: Shop Records Project Ontology
+description: >-
+  Project ontology for five declared structured sources: a warehouse activity
+  record, an inventory unit table, an invoice table, a payment record, and a
+  supplier order history. It declares only the enduring things those sources
+  name and the one relation a source states between two of them.
+
+  The bound history profile is state-version, whose ontology_roles.event is
+  empty. Occurrences are therefore not an admissible population family here,
+  and no Event class is declared: the sources' event identifiers, the
+  warehouse activity and its time, and the per-entry quantities of the
+  supplier order history carry no admitted type and are recorded as typed gaps
+  at population rather than being reshaped into Entity records.
+
+  No knowledge pack is imported. The sources report no measured or bounded
+  quantity that survives to a populated record, no calendar-complete domain
+  time, and no attributed claim, so metrology, chronology and research would
+  each contribute vocabulary this material does not use.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  shop: https://malleus.dev/schema/projects/shop_records/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  ShopRelationType:
+    description: >-
+      Relation predicates this ontology declares. One value for each relation a
+      declared source states between two records it also names. The list grows
+      by adding values, never by redefining one.
+    permissible_values:
+      PAYMENT_REFERENCES_INVOICE:
+        description: >-
+          A payment names an invoice among the invoices it references. It
+          records the reference the source states and nothing further: no
+          amount, no allocation between the referenced invoices, and no
+          settlement status, because no declared source reports any of those.
+
+classes:
+  InventoryUnit:
+    is_a: Entity
+    description: >-
+      A separately identified unit of stock. Declared by the inventory unit
+      source, whose identifier column names the concept and whose product code
+      column reports the code of the product the unit is a unit of.
+    slots:
+      - product_code
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Materials management and inventory
+          taxonomy: DDC 658.7
+          vocabularies:
+            - vocabulary: schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - IndividualProduct
+                - Product
+                - productID
+          invented_terms:
+            - InventoryUnit
+          invention_search: >-
+            schema.org is the commerce vocabulary this session can vouch for
+            from certain knowledge. The declared inputs carry no commerce or
+            inventory pack, and no vocabulary outside them could be consulted.
+            schema.org names IndividualProduct, a single identifiable instance
+            of a product, Product, and productID, an identifier of a product;
+            it names no term for a unit of stock held and identified in a
+            warehouse. The source's own identifier column is inventory_unit_id,
+            so the class name InventoryUnit is local and is recorded here.
+
+  Order:
+    is_a: Entity
+    description: >-
+      An order named by the warehouse source's order field. That source states
+      the order's identifier and nothing else that is a property of the order,
+      so records of this class carry identity alone.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Commerce and order handling
+          taxonomy: DDC 381
+          vocabularies:
+            - vocabulary: schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - Order
+          invented_terms: []
+
+  SupplierOrder:
+    is_a: Entity
+    description: >-
+      An order placed with a supplier, named by the supplier order history
+      source's supplier_order_id field. Kept distinct from Order: the two
+      sources use different field names, share no identifier, and state no
+      correspondence between the two, so collapsing them would assert one the
+      bytes do not carry.
+    slots:
+      - product_code
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Commerce and order handling
+          taxonomy: DDC 381
+          vocabularies:
+            - vocabulary: schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - Order
+                - seller
+          invented_terms:
+            - SupplierOrder
+          invention_search: >-
+            schema.org names Order, a confirmation of a transaction, and
+            seller, the party providing the goods, but no class for an order a
+            buyer places with a supplier. No vocabulary outside schema.org
+            could be consulted from the declared inputs. The source's own
+            identifier field is supplier_order_id and it is a different field
+            from the warehouse source's order field, so the class name
+            SupplierOrder is local and is recorded here.
+
+  Actor:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A party the warehouse source names, in its actor field, as the performer
+      of the activity a record reports. That source states the party's
+      identifier and nothing else about it: not what kind of party it is, and
+      not whether it is a person, so agent_type stays unset.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Agency and provenance in records of activity
+          taxonomy: DDC 005.7
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Activity
+                - wasAssociatedWith
+          invented_terms:
+            - Actor
+          invention_search: >-
+            PROV-O names Agent, something that bears some form of
+            responsibility for an activity taking place, and wasAssociatedWith,
+            the assignment of an agent to an activity; those are the borrowed
+            definitions. The Malleus root already declares a mixin named Agent,
+            which this class wears, so that name is taken and the source's own
+            field name, actor, is used for the class instead. The class name is
+            therefore local. No vocabulary outside PROV-O and schema.org could
+            be consulted from the declared inputs.
+
+  Invoice:
+    is_a: Entity
+    description: >-
+      An invoice. Declared by the invoice source, which states identifiers and
+      no other column, and referenced by the payment source's invoice_ids
+      field, which names the same concept.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Accounting
+          taxonomy: DDC 657
+          vocabularies:
+            - vocabulary: schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - Invoice
+          invented_terms: []
+
+  Payment:
+    is_a: Entity
+    description: >-
+      A payment, named by the payment source under its own payment_id field.
+      No declared source reports an amount, a currency, a date, or a payment
+      method for a payment, so records of this class carry identity and the
+      invoices the payment references.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Accounting
+          taxonomy: DDC 657
+          vocabularies:
+            - vocabulary: schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - Invoice
+                - totalPaymentDue
+          invented_terms:
+            - Payment
+          invention_search: >-
+            schema.org names Invoice and the payment terms an invoice carries,
+            among them totalPaymentDue; this session found in it no type naming
+            a payment as an identified thing that references one or more
+            invoices. No vocabulary outside schema.org could be consulted from
+            the declared inputs. The source's own identifier field is
+            payment_id, so the class name Payment is local and is recorded
+            here.
+
+  PaymentInvoiceRelation:
+    is_a: Relation
+    description: >-
+      A payment's reference to one invoice, as the payment source states it.
+      One record per invoice the payment names, because the source lists the
+      invoices and states nothing that would divide the payment between them.
+    slot_usage:
+      relation_type:
+        range: ShopRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Accounting
+          taxonomy: DDC 657
+          vocabularies:
+            - vocabulary: schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - Invoice
+          invented_terms:
+            - PaymentInvoiceRelation
+            - ShopRelationType
+          invention_search: >-
+            schema.org names Invoice, the commercial document this relation
+            reaches, and it was searched for a term naming a payment's
+            reference to an invoice and for a term naming a reified edge that
+            carries such a reference; neither was found. No vocabulary outside
+            schema.org could be consulted from the declared inputs. The class
+            name and the enum that types its relation_type are therefore local
+            and are recorded here.
+
+slots:
+  product_code:
+    range: string
+    description: >-
+      Product code exactly as a source reports it, in the source's own
+      characters. No declared source enumerates products as records, so the
+      code is retained as the value the source states and is never resolved to
+      a product record.

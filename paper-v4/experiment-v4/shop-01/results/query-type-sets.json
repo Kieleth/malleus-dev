@@ -1,0 +1,21 @@
+{
+  "CQ-S1": [
+    "Payment",
+    "Invoice"
+  ],
+  "CQ-S2": [
+    "SupplierOrder"
+  ],
+  "CQ-S3": [
+    "Order",
+    "InventoryUnit"
+  ],
+  "CQ-S4": [
+    "Order",
+    "Actor",
+    "InventoryUnit",
+    "Invoice",
+    "Payment",
+    "SupplierOrder"
+  ]
+}

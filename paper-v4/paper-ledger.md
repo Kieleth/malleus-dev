@@ -7585,3 +7585,82 @@ derivation locator is ever resolved against its row by Core, so the reviewer
 of this cell is the first thing that compares `row:N:field` with the row.
 
 Non-claim: the producer has not run. E-0201's expectation stands as written.
+
+### E-0203, shop-01 (Opus 5 at v4.11, the same skill and Core given rows) is admitted at the fourth runner attempt: one structural return, two parent errors; 17 rows over 9 witnesses; every borrowed term confirmed
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/shop-01/ontology-run/`,
+`paper-v4/experiment-v4/shop-01/results/` (all public: the five sources are
+the repository's own fixtures, so nothing in this cell is withheld),
+`private/paper-v4-v4-shop-01/` (the ledger, the three refused attempts, the
+producer's work), `paper-v4/evaluation-v4/shop-01/` (review task under the
+caveat of E-0201 and E-0202: no frozen protocol validates a row-shaped
+record).
+
+Ontology: accepted at attempt 01, 945 facts, six entity types and one
+relation type on the surface beside the roots, no subject-bearing type, families
+entities and relations (the state-version profile admits no event). Seven
+project classes, every one a direct root extension grounded to schema.org
+or PROV-O with all ten borrowed terms confirmed by fetch and no none_found
+block; no pack imported, each declined with a reason in the session log. The
+producer declared no Event class because the bound profile admits none, and
+carried the warehouse occurrence, the two supplier-order quantities (three
+readings, no stated order) and the absence of money as typed gaps.
+
+Population: four neutral plans written by a producer-authored row adapter;
+7 entities, 2 relations, 15 derivations, 13 typed gaps (11 TYPE_ABSENT, 2
+RELATION_ABSENT), 0 supersessions; every one of the nine physical rows
+populated or gapped. No census exists for rows; the run result says so.
+Runner attempt 1 refused at the plan loader on two rules no declared input
+states (strict canonical bytes, a grammar key): the parent's omitted
+coordinates, returned uncounted. Attempt 2 reached the compiler, which
+refused the root closure (FIELDS_NOT_CLOSED): structural return 1 of 2,
+carrying the grammar's closed shapes read from the compiler's field sets,
+because the skill states none of them for structured sources and the
+fixture plans are a forbidden input. Attempt 3 refused IDENTITY_MISMATCH:
+the plans carried the raw digest of the staged profile file, as the parent's
+phase-two message instructed, where the compiler wants the profile's
+canonical identity; the parent's error, corrected uncounted, and verified by
+the producer from its own declared input before it wrote the value. Attempt
+4 admitted under `actor:overseer-shop-01`: 38 ledger events, replay
+reproducing admission, 9 records traced. No modelling decision changed
+across the four hand-offs; the counts are identical at each. The producer
+named one expressiveness gap: `valid_time` is required and no kind says a
+change set has no valid time; it wrote ORDER_ONLY "0" in all four plans and
+said so.
+
+Query: the binding frozen at acceptance (56 cases: 11 ENTITY, 45 RELATION;
+the types each shop question names, CQ-S4 every project entity type since
+the question names none; closure check clean) executed unchanged after
+replay under the v4.9 executor: CQ-S1 5, CQ-S2 1, CQ-S3 2, CQ-S4 9, 17 rows
+(13 ENTITY, 4 RELATION) over 9 witnesses, no row from more than one case,
+no forbidden attempt. CQ-S2 returns the current supplier-order record and
+nothing of its history, as the run contract recorded before the producer
+ran.
+
+Execution coordinate: inputs pinned at `c95dba7` (E-0202); the runner
+executed at main `0f013ba`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 138,864; population
+50,777; the three corrections 11,653, 27,128 and 22,321; producer total
+250,743 (run-21: 387,470 on 186 blocks; here nine physical rows in five
+files).
+
+Expected effect (E-0201): admission within two structural returns and no
+UNSUPPORTED row at review. The first held with one structural return; the
+second waits on the review, which no frozen protocol validates.
+
+What the cell found that the document cells could not: the skill's
+structured-source path names no plan grammar string, no byte encoding, no
+root keys, no reference shapes and no valid-time kinds (two of the three
+refusals trace to that, one of them through the parent; the third was the
+parent's own digest error); the harness stages
+the profile as non-canonical bytes so its file digest is not its identity;
+Core never resolves a derivation locator against its row (Paper-26); and
+the grammar cannot say that a change set has no valid time. Each is a Core
+or harness entry to open, not a producer fault.
+
+Non-claim: admission is structural acceptance. No review exists yet, and
+when it does it is a record the frozen validator refuses to read; whether
+protocol v3 admits a row surface is Luis's.

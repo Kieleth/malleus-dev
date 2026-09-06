@@ -1,0 +1,281 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "shop-01",
+  "protocol": "v4.11-shop",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-06T19:27:59Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/shop-01/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "POPULATION_PLANS_READY",
+      "execution": {
+        "pinned_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "paper_commit": "0f013ba",
+        "staged_at": "2026-09-06T19:27:59Z",
+        "interpreter": "VERIFIED by prepare_producer.py preflight"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-06T19:45:01Z",
+        "dispatched_at_source": "the harness transcript's timestamp of the SendMessage call",
+        "after_binding_frozen_at": "2026-09-06T19:43:30Z",
+        "message": "run-21's phase-two message with shop-01's coordinates, fact count, the contract identity, the plan id prefix, the five source ids, the profile and the plan file-order rule",
+        "plan_id_prefix": "plan:paper-v4:small-shop:shop:1",
+        "contract_identity": "sha256:390a490c80f15ad46c7c080604bc5c719f50b4c034ed6f986baf0f86a354b651",
+        "contract_identity_computed_by": "paper-v4/experiment-v4/shop-01/contract_identity.py over the declared closure (small-shop, malleus, linkml:types); its validated fact set equals the gate's",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ]
+      },
+      "usage_cumulative": {
+        "tokens": 138864,
+        "tool_uses": 15,
+        "duration_ms": 773128
+      },
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 189641,
+          "tool_uses": 26,
+          "duration_ms": 1257558
+        },
+        {
+          "after": "POPULATION_CORRECTION_01_PLAN_LOADER_COORDINATES",
+          "tokens": 201294,
+          "tool_uses": 35,
+          "duration_ms": 1382495
+        },
+        {
+          "after": "POPULATION_CORRECTION_02_FIELDS_NOT_CLOSED",
+          "tokens": 228422,
+          "tool_uses": 42,
+          "duration_ms": 1671767
+        },
+        {
+          "after": "POPULATION_CORRECTION_03_PROFILE_IDENTITY",
+          "tokens": 250743,
+          "tool_uses": 53,
+          "duration_ms": 1837027
+        }
+      ],
+      "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures; corrections 01 and 03 were the parent's coordinates and are not structural returns",
+      "producer_observations": [
+        "the producer wrote a row adapter (work/adapter.py) that reads the five files as bytes and copies every populated value, carrying the source token beside each derivation until the grammar's closed shapes removed it; it then moved the token census to a bookkeeping file outside the plans",
+        "it declined three coordinates rather than invent them (the plan grammar string, a valid-time kind, and a bucket for untyped item identifiers under root Entity) and named an expressiveness gap: valid_time is required and no kind says a change set has no valid time; it used ORDER_ONLY \"0\" in all four plans and said so",
+        "it verified the corrected profile identity from its own declared input before writing it, and kept the two digest rules (verbatim source bytes; canonical profile bytes) as separate helpers"
+      ]
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:e795d73122109e75b1301660c347155cafdd8156a8c54f6c025bd4d35becdd1a",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:954cff70571d35b55b5fdc483a2dfb3ac840fa63fe09ba1e1132ccd9a3f268c1",
+      "fact_count": 945,
+      "accepted_at": "2026-09-06T19:42:44Z",
+      "families_admitted": [
+        "entities",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 7,
+        "EVENT": 1,
+        "RELATION": 1
+      },
+      "event_types": [
+        "Event"
+      ],
+      "relation_types": [
+        "PaymentInvoiceRelation"
+      ],
+      "subject_bearing_types": [],
+      "note": "accepted at attempt 01; seven project classes, all direct root extensions (InventoryUnit, Order, SupplierOrder, Actor, Invoice, Payment on Entity; PaymentInvoiceRelation on Relation), each grounded to schema.org or PROV-O with the cited-with-invention or cited form, none none_found; no Event class declared because the bound state-version profile admits no event family; no pack imported, each declined with a reason in the session log (no number reaches a record, the one time has no year or zone, the rows are operational records not claims); no quantity slot on SupplierOrder because the two supplier rows admit three readings and no ordering between e4 and e7 is stated; the warehouse row's items field gapped whole rather than typed by token match",
+      "producer_observations": [
+        "the producer read the profile's empty event role as the load-bearing input and declared no Event class rather than compile one the profile cannot populate",
+        "three delimitations carried as gaps rather than repaired: the warehouse occurrence (no event family, a time with no year or zone, an items field whose members are declared nowhere), the two supplier-order quantities (no stated ordering, DUPLICATE_RECORD_ID on one id, supersession unavailable at the genesis boundary by its reading), and no money (a payment names two invoices and states no division)",
+        "announced phase two before it: six entity records, two relations, every other field a typed gap"
+      ],
+      "phase_two_inputs_staged": [
+        "producer/accepted/population-surface.json",
+        "producer/accepted/diagnostic.json"
+      ],
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "overseer, before phase two",
+        "checked_at": "2026-09-06T19:44:15Z",
+        "checked_at_precision": "minute, from the session clock",
+        "urls": 2,
+        "fabricated": 0,
+        "result": "schema.org/IndividualProduct, schema.org/Order and schema.org/Invoice fetched: IndividualProduct (a subtype of Product), productID, Order, seller, Invoice and totalPaymentDue all defined; www.w3.org/TR/prov-o fetched: Agent (confirmed in run-21's check), Activity and wasAssociatedWith defined. Every borrowed term of every block confirmed",
+        "unverified": [],
+        "vocabulary_claims_unsupported": 0,
+        "fabricated_basis": "the two vocabularies are real and all ten distinct borrowed terms are types, properties or classes they declare"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-06T19:53:35Z",
+      "execution_commit": "0f013ba",
+      "core_note": "Core files at the pinned coordinate c95dba7 (OVR-000415); commits between are paper files",
+      "status": "REFUSED",
+      "stage": "RUNNER_PLAN_LOADER",
+      "reason": "PLAN_NOT_CANONICAL_JSON",
+      "classification": "HARNESS_INTERFACE_OMISSION_RETURNED_WITH_COORDINATES",
+      "counts_against_diagnostic_budget": false,
+      "detail": "the runner reads a plan as strict canonical JSON bytes (sorted keys, separators ',' and ':', ensure_ascii false, no trailing newline) and requires grammar == malleus.population-plan/private-v0; the four plans are pretty-printed and carry no grammar key; parsed content is otherwise the same bytes canonicalised",
+      "overseer_reading": "neither rule is stated by the skill (which states canonical bytes and a grammar only for the document capture object), by the spawn message, or by the parent's phase-two message; the producer's own report asked the parent to supply the grammar string. The rule is the Small Shop fixture's convention carried into the runner by Paper-26. Returned to the producer as two interface coordinates the parent omitted, with the diagnostic verbatim; not counted against the two structural returns. The compiler has not yet spoken: the plans were refused before it ran",
+      "structural_diagnostic_returned_to_producer_at": "2026-09-06T19:55:00Z",
+      "structural_diagnostic_returns_used": 0,
+      "hand_repair": false,
+      "leftovers": "refused-runner-attempt-01/ (the empty ledger directory the runner created before refusing, and the diagnostic line)"
+    },
+    {
+      "attempt": 2,
+      "transaction_time": "2026-09-06T19:57:20Z",
+      "execution_commit": "0f013ba",
+      "core_note": "Core files at the pinned coordinate c95dba7 (OVR-000415); commits between are paper files",
+      "status": "REFUSED",
+      "stage": "POPULATION_PLAN_COMPILER",
+      "reason": "FIELDS_NOT_CLOSED",
+      "classification": "STRUCTURAL_REFUSAL_RETURNED_TO_PRODUCER",
+      "detail": "the compiler's root closure: the plans carry contract_root_source_locator, locator_convention and row_census beside the twelve root keys; below the root, adapter carries five keys beyond adapter_id and version, sources carry id, locator and bytes for source_id and sha256, derivations carry value and source_value beside the four closed keys, history_profile carries a locator, and valid_time carries three descriptive keys and no kind or value; the compiler stops at the first closure failure",
+      "overseer_reading": "the artifact was refused by the compiler on its own grammar, so this is a structural return; the cause is that no declared input states the plan grammar's closed shapes for structured sources: the skill illustrates the record envelope through the document path only and names the plan grammar, its root keys, the source and evidence reference shapes, the derivation and gap shapes and the two valid-time kinds nowhere, and the fixture plans that show the shape are a forbidden input (PRIOR_POPULATION). The return carries the shapes as the compiler's field sets declare them, as interface facts. The diagnostic is fail-fast at the root, as NOT_VERBATIM was before Core-7; a second refusal below the root would be the same class",
+      "structural_diagnostic_returned_to_producer_at": "2026-09-06T19:59:35Z",
+      "structural_diagnostic_return_ordinal": 1,
+      "structural_diagnostic_return_limit": 2,
+      "structural_diagnostic_returns_used": 1,
+      "hand_repair": false,
+      "leftovers": "refused-runner-attempt-02/ (the ledger the runner created before the compiler refused, and the diagnostic line)"
+    },
+    {
+      "attempt": 3,
+      "transaction_time": "2026-09-06T20:04:21Z",
+      "execution_commit": "0f013ba",
+      "core_note": "Core files at the pinned coordinate c95dba7 (OVR-000415); commits between are paper files",
+      "status": "REFUSED",
+      "stage": "POPULATION_PLAN_COMPILER",
+      "reason": "IDENTITY_MISMATCH",
+      "classification": "PARENT_INTERFACE_ERROR_RETURNED_WITH_COORDINATE",
+      "counts_against_diagnostic_budget": false,
+      "detail": "the plans carry history_profile.sha256 = the raw digest of the staged inputs/profile-state-version.json (sha256:2205…), exactly as the parent's phase-two message instructed; the compiler compares against the bound profile's identity sha256:b18f3129…, the digest of the profile's canonical bytes; the staged file is the same content pretty-printed with a trailing newline",
+      "overseer_reading": "the parent's coordinate was wrong, not the producer's reading of it; returned with the correct identity and the way to verify it from the declared input; not counted against the two structural returns, of which one remains. Harness note: prepare_producer stages the profile as non-canonical bytes, so a producer that must cite the profile by identity cannot take the digest of the file it was given; the document cells never needed the identity in a producer artifact, so this never surfaced",
+      "structural_diagnostic_returned_to_producer_at": "2026-09-06T20:05:20Z",
+      "structural_diagnostic_returns_used": 1,
+      "hand_repair": false,
+      "leftovers": "refused-runner-attempt-03/ (the ledger the runner created before the compiler refused, and the diagnostic line)"
+    },
+    {
+      "attempt": 4,
+      "transaction_time": "2026-09-06T20:08:04Z",
+      "execution_commit": "0f013ba",
+      "core_note": "Core files at the pinned coordinate c95dba7 (OVR-000415); commits between are paper files",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 7,
+        "event_participations": 0,
+        "events": 0,
+        "relations": 2,
+        "signals": 0
+      },
+      "ledger_event_count": 38,
+      "records_traced": 9,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": null,
+      "census_not_reported": "NO_CENSUS_EXISTS_FOR_ROWS_THE_CENSUS_IS_THE_DOCUMENT_ADAPTERS_REPORT",
+      "gaps_by_kind": {
+        "RELATION_ABSENT": 2,
+        "TYPE_ABSENT": 11
+      },
+      "plans": [
+        {
+          "file": "01-inventory.json",
+          "plan_id": "plan:paper-v4:small-shop:shop:1:inventory",
+          "status": "CHANGE_SET",
+          "gap_count": 0
+        },
+        {
+          "file": "02-warehouse.json",
+          "plan_id": "plan:paper-v4:small-shop:shop:1:warehouse",
+          "status": "CHANGE_SET",
+          "gap_count": 8
+        },
+        {
+          "file": "03-supplier-orders.json",
+          "plan_id": "plan:paper-v4:small-shop:shop:1:supplier-orders",
+          "status": "CHANGE_SET",
+          "gap_count": 4
+        },
+        {
+          "file": "04-invoices-payments.json",
+          "plan_id": "plan:paper-v4:small-shop:shop:1:invoices-payments",
+          "status": "CHANGE_SET",
+          "gap_count": 1
+        }
+      ],
+      "structural_diagnostic_returns_used": 1,
+      "admitted_at": "2026-09-06T20:08:05Z",
+      "note": "admitted at the fourth runner attempt after three refusals: the plan loader's byte rule (parent's omitted coordinate), the compiler's root closure (structural return 1 of 2), the parent's wrong profile digest (parent's error); no modelling decision changed across the four hand-offs by the producer's report and the counts; 7 entities, 2 relations, 15 derivations, 13 typed gaps (11 TYPE_ABSENT, 2 RELATION_ABSENT), 0 supersessions; every one of the nine physical rows populated or gapped"
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-06T19:43:30Z",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:72a5ed45a5d513331ba17dd021c104b63a66305e79a6ebd501a75f9a2f297d66",
+    "type_sets_note": "query-type-sets.note.json",
+    "closure_preflight": {
+      "tool": "paper-v4/experiment-v4/type_set_closure.py",
+      "status": "ACCEPTED",
+      "omissions": {}
+    },
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:e5a0a0eaebb430231987577df2c3f32e52057ade78e3c6ade984365ace9f2c59",
+    "cases_sha256": "sha256:123ee3d493d7a792c9c442042d8199974cb89c213224e9ba4f806e34a3379cda",
+    "cases": 56,
+    "cases_by_kind": {
+      "ENTITY": 11,
+      "RELATION": 45
+    },
+    "phase_two_dispatched_after": true,
+    "executed_at": "2026-09-06T20:08:33Z",
+    "binding_executed": "results/native-query-binding.json",
+    "bound_after_replay_receipt_sha256": "sha256:6dc2bf18e88150387caf646f64fad6a79e921fd467da3dbd6461f422fa5580c4",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "result_schema": "malleus.paper-v4.query-result/v3",
+    "rows_by_question": {
+      "NQ-CQ-S1": 5,
+      "NQ-CQ-S2": 1,
+      "NQ-CQ-S3": 2,
+      "NQ-CQ-S4": 9
+    },
+    "rows_total": 17,
+    "rows_by_kind": {
+      "ENTITY": 13,
+      "RELATION": 4
+    },
+    "rows_from_more_than_one_case": 0,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:a7be8ec4772ed03354f2838183aa8ba64e092f13daf2039aca5b3269589b621c",
+    "witnesses_traced": 9,
+    "note": "CQ-S2 returns the one current supplier-order record and nothing of its history, as the run contract recorded before the producer ran; CQ-S4 returns every current record, the question naming no type, and the reviewer reads each row's derivation from the trace"
+  },
+  "review": {}
+}

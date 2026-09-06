@@ -1,0 +1,14 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-06T19:43:30Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface and the four shop questions only, before phase two",
+  "rationale": {
+    "CQ-S1": "payment, invoice, settlement relation: the two endpoint types; every relation type on the surface is bound by the binder",
+    "CQ-S2": "supplier order and its states: the one supplier-order type; the history half is unreachable by a type-only case, recorded in the run contract before the producer ran",
+    "CQ-S3": "sales order, inventory unit, containment, product: the two endpoint types; product is a field of the unit",
+    "CQ-S4": "current records deriving from the warehouse source: the question names no type, so every project entity type is listed and the reviewer reads the derivation of each row from the trace"
+  },
+  "left_out": "Entity and Event (roots; Event is EVENT family and the profile admits none); no catalogue type exists on this surface",
+  "closure": "no surface type has a subtype; the closure check passes trivially",
+  "note": "the first type sets written for a row-shaped cell; the same judgement as the paper's: types the question names, nothing selected against a result, no result existing"
+}

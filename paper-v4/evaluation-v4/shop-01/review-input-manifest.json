@@ -1,0 +1,136 @@
+{
+  "schema": "malleus.paper-v4.source-grounded-review-inputs/v2",
+  "status": "FROZEN_FOR_REVIEW",
+  "run_id": "shop-01",
+  "review_protocol": "NONE_FROZEN",
+  "review_protocol_note": "paper-v4/evaluation-v4/review-protocol-v2.json is bound to the document surface: its validator refuses any protocol whose authoritative evidence surface is not SELECTED_READING_TEXT_LAYER and whose locator kind is not SELECTED_READING_BLOCK_ID, and it requires fixed_identities to carry exactly source_sha256, selected_reading_sha256 and competency_questions_sha256. This cell's surface is five row-shaped files, its locators are row:N:field and its fixed identities are the five source digests, so validate_review_input_manifest would refuse this manifest. No shop protocol was written and the frozen files were not edited. The decision is Luis's and is recorded in E-0201 and in paper-v4/experiment-v4/shop-01/run-contract.json under evaluation.review_protocol.",
+  "validation": {
+    "validated": false,
+    "validator": "paper-v4/evaluation-v4/review.py::validate_review_input_manifest",
+    "not_called_because": "The validator takes a frozen protocol and checks this manifest against it. No frozen protocol binds this cell, so there is nothing to validate against, and calling it with the v2 protocol would produce a refusal that says only what E-0201 already records. The manifest is therefore frozen unvalidated, and the review record it binds is not machine validated either."
+  },
+  "fixed_identities": {
+    "source_sha256": {
+      "source:small-shop:warehouse": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e",
+      "source:small-shop:inventory": "sha256:2e18a2a88c5964b80036799fe9f044d91e4dc790789b701df5f50a86c24a59ec",
+      "source:small-shop:invoices": "sha256:048b6c70b94cddc026c656f51746794f5dfc1a70ce2372c5fed341b02973f175",
+      "source:small-shop:payments": "sha256:3ad1935a2912eb698c14977ff9e42b3e49020912de0dad6f37ad10b4e27a060d",
+      "source:small-shop:supplier-orders": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081"
+    },
+    "competency_questions_sha256": "sha256:889e648f5bc92e059d8df844a6603651867af1b31998cd00cdd12afa57b50eb5",
+    "accepted_ontology_sha256": "sha256:e795d73122109e75b1301660c347155cafdd8156a8c54f6c025bd4d35becdd1a",
+    "contract_identity": "sha256:390a490c80f15ad46c7c080604bc5c719f50b4c034ed6f986baf0f86a354b651"
+  },
+  "stage_identities": {
+    "ledger_head": "sha256:8cd6f85e781d03c590df1e5c0f57865feb35e7a09d04643e5f9a4a0e2c4b742f",
+    "replay_receipt_sha256": "sha256:6dc2bf18e88150387caf646f64fad6a79e921fd467da3dbd6461f422fa5580c4",
+    "query_binding_sha256": "sha256:7f3dfda2e2196320db662593a732a4d8ce434846b2c6f89d60f2a3a47cf38d30",
+    "query_result_sha256": "sha256:85adb10bcc7f2d3d8dabbc899fbe01f98d038950382d2f0d9326ff576d022d2c",
+    "query_trace_summary_sha256": "sha256:5118a16c6e938261b1f4fe99ec7adc9923ebc83ca348f658f7e787378aab3fdc",
+    "population_trace_summary_sha256": "sha256:a3d00069a86f073340f227f837c30084c8222120b285d1ad581ce24a4c66e970"
+  },
+  "materials": [
+    {
+      "name": "source_warehouse",
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/warehouse.jsonl",
+      "sha256": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "source_inventory",
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/inventory-units.csv",
+      "sha256": "sha256:2e18a2a88c5964b80036799fe9f044d91e4dc790789b701df5f50a86c24a59ec",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "source_invoices",
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/sources/invoices.csv",
+      "sha256": "sha256:048b6c70b94cddc026c656f51746794f5dfc1a70ce2372c5fed341b02973f175",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "source_payments",
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/sources/payments.jsonl",
+      "sha256": "sha256:3ad1935a2912eb698c14977ff9e42b3e49020912de0dad6f37ad10b4e27a060d",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "source_supplier_orders",
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl",
+      "sha256": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "competency_questions",
+      "path": "paper-v4/experiment-v4/shop-01/competency-questions.json",
+      "sha256": "sha256:889e648f5bc92e059d8df844a6603651867af1b31998cd00cdd12afa57b50eb5",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "query_binding",
+      "path": "paper-v4/experiment-v4/shop-01/results/native-query-binding.json",
+      "sha256": "sha256:7f3dfda2e2196320db662593a732a4d8ce434846b2c6f89d60f2a3a47cf38d30",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "query_result",
+      "path": "paper-v4/experiment-v4/shop-01/results/query-result.json",
+      "sha256": "sha256:85adb10bcc7f2d3d8dabbc899fbe01f98d038950382d2f0d9326ff576d022d2c",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "population_trace",
+      "path": "paper-v4/experiment-v4/shop-01/results/trace-summary.json",
+      "sha256": "sha256:a3d00069a86f073340f227f837c30084c8222120b285d1ad581ce24a4c66e970",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "retained_plan_01_inventory",
+      "path": "paper-v4/experiment-v4/shop-01/results/population-plan.01-inventory.json",
+      "sha256": "sha256:c49750378e01b7c2251a260a164ed85b257dc2639fbe110877db4db350d9c4c6",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "retained_plan_02_warehouse",
+      "path": "paper-v4/experiment-v4/shop-01/results/population-plan.02-warehouse.json",
+      "sha256": "sha256:9850f3f5d8373113b465f94f7b9cab0fa2ab457a67f84ac0af4c657b7d114722",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "retained_plan_03_supplier_orders",
+      "path": "paper-v4/experiment-v4/shop-01/results/population-plan.03-supplier-orders.json",
+      "sha256": "sha256:64aee1d65fd10944095b4afd4d5ec34c5f31af01006f1e160c63099dfa938897",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "retained_plan_04_invoices_payments",
+      "path": "paper-v4/experiment-v4/shop-01/results/population-plan.04-invoices-payments.json",
+      "sha256": "sha256:4b67971c6762fab2a4730b07df7a95e37377e93d6e13e8f118b9e87550a3b4ee",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "query_trace_summary",
+      "path": "paper-v4/experiment-v4/shop-01/results/query-trace-summary.json",
+      "sha256": "sha256:5118a16c6e938261b1f4fe99ec7adc9923ebc83ca348f658f7e787378aab3fdc",
+      "visibility": "PUBLIC"
+    }
+  ],
+  "rows_per_question": {
+    "CQ-S1": 5,
+    "CQ-S2": 1,
+    "CQ-S3": 2,
+    "CQ-S4": 9
+  },
+  "witnesses_traced": 9,
+  "authorship": {
+    "preliminary_evaluator_kind": "CLAUDE_PRELIMINARY",
+    "ratifier_evaluator_kind": "HUMAN_AUTHOR",
+    "ratifier_actor_id": "actor:luis",
+    "deviation": {
+      "from": "NO_PROTOCOL_NAMES_A_PRELIMINARY_EVALUATOR_FOR_THIS_CELL",
+      "to": "CLAUDE_PRELIMINARY",
+      "reason": "The frozen v2 protocol names CODEX_PRELIMINARY and does not bind this cell. Codex is unavailable in any case: its tokens were exhausted on 2026-09-04 and the overseer session took both roles over, recorded in handover/2026-09-04-overseer-takeover.md. The shop-01 contract names a fresh Claude session as the preliminary inspector, so the reviewer records CLAUDE_PRELIMINARY and Luis ratifies.",
+      "protocol_edited": false
+    }
+  }
+}

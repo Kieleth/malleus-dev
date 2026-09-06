@@ -2,8 +2,8 @@
 
 Template, version 4, translated from `paper-v4/evaluation-v4/run-21/review-task.md`
 for a cell whose sources are rows. Instantiate it at freeze by substituting
-`{{ROWS_CQ_S1}}`, `{{ROWS_CQ_S2}}`, `{{ROWS_CQ_S3}}`, `{{ROWS_CQ_S4}}`,
-`{{ROWS_TOTAL}}` and `{{WITNESS_COUNT}}` with the frozen cell's own figures, and
+`5`, `1`, `2`, `9`,
+`17` and `9` with the frozen cell's own figures, and
 write the result over this file. Run-05's task carried run-02's row counts on a
 wrapped line into a live review; a template with one substitution point per
 figure is what stops that happening again. No placeholder may survive
@@ -56,13 +56,16 @@ Every one of them is a material in the input manifest, bound by digest.
 - `paper-v4/experiment-v4/shop-01/results/native-query-binding.json`, the
   type-only binding, expanded from the evaluator's type sets at ontology
   acceptance and before phase two existed.
-- `private/paper-v4-v4-shop-01/query/query-result.json`, the rows.
+- `paper-v4/experiment-v4/shop-01/results/query-result.json`, the rows.
 - `paper-v4/experiment-v4/shop-01/results/trace-summary.json`, provenance for
   every populated record, and
   `paper-v4/experiment-v4/shop-01/results/query-trace-summary.json`, the same for
-  the {{WITNESS_COUNT}} witnesses the returned rows use.
-- `private/paper-v4-v4-shop-01/ledger/`, the retained population plans, which the
-  trace resolves by plan id.
+  the 9 witnesses the returned rows use.
+- `paper-v4/experiment-v4/shop-01/results/population-plan.01-inventory.json` and
+  its three siblings `population-plan.02-warehouse.json`,
+  `population-plan.03-supplier-orders.json` and
+  `population-plan.04-invoices-payments.json`, the retained population plans,
+  which the trace resolves by plan id.
 - this task, the input manifest, and a copy of
   `paper-v4/evaluation-v4/shop-01/review-record.blank.md`.
 
@@ -183,9 +186,9 @@ Per question, choose one `question_responsiveness`:
 - `NOT_RESPONSIVE`: they do not answer it.
 - `NOT_EVALUABLE`: the row representation is insufficient to decide.
 
-Judge every returned row exactly once, in order: {{ROWS_CQ_S1}} rows for CQ-S1,
-{{ROWS_CQ_S2}} for CQ-S2, {{ROWS_CQ_S3}} for CQ-S3, {{ROWS_CQ_S4}} for CQ-S4,
-{{ROWS_TOTAL}} in all. Cite at least one row locator per row and per question.
+Judge every returned row exactly once, in order: 5 rows for CQ-S1,
+1 for CQ-S2, 2 for CQ-S3, 9 for CQ-S4,
+17 in all. Cite at least one row locator per row and per question.
 Write each reason in your own words. Copy no source row into the record beyond
 the locator, and add no numerical aggregate.
 
