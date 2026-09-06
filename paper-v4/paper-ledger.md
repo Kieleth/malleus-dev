@@ -7914,3 +7914,81 @@ LOCATOR_NOT_RESOLVABLE; the residual bullet). Core-23 (a valid-time kind
 for "none stated") follows it, one writer at a time.
 
 Non-claim: no paper cell changes; shop-01's record stands as reviewed.
+
+### E-0209, run-22 opens as the second replicate of the record condition, the first cell of harness v4.12, under review protocol v3 and the thirty questions
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-22/` (Paper-29, Opus 5: RED 765862e,
+GREEN db6cb22; run-contract.json, producer-input-manifest.json, the v4.12
+binder, executor, prepare and offline validation, test_pipeline.py with the
+substitution tables, test_contract.py), `paper-v4/evaluation-v4/run-22/`
+(review task and blank record instantiated from protocol v3 for the
+thirty ids of `competency-questions-v3.json`, and the manifest builder),
+`paper-v4/active-test-manifest.json`; Luis's rulings of 2026-09-06 (E-0205,
+items 1, 2, 3, 4).
+
+Cell. The producer condition is run-21's byte for byte: the producer block
+key for key (Claude Opus 5, `claude-opus-5`), the spawn message with the run id
+moved, the forbidden inputs unmoved, Core held at c95dba7 (OVR-000415).
+Coordinates `capture:paper-v4:yu-2025:v4:22`, `plan:paper-v4:yu-2025:v4:22`,
+`artifact:selected-reading:yu-2025:v4:22`, actor `actor:overseer-run-22`.
+Thirty carried change entries, four added. `measured_against` recomputed
+from run-21's frozen files rather than carried under a new name (Paper-29
+caught that a blanket substitution would have put run-20's figures under
+run-21's name).
+
+Change under test, three instrument changes, each its own entry:
+ENTITY_NO_SUBJECT_REACHABILITY (the binder emits one ENTITY_NO_SUBJECT case
+per subject-bearing type in a set, the executor returns that type's records
+whose subject slot is absent as ENTITY rows projected by own type; binding
+schema v4 to v5; row kinds unchanged; E-0197, E-0205 item 2);
+TYPE_SET_CLOSURE_AT_BIND_TIME (the v4.11 check inside the binder, which now
+takes `--contract` and refuses TYPE_SET_NOT_CLOSED_UNDER_SUBTYPES before
+writing; E-0198); CANONICAL_PROFILE_STAGING (the source-assertion profile
+staged as its canonical bytes so its digest is its identity
+sha256:2317d88f…; the manifest carries `staged_as` and `source_sha256`; the
+one declared input that moved since run-21; E-0203 cause B).
+
+Expected effect: admission within two structural returns and no
+UNSUPPORTED witness at review, run-20's and run-21's expectation restated
+because the producer condition is unchanged. Nothing is expected of
+coverage, row counts, derived responsiveness, the controls or cost.
+Falsifier: a third structural refusal, or one UNSUPPORTED witness, stated
+over witnesses because v3 judges support once per witness.
+
+Comparability: with run-20 and run-21 on the producer side only (ontology,
+census, population, admission, defect counts, cost: three draws of one
+condition). Not on the query and review side (run-21: 490 rows over 182
+witnesses under v2): thirty questions where they bound four, a case kind theirs did not emit, support per witness with a
+derived label under v3 where theirs was per row with a chosen label under
+v2.
+
+Measured before the run, on run-09's frozen record by the carried offline
+validation: the new case kind restores 429 rows over 373 witnesses reached
+by no other kind, 427 SUPPORTED and 2 PARTIAL under run-09's reviewers'
+labels. Run-21's census counted 237 subject-less source-asserted records no
+case returned; run-20's 118.
+
+Gate at db6cb22: 1,746 passed (1,655 before the cell; 91 added, all
+run-22's).
+
+Non-claim: no producer has run. The restored-row figures are read off
+another cell's graph and bound what the addition reaches, not what run-22
+returns.
+
+### E-0210, run-22's pin verified by the overseer at the Core-20 coordinate, unchanged
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-22/pin.py` run by the overseer at
+`--commit c95dba7b86bb61487bda9a52458e1ea47cce20ab` after db6cb22; `git
+status` of the cell directory after the run.
+
+Result: the re-run rewrote nothing, so Paper-29's manifest and gate are the
+bytes the pin produces at this coordinate: tree 39a9b9da…, governance head
+OVR-000415, Core-19 and Core-20 LANDED, packs chronology 0.1.0, metrology
+0.3.0, research 0.5.0, every input tracked, the profile staged canonical
+at its identity and recorded as the one input moved since run-21.
+
+Non-claim: the producer has not run.
