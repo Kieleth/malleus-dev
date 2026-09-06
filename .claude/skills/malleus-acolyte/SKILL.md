@@ -665,6 +665,80 @@ Supplied by the parent or the harness, never written into `document-population.j
 ```
 <!-- malleus-nascent-document-harness:end -->
 
+### Before you stop: what the adapter refuses for
+
+Read your file against this list before you hand it over. Each line names one
+refusal the document adapter or the population plan compiler returns and the
+check that closes it; the method is stated above and named here, never
+restated.
+
+<!-- malleus-preflight-refusals:start -->
+- `NOT_VERBATIM`: every statement is a byte span of its named block after
+  whitespace collapse, copied by the method in step 6 and never retyped.
+- `UNKNOWN_BLOCK`: every block ID in `assertions` and in `nothing_assertable`
+  is one the reading's own inventory declares.
+- `GAP_REQUIRED`: every assertion names at least one formalization target or
+  one typed gap.
+- `UNKNOWN_FORMALIZATION_TARGET`: every formalization names a record in
+  `records` and a path that record has.
+- `UNKNOWN_MODALITY`: every assertion's modality is one of the six accepted.
+- `UNKNOWN_GAP_KIND`: every gap kind is one the harness lists.
+- `MODALITY_NOT_ASSERTED`: a record's `assertion_modality` is the modality of
+  an assertion that formalizes it.
+- `EVALUATIVE_SLOT_NOT_EVALUATED`: every evaluative slot a record sets is
+  formalized by at least one assertion that is not hypothesised.
+- `SUBJECT_NOT_NAMED`: every subject you set carries a `name` or a form in
+  `tags` that occurs, by the word rule, in a statement formalizing the record.
+- `UNKNOWN_ASSERTION_LOCATOR`: every `assertion_locator` names an assertion of
+  this capture.
+- `DIGEST_NOT_LOCATED`: a record carrying `statement_sha256` carries the
+  locator too.
+- `DIGEST_MISMATCH`: that digest is the digest of the located assertion's own
+  statement bytes.
+- `FIELDS_NOT_CLOSED`: every capture object carries exactly its closed field
+  set, no extra key and none missing.
+- `MALFORMED_CAPTURE`: the file is JSON data in the shapes above, with
+  `assertion_time` and `domain_time` omitted rather than null when unknown.
+- `UNSUPPORTED_GRAMMAR`: `capture.schema` is the grammar named above.
+- `READING_MISMATCH`: `capture.reading_sha256` is the digest of the reading
+  bytes exactly as supplied.
+- `UNDERIVED_FIELD`: every key under a record's `properties`, and both
+  endpoints of every relation, is named by a formalization target.
+- `RECORDS_NOT_REHYDRATABLE`: every field of every record is a slot the
+  accepted population surface declares for its type, every enum value one the
+  surface lists, every required slot present.
+- `DUPLICATE_RECORD_ID`: every record ID occurs once.
+- `DANGLING_ENDPOINT`: both endpoints of every relation and every
+  participation are records of this file.
+- `DANGLING_SUBJECT`: every `subject` value is a record of this file.
+- `UNKNOWN_FAMILY`: `records` carries only the envelopes named above.
+- `FAMILY_NOT_ADMITTED`: a nonempty `events` or `event_participations`
+  envelope needs the bound profile's Event role.
+- `ABSENT_PATH`: every formalization path resolves in the record it names,
+  read again at the plan.
+- `UNKNOWN_RECORD`: every supersession names a record of this file.
+- `UNKNOWN_SUPERSESSION`: every superseded record ID is one the history holds.
+- `SUPERSESSION_FORK`: no two records supersede one prior record, and no prior
+  record is superseded already.
+- `SUPERSESSION_TYPE_MISMATCH`: a replacement carries the prior record's type.
+- `SUPERSESSION_VALID_TIME_MISMATCH`: a replacement carries the prior record's
+  valid-time kind.
+- `MALFORMED_SUPERSESSION`: every supersession is an object with exactly the
+  two ID fields.
+- `UNLISTED_SOURCE`: every source a derivation or a gap names is one the plan
+  lists.
+- Not yours to check, because the parent supplies what they read and your file
+  does not: `MALFORMED_READING`, `MALFORMED_PLAN`, `MALFORMED_IDENTITY`,
+  `MALFORMED_PROFILE_REFERENCE`, `MALFORMED_RETENTION_EVENT`,
+  `MALFORMED_EVIDENCE_REFERENCE`, `IDENTITY_MISMATCH`, `SOURCES_REQUIRED`,
+  `UNRETAINED_SOURCE`, `UNRETAINED_EVIDENCE`, `DUPLICATE_PLAN_ID`,
+  `DUPLICATE_CHANGE_SET_ID`, `DUPLICATE_ARTIFACT_ID`, `UNKNOWN_SEMANTIC_UNIT`,
+  `UNKNOWN_ORIGIN`, `GROUNDING_REQUIRED` and `UNSUPPORTED_VALID_TIME`.
+<!-- malleus-preflight-refusals:end -->
+
+A clean pass is not a complete capture. The census is what says how much of
+the reading you covered, and the list above says nothing about it.
+
 ## Standing orders (the playbook, condensed)
 
 1. Schema first, code second. When the human names a new domain concept,

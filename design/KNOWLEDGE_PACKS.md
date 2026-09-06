@@ -653,6 +653,60 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     `sha256:592db0dc3d1ba773332b09c073f3e158d81f6bbcb4d55c13b75d8ed4e31689b1`
     at 981 bytes, and the fixture manifest is repinned.
 
+25. The adapter's refusal reasons become the producer's pre-flight list, in the
+    acolyte skill and one guard, no pack change and no change to either
+    adapter. Decided on the matrix pass of 2026-09-05: at one fixed protocol,
+    what separated the producers was what each checked before it stopped. The
+    three Opus cells built validators from the skill's rules and returned
+    zero, seven and zero defects at the runner. Run-16's validator checked
+    verbatim statements and formalization targets, two of the rules the
+    adapter enforces, and none of the three derivation-content rules; the
+    runner returned fifty defects in one diagnostic. Run-17's covered none of
+    the record-level rules and the runner refused three times, on
+    `NOT_VERBATIM` for all eight assertions, then on records naming six
+    properties and two enum values the staged surface does not declare and one
+    required slot absent, then on `GAP_REQUIRED` with all eight assertions
+    emptied. The skill states every one of those rules. It states them where
+    the method that satisfies them belongs, spread over step 6, the template
+    section and the derivation paragraph, so a producer reading for method
+    reads a rule and never a list of what the file is about to be refused for.
+    The evidence is `handover/2026-09-05-run-16-sonnet-rca.md`,
+    `handover/2026-09-05-run-17-haiku-rca.md`, and `paper-v4/paper-ledger.md`
+    E-0172, E-0173 and E-0176.
+
+    **Why a list and not a rule.** Every rule the list names exists already and
+    is enforced already. A new rule would be a second statement of the same
+    thing, which `single_source` scores, and it would put law where the defect
+    was not: no cell failed for want of a rule. What was missing is the
+    enumeration, one place saying these are the reasons the adapter returns, so
+    a producer can walk its own file against them instead of recalling which
+    paragraphs carried a check. Each line is therefore the reason's name and
+    one clause, and it names the method rather than restating it: the verbatim
+    method of step 6, decision 23's word rule, the census.
+
+    **Why the guard.** A list transcribed from two enums goes stale on the next
+    reason added, and this skill installs into projects that will read it long
+    after. `test_acolyte_preflight_list_is_the_adapters_own_refusal_reasons`
+    derives the names from `DocumentAssertionRefusalReason` and
+    `PopulationPlanRefusalReason` at import time and asserts the paragraph
+    names every one of them and none besides. Adding a reason to Core fails the
+    suite until the skill carries its line; inventing a refusal in the skill
+    fails it too.
+
+    **What it does not do.** It does not run the checks. The producer still
+    writes its own validator, and the list is what a validator is written
+    against, not a validator. It steers nothing, which is the property that
+    answers decision 22's finding that a rule the producer can see is a rule
+    the producer works around: every line is a refusal the adapter already
+    returns, so a producer that reads the list and satisfies it has done what
+    the refusal would have made it do one return later, and there is no
+    unenforced margin to work in. It does not measure coverage either: a file
+    that clears every line can still be a thin capture, and the census, not the
+    list, is what says so. No reason is added or removed, no message and no
+    aggregation moves, admission is unchanged, and the pack is untouched, so
+    `research` stays at 0.5.0 and every frozen paper cell keeps compiling
+    against the commit it pins.
+
 
 ## Open
 
