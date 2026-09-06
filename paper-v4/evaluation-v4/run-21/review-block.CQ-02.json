@@ -1,0 +1,1006 @@
+{
+  "question_id": "CQ-02",
+  "question_responsiveness": "RESPONSIVE",
+  "responsiveness_rationale": "The rows name the ridge subsection the deep microseismicity belongs to and they place those events beneath its ridge axis with a depth range, and a further row gives the trend the deep events line up along relative to the axial faults. Both halves of the question are therefore answered directly by rows rather than by inference across them. The spatial part reaches the reader through the quantity label of the depth observations and through claim statements rather than through a typed spatial relation, and the earthquake population itself is not a record here, but nothing in the question is left unaddressed and no row makes the identification ambiguous.",
+  "source_locators": [
+    "page:1:block:005",
+    "page:2:block:004",
+    "page:2:block:006"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this volcano among the settings where comparable magmatic-tectonic activity has been reported at depth, which carries both the name and the volcano classification."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the main axial normal faults as the structures the deep events run parallel to, so the name and the fault type both sit in the prose."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005",
+        "page:4:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block discusses seismicity beneath the floor of the axial valley and the second labels it on a cross-section; the projected kind is the feature itself."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004",
+        "page:7:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block introduces the abbreviation and defines it as the separation between brittle and ductile lithosphere; the second draws it as a boundary line in the schematic, which supports the boundary classification."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this transform fault as one of the two bounding the studied ridge stretch, and uses the abbreviation for transform faults defined earlier in the reading."
+    },
+    {
+      "row_index": 5,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:4:block:003",
+        "page:4:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The name is in the map legend and in the caption, but the caption treats this surface as belonging to the core complex rather than being one. The classification therefore goes past what the cited prose supports, while the name does not."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006",
+        "page:7:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both blocks treat the crust as a layer of measured thickness sitting above the mantle, which is what the name and the layer classification assert."
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes a fault dipping west that bounds the intersection segment along its eastern side, which covers both the name and the kind."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block places the study in that ocean by name, and the basin classification is the ordinary reading of it."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this peninsula as one of the Icelandic comparison sites, which is the whole of the projection."
+    },
+    {
+      "row_index": 10,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block gives both strike directions and the discontinuity they characterize, so the name and the orientations hold. It calls them faults and nothing more, so the normal-fault classification is not what the cited prose says."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block calls these normal faults and gives both strikes, which covers name, kind and orientations."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block calls these normal faults, gives both strikes, and says they cut the core complex surface, which covers every projected field."
+    },
+    {
+      "row_index": 13,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block gives the orientation and describes them as high-angle inward dipping faults bounding the segment, so name and orientation hold. It does not classify them as normal faults."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block is a map legend that carries this feature name, and the projected kind is the same term."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this ridge as one of the ultraslow-spreading ridges where deep mantle events have been seen, which supports name and kind."
+    },
+    {
+      "row_index": 16,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:4:block:004",
+        "page:4:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block is a legend entry that carries the name alone. The caption block shades the hummocky sea floor and the cones in two different colours, treating them as separate classes, so the cone classification does not follow from the reading."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007",
+        "page:4:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block describes an inactive hydrothermal mound inferred from the submersible dives and the second labels it on the map, which covers the name and the mound classification."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this plate as the place where comparable sub-horizontal reflections were seen, supporting name and plate classification."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this ridge in the compilation of updated maximum-depth data, which supports name and kind."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block names the boundary in full as where melt may sit at sub-solidus temperatures; the second gives the abbreviation the row projects. The boundary classification follows from both."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block attributes the cold-edge effect to old lithosphere, using the name and treating it as a layer."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this seamount and locates it on a ridge, which covers name and kind."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:7:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block reports the deep events at mantle depths; the second labels it beside the crust in the schematic, which is where the layer classification comes from."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block gives the full ridge name with its abbreviation and the second spells the expansion out again, so name and ridge classification both hold."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the ridge stretch between the two transforms as a segment of stated length, which is what the name and the kind assert."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this island as one of the comparison sites, which is the whole projection."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the median valley of the magmatic segment with its width; a median valley at a ridge axis is the axial valley, so the classification holds."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010",
+        "page:7:block:011"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The schematic label carries the name and the caption calls it the expected interface drawn as a line, which supports the boundary classification."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this young volcanic ridge inside the segment and gives its strike, which is the orientation projected."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block introduces this discontinuity by name among the four subsections and identifies it as a non-transform discontinuity; the second gives the orientation."
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block names this discontinuity as the second of the two non-transform discontinuities; the second gives the orientation the row projects."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both blocks name the oceanic core complex with its abbreviation and place it beside the ridge axis, which covers name and kind."
+    },
+    {
+      "row_index": 33,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:005",
+        "page:4:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both blocks carry the name, so the name holds. The prose makes this the edge of the core complex rather than a core complex in its own right, so the projected kind is not what the cited blocks support."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this massif and says where it sits, which covers name and kind."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this subsection as the intersection segment and lists it among the four ridge subsections, which supports name and segment classification."
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this subsection and calls it a short ridge segment, which is exactly what the row projects."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block names the segment south of the second discontinuity; the second gives its length and the orientation the row projects."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this transform fault as one of the two bounding the studied stretch, covering name and kind."
+    },
+    {
+      "row_index": 39,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:3:block:003",
+        "page:6:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The legend block carries the name and nothing else. The reading elsewhere treats this valley as the floor of the transform fault, not as a valley on the ridge axis, so the axial-valley classification is not supported."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the ridge-transform intersection with its abbreviation, which is both the name and the kind."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block is a map legend carrying this feature name, and the projected kind repeats it."
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:5:block:009"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block gives the full ridge name with the abbreviation the row projects; the second uses the abbreviation among ultraslow-spreading ridges, which supports the ridge classification."
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this supersegment in the compilation of updated data, which supports the name, and the segment classification follows from it."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this numbered ridge segment in the same compilation, covering name and kind."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block is a map legend carrying this name, and the kind is the same term."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports an extinct hydrothermal vent field on the flank of the northern discontinuity, which supports the name, the vent-field kind and the inactive status."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001",
+        "page:4:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW Both blocks name volcanic cones as observed morphology in the segment, which covers name and kind."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this ocean as where the offshore comparison site lies, which supports name and basin classification."
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation is formalized from the same block that formalizes the faults, and that block states that the faults cut the surface of the core complex, which is the edge the row asserts."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "DERIVATION_LOCAL One block formalizes the relation and both endpoints. It names the seamount as belonging to the ridge, which is the part-of edge the row asserts."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation and both endpoints come from the same block, which places the ridge segment between the two transforms, so bounding by this one is stated rather than inferred."
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL Same block for the relation and both endpoints. The segment is described as lying between the two transforms, which supports bounding by this one."
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation block also formalizes both endpoints. It places the core complex at the ridge’s outside corner, which supports the containment edge as the caption means it."
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation and both endpoints are formalized in one block, which says the intersection segment is bounded eastward by the detachment fault. The block also gives the segment its short name, so the endpoint identification does not depend on another block."
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation block is one of the blocks that formalize the endpoints. It places the segment immediately south of the discontinuity, which is the adjacency asserted."
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation block also formalizes the fault endpoint. It states that the segment is bounded by those inward dipping faults; the negation carried in the same sentence is about detachment faults, not about this edge."
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation block formalizes both endpoints. It names the segment as the one lying south of the discontinuity, which is the adjacency asserted."
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DERIVATION_LOCAL The relation block also formalizes the vent field. It places that vent field on the eastern side of the discontinuity, which supports the containment edge."
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located assertion is the sentence the record reproduces and its digest recomputes. The block reports the deep events under the segment axis lining up along a single trend parallel to the axial faults, and it names the segment, so the claim is about the segment shown. The sentence runs past the end of the block, so the retained text stops mid-clause, but nothing in the projection depends on the missing words."
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block concludes from the location tests that the deep events under the segment axis are required by the data rather than artifacts, and it names the segment, which is what the record claims and about what."
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states the degassing mechanism, the strain it produces under extension and the earthquakes it triggers in the mantle, so both the statement and the mantle as its subject rest on this block."
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block names the segment, states the degassing explanation for its deep microseismicity, and marks that explanation as the one the authors prefer, which supports the statement and the preferred disposition alike."
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block describes the mound as inactive and attributes the inference to the dive observations, which is the claim and its subject."
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block records the absence of active venting on the segment axis and names the segment, which supports the negated claim and its subject."
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that no current eruption is evidenced in the axial valley and gives the grounds, so the negated claim and the valley as its subject both hold."
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block attributes the shallow events under the dome to ruptures on the faults cutting its surface, and the dome is the core complex the row names as subject."
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states where the massif sits and why it is included in the compilation, which is the claim and its subject."
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block calls the intersection segment amagmatic and describes what bounds it, and the same block gives that segment the short name the row uses as subject."
+    },
+    {
+      "row_index": 69,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports normal velocity ratios from tomography in the named segment, which supports the claim and the segment as its subject."
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reads the boundary depth off the seismicity beneath the discontinuity and gives it as about ten kilometres, which matches the value, the unit and the approximate qualification, and the boundary is the subject."
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the depth the boundary would have under the cold and thick lithosphere explanation, which is the hypothesised value and unit the row carries; the boundary is named in the same block."
+    },
+    {
+      "row_index": 72,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the isotherm value with its stated tolerance and ties it to the definition of the boundary, so value, uncertainty, unit and subject all rest here."
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states that the boundary stays shallower than ten kilometres off axis, which is the open upper bound and unit the row carries."
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the barium-based pre-eruptive range for the named segment, and the surrounding sentences say the figures are estimates from a fixed ratio, which supports the values, the unit and the estimated determination."
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the barium-based range for the southern segment in the same sentence pair, matching the values, unit and estimated status the row carries."
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the barium-based primary-melt range for the named segment, with the unit and the estimation language the row carries."
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the barium-based primary-melt range for the southern segment, which is the value pair, unit and status projected."
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the calculated volatile content of the melts along the named segment as a range in weight percent, which is the value pair and unit the row carries."
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the comparison range for the southern segment, matching the values and unit projected."
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block states a floor for the primary-melt concentration along the named segment, which is the open lower bound and unit the row carries."
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the rubidium-based pre-eruptive range for the named segment alongside the barium one, which supports value, unit and estimated status."
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the rubidium-based range for the southern segment, matching the projected values and unit."
+    },
+    {
+      "row_index": 83,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the rubidium-based primary-melt range for the named segment, which is what the row projects."
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the rubidium-based primary-melt range for the southern segment, matching the values and unit."
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the age of the cold lithosphere responsible for the edge effect, which is the value, unit and subject the row carries."
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the length of ridge axis the network covered, and names the ridge, so value, unit and subject all rest here."
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same block gives the length of the transform covered by the network and names the transform, which is the value and subject projected."
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the crustal thickness of the western flank with its tolerance and the age of that crust, which supports value, uncertainty, unit and the crust as subject."
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block reports the depth range of the deep earthquakes observed beneath the named segment axis, which is the value pair, unit and subject the row carries."
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block lists the three depth observations and gives the deep microseismicity beneath the named segment axis as an approximate range, which supports the values, the unit, the approximate qualification and the subject."
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block has the rising melt continuing to degas and generating mantle earthquakes across the stated depth interval, which is the hypothesised range, unit and subject."
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the shallower-than bound observed beneath the discontinuity, matching the open upper bound, unit and subject."
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same sentence gives the shallower bound beneath the core complex, which is the value and subject this row projects."
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the average concentration reported for segments in that ocean region and marks it as suggested by earlier work, which supports the value, the unit and the estimated status; the region is named in the same block."
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the number of events located along the ridge after relocation, and the ridge is the scope the count is stated for, so both the count and its subject rest here."
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same sentence gives the number of events located along the transform, which is the count and the subject the row projects."
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The schematic caption ties the boundary line to a single isotherm value, which is the value, unit and subject the row carries."
+    },
+    {
+      "row_index": 98,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same caption gives the crustal thickness beneath the named segment with its tolerance, matching the value, uncertainty and unit for the crust as subject."
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The schematic caption gives the depth range of the deep earthquakes below the sea floor beneath the ridge axis and names the ridge, which supports the values, the unit and the subject."
+    },
+    {
+      "row_index": 100,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block says how many events were put in the subset built to test the deep locations beneath the named segment, so the count, its scope and the segment as subject all rest here."
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block places these earthquakes in a hot mantle above a stated temperature, which is the open lower bound, the unit and the subject."
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the melt fraction another study found necessary at the boundary’s base, matching the value, the percentage unit and the modelled determination."
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the half rate at which the ridge spreads here, which is the value, unit and subject the row projects."
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the approximate length of the ridge segment between the two transforms, which is the value, unit and subject."
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the depth floor of the offshore comparison activity and names the island, so value, unit and subject hold."
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the width of the median valley in the magmatic segment, which is the value, unit and subject the row carries."
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block infers from microseismicity across that depth interval that ascending melt sits in the mantle at those depths, which supports the range, unit and subject."
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the modelled temperature interval for that depth interval and concludes the mantle there is hot, which supports the values, the unit, the modelled determination and the subject."
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block records that no earthquakes appear below the stated depth beneath the named ridge axis, which is the negated open lower bound, the unit and the subject."
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the normal depth range of the earthquakes beneath the southern discontinuity, matching the values, unit and subject."
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the approximate length of the northern discontinuity, which is the value, unit and subject."
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block says the earthquakes beneath that discontinuity reach down to about ten kilometres, which supports the bound, the unit and the subject; the approximation in the prose is not carried by the projected qualification, which states an open upper bound instead."
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the ridge offset of the southern discontinuity, which is the value, unit and subject."
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the shallow focal depths of the cluster west of the axial valley, which is the range, unit and subject the row projects."
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the depth the off-axis shallow seismicity west of the named segment axis reaches, which supports the bound, the unit and the segment as subject."
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the estimated pre-eruptive concentration range for the named segment after fractional crystallization, matching the values, unit and estimated status."
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the approximate length of the named segment, which is the value, unit and subject."
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the length of the southern magmatic segment, which is the value, unit and subject."
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the depth range of the shallow earthquakes at the intersection’s outside corner, which supports the values, the unit and the intersection as subject."
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The block gives the highest melt concentration previously reported at that ridge, which is the value, unit and subject the row projects."
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same sentence that gives the western flank thickness also gives the age of that crust, which is the value, unit and subject here."
+    }
+  ]
+}

@@ -7198,3 +7198,66 @@ Non-claim: admission is structural acceptance. No preliminary review exists
 yet; the review judges the rows as rows. The replicate's variance against
 run-20 is read in the RCA after the review. Whether this cell or run-20 is
 the cell of record is Luis's.
+
+### E-0197, run-21 (Opus 5 at v4.10, the run-20 replicate) preliminary review: PARTIAL, RESPONSIVE, PARTIAL, PARTIAL; 471 SUPPORTED, 19 PARTIAL, none UNSUPPORTED; 215 digests verified
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/run-21/review-block.CQ-01.json` to
+`review-block.CQ-04.json` (two fresh Opus 5 sessions, CQ-01 with CQ-02 and
+CQ-03 with CQ-04, dispatched 12:46Z under task v4 and protocol v2 with the
+aboutness instruction), merged and validated as
+`review-record.preliminary.md` (`sha256:b345d13d455ecd9d0dcd5f3acbfb5bcd1064ffb61cd81e1c724f1cac6d567c44`), manifest
+`sha256:ca37103e0145350fc9526ed23071d219a463c798eb8e9d85b1a47a98ac37fdc8`.
+
+Results: CQ-01 PARTIAL, 23 SUPPORTED, 1 PARTIAL; CQ-02 RESPONSIVE, 116 and
+6; CQ-03 PARTIAL, 172 and 6; CQ-04 PARTIAL, 160 and 6. 490 rows, no
+UNSUPPORTED, no NOT_EVALUABLE. Every digest token DIGEST_OK: 0 and 63 rows
+in the first pair, 79 and 73 in the second, 215 in all. RELATION rows: 41,
+every one DERIVATION_LOCAL. Every SUBJECT row SUBJECT_IN_BLOCK (210), three
+by a tag. The expectation of E-0193 held on both parts: no return, no
+UNSUPPORTED row.
+
+Why CQ-01 is PARTIAL: the rows name the campaign, the instrument kind and
+the acquisition chain, and no row carries the instrument count; the first
+session reports the number is in the reading and reaches no row. Checked
+after the report: the count is in the population twice, as
+ReportedObservation records of nineteen instruments formalized by two
+assertions, both without a subject, and a subject-less subject-bearing
+record is reached by no case under the v4.4 binder. This cell carries 237
+such records (run-20: 118). Run-20's CQ-01 was RESPONSIVE on a
+CountObservation the producer had given a subject. The reachability of
+subject-less records is one of the rulings open; this is its first effect
+on a responsiveness label.
+
+Why CQ-03 and CQ-04 are PARTIAL, in the second session's words: everything
+asked for is present and nothing singles it out. CQ-03 returns several
+depth ranges and several concentration ranges side by side for two segments
+with nothing marking the answering pair (the material-ambiguity line of runs
+15, 19 and 20); CQ-04's mechanism is answerable only by reading two unlinked
+claim rows together. The session names the standard under which both are
+RESPONSIVE. CQ-04's 166 rows are CQ-03's 178 minus 12 in the same order, so
+the two support blocks are identical row for row, a property of the
+type-only binding.
+
+The nineteen PARTIAL rows: eighteen are six feature records whose
+`feature_kind` the cited block does not state (a surface and a termination
+of a core complex classified as core complexes, faults classified as
+normal, a transform valley as axial, hummocky sea floor as a cone), each
+returned in three questions; the nineteenth is the campaign's projected
+duration, which the block gives as the length of continuous recording. Both
+sessions state that whether a controlled-vocabulary near-miss is a row
+claim or a modelling decision is not settled by the task, and neither went
+past PARTIAL. Not downgraded and flagged: a claim truncated at a block
+boundary, an approximation marker the qualification vocabulary cannot
+carry, figure legends projected as prose while the questions exclude
+figures, two text-layer artefacts read as a person reads.
+
+Against run-20, the same condition: R R P R, 417 SUPPORTED of 434, 17
+PARTIAL, 251 digests; run-21 P R P P, 471 of 490, 19 PARTIAL, 215 digests.
+The support fraction is the same to two places; the labels moved on CQ-01
+(reachability) and CQ-04 (the reviewer's linking standard).
+
+Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
+The replicate's variance is read in the RCA. Whether run-20 or run-21 is
+the cell of record is Luis's.
