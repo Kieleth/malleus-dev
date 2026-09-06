@@ -6137,3 +6137,46 @@ A cell that is admitted will not have shown that the paragraph caused it, only
 that the outcome the loop predicted from it occurred. Core-20's overseer entry
 is not on the record at this pin, so the coordinate is a statement about bytes
 and the gate is re-read after it lands. Whether the expectation holds is open.
+
+### E-0181, run-18 re-pinned to the Core-20 governance commit; both entries read LANDED
+
+Date: 2026-09-05
+
+Sources: `paper-v4/experiment-v4/run-18/run-contract.json` and
+`producer-input-manifest.json`, `pin.py --commit c95dba7` run after E-0180, the
+governance ledger through OVR-000415, commits `f220852` and `c95dba7`.
+
+E-0180 was written while Core-20 was in flight. Its pin read
+`f220852551ea5f815a751bfd7d5b44e1271ebcbd`, the commit that carries Core-20's
+skill paragraph and its guard, at governance head OVR-000414: both entries read
+LANDED on the bytes, and `governance_entry_landed` read false because Core-20's
+overseer entry had not been written. OVR-000415 landed at
+`c95dba7b86bb61487bda9a52458e1ea47cce20ab` between run-18's RED and GREEN
+commits.
+
+Run-18 is re-pinned to that commit. Core commit
+`c95dba7b86bb61487bda9a52458e1ea47cce20ab`, tree
+`39a9b9da7dcd41660b8b10fb20b1b1d8e2261082`, governance head OVR-000415 at
+`sha256:19353a94…`. The gate status stays
+`PINNED_TO_THE_V4_10_CORE_COORDINATE`. Nothing else moved: Core-19 LANDED on the
+same six observations, Core-20 LANDED on the same paragraph and the same guard,
+the packs stay at chronology 0.1.0, metrology 0.3.0 and research 0.5.0, and the
+declared inputs are the same eight digests, with
+`MALLEUS_NASCENT_PROJECT_SKILL` the one that moved against run-17 and the
+reading unchanged. `governance_entry_landed` now reads true.
+
+Deviation recorded: the instruction for this cell said to run the pin at HEAD.
+By the time it ran, HEAD was run-18's own GREEN commit, because the RED and
+GREEN commits of this cell had landed on top of the Core work. That reading is
+kept here rather than in the contract: `pin.py --commit HEAD` at
+`46e91a128492a906c3c1c6ca0d0c1b7ba70cbe78` returned the same two LANDED
+statuses, the same governance head OVR-000415 and the same gate status, over
+tree `a296c6d2d0b57c3300efb49300b3e044b4647bc7`. The coordinate written into the
+contract is `c95dba7` instead, because every cell from run-04 on pins a Core
+commit and records paper commits between as the runner's execution commit;
+pinning a paper commit would break that reading without changing a single byte
+the producer consumes.
+
+Non-claim: no producer has run under this cell. The expected effect and the
+falsifier are E-0180's: admission within two structural returns under the v4.10
+skill where run-17 at v4.9 was refused after two; a third refusal falsifies it.

@@ -4,8 +4,8 @@
   "status": "FROZEN",
   "producer_workspace": "private/paper-v4-v4-run-18/producer",
   "core": {
-    "commit": "f220852551ea5f815a751bfd7d5b44e1271ebcbd",
-    "tree": "b183c492e9e600845efa471f4af8aa68869eee1c"
+    "commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
   },
   "interface_coordinates": {
     "capture_id": "capture:paper-v4:yu-2025:v4:18",
