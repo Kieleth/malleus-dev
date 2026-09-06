@@ -1,16 +1,21 @@
-"""Validate the v4.4 ENTITY restriction and the v4.9 removal on run-09's record.
+"""Validate the v4.4 restriction, the v4.9 removal and the v4.12 restoration.
 
-Both changes in the query surface are removals, so they can be measured before a
-producer runs: expand run-09's frozen type sets against run-09's frozen surface
+The first two changes in the query surface are removals and the third is an
+addition, and all three can be measured on one frozen record: expand run-09's frozen type sets against run-09's frozen surface
 with this cell's rule, keep the cases the rule keeps, select the rows of run-09's
 frozen query result that came from those cases, collapse the rows that repeat a
 witness inside one question the way this cell's executor now does, and read the
 labels off run-09's preliminary review record. Nothing is executed. No graph is
 reopened, no query is run, no ontology is compiled and no model is called.
 
-The two stages are reported separately. The first is the carried v4.4 rule, whose
-counts must not move because the binder did not; the second is this cell's, and
-the difference between them is what the removal takes out of run-09's record.
+The carried stages are reported first and their counts must not move, because
+neither the v4.4 rule nor the v4.9 removal moved under this cell. The third
+stage is v4.12's own. Run-09 ran under the v3 binding, which emitted a plain
+ENTITY case for every type in a question's set, so the rows an ENTITY_NO_SUBJECT
+case returns are already in run-09's result: they are the rows of the ENTITY
+case of a subject-bearing type whose projected record carries no subject. They
+are counted here with the labels run-09's reviewers gave them, which is what the
+addition brings back into reach and nothing more.
 
 Run-09 is frozen, so every one of its files is read and none is written. The
 rows themselves stay where they are: this script writes counts, per question and
@@ -41,8 +46,12 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 RUN_09 = HERE.parent / "run-09"
 
-RECORD_SCHEMA = "malleus.paper-v4.run-22-offline-validation/v1"
+RECORD_SCHEMA = "malleus.paper-v4.run-22-offline-validation/v2"
 QUESTION_IDS = ("CQ-01", "CQ-02", "CQ-03", "CQ-04")
+# v4.12's case kind. A v3 binding knows nothing of it, so its counterpart there
+# is the ENTITY case of the same type and the rows it would return are that
+# case's rows whose record carries no subject.
+ENTITY_NO_SUBJECT = "ENTITY_NO_SUBJECT"
 
 # Run-09's frozen inputs. The first three are public and digest-pinned by
 # run-09's own contract test; the fourth is the withheld query result; the fifth
@@ -89,6 +98,8 @@ def case_identity(case: dict[str, object]) -> tuple[str, ...]:
         )
     if kind == "SUBJECT":
         return (kind, str(case["record_type"]), str(case["subject_record_type"]))
+    if kind == ENTITY_NO_SUBJECT:
+        return (kind, str(case["record_type"]))
     raise OfflineValidationRefusal(f"unknown case kind: {kind}")
 
 
@@ -161,7 +172,11 @@ def validate() -> dict[str, object]:
         "rows_one_per_witness": 0,
         "rows_re_projected": 0,
         "rows_re_projected_under_another_label": 0,
+        "rows_restored_by_entity_no_subject": 0,
+        "rows_restored_witnesses": 0,
+        "rows_restored_new_witnesses": 0,
     }
+    restored_by_label_total: dict[str, int] = {}
     kept_by_kind: dict[str, int] = {}
     kept_by_label: dict[str, int] = {}
     one_by_kind: dict[str, int] = {}
@@ -174,9 +189,17 @@ def validate() -> dict[str, object]:
             for name in types
             if binder.SUBJECT_SLOT in binder._slot_names(by_name[name])
         ]
-        restricted = binder._cases(
+        expanded = binder._cases(
             types=types, relations=relations, by_name=by_name
         )
+        restricted = [
+            case for case in expanded if str(case["kind"]) != ENTITY_NO_SUBJECT
+        ]
+        restored_types = {
+            str(case["record_type"])
+            for case in expanded
+            if str(case["kind"]) == ENTITY_NO_SUBJECT
+        }
         kept_identities = {case_identity(case) for case in restricted}
         frozen_cases = frozen[question_id]
         frozen_identities = {case_identity(case) for case in frozen_cases}
@@ -184,10 +207,23 @@ def validate() -> dict[str, object]:
             raise OfflineValidationRefusal(
                 f"the v4 expansion of {question_id} is not a subset of the v3 one"
             )
+        if restored_types != set(bearing):
+            raise OfflineValidationRefusal(
+                f"the ENTITY_NO_SUBJECT cases of {question_id} do not cover its"
+                " subject-bearing types"
+            )
         kept_ordinals = {
             int(case["ordinal"])
             for case in frozen_cases
             if case_identity(case) in kept_identities
+        }
+        # The v3 ENTITY case of each subject-bearing type. Its subject-less rows
+        # are the ones v4.4 took out of reach and v4.12 gives back.
+        restored_ordinals = {
+            int(case["ordinal"])
+            for case in frozen_cases
+            if str(case["kind"]) == "ENTITY"
+            and str(case["record_type"]) in restored_types
         }
 
         rows = rows_by_question[question_id]
@@ -203,8 +239,21 @@ def validate() -> dict[str, object]:
         survivor_label: dict[str, str] = {}
         kept = 0
         relabelled = 0
+        restored = 0
+        restored_by_label: dict[str, int] = {}
+        restored_witnesses: set[str] = set()
         for index, row in enumerate(rows):
-            if int(row["case_ordinal"]) not in kept_ordinals:
+            ordinal = int(row["case_ordinal"])
+            if (
+                ordinal in restored_ordinals
+                and row["record"].get(binder.SUBJECT_SLOT) is None
+            ):
+                restored += 1
+                restored_by_label[judged[index]] = (
+                    restored_by_label.get(judged[index], 0) + 1
+                )
+                restored_witnesses.add(witness_identity(row))
+            if ordinal not in kept_ordinals:
                 continue
             kept += 1
             by_kind[str(row["kind"])] = by_kind.get(str(row["kind"]), 0) + 1
@@ -244,6 +293,12 @@ def validate() -> dict[str, object]:
                 "rows_one_per_witness_by_kind": dict(sorted(single_kind.items())),
                 "rows_one_per_witness_by_label": dict(sorted(single_label.items())),
                 "rows_re_projected_under_another_label": relabelled,
+                "rows_restored_by_entity_no_subject": restored,
+                "rows_restored_witnesses": len(restored_witnesses),
+                "rows_restored_new_witnesses": len(
+                    restored_witnesses - set(survivor_label)
+                ),
+                "rows_restored_by_label": dict(sorted(restored_by_label.items())),
             }
         )
         totals["cases_v3"] += len(frozen_cases)
@@ -255,12 +310,20 @@ def validate() -> dict[str, object]:
         totals["rows_one_per_witness"] += len(survivor_label)
         totals["rows_re_projected"] += kept - len(survivor_label)
         totals["rows_re_projected_under_another_label"] += relabelled
+        totals["rows_restored_by_entity_no_subject"] += restored
+        totals["rows_restored_witnesses"] += len(restored_witnesses)
+        totals["rows_restored_new_witnesses"] += len(
+            restored_witnesses - set(survivor_label)
+        )
+        for name, count in restored_by_label.items():
+            restored_by_label_total[name] = restored_by_label_total.get(name, 0) + count
 
     totals["rows_kept_by_kind"] = dict(sorted(kept_by_kind.items()))
     totals["rows_kept_by_label"] = dict(sorted(kept_by_label.items()))
     totals["rows_kept_unjudged"] = 0
     totals["rows_one_per_witness_by_kind"] = dict(sorted(one_by_kind.items()))
     totals["rows_one_per_witness_by_label"] = dict(sorted(one_by_label.items()))
+    totals["rows_restored_by_label"] = dict(sorted(restored_by_label_total.items()))
 
     return {
         "schema": RECORD_SCHEMA,
@@ -272,6 +335,13 @@ def validate() -> dict[str, object]:
             " on the surface; SUBJECT and RELATION expansion unchanged"
         ),
         "and_change_id": "ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION",
+        "third_change_id": "ENTITY_NO_SUBJECT_REACHABILITY",
+        "third_rule": (
+            "one ENTITY_NO_SUBJECT case per subject-bearing type in a question's"
+            " set, returning the records of that type whose subject slot is"
+            " absent as ENTITY rows; measured here as the rows of run-09's v3"
+            " ENTITY case of the same type whose record carries no subject"
+        ),
         "and_rule": (
             "within one question, rows with the same witness are one row, the row"
             " projecting the fields of the witness record's own type; a collapsed"

@@ -15,6 +15,16 @@ projecting both. Run-08 could execute the first kind only, so an observation or
 a claim that carried no relation was unreachable however well it was derived
 (E-0138, and the v4.2 RCA sections 2 and 4).
 
+v4.12 adds a fourth case kind and no fifth row kind. An ENTITY_NO_SUBJECT case
+names one subject-bearing record type and returns the records of it whose
+``subject`` slot is absent, each as an ``ENTITY`` row witnessed by itself and
+projected by its own type like every other row. It is the only case whose
+selection reads a record's fields at all, and the only field it reads is
+whether that slot is there. A record that carries a subject is returned by its
+SUBJECT case and by no case of this kind, so the addition reaches nothing twice;
+a record reached both here and through an ancestor's ENTITY case builds the same
+row and adds an ordinal to it (E-0197).
+
 Query execution runs inside a guard that counts and refuses file reads, socket
 use and embedding-library imports, so the reported source-free observation is
 mechanical rather than asserted. Provenance for every witness comes from
@@ -58,7 +68,7 @@ import malleus.compiler as api
 
 RESULT_SCHEMA = "malleus.paper-v4.query-result/v3"
 TRACE_SCHEMA = "malleus.paper-v4.query-trace-summary/v1"
-BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v4"
+BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v5"
 FORBIDDEN_ATTEMPTS = ("embedding_import", "file_read", "network")
 _EMBEDDING_PACKAGES = frozenset(
     {
@@ -83,11 +93,17 @@ SUBJECT_SLOT = "subject"
 # type declares, wherever the subject record carries it. v4.7's only
 # harness delta.
 SUBJECT_TAGS_SLOT = "tags"
-CASE_KINDS = ("ENTITY", "RELATION", "SUBJECT")
+CASE_KINDS = ("ENTITY", "ENTITY_NO_SUBJECT", "RELATION", "SUBJECT")
+# The case kind v4.12 adds, and the row kind it writes. The case kind is new;
+# the row kind is not, because the row is one admitted record witnessed by
+# itself, which is what an ENTITY row already was.
+ENTITY_NO_SUBJECT = "ENTITY_NO_SUBJECT"
+ENTITY_ROW_KIND = "ENTITY"
 # The closed field set of a case and the closed output-field set that goes with
 # it, per kind. Every kind names record types and projected field names only.
 _CASE_FIELDS = {
     "ENTITY": {"kind", "ordinal", "output_fields", "record_type"},
+    ENTITY_NO_SUBJECT: {"kind", "ordinal", "output_fields", "record_type"},
     "RELATION": {
         "kind",
         "ordinal",
@@ -106,11 +122,13 @@ _CASE_FIELDS = {
 }
 _OUTPUT_FIELDS = {
     "ENTITY": {"record"},
+    ENTITY_NO_SUBJECT: {"record"},
     "RELATION": {"relation", "source", "target"},
     "SUBJECT": {"record", "subject"},
 }
 _TYPE_FIELDS = {
     "ENTITY": ("record_type",),
+    ENTITY_NO_SUBJECT: ("record_type",),
     "RELATION": (
         "source_record_type",
         "relation_record_type",
@@ -124,6 +142,7 @@ _TYPE_FIELDS = {
 # This is how the executor reads that map back without reading the surface.
 _PROJECTED_TYPES = {
     "ENTITY": (("record_type", "record"),),
+    ENTITY_NO_SUBJECT: (("record_type", "record"),),
     "RELATION": (
         ("source_record_type", "source"),
         ("relation_record_type", "relation"),
@@ -322,6 +341,39 @@ def _entity_rows(
     return rows
 
 
+def _entity_no_subject_rows(
+    graph,
+    case: dict[str, Any],
+    witnesses: list[str],
+    projections: dict[str, list[str]],
+) -> list[dict]:
+    """The records of one subject-bearing type that carry no subject.
+
+    Absent is the slot missing from the record and an explicit null alike: both
+    say the producer named nothing this record is about. Run-21 populated 237
+    such records and the v4.4 binder reached none of them, which is why its
+    CQ-01 came back without the instrument count that is stated twice in the
+    reading (E-0197). The row is an ENTITY row, witnessed by the record itself
+    and projected by the record's own type, so a reviewer reads it exactly as
+    any other ENTITY row and the row grammar does not move.
+    """
+
+    rows: list[dict[str, Any]] = []
+    for item in graph.query(case["record_type"]):
+        if item.get(SUBJECT_SLOT) is not None:
+            continue
+        rows.append(
+            {
+                "case_ordinals": [case["ordinal"]],
+                "kind": ENTITY_ROW_KIND,
+                "record": _project(item, _own_fields(item, projections)),
+                "witness": {"record_id": item["id"]},
+            }
+        )
+        witnesses.append(item["id"])
+    return rows
+
+
 def _relation_rows(
     graph,
     case: dict[str, Any],
@@ -414,6 +466,7 @@ def _subject_rows(
 
 _ROWS_BY_KIND = {
     "ENTITY": _entity_rows,
+    ENTITY_NO_SUBJECT: _entity_no_subject_rows,
     "RELATION": _relation_rows,
     "SUBJECT": _subject_rows,
 }

@@ -102,6 +102,24 @@ PROFILE_PATH = "src/malleus/profiles/source-assertion.json"
 # reads false on the third, which is why the text itself is recorded beside it.
 SEED_SCALAR_RANGES = ("Boolean", "DateTime", "Float", "Integer", "String")
 
+# run-22 addition begins: the canonical-staging table
+# The declared inputs whose staged bytes are not the file's bytes, and the two
+# names a staging is recorded under. v4.12's third change: the history profile
+# is staged as its canonical JSON, because that is the form Core digests to get
+# the profile's identity. shop-01 staged the file's own bytes, the producer
+# wrote their digest into four plans as the parent had told it to, and the
+# compiler refused every one of them (E-0203, cause B).
+CANONICAL_JSON_INPUTS = frozenset({"SOURCE_ASSERTION_PROFILE"})
+CANONICAL_JSON = "CANONICAL_JSON"
+SOURCE_BYTES = "SOURCE_BYTES"
+# Why each input that moved against the reference cell moved. An input that
+# moved for a reason this table does not name is Core moving under the cell,
+# which is a different fact and is recorded as one.
+MOVED_BY_THE_HARNESS = {
+    "SOURCE_ASSERTION_PROFILE": "STAGED_AS_CANONICAL_JSON_FROM_V4_12",
+}
+# run-22 addition ends: the canonical-staging table
+
 # Name, tracked source path, workspace target. The eight are run-04's, in
 # run-04's order, and the reading is the one input that is untracked.
 DECLARED_INPUTS = (
@@ -228,17 +246,24 @@ def _digest(data: bytes) -> str:
     return "sha256:" + sha256(data).hexdigest()
 
 
+# run-22 addition begins: the canonical bytes beside the canonical digest
+def _canonical(data: bytes) -> bytes:
+    """A JSON document's canonical bytes: sorted keys, compact, no newline."""
+    return json.dumps(
+        json.loads(data),
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+# run-22 addition ends: the canonical bytes beside the canonical digest
+
+
 def _canonical_digest(data: bytes) -> str:
     """The identity Core gives a canonical JSON artifact, from its bytes."""
-    return _digest(
-        json.dumps(
-            json.loads(data),
-            allow_nan=False,
-            ensure_ascii=False,
-            separators=(",", ":"),
-            sort_keys=True,
-        ).encode("utf-8")
-    )
+    return _digest(_canonical(data))
 
 
 def _git(*arguments: str) -> str:
@@ -591,12 +616,15 @@ REFERENCE_MANIFEST = f"paper-v4/experiment-v4/{REFERENCE_RUN}/producer-input-man
 
 
 def _moved_since_reference(declared: list[dict[str, str]]) -> dict[str, object]:
-    """Which declared inputs carry other bytes than the v4.10 cell of record's.
+    """Which declared inputs carry other bytes than the cell this one replicates.
 
     A cell states what its producer read, and a cell that shares an input list
     with an earlier one has to say which of those inputs actually moved. Core
-    does not move under this cell and neither does the skill: the manifest
-    records which inputs moved against run-21's, and none is expected to have.
+    does not move under this cell and neither does the skill. One input does:
+    the history profile is staged as canonical JSON from v4.12, so the bytes
+    the producer reads are the profile's identity bytes and not the file's, and
+    the cause is recorded beside the name rather than left to be read as Core
+    having moved.
     """
     reference = {
         item["name"]: item["sha256"]
@@ -607,12 +635,17 @@ def _moved_since_reference(declared: list[dict[str, str]]) -> dict[str, object]:
     observed = {item["name"]: item["sha256"] for item in declared}
     if set(observed) != set(reference):
         raise PinRefusal("the declared input set differs from the reference run's")
+    moved = sorted(name for name in observed if observed[name] != reference[name])
     return {
         "reference_run": REFERENCE_RUN,
         "reference_manifest": REFERENCE_MANIFEST,
-        "moved": sorted(
-            name for name in observed if observed[name] != reference[name]
-        ),
+        "moved": moved,
+        # run-22 addition begins: the cause of every moved input
+        "moved_cause": {
+            name: MOVED_BY_THE_HARNESS.get(name, "CORE_MOVED_UNDER_THIS_CELL")
+            for name in moved
+        },
+        # run-22 addition ends: the cause of every moved input
         "unchanged": sorted(
             name for name in observed if observed[name] == reference[name]
         ),
@@ -628,14 +661,20 @@ def build_manifest(commit: str, tree: str, reading: Path) -> dict[str, object]:
             if name in UNTRACKED_INPUTS
             else _git_show(commit, source)
         )
+        # run-22 addition begins: the staged bytes beside the source bytes
+        staged_as = CANONICAL_JSON if name in CANONICAL_JSON_INPUTS else SOURCE_BYTES
+        staged = _canonical(data) if staged_as == CANONICAL_JSON else data
         declared.append(
             {
                 "name": name,
                 "source": source,
                 "target": target,
-                "sha256": _digest(data),
+                "staged_as": staged_as,
+                "source_sha256": _digest(data),
+                "sha256": _digest(staged),
             }
         )
+        # run-22 addition ends: the staged bytes beside the source bytes
     return {
         "schema": "malleus.paper-v4.producer-input-manifest/v1",
         "run_id": RUN_ID,

@@ -21,6 +21,22 @@ v4.3 RCA, section 5). The restriction:
 * ``SUBJECT`` and ``RELATION`` expansion is unchanged, so every subject-bearing
   record that is attached is still returned, projecting the thing it is about.
 
+What v4.12 adds is a fourth case kind and a refusal. ``ENTITY_NO_SUBJECT`` is
+emitted for every subject-bearing type in a question's set and returns the
+records of that type whose ``subject`` slot is absent, each of them an
+``ENTITY`` row witnessed by itself, so a record about nothing the producer
+stated is reached once instead of not at all. Run-21 carried 237 such records
+and CQ-01's answer, the instrument count, was two of them (E-0197). A record
+that does carry a subject is still reached through it and never here, so
+nothing the v4.4 restriction excluded on purpose comes back.
+
+The refusal is the closure check. ``type_set_closure.omissions`` runs against
+the gate's validated contract before the binding is written, so a set that
+lists a type without its surface subtypes is refused where the evaluator can
+still correct it. v4.11 shipped that check as a step the procedure ran by hand;
+a step run by hand is a step that can be skipped, and the artefact it guards is
+the one this script writes (E-0196, E-0198).
+
 The expansion stays mechanical and the evaluator's one judgement stays the type
 set per question. ``cases_sha256`` still digests the queries alone, so the
 binding that executes after the replay is provably the binding whose digest the
@@ -34,25 +50,34 @@ from __future__ import annotations
 
 import argparse
 from hashlib import sha256
+import importlib.util
 import json
 from pathlib import Path
 import sys
 
 
-BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v4"
+BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v5"
 SURFACE_SCHEMA = "malleus.paper-v4.population-surface/v2"
 BOUND_AT_STAGE = "ONTOLOGY_ACCEPTANCE"
 PENDING = "PENDING"
+CLOSURE_CHECK = "TYPE_SET_CLOSED_UNDER_THE_SURFACES_SUBTYPES_AT_BIND_TIME"
 
-# The three case kinds, in the order the expansion emits them. All three are
-# type-only: a case names record types and projected field names and nothing
-# else.
-CASE_KINDS = ("ENTITY", "RELATION", "SUBJECT")
+# The four case kinds, sorted, which is also the order the expansion emits
+# them. All four are type-only: a case names record types and projected field
+# names and nothing else. ``ENTITY_NO_SUBJECT`` is v4.12's addition and is
+# emitted directly after ``ENTITY``, so a question's ordinals keep the two
+# entity kinds first and the rows keep their order.
+CASE_KINDS = ("ENTITY", "ENTITY_NO_SUBJECT", "RELATION", "SUBJECT")
+ENTITY_NO_SUBJECT = "ENTITY_NO_SUBJECT"
 
 # The reference a source-asserted record carries to the entity it is about
 # (Core-13, the research pack's SourceAsserted mixin). A surface type that
 # carries this slot is a SUBJECT case's first type, and from v4.4 it is not an
 # ENTITY case at all: it is reached through its subject or it is not reached.
+# From v4.12 the second half of that sentence has one exception. A record of a
+# bearing type whose ``subject`` is absent is reached by an ENTITY_NO_SUBJECT
+# case, which is the only case whose selection reads a record at all, and reads
+# exactly one thing: whether the slot is there.
 SUBJECT_SLOT = "subject"
 ENTITY_FAMILY = "ENTITY"
 
@@ -73,9 +98,11 @@ HOUSEKEEPING_SLOTS = frozenset(
 BOUND_BY = (
     "paper evaluator, at ontology acceptance and before phase two, from the"
     " accepted population surface only. The evaluator's one judgement is each"
-    " question's type set; this script expands it into three kinds of case,"
+    " question's type set; this script expands it into four kinds of case,"
     " every one of them type-only: one ENTITY case per type in the set that"
-    " carries no subject on the surface, one RELATION case per ordered pair of"
+    " carries no subject on the surface, one ENTITY_NO_SUBJECT case per type in"
+    " the set that does carry it, returning the records of that type whose"
+    " subject slot is absent, one RELATION case per ordered pair of"
     " those types under every relation type on the surface, and one SUBJECT"
     " case per ordered pair of a subject-bearing type with an entity type. Each"
     " type projects its non-housekeeping slots. No population, admission,"
@@ -159,10 +186,13 @@ def _cases(
     relations: list[str],
     by_name: dict[str, dict[str, object]],
 ) -> list[dict[str, object]]:
-    """Every ENTITY, RELATION and SUBJECT case a question's type set expands to.
+    """Every case of the four kinds a question's type set expands to.
 
     The v4.4 restriction is the first loop: a type that carries ``subject`` is
-    reached through its subject or not at all, and gets no ENTITY case.
+    reached through its subject or not at all, and gets no ENTITY case. The
+    v4.12 addition is the second: the same type gets one ENTITY_NO_SUBJECT
+    case, which returns the records of it that carry no subject and nothing
+    else.
     """
 
     projections = {name: _projection(by_name[name]) for name in types}
@@ -176,6 +206,15 @@ def _cases(
         cases.append(
             {
                 "kind": "ENTITY",
+                "ordinal": len(cases) + 1,
+                "output_fields": {"record": projections[record_type]},
+                "record_type": record_type,
+            }
+        )
+    for record_type in bearing:
+        cases.append(
+            {
+                "kind": ENTITY_NO_SUBJECT,
                 "ordinal": len(cases) + 1,
                 "output_fields": {"record": projections[record_type]},
                 "record_type": record_type,
@@ -215,6 +254,7 @@ def _cases(
 
     expected = (
         len(unattached)
+        + len(bearing)
         + len(types) * len(types) * len(relations)
         + len(bearing) * len(entities)
     )
@@ -226,8 +266,55 @@ def _cases(
     return cases
 
 
+def _type_set_closure():
+    """The shared closure reader, loaded by path from the experiment root.
+
+    It lives beside the cells and not inside one, because every cell from v4.11
+    on reads the same rule from the same file. Loading it by path is how the
+    procedure already runs it.
+    """
+
+    path = Path(__file__).resolve().parents[1] / "type_set_closure.py"
+    specification = importlib.util.spec_from_file_location(
+        "paper_v4_type_set_closure", path
+    )
+    if specification is None or specification.loader is None:
+        raise BindingRefusal(f"the closure reader is not readable: {path}")
+    module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    return module
+
+
+def refuse_unclosed(
+    *, surface: dict[str, object], contract: dict[str, object], type_sets: dict
+) -> None:
+    """Refuse a type set that lists a type without its surface subtypes.
+
+    The facade's typed query returns a type's records and its subtypes', and the
+    v4.9 executor projects every reached record by its own type and refuses a
+    type the binding never names. A set that lists a parent and not a surface
+    subtype therefore binds a query that is refused after the rows exist, which
+    is what run-21's first binding did (E-0196). Here it is refused before the
+    binding is written, with the reason and the omitted names the shared reader
+    returns.
+    """
+
+    closure = _type_set_closure()
+    found = closure.omissions(surface, contract, type_sets)
+    if found:
+        detail = "; ".join(
+            f"{question} omits {', '.join(names)}"
+            for question, names in sorted(found.items())
+        )
+        raise BindingRefusal(f"{closure.REASON}: {detail}")
+
+
 def build(
-    *, surface_source: bytes, type_sets: dict[str, list[str]], replay_receipt: str
+    *,
+    surface_source: bytes,
+    type_sets: dict[str, list[str]],
+    replay_receipt: str,
+    contract_source: bytes,
 ) -> dict[str, object]:
     by_name = load_surface(surface_source)
     relations = _relation_types(by_name)
@@ -255,6 +342,11 @@ def build(
             }
         )
 
+    refuse_unclosed(
+        surface=json.loads(surface_source),
+        contract=json.loads(contract_source),
+        type_sets=resolved,
+    )
     return {
         "schema": BINDING_SCHEMA,
         "status": "FROZEN_AT_ONTOLOGY_ACCEPTANCE",
@@ -264,14 +356,22 @@ def build(
         "cases_sha256": _digest(_canonical(queries)),
         "expansion": {
             "case_kinds": list(CASE_KINDS),
+            "closure_checked": CLOSURE_CHECK,
             "entity_case_scope": "TYPES_IN_THE_SET_THAT_CARRY_NO_SUBJECT",
+            "entity_no_subject_case_scope": (
+                "TYPES_IN_THE_SET_THAT_CARRY_SUBJECT_RESTRICTED_TO_RECORDS"
+                "_WHOSE_SUBJECT_SLOT_IS_ABSENT"
+            ),
             "entity_record_types": entity_types(by_name),
             "housekeeping_slots": sorted(HOUSEKEEPING_SLOTS),
             "producer_visibility": "WITHHELD",
             "relation_record_types": relations,
             "rule": (
                 "one ENTITY case per type in a question's set that carries no"
-                " subject on the surface; every ordered pair of those types"
+                " subject on the surface; one ENTITY_NO_SUBJECT case per type"
+                " in the set that does carry subject, returning the records of"
+                " that type whose subject slot is absent; every ordered pair of"
+                " the set's types"
                 " under every relation type on the surface as a RELATION case;"
                 " every ordered pair of a subject-bearing type in the set with"
                 " an entity type in the set as a SUBJECT case; each type"
@@ -302,6 +402,7 @@ def execute(arguments: argparse.Namespace) -> dict[str, object]:
         surface_source=Path(arguments.surface).read_bytes(),
         type_sets=type_sets,
         replay_receipt=receipt,
+        contract_source=Path(arguments.contract).read_bytes(),
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(_canonical(binding) + b"\n")
@@ -311,6 +412,11 @@ def execute(arguments: argparse.Namespace) -> dict[str, object]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--surface", required=True, help="accepted population surface")
+    parser.add_argument(
+        "--contract",
+        required=True,
+        help="the gate's validated contract, read for the surface's subtypes",
+    )
     parser.add_argument(
         "--type-sets", required=True, help="question id to surface type list"
     )

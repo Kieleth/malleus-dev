@@ -13,6 +13,16 @@ Before any of that, the builder refuses unless it is executing on the
 repository ``.venv`` interpreter with the ``linkml`` and ``linkml-runtime``
 versions the paper environment lock names, and records that check in the
 receipt.
+
+One declared input is not staged as the bytes its file carries. The history
+profile is staged as its canonical JSON, sorted keys, compact separators and no
+trailing newline, because that is the form Core digests to get the profile's
+identity. shop-01 staged the file's own bytes, the parent told the producer to
+write their digest into its plans, and the compiler refused all four with
+IDENTITY_MISMATCH (E-0203, cause B). From v4.12 the staged file's digest is the
+identity, so the producer reads it off its own declared input and the parent has
+nothing left to hand it. The manifest states a staging per input and carries the
+source bytes' digest beside the staged bytes'.
 """
 
 from __future__ import annotations
@@ -30,6 +40,13 @@ import sys
 ROOT = Path(__file__).resolve().parents[3]
 MANIFEST = Path(__file__).with_name("producer-input-manifest.json")
 UNTRACKED_INPUTS = {"SELECTED_READING"}
+# The declared inputs staged as canonical JSON, and the two names a staging is
+# recorded under. The manifest states one per input and this set is checked
+# against it, so a manifest and a builder that disagree refuse rather than stage
+# bytes nobody declared.
+CANONICAL_JSON_INPUTS = {"SOURCE_ASSERTION_PROFILE"}
+CANONICAL_JSON = "CANONICAL_JSON"
+SOURCE_BYTES = "SOURCE_BYTES"
 VENV = ROOT / ".venv"
 ENVIRONMENT_LOCK = ROOT / "paper-v4/environment/requirements-cp312-macos-arm64.lock"
 PINNED_PACKAGES = ("linkml", "linkml-runtime")
@@ -42,6 +59,29 @@ class ProducerPreparationRefusal(ValueError):
 
 def _digest(data: bytes) -> str:
     return "sha256:" + sha256(data).hexdigest()
+
+
+def _canonical(data: bytes) -> bytes:
+    """A JSON document's canonical bytes: sorted keys, compact, no newline."""
+    return json.dumps(
+        json.loads(data),
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+def staged_bytes(item: dict[str, object], data: bytes) -> bytes:
+    """What one declared input is written as, which the manifest states."""
+    staged_as = item["staged_as"]
+    if staged_as == CANONICAL_JSON:
+        return _canonical(data)
+    if staged_as != SOURCE_BYTES:
+        raise ProducerPreparationRefusal(
+            f"declared input {item['name']} names an unknown staging: {staged_as}"
+        )
+    return data
 
 
 def _locked_versions() -> dict[str, str]:
@@ -125,6 +165,16 @@ def _git_show(commit: str, path: str) -> bytes:
 def prepare(reading: Path, output: Path) -> dict[str, object]:
     interpreter = preflight()
     manifest = json.loads(MANIFEST.read_bytes())
+    canonical = {
+        item["name"]
+        for item in manifest["declared_inputs"]
+        if item["staged_as"] == CANONICAL_JSON
+    }
+    if canonical != CANONICAL_JSON_INPUTS:
+        raise ProducerPreparationRefusal(
+            f"the manifest stages {sorted(canonical)} as canonical JSON;"
+            f" this builder stages {sorted(CANONICAL_JSON_INPUTS)}"
+        )
     commit = manifest["core"]["commit"]
     private_root = (ROOT / "private").resolve()
     output = output.resolve()
@@ -135,11 +185,16 @@ def prepare(reading: Path, output: Path) -> dict[str, object]:
 
     sources: dict[str, bytes] = {}
     for item in manifest["declared_inputs"]:
-        data = (
+        read = (
             reading.read_bytes()
             if item["name"] in UNTRACKED_INPUTS
             else _git_show(commit, item["source"])
         )
+        if _digest(read) != item["source_sha256"]:
+            raise ProducerPreparationRefusal(
+                f"declared input source digest mismatch: {item['name']}"
+            )
+        data = staged_bytes(item, read)
         if _digest(data) != item["sha256"]:
             raise ProducerPreparationRefusal(
                 f"declared input digest mismatch: {item['name']}"

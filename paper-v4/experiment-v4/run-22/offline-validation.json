@@ -1,18 +1,20 @@
 {
-  "schema": "malleus.paper-v4.run-22-offline-validation/v1",
+  "schema": "malleus.paper-v4.run-22-offline-validation/v2",
   "run_id": "run-22",
   "status": "COMPUTED",
   "change_id": "ENTITY_KIND_RESTRICTED",
   "rule": "one ENTITY case per type in a question's set that carries no subject on the surface; SUBJECT and RELATION expansion unchanged",
   "and_change_id": "ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION",
+  "third_change_id": "ENTITY_NO_SUBJECT_REACHABILITY",
+  "third_rule": "one ENTITY_NO_SUBJECT case per subject-bearing type in a question's set, returning the records of that type whose subject slot is absent as ENTITY rows; measured here as the rows of run-09's v3 ENTITY case of the same type whose record carries no subject",
   "and_rule": "within one question, rows with the same witness are one row, the row projecting the fields of the witness record's own type; a collapsed row's label here is the first producing row's",
   "executes": "NOTHING",
   "measured_on": "run-09",
   "inputs": {
     "binder": {
       "path": "paper-v4/experiment-v4/run-22/bind_from_surface.py",
-      "sha256": "sha256:9c45257fd8541ab4782823ba4838508b25e72d2655d24ab1697bd84ea6e0e741",
-      "binding_schema": "malleus.paper-v4.native-query-binding/v4"
+      "sha256": "sha256:6bb316acb4b4f114d150ec1070b50e11e96454d76404410cc2835cb2e4f909e7",
+      "binding_schema": "malleus.paper-v4.native-query-binding/v5"
     },
     "type_sets": {
       "path": "paper-v4/experiment-v4/run-09/results/query-type-sets.json",
@@ -67,7 +69,13 @@
       "rows_one_per_witness_by_label": {
         "SUPPORTED": 54
       },
-      "rows_re_projected_under_another_label": 0
+      "rows_re_projected_under_another_label": 0,
+      "rows_restored_by_entity_no_subject": 78,
+      "rows_restored_witnesses": 64,
+      "rows_restored_new_witnesses": 64,
+      "rows_restored_by_label": {
+        "SUPPORTED": 78
+      }
     },
     {
       "question_id": "CQ-02",
@@ -99,7 +107,14 @@
         "PARTIAL": 3,
         "SUPPORTED": 165
       },
-      "rows_re_projected_under_another_label": 0
+      "rows_re_projected_under_another_label": 0,
+      "rows_restored_by_entity_no_subject": 117,
+      "rows_restored_witnesses": 103,
+      "rows_restored_new_witnesses": 103,
+      "rows_restored_by_label": {
+        "PARTIAL": 1,
+        "SUPPORTED": 116
+      }
     },
     {
       "question_id": "CQ-03",
@@ -131,7 +146,14 @@
         "PARTIAL": 3,
         "SUPPORTED": 120
       },
-      "rows_re_projected_under_another_label": 0
+      "rows_re_projected_under_another_label": 0,
+      "rows_restored_by_entity_no_subject": 117,
+      "rows_restored_witnesses": 103,
+      "rows_restored_new_witnesses": 103,
+      "rows_restored_by_label": {
+        "PARTIAL": 1,
+        "SUPPORTED": 116
+      }
     },
     {
       "question_id": "CQ-04",
@@ -163,7 +185,13 @@
         "PARTIAL": 1,
         "SUPPORTED": 117
       },
-      "rows_re_projected_under_another_label": 0
+      "rows_re_projected_under_another_label": 0,
+      "rows_restored_by_entity_no_subject": 117,
+      "rows_restored_witnesses": 103,
+      "rows_restored_new_witnesses": 103,
+      "rows_restored_by_label": {
+        "SUPPORTED": 117
+      }
     }
   ],
   "totals": {
@@ -176,6 +204,9 @@
     "rows_one_per_witness": 463,
     "rows_re_projected": 167,
     "rows_re_projected_under_another_label": 0,
+    "rows_restored_by_entity_no_subject": 429,
+    "rows_restored_witnesses": 373,
+    "rows_restored_new_witnesses": 373,
     "rows_kept_by_kind": {
       "ENTITY": 225,
       "RELATION": 79,
@@ -194,6 +225,10 @@
     "rows_one_per_witness_by_label": {
       "PARTIAL": 7,
       "SUPPORTED": 456
+    },
+    "rows_restored_by_label": {
+      "PARTIAL": 2,
+      "SUPPORTED": 427
     }
   },
   "non_claim": "These are run-09's rows under run-22's rule, not run-22's rows. No producer has run at this cell's coordinate and no graph of its own exists. The labels are run-09's preliminary reviewers' and are not ratified. What the numbers bound is the review, not the result."

@@ -84,55 +84,76 @@
       "name": "MALLEUS_NASCENT_PROJECT_SKILL",
       "source": ".claude/skills/malleus-acolyte/SKILL.md",
       "target": ".claude/skills/malleus-acolyte/SKILL.md",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81",
       "sha256": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81"
     },
     {
       "name": "SELECTED_READING",
       "source": "private/paper-v4-text-layer/selected-reading.json",
       "target": "inputs/selected-reading.json",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
       "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
     },
     {
       "name": "MALLEUS_ROOT",
       "source": "ontology/malleus.yaml",
       "target": "inputs/malleus.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3",
       "sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
     },
     {
       "name": "LINKML_TYPES",
       "source": "paper-v4/experiment-v2/run-inputs/linkml-types.yaml",
       "target": "inputs/linkml-types.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00",
       "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
     },
     {
       "name": "METROLOGY_PACK",
       "source": "ontology/packs/metrology.yaml",
       "target": "inputs/metrology.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:be843436a99ea38c1147d8b4296e560348fe34fa8ec5a23d176868239cd01fef",
       "sha256": "sha256:be843436a99ea38c1147d8b4296e560348fe34fa8ec5a23d176868239cd01fef"
     },
     {
       "name": "CHRONOLOGY_PACK",
       "source": "ontology/packs/chronology.yaml",
       "target": "inputs/chronology.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1",
       "sha256": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1"
     },
     {
       "name": "RESEARCH_PACK",
       "source": "ontology/packs/research.yaml",
       "target": "inputs/research.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b",
       "sha256": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b"
     },
     {
       "name": "SOURCE_ASSERTION_PROFILE",
       "source": "src/malleus/profiles/source-assertion.json",
       "target": "inputs/profile-source-assertion.json",
-      "sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46"
+      "staged_as": "CANONICAL_JSON",
+      "source_sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46",
+      "sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
     }
   ],
   "moved_since": {
     "reference_run": "run-21",
     "reference_manifest": "paper-v4/experiment-v4/run-21/producer-input-manifest.json",
-    "moved": [],
+    "moved": [
+      "SOURCE_ASSERTION_PROFILE"
+    ],
+    "moved_cause": {
+      "SOURCE_ASSERTION_PROFILE": "STAGED_AS_CANONICAL_JSON_FROM_V4_12"
+    },
     "unchanged": [
       "CHRONOLOGY_PACK",
       "LINKML_TYPES",
@@ -140,8 +161,7 @@
       "MALLEUS_ROOT",
       "METROLOGY_PACK",
       "RESEARCH_PACK",
-      "SELECTED_READING",
-      "SOURCE_ASSERTION_PROFILE"
+      "SELECTED_READING"
     ]
   },
   "forbidden_inputs": [
