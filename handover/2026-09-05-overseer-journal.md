@@ -577,3 +577,7 @@ Change: one module and six tests (RED 6d4fba3, GREEN 8754b44), no Core change, n
 ### The other half measured (14:25Z): 117 rows of unlisted types in six cells
 
 `unlisted_rows.py` over the twelve frozen cells with query results: rows whose witness type the question's set never named number 17 (run-09), 22 (run-10), 18 (run-12), 22 (run-13), 16 (run-15), 22 (run-20), none elsewhere, 117 of 8,367 ENTITY and SUBJECT rows. Run-13's record-cell candidacy carries 22 of them, run-20's 22; all reviewed as rows. E-0199. No harness change; the loop stays paused on the rulings.
+
+## Calibration: the Small Shop baseline at the current Core (2026-09-06T15:00Z to 15:25Z)
+
+Master plan item 11, the part that is a rerun and not a ruling. The public-population driver at the current Core reproduces the shop's graph, records, queries and counts byte for byte; six identities moved (the contract revision's and the history's), and the frozen conformance test fails on them; it is outside Core's testpaths, so nothing was red. Bisected by worktree over the 39 Core commits since the freeze, comparing the full identity after a first pass that compared a prefix and was wrong: the move is at e4fa5fd (2026-09-05, the range-binding diagnostic), which re-pinned two of its own fixtures and not this one. E-0200. The re-freeze is Core's; reported to Luis with candidate shop questions for item 11's second half.

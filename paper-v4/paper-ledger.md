@@ -7353,3 +7353,17 @@ rows can carry.
 Non-claim: the count says which rows the sets did not name, not whether
 those rows answered the question; the reviews judged that already, row by
 row.
+
+### E-0200, the Small Shop baseline recreated at the current Core: graph, records and queries reproduce; the revision identity and history digests moved at Core e4fa5fd, and the frozen conformance evidence has been stale since
+
+Date: 2026-09-06
+
+Sources: `research/ontology_driven_kg_realization/experiments/small_shop/public_population/` (run.py, test_run.py, evidence.json frozen at 9a33e64, 2026-09-03), a fresh run of the same driver at main 5a8af0c (Core files at c53d982), and a bisection by throwaway worktree over the 39 commits since 9a33e64 that touch `src/malleus` or `ontology/`, comparing the full revision identity. Master plan item 11 (Luis, 2026-09-05): recreate the baseline on the current Core for calibration.
+
+Result: the fresh run admits, reopens, replays, queries and traces the complete five-stage fixture; `graph`, `records`, `queries`, `record_counts`, `claim`, `grammar`, `limitations`, the two contract identities and their count are byte-identical to the frozen evidence (9 current records, 10 historical, 5 change sets, 48 ledger events, the same graph state digest). Six identities differ: the contract revision's `revision_identity` and the history's `acceptance_head`, `ledger_head`, `ledger_sha256`, `materialization_head` and `receipt_identity`. The frozen `test_run.py` fails at the current Core on the evidence bytes; it is not in Core's `testpaths` (pyproject.toml lists `research/methodology_gedanken_e2e/tests` only), so no gate has been red.
+
+Bisection: the identities hold through e7919a7 and move at e4fa5fd (2026-09-05 00:22, "Name the range that failed to bind and the ranges that do"), which changed `_contract_pipeline/elaborate.py` and re-pinned the digests of two of its own fixtures (`document-change.json`, `inspection_note_capture_v1/manifest.json`) and not the Small Shop public-population evidence. The paper cells from run-13 (pinned at 12a04a9 or later) executed on the moved side; the knowledge the shop run derives is unchanged across it.
+
+Reading, as calibration: the paper's Core coordinate reproduces the structured consumer's graph exactly; what moved is a revision-record identity and the ledger digests that include it, at a commit whose own fixtures were re-frozen and whose entry did not name this one. The repair is one re-frozen evidence file and belongs to Core's stream; it is reported, not applied, here.
+
+Non-claim: nothing here judges the range-binding change itself; the shop's population plans carry no range that failed to bind.
