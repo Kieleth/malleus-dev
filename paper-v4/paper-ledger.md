@@ -7122,3 +7122,79 @@ detail and returned 0 for run-20's "1 defect"; run-20's contract had stated
 1 correctly. Expected effect and falsifier are E-0193's: admission within two
 returns and no UNSUPPORTED row; the secondary measures are read as variance
 against run-20.
+
+### E-0196, run-21 (Opus 5 at v4.10, the run-20 replicate) is admitted at the first runner attempt with no defect; every block asserted; the binding frozen at acceptance was refused at execution and closed under subtypes before any row existed
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-21/ontology-run/`, `paper-v4/experiment-v4/run-21/results/`,
+`private/paper-v4-v4-run-21/` (ledger, query result, population plan, the
+first binding files, withheld files), `paper-v4/evaluation-v4/run-21/`
+(review inputs under protocol v2 and task v4).
+
+Ontology: accepted at attempt 01, 3,780 facts, 22 entity types, 2 event
+types, 5 relation types, 5 subject-bearing types. Thirteen project classes;
+seven root extensions, four grounded to the IUPAC Gold Book, DCMI Metadata
+Terms, PROV-O and Schema.org with 16 of 17 borrowed terms confirmed (the Gold
+Book's bare "phase" entry unverified: the site refuses the fetch and its
+mirror fails the handshake) and three declared none_found with a search note
+naming GeoSciML, the GEBCO gazetteer, the USGS earthquake glossary, QuakeML,
+the FDSN standards and OGC GeoSPARQL as not cited unverified. One feature
+type carrying feature_kind and one material type carrying material_kind
+where run-20 minted twelve and four. The session log records no capability
+probe; the attempt was handed over uncompiled after a shape-only self-check,
+saying so. Overseer error at the gate, recorded in the launch log: the first
+invocation used the frozen run-01 gate at the experiment root, whose manifest
+carries the 2026-09-04 pack digests, and it refused on the metrology digest;
+the diagnostic is parked under `overseer-misinvocation/` and is not an
+attempt; the cell's own gate accepted the same bytes.
+
+Population: 399 assertions; 186 blocks asserted, 0 declared, 0 untouched,
+the first cell since the census reports block labels (Core-19) with nothing
+declared; 535 records (508 entities, 1 event, 26 relations); 94 typed gaps
+(88 RELATION_ABSENT, 4 REQUIRED_FIELD_ABSENT_IN_SOURCE, 1
+INTERVAL_NOT_EXPRESSIBLE, 1 TYPE_ABSENT) on the 93 partly formalized
+assertions; 306 fully formalized, 0 unformalized. Every statement a byte
+span located by an anchor with whitespace, ligatures and dash forms folded;
+the 100 bibliography blocks use the whole block. Two pre-flight passes by the
+producer's report: the builder's checks, then an audit re-reading the emitted
+file, the reading and the surface from disk across the 24 producer-owned
+refusals. Runner attempt 1 admitted under `actor:overseer-run-21`: fourteen
+ledger events, replay reproducing admission, 535 traced. Census: 0 of 26
+relations non-local; largest hub 10. Subject coverage 77 of 314 proposed, 46
+attachable, 93 ambiguous, 98 unnamed (run-20: 117 of 235). Provenance
+coverage 314 of 314 with a locator and a digest (run-20: 235 of 235).
+
+Query: the binding frozen at acceptance (1,583 cases: 16 ENTITY, 1,430
+RELATION, 137 SUBJECT; run-20's judgement translated to a surface with one
+feature and one material type; the two catalogue types and the event type
+in no set) was refused at execution by the v4.9 executor: an
+AnalyticalMethod record reached through the Method case has no projection,
+because its own type was in no set. No row existed. The evaluator closed the
+sets under the surface's subtypes (AnalyticalMethod beside Method in CQ-01,
+CQ-03 and CQ-04, the only omission by the closure check over the is_a
+chains), re-bound (1,883 cases: 19 ENTITY, 1,715 RELATION, 149 SUBJECT) and
+executed after replay: CQ-01 24, CQ-02 122, CQ-03 178, CQ-04 166, 490 rows
+(239 ENTITY, 41 RELATION, 210 SUBJECT) over 182 witnesses, 237 rows from
+more than one case, no forbidden attempt. The first sets, note, acceptance
+binding and executed binding are frozen beside the amended ones as
+`*.first.*`. Run-20's sets met the rule by listing GeophysicalModel beside
+Method; the acceptance note's sentence that Method's case returns its
+subtypes was right about reach and wrong about projection, and the
+executor's docstring assigns the correction to the evaluator.
+
+Execution coordinate: inputs pinned at `c95dba7` (E-0195); the runner
+executed at main `636f826`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 179,467; population
+208,003; producer total 387,470 (run-20: 433,787; run-15: 351,253; run-13:
+383,284; run-14: 439,761).
+
+Expected effect (E-0193): admission within two structural returns and no
+UNSUPPORTED row at review. The first held with no return; the second waits
+on the review. First-attempt defects across the Opus cells: 0, 7, 0, 1, 0.
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet; the review judges the rows as rows. The replicate's variance against
+run-20 is read in the RCA after the review. Whether this cell or run-20 is
+the cell of record is Luis's.

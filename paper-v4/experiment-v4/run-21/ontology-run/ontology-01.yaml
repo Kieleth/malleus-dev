@@ -1,0 +1,652 @@
+id: https://malleus.dev/schema/projects/mid_ocean_ridge_seismicity
+name: mid_ocean_ridge_seismicity
+version: 0.1.0
+title: Mid-Ocean Ridge Seismicity and Melt Volatile Project Ontology
+description: >-
+  Project vocabulary proposed for one retained reading that reports
+  ocean-bottom seismometer microseismicity beneath a slow-spreading mid-ocean
+  ridge together with geochemical estimates of the volatile content of the
+  melts feeding it. Every class, slot and enum here is a proposal derived from
+  that reading and from the declared Malleus root and packs. Nothing here is
+  accepted knowledge, and no class asserts that any record of its type is true.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  mors: https://malleus.dev/schema/projects/mid_ocean_ridge_seismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+#
+# Every value classifies a distinction the reading itself draws. Source
+# values, names and numbers are data and never appear here.
+# -------------------------------------------------------------------
+
+enums:
+
+  GeoscienceFeatureKind:
+    description: >-
+      Kind of named physical feature of the solid Earth or the sea floor. The
+      list grows by adding values, never by redefining one. OTHER records that
+      no listed kind fits; leaving the slot unset is the honest value when the
+      source does not say what kind of feature it names.
+    permissible_values:
+      MID_OCEAN_RIDGE:
+      RIDGE_SEGMENT:
+      RIDGE_AXIS:
+      TRANSFORM_FAULT:
+      NON_TRANSFORM_DISCONTINUITY:
+      FRACTURE_ZONE:
+      RIDGE_TRANSFORM_INTERSECTION:
+      OCEANIC_CORE_COMPLEX:
+      DETACHMENT_FAULT:
+      NORMAL_FAULT:
+      SHEAR_ZONE:
+      AXIAL_VALLEY:
+      NEOVOLCANIC_RIDGE:
+      VOLCANIC_CONE:
+      VOLCANO:
+      SEAMOUNT:
+      MASSIF:
+      TRANSVERSE_RIDGE:
+      SUSPENDED_VALLEY:
+      HYDROTHERMAL_VENT_FIELD:
+      HYDROTHERMAL_MOUND:
+      LITHOSPHERIC_LAYER:
+      LITHOSPHERIC_BOUNDARY:
+      TECTONIC_PLATE:
+      OCEAN_BASIN:
+      MANTLE_PLUME:
+      PENINSULA:
+      ISLAND:
+      OTHER:
+
+  MaterialKind:
+    description: >-
+      Kind of Earth material a source names. OTHER records that no listed kind
+      fits; unset is the honest value when the source does not say.
+    permissible_values:
+      CHEMICAL_SPECIES:
+      CHEMICAL_ELEMENT:
+      MINERAL:
+      ROCK:
+      MELT:
+      FLUID_PHASE:
+      SEDIMENT:
+      OTHER:
+
+  ActorKind:
+    description: Whether a credited actor is an individual or a body.
+    permissible_values:
+      PERSON:
+      ORGANIZATION:
+
+  ArtifactKind:
+    description: >-
+      Kind of computational artifact a source names and reuses. Software that
+      a source only cites as a publication is a BibliographicSource instead.
+    permissible_values:
+      SOFTWARE_PACKAGE:
+      NUMERICAL_MODEL:
+
+  SourceKind:
+    description: >-
+      Form in which a work reporting domain assertions was issued, as the
+      source describes it. OTHER records that no listed form fits.
+    permissible_values:
+      JOURNAL_ARTICLE:
+      BOOK_CHAPTER:
+      CONFERENCE_ABSTRACT:
+      PREPRINT:
+      DATASET:
+      DATABASE:
+      CRUISE_RECORD:
+      TECHNICAL_REPORT:
+      WEB_RESOURCE:
+      OTHER:
+
+  GeophysicalEventKind:
+    description: >-
+      Kind of occurrence in the solid Earth that a source reports as having
+      happened, as distinct from the enduring features it happens to.
+    permissible_values:
+      EARTHQUAKE:
+      EARTHQUAKE_SWARM:
+      VOLCANIC_ERUPTION:
+      DYKE_INTRUSION:
+      DEGASSING:
+
+  GeoscienceRelationType:
+    description: >-
+      Spatial, structural and compositional predicates between Earth features
+      and Earth materials. The research pack supplies the investigation
+      predicates and none of these, so the two families do not overlap.
+    permissible_values:
+      PART_OF:
+      LOCATED_IN:
+      LOCATED_BENEATH:
+      ADJACENT_TO:
+      BOUNDED_BY:
+      OFFSET_BY:
+      CUTS:
+      COMPOSED_OF:
+      DISSOLVED_IN:
+      OVERLIES:
+
+  ScholarlyRelationType:
+    description: >-
+      Predicates between works, actors and computational artifacts that a
+      source states about the conduct and reporting of the work.
+    permissible_values:
+      CITES:
+      FUNDS:
+      AFFILIATED_WITH:
+      DEPOSITED_IN:
+      IMPLEMENTS:
+
+  ClaimKind:
+    description: >-
+      What a source is doing when it makes an attributed statement, as the
+      reading presents it. It classifies the statement, never its truth and
+      never Malleus's acceptance of it. OTHER records that no listed kind fits.
+    permissible_values:
+      MECHANISM_HYPOTHESIS:
+        description: A candidate physical mechanism the source raises for an observation.
+      ORIGIN_INTERPRETATION:
+        description: A reading of how a named feature came to be as it is.
+      OBSERVATION_INTERPRETATION:
+        description: A reading of what a reported observation means.
+      METHOD_JUSTIFICATION:
+        description: A statement of why a procedure, parameter or selection was adopted.
+      PRIOR_WORK_EXPECTATION:
+        description: What earlier work leads the source to expect.
+      LIMITATION:
+        description: A bound the source places on what its own result establishes.
+      CONTRIBUTION_STATEMENT:
+        description: What a named contributor did, as the source states it.
+      FUNDING_STATEMENT:
+        description: What supported the work financially, as the source states it.
+      AVAILABILITY_STATEMENT:
+        description: Where data, code or material can be obtained, as the source states it.
+      OTHER:
+
+# -------------------------------------------------------------------
+# Classes
+#
+# Direct Malleus root extensions carry their own grounding block. Classes
+# derived through a pack type carry none, by the rite's rule.
+# -------------------------------------------------------------------
+
+classes:
+
+  GeoscienceFeature:
+    is_a: Entity
+    mixins:
+      - Statusable
+    description: >-
+      A named, enduring physical feature of the solid Earth or the sea floor:
+      a ridge, a segment, a fault, a discontinuity, a lithospheric layer, a
+      layer boundary, a plate, an ocean basin. Quantities a source reports
+      about a feature are ReportedObservation records that carry the feature
+      as their subject; they are not slots here.
+    slots:
+      - feature_kind
+      - orientation_notation
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and marine geoscience
+          taxonomy: DDC 551.8
+          none_found: true
+          search: >-
+            Considered the IUGS-CGI GeoSciML feature vocabularies, the
+            IHO-IOC GEBCO gazetteer of undersea feature names, and the USGS
+            earthquake glossary as candidate vocabularies for named sea floor
+            and lithospheric features. None of the three is present in the
+            declared inputs, and this session has no network access to resolve
+            a locator for any of them. No vocabulary is therefore cited: a
+            plausible but unverified standard name and URL would be worse than
+            an honest gap, because the rite reads the shape of a citation and
+            never follows it. W3C SOSA/SSN, which the research pack does cite,
+            names Feature of Interest, but that term marks what an observation
+            targets rather than a kind of Earth feature, so it was rejected as
+            the grounding vocabulary here.
+          invented_terms:
+            - GeoscienceFeature
+            - GeoscienceFeatureKind
+            - orientation_notation
+
+  EarthMaterial:
+    is_a: Entity
+    description: >-
+      A material a source names as a substance in its own right: a chemical
+      species, an element, a mineral, a rock, a melt, a fluid phase, a
+      sediment. A physical piece of material taken for analysis is a Sample,
+      not an EarthMaterial.
+    slots:
+      - material_kind
+      - chemical_formula
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Petrology and geochemistry
+          taxonomy: DDC 552
+          vocabularies:
+            - vocabulary: IUPAC Compendium of Chemical Terminology, the Gold Book
+              vocabulary_url: https://goldbook.iupac.org/
+              borrowed_terms:
+                - chemical species
+                - phase
+                - concentration
+                - solubility
+          invented_terms:
+            - EarthMaterial
+            - MaterialKind
+            - chemical_formula
+          invention_search: >-
+            The Gold Book supplies chemical species, phase, concentration and
+            solubility, which are the terms this class and the reading it
+            serves actually turn on, and those are borrowed above. It supplies
+            no single class covering species, minerals, rocks, melts and
+            sediments together, so EarthMaterial and the enum MaterialKind are
+            local. Rock and mineral names are classified in the IUGS-CGI
+            simple lithology vocabulary, which is not present in the declared
+            inputs and whose locator cannot be resolved from this session, so
+            it is not cited and the rock kinds stay coarse. chemical_formula
+            is recorded as invented because it follows ordinary chemical
+            usage rather than a Gold Book entry this session can vouch for.
+
+  ResearchActor:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person or a body a source credits with conducting, supporting or
+      publishing work. Which of the two is recorded in agent_type; what the
+      actor did is a ContributionRelation, and the source's own wording of it
+      is a ReportedClaim.
+    slots:
+      - contact_email
+    slot_usage:
+      agent_type:
+        range: ActorKind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Scholarly communication and attribution
+          taxonomy: DDC 020
+          vocabularies:
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - creator
+                - contributor
+                - publisher
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+          invented_terms:
+            - ResearchActor
+            - ActorKind
+            - contact_email
+          invention_search: >-
+            PROV-O separates Agent, Person and Organization into three
+            classes. Malleus carries Agent as a mixin trait rather than a
+            class, so a single concrete class carrying the distinction in
+            agent_type was minted here instead, and the names ResearchActor
+            and ActorKind are local. Neither DCMI Metadata Terms nor PROV-O
+            names an electronic address; FOAF's mbox was the closest term
+            found and FOAF is not present in the declared inputs, so
+            contact_email is recorded as local.
+
+  ComputationalArtifact:
+    is_a: Entity
+    description: >-
+      A named software package or numerical model a source uses or produces.
+      A procedure is a Method; a work that documents an artifact is a
+      BibliographicSource; the two are related through IMPLEMENTS and CITES.
+    slots:
+      - artifact_kind
+      - artifact_version
+      - access_url
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Computer software and computational modelling
+          taxonomy: DDC 005
+          vocabularies:
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/
+              borrowed_terms:
+                - SoftwareApplication
+                - SoftwareSourceCode
+                - softwareVersion
+                - codeRepository
+          invented_terms:
+            - ComputationalArtifact
+            - ArtifactKind
+            - artifact_version
+            - access_url
+          invention_search: >-
+            Schema.org names SoftwareApplication and SoftwareSourceCode and
+            supplies softwareVersion and codeRepository, and those are
+            borrowed above as the model for this class. It names no single
+            type covering both a software package and a parameterised
+            numerical model of a physical system, which is the pair this
+            reading needs to hold together, so ComputationalArtifact and the
+            enum ArtifactKind are local. artifact_version and access_url are
+            recorded as local because they carry a version and a route for a
+            numerical model as well as for software, which is wider than the
+            schema.org properties they follow.
+
+  GeophysicalEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+    description: >-
+      An occurrence in the solid Earth that a source reports as having
+      happened at a place and a time: an earthquake, a swarm, an eruption, an
+      intrusion, an episode of degassing. The Quantified mixin carries the one
+      quantity a source states as part of naming the occurrence, typically its
+      magnitude; every other reported quantity is a ReportedObservation.
+    slot_usage:
+      event_type:
+        range: GeophysicalEventKind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology and volcanology
+          taxonomy: DDC 551.2
+          none_found: true
+          search: >-
+            Considered QuakeML, the FDSN standards that adopt it, and the USGS
+            earthquake glossary as candidate vocabularies for earthquakes,
+            eruptions and intrusions treated as occurrences. None is present
+            in the declared inputs and no locator for any of them can be
+            resolved from this session, so none is cited rather than risk a
+            plausible but unverified URL. Two vocabularies that are reachable
+            from the declared inputs were checked and rejected: PROV-O names
+            Activity, and the W3C Time Ontology names temporal entity, instant
+            and interval, and both describe occurrence and temporal position
+            generically without naming any event kind in this area.
+          invented_terms:
+            - GeophysicalEvent
+            - GeophysicalEventKind
+
+  GeoscienceRelation:
+    is_a: Relation
+    description: >-
+      A typed spatial, structural or compositional relation between two Earth
+      entities, as a source states it. A relation a reading only implies is a
+      declared gap, never a derivation from a neighbouring sentence.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and marine geoscience
+          taxonomy: DDC 551.8
+          none_found: true
+          search: >-
+            Considered OGC GeoSPARQL's topological relation families and the
+            IUGS-CGI GeoSciML relation vocabularies as candidate sources for
+            spatial and structural predicates between Earth features. Neither
+            is present in the declared inputs and neither locator can be
+            resolved from this session, so neither is cited. The research
+            pack's ResearchRelationType is cited and available and was read
+            first: it carries investigation predicates only and names no
+            spatial, structural or compositional relation, so this family sits
+            beside it rather than reusing or weakening it.
+          invented_terms:
+            - GeoscienceRelation
+            - GeoscienceRelationType
+
+  ScholarlyRelation:
+    is_a: Relation
+    description: >-
+      A typed relation between works, actors and computational artifacts that
+      a source states about how the work was conducted, supported and
+      reported. Credit for a contribution is the research pack's
+      ContributionRelation, not this family.
+    slot_usage:
+      relation_type:
+        range: ScholarlyRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Scholarly communication and citation
+          taxonomy: DDC 020
+          vocabularies:
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - references
+                - isReferencedBy
+                - publisher
+                - identifier
+          invented_terms:
+            - ScholarlyRelation
+            - ScholarlyRelationType
+            - FundingRelation
+            - award_identifier
+          invention_search: >-
+            DCMI Metadata Terms supplies references and isReferencedBy for
+            citation and publisher and identifier for issue and naming, and
+            those are borrowed above. It names no term for financial support
+            of a work or for the identifier of an award, and CRediT, cited by
+            the research pack, names contributor roles rather than relations
+            between works and funders. FundingRelation and award_identifier
+            are therefore local, as are the family name ScholarlyRelation and
+            its enum.
+
+  FundingRelation:
+    is_a: ScholarlyRelation
+    description: >-
+      Financial support a source states from a funding body to a work, a
+      campaign or a person, carrying FUNDS as its relation_type. The award
+      identifiers are the ones the source prints; a body that names several
+      awards for one work carries them all here, and a body that names none is
+      recorded without inventing one.
+    slots:
+      - award_identifier
+
+  ReportedClaim:
+    is_a: Claim
+    description: >-
+      An attributed statement the reading makes, refined by what the source is
+      doing when it makes it. hypothesis_disposition, inherited through the
+      research pack's Evaluative mixin, is captured from the sentence that
+      disposes of a hypothesis and never from the sentence that raises it.
+    slot_usage:
+      claim_kind:
+        range: ClaimKind
+
+  ReportedObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A quantity, bound, count or ratio-free measurement a source reports,
+      carrying the entity it is about in subject, the source's own wording of
+      the kind of quantity in quantity_kind, and how the source qualifies the
+      number in value_qualification. The Counted mixin carries counts of
+      things, such as located events or deployed instruments, in the same
+      record shape.
+
+  ReportedRatio:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A ratio a source reports between two quantity kinds, keeping both kinds
+      explicit and carrying the source's modality, the entity the ratio is
+      about, and the route back to the retained assertion.
+    slots:
+      - value_qualification
+
+  BibliographicSource:
+    is_a: Source
+    description: >-
+      A work that reports domain assertions and that the reading identifies as
+      a work: an article, a chapter, an abstract, a preprint, a dataset, a
+      database, a cruise record, a report, a web resource. The identifiers
+      here are facts the reading states about the work, not routes the
+      protocol uses to reach retained bytes.
+    slots:
+      - source_kind
+      - doi
+      - publication_year
+      - publication_venue
+      - publication_volume
+      - page_range
+      - access_url
+      - received_date
+      - accepted_date
+
+  AnalyticalMethod:
+    is_a: Method
+    description: >-
+      A named procedure, algorithm or scale a source uses to obtain a result.
+      defining_expression carries the expression the source prints for it, in
+      the source's own characters; parameters and thresholds the source states
+      for a method are ReportedObservation records carrying the method as
+      their subject.
+    slots:
+      - defining_expression
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+
+  feature_kind:
+    range: GeoscienceFeatureKind
+    description: >-
+      Kind of Earth feature, as the source names it. OTHER when no listed kind
+      fits; unset when the source does not say what kind of feature it names.
+
+  orientation_notation:
+    range: string
+    multivalued: true
+    description: >-
+      Compass bearing or trend the source states for a feature, in the
+      source's own notation and characters, one entry per orientation the
+      source states. It is kept as written because bearings such as a
+      quadrant notation or a bare compass pair carry no single number, and
+      converting one would report something the source does not say. A bearing
+      the source states unambiguously as a number may additionally be recorded
+      as a ReportedObservation.
+
+  material_kind:
+    range: MaterialKind
+    description: >-
+      Kind of Earth material, as the source names it. OTHER when no listed
+      kind fits; unset when the source does not say.
+
+  chemical_formula:
+    range: string
+    description: >-
+      Formula the source writes for a material, in the source's own
+      characters. Unset when the source names a material without one.
+
+  contact_email:
+    range: string
+    description: >-
+      Electronic address a source prints for an actor. Recorded as printed;
+      Malleus does not resolve it and it is never evidence that the address
+      reaches the actor.
+
+  artifact_kind:
+    range: ArtifactKind
+    description: Whether the artifact is a software package or a numerical model.
+
+  artifact_version:
+    range: string
+    description: >-
+      Version the source states for the artifact, in the source's own wording.
+      Unset when the source names an artifact without a version.
+
+  access_url:
+    range: string
+    description: >-
+      Address the source states for obtaining a work or an artifact. A route,
+      never evidence that what is at the end of it is authentic or unchanged.
+
+  source_kind:
+    range: SourceKind
+    description: >-
+      Form in which the work was issued, as the source describes it. OTHER
+      when no listed form fits; unset when the source does not say.
+
+  doi:
+    range: string
+    description: >-
+      Digital object identifier the source prints for a work, as printed. A
+      fact the source reports about the work, not a protocol locator.
+
+  publication_year:
+    range: integer
+    description: Year of issue the source states for a work.
+
+  publication_venue:
+    range: string
+    description: >-
+      Journal, series, book or repository the source names as carrying the
+      work, in the source's own wording.
+
+  publication_volume:
+    range: string
+    description: Volume designation the source prints for a work, as printed.
+
+  page_range:
+    range: string
+    description: >-
+      Page or article designation the source prints for a work, as printed,
+      including the source's own separators.
+
+  received_date:
+    range: string
+    description: >-
+      Date of receipt the work prints about itself, in the source's own
+      wording, so that a date given without a full calendar position is not
+      completed by invention.
+
+  accepted_date:
+    range: string
+    description: >-
+      Date of acceptance the work prints about itself, in the source's own
+      wording, on the same terms as received_date.
+
+  defining_expression:
+    range: string
+    description: >-
+      Expression the source prints as defining a method or scale, in the
+      source's own characters. It is retained, never evaluated.
+
+  award_identifier:
+    range: string
+    multivalued: true
+    description: >-
+      Identifier the source prints for an award of financial support, as
+      printed, one entry per identifier the source states for that award.

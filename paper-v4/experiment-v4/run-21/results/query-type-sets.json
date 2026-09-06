@@ -1,0 +1,45 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "Observation",
+    "ReportedObservation",
+    "Method",
+    "AnalyticalMethod",
+    "ComputationalArtifact"
+  ],
+  "CQ-02": [
+    "GeoscienceFeature",
+    "Observation",
+    "ReportedObservation",
+    "Claim",
+    "ReportedClaim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "ReportedObservation",
+    "ReportedRatio",
+    "QuantityValue",
+    "Ratio",
+    "GeoscienceFeature",
+    "EarthMaterial",
+    "Sample",
+    "Method",
+    "AnalyticalMethod",
+    "ComputationalArtifact",
+    "Claim",
+    "ReportedClaim"
+  ],
+  "CQ-04": [
+    "Claim",
+    "ReportedClaim",
+    "Observation",
+    "ReportedObservation",
+    "ReportedRatio",
+    "EarthMaterial",
+    "GeoscienceFeature",
+    "ComputationalArtifact",
+    "Method",
+    "AnalyticalMethod"
+  ]
+}

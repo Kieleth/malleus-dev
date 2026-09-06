@@ -1,0 +1,22 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-06T11:59:48Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the one feature type, the observation types, the claim types",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the feature, material, sample, method, artifact and claim types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: the claim types, the observation types, the material, feature, artifact and method types"
+  },
+  "translation": {
+    "run-20 EarthFeature subtypes (SpreadingRidge, RidgeSegment, RidgeDiscontinuity, TransformFault, FaultStructure, OceanicCoreComplex, LithosphericInterface, LithosphericUnit, GeographicRegion, SeafloorMorphology, VolcanicStructure, HydrothermalStructure)": "GeoscienceFeature, the only feature type this surface has (kinds live in feature_kind); listing it returns every feature, which run-20 avoided by naming subtypes; no narrower choice exists here",
+    "run-20 RockType, MeltPhase, MineralPhase, ChemicalConstituent": "EarthMaterial (kinds live in material_kind)",
+    "run-20 SoftwareTool, GeophysicalModel": "ComputationalArtifact (software package or numerical model)",
+    "run-20 CountObservation": "ReportedObservation (the one Observation subtype here; Observation kept beside it as run-20 kept it beside CountObservation)",
+    "run-20 Claim": "Claim and ReportedClaim (this surface has a claim subtype; the parent is kept as run-20 kept Observation beside its subtype)",
+    "run-20 DataResource": "no counterpart on this surface; BibliographicSource is a catalogue and is in no set"
+  },
+  "lesson_applied": "no catalogue type the question does not ask for: BibliographicSource and ResearchActor are in no set",
+  "left_out": "GeophysicalEvent (EVENT family, subject-bearing here) is in no set, as the event type was in runs 12 to 20; AnalyticalMethod is in no set because Method's ENTITY case returns its subtypes and AnalyticalMethod bears no subject",
+  "note": "run-20's sets translated to run-21's surface; the same questions, the same judgement; the translation is coarser because this producer minted one feature type and one material type where run-20 minted twelve and four"
+}

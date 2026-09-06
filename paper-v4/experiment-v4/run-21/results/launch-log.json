@@ -1,0 +1,337 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-21",
+  "protocol": "v4.10",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-06T11:39:31Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-21/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "POPULATION_READY",
+      "execution": {
+        "pinned_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "paper_commit": "636f826",
+        "staged_at": "2026-09-06T11:39:31Z",
+        "interpreter": "VERIFIED by prepare_producer.py preflight"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-06T12:01:59Z",
+        "dispatched_at_source": "the harness transcript's timestamp of the SendMessage call",
+        "after_binding_frozen_at": "2026-09-06T11:59:48Z",
+        "message": "run-20's phase-two message with run-21's coordinates and fact count",
+        "capture_id": "capture:paper-v4:yu-2025:v4:21",
+        "plan_id": "plan:paper-v4:yu-2025:v4:21",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ]
+      },
+      "usage_cumulative": {
+        "tokens": 179467,
+        "tool_uses": 15,
+        "duration_ms": 848863
+      },
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 387470,
+          "tool_uses": 39,
+          "duration_ms": 1994709
+        }
+      ],
+      "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures",
+      "producer_observations": [
+        "the producer reports two independent pre-flight passes before handing over: the builder's checks, then an audit that re-reads the emitted JSON, the reading and the surface from disk and rebuilds every check across the 24 producer-owned refusals; no statement typed, every span located by an anchor with whitespace, ligatures and dash forms folded and the block's bytes copied out, which caught the hyphenated line breaks; the 100 bibliography blocks use the whole block as the statement",
+        "three judgement calls flagged for the review: the two corresponding e-mails assigned to Yu and Singh from local parts and domains (the thinnest reading in the file, by the producer's own account); author initials matched to the byline and carried as tags; contribution_role unset everywhere because the source declares no CRediT role",
+        "retained limitations by the producer's report: authors of cited works not modelled, no citation or affiliation relations, no assertion_time or domain_time; nothing_assertable empty, running headers asserted"
+      ]
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:6fbb99a283ddb057a2690e0bf7530a6a16bac7890f36780b4d397588f8592e6a",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:6456b4eeb161d5a80188686bcb5673bed11abd8a3554fed5212fdcb4d90dab24",
+      "fact_count": 3780,
+      "accepted_at": "2026-09-06T11:57:11Z",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 22,
+        "EVENT": 2,
+        "RELATION": 5
+      },
+      "event_types": [
+        "Event",
+        "GeophysicalEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "ResearchRelation",
+        "FundingRelation",
+        "GeoscienceRelation",
+        "ScholarlyRelation"
+      ],
+      "subject_bearing_types": [
+        "Claim",
+        "Observation",
+        "ReportedClaim",
+        "ReportedObservation",
+        "ReportedRatio"
+      ],
+      "note": "accepted at attempt 01; 13 project classes, seven root extensions (GeoscienceFeature, EarthMaterial, ResearchActor, ComputationalArtifact on Entity; GeophysicalEvent on Event; GeoscienceRelation, ScholarlyRelation on Relation); three of the seven declare none_found with a search note naming GeoSciML, the GEBCO gazetteer, the USGS earthquake glossary, QuakeML, the FDSN standards and OGC GeoSPARQL as not cited unverified; four grounded to the IUPAC Gold Book, DCMI Metadata Terms, PROV-O and Schema.org; one feature type carrying feature_kind and one material type carrying material_kind where run-20 minted twelve feature and four material types; quantities about a feature are ReportedObservation records with the feature as subject by the class descriptions",
+      "producer_observations": [
+        "the session log records only the eight declared inputs read, no network, no delegation, and no capability probe; the attempt was handed over uncompiled after a shape-only self-check, and the log says so",
+        "one judgement flagged for the parent, not acted on: the contributions section declares no CRediT role, so contribution_role stays unset and the source's wording goes to a ReportedClaim; the preferred-mechanism sentence is to be captured as two assertions so the HYPOTHESISED one does not formalize the disposition"
+      ],
+      "overseer_observations": [
+        "the overseer first invoked the frozen run-01 gate at paper-v4/experiment-v4/compile_ontology_candidate.py, whose manifest carries the 2026-09-04 pack digests; it refused at CONTRACT_COMPILATION with 'declared compiler input digest mismatch: inputs/metrology.yaml'; the diagnostic is parked at overseer-misinvocation/frozen-run01-gate-attempt-01 and is not a gate attempt; the cell's own gate accepted the same bytes"
+      ],
+      "phase_two_inputs_staged": [
+        "producer/accepted/population-surface.json",
+        "producer/accepted/diagnostic.json"
+      ],
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "overseer, before phase two",
+        "checked_at": "2026-09-06T12:01:57Z",
+        "checked_at_precision": "minute, from the session clock",
+        "urls": 4,
+        "fabricated": 0,
+        "result": "www.dublincore.org/specifications/dublin-core/dcmi-terms fetched: creator, contributor, publisher, references, isReferencedBy, identifier all defined; www.w3.org/TR/prov-o fetched: Agent, Person, Organization defined; schema.org/SoftwareApplication and schema.org/SoftwareSourceCode fetched: SoftwareApplication, softwareVersion, SoftwareSourceCode, codeRepository defined; goldbook.iupac.org returns 403 to the fetch and its old mirror fails the TLS handshake, so the Gold Book terms were checked by search restricted to the domain: chemical species (CT06859), concentration (C01222) and solubility (S05740) are entries; a bare 'phase' entry was not found, only compounds and a secondhand pointer to P04528. Three blocks declare none_found with a search note; no unverified vocabulary is cited",
+        "unverified": [
+          "IUPAC Gold Book: phase"
+        ],
+        "vocabulary_claims_unsupported": 0,
+        "fabricated_basis": "the four vocabularies are real; 16 of the 17 distinct borrowed terms are confirmed as entries, classes or properties they declare; one Gold Book term unverified because the site refuses the fetch"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-06T12:35:29Z",
+      "execution_commit": "636f826",
+      "core_note": "Core files at the pinned coordinate c95dba7 (OVR-000415); commits between are paper files",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 508,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 26,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 535,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 306,
+          "PARTLY_FORMALIZED": 93,
+          "UNFORMALIZED": 0
+        },
+        "blocks_asserted": 186,
+        "blocks_declared_nothing_assertable": 0,
+        "blocks_untouched": 0,
+        "blocks_reviewed": 186,
+        "blocks_total": 186,
+        "capture_sha256": "sha256:95088070211600317c2856c2111ddb87781b25491cc168af4f784c4d8a790dc9",
+        "gaps_by_kind": {
+          "INTERVAL_NOT_EXPRESSIBLE": 1,
+          "RELATION_ABSENT": 88,
+          "REQUIRED_FIELD_ABSENT_IN_SOURCE": 4,
+          "TYPE_ABSENT": 1
+        }
+      },
+      "derivation_census": {
+        "non_local_relations": 0,
+        "top_hubs": [
+          {
+            "assertion": "assertion:388",
+            "block": "page:10:block:046",
+            "records": 10
+          },
+          {
+            "assertion": "assertion:244",
+            "block": "page:8:block:003",
+            "records": 9
+          },
+          {
+            "assertion": "assertion:003",
+            "block": "page:1:block:001",
+            "records": 8
+          },
+          {
+            "assertion": "assertion:266",
+            "block": "page:8:block:010",
+            "records": 8
+          },
+          {
+            "assertion": "assertion:021",
+            "block": "page:1:block:005",
+            "records": 7
+          }
+        ],
+        "fan_out_distribution": {
+          "1": 249,
+          "10": 1,
+          "2": 81,
+          "3": 36,
+          "4": 15,
+          "5": 8,
+          "6": 4,
+          "7": 2,
+          "8": 2,
+          "9": 1
+        }
+      },
+      "subject_coverage": {
+        "ambiguous": 93,
+        "attachable": 46,
+        "by_type": {
+          "ReportedClaim": {
+            "ambiguous": 65,
+            "attachable": 20,
+            "proposed": 20,
+            "total": 145,
+            "unnamed": 40,
+            "with_subject": 20,
+            "without_subject": 125
+          },
+          "ReportedObservation": {
+            "ambiguous": 24,
+            "attachable": 25,
+            "proposed": 57,
+            "total": 164,
+            "unnamed": 58,
+            "with_subject": 57,
+            "without_subject": 107
+          },
+          "ReportedRatio": {
+            "ambiguous": 4,
+            "attachable": 1,
+            "proposed": 0,
+            "total": 5,
+            "unnamed": 0,
+            "with_subject": 0,
+            "without_subject": 5
+          }
+        },
+        "proposed": 77,
+        "total": 314,
+        "unnamed": 98,
+        "with_subject": 77,
+        "without_subject": 237
+      },
+      "provenance_coverage": {
+        "by_type": {
+          "ReportedClaim": {
+            "total": 145,
+            "with_digest": 145,
+            "with_locator": 145
+          },
+          "ReportedObservation": {
+            "total": 164,
+            "with_digest": 164,
+            "with_locator": 164
+          },
+          "ReportedRatio": {
+            "total": 5,
+            "with_digest": 5,
+            "with_locator": 5
+          }
+        },
+        "total": 314,
+        "with_digest": 314,
+        "with_locator": 314
+      },
+      "gaps_by_kind": {
+        "INTERVAL_NOT_EXPRESSIBLE": 1,
+        "RELATION_ABSENT": 88,
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE": 4,
+        "TYPE_ABSENT": 1
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-06T12:36:09Z",
+      "note": "admitted at the first runner attempt with no return: the first Opus cell of the loop to admit at attempt 1 with zero first-attempt defects since run-15 (0, 7, 0, 1, 0 across the five Opus cells); 186 of 186 blocks asserted and none declared, the first cell whose census reports every block asserted; 314 of 314 source-asserted records with a locator and digest; 0 of 26 relations non-local"
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-06T11:59:48Z",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:25c91a5b06726edb51c4a7ce74677b29e47b465281b6b2d771c0d93c2ba87cda",
+    "type_sets_note": "query-type-sets.note.json",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:abf9cc3c4993231d41f0827e79f3643b94b62d44f8ecc10668cf3d4da0a4485b",
+    "cases_sha256": "sha256:78f312e120960136f9e2d12b4884e8276a93db41798b70a3f5ac67059522734c",
+    "cases": 1883,
+    "cases_by_kind": {
+      "ENTITY": 19,
+      "RELATION": 1715,
+      "SUBJECT": 149
+    },
+    "phase_two_dispatched_after": true,
+    "first_binding_before_amendment": {
+      "type_sets": "query-type-sets.first.json",
+      "type_sets_sha256": "sha256:00c11d17a5e29c00e8a6ba209857ec1f031ef12523452aed6811c0bc62c9767d",
+      "type_sets_note": "query-type-sets.first.note.json",
+      "binding_at_acceptance": "query-binding.acceptance.first.json",
+      "binding_at_acceptance_sha256": "sha256:182c641ced76d0de7af4ffd68db3fb8bdb5d84bf8b56e5276e6ff2dedc5afe70",
+      "cases_sha256": "sha256:2ec3650025e6ef88c3461bd97c8031985a1931a21ca0a9a8166ed60f07ed663a",
+      "cases": 1583,
+      "cases_by_kind": {
+        "ENTITY": 16,
+        "RELATION": 1430,
+        "SUBJECT": 137
+      },
+      "bound_at": "2026-09-06T11:59:48Z",
+      "binding_executed": "results/native-query-binding.first.json",
+      "executor_refusal_at": "2026-09-06T12:37:00Z",
+      "executor_refusal": "native-query: NativeQueryRefusal: the binding declares no projection for the record's own type: AnalyticalMethod",
+      "rows_produced": 0
+    },
+    "type_sets_amended_at": "2026-09-06T12:38:47Z",
+    "type_sets_amendment": "AnalyticalMethod added to CQ-01, CQ-03 and CQ-04 beside Method, closing the sets under the surface's subtypes after the executor's own-type projection rule refused the first binding; no row existed; the reason and the closure check are in query-type-sets.note.json under amendment",
+    "executed_at": "2026-09-06T12:39:12Z",
+    "binding_executed": "results/native-query-binding.json",
+    "bound_after_replay_receipt_sha256": "sha256:2cab922f229d578f183a647e445d0b99348ce2f931fb161a0652547a29a6e832",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "result_schema": "malleus.paper-v4.query-result/v3",
+    "rows_by_question": {
+      "NQ-CQ-01": 24,
+      "NQ-CQ-02": 122,
+      "NQ-CQ-03": 178,
+      "NQ-CQ-04": 166
+    },
+    "rows_total": 490,
+    "rows_by_kind": {
+      "ENTITY": 239,
+      "RELATION": 41,
+      "SUBJECT": 210
+    },
+    "rows_from_more_than_one_case": 237,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:65bed38eb14e1d4d305cca5796c8ee6e2bf086f2e6b946e1e7037d0335e2569b"
+  },
+  "review": {}
+}
