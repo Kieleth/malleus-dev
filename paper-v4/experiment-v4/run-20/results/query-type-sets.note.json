@@ -1,0 +1,21 @@
+{
+  "written_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "written_at": "2026-09-06T06:14:01Z",
+  "written_by": "paper evaluator (overseer session), from the accepted population surface only, before phase two",
+  "rationale": {
+    "CQ-01": "observing system, campaign, instrument count, acquisition",
+    "CQ-02": "named region, earthquake population, spatial relation: the ridge, segment, discontinuity, fault, core-complex, interface, region and morphology types, the observation types, Claim",
+    "CQ-03": "bounded quantities with units and status: every quantified type and the structure, unit, interface, material, constituent, sample, method, model and data types a quantity may be about",
+    "CQ-04": "a preferred causal mechanism as hypothesis: Claim, the observation types, the melt, constituent, structural, volcanic, hydrothermal, fault and model types"
+  },
+  "translation": {
+    "run-15 GeologicFeature": "the EarthFeature subtypes named one by one; the parent EarthFeature is in no set, since an ENTITY case on the parent returns every feature",
+    "run-15 EarthMaterial": "RockType, MeltPhase, MineralPhase, ChemicalConstituent",
+    "run-15 SoftwareTool": "SoftwareTool",
+    "run-15 CountObservation, RatioObservation": "CountObservation, ReportedRatio",
+    "run-15 BibliographicSource": "PublishedWork, a catalogue, in no set; DataResource (datasets) kept"
+  },
+  "lesson_applied": "no catalogue type the question does not ask for: PublishedWork and ResearchAgent are in no set",
+  "left_out": "GeophysicalEvent (EVENT family, subject-bearing here) is in no set, as the event type was in runs 12 to 19",
+  "note": "run-15's sets translated to run-20's surface; the same questions, the same judgement"
+}

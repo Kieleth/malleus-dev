@@ -1,0 +1,68 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-20",
+  "core": {
+    "commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
+  },
+  "producer_input_manifest_sha256": "sha256:3a5258add2410ec65210dfbd03def96a833f23e63f973a7b92574643d3d83fd5",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:a41423238bf9866648533d8150c52d98350680a69773e3812f790a846bdeb2c7",
+    "final_status_sha256": "sha256:80aa02538163cbe045a1b02543b9d2865d4eaa9cb692a8643538bfdfea6447f1"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:49f0a4d3568740ffb8138d4841015f98adb31fc9865a45d8319641eb2270b6a5",
+      "ontology_path": "paper-v4/experiment-v4/run-20/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-20/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:60a9eac5033d90176b89c35f46999797bcc5751968d92cfe12a72ad62c26a5c9",
+      "accepted_at": "2026-09-06T06:13:11Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:49f0a4d3568740ffb8138d4841015f98adb31fc9865a45d8319641eb2270b6a5",
+    "validated_contract_sha256": "sha256:683fdfe753781e7657a3b6178fab09753c381b530f79c72d43e301c6bfe6f737",
+    "validated_fact_set_sha256": "sha256:c1a1e443f5dd4de042e4088885dfd49640a04c525adeea4db6e54ac97af37568",
+    "fact_count": 4314,
+    "grounding_receipt_sha256": "sha256:a975f08138f9de8b667309ecb7c8579869081f6287e442982f3252d9be129a4e",
+    "population_surface_sha256": "sha256:50af6cc8c2593e9ace4e8f6c5c276bb07b83b14b8960d105cb325120d59f1a73",
+    "population_surface_families": {
+      "ENTITY": 38,
+      "EVENT": 2,
+      "RELATION": 4
+    }
+  },
+  "accepted_ontology_sha256": "sha256:49f0a4d3568740ffb8138d4841015f98adb31fc9865a45d8319641eb2270b6a5",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-06T06:14:01Z",
+    "checked_at_precision": "minute, from the session clock",
+    "urls": 3,
+    "fabricated": 0,
+    "result": "purl.obolibrary.org/obo/bfo.owl redirects to the BFO 2.0 OWL (v2019-08-26) on GitHub, fetched: independent continuant, occurrent, process and object aggregate declared in the excerpt read; material entity (BFO_0000040), object (BFO_0000030) and site (BFO_0000029) confirmed by label through the EBI OLS API; purl.obolibrary.org/obo/ro.owl redirects to the RO OWL on GitHub, fetched: 'part of' declared in the excerpt read, 'located in' (RO_0001025) and 'adjacent to' (RO_0002220) confirmed by label through OLS in run-13's check; www.w3.org/TR/prov-o fetched in run-13's check: Agent, Person, Organization defined. The first cell of the loop whose every cited term is confirmed; the domain names are declared invented with a search note naming GeoSciML, SWEET, the USGS Thesaurus, GCMD, QuakeML, the IUGS classification and ChEBI as not cited unverified",
+    "unverified": [],
+    "vocabulary_claims_unsupported": 0,
+    "fabricated_basis": "the three vocabularies are real and every borrowed term is a class or property they declare"
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-20 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

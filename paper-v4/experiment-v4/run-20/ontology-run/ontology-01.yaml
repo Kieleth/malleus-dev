@@ -1,0 +1,576 @@
+id: https://malleus.dev/schema/projects/marine-geoscience
+name: marine_geoscience
+version: 0.1.0
+title: Marine Geoscience Project Ontology
+description: >-
+  Project vocabulary for mid-ocean ridge microseismicity and mid-ocean ridge
+  basalt geochemistry as a source reports them. This schema declares only the
+  things a source names: features of the Earth, materials, research agents,
+  geophysical occurrences, and the spatial arrangement of features. Every
+  reported quantity, count, ratio, and attributed claim is carried by the
+  metrology and research packs rather than by a project slot, so a number the
+  source states about a named thing is an Observation with that thing as its
+  subject and never a slot on the thing itself.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  marine: https://malleus.dev/schema/projects/marine-geoscience/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+
+  AgentKind:
+    description: >-
+      Whether a research agent is a person or an organization, as the source
+      presents it. It constrains the root's open agent_type slot, which the
+      Malleus root asks domain projects to constrain.
+    permissible_values:
+      PERSON:
+        description: An individual the source names.
+      ORGANIZATION:
+        description: >-
+          An institution, funding body, publisher, laboratory, or programme the
+          source names.
+
+  EventKind:
+    description: >-
+      Kind of geophysical occurrence. It constrains the root's required
+      event_type slot. The list is deliberately short and grows by adding a
+      value when the reading names an occurrence of a kind it does not cover.
+    permissible_values:
+      EARTHQUAKE:
+        description: An earthquake the source names as an individual occurrence.
+      VOLCANIC_ERUPTION:
+        description: A volcanic eruption the source names as an individual occurrence.
+
+  GeoscienceRelationType:
+    description: >-
+      Predicates for the spatial and material arrangement of Earth features and
+      Earth materials, in the direction the source states them. PART_OF,
+      LOCATED_IN and ADJACENT_TO carry the OBO Relations Ontology senses of
+      part of, located in and adjacent to. OVERLIES and UNDERLIES are both
+      present, and neither is derived from the other, so a relation keeps the
+      endpoint order of the sentence that states it rather than a direction
+      this schema picked.
+    permissible_values:
+      PART_OF:
+        description: The source states that one feature is a part of another.
+      LOCATED_IN:
+        description: The source places one feature inside the extent of another.
+      ADJACENT_TO:
+        description: The source states that two features lie next to one another.
+      BOUNDED_BY:
+        description: >-
+          The source states that one feature is bounded or terminated by
+          another.
+      OFFSET_BY:
+        description: >-
+          The source states that one feature is offset along strike by another.
+      CUT_BY:
+        description: The source states that one feature is cut or dissected by another.
+      INTERSECTS:
+        description: The source states that two features intersect.
+      OVERLIES:
+        description: The source places one feature above another in depth.
+      UNDERLIES:
+        description: The source places one feature below another in depth.
+      OBSERVED_ON:
+        description: >-
+          The source reports a material observed on, at, or recovered from a
+          feature.
+      CONTAINS:
+        description: The source states that one thing carries another within it.
+      COMPOSED_OF:
+        description: The source states what a feature or material is made of.
+      DERIVED_FROM:
+        description: >-
+          The source states that one material originates from another material
+          or feature.
+
+# -------------------------------------------------------------------
+# Classes
+# -------------------------------------------------------------------
+
+classes:
+
+  # --- Features of the Earth --------------------------------------
+
+  EarthFeature:
+    is_a: Entity
+    description: >-
+      A named feature of the solid Earth, its ocean floor, or its geography
+      that the source refers to as a thing in its own sentences. Aligned with
+      the BFO categories independent continuant, material entity, object and
+      site: a feature endures, bears qualities, and is not itself an
+      occurrence. The class is concrete on purpose, so a feature the reading
+      names but does not sort into one of the subkinds below has a home that
+      does not require inventing a subkind for it.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and marine geology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Structural geology"
+          vocabularies:
+            - vocabulary: Basic Formal Ontology (BFO), OBO Foundry release
+              vocabulary_url: http://purl.obolibrary.org/obo/bfo.owl
+              borrowed_terms:
+                - independent continuant
+                - material entity
+                - object
+                - site
+          invented_terms:
+            - EarthFeature
+            - SpreadingRidge
+            - RidgeSegment
+            - RidgeDiscontinuity
+            - TransformFault
+            - FaultStructure
+            - OceanicCoreComplex
+            - VolcanicStructure
+            - HydrothermalStructure
+            - LithosphericUnit
+            - LithosphericInterface
+            - SeafloorMorphology
+            - GeographicRegion
+          invention_search: >-
+            The declared inputs are the Malleus root and the metrology,
+            chronology and research packs, and none of them cites a geoscience
+            vocabulary, so the search ran over what could be vouched for in
+            this session. Basic Formal Ontology is cited because the Malleus
+            root declares the BFO namespace and aligns its own Entity, Event
+            and Signal roots to BFO categories, and its upper terms are the
+            ones actually borrowed here. Controlled geoscience vocabularies
+            that would name these feature kinds are known to exist, among them
+            GeoSciML and the CGI Geoscience Terms, the NASA-JPL SWEET
+            ontologies, the USGS Thesaurus and the GCMD keyword set, but none
+            is among the declared inputs and this session has no network
+            access, so neither a term spelling nor a resolvable URL could be
+            checked. Citing one from recall would be a fabricated citation, so
+            the feature class names stay local and follow the wording the
+            reading itself uses. A reviewer with network access should replace
+            this block with a cited form once the spellings and URLs are
+            verified.
+
+  SpreadingRidge:
+    is_a: EarthFeature
+    description: >-
+      A mid-ocean ridge or spreading center taken as a whole, as distinct from
+      one of its along-axis segments.
+
+  RidgeSegment:
+    is_a: EarthFeature
+    description: >-
+      A named along-axis portion of a spreading ridge, including a supersegment
+      the source treats as one length of axis.
+
+  RidgeDiscontinuity:
+    is_a: EarthFeature
+    description: >-
+      A break in a spreading axis that is not a transform fault, including a
+      non-transform discontinuity and a ridge-transform intersection.
+
+  TransformFault:
+    is_a: EarthFeature
+    description: >-
+      An oceanic transform fault, its plate-boundary trace, and the valley it
+      occupies.
+
+  FaultStructure:
+    is_a: EarthFeature
+    description: >-
+      A fault, fracture, or shear zone other than a transform fault, including
+      a normal fault, a detachment fault, and a mylonite shear zone.
+
+  OceanicCoreComplex:
+    is_a: EarthFeature
+    description: >-
+      An oceanic core complex, together with the corrugated surface, dome, and
+      termination the source attributes to it.
+
+  VolcanicStructure:
+    is_a: EarthFeature
+    description: >-
+      A volcanic or magmatic body, including a neo-volcanic ridge, a volcanic
+      cone, a volcanic edifice, a named volcano, a melt lens, and a magma
+      reservoir.
+
+  HydrothermalStructure:
+    is_a: EarthFeature
+    description: >-
+      A hydrothermal vent field, mound, or massif, whether the source reports
+      it as active, extinct, or inactive.
+
+  LithosphericUnit:
+    is_a: EarthFeature
+    description: >-
+      A body or layer of the Earth's interior, or a tectonic plate, including
+      crust, mantle, lithosphere, asthenosphere, and a rheologically named part
+      of one of them.
+
+  LithosphericInterface:
+    is_a: EarthFeature
+    description: >-
+      A boundary or surface separating two units or regimes, including the
+      brittle-ductile boundary, the Moho, the lithosphere-asthenosphere
+      boundary, an isotherm the source uses as a boundary, and the sea floor.
+
+  SeafloorMorphology:
+    is_a: EarthFeature
+    description: >-
+      A morphological form of the sea floor, including an axial or median
+      valley, a transform valley, a fracture zone, a transverse ridge, a
+      corrugated surface, and a bathymetric high.
+
+  GeographicRegion:
+    is_a: EarthFeature
+    description: >-
+      A named ocean, sea area, landmass, or study area the source uses to place
+      other features.
+
+  # --- Materials of the Earth -------------------------------------
+
+  EarthMaterial:
+    is_a: Entity
+    description: >-
+      A named material of the Earth that the source refers to as a kind of
+      stuff rather than as a specimen it holds. Aligned with the BFO categories
+      material entity and object aggregate. A specimen the source collected is
+      a research pack Sample, not an EarthMaterial.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Petrology and geochemistry
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Petrology"
+          vocabularies:
+            - vocabulary: Basic Formal Ontology (BFO), OBO Foundry release
+              vocabulary_url: http://purl.obolibrary.org/obo/bfo.owl
+              borrowed_terms:
+                - material entity
+                - object aggregate
+          invented_terms:
+            - EarthMaterial
+            - RockType
+            - MeltPhase
+            - MineralPhase
+            - ChemicalConstituent
+          invention_search: >-
+            No declared input cites a petrological, mineralogical, or chemical
+            vocabulary. Basic Formal Ontology is cited for the upper terms
+            actually borrowed, on the same ground as the EarthFeature block:
+            the Malleus root declares its namespace and aligns its own roots to
+            it. Vocabularies that would name these material kinds are known to
+            exist, among them the IUGS igneous rock classification, the IMA
+            mineral names list, ChEBI for chemical entities, and IUPAC
+            nomenclature, but none is among the declared inputs and this
+            session has no network access, so no term spelling or URL could be
+            checked and none is cited from recall. The four material class
+            names are therefore local and follow the reading's own wording.
+
+  RockType:
+    is_a: EarthMaterial
+    description: >-
+      A kind of rock the source names, including a named basalt type and a
+      named mantle rock.
+
+  MeltPhase:
+    is_a: EarthMaterial
+    description: >-
+      A melt or magma the source names by its stage or setting, including a
+      primary melt, a primitive melt, and a pre-eruptive melt.
+
+  MineralPhase:
+    is_a: EarthMaterial
+    description: A mineral the source names, including a named compositional variety.
+
+  ChemicalConstituent:
+    is_a: EarthMaterial
+    description: >-
+      A chemical element, compound, or volatile species the source reports as a
+      constituent of a rock, a melt, or a fluid.
+
+  # --- Agents -----------------------------------------------------
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person or organization the source credits, names as an author, names as
+      a funder, or otherwise records as acting in the work. Aligned with PROV-O
+      Agent; an instance is a PROV Person or a PROV Organization, recorded in
+      agent_type.
+    slot_usage:
+      agent_type:
+        range: AgentKind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology, 2013 Recommendation
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+          invented_terms:
+            - ResearchAgent
+            - AgentKind
+          invention_search: >-
+            PROV-O supplies Agent, Person and Organization, its namespace is
+            declared by the Malleus root, and the root's own Agent mixin cites
+            PROV:Agent, so the terms are borrowed rather than invented. The
+            class name is local only because Agent is already taken by that
+            root mixin and a second class of the same name would collide. The
+            enum name AgentKind is local for the same reason: PROV names the
+            two categories but not the discriminator that carries them. The
+            area and taxonomy repeat the research pack's own declared values,
+            because this class serves the same area of knowledge that pack
+            already grounded.
+
+  # --- Occurrences ------------------------------------------------
+
+  GeophysicalEvent:
+    is_a: Event
+    mixins:
+      - Describable
+      - SourceAsserted
+    description: >-
+      A geophysical occurrence the source names as an individual happening, as
+      distinct from a population of occurrences it only counts or bounds.
+      Aligned with the BFO categories occurrent and process. A set of events the
+      source reports only in aggregate is not an instance here; its count and
+      its depth range are Observations whose subject is the feature the source
+      names. SourceAsserted is worn so the route back to the retained assertion
+      travels with the occurrence; subject stays unset for an occurrence whose
+      assertion is about the occurrence itself.
+    slot_usage:
+      event_type:
+        range: EventKind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geophysics > Seismology"
+          vocabularies:
+            - vocabulary: Basic Formal Ontology (BFO), OBO Foundry release
+              vocabulary_url: http://purl.obolibrary.org/obo/bfo.owl
+              borrowed_terms:
+                - occurrent
+                - process
+          invented_terms:
+            - GeophysicalEvent
+            - EventKind
+          invention_search: >-
+            No declared input cites a seismological vocabulary. QuakeML is the
+            standard whose Event, Origin, Magnitude, Pick, Arrival and
+            FocalMechanism element names would be the ones to borrow, and the
+            FDSN station and event schemas are the other candidates, but none
+            is among the declared inputs and this session has no network
+            access, so no schema URL could be checked and none is cited from
+            recall. Basic Formal Ontology is cited for the upper terms actually
+            borrowed. The class and enum names are therefore local. If QuakeML
+            is later verified, Origin, Magnitude and FocalMechanism are the
+            three concepts this schema currently carries as Observations rather
+            than as typed classes, and that is the first place to revisit.
+
+  # --- Relations --------------------------------------------------
+
+  GeoscienceRelation:
+    is_a: Relation
+    description: >-
+      A stated spatial or material relation between two Earth features, between
+      an Earth feature and an Earth material, or between two Earth materials.
+      Endpoints are Entities, which the Malleus root requires, so an occurrence
+      is never an endpoint; a relation the source states between an earthquake
+      and a structure is recorded as a typed gap rather than derived.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and marine geology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Structural geology"
+          vocabularies:
+            - vocabulary: OBO Relations Ontology (RO), OBO Foundry release
+              vocabulary_url: http://purl.obolibrary.org/obo/ro.owl
+              borrowed_terms:
+                - part of
+                - located in
+                - adjacent to
+          invented_terms:
+            - GeoscienceRelation
+            - GeoscienceRelationType
+          invention_search: >-
+            The OBO Relations Ontology supplies part of, located in and
+            adjacent to, which the enum spells as PART_OF, LOCATED_IN and
+            ADJACENT_TO. Its overlaps relation was considered for INTERSECTS
+            and not used, because the reading states that two structures
+            intersect rather than that they share a region. The remaining ten
+            values, BOUNDED_BY, OFFSET_BY, CUT_BY, INTERSECTS, OVERLIES,
+            UNDERLIES, OBSERVED_ON, CONTAINS, COMPOSED_OF and DERIVED_FROM,
+            describe ridge geometry, lithospheric layering, and material
+            provenance in the senses the reading uses, and no relation among
+            the declared inputs names them. GeoSciML and the CGI Geoscience
+            Terms are the vocabularies that would name the structural ones, and
+            they could not be checked offline, so the class name, the enum
+            name, and those ten values are local.
+
+  FundingRelation:
+    is_a: ContributionRelation
+    description: >-
+      A funding contribution the source credits, from a funding body to a work,
+      a project, or a person. It carries CONTRIBUTED_TO as its relation_type,
+      inherited from the research pack. contribution_role is set to OTHER when
+      the source states that the contribution is funding, because the CRediT
+      taxonomy names the role of a person who acquires funding and not the role
+      of the body that supplies it; it stays unset when the source names a
+      funder without saying what was funded.
+    slots:
+      - award_identifier
+
+  # --- Records that extend pack types -----------------------------
+
+  CountObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      An observation whose reported value is an integer count rather than a
+      bounded quantity, carrying the count and the scope the source states for
+      it. The count stays an integer here rather than being widened into the
+      float bounds a plain Observation would use.
+
+  ReportedRatio:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A ratio the source reports, carrying the route back to the assertion that
+      states it and the entity the ratio is about, plus how the source
+      qualifies the number and how it was determined.
+    slots:
+      - value_qualification
+      - determination
+
+  PublishedWork:
+    is_a: Source
+    description: >-
+      A published work the source cites or is itself: an article, a book
+      chapter, a conference abstract, or a preprint.
+    slots:
+      - doi
+      - publication_year
+      - container_title
+      - volume_designation
+      - page_range
+      - locator
+      - received_date
+      - accepted_date
+
+  DataResource:
+    is_a: Source
+    description: >-
+      A database, archive, deposit, or catalogue the source names as a place
+      its data was drawn from or deposited in.
+    slots:
+      - doi
+      - locator
+
+  SoftwareTool:
+    is_a: Method
+    description: >-
+      A named software package or program the source states it used. The
+      algorithm a package implements is a research pack Method in its own
+      right, related to the package rather than merged into it.
+    slots:
+      - locator
+      - software_version
+
+  GeophysicalModel:
+    is_a: Method
+    description: >-
+      A named model the source uses to determine or predict a quantity,
+      including a one-dimensional velocity model, a thermal model, and a
+      solubility model. It extends Method because a model is the means by which
+      the source determined a value, and no pack declares a model class.
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+
+  doi:
+    range: string
+    description: >-
+      Digital Object Identifier the source states for a work or a deposit, in
+      the form the source writes it.
+
+  publication_year:
+    range: integer
+    description: Year of publication the source states for a work.
+
+  container_title:
+    range: string
+    description: >-
+      Title of the larger work in which a work appeared, as the source writes
+      it: a journal, a book, or a series.
+
+  volume_designation:
+    range: string
+    description: >-
+      Volume, issue, or article designation the source states, retained as
+      written rather than split into parts the source does not separate.
+
+  page_range:
+    range: string
+    description: >-
+      Page range or article number the source states, retained as written and
+      never converted.
+
+  received_date:
+    range: string
+    description: >-
+      Date of receipt the source states for itself, retained in the source's
+      own wording. It is a string because the source states a calendar day
+      without a time, and a datetime would require inventing one.
+
+  accepted_date:
+    range: string
+    description: >-
+      Date of acceptance the source states for itself, retained in the source's
+      own wording, for the same reason as received_date.
+
+  software_version:
+    range: string
+    description: Version designation the source states for a software package.
+
+  award_identifier:
+    range: string
+    description: >-
+      Grant, award, or agreement number the source states for a funding
+      contribution, as the source writes it.

@@ -6715,3 +6715,67 @@ Non-claim: no producer has run under this cell. The expected effect and the
 falsifier are E-0187's: admission within two structural returns and no
 UNSUPPORTED row at review; a third refusal or one UNSUPPORTED row falsifies.
 This cell is the candidate cell of record pending Luis's ruling.
+
+### E-0189, run-20 (Opus 5 at v4.10) is admitted at the second runner attempt after one defect; every source-asserted record carries a locator and digest
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-20/ontology-run/`, `paper-v4/experiment-v4/run-20/results/`,
+`private/paper-v4-v4-run-20/` (ledger, query result, population plan, the
+refused first runner attempt, withheld files), `paper-v4/evaluation-v4/run-20/`
+(review inputs under protocol v2 and task v4).
+
+Ontology: accepted at attempt 01, 4,314 facts, 38 entity types, 2 event
+types, 4 relation types, 5 subject-bearing types. Twenty-eight project
+classes; five root extensions grounded to BFO, RO and PROV-O with every
+borrowed term confirmed (four BFO classes in the fetched OWL, three by IRI
+through the EBI OLS API, RO's three and PROV-O's three from earlier checks)
+and the domain names declared invented with a search note naming the
+geoscience vocabularies the producer would not cite unverified: the first cell
+of the loop with no unsupported vocabulary claim. The producer ran the
+prescribed capability probe, found the ambient shim broken, and handed the
+attempt over uncompiled, saying so.
+
+Population: 393 assertions; 184 blocks asserted, 2 declared
+nothing-assertable (map-panel furniture), 0 untouched; 482 records (426
+entities, 1 event, 55 relations); 77 typed gaps (49 TYPE_ABSENT, 18
+REQUIRED_FIELD_ABSENT_IN_SOURCE, 6 RELATION_ABSENT, 4 AGGREGATE_ONLY), every
+unformalized assertion carrying one. Every statement a byte span through a
+harness that refuses an anchor it cannot find. The producer ran the skill's
+pre-flight list mechanically and refused to write while any check failed: 37
+failures fixed before the file existed. Runner attempt 1 refused one defect,
+SUBJECT_NOT_NAMED on the cold-thick-lithosphere hypothesis, whose subject
+slot the raising sentence formalized without naming the segment; returned as
+diagnostic 1 of 2. The producer applied the strict reading to all six records
+of that shape, lengthened one span so the preferred hypothesis keeps RC2, and
+unset five subjects rather than repoint them at an entity chosen to pass
+("a subject chosen to satisfy a checker is not evidence", its words). Attempt
+2 admitted under `actor:overseer-run-20`: fourteen ledger events, replay
+reproducing admission, 482 traced. Census: 317 fully, 21 partly, 55
+unformalized; 24 of 55 relations non-local; largest hub 16 (the byline).
+Subject coverage 117 of 235 proposed, 33 attachable, 30 ambiguous, 55
+unnamed. Provenance coverage 235 of 235 with a locator and a digest, the
+first cell where the census reports it whole (run-15: 142 of 351; runs 16
+and 19: none).
+
+Query: the v4 binding frozen at acceptance (3,068 cases: 38 ENTITY, 2,852
+RELATION, 178 SUBJECT; the EarthFeature subtypes named one by one, the parent
+and the two catalogue types in no set) executed unchanged after replay under
+the v4.9 executor: CQ-01 34, CQ-02 105, CQ-03 158, CQ-04 137, 434 rows (171
+ENTITY, 17 RELATION, 246 SUBJECT) over 220 witnesses, 33 rows from more than
+one case, no forbidden attempt.
+
+Execution coordinate: inputs pinned at `c95dba7` (E-0188); the runner
+executed at main `7165390`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 189,798; population
+226,989; correction 17,000; producer total 433,787 (run-15: 351,253; run-13:
+383,284; run-14: 439,761).
+
+Expected effect (E-0187): admission within two structural returns and no
+UNSUPPORTED row at review. The first held with one return; the second waits
+on the review. First-attempt defects across the Opus cells: 0, 7, 0, 1.
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet; the review judges the rows as rows. Whether this cell is the cell of
+record is Luis's.

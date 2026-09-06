@@ -1,0 +1,61 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "Observation",
+    "CountObservation",
+    "Method",
+    "SoftwareTool",
+    "DataResource"
+  ],
+  "CQ-02": [
+    "SpreadingRidge",
+    "RidgeSegment",
+    "RidgeDiscontinuity",
+    "TransformFault",
+    "FaultStructure",
+    "OceanicCoreComplex",
+    "LithosphericInterface",
+    "GeographicRegion",
+    "SeafloorMorphology",
+    "Observation",
+    "CountObservation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "CountObservation",
+    "ReportedRatio",
+    "QuantityValue",
+    "Ratio",
+    "RidgeSegment",
+    "SpreadingRidge",
+    "LithosphericUnit",
+    "LithosphericInterface",
+    "RockType",
+    "MeltPhase",
+    "ChemicalConstituent",
+    "MineralPhase",
+    "Sample",
+    "Method",
+    "GeophysicalModel",
+    "Claim",
+    "DataResource"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "CountObservation",
+    "ReportedRatio",
+    "MeltPhase",
+    "ChemicalConstituent",
+    "RidgeSegment",
+    "LithosphericUnit",
+    "LithosphericInterface",
+    "VolcanicStructure",
+    "HydrothermalStructure",
+    "FaultStructure",
+    "GeophysicalModel",
+    "Method"
+  ]
+}
