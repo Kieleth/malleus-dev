@@ -1,0 +1,770 @@
+{
+  "run_id": "run-19",
+  "declared_blocks": 127,
+  "judged_by": "fresh Opus 5 session, blind to the producer's reasons",
+  "rule": "A block is nothing-assertable only when it holds no sentence a reader could quote verbatim to capture a source-supported record naming a thing, a quantity, a relation, a claim or an attribution; a reference entry naming a work is assertable, while a running header, a page number, figure furniture, a licence stamp, or a severed fragment whose numbers belong to nothing named in the block is not.",
+  "blocks": [
+    {
+      "block_id": "page:10:block:001",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "a severed title tail with volume and year, the work itself not named here"
+    },
+    {
+      "block_id": "page:10:block:002",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:003",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:004",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:005",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:10:block:006",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:007",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:10:block:008",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:009",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:010",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:011",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:012",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:013",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:014",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:10:block:015",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:016",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:017",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:018",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:019",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:020",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:021",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:022",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names the persons credited with one numbered work"
+    },
+    {
+      "block_id": "page:10:block:023",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work by title, venue and year, its authors severed away"
+    },
+    {
+      "block_id": "page:10:block:024",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:025",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:026",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:027",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:028",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:10:block:029",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:030",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:031",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names the persons credited with one numbered work"
+    },
+    {
+      "block_id": "page:10:block:032",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work by title, venue and year, its authors severed away"
+    },
+    {
+      "block_id": "page:10:block:033",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:10:block:034",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:035",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:036",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter carrying an identifier but no named work"
+    },
+    {
+      "block_id": "page:10:block:037",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:038",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:039",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:10:block:040",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:041",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:10:block:042",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:10:block:043",
+      "assertable": true,
+      "kind": "ACKNOWLEDGEMENT_OR_CREDIT",
+      "reason": "credits named persons and a named expedition"
+    },
+    {
+      "block_id": "page:10:block:048",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:11:block:001",
+      "assertable": true,
+      "kind": "OTHER",
+      "reason": "states that added content exists at a registered identifier"
+    },
+    {
+      "block_id": "page:11:block:002",
+      "assertable": true,
+      "kind": "ACKNOWLEDGEMENT_OR_CREDIT",
+      "reason": "names the two persons to whom enquiries go, an attribution"
+    },
+    {
+      "block_id": "page:11:block:003",
+      "assertable": true,
+      "kind": "ACKNOWLEDGEMENT_OR_CREDIT",
+      "reason": "gives credit to the referees and states that a record of that stage exists"
+    },
+    {
+      "block_id": "page:11:block:004",
+      "assertable": true,
+      "kind": "LICENCE_OR_BOILERPLATE",
+      "reason": "back-matter sentence asserting a stance, alongside a bare address"
+    },
+    {
+      "block_id": "page:11:block:006",
+      "assertable": false,
+      "kind": "LICENCE_OR_BOILERPLATE",
+      "reason": "rights stamp with the running line and a page number"
+    },
+    {
+      "block_id": "page:1:block:006",
+      "assertable": true,
+      "kind": "OTHER",
+      "reason": "front matter carrying submission dates and author affiliations"
+    },
+    {
+      "block_id": "page:2:block:007",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "figure 1 caption prose carrying full statements, after a severed opening sentence"
+    },
+    {
+      "block_id": "page:2:block:008",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:3:block:005",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "figure 2 caption prose stating what a panel shows"
+    },
+    {
+      "block_id": "page:3:block:006",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:4:block:004",
+      "assertable": false,
+      "kind": "FIGURE_FURNITURE",
+      "reason": "coordinates, scale ticks and one-word keys, no statement"
+    },
+    {
+      "block_id": "page:4:block:005",
+      "assertable": false,
+      "kind": "FIGURE_FURNITURE",
+      "reason": "coordinates, scale ticks and one-word keys, no statement"
+    },
+    {
+      "block_id": "page:4:block:006",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "figure 3 caption prose carrying full statements, after short keys"
+    },
+    {
+      "block_id": "page:4:block:007",
+      "assertable": true,
+      "kind": "CAPTION_PROSE",
+      "reason": "continuation of the figure 3 caption, still full statements"
+    },
+    {
+      "block_id": "page:4:block:008",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:5:block:011",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:6:block:006",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:7:block:013",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:8:block:009",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "a bare number and a closing bracket, no subject"
+    },
+    {
+      "block_id": "page:8:block:011",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "the tail of a split web address, no subject"
+    },
+    {
+      "block_id": "page:8:block:012",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:8:block:013",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:8:block:014",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:8:block:015",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:8:block:016",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:8:block:017",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:8:block:018",
+      "assertable": false,
+      "kind": "RUNNING_HEADER_OR_FOOTER",
+      "reason": "journal running line and a page number"
+    },
+    {
+      "block_id": "page:9:block:001",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:002",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:003",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:004",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:005",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:006",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:007",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:008",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:009",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:010",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:011",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names the persons credited with one numbered work"
+    },
+    {
+      "block_id": "page:9:block:012",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work by title, venue and year, its authors severed away"
+    },
+    {
+      "block_id": "page:9:block:013",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:014",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:015",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter carrying an identifier but no named work"
+    },
+    {
+      "block_id": "page:9:block:016",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:017",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:018",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter carrying an identifier but no named work"
+    },
+    {
+      "block_id": "page:9:block:019",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:020",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:021",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:022",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:023",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:024",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter carrying an identifier but no named work"
+    },
+    {
+      "block_id": "page:9:block:025",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:026",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:027",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names the persons credited with one numbered work"
+    },
+    {
+      "block_id": "page:9:block:028",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work by title, venue and year, its authors severed away"
+    },
+    {
+      "block_id": "page:9:block:029",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:030",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:031",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:032",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:033",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:034",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:035",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:036",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:037",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:038",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:039",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:040",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:041",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:042",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:043",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:044",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:045",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:046",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:047",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:048",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:049",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:050",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:051",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:052",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:053",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:054",
+      "assertable": false,
+      "kind": "SEVERED_FRAGMENT",
+      "reason": "continuation matter only: volume, pages and year of a work not named here"
+    },
+    {
+      "block_id": "page:9:block:055",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    },
+    {
+      "block_id": "page:9:block:056",
+      "assertable": true,
+      "kind": "REFERENCE_ENTRY",
+      "reason": "names a work with authors, title, venue and year"
+    }
+  ]
+}

@@ -539,3 +539,11 @@ No ruling has come. A second measurement that needs none: the census now counts 
 ### Declared blocks audited (10:50Z)
 
 Run-16: 111 of 128 declared blocks assertable, 101 of them reference entries; the declaration true for 17 (running headers, figure furniture, boilerplate, severed fragments). The census reports the number and cannot check it; the audit cost one session. For the paper, run-16's coverage is 58 of 169 assertable blocks, not 186 of 186 reviewed. E-0192. The loop pauses on Luis's rulings.
+
+## Replicate and second audit (2026-09-06T10:57Z; first written as 12:00Z, corrected from the wake clock)
+
+No ruling has come; the instruction is to keep learning. Two measurements that need none. Run-21 (Paper-25, E-0193): Opus 5 at the run-20 coordinate, harness byte for byte, the first within-condition replicate the matrix has; the RCA reads first-attempt defects, coverage, subjects, provenance, rows, the review's rates and labels, and cost as variance against run-20, with the same expectation and falsifier. And the declared-blocks audit repeated on run-19's 127 declarations, to corroborate E-0192 on the other Sonnet cell. Dispatched 10:57Z.
+
+### Run-19's declarations audited (11:05Z; first written as 12:15Z, corrected)
+
+92 of 127 declared blocks assertable, 82 of them reference entries; 35 true (24 severed fragments this session read stricter than run-16's auditor, 8 running headers, 2 figure-furniture blocks, one rights stamp). Same shape as run-16 (111 of 128): the two Sonnet cells declared the reference list void and the census counted it as reviewed. The auditors differ on the fragments (bibliographic tails with a venue and year), which is the rule's edge and worth one sentence in the review task if declarations are sampled. Entry E-0194, after Paper-25's E-0193 lands; the file is leak-checked at 60 characters.

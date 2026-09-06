@@ -7078,3 +7078,47 @@ about any model or about the protocol. A pair is not a distribution, and a cell
 that is admitted with no UNSUPPORTED row will not have shown that run-20's
 figures are reproducible, only that a second draw of the same condition landed
 somewhere. Whether run-20 or this cell is the cell of record is Luis's.
+
+### E-0194, a second declaration audited: 92 of the 127 blocks run-19's producer declared nothing-assertable carry assertable content
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/run-19/reliability/declared-blocks.json`
+(`sha256:724b6e0292f4e2e6a6ef495ea5082daed09304c63c28d283d4c24a124bfe347d`),
+written by a fresh Opus 5 session under the rule of E-0192 with one clause
+added (a severed fragment that names a number but not what it belongs to is
+not assertable on its own); the run-19 capture (E-0185).
+
+Result: of 127 declared blocks, 92 assertable and 35 not. By kind: 82
+reference entries, 4 caption-prose blocks, 3 acknowledgement lines, the
+front-matter block and the publisher's note, assertable; 24 severed
+fragments, 8 running headers, 2 figure-furniture blocks and the rights stamp,
+not. Run-19's producer is the same model as run-16's one skill apart; both
+declared the reference list void and the census counted it as reviewed. The
+two auditors differ on bibliographic tails carrying a venue and year (run-16's
+read them assertable, run-19's not, under a clause this session was given and
+that one was not), which is the rule's edge and the sentence a sampled
+declaration check would need. Four calls the session names as its own are in
+the file. Run-19's coverage for the paper: 59 blocks asserted of 151
+assertable (59 plus 92), not 186 of 186 reviewed.
+
+Non-claim: one cell, one session; the audit file is not part of run-19's
+preliminary record, which is unchanged.
+
+### E-0195, run-21's pin verified by the overseer at the Core-20 coordinate, unchanged
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-21/run-contract.json` and
+`producer-input-manifest.json`, `pin.py --commit c95dba7` run again by the
+overseer after E-0193, the governance ledger through OVR-000415.
+
+Run-21 replicates run-20: the same Core commit
+`c95dba7b86bb61487bda9a52458e1ea47cce20ab`, governance head OVR-000415, the
+harness byte for byte except the run id, the producer block key for key
+(Opus 5). The overseer's re-run of the pin rewrote nothing. Paper-25 repaired
+a carried reader that took the first-attempt defect count from a refusal's
+detail and returned 0 for run-20's "1 defect"; run-20's contract had stated
+1 correctly. Expected effect and falsifier are E-0193's: admission within two
+returns and no UNSUPPORTED row; the secondary measures are read as variance
+against run-20.
