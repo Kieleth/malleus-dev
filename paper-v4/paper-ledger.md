@@ -6243,3 +6243,154 @@ not.
 Non-claim: one session on one document per cell; the list's effect on the
 Opus and Sonnet producers, who did build validators from the rules, is not
 measured (no cell of theirs has run at v4.10).
+
+### E-0183, run-19 opens the second cell of v4.10: Core-20's pre-flight list on a Sonnet 5 producer
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-19/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`native_query.py`, `offline-validation.json`, `test_contract.py`,
+`test_pipeline.py`, `paper-v4/evaluation-v4/run-19/review-record.blank.md`,
+`handover/2026-09-06-v410-rca.md`,
+`handover/2026-09-05-run-16-sonnet-rca.md`,
+`handover/2026-09-05-overseer-journal.md` ("Anchors: 48 of the 99 proposed
+subjects"), and E-0170 to E-0173 and E-0180 to E-0182.
+
+Cell: run-19 is the second cell of v4.10 and the seventh on the settled
+harness. Core does not move, the harness does not move, the document does not
+move. What moves is the producer's model. The scope block says it plainly:
+`matrix_cell` SECOND_OF_V4_10, `variable`
+SONNET_5_PRODUCER_AT_THE_CORE_20_COORDINATE, `also_moved`
+NOTHING_CORE_IS_HELD_AT_THE_COMMIT_RUN_18_PINNED, `harness`
+IDENTICAL_TO_RUN_18, `harness_matched_cell` run-18, `model_matched_cells`
+run-05 and run-16. Run-19 supersedes nothing.
+
+Producer: requested model `sonnet`, model id `claude-sonnet-5`, model family
+Claude Sonnet 5, reasoning effort the harness default and neither pinned nor
+observed. Those three fields are run-16's, and they are the only three keys
+that differ from run-18's producer block; `test_pipeline.py` and
+`test_contract.py` both compare the two blocks key by key and require exactly
+that difference, and both compare this block against run-16's and require no
+difference at all.
+
+Harness: byte for byte run-18's. `native_query.py` carries no run id and is
+copied without a substitution. Six scripts, the spawn message and
+`offline_validation.py` are run-18's with the run id moved, read through one
+table that reverses. `pin.py` takes a second table, the reference cell stepping
+from run-17 to run-18 with the carried status and the interface ordinal, and
+nine passages repaired because the blanket step would otherwise say that this
+cell pins a commit after run-18's, that two Core entries are its own, that
+Core-20 is in flight, and that the refusal Core-19 types reached run-18's
+runner rather than run-17's. The protocol version does not step: v4.10 stays.
+The pin gains no code, which it last did at run-18, so the five marked blocks
+run-18 added are carried whole and their markers still name run-18; the test
+reverses both tables with nothing removed and requires run-18's bytes exactly.
+
+Coordinates: `pin.py --commit c95dba7b86bb61487bda9a52458e1ea47cce20ab` pins
+that commit, tree `39a9b9da7dcd41660b8b10fb20b1b1d8e2261082`, governance head
+`OVR-000415` at `sha256:19353a94…`. The gate status reads
+`PINNED_TO_THE_V4_10_CORE_COORDINATE`. No declared input moved against run-18's
+manifest: all eight are the same digests, the skill included, where run-18
+moved one. The interface coordinates are new: `capture:paper-v4:yu-2025:v4:19`
+and `plan:paper-v4:yu-2025:v4:19`, the runner will execute under
+`actor:overseer-run-19` with the reading artifact
+`artifact:selected-reading:yu-2025:v4:19`, and the private workspace is
+`private/paper-v4-v4-run-19/producer`.
+
+What the pin read at that commit. Core-19 LANDED, on the same six observations
+run-18's pin read: the document adapter moved, the plan compiler moved, the
+block census declares ASSERTED, DECLARED_NOTHING_ASSERTABLE and UNTOUCHED, the
+adapter writes `provenance_coverage` as a literal, the plan compiler's enum
+gained `RECORDS_NOT_REHYDRATABLE` and lost nothing, and `_empty_assertion_defects`
+and `_refuse_gaps` are both present, all read against the v4.8 coordinate.
+Core-20 LANDED on the bytes: the skill's paragraph is between its markers, it
+names every one of the 48 reasons the two enums declare between them at the
+pinned commit and no reason neither enum carries, and `tests/test_inquisition.py`
+names both enum classes and the same marker. `governance_entry_landed` reads
+true. Both entries are carried from run-18 and neither is carried unread: the
+pin recomputes both statuses at the commit and the contract records the reading
+rather than run-18's copy of it.
+
+All twenty-seven of run-18's `changes` entries are carried forward and marked
+`carried_from: run-18`. Ten are Core's, eight of them read at fixed commits with
+`CORE_18_NAME_AS_WORD` the newest, between the v4.7 and the v4.8 coordinates,
+and two read between the v4.8 coordinate and the pinned commit. Fourteen are the
+harness's. Three are closed cells' model records: `SONNET_5_PRODUCER_AT_V4_9`,
+whose subject stays run-16's producer block and whose fields are the three this
+cell runs; `HAIKU_4_5_PRODUCER_AT_V4_9`, whose subject stays run-17's; and
+`HAIKU_4_5_PRODUCER_AT_V4_10`, whose subject stays run-18's and whose
+expectation that run refused. None is this cell's producer entry, and the
+contract and both test files say so.
+
+One entry is this cell's: `SONNET_5_PRODUCER_AT_V4_10`, kind `MODEL_CELL`,
+subject the contract's own producer block, `defect_of: none`. The harness delta
+is NONE and the Core delta is NONE. It is measured against run-16, the same
+model at the same harness one Core coordinate earlier, and against run-18, the
+Haiku 4.5 cell at this same commit.
+
+Measurement. Run-16 was admitted, so its figures come from its own frozen
+results and are recomputed in the tests rather than copied: ontology accepted at
+attempt 01 at 2,880 facts with no gate return; runner attempt 1 refused fifty
+defects in one aggregated diagnostic (45 SUBJECT_NOT_NAMED, 4
+MODALITY_NOT_ASSERTED, 1 EVALUATIVE_SLOT_NOT_EVALUATED), returned as structural
+diagnostic 1 of 2, attempt 2 admitted and replayed; 148 assertions, 194 records
+(159 entities, 3 events, 32 relations), 433 rows over 157 witnesses; producer
+529,350 tokens. Its preliminary review, not ratified, reads RESPONSIVE, PARTIAL,
+PARTIAL, PARTIAL with 370 SUPPORTED, 61 PARTIAL, 2 UNSUPPORTED and no digest
+token on any row. Three counts have no public file at all, because run-16 ran
+before Core-19 and its census reports 186 of 186 blocks REVIEWED with no split:
+58 blocks asserted and 128 declared nothing-assertable, 0 records carrying a
+locator or a statement digest, and 48 of the 99 proposed subjects formalized
+only by an assertion that formalizes no other field of the record. All three are
+recomputed from run-16's capture, and the anchor rule is stated in the contract
+and computed in the test rather than read from E-0172. Run-18: ontology accepted
+at attempt 01 at 2,614 facts; population refused three times after two
+structural returns, READING_MISMATCH then NOT_VERBATIM on 18 of 26 then
+NOT_VERBATIM on 11; 26 assertions over 23 blocks, 163 declared, none untouched,
+22 records; producer 161,919 tokens.
+
+Expected, stated before the run: under the v4.10 skill a Sonnet 5 producer
+returns fewer than fifty defects at the first runner attempt, where run-16
+returned fifty at v4.9, and reaches admission within the two structural returns
+the manifest allows, as run-16 did with one. Falsifier: fifty or more defects at
+the first attempt, or a third structural refusal. Both halves are read off this
+cell's own launch log. The expectation rests on run-16's own report: its
+validator checked verbatim statements and formalization targets before the
+return and all three derivation-content rules after it, and Core-20's paragraph
+names every rule of both enums with the check in plain words before the producer
+writes anything. If the falsifier fires, it says the list does not reach even a
+producer that turns rules into code, and run-18's reading stands for every
+producer rather than for small ones.
+
+Read but not expected, in either direction: the subjects formalized only by an
+anchor assertion (48 in run-16), the records carrying a locator (0), and the
+blocks declared nothing-assertable (128). Core-19's census now writes the block
+split and the provenance coverage at admission, so a repeat of any of the three
+is visible there rather than at review. They are recorded on the measurement
+block and on the producer entry with their disposition stated, and the tests
+require that neither the expectation string nor the falsifier string appears in
+that block.
+
+The review surface does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell it
+is instantiated to changes. The blank record for run-19 is run-18's with the run
+id moved and nothing else.
+
+The offline validation is carried whole. `offline_validation.py` re-runs the
+v4.4 ENTITY restriction and the v4.9 collapse on run-09's frozen record and
+returns run-18's counts unchanged, because neither the binder nor the executor
+moved: 630 of run-09's 1,466 rows kept (58, 319, 131, 122), 618 SUPPORTED, 12
+PARTIAL, none unjudged, and those 630 become 463 under one row per witness per
+question (54, 168, 123, 118), 167 re-projections removed, 456 SUPPORTED and 7
+PARTIAL, with no collapsed row carrying a label the survivor did not. Every
+total and every per-question figure equals run-18's record key for key.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-19, and
+`ontology-run/` and `results/` carry only a keepfile. Nothing here is a claim
+about any model: two Sonnet cells at two protocols are two observations, not a
+measurement of the model, and what changes across them is the protocol. A cell
+that returns fewer defects will not have shown that the paragraph caused it,
+only that the outcome the RCA predicted from it occurred. Whether the
+expectation holds is open.
