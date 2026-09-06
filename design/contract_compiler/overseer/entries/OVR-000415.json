@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81",
+        "before_digest": "sha256:9dfdd4b20e7518582acfdc91957f756f41d1b72d748496bc196edb24cab65ceb",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:ea49fdf603ad4fac749c9ba7d8320ddf97b05070e0b0ba098bd70f145467a74b",
+        "before_digest": "sha256:f9cd23c29593864ef757b8e61fa91bbedf7afc7194a1d414b329fbcc9c847fb5",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:eb13559485083ccd056267f01116df47501ee82a93a7d7233e1276e1b439a484",
+        "before_digest": "sha256:6a2bfc7995fa4f638676edb135d96e3a8f08a5a778742d31fe62f6feb5bd3cfb",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:19353a947c5094e8129a2db80c46a0596786594877088015aeb259229caeabe9",
+  "entry_id": "OVR-000415",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:660ed28c32caf3ad54bf512f4dff6e9a22ce15f8c89b4182b79f6b152fc6e5ff",
+  "recorded_at": "2026-09-06T00:45:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "80cf4484dfd69c7230995c5b3d543b89f8b2e172",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f220852551ea5f815a751bfd7d5b44e1271ebcbd",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 415,
+  "subject": {
+    "id": "producer-preflight-refusals",
+    "type": "DOCUMENT"
+  },
+  "summary": "The acolyte carries the adapter's refusal reasons as the producer's pre-flight list, one line per reason, and a guard derives that list from the two enums so the skill cannot drift from Core.",
+  "why": "At the fixed protocol of the 2026-09-05 matrix, what separated the producers was what each checked before stopping. The three Opus cells built validators from the skill's rules and returned zero, seven and zero defects. Run-16's covered two of the adapter's rules and the runner returned fifty defects. Run-17's covered none of the record-level rules and the runner refused three times: NOT_VERBATIM for all eight assertions, then records naming properties and enum values the staged surface does not declare, then GAP_REQUIRED with all eight assertions emptied. The skill states each rule where its method belongs and nowhere as the list of what the adapter refuses for. The new subsection names every reason of the two enums with one clause of check, plus one clause for the seventeen the parent supplies. The guard reads both enums at import time and asserts the paragraph names every reason and none besides. Decision 25 records why a list and not a rule, why the guard, and that it runs no check, steers nothing because every line is a refusal the adapter already returns, and measures no coverage. Nothing in either adapter changes and no reason is added or removed."
+}
