@@ -7559,3 +7559,29 @@ Non-claim: this cell tests whether a model given rows and this skill writes an
 admissible population. It does not claim a mapping language, a source-to-plan
 compiler, or that the state-version profile is a general domain-history model.
 Those remain the fixture's own stated boundary and this cell does not move it.
+
+### E-0202, shop-01's pin verified by the overseer at the Core-20 coordinate, unchanged
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/shop-01/pin.py` run by the overseer at
+`--commit c95dba7b86bb61487bda9a52458e1ea47cce20ab` after Paper-26's GREEN
+commit 919bf8f; `git status` of the cell directory after the run; the active
+test gate.
+
+Result: the re-run rewrote nothing (the cell directory is clean after it), so
+Paper-26's manifest and gate are the bytes the pin produces at this
+coordinate: tree 39a9b9da…, governance head OVR-000415, twelve declared
+inputs all tracked, the six shared with run-21 at run-21's digests, Core-19
+and Core-20 LANDED, the plan compiler's 34 refusal reasons, the state-version
+profile at identity sha256:b18f3129…. Gate: 1581 passed (1522 before the
+cell, 59 added, all shop-01's).
+
+Two points carried from Paper-26's report for Luis: the frozen v2 review
+validator refuses any non-document evidence surface, so shop-01's review
+record cannot be machine-validated until a v3 protocol exists or the cell's
+questions are renamed (E-0201, `evaluation.review_protocol`); and no
+derivation locator is ever resolved against its row by Core, so the reviewer
+of this cell is the first thing that compares `row:N:field` with the row.
+
+Non-claim: the producer has not run. E-0201's expectation stands as written.
