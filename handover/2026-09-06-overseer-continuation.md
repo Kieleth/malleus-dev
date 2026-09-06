@@ -14,8 +14,11 @@ Purpose: a fresh session continues the loop from this file, the journal (`handov
 ## In flight (agents dispatched by this session; their reports arrive as task notifications; if the session is lost, their work is on disk, uncommitted unless they committed as instructed)
 
 1. Question author: DONE, frozen E-0206. Wrote `paper-v4/experiment-v4/competency-questions-v3.json` (30 questions, DRAFT_FOR_FREEZE). Report received 21:08Z; to freeze (status FROZEN) and record as E-0206.
-2. Core-21 (Opus): re-freeze `research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json` at the current Core, add its test dir to pyproject testpaths, write the skill's structured-source section with a compiler-validated worked plan, governance entry (next OVR after the head; Core-20 was OVR-000415), decision 26 in `design/KNOWLEDGE_PACKS.md`. Commits RED/GREEN, no push. One writer on Core's ledger: do not dispatch Core-22 until it reports.
+2. Core-21 (Opus), committed OVR-000416 and OVR-000417 (82dbb34, 40cc425); report pending: re-freeze `research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json` at the current Core, add its test dir to pyproject testpaths, write the skill's structured-source section with a compiler-validated worked plan, governance entry (next OVR after the head; Core-20 was OVR-000415), decision 26 in `design/KNOWLEDGE_PACKS.md`. Commits RED/GREEN, no push. One writer on Core's ledger: do not dispatch Core-22 until it reports.
 3. Paper-28 (Opus): DONE 21:30Z, E-0207. `paper-v4/evaluation-v4/review-protocol-v3.json`, v3 task template and blank record, `review.py` accepting v2 and v3 (declared evidence surface and locator convention; coverage per required semantic with derived responsiveness; assembly descriptor; controls; LOCATOR_NOT_RESOLVABLE → NOT_EVALUABLE by rule; support once per witness). Commits RED/GREEN, no push.
+
+
+4. Paper-29 (Opus), dispatched 21:40Z: harness v4.12 and run-22 opened as the second replicate of the record condition (producer condition byte for byte with run-21; binder reaches subject-less records of listed subject-bearing types as ENTITY rows; closure check inside the binder; canonical profile staging; the thirty questions of competency-questions-v3.json; review package under protocol v3). Commits RED/GREEN by pathspec, no push, no ledger entry (the overseer writes E-0208 as run-22's opening from its report). After it: pin re-run, launch the run-22 Opus producer, thirty type sets at acceptance.
 
 ## Next steps in order (all ruled)
 
