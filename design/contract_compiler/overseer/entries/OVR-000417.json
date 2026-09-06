@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:23f03bab9b2248ecf995f781156fbd145c133048373583173e0fe89633ab8c93",
+        "before_digest": "sha256:0ad62294f3d67fb80d7993292a8b2ab3825739befd07fb3036cfab8fa0d724d4",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:9127d5a1352123e7017ffafae4474f49cc2b03e4a345b8b74b6a8ceadd2a98fa",
+  "entry_id": "OVR-000417",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b0a1e35a53498da39e2a6ff2e4819e7703cae247ea240fe7efd0d3615baa0db3",
+  "recorded_at": "2026-09-06T21:55:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "14680ea2bcea8c826937f810ac346ff43675f35c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 417,
+  "subject": {
+    "id": "structured-plan-guard-public-facade",
+    "type": "DOCUMENT"
+  },
+  "summary": "The structured-plan guard builds its fixture contract through the public facade, because pyproject ships tests/test_inquisition.py in the sdist and ships no other test package.",
+  "why": "OVR-000416 recorded the guard as written, and as written it imported a compiled contract and a partial effective contract from tests/contract_compiler/pareto. That package is not in pyproject's build include list and tests/test_inquisition.py is, so the sdist carried a test file whose one new test imported a module the archive does not hold. Nothing caught it: CI smoke-tests the wheel, which carries no tests at all. The guard now compiles its fixture schema with compile_linkml_contract over the bundled root and LinkML's own types, and composes the partial contract from the shipped STRUCTURAL_HISTORY_BUNDLE's normative profile. That is the surface step 7 of the acolyte names, so the guard exercises what an adopter is told to call and couples to no test fixture. Nothing about the worked plan, the skill or the assertions moves; the contract it compiles against is the same schema and the plan compiles to the same change set."
+}
