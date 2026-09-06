@@ -337,6 +337,15 @@ Use one protocol figure and compact result tables only where they reduce prose. 
    nearest prior; its checker was bounded by the pinned skill.
 11. Recreate the small-shop baseline on the current Core for calibration and
    add questions to it; the logistics shop is the paper's calibration set
+   (Luis, 2026-09-06: done as E-0200 and shop-01, E-0201 to E-0204).
+12. Subject-less records as a re-trigger (Luis, 2026-09-06 20:55Z, "use this
+   as a 'retrigger in recursive mode' to declare and define the 'about'"):
+   after admission, the census's list of subject-bearing records without a
+   subject goes back to the producer as a typed prompt, not a refusal, asking
+   it to declare what each record is about or to say that the source names
+   nothing; the second pass is admitted as a supersession. Design after
+   protocol v3; the reachability change of decision (2) in E-0205 is the
+   interim.
    (1.4.x).
 
 ## Submission gate

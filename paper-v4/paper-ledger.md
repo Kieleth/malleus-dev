@@ -7729,3 +7729,56 @@ re-graded here. Whether an unresolvable locator is PARTIAL, UNSUPPORTED or
 NOT_EVALUABLE, whether the producer's convention or the task's is the
 cell's, and whether the cell is re-reviewed under a declared convention,
 are Luis's.
+
+### E-0205, runs 09 to 21 ratified as recorded; run-20 is the cell of record; Luis's rulings of 2026-09-06
+
+Date: 2026-09-06
+
+Sources: Luis's message in chat at about 20:55Z on 2026-09-06, quoted below;
+the eleven human records written by the overseer at his instruction from
+each cell's preliminary record, each validated HUMAN_RATIFIED by the
+committed v2 validator against its manifest, query result and the reading:
+
+- run-09: `paper-v4/evaluation-v4/run-09/review-record.human.md` (sha256:6e9ce18c8a5fd04255aa34fe9dd90d7fafe51c85537c244f84bfbb08cf9faa32)
+- run-10: `paper-v4/evaluation-v4/run-10/review-record.human.md` (sha256:8af0cfc67772f596f681ee9f1687940b7ab58556127b23a899accbeb971f12e8)
+- run-11: `paper-v4/evaluation-v4/run-11/review-record.human.md` (sha256:b213815e50dfaad5aa8256766f038ecf2995a3b8b1044155e1bcfbeb76152f18)
+- run-12: `paper-v4/evaluation-v4/run-12/review-record.human.md` (sha256:232745aa9c1b5ab35f1a9b44802c39ab551458574f5095b244447d2a5c5ddd8d)
+- run-13: `paper-v4/evaluation-v4/run-13/review-record.human.md` (sha256:9b31f9e8b61af0e405caae70b2fb49acde5d46ef62701a5bc50e8d9944da1f0b)
+- run-14: `paper-v4/evaluation-v4/run-14/review-record.human.md` (sha256:4ece4d8462fc17a8b30a16fa59e5749910d6c216352c8ce08977408f1d558b5f)
+- run-15: `paper-v4/evaluation-v4/run-15/review-record.human.md` (sha256:10f7f1c90c7b0dccbfa528e94dcb420e6bb7a77df5ae17aa39cecd99ebdd63e7)
+- run-16: `paper-v4/evaluation-v4/run-16/review-record.human.md` (sha256:301d1dbe292d7bc9074e6021ec71b36f44e9371da985e7b469b540352088e6ff)
+- run-19: `paper-v4/evaluation-v4/run-19/review-record.human.md` (sha256:01655499ef21ed1d09d76d2cbb7c7c734c6013d8ee2c2931a225d5ef86def18a)
+- run-20: `paper-v4/evaluation-v4/run-20/review-record.human.md` (sha256:e51ae27c33a8e9efa49388a7112d582ca3f6e1f94a7ba589bdd3648aa1bddaa9)
+- run-21: `paper-v4/evaluation-v4/run-21/review-record.human.md` (sha256:08f4bef050ebf52d323302f8c4f6217ce0d61f1ebacc047e6e9f5fc1296f46b1)
+
+Runs 17 and 18 (Haiku 4.5) refused before any review and carry no record.
+
+The rulings, in Luis's words: "'4. Thirty-question authoring' go. '1. Cell
+of record' go, but we can/should repeat in any case, 3-5 times. '2.
+Subject-less reachability' b) for the moment is ok, but we should probably
+use this as a 'retrigger in recursive mode' to declare and define the
+'about' I think. '3. Protocol v3 (three things bundled)' all of course. 5
+ratify, yes. 6 go yes please. 7 add/update, lets go."
+
+Read as decisions: (1) run-20 is the cell of record, and its condition
+(Opus 5 at c95dba7 under the v4.10 harness) is replicated three to five
+times; run-21 is the first replicate. (2) The binder reaches subject-less
+records of the listed subject-bearing types as ENTITY rows from the next
+protocol version on, never retroactively; and the census's subject-less
+list becomes, in a later design, a re-entry prompt to the producer to
+declare what each record is about, recorded as master plan item 12. (3)
+Protocol v3 with a declared evidence surface and locator convention per
+cell, coverage per required semantic with a derived responsiveness label,
+assembly as a descriptor, controls, support once per witness, and a rule
+for an unresolvable locator (Paper-28). (4) Thirty questions in five tiers
+with five controls, authored by a fresh session from the reading alone,
+frozen before the next cell. (5) This entry. (6) The Small Shop public
+evidence re-frozen at the current Core (Core-21). (7) Core and skill
+entries: the skill's structured-source section (Core-21), locator
+resolution at admission with a declared convention (Core-22), a valid-time
+kind for "none stated" (Core-23), canonical profile staging in the harness
+(the next harness version).
+
+Non-claim: the labels of the ratified records are as their sessions gave
+them; the reliability figures of E-0191 and the grading findings of E-0197
+and E-0204 stand beside them.
