@@ -635,3 +635,7 @@ The thirty questions came back from the reading-only session with a 104-check se
 ### Protocol v3 landed (21:30Z); a shared-index sweep
 
 Paper-28 delivered protocol v3 with 63 tests and reported its departures from the design one by one; E-0207. Its GREEN commit never happened as its own: between its `git add` and its `git commit`, Core-21 committed in the same working tree and the shared index carried Paper-28's four staged files into OVR-000416's commit (82dbb34). Content intact, gate at HEAD 1655. Rule earned: an agent commits its paths by pathspec (`git commit -- <paths>`) in the same command as the add, never a bare commit after a separate add; the overseer does the same from here. Written into the continuation handover.
+
+### Core-21 landed; Core-22 dispatched (22:10Z)
+
+Core-21 closed E-0200 and E-0203 cause A: the shop evidence re-frozen and gated for the first time, the skill's structured-source section with a worked plan the compiler accepts, decision 26, OVR-000416 and a second entry OVR-000417 for a guard it rebuilt through the public facade after finding the first imported a fixture the sdist does not ship. Core's suite 3,126 in a throwaway worktree. E-0208. Core-22 dispatched at 22:10Z: the fixture's row convention codified and every locator resolved at admission with one aggregated typed refusal, plus Core-21's incomplete bullet. Paper-29 still building v4.12 and run-22.
