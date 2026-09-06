@@ -6533,3 +6533,162 @@ responsiveness judged on coverage, not precision, with most rows records the
 question does not ask about.
 
 Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
+
+### E-0187, run-20 opens the third cell of v4.10: the Opus 5 producer at the Core-20 coordinate
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-20/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `pin.py`,
+`native_query.py`, `offline-validation.json`, `test_contract.py`,
+`test_pipeline.py`, `paper-v4/evaluation-v4/run-20/review-record.blank.md`,
+`handover/2026-09-05-v49-rca.md`, `handover/2026-09-06-v410-rca.md`, and
+E-0166 to E-0169 and E-0183 to E-0185.
+
+Cell: run-20 is the third cell of v4.10 and the eighth on the settled harness.
+Core does not move, the harness does not move, the document does not move. What
+moves is the producer's model. The scope block says it plainly: `matrix_cell`
+THIRD_OF_V4_10, `variable` OPUS_5_PRODUCER_AT_THE_CORE_20_COORDINATE,
+`also_moved` NOTHING_CORE_IS_HELD_AT_THE_COMMIT_RUN_19_PINNED, `harness`
+IDENTICAL_TO_RUN_19, `harness_matched_cell` run-19, `model_matched_cells`
+run-04 and run-08 to run-15. Run-20 supersedes nothing. With this cell the
+v4.10 row has all three models.
+
+Producer: requested model `opus`, model id `claude-opus-5`, model family
+Claude Opus 5, reasoning effort the harness default and neither pinned nor
+observed. Those three fields are run-15's, and they are the only three keys
+that differ from run-19's producer block; `test_pipeline.py` and
+`test_contract.py` both compare the two blocks key by key and require exactly
+that difference. Against run-15's block there is no difference at all, and
+run-15's block is run-09's: for this model the producer block has not moved
+since v4.3.
+
+Harness: byte for byte run-19's. `native_query.py` carries no run id and is
+copied without a substitution. Six scripts, the spawn message and
+`offline_validation.py` are run-19's with the run id moved, read through one
+table that reverses. `pin.py` takes a second table, the reference cell stepping
+from run-18 to run-19 with the carried status and the interface ordinal, and
+four passages repaired because the blanket step would otherwise say that this
+cell carries twenty-seven entries rather than twenty-eight, that the two
+entries reading past the v4.8 coordinate are run-19's own, that Core-18's carry
+chain skips run-18, and that Core-19's entry was run-19's own. The protocol
+version does not step: v4.10 stays. The pin gains no code, which it last did at
+run-18, so the five marked blocks are carried whole and their markers still
+name run-18; the test reverses both tables with nothing removed and requires
+run-19's bytes exactly.
+
+Coordinates: `pin.py --commit c95dba7b86bb61487bda9a52458e1ea47cce20ab` pins
+that commit, tree `39a9b9da7dcd41660b8b10fb20b1b1d8e2261082`, governance head
+`OVR-000415` at `sha256:19353a94…`. The gate status reads
+`PINNED_TO_THE_V4_10_CORE_COORDINATE`. No declared input moved against run-19's
+manifest: all eight are the same digests, the skill included. The interface
+coordinates are new: `capture:paper-v4:yu-2025:v4:20` and
+`plan:paper-v4:yu-2025:v4:20`, the runner will execute under
+`actor:overseer-run-20` with the reading artifact
+`artifact:selected-reading:yu-2025:v4:20`, and the private workspace is
+`private/paper-v4-v4-run-20/producer`.
+
+What the pin read at that commit. Core-19 LANDED, on the same six observations
+run-18's and run-19's pins read: the document adapter moved, the plan compiler
+moved, the block census declares ASSERTED, DECLARED_NOTHING_ASSERTABLE and
+UNTOUCHED, the adapter writes `provenance_coverage` as a literal, the plan
+compiler's enum gained `RECORDS_NOT_REHYDRATABLE` and lost nothing, and
+`_empty_assertion_defects` and `_refuse_gaps` are both present, all read against
+the v4.8 coordinate. Core-20 LANDED on the bytes: the skill's paragraph is
+between its markers, it names every one of the 48 reasons the two enums declare
+between them at the pinned commit and no reason neither enum carries, and
+`tests/test_inquisition.py` names both enum classes and the same marker.
+`governance_entry_landed` reads true. Both entries are carried from run-19 and
+neither is carried unread: the pin recomputes both statuses at the commit.
+
+All twenty-eight of run-19's `changes` entries are carried forward and marked
+`carried_from: run-19`. Ten are Core's, eight of them read at fixed commits and
+two between the v4.8 coordinate and the pinned commit; both of those two carry
+`carried_since: run-18`, because run-18 wrote them. Fourteen are the harness's.
+Four are closed cells' model records: `SONNET_5_PRODUCER_AT_V4_10`, whose
+subject stays run-19's producer block and whose expectation held;
+`HAIKU_4_5_PRODUCER_AT_V4_10`, run-18's, whose expectation was refused;
+`HAIKU_4_5_PRODUCER_AT_V4_9`, run-17's; and `SONNET_5_PRODUCER_AT_V4_9`,
+run-16's. None is this cell's producer entry, and the contract and both test
+files say so.
+
+One entry is this cell's: `OPUS_5_PRODUCER_AT_V4_10`, kind `MODEL_CELL`,
+subject the contract's own producer block, `defect_of: none`, `candidate:
+CELL_OF_RECORD_PENDING_LUIS`. The harness delta is NONE and the Core delta is
+NONE. It is measured against run-15, the same model at the same document one
+protocol version and one Core coordinate earlier, and against run-19, the
+Sonnet 5 cell at this same commit.
+
+Measurement. Both cells were admitted, so both leave public results and every
+figure is recomputed in the tests rather than copied. Run-15 at v4.9: ontology
+refused at attempt 01 (`IMPORT_READER_REFUSED`, a `default_prefix` at the schema
+root) and accepted at attempt 02 at 3,221 facts, one diagnostic return at the
+gate; runner attempt 1 admitted and replayed with no structural return at all;
+358 assertions over 185 of 186 blocks with 1 declared nothing-assertable and
+none untouched; 351 records (315 entities, 1 event, 35 relations); 142 of those
+351 carrying both `assertion_locator` and `statement_sha256`, recomputed from
+its capture under the adapter's own provenance rule because run-15 ran before
+Core-19 and its census carries no provenance axis; subject coverage 80 of 144
+proposed, 20 attachable, 18 ambiguous, 26 unnamed, none formalized through an
+anchor; 0 of 35 relations non-local; 433 rows over 160 witnesses; producer
+351,253 tokens. Its preliminary review, E-0169 and not ratified, reads PARTIAL,
+RESPONSIVE, PARTIAL, PARTIAL with 427 SUPPORTED, 6 PARTIAL, no UNSUPPORTED row
+and 214 rows carrying a digest token. Run-19 at this commit: ontology accepted
+at attempt 01 at 2,794 facts; runner attempt 1 refused three
+`SUBJECT_NOT_NAMED` defects, returned as structural diagnostic 1 of 2, attempt 2
+admitted; 157 assertions, 59 blocks asserted and 127 declared, 204 records, no
+record carrying a locator or a digest, 154 rows over 54 witnesses; producer
+517,488 tokens. Run-19's preliminary review was being written in a separate
+session while this cell was opened and is not read here: the contract records
+its review as NOT_READ_BY_THIS_CELL and carries no label of its rows.
+
+Expected, stated before the run: an Opus 5 producer under the v4.10 skill
+reaches admission within the two structural returns the manifest allows and its
+rows judge with no UNSUPPORTED row, which is what the three Opus cells at v4.7,
+v4.8 and v4.9 gave. Falsifier: a third structural refusal, or one UNSUPPORTED
+row at review. Both halves are read off this cell's own files, the launch log's
+runner list and the preliminary review record, and need no comparison to decide.
+
+Read but not expected, in either direction: the blocks declared
+nothing-assertable (1 in run-15, 127 in run-19), the records carrying a locator
+(142 and 0), and the defect count at the first runner attempt, which is what
+Core-20's list is meant to move and which run-13, run-14 and run-15 gave as 0, 7
+and 0 without it, run-19 as 3 with it. Core-19's census now writes the block
+split and the provenance coverage at admission, so all of these are visible
+there rather than at review. Every one is recomputed in the tests from the
+cells' own frozen launch logs and captures, and the tests require that neither
+the expectation string nor the falsifier string appears in that block.
+
+The review surface does not move. `REVIEW_TASK_V4` is carried with the same
+template, the same seven placeholders and the same five duties; only the cell it
+is instantiated to changes. The blank record for run-20 is run-19's with the run
+id moved and nothing else.
+
+The offline validation is carried whole. `offline_validation.py` re-runs the
+v4.4 ENTITY restriction and the v4.9 collapse on run-09's frozen record and
+returns run-19's counts unchanged, because neither the binder nor the executor
+moved: 630 of run-09's 1,466 rows kept (58, 319, 131, 122), 618 SUPPORTED, 12
+PARTIAL, none unjudged, and those 630 become 463 under one row per witness per
+question (54, 168, 123, 118), 167 re-projections removed, 456 SUPPORTED and 7
+PARTIAL. Every total and every per-question figure equals run-19's record key
+for key.
+
+Four carried strings were stepped rather than copied, and two of them correct a
+drift in run-19. The five `carried` values that name the cell a Core entry was
+last read at, and `ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION`'s and
+`SUBJECT_TAGS_PROJECTED`'s, step to run-19 as they stepped at every cell from
+run-15 to run-18. `ENTITY_KIND_RESTRICTED`'s `carried_bytes` and
+`executor_at_this_cell` read RUN_17S in run-19's contract where they should have
+read RUN_18S; they read RUN_19S here. `PUBLIC_COST_RECORD.derived_by` and
+`REVIEW_TASK_V4.instantiated_to` pointed at run-18's files in run-19's contract
+where every cell from run-15 to run-18 pointed at its own; they point at
+run-20's here.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-20, and
+`ontology-run/` and `results/` carry only a keepfile. Nothing here is a claim
+about any model: ten Opus cells across ten protocols are ten observations, not a
+measurement of the model, and what changes across them is the protocol. A cell
+that is admitted with no UNSUPPORTED row will not have shown that Core-20's list
+caused anything, only that the outcome the three stable Opus cells gave held
+once more at a moved Core coordinate. Whether the expectation holds is open.

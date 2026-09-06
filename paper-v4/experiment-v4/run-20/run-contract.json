@@ -1,0 +1,2376 @@
+{
+  "schema": "malleus.paper-v4.v4-run-contract/v1",
+  "run_id": "run-20",
+  "status": "READY_FOR_PRODUCER",
+  "supersedes": "NOTHING_RUN_20_IS_THE_THIRD_CELL_OF_V4_10",
+  "protocol": {
+    "version": "v4.10",
+    "iteration": "FIFTEENTH",
+    "isolation": "ISOLATION_ONLY_RUN_19S_SPAWN_MESSAGE_WITH_THE_RUN_ID_SUBSTITUTED",
+    "v4_1_cells_followed": [
+      {
+        "run_id": "run-04",
+        "path": "paper-v4/experiment-v4/run-04",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_RATIFIED",
+        "ledger_entries": [
+          "E-0125",
+          "E-0133",
+          "E-0135"
+        ],
+        "superseded": false
+      },
+      {
+        "run_id": "run-05",
+        "path": "paper-v4/experiment-v4/run-05",
+        "requested_model": "sonnet",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_RATIFIED",
+        "ledger_entries": [
+          "E-0126",
+          "E-0131",
+          "E-0132"
+        ],
+        "superseded": false
+      },
+      {
+        "run_id": "run-06",
+        "path": "paper-v4/experiment-v4/run-06",
+        "requested_model": "haiku",
+        "outcome": "ONTOLOGY_ACCEPTED_POPULATION_REFUSED",
+        "ledger_entries": [
+          "E-0127",
+          "E-0129"
+        ],
+        "superseded": false
+      },
+      {
+        "run_id": "run-07",
+        "path": "paper-v4/experiment-v4/run-07",
+        "requested_model": "haiku",
+        "outcome": "ONTOLOGY_ACCEPTED_POPULATION_REFUSED",
+        "ledger_entries": [
+          "E-0128",
+          "E-0130"
+        ],
+        "superseded": false
+      }
+    ],
+    "changes": [
+      {
+        "id": "BINDING_FROZEN_AT_ACCEPTANCE",
+        "subject": "paper-v4/experiment-v4/run-20/bind_from_surface.py",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "defect_of": "run-04",
+        "detail": "The evaluator writes one file of type sets per question, read from the accepted population surface at ontology acceptance and before phase two exists. bind_from_surface.py expands it deterministically into the exhaustive binding: every ordered pair of a question's types under every relation type on the surface, with a fixed field projection per type made of that type's non-housekeeping slots, carrying bound_at_stage ONTOLOGY_ACCEPTANCE. Its digest is recorded in the launch log at acceptance and the query runs it unchanged after replay; only bound_after_replay_receipt_sha256 moves from PENDING to the receipt digest, and cases_sha256 digests the queries alone so the executed binding is provably the one the launch log pinned. The producer never sees any of it.",
+        "why": "Deep sweep D-01. Run-04's own binding records in bound_by that a hand-picked draft returned no row for CQ-03 and was replaced, and that a second draft's CQ-04 type set was cut once its 75 citation rows were visible. No value or identifier entered the binding, but the selection between bindings was conditioned on the result, which the manuscript's binding rule and the master plan's submission gate both exclude in kind.",
+        "carried_from": "run-19",
+        "carried_since": "run-08"
+      },
+      {
+        "id": "CORE_12_DERIVATION_CHECKS",
+        "subject": "src/malleus/_contract_pipeline/document.py",
+        "core_task": "Core-12",
+        "baseline_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+        "expected_reasons": [
+          "DIGEST_MISMATCH"
+        ],
+        "reasons": [
+          "DIGEST_MISMATCH",
+          "EVALUATIVE_SLOT_NOT_EVALUATED",
+          "UNKNOWN_ASSERTION_LOCATOR"
+        ],
+        "census_axes": [
+          "DERIVATION_LOCALITY",
+          "ASSERTION_FAN_OUT"
+        ],
+        "census_axes_disposition": "REPORTED_NOT_REFUSED",
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "detail": "Three checks over the derivation rule's content rather than its existence. A DIGEST_MISMATCH refusal in the document adapter when a record's assertion_locator names an assertion of the same capture and its statement_sha256 is not that assertion's statement digest, aggregated. Modality-disposition consistency: a field a pack marks evaluative must be formalized by at least one assertion whose modality is not HYPOTHESISED, aggregated. Derivation-locality and fan-out as census axes: per relation, whether the formalizing assertion's block is among the blocks that formalize an endpoint, and per assertion, how many distinct records it formalizes, both reported beside the census and neither refused. The pin script fills the reason names from the diagnostic enum at the pinned commit; nothing here names a reason Core has not landed. The adapter takes the compiled contract view as an optional argument (None for older runners); run-09's run.py passes retention.contract_view so the evaluative-slot check is in force, and test_pipeline.py pins that one-line difference from run-04's runner. Carried into v4.3 unchanged. Its reasons are read between its own baseline and the v4.2 coordinate, both fixed commits, so a reason Core-13 adds cannot be attributed to Core-12; the pin only records whether the three are still in force at the v4.3 coordinate.",
+        "why": "handover/2026-09-05-run-04-review-rca.md. All 104 of run-04's located claims carried a correct statement digest and nothing recomputed one; one assertion carried thirty-six formalization targets for twelve relations it names no endpoint of; all five hypothesis dispositions derive from the sentence that states the hypothesis, never from the sentence that disposes of it. The protocol proved a pointer existed and left what it pointed at to review.",
+        "runner_passes_contract_view": true,
+        "carried_from": "run-19",
+        "landed_commit": "f59477154a2b20f9ffbf6b1f72f6104ee2e1f6c5",
+        "still_present_at_pin": true,
+        "carried_since": "run-08"
+      },
+      {
+        "id": "CORE_14_MODALITY_SOURCE_OF_TRUTH",
+        "subject": "src/malleus/_contract_pipeline/document.py, src/malleus/_contract_pipeline/elaborate.py, .claude/skills/malleus-acolyte/SKILL.md",
+        "core_task": "Core-14",
+        "baseline_commit": "f6c8c71fd95711fd8f1bec811dff94cd61e535a0",
+        "expected_reasons": [
+          "MODALITY_NOT_ASSERTED"
+        ],
+        "expected_reasons_basis": "READ_FROM_THE_ADAPTER_ENUM_AT_THE_PINNED_COMMIT_AFTER_THE_PAPERS_PROVISIONAL_NAME_WAS_WRONG",
+        "reasons": [
+          "MODALITY_NOT_ASSERTED"
+        ],
+        "ride_alongs": [
+          "INVALID_RANGE_NAMES_THE_BOUND_SCALAR_RANGES",
+          "SKILL_STATES_WHAT_AN_ENTITY_NAME_IS",
+          "SKILL_RANGE_NOTE_CORRECTED"
+        ],
+        "ride_alongs_gate": "PIN_STATUS_IS_THE_REASON_ONLY_THE_GATE_ALSO_WAITS_FOR_THEM",
+        "invalid_range": {
+          "path": "src/malleus/_contract_pipeline/elaborate.py",
+          "sha256": "sha256:714cf83f07b4f9552bb956cd6f2ceeee5bc90e7985ae7cc0bd6212c4a760a524",
+          "baseline_sha256": "sha256:fb5863741a6d252eef628e81a65a77fe8b57aa8f9deb9ee396e9aab4957bf140",
+          "moved": true,
+          "messages": [
+            "f\"{subject} has an unbound range {constraint.range_id}; a \" f\"range binds as one of the seed scalars {_SEED_SCALAR_NAMES}\" \", or a class or enum declared in the closure\",",
+            "\"scalar range graph is cyclic\","
+          ],
+          "baseline_messages": [
+            "f\"{subject} has an unbound range\",",
+            "\"scalar range graph is cyclic\","
+          ],
+          "messages_moved": true,
+          "seed_scalar_name_literal_in_message": false
+        },
+        "skill": {
+          "path": ".claude/skills/malleus-acolyte/SKILL.md",
+          "sha256": "sha256:9f37686fd809dfac4fd2eac6fd570cf51fa4029dd16435b9a35b30e54467eba6",
+          "baseline_sha256": "sha256:f19f905761d97809b9ef731ff5a9cf6bf6ccd3e9a1756f7f8c3a8fca49356f89",
+          "moved": true
+        },
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "detail": "One idea: a record's modality has one source of truth, the assertion that formalizes it. The document adapter refuses a record whose assertion_modality no assertion formalizing its [\"properties\", \"assertion_modality\"] path carries, typed MODALITY_NOT_ASSERTED and aggregated with the other derivation defects, and the skill states it: an assertion carries one modality, a sentence that carries two is captured as two assertions. Two ride-alongs with separately measurable effects and no semantic change: the elaborator's INVALID_RANGE refusal names the bound scalar ranges rather than saying only that a range is unbound, and the skill's range note is corrected; and the skill states that an entity's name is the source's own designator. The pin script fills what the pinned commit carries: every refusal reason the enum gained after the v4.3 coordinate, the elaborator's INVALID_RANGE message text verbatim beside the v4.3 coordinate's, whether it moved, and whether a bound scalar range is named literally in it, and the skill's digest beside the v4.3 coordinate's. The literal check is a reading of the text, not a fact about the change: a message that names the ranges through a joined constant reads false, so the text is recorded beside it and the gate uses the bytes. Carried into v4.5 unchanged: this entry states what v4.4 landed, not what v4.5 expects. Its reason and both of its ride-alongs are read between the v4.3 and the v4.4 coordinates, all fixed commits, so nothing Core-15 lands can be attributed to Core-14; pin_status is CARRIED_FROM_RUN_12 and the pin records only whether MODALITY_NOT_ASSERTED is still in force at this coordinate.",
+        "why": "handover/2026-09-05-v43-rca.md sections 6, 7 and 8, and E-0143. Twenty of run-09's 212 source-asserted records carry an assertion_modality that no formalizing assertion carries, MEASURED in the capture against STATED on the record twelve times; run-04 and run-08 had zero. The record's modality is a copy of the assertion's, set by the producer a second time, and this cell's producer tagged the clause where the capture tagged the sentence. The reviewers judged all twenty on the prose and flagged them, which is a check the protocol should be making. The two ride-alongs are the two returns that recurred: both Opus cells on the current skill spent their first ontology attempt on a date or uri range, and run-09 spent its first runner attempt on names. Neither is a rule gap; both are the protocol not stating what it already checks.",
+        "expected_reasons_history": {
+          "provisional_name": "MODALITY_MISMATCH",
+          "provisional_basis": "FORMED_ON_CORE_12S_DIGEST_MISMATCH_BEFORE_CORE_14_LANDED",
+          "landed_name": "MODALITY_NOT_ASSERTED",
+          "corrected_against": "src/malleus/_contract_pipeline/document.py",
+          "note": "The contract was opened before Core-14 landed and named the refusal it expected. Core landed the check under another name and the pin recorded that name in reasons, which is what the subset check is for; the expectation was then corrected against Core's bytes rather than the bytes against the expectation. From this pin forward the subset check is a regression guard: a rename or a removal returns the entry to PENDING_AT_PIN."
+        },
+        "ride_alongs_observed": {
+          "ELABORATOR_MOVED_SINCE_THE_V4_3_COORDINATE": true,
+          "SKILL_MOVED_SINCE_THE_V4_3_COORDINATE": true
+        },
+        "ride_alongs_landed": true,
+        "carried_from": "run-19",
+        "carried_since": "run-12",
+        "carried": "RUN_19_READ_AT_THE_FIXED_V4_4_COORDINATE",
+        "landed_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "still_present_at_pin": true
+      },
+      {
+        "id": "CORE_15_SUBJECT_ALIASES",
+        "subject": "src/malleus/_contract_pipeline/document.py, .claude/skills/malleus-acolyte/SKILL.md",
+        "core_task": "Core-15",
+        "baseline_commit": "2026244516aa2c5bdc14ae0fea5c4242f5e7f31f",
+        "expected_reasons": [],
+        "expected_reasons_basis": "NO_NEW_REASON_THE_SUBJECT_CHECK_WIDENS_AND_ITS_MESSAGE_MOVES",
+        "reasons": [],
+        "reasons_added": false,
+        "name_forms": [
+          "name",
+          "tags"
+        ],
+        "whitespace": "IGNORED",
+        "new_slot": false,
+        "new_pack_version": false,
+        "adapter": {
+          "path": "src/malleus/_contract_pipeline/document.py",
+          "sha256": "sha256:e91737af6d8dafcddd399d76ced853eb8fbb4409389b3ec3cbabdf2f84dfcf44",
+          "baseline_sha256": "sha256:50b84d715b7f9d493ab39e6579c85e524b837fa4b7ceed95c071a4bc7505af78",
+          "moved": true,
+          "messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
+          ],
+          "baseline_messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose name \" f\"{name} is absent from the statement of {named}\","
+          ],
+          "messages_moved": true
+        },
+        "skill": {
+          "path": ".claude/skills/malleus-acolyte/SKILL.md",
+          "sha256": "sha256:0509df9a6b28ee093e5d08d5d8214a7e9ce10a4a598c8e525c83c306195c2691",
+          "baseline_sha256": "sha256:9f37686fd809dfac4fd2eac6fd570cf51fa4029dd16435b9a35b30e54467eba6",
+          "moved": true
+        },
+        "observed": {
+          "ADAPTER_MOVED_SINCE_THE_V4_4_COORDINATE": true,
+          "SKILL_MOVED_SINCE_THE_V4_4_COORDINATE": true
+        },
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "detail": "The document adapter's subject check accepts the subject entity's name the way the reading spells it: its name or any of its tags, whitespace collapsed and case folded on both sides, must occur in a statement that formalizes the record. SUBJECT_NOT_NAMED still refuses a subject no form of whose name is in the statement, so the enum does not move and no reason is added; what moves is the comparison and the refusal's message. The skill states that the source's other forms of a name go in tags. tags is an existing root slot every Entity already carries, so there is no new slot, no pack version and no ontology change. The pin script records the adapter's and the skill's digests against the v4.4 coordinate 2026244, the SUBJECT_NOT_NAMED message text verbatim beside that coordinate's, and every refusal reason the enum gained after it, which must be none. pin_status is the two byte comparisons and nothing else: expected_reasons is empty, so a subset check would read LANDED before Core had written a line. Carried into v4.7 unchanged: this entry states what v4.5 landed, not what v4.7 expects. Core-16 and Core-17 rewrite the same two files, so both byte comparisons are now read between the v4.4 and the v4.5 coordinates, which are fixed commits; a comparison against this cell's pin would report their bytes as Core-15's. The expectation is empty, so no enum check is possible in either direction and the entry records that rather than a vacuous subset result.",
+        "why": "handover/2026-09-05-v44-rca.md sections 2 and 4, decision 20, approved in E-0148, and the overseer journal's two iteration 2 sections. Run-10's first runner attempt refused 35 of 130 subjects with one aggregated SUBJECT_NOT_NAMED, against run-09's 98 of 129, and the names were the source's own designators, so run-09's naming sentence had already held. The overseer classified all 35 from the artifacts: 14 are genuinely unnamed in their sentence, 7 are aliases (the entity named Mid-Atlantic Ridge where the sentence writes the MAR), 8 are partial names (Oceanic crust named, crust written) and 6 are whitespace artefacts of the text layer (CO2 named, CO 2 printed). Twenty-one of the thirty-five are the check being more literal than names are, not a producer naming something the source does not. The repair run-11's producer made was five renames to the repeated form and sixteen subjects dropped with typed gaps, which is the protocol paying a producer round for a string comparison.",
+        "decision": 20,
+        "carried": "RUN_19_READ_AT_THE_FIXED_V4_5_COORDINATE",
+        "landed_commit": "9d789f2a2ab0d02d6de995acfd922e9a3e8eefd5",
+        "carried_from": "run-19",
+        "carried_since": "run-12",
+        "expectation": "EMPTY_NO_ENUM_CHECK_IS_POSSIBLE",
+        "landed_at_the_v4_5_coordinate": true,
+        "pin_evidence": "ADAPTER_AND_SKILL_BYTES_AGAINST_THE_V4_4_COORDINATE"
+      },
+      {
+        "id": "CORE_16_PROJECTED_SUBJECT",
+        "subject": "src/malleus/_contract_pipeline/document.py, .claude/skills/malleus-acolyte/SKILL.md",
+        "core_task": "Core-16",
+        "baseline_commit": "9d789f2a2ab0d02d6de995acfd922e9a3e8eefd5",
+        "expected_reasons": [],
+        "expected_reasons_basis": "NO_NEW_REASON_THE_ADAPTER_SETS_THE_SUBJECT_AND_THE_CENSUS_REPORTS_IT",
+        "reasons": [],
+        "reasons_added": false,
+        "projection_rule": "EXACTLY_ONE_CAPTURE_ENTITY_NAMED_IN_A_FORMALIZING_STATEMENT",
+        "name_forms": [
+          "name",
+          "tags"
+        ],
+        "whitespace": "IGNORED",
+        "producer_set_subject": "STILL_PASSES_THE_NAME_CHECK",
+        "census_keys": [
+          "ambiguous",
+          "projected",
+          "proposed",
+          "unnamed"
+        ],
+        "census_axes": [
+          "SUBJECT_COVERAGE"
+        ],
+        "census_axes_disposition": "REPORTED_NOT_REFUSED",
+        "new_slot": false,
+        "new_pack_version": false,
+        "pin_evidence": "ADAPTER_AND_SKILL_BYTES_AGAINST_THE_V4_5_COORDINATE_PLUS_THE_CENSUS_KEYS_AT_THE_V4_6_COORDINATE",
+        "adapter": {
+          "path": "src/malleus/_contract_pipeline/document.py",
+          "sha256": "sha256:238ba414a060211947c233e862fff30209d65616c91aee415b2de1f447cfe78f",
+          "baseline_sha256": "sha256:e91737af6d8dafcddd399d76ced853eb8fbb4409389b3ec3cbabdf2f84dfcf44",
+          "moved": true,
+          "messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
+          ],
+          "baseline_messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
+          ],
+          "messages_moved": false
+        },
+        "skill": {
+          "path": ".claude/skills/malleus-acolyte/SKILL.md",
+          "sha256": "sha256:8a136ff5b9db629ee4b4c626c2c0a71a4a9b304000e8f621e6dfd06651fdcd96",
+          "baseline_sha256": "sha256:0509df9a6b28ee093e5d08d5d8214a7e9ce10a4a598c8e525c83c306195c2691",
+          "moved": true
+        },
+        "observed": {
+          "ADAPTER_MOVED_SINCE_THE_V4_5_COORDINATE": true,
+          "SKILL_MOVED_SINCE_THE_V4_5_COORDINATE": true
+        },
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "detail": "The document adapter derives the subject of a source-asserted record whose subject slot is unset. Where exactly one entity of the capture is named, by its name or any of its tags with whitespace ignored, in a statement that formalizes the record, the adapter sets the subject to that entity and records the derivation as projected from that assertion. A subject the producer set is recorded as proposed and still passes the name check Core-15 widened. A statement naming more than one entity of the capture is ambiguous and the subject stays unset; a statement naming none is unnamed. The census reports all four dispositions on the subject-coverage axis, which stays reported and never refused, so no refusal reason is added and expected_reasons is empty; what moves is the derivation and the census keys. One skill sentence says so and tells the producer to set the subject only where the sentence names more than one entity. subject is the slot Core-13 added and tags an existing root slot every Entity already carries, so there is no new slot, no pack version and no ontology change. The pin script records the adapter's and the skill's digests against the v4.5 coordinate 9d789f2, the SUBJECT_NOT_NAMED message text verbatim beside that coordinate's, every refusal reason the enum gained after it, which must be none, and which of the four census keys the subject census declares at the pinned commit. pin_status is the two byte comparisons and nothing else: expected_reasons is empty, so a subset check would read LANDED before Core had written a line. Carried into v4.7 unchanged: this entry states what v4.6 landed, not what v4.7 expects. Core-17 rewrites the same two files, so both byte comparisons and the census keys are now read between the v4.5 coordinate 9d789f2 and the v4.6 coordinate 90abc79, which are fixed commits; a comparison against this cell's pin would report Core-17's bytes as Core-16's. One correction travels with the entry. Run-12's pin read the census keys by scanning the census function's body for the four literals, and the adapter names its outcomes by module constant there, so run-12's frozen contract records census_keys_at_pin: [] at a commit where Core-16 had landed and its census declared all four. Run-12 is frozen and is not edited; run-13's pin resolves the adapter's own _SUBJECT_OUTCOMES tuple, and census_keys_at_the_v4_6_coordinate is what that reader finds at 90abc79.",
+        "why": "handover/2026-09-05-overseer-journal.md, iteration 4 decided, and E-0151. Run-11 removed the subject return entirely, the first cell admitted with no diagnostic at either stage, and failed its coverage falsifier: subject coverage 91 of 248 against run-10's 114 of 235, the denominator grown and the numerator fallen. Computed by the overseer from run-11's own population file, 77 source-asserted records carry no subject while the sentence that formalizes them names a capture entity the widened check would have accepted. The producer's validator enforced the check and treated the attachment itself as optional, so the skill's 'carries that thing as its subject' was read as permission rather than duty. A rule stated as a duty with no mechanism behaves as a preference, which is the third time in this loop. This is Luis's anchors point in its projected form: what the sentence says is derived by the compiler, not left to the producer's diligence. Withdrawn one cell later: of the fifteen subjects the rule projected in run-12, the overseer read thirteen as wrong, attached to the record's instrument, database or reference frame rather than to what the record is about, and the producer reported narrowing eight formalizing spans so the rule would not fire. Core-17 is the withdrawal (E-0155 and the overseer journal, iteration 4 admitted and frozen).",
+        "carried_from": "run-19",
+        "carried": "RUN_19_READ_AT_THE_FIXED_V4_6_COORDINATE",
+        "carried_since": "run-12",
+        "landed_commit": "90abc7916a92511e9c5202b591bc60fafab332d3",
+        "expectation": "EMPTY_NO_ENUM_CHECK_IS_POSSIBLE",
+        "census_keys_at_the_v4_6_coordinate": [
+          "ambiguous",
+          "projected",
+          "proposed",
+          "unnamed"
+        ],
+        "census_keys_present": true,
+        "landed_at_the_v4_6_coordinate": true
+      },
+      {
+        "id": "CORE_17_PROJECTION_WITHDRAWN",
+        "subject": "src/malleus/_contract_pipeline/document.py, .claude/skills/malleus-acolyte/SKILL.md",
+        "core_task": "Core-17",
+        "decision": 22,
+        "baseline_commit": "90abc7916a92511e9c5202b591bc60fafab332d3",
+        "expected_reasons": [],
+        "expected_reasons_basis": "NO_REASON_ADDED_AND_NONE_REMOVED_A_DERIVATION_IS_WITHDRAWN_AND_THE_CENSUS_REPORTS_WHAT_IS_LEFT",
+        "kind": "REMOVAL",
+        "census_keys": [
+          "ambiguous",
+          "attachable",
+          "proposed",
+          "unnamed"
+        ],
+        "withdrawn_census_key": "projected",
+        "census_axes": [
+          "SUBJECT_COVERAGE"
+        ],
+        "census_axes_disposition": "REPORTED_NOT_REFUSED",
+        "new_slot": false,
+        "new_pack_version": false,
+        "pin_evidence": "ADAPTER_AND_SKILL_BYTES_AGAINST_THE_V4_6_COORDINATE_PLUS_THE_CENSUS_OUTCOME_KEYS_AT_THE_V4_7_COORDINATE",
+        "detail": "The document adapter stops deriving a subject. A source-asserted record's subject is the one the producer set or none, and the check Core-15 widened still holds it: the subject entity's name or one of its tags, whitespace ignored, must occur in a statement that formalizes the record. The census reports four outcomes instead of Core-16's four: proposed is a subject the producer set, attachable is a record whose subject is unset and whose formalizing statement names exactly one entity of the capture, ambiguous is one whose statement names more than one, and unnamed one whose statement names none. attachable is the report that replaces the attachment: it counts what a projection would have reached without reaching it. The axis stays reported and never refused, so no refusal reason is added and none is removed, and expected_reasons is empty. One skill sentence goes with it: the producer sets the subject or leaves it unset, and nothing derives it. subject is the slot Core-13 added and tags an existing root slot, so there is no new slot, no pack version and no ontology change. The pin records the adapter's and the skill's digests against the v4.6 coordinate 90abc79, the SUBJECT_NOT_NAMED message text verbatim beside that coordinate's, every refusal reason the enum gained after it, which must be none, and the census's own outcome keys at the v4.7 coordinate, where the four must be present and projected must be gone. pin_status is the two byte comparisons and nothing else: expected_reasons is empty, so a subset check would read LANDED before Core had written a line. Carried into v4.8 unchanged: this entry states what v4.7 landed, not what v4.8 expects. Core-18 rewrites the same adapter and the same skill, so both byte comparisons and the census outcome keys are now read between the v4.6 coordinate 90abc79 and the v4.7 coordinate 12a04a9, which are fixed commits; a comparison against this cell's pin would report Core-18's bytes as Core-17's.",
+        "why": "handover/2026-09-05-overseer-journal.md, iteration 4 admitted and frozen, decision 22, and E-0155. Core-16 projected fifteen subjects in run-12 and the overseer read thirteen of them as wrong before the review ran: a relocation count attached to HypoDD, an identification count to SEISAN, an error ellipsoid to NonLinLoc, mean location errors to a reference frame the record's own span never names. A sentence that names exactly one entity names its instrument, its database or its reference frame as often as its subject, so named is not about. The review surface cannot catch it either, because a projected subject occurs in its block by construction. The second effect is worse: the producer, knowing the rule, narrowed eight formalizing spans so those sentences would name nothing, trading retained evidence for the absence of a wrong subject. This is the loop's second withdrawal and the second time a report beat a rule; the first was the ENTITY flood. What the census loses in attachments it keeps as a count, which is the honest measure of what the producer left unattached. Run-12's preliminary review agreed after the fact: 26 rows fell on projected-subject records and 18 of them came back PARTIAL, against 7 PARTIAL and 2 UNSUPPORTED across the other 382 (E-0157).",
+        "reasons": [],
+        "adapter": {
+          "path": "src/malleus/_contract_pipeline/document.py",
+          "sha256": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
+          "baseline_sha256": "sha256:238ba414a060211947c233e862fff30209d65616c91aee415b2de1f447cfe78f",
+          "moved": true,
+          "messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
+          ],
+          "baseline_messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
+          ],
+          "messages_moved": false
+        },
+        "skill": {
+          "path": ".claude/skills/malleus-acolyte/SKILL.md",
+          "sha256": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f",
+          "baseline_sha256": "sha256:8a136ff5b9db629ee4b4c626c2c0a71a4a9b304000e8f621e6dfd06651fdcd96",
+          "moved": true
+        },
+        "observed": {
+          "ADAPTER_MOVED_SINCE_THE_V4_6_COORDINATE": true,
+          "SKILL_MOVED_SINCE_THE_V4_6_COORDINATE": true
+        },
+        "census_keys_present": true,
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "reasons_added": false,
+        "carried_from": "run-19",
+        "carried": "RUN_19_READ_AT_THE_FIXED_V4_7_COORDINATE",
+        "carried_since": "run-13",
+        "landed_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "expectation": "EMPTY_NO_ENUM_CHECK_IS_POSSIBLE",
+        "census_keys_at_the_v4_7_coordinate": [
+          "ambiguous",
+          "attachable",
+          "proposed",
+          "unnamed"
+        ],
+        "projection_withdrawn_at_the_v4_7_coordinate": true,
+        "landed_at_the_v4_7_coordinate": true
+      },
+      {
+        "id": "CORE_18_NAME_AS_WORD",
+        "subject": "src/malleus/_contract_pipeline/document.py, .claude/skills/malleus-acolyte/SKILL.md",
+        "core_task": "Core-18",
+        "decision": 23,
+        "kind": "CLARIFICATION",
+        "baseline_commit": "12a04a9f033d890663398e1249b4e91c1ed6da7f",
+        "expected_reasons": [],
+        "expected_reasons_basis": "NO_REASON_IS_ADDED_AND_SUBJECT_NOT_NAMEDS_CONDITION_IS_NARROWED",
+        "reasons": [],
+        "reasons_added": false,
+        "expectation": "EMPTY_NO_ENUM_CHECK_IS_POSSIBLE",
+        "replaces": "THE_WHITESPACE_FREE_SUBSTRING_TEST_OF_CORE_15",
+        "word_rule": "THE_FORMS_NON_WHITESPACE_CHARACTERS_IN_ORDER_WITH_ANY_WHITESPACE_BETWEEN_CASE_INSENSITIVE_NOT_ADJACENT_TO_A_LETTER_ON_EITHER_SIDE",
+        "boundaries": "DIGITS_AND_PUNCTUATION_ARE_BOUNDARIES",
+        "sites": [
+          "SUBJECT_NOT_NAMED_CHECK",
+          "SUBJECT_CENSUS"
+        ],
+        "one_predicate_at_both_sites": true,
+        "name_forms": [
+          "name",
+          "tags"
+        ],
+        "whitespace": "IGNORED_INSIDE_THE_FORM",
+        "census_keys": [
+          "ambiguous",
+          "attachable",
+          "proposed",
+          "unnamed"
+        ],
+        "census_axes": [
+          "SUBJECT_COVERAGE"
+        ],
+        "census_axes_disposition": "REPORTED_NOT_REFUSED",
+        "new_slot": false,
+        "new_pack_version": false,
+        "pin_evidence": "THE_BOUNDED_PREDICATE_AT_BOTH_SITES_AND_THE_SUBSTRING_TEST_ABSENT_PLUS_THE_SKILL_SENTENCE_MOVED_ALL_READ_BETWEEN_THE_V4_7_AND_THE_V4_8_COORDINATES",
+        "pin_evidence_method": "AST_OVER_THE_ADAPTER_AT_THE_PINNED_COMMIT_AND_BYTES_FOR_THE_SKILL",
+        "detail": "The name-or-tag comparison becomes word-bounded at both sites that make it: the SUBJECT_NOT_NAMED check and the subject census. A form occurs in a statement when its non-whitespace characters appear in order with any whitespace between them, case-insensitively, and the match is adjacent to no letter on either side; digits and punctuation are boundaries, so the text layer's glued citation digits still name and an occurrence inside another word does not. One predicate serves both sites and replaces the whitespace-free substring test Core-15 widened the check to. The rule does not change: a source-asserted record's subject is the one the producer set or none, and the subject entity's name or one of its tags must occur in a statement that formalizes the record. What changes is what counts as occurring. No refusal reason is added and none is removed, so expected_reasons is empty and the enum cannot report the change; SUBJECT_NOT_NAMED's condition is narrowed, so a subject matched only inside another word is now refused and an inflected or glued form costs the producer a tag. The census keeps Core-17's four outcomes and counts them under the same predicate, which is why attachable and ambiguous fall. subject is the slot Core-13 added and tags an existing root slot, so there is no new slot, no pack version and no ontology change. One skill sentence says a name occurs as a word. The pin reads the adapter at the pinned commit, resolves both sites by AST, and records for each whether it calls the shared bounded predicate and whether a substring test against a statement is still in it; pin_status is LANDED only when both sites carry the predicate, neither carries the substring test, and the adapter and the skill have both moved off the v4.7 coordinate. Carried into v4.9 unchanged: this entry states what v4.8 landed, not what v4.9 expects. This cell pins the same Core coordinate as run-14, so the two byte comparisons, the enum difference and the census outcome keys are read between the v4.7 coordinate 12a04a9 and the v4.8 coordinate dc52547, which are fixed commits. The pin still resolves both subject sites by AST at the pinned commit and refuses outright if the shared predicate is gone or a membership test against a statement is back, because a carried entry that read LANDED without reading the adapter would be a claim about bytes nobody opened.",
+        "why": "handover/2026-09-05-overseer-journal.md, iteration 5 RCA before the review, decision 23, and E-0160. Run-13's 33 attachable records were read one by one against the entity each names: 14 name a tool, model or instrument, and the tag LAB was found sitting inside \"available\". Measured by script over the retained captures of runs 11 to 13, eight of run-12's fifteen projected subjects were in-word matches of three-letter tags: RTI in \"vertical\" and \"portion\", OCC in \"occur\", MAR in \"mark\", OBS in \"observations\". E-0155 and E-0157 read those thirteen subjects as wrong and attributed them to a sentence naming its instrument as often as its subject; the subjects are wrong as read and the attribution is not, which E-0160 corrects. Of the seven matched as a word, three attach a record to its software, one is marginal and three are plausible, so the attribution rests on three or four cases and not on thirteen. The comparison strips whitespace and tests substring; it has no word boundary, and the check has been reading in-word matches as names since Core-15. This is the loop's third clarification of an existing check, after ranges and names and after tags, and the three keep finding the same thing: the rule was right and the comparison was loose.",
+        "adapter": {
+          "path": "src/malleus/_contract_pipeline/document.py",
+          "sha256": "sha256:a2bf48502d19600630bfcb03ff57639e676b833d22c88e80324478254d46a95f",
+          "baseline_sha256": "sha256:f7b264568118e7d070271acd611be4ecefd1457d3043838930deca34e3f1c811",
+          "moved": true,
+          "messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"in the statement of {named}\","
+          ],
+          "baseline_messages": [
+            "record_id, f\"record {record_id} names subject {subject}, which \" \"carries no name\",",
+            "record_id, f\"record {record_id} names subject {subject}, whose {tried} \" f\"absent from the statement of {named}\","
+          ],
+          "messages_moved": true
+        },
+        "skill": {
+          "path": ".claude/skills/malleus-acolyte/SKILL.md",
+          "sha256": "sha256:022041359239ea345c4d5f33e8bc7aa478c58b439910200fe261ab72e08bd367",
+          "baseline_sha256": "sha256:14e50d9db7488e6ccee0dd0d1ce441a2d20b58a306b9379652036dfbc68bba8f",
+          "moved": true
+        },
+        "sites_at_pin": {
+          "_subject_defects": {
+            "calls": [
+              "_occurs_as_word",
+              "_record_properties",
+              "_subject_names"
+            ],
+            "statement_membership_tests": []
+          },
+          "_subject_outcomes": {
+            "calls": [
+              "_items",
+              "_obj",
+              "_occurs_as_word",
+              "_record_properties",
+              "_subject_names",
+              "_word"
+            ],
+            "statement_membership_tests": []
+          }
+        },
+        "sites_at_the_v4_7_coordinate": {
+          "_subject_defects": {
+            "calls": [
+              "_compact",
+              "_record_properties",
+              "_subject_names"
+            ],
+            "statement_membership_tests": [
+              "form in _compact(statements[assertion_id]).casefold()"
+            ]
+          },
+          "_subject_outcomes": {
+            "calls": [
+              "_compact",
+              "_items",
+              "_obj",
+              "_record_properties",
+              "_subject_names",
+              "_word"
+            ],
+            "statement_membership_tests": [
+              "form in statement"
+            ]
+          }
+        },
+        "bounded_predicate": [
+          "_occurs_as_word"
+        ],
+        "bounded_predicate_at_both_sites": true,
+        "substring_test_left_at": [],
+        "substring_test_absent": true,
+        "census_keys_present": true,
+        "observed": {
+          "ADAPTER_MOVED_SINCE_THE_V4_7_COORDINATE": true,
+          "SKILL_MOVED_SINCE_THE_V4_7_COORDINATE": true,
+          "ONE_PREDICATE_AT_BOTH_SUBJECT_SITES": true,
+          "NO_SUBSTRING_TEST_LEFT_AT_EITHER_SITE": true
+        },
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "carried_from": "run-19",
+        "carried": "RUN_19_READ_AT_THE_FIXED_V4_8_COORDINATE",
+        "carried_since": "run-14",
+        "landed_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "census_keys_at_the_v4_8_coordinate": [
+          "ambiguous",
+          "attachable",
+          "proposed",
+          "unnamed"
+        ],
+        "landed_at_the_v4_8_coordinate": true
+      },
+      {
+        "id": "CORE_19_HONEST_REPORTING",
+        "subject": "src/malleus/_contract_pipeline/document.py",
+        "also_subject": "src/malleus/_contract_pipeline/population.py",
+        "kind": "REPORTING",
+        "core_task": "Core-19",
+        "decision": 24,
+        "governance_entry": "OVR-000414",
+        "landed_commit": "8a6c3f384d02105ad880d0d91f85d8e45f85cff9",
+        "baseline_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "detail": "Four fixes to what the protocol reports, none to what it admits. The block census labels every block of the reading ASSERTED, DECLARED_NOTHING_ASSERTABLE or UNTOUCHED and counts the three, keeping blocks_reviewed as the sum of the first two with its meaning stated. A provenance axis reports, per type that carries assertion_locator, how many records reach the assertion behind them and how many bind its bytes. The rehydration failure that reached run-17's runner as a raw ValueError is typed RECORDS_NOT_REHYDRATABLE in the plan compiler's enum. GAP_REQUIRED runs as a pre-pass that collects every assertion with neither a formalization target nor a gap and refuses once, instead of naming the first.",
+        "why": "Run-16 and run-17 both left the record saying something that is not true. Run-16's census counted 186 of 186 blocks reviewed when 128 of them were a producer claim the census cannot check; run-17's counted 186 when the capture named seven. The two protocol observations of E-0176 are the other half: the paper claims every refusal is typed, and at the rehydration stage that was false, and GAP_REQUIRED spent a return on one assertion when eight were in the same state. This cell reads the fixes because its producer is the one that met all four.",
+        "expected_reasons": [
+          "RECORDS_NOT_REHYDRATABLE"
+        ],
+        "expected_reasons_basis": "One reason is typed where the graph gate's exception passed through untyped, and none is removed. The pin computes the difference of the plan compiler's enum between the v4.9 coordinate and the pinned commit and compares it to this list; the document adapter's enum is expected to be unchanged and the pin records that difference too.",
+        "census_keys": [
+          "ASSERTED",
+          "DECLARED_NOTHING_ASSERTABLE",
+          "UNTOUCHED"
+        ],
+        "census_key_added": "provenance_coverage",
+        "census_axes": [
+          "BLOCK_COVERAGE",
+          "PROVENANCE_COVERAGE"
+        ],
+        "census_axes_disposition": "REPORTED_NOT_REFUSED",
+        "aggregation": "GAP_REQUIRED",
+        "aggregation_evidence": "MODULE_LEVEL_PRE_PASS_AND_REFUSAL_RESOLVED_BY_AST",
+        "aggregation_non_evidence": "The document adapter's enum carries GAP_REQUIRED at both coordinates, so the enum difference cannot report the aggregation. What the AST can see is _empty_assertion_defects, which collects every empty assertion, and _refuse_gaps, which renders them as one refusal, both module-level functions and neither present at the v4.9 coordinate. That is what this entry records and it is recorded as what it is.",
+        "pin_evidence": "The pin resolves the three block labels inside _block_census by AST and records every label-shaped constant it finds, so a fourth label is reported rather than hidden; it records whether the adapter writes provenance_coverage as a literal; it computes the plan compiler's enum difference between the two coordinates; and it resolves the two GAP_REQUIRED functions by name. LANDED requires all six observations, and the adapter and the plan compiler both moved since the v4.9 coordinate.",
+        "pin_status": "LANDED",
+        "producer_visible": true,
+        "producer_visible_note": "Visible only through the skill, which Core-20 moves. Core-19 changes no rule the producer must follow; it changes what the census says about what the producer did, and it types one refusal the producer already met untyped.",
+        "carried_since": "run-18",
+        "reasons": [
+          "RECORDS_NOT_REHYDRATABLE"
+        ],
+        "reasons_removed": [],
+        "document_reasons": [],
+        "adapter": {
+          "path": "src/malleus/_contract_pipeline/document.py",
+          "sha256": "sha256:0d3922344de2245310e6255e4c7e703d36be8669f44a755a1f0af4c6b642885b",
+          "baseline_sha256": "sha256:a2bf48502d19600630bfcb03ff57639e676b833d22c88e80324478254d46a95f",
+          "moved": true
+        },
+        "plan_compiler": {
+          "path": "src/malleus/_contract_pipeline/population.py",
+          "sha256": "sha256:d5d66dfa92d2055cf0782fb708d2da9f54e768a25f60c0c3ecdadd141dab229e",
+          "baseline_sha256": "sha256:b6bf8184cd219c9a22e312cc737161a09b2b7c4cb8d4b55a84885a1a91ac2d28",
+          "moved": true
+        },
+        "block_census_labels_at_pin": [
+          "ASSERTED",
+          "DECLARED_NOTHING_ASSERTABLE",
+          "UNTOUCHED"
+        ],
+        "block_census_labels_at_the_v4_8_coordinate": [],
+        "block_census_labels": [
+          "ASSERTED",
+          "DECLARED_NOTHING_ASSERTABLE",
+          "UNTOUCHED"
+        ],
+        "provenance_census_key": "provenance_coverage",
+        "gap_aggregation_names": [
+          "_empty_assertion_defects",
+          "_refuse_gaps"
+        ],
+        "gap_aggregation_at_pin": [
+          "_empty_assertion_defects",
+          "_refuse_gaps"
+        ],
+        "gap_aggregation_at_the_v4_8_coordinate": [],
+        "gap_aggregation_evidence": "MODULE_LEVEL_PRE_PASS_AND_REFUSAL_RESOLVED_BY_AST",
+        "gap_aggregation_non_evidence": "THE_ENUM_CARRIES_GAP_REQUIRED_AT_BOTH",
+        "observed": {
+          "ADAPTER_MOVED_SINCE_THE_V4_8_COORDINATE": true,
+          "PLAN_COMPILER_MOVED_SINCE_THE_V4_8_COORDINATE": true,
+          "THREE_BLOCK_LABELS_IN_THE_CENSUS": true,
+          "PROVENANCE_COVERAGE_WRITTEN_BY_THE_ADAPTER": true,
+          "REHYDRATION_REASON_TYPED_IN_THE_POPULATION_ENUM": true,
+          "GAP_REQUIRED_AGGREGATED_BY_A_PRE_PASS": true
+        },
+        "reasons_added": true,
+        "reasons_match_expected": true,
+        "carried_from": "run-19",
+        "carried": "READ_AGAIN_AT_THE_SAME_COMMIT_NOT_CARRIED_UNREAD",
+        "carried_note": "Run-18's entry, carried through run-19. This cell pins the commit run-19 pinned, which is the commit run-18 pinned, so the pin reads it again there against the same v4.8 baseline rather than copying run-19's status: pin_status is recomputed from the bytes and must come back LANDED."
+      },
+      {
+        "id": "CORE_20_REFUSAL_LIST_PREFLIGHT",
+        "subject": ".claude/skills/malleus-acolyte/SKILL.md",
+        "also_subject": "tests/test_inquisition.py",
+        "kind": "CLARIFICATION",
+        "core_task": "Core-20",
+        "decision": 25,
+        "governance_entry": "OVR-000415_EXPECTED_AFTER_OVR-000414",
+        "governance_note": "The pin decides pin_status on the bytes at the pinned commit and records the governance head beside it. Core-20's code may be at the commit this cell pins before its overseer entry is written, and this cell may be pinned in that state; governance_entry_landed says which, and the overseer re-pins after the entry lands.",
+        "baseline_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+        "detail": "The skill gains one paragraph between two markers: the adapter's and the plan compiler's refusal reasons as the producer's pre-flight, one line per reason with the check in plain words. A guard in tests/test_inquisition.py derives the reason names from DocumentAssertionRefusalReason and PopulationPlanRefusalReason and asserts the paragraph carries each of them and no other, so the list cannot drift from Core in either direction. Nothing in the adapter changes and no refusal reason is added or removed.",
+        "why": "At a fixed protocol the five cells of the 2026-09-05 matrix differed in what the producer checked before it stopped, and the adapter's refusal reasons are exactly that list. The Opus and Sonnet producers validated every field against the staged surface and every assertion for a target or a gap unasked; run-17's Haiku producer did neither, and both are rules the skill states without a method. A list the producer can run its own file against is the cheapest thing that carries the rules it already states, and because the list is the adapter's own refusals it steers no modelling decision.",
+        "expected_reasons": [],
+        "expected_reasons_basis": "Core-20 adds no refusal reason and removes none, in either enum. No enum check is possible in either direction, and the entry says so rather than carrying a vacuous subset result. What is readable is the paragraph and the guard.",
+        "expectation": "EMPTY_NO_ENUM_CHECK_IS_POSSIBLE",
+        "pin_evidence": "The pin reads the skill at the pinned commit, extracts the paragraph between the malleus-preflight-refusals markers, and collects every reason-shaped token in it. LANDED requires the markers present, every reason of both enums named in the paragraph, no token in it that neither enum carries, and tests/test_inquisition.py naming both enum classes and the same marker. Anything less reads PENDING_AT_PIN, and the entry names the reasons that are missing.",
+        "pin_evidence_method": "The reason list is derived from the two enums at the pinned commit, never typed into this contract, so a Core task that adds a reason after this cell opens makes the paragraph incomplete rather than making the pin silently agree with it.",
+        "pin_status": "LANDED",
+        "producer_visible": true,
+        "producer_visible_note": "The skill is one of the eight declared inputs, so this change is the one thing in the cell the producer reads. Its bytes are recorded in the producer input manifest at the pinned commit and the workspace is built from those bytes, never from the live tree.",
+        "expected": "ADMISSION_WITHIN_TWO_STRUCTURAL_RETURNS_AND_NO_UNSUPPORTED_ROW_AT_REVIEW",
+        "expected_stated_before_the_run": true,
+        "expected_detail": "An Opus 5 producer under the v4.10 skill reaches admission within the two structural returns the manifest allows and its rows judge with no UNSUPPORTED row, which is what the three Opus cells at v4.7, v4.8 and v4.9 gave without the pre-flight list. What the list is expected to do to the defect count at the first runner attempt is not stated here: those three cells returned 0, 7 and 0, so there is no fifty to fall from.",
+        "falsifier": "A_THIRD_STRUCTURAL_REFUSAL_OR_AN_UNSUPPORTED_ROW_AT_REVIEW",
+        "falsifier_basis": "The runner list in this cell's own launch log decides the first half and the preliminary review record decides the second; no comparison with another cell is needed to read either. A third refusal says the list does not substitute for a producer's own validator even for the producer that writes one; an UNSUPPORTED row says the rows this harness returns stopped being supported by the reading.",
+        "not_this_cell": "Nothing is claimed about any model, and nothing about the list beyond this document and this producer. One cell is one observation. A cell that is admitted will not have shown that the paragraph caused it, only that the outcome the loop predicted from it occurred.",
+        "carried_since": "run-18",
+        "reasons": [],
+        "population_reasons_at_pin": [
+          "ABSENT_PATH",
+          "DANGLING_ENDPOINT",
+          "DANGLING_SUBJECT",
+          "DUPLICATE_ARTIFACT_ID",
+          "DUPLICATE_CHANGE_SET_ID",
+          "DUPLICATE_PLAN_ID",
+          "DUPLICATE_RECORD_ID",
+          "FAMILY_NOT_ADMITTED",
+          "FIELDS_NOT_CLOSED",
+          "GROUNDING_REQUIRED",
+          "IDENTITY_MISMATCH",
+          "MALFORMED_EVIDENCE_REFERENCE",
+          "MALFORMED_IDENTITY",
+          "MALFORMED_PLAN",
+          "MALFORMED_PROFILE_REFERENCE",
+          "MALFORMED_RETENTION_EVENT",
+          "MALFORMED_SUPERSESSION",
+          "RECORDS_NOT_REHYDRATABLE",
+          "SOURCES_REQUIRED",
+          "SUPERSESSION_FORK",
+          "SUPERSESSION_TYPE_MISMATCH",
+          "SUPERSESSION_VALID_TIME_MISMATCH",
+          "UNDERIVED_FIELD",
+          "UNKNOWN_FAMILY",
+          "UNKNOWN_GAP_KIND",
+          "UNKNOWN_ORIGIN",
+          "UNKNOWN_RECORD",
+          "UNKNOWN_SEMANTIC_UNIT",
+          "UNKNOWN_SUPERSESSION",
+          "UNLISTED_SOURCE",
+          "UNRETAINED_EVIDENCE",
+          "UNRETAINED_SOURCE",
+          "UNSUPPORTED_GRAMMAR",
+          "UNSUPPORTED_VALID_TIME"
+        ],
+        "skill": {
+          "path": ".claude/skills/malleus-acolyte/SKILL.md",
+          "sha256": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81",
+          "baseline_sha256": "sha256:022041359239ea345c4d5f33e8bc7aa478c58b439910200fe261ab72e08bd367",
+          "moved": true
+        },
+        "observed": {
+          "marker": "malleus-preflight-refusals",
+          "paragraph_present": true,
+          "reasons_at_pin": [
+            "ABSENT_PATH",
+            "DANGLING_ENDPOINT",
+            "DANGLING_SUBJECT",
+            "DIGEST_MISMATCH",
+            "DIGEST_NOT_LOCATED",
+            "DUPLICATE_ARTIFACT_ID",
+            "DUPLICATE_CHANGE_SET_ID",
+            "DUPLICATE_PLAN_ID",
+            "DUPLICATE_RECORD_ID",
+            "EVALUATIVE_SLOT_NOT_EVALUATED",
+            "FAMILY_NOT_ADMITTED",
+            "FIELDS_NOT_CLOSED",
+            "GAP_REQUIRED",
+            "GROUNDING_REQUIRED",
+            "IDENTITY_MISMATCH",
+            "MALFORMED_CAPTURE",
+            "MALFORMED_EVIDENCE_REFERENCE",
+            "MALFORMED_IDENTITY",
+            "MALFORMED_PLAN",
+            "MALFORMED_PROFILE_REFERENCE",
+            "MALFORMED_READING",
+            "MALFORMED_RETENTION_EVENT",
+            "MALFORMED_SUPERSESSION",
+            "MODALITY_NOT_ASSERTED",
+            "NOT_VERBATIM",
+            "READING_MISMATCH",
+            "RECORDS_NOT_REHYDRATABLE",
+            "SOURCES_REQUIRED",
+            "SUBJECT_NOT_NAMED",
+            "SUPERSESSION_FORK",
+            "SUPERSESSION_TYPE_MISMATCH",
+            "SUPERSESSION_VALID_TIME_MISMATCH",
+            "UNDERIVED_FIELD",
+            "UNKNOWN_ASSERTION_LOCATOR",
+            "UNKNOWN_BLOCK",
+            "UNKNOWN_FAMILY",
+            "UNKNOWN_FORMALIZATION_TARGET",
+            "UNKNOWN_GAP_KIND",
+            "UNKNOWN_MODALITY",
+            "UNKNOWN_ORIGIN",
+            "UNKNOWN_RECORD",
+            "UNKNOWN_SEMANTIC_UNIT",
+            "UNKNOWN_SUPERSESSION",
+            "UNLISTED_SOURCE",
+            "UNRETAINED_EVIDENCE",
+            "UNRETAINED_SOURCE",
+            "UNSUPPORTED_GRAMMAR",
+            "UNSUPPORTED_VALID_TIME"
+          ],
+          "reasons_named_in_the_paragraph": [
+            "ABSENT_PATH",
+            "DANGLING_ENDPOINT",
+            "DANGLING_SUBJECT",
+            "DIGEST_MISMATCH",
+            "DIGEST_NOT_LOCATED",
+            "DUPLICATE_ARTIFACT_ID",
+            "DUPLICATE_CHANGE_SET_ID",
+            "DUPLICATE_PLAN_ID",
+            "DUPLICATE_RECORD_ID",
+            "EVALUATIVE_SLOT_NOT_EVALUATED",
+            "FAMILY_NOT_ADMITTED",
+            "FIELDS_NOT_CLOSED",
+            "GAP_REQUIRED",
+            "GROUNDING_REQUIRED",
+            "IDENTITY_MISMATCH",
+            "MALFORMED_CAPTURE",
+            "MALFORMED_EVIDENCE_REFERENCE",
+            "MALFORMED_IDENTITY",
+            "MALFORMED_PLAN",
+            "MALFORMED_PROFILE_REFERENCE",
+            "MALFORMED_READING",
+            "MALFORMED_RETENTION_EVENT",
+            "MALFORMED_SUPERSESSION",
+            "MODALITY_NOT_ASSERTED",
+            "NOT_VERBATIM",
+            "READING_MISMATCH",
+            "RECORDS_NOT_REHYDRATABLE",
+            "SOURCES_REQUIRED",
+            "SUBJECT_NOT_NAMED",
+            "SUPERSESSION_FORK",
+            "SUPERSESSION_TYPE_MISMATCH",
+            "SUPERSESSION_VALID_TIME_MISMATCH",
+            "UNDERIVED_FIELD",
+            "UNKNOWN_ASSERTION_LOCATOR",
+            "UNKNOWN_BLOCK",
+            "UNKNOWN_FAMILY",
+            "UNKNOWN_FORMALIZATION_TARGET",
+            "UNKNOWN_GAP_KIND",
+            "UNKNOWN_MODALITY",
+            "UNKNOWN_ORIGIN",
+            "UNKNOWN_RECORD",
+            "UNKNOWN_SEMANTIC_UNIT",
+            "UNKNOWN_SUPERSESSION",
+            "UNLISTED_SOURCE",
+            "UNRETAINED_EVIDENCE",
+            "UNRETAINED_SOURCE",
+            "UNSUPPORTED_GRAMMAR",
+            "UNSUPPORTED_VALID_TIME"
+          ],
+          "reasons_absent_from_the_paragraph": [],
+          "reasons_the_paragraph_invents": [],
+          "every_reason_named": true,
+          "no_other_reason_named": true,
+          "guard_path": "tests/test_inquisition.py",
+          "guard_names_the_marker": true,
+          "enums_named_in_the_guard": [
+            "DocumentAssertionRefusalReason",
+            "PopulationPlanRefusalReason"
+          ],
+          "guard_derives_from_both_enums": true
+        },
+        "reasons_added": false,
+        "governance_head_at_pin": "OVR-000415",
+        "governance_entry_landed": true,
+        "carried_from": "run-19",
+        "carried": "READ_AGAIN_AT_THE_SAME_COMMIT_NOT_CARRIED_UNREAD",
+        "carried_note": "Run-18's entry, carried through run-19. This cell pins the commit run-19 pinned, which is the commit run-18 pinned, so the pin reads it again there against the same v4.8 baseline rather than copying run-19's status: pin_status is recomputed from the bytes and must come back LANDED.",
+        "expected_at_run_18": "ADMITTED_WITHIN_TWO_STRUCTURAL_RETURNS",
+        "falsifier_at_run_18": "A_THIRD_STRUCTURAL_REFUSAL",
+        "outcome_at_run_18": "EXPECTATION_REFUSED_BY_A_THIRD_STRUCTURAL_REFUSAL_E-0182",
+        "expectation_note": "The expectation on this entry is the cell it sits in. Run-18 stated admission within two structural returns for a Haiku 4.5 producer and a third refusal fired; run-19 stated fewer than fifty defects at the first runner attempt and admission within two returns for a Sonnet 5 producer and both held. Those strings are kept beside their outcomes so the carried entry does not read as though an earlier expectation still stood. What this cell expects of the same paragraph is stated here and on OPUS_5_PRODUCER_AT_V4_10, and both say the same two things.",
+        "expected_at_run_19": "FEWER_THAN_FIFTY_DEFECTS_AT_THE_FIRST_RUNNER_ATTEMPT_AND_ADMISSION_WITHIN_TWO_STRUCTURAL_RETURNS",
+        "falsifier_at_run_19": "FIFTY_OR_MORE_DEFECTS_AT_THE_FIRST_RUNNER_ATTEMPT_OR_A_THIRD_STRUCTURAL_REFUSAL",
+        "outcome_at_run_19": "EXPECTATION_HELD_THREE_DEFECTS_AT_THE_FIRST_RUNNER_ATTEMPT_AND_ONE_STRUCTURAL_RETURN_E-0185"
+      },
+      {
+        "id": "ENTITY_KIND_RESTRICTED",
+        "subject": "paper-v4/experiment-v4/run-20/bind_from_surface.py, paper-v4/experiment-v4/run-20/native_query.py",
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v3",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "case_kinds": [
+          "ENTITY",
+          "RELATION",
+          "SUBJECT"
+        ],
+        "entity_case_scope": "TYPES_IN_THE_SET_THAT_CARRY_NO_SUBJECT",
+        "case_count_rule": "len(types without subject) + len(types)^2 * len(relations) + len(bearing) * len(entities)",
+        "restricts": "QUERY_CASE_KINDS_V3",
+        "defect_of": "run-09",
+        "executor_change": "ACCEPTED_SCHEMA_STRING_ONLY_NATIVE_QUERY_IS_OTHERWISE_RUN_09S_BYTES",
+        "offline_validation": {
+          "script": "paper-v4/experiment-v4/run-20/offline_validation.py",
+          "record": "paper-v4/experiment-v4/run-20/offline-validation.json",
+          "basis": "RUN_09S_FROZEN_TYPE_SETS_SURFACE_QUERY_RESULT_AND_PRELIMINARY_RECORD",
+          "executes": "NOTHING",
+          "rows": 630,
+          "rows_by_question": {
+            "CQ-01": 58,
+            "CQ-02": 319,
+            "CQ-03": 131,
+            "CQ-04": 122
+          },
+          "labels": {
+            "PARTIAL": 12,
+            "SUPPORTED": 618
+          },
+          "unjudged": 0
+        },
+        "detail": "bind_from_surface.py emits an ENTITY case only for the types in a question's set that do not carry subject on the surface. SUBJECT and RELATION expansion is unchanged, so a source-asserted record is still returned when it is attached, projecting the thing it is about, and an unattached one is returned by nothing. The case count becomes len(types without subject) + len(types)^2 * len(relations) + len(bearing) * len(entities), and the binding schema moves to malleus.paper-v4.native-query-binding/v4. native_query.py is run-09's bytes with the accepted schema string substituted and nothing else: the three executors, the source-free guard, the forbidden-attempt counters and the witness tracer are the bytes every cell from run-02 onward ran, and run-12's test_pipeline.py proved it by reconstructing run-09's file from that one. The binding is still frozen at ontology acceptance, cases_sha256 still digests the queries alone, and the producer still never sees the file. Carried into v4.5 unchanged: this entry states what v4.4 landed. This cell's binder is run-12's bytes with the run id moved and no delta. Its executor is run-12's with one delta, SUBJECT_TAGS_PROJECTED, which touches the SUBJECT row's subject projection and nothing the ENTITY restriction owns: no case field, no case count, no kind. run-13's test_pipeline.py proves both, the binder by reconstruction and the executor by reversing the delta back to run-12's bytes. Carried into v4.9: this cell's binder is run-14's bytes with the run id moved and no delta, so the case count rule, the ENTITY scope and the binding schema are exactly what v4.4 landed. Its executor is run-14's with one delta, ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION, which collapses rows that repeat a witness inside one question and projects a row through the witness record's own type. That delta adds no case, removes none and changes no case field, no case count and no kind, so nothing this entry owns moves; run-15's test_pipeline.py proves the binder by reconstruction and the executor by reversing the delta back to run-14's bytes. Carried into run-16 unchanged: its binder is run-15's bytes with the run id moved and its executor is run-15's byte for byte, so nothing this entry owns moves and run-16's test_pipeline.py proves both. Carried into run-17 unchanged: its binder is run-16's bytes with the run id moved and its executor is run-16's byte for byte, so nothing this entry owns moves and run-17's test_pipeline.py proves both. Carried into run-18 unchanged: its binder is run-17's bytes with the run id moved and its executor is run-17's byte for byte, so nothing this entry owns moves and run-18's test_pipeline.py proves both. Carried into run-19 unchanged: its binder is run-18's bytes with the run id moved and its executor is run-18's byte for byte, so nothing this entry owns moves and run-19's test_pipeline.py proves both. Carried into run-20 unchanged: its binder is run-19's bytes with the run id moved and its executor is run-19's byte for byte, so nothing this entry owns moves and run-20's test_pipeline.py proves both.",
+        "why": "handover/2026-09-05-v43-rca.md sections 5 and 8, and E-0143. 1,061 of run-09's 1,466 rows came through the ENTITY kind, which returns every admitted record of every type in a question's set. 1,052 of them were SUPPORTED, so they are not wrong; none of them is an answer, because a row whose witness is itself says only that a record of that type exists. They tripled the review: 1.21 million tokens across four sessions against 322 thousand for run-04. The rationale is the protocol's own: a source-asserted record reaches a question through its subject; an unattached one reaches nothing, which is the honest outcome the subject-coverage census already counts. Computed offline from run-09's already-judged record, the restriction returns 630 rows (58, 319, 131, 122) with 618 SUPPORTED and 12 PARTIAL, and no row of it is unjudged.",
+        "carried_from": "run-19",
+        "carried_since": "run-12",
+        "carried_bytes": "RUN_19S_BYTES_WITH_THE_RUN_ID_MOVED",
+        "executor_at_this_cell": "RUN_19S_BYTES_BYTE_FOR_BYTE_THIS_CELL_HAS_NO_HARNESS_DELTA"
+      },
+      {
+        "id": "GATE_SURFACES_CHAINED_CAUSE",
+        "subject": "paper-v4/experiment-v4/run-20/compile_ontology_candidate.py",
+        "diagnostic_field": "cause_chain",
+        "detail": "A refused gate attempt records every link of the raised error's __cause__ chain in diagnostic.json, reason and detail per link, head first, alongside the flattened chained_cause and the unchanged detail. The diagnostic file is the artifact returned to the producer, so a refusal whose sentence lives in a chained cause is complete in the file.",
+        "why": "Deep sweep D-14. Run-05's attempt-01 diagnostic carries IMPORT_READER_REFUSED and nothing else; the sentence naming the rejected field lived in the chained cause and had to be read out of the ontology-run result and the launch log. The frozen artifact was not the artifact the experiment describes returning.",
+        "carried_from": "run-19",
+        "carried_since": "run-08"
+      },
+      {
+        "id": "HAIKU_4_5_PRODUCER_AT_V4_10",
+        "subject": "paper-v4/experiment-v4/run-18/run-contract.json#producer",
+        "subject_block": "producer",
+        "kind": "MODEL_CELL",
+        "defect_of": "none",
+        "detail": "The producer block's three model fields are run-17's and are held there: requested_model haiku, model family Claude Haiku 4.5, model id claude-haiku-4-5-20251001. Every other key of run-17's producer block reaches this cell unchanged, the harness is run-17's byte for byte with the run id moved, native_query.py is copied without a substitution, and the spawn message is run-17's with the run id moved. This entry records a variable held rather than a variable moved: the model is what makes Core-20 readable, because the producer Core-20's list is for is the one that failed without it.",
+        "why": "handover/2026-09-05-overseer-journal.md, \"Loop iteration 8 decided\". Core-20 is measured on the cheapest producer and the one the list is for. A cell that changed the model as well would leave the outcome unattributable to either.",
+        "harness_delta": "NONE",
+        "core_delta": "CORE_19_LANDED_AND_CORE_20_UNDER_TEST",
+        "edit_site": "NO_EDIT_THE_MODEL_FIELDS_ARE_RUN_17S",
+        "executor": "RUN_17S_NATIVE_QUERY_BYTE_FOR_BYTE",
+        "spawn_message": "RUN_17S_WITH_THE_RUN_ID_MOVED",
+        "skill": "THE_CORE_20_BYTES_AT_THE_PINNED_COMMIT_NOT_RUN_17S",
+        "requested_model": "haiku",
+        "model_family": "Claude Haiku 4.5",
+        "model_id": "claude-haiku-4-5-20251001",
+        "prior_requested_model": "haiku",
+        "prior_model_id": "claude-haiku-4-5-20251001",
+        "prior_haiku_cells": [
+          "run-06",
+          "run-07",
+          "run-17"
+        ],
+        "prior_haiku_cell_protocols": {
+          "run-06": "v4.1",
+          "run-07": "v4.1-pair",
+          "run-17": "v4.9"
+        },
+        "prior_haiku_cell_outcome": "ONTOLOGY_ACCEPTED_POPULATION_REFUSED",
+        "harness_matched_cell": "run-17",
+        "model_matched_cells": [
+          "run-06",
+          "run-07",
+          "run-17"
+        ],
+        "measured_against": [
+          "run-17",
+          "run-06",
+          "run-07"
+        ],
+        "producer_visible": true,
+        "producer_visible_note": "A producer is the model that runs it. Nothing about the model differs from run-17's, so what the producer sees that run-17's did not is the skill, which is Core-20's entry and not this one.",
+        "case_fields_changed": [],
+        "case_kinds_changed": [],
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "result_schema": "malleus.paper-v4.query-result/v3",
+        "prior_result_schema": "malleus.paper-v4.query-result/v3",
+        "expected": "ADMITTED_WITHIN_TWO_STRUCTURAL_RETURNS",
+        "expected_stated_before_the_run": true,
+        "falsifier": "A_THIRD_STRUCTURAL_REFUSAL",
+        "falsifier_basis": "The runner list in this cell's own launch log decides it. Two structural returns are the cap the manifest declares; a third refusal ends the cell where run-06, run-07 and run-17 ended.",
+        "cost": "NONE_AT_THE_HARNESS_THE_MODEL_THE_AGENT_TOOL_SPAWNS_IS_RUN_17S",
+        "not_this_cell": "Nothing is claimed about any model. Three Haiku cells at three protocols are three observations, not a measurement of the model; what changes across them is the protocol, which is the axis the paper reports.",
+        "carried_since": "run-18",
+        "carried_from": "run-19",
+        "carried": "THE_CLOSED_CELLS_OWN_RECORD_NOT_THIS_CELLS_PRODUCER",
+        "subject_cell": "run-18",
+        "carried_note": "This entry is run-18's and stays run-18's. Its subject is run-18's producer block and its expectation, which the run refused, is run-18's; run-20's own producer entry is OPUS_5_PRODUCER_AT_V4_10, whose subject is this contract's producer block. It reaches this cell through run-19.",
+        "outcome": "EXPECTATION_REFUSED_BY_A_THIRD_STRUCTURAL_REFUSAL_E-0182"
+      },
+      {
+        "id": "HAIKU_4_5_PRODUCER_AT_V4_9",
+        "subject": "paper-v4/experiment-v4/run-17/run-contract.json#producer",
+        "subject_block": "producer",
+        "kind": "MODEL_CELL",
+        "defect_of": "none",
+        "detail": "The producer block's three model fields and nothing else: requested_model haiku, model family Claude Haiku 4.5, model id claude-haiku-4-5-20251001. Every other key of run-16's producer block reaches this cell unchanged, the harness is run-16's byte for byte with the run id moved, native_query.py is copied without a substitution, the spawn message is run-16's with the run id moved, the installed skill is the same bytes at the same Core commit, and Core does not move: the coordinate is dc5254795a78648591d3a1b0bcf602af8d443dc1 at governance head OVR-000413, the one run-15 and run-16 pinned. The model field is the only difference, which is what makes this a matrix cell rather than an iteration. It is measured against run-16, the Sonnet 5 cell at this same harness, against run-15, the Opus 5 cell at it, and against run-06 and run-07, the two Haiku 4.5 cells at v4.1, which ran under a skill that had neither the verbatim method nor the block-inventory rule and against an adapter that refused one defect at a time.",
+        "why": "handover/2026-09-05-haiku-rca.md. Runs 06 and 07 both accepted an ontology and had the population refused after two structural returns, on paraphrase presented as verbatim, an envelope copied from the skill's own call template, a constructed block id and a mispathed formalization target. The RCA named those as a rule without a method, a skill that conflated the producer's output file with the adapter's call, no instruction to take block ids from the inventory, and a fail-fast diagnostic that spends a return per defect. All four were fixed in Core before the v4.9 coordinate, and no cell since has run a Haiku producer against them. This cell is what tells the paper whether the protocol still has the unstated requirement the RCA named, that only a stronger model satisfies it.",
+        "harness_delta": "NONE",
+        "core_delta": "NONE",
+        "edit_site": "THE_PRODUCER_BLOCK_NOT_ANY_HARNESS_FILE",
+        "executor": "RUN_16S_NATIVE_QUERY_BYTE_FOR_BYTE",
+        "spawn_message": "RUN_16S_WITH_THE_RUN_ID_MOVED",
+        "skill": "THE_SAME_DECLARED_BYTES_AT_THE_SAME_CORE_COMMIT",
+        "requested_model": "haiku",
+        "model_family": "Claude Haiku 4.5",
+        "model_id": "claude-haiku-4-5-20251001",
+        "prior_requested_model": "sonnet",
+        "prior_model_id": "claude-sonnet-5",
+        "prior_haiku_cells": [
+          "run-06",
+          "run-07"
+        ],
+        "prior_haiku_cell_protocols": {
+          "run-06": "v4.1",
+          "run-07": "v4.1-pair"
+        },
+        "prior_haiku_cell_outcome": "ONTOLOGY_ACCEPTED_POPULATION_REFUSED",
+        "harness_matched_cell": "run-16",
+        "measured_against": [
+          "run-16",
+          "run-15",
+          "run-06",
+          "run-07"
+        ],
+        "producer_visible": true,
+        "producer_visible_note": "A producer is the model that runs it, so the change is visible to the producer in the only sense that matters and to nothing else: no input, no message and no file it reads differs from run-16's.",
+        "case_fields_changed": [],
+        "case_kinds_changed": [],
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "result_schema": "malleus.paper-v4.query-result/v3",
+        "prior_result_schema": "malleus.paper-v4.query-result/v3",
+        "expected": "ADMITTED_WITHIN_TWO_STRUCTURAL_RETURNS",
+        "expected_stated_before_the_run": true,
+        "expected_detail": "Under the v4.9 skill a Haiku 4.5 producer reaches admission within the two structural returns the manifest allows, where run-06 and run-07 did not. The four things the skill and the adapter now carry that they did not at v4.1 are the reason to expect it: the verbatim rule has a mechanical method, block ids come from the reading's own inventory, the adapter reports every non-verbatim statement and every unknown block in one refusal instead of the first, and the capture template no longer carries a contract-identity placeholder for a value the producer must never write. Core-18's word rule is in force at the same coordinate. Nothing is expected of coverage, of row counts or of the review.",
+        "expectation_basis": {
+          "method": "Each of the four is read with git show at the pinned commit and at the v4.1 baseline the two Haiku cells ran at, so the claim is about bytes rather than about a memory of the RCA.",
+          "pinned_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+          "v4_1_baseline_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+          "checks": [
+            {
+              "name": "VERBATIM_METHOD_IN_THE_SKILL",
+              "subject": ".claude/skills/malleus-acolyte/SKILL.md",
+              "marker": "locate the span in the named block by a whitespace-insensitive anchor and copy the block's own bytes",
+              "at_the_v4_1_baseline": "ABSENT"
+            },
+            {
+              "name": "BLOCK_IDS_FROM_THE_INVENTORY",
+              "subject": ".claude/skills/malleus-acolyte/SKILL.md",
+              "marker": "taken from the reading's own block inventory",
+              "at_the_v4_1_baseline": "ABSENT"
+            },
+            {
+              "name": "AGGREGATED_STATEMENT_AND_BLOCK_REFUSAL",
+              "subject": ".claude/skills/malleus-acolyte/SKILL.md",
+              "marker": "refuses those last two once for the whole capture",
+              "at_the_v4_1_baseline": "ABSENT"
+            },
+            {
+              "name": "NO_CONTRACT_IDENTITY_PLACEHOLDER",
+              "subject": ".claude/skills/malleus-acolyte/SKILL.md",
+              "marker": "replace-with-PartialEffectiveContract.identity",
+              "at_the_pinned_commit": "ABSENT",
+              "at_the_v4_1_baseline": "PRESENT"
+            }
+          ]
+        },
+        "falsifier": "A_THIRD_STRUCTURAL_REFUSAL",
+        "falsifier_basis": "The runner list in this cell's own launch log decides it. Two structural returns are the cap the manifest declares; a third refusal ends the cell with the population refused, which is where run-06 and run-07 ended, and refuses the expectation as stated. Nothing else in the cell is needed to read it, and no comparison with another cell is needed to decide it.",
+        "cost": "NONE_AT_THE_HARNESS_THE_ONLY_DIFFERENCE_IS_WHICH_MODEL_THE_AGENT_TOOL_SPAWNS",
+        "not_this_cell": "Nothing is claimed about any model. One cell per model is one observation, and a difference between two single sessions is not a measurement of either. Run-06 and run-07 ran at v4.1 under a different skill, a different pack set and a different adapter, so they bound this cell's expectation and nothing else; a cell that is admitted has not shown that the fixes caused it, only that the outcome the RCA predicted from them occurred.",
+        "carried_since": "run-17",
+        "carried_from": "run-19",
+        "carried": "THE_CLOSED_CELLS_OWN_RECORD_NOT_THIS_CELLS_PRODUCER",
+        "subject_cell": "run-17",
+        "carried_note": "This entry is run-17's and stays run-17's. Its subject is run-17's producer block and its expectation, which the run refused, is run-17's. It reaches this cell through run-19 rather than from any claim of this one, and the four expectation checks it carries are read at run-17's own two commits and never at this cell's pin.",
+        "outcome": "EXPECTATION_REFUSED_BY_A_THIRD_STRUCTURAL_REFUSAL_E-0176"
+      },
+      {
+        "id": "INTERPRETER_PREFLIGHT",
+        "subject": "paper-v4/experiment-v4/run-20/prepare_producer.py",
+        "lock": "paper-v4/environment/requirements-cp312-macos-arm64.lock",
+        "packages": [
+          "linkml",
+          "linkml-runtime"
+        ],
+        "detail": "The workspace builder refuses before it writes anything unless sys.prefix is the repository .venv and the installed linkml and linkml-runtime versions equal the versions the paper environment lock names. The check, the lock path, the lock digest and both version maps are recorded in the producer input receipt under interpreter.",
+        "why": "Deep sweep D-10. The base conda python at linkml-runtime 1.10.0 refuses the harness only at the gate, after the producer's whole ontology phase has been spent, and the environment lock test does not inspect the running interpreter.",
+        "carried_from": "run-19",
+        "carried_since": "run-08"
+      },
+      {
+        "id": "LAUNCH_LOG_V2",
+        "subject": "paper-v4/experiment-v4/run-20/results/launch-log.json",
+        "log_schema": "malleus.paper-v4.producer-launch-log/v2",
+        "prior_log_schema": "malleus.paper-v4.producer-launch-log/v1",
+        "required_keys": [
+          "schema",
+          "run",
+          "protocol",
+          "launches",
+          "gate",
+          "runner",
+          "query",
+          "review"
+        ],
+        "detail": "One launch-log shape for the whole cell, published as-is in results/ at freeze. launches[] carries per-launch role, model, first stage and usage per resume; gate[] the ontology attempts and the overseer citation-veracity check; runner[] every attempt with its own execution_commit; query{} the binding, its acceptance-time digest and the row counts; review{} the review launch and its usage. usage_from_launch_log.py refuses a log that is not this shape.",
+        "why": "Deep sweep D-09. Six cells declared producer-launch-log/v1 over four incompatible shapes, so no cross-cell reader can be written against the version string.",
+        "carried_from": "run-19",
+        "carried_since": "run-08"
+      },
+      {
+        "id": "ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION",
+        "subject": "paper-v4/experiment-v4/run-20/native_query.py",
+        "kind": "REMOVAL",
+        "defect_of": "run-13",
+        "edit_site": "EXECUTOR_NOT_BINDER",
+        "binder_change": "NONE",
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "result_schema": "malleus.paper-v4.query-result/v3",
+        "prior_result_schema": "malleus.paper-v4.query-result/v2",
+        "case_fields_changed": [],
+        "case_kinds_changed": [],
+        "case_count_rule_changed": false,
+        "producer_visible": false,
+        "witness": "THE_ROWS_KIND_AND_ITS_RECORD_IDS",
+        "witness_ids": {
+          "ENTITY": [
+            "record_id"
+          ],
+          "RELATION": [
+            "relation_id",
+            "source_id",
+            "target_id"
+          ],
+          "SUBJECT": [
+            "record_id",
+            "subject_id"
+          ]
+        },
+        "row_projection": "THE_WITNESS_RECORDS_OWN_TYPE_AS_THE_SURFACE_DECLARES_IT_NEVER_THE_CASES",
+        "row_ordinals": "CASE_ORDINALS_SORTED_IN_PLACE_OF_CASE_ORDINAL",
+        "row_order": "BY_FIRST_PRODUCING_CASE_ORDINAL",
+        "subject_tags": "STILL_PROJECTED_ON_THE_SUBJECT_SIDE_E_0156",
+        "cross_question_repeats": "UNTOUCHED_THE_EVALUATORS_TYPE_SET_JUDGEMENT",
+        "projection_source": "THE_BINDINGS_OWN_PER_TYPE_OUTPUT_FIELDS",
+        "absent_own_type": "REFUSED_NOT_FALLEN_BACK_TO_THE_CASES_TYPE",
+        "detail": "native_query.py emits one row per distinct witness per question. A witness is the row's kind and its record ids: record_id for an ENTITY row, record_id and subject_id for a SUBJECT row, relation_id with both endpoint ids for a RELATION row. Two cases that reach one witness produce one row; the row carries case_ordinals, every producing ordinal sorted, in place of case_ordinal, and the rows of a question are ordered by the first ordinal that produced them. The row projects the fields of the witness record's own type as the surface declares them and never the type its case named: for a SUBJECT row each side through its own record's type, for a RELATION row the relation's own type and each endpoint's own type. The per-type projections are read back out of the binding, where the binder already wrote one list per record type off the accepted surface and repeated it in every case naming that type, so bind_from_surface.py does not change and the binding frozen at acceptance with its cases_sha256 stays the executed binding's proof. A type the binding projects two ways, and a record whose own type the binding never names, are both refused rather than guessed past. The subject side still projects tags (E-0156). The result schema moves to malleus.paper-v4.query-result/v3. Nothing else in the executor moves: the three case kinds, the source-free guard, the forbidden-attempt counters and the witness tracer are the bytes every cell from run-02 onward ran, and the producer never sees the file. Carried into this cell unchanged: run-16's native_query.py is run-15's bytes byte for byte, with no substitution at all, because the executor carries no run id; run-16's test_pipeline.py proves it by direct byte equality. Carried into run-17 the same way: run-17's native_query.py is run-16's bytes byte for byte, with no substitution at all, and run-17's test_pipeline.py proves it by direct byte equality. Carried into run-18 the same way: run-18's native_query.py is run-17's bytes byte for byte, with no substitution at all, and run-18's test_pipeline.py proves it by direct byte equality. Carried into run-19 the same way: run-19's native_query.py is run-18's bytes byte for byte, with no substitution at all, and run-19's test_pipeline.py proves it by direct byte equality. Carried into run-20 the same way: run-20's native_query.py is run-19's bytes byte for byte, with no substitution at all, and run-20's test_pipeline.py proves it by direct byte equality.",
+        "why": "handover/2026-09-05-overseer-journal.md, iteration 6 RCA before the review, and the run-13 review E-0161. Measured on the frozen query results, run-13's 515 rows carry 152 repeats of a witness inside one question: 93 with identical projections and 59 the same record projected under a parent type's case with fewer fields, which hid three records' statement digests from the reviewers. Run-14's 919 carry 44 such re-projections. A second row for a witness the question has already returned is not a second piece of evidence, and a row that shows an ancestor's fields shows the reviewer less than the capture holds.",
+        "measured_before_the_run": {
+          "method": "this cell's executor re-run against the frozen ledgers and the frozen bindings of run-13 and run-14, in the overseer scratchpad, writing nothing into either cell",
+          "run-13": {
+            "rows": 515,
+            "rows_by_question": {
+              "CQ-01": 63,
+              "CQ-02": 127,
+              "CQ-03": 176,
+              "CQ-04": 149
+            },
+            "within_question_repeats": 152,
+            "identical_projections": 93,
+            "parent_type_re_projections": 59,
+            "rows_after": 363,
+            "rows_after_by_question": {
+              "CQ-01": 46,
+              "CQ-02": 98,
+              "CQ-03": 111,
+              "CQ-04": 108
+            },
+            "rows_whose_projection_widens": 19,
+            "records_whose_digest_is_revealed": 3
+          },
+          "run-14": {
+            "rows": 919,
+            "rows_by_question": {
+              "CQ-01": 190,
+              "CQ-02": 195,
+              "CQ-03": 323,
+              "CQ-04": 211
+            },
+            "within_question_repeats": 44,
+            "cross_question_repeats": 484,
+            "rows_after": 875,
+            "rows_after_by_question": {
+              "CQ-01": 187,
+              "CQ-02": 186,
+              "CQ-03": 301,
+              "CQ-04": 201
+            },
+            "rows_whose_projection_widens": 3,
+            "records_whose_digest_is_revealed": 3,
+            "witnesses_traced": 389,
+            "witnesses_traced_unchanged": true
+          }
+        },
+        "expected": "NO_WITNESS_TWICE_IN_ONE_QUESTION_NO_DIGEST_HIDDEN_BY_A_PARENT_TYPE_PROJECTION_AND_ROW_COUNTS_FALLING_BY_THE_WITHIN_QUESTION_REPEATS_AND_NOTHING_ELSE",
+        "falsifier": "A_ROW_COUNT_THAT_FALLS_BY_ANYTHING_OTHER_THAN_THE_WITHIN_QUESTION_REPEATS",
+        "falsifier_basis": "The change is a removal with a stated arithmetic: rows out equals rows in minus the witnesses a question returned more than once. A count that falls further means the collapse reached a witness that was not a repeat, and a count that falls less means it did not reach one that was. Either refuses the removal as stated.",
+        "not_this_cell": "The cross-question repeats stay. A catalogue returned whole by every question whose type set names its type is the evaluator's type-set judgement at ontology acceptance, recorded in query-type-sets.note.json, and not something the executor decides.",
+        "carried_from": "run-19",
+        "carried": "RUN_19S_EXECUTOR_BYTE_FOR_BYTE",
+        "carried_since": "run-15"
+      },
+      {
+        "id": "OPUS_5_PRODUCER_AT_V4_10",
+        "subject": "paper-v4/experiment-v4/run-20/run-contract.json#producer",
+        "subject_block": "producer",
+        "kind": "MODEL_CELL",
+        "defect_of": "none",
+        "candidate": "CELL_OF_RECORD_PENDING_LUIS",
+        "detail": "The producer block's three model fields and nothing else: requested_model opus, model family Claude Opus 5, model id claude-opus-5. Every other key of run-19's producer block reaches this cell unchanged, the harness is run-19's byte for byte with the run id moved, native_query.py is copied without a substitution, the spawn message is run-19's with the run id moved, the installed skill is the same bytes at the same Core commit, and Core does not move: the coordinate is c95dba7b86bb61487bda9a52458e1ea47cce20ab at governance head OVR-000415, the one run-19 pinned and run-18 before it. The model field is the only difference, which is what makes this a matrix cell rather than an iteration. What it measures is the v4.10 harness and Core-20's pre-flight refusal list on the producer that ran run-15: that cell was admitted at its first runner attempt at v4.9, before the list existed, and its census reported no block split and no provenance coverage because Core-19 had not landed.",
+        "why": "handover/2026-09-05-v49-rca.md and E-0185. The v4.9 RCA's own recommendation was that the matrix cells at a stable Core are what the paper needs next; the Haiku and Sonnet cells of v4.10 have run and the Opus one has not. Run-19 showed the list changing what a Sonnet producer checked before it stopped. Whether it changes anything for the producer whose three cells at v4.7 to v4.9 already returned 0, 7 and 0 defects at the first runner attempt is the open question this cell reads, and it is the third and last cell of the v4.10 row.",
+        "harness_delta": "NONE",
+        "core_delta": "NONE",
+        "edit_site": "THE_PRODUCER_BLOCK_NOT_ANY_HARNESS_FILE",
+        "executor": "RUN_19S_NATIVE_QUERY_BYTE_FOR_BYTE",
+        "spawn_message": "RUN_19S_WITH_THE_RUN_ID_MOVED",
+        "skill": "THE_SAME_DECLARED_BYTES_AT_THE_SAME_CORE_COMMIT",
+        "requested_model": "opus",
+        "model_family": "Claude Opus 5",
+        "model_id": "claude-opus-5",
+        "prior_requested_model": "sonnet",
+        "prior_model_id": "claude-sonnet-5",
+        "prior_opus_cells": [
+          "run-04",
+          "run-08",
+          "run-09",
+          "run-10",
+          "run-11",
+          "run-12",
+          "run-13",
+          "run-14",
+          "run-15"
+        ],
+        "prior_opus_cell_protocols": {
+          "run-04": "v4.1",
+          "run-08": "v4.2",
+          "run-09": "v4.3",
+          "run-10": "v4.4",
+          "run-11": "v4.5",
+          "run-12": "v4.6",
+          "run-13": "v4.7",
+          "run-14": "v4.8",
+          "run-15": "v4.9"
+        },
+        "prior_opus_cell_outcome": "ADMITTED_AND_REPLAYED",
+        "harness_matched_cell": "run-19",
+        "model_matched_cells": [
+          "run-04",
+          "run-08",
+          "run-09",
+          "run-10",
+          "run-11",
+          "run-12",
+          "run-13",
+          "run-14",
+          "run-15"
+        ],
+        "measured_against": [
+          "run-15",
+          "run-19"
+        ],
+        "producer_visible": true,
+        "producer_visible_note": "A producer is the model that runs it, so the change is visible to the producer in the only sense that matters and to nothing else: no input, no message and no file it reads differs from run-19's.",
+        "case_fields_changed": [],
+        "case_kinds_changed": [],
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "result_schema": "malleus.paper-v4.query-result/v3",
+        "prior_result_schema": "malleus.paper-v4.query-result/v3",
+        "expected": "ADMISSION_WITHIN_TWO_STRUCTURAL_RETURNS_AND_NO_UNSUPPORTED_ROW_AT_REVIEW",
+        "expected_stated_before_the_run": true,
+        "expected_detail": "Under the v4.10 skill an Opus 5 producer reaches admission within the two structural returns the manifest allows and its rows judge with no UNSUPPORTED row, which is what the three Opus cells at v4.7, v4.8 and v4.9 gave: run-13 and run-15 were admitted at the first runner attempt, run-14 at the second after one return, and their 1,867 rows carried no UNSUPPORTED label between them. Nothing is expected of coverage, of row counts, of the defect count at the first attempt or of the responsiveness labels.",
+        "falsifier": "A_THIRD_STRUCTURAL_REFUSAL_OR_AN_UNSUPPORTED_ROW_AT_REVIEW",
+        "falsifier_basis": "Both halves are read off this cell's own files and need no comparison to decide: the runner list in this cell's launch log carries the attempts and the returns used, and the preliminary review record carries the label on every row. A third structural refusal ends the cell where run-06, run-07, run-17 and run-18 ended; one UNSUPPORTED row refuses the second half as stated.",
+        "secondary_measures": {
+          "disposition": "READ_BY_THE_RCA_NOT_EXPECTED_IN_EITHER_DIRECTION",
+          "counted_by": "CORE_19_CENSUS_AT_ADMISSION",
+          "blocks_declared_nothing_assertable": {
+            "run-15": 1,
+            "run-19": 127
+          },
+          "records_carrying_a_locator": {
+            "run-15": 142,
+            "run-19": 0
+          },
+          "first_runner_attempt_defects": {
+            "run-13": 0,
+            "run-14": 7,
+            "run-15": 0,
+            "run-19": 3
+          },
+          "note": "Three figures the RCA reads beside the outcome. The block split and the provenance coverage are what Core-19's census now writes at admission, where run-15 ran before Core-19 and its census reports 186 of 186 blocks REVIEWED with no split and no provenance axis at all; run-15's 185 asserted blocks, its 1 declared block and its 142 records carrying a locator are recomputed from its capture under the adapter's own rule. The defect count at the first runner attempt is what Core-20's list is supposed to move, and the three Opus cells before this one gave 0, 7 and 0 without it. None of the three is an expectation of this cell and none can falsify it."
+        },
+        "cost": "NONE_AT_THE_HARNESS_THE_ONLY_DIFFERENCE_IS_WHICH_MODEL_THE_AGENT_TOOL_SPAWNS",
+        "not_this_cell": "Nothing is claimed about any model. One cell per model per protocol is one observation, and a difference between two single sessions is not a measurement of either. The nine earlier Opus cells ran at nine earlier protocols under earlier skills, so they bound this cell's expectation and nothing else; a cell that is admitted with no UNSUPPORTED row will not have shown that the list caused anything, only that the outcome the three stable Opus cells gave held once more at a moved Core coordinate.",
+        "carried_since": "run-20"
+      },
+      {
+        "id": "PACKS_0_3_0",
+        "subject": "ontology/packs/metrology.yaml, ontology/packs/research.yaml",
+        "core_task": "Core-11",
+        "expected_versions": {
+          "metrology": "0.3.0",
+          "research": "0.4.0"
+        },
+        "versions": {
+          "metrology": "0.3.0",
+          "research": "0.5.0"
+        },
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "detail": "metrology gains a value qualifier beside the quantity value, so a value the source marks approximate is no longer stored as a closed exact bound pair with empty uncertainty. research gains the CRediT contribution roles as a grounded enumeration reaching the contribution relation. The pin script records the versions and the digests that actually landed at the pinned commit; the id names the version this cell was scoped for. Research landed at 0.4.0 rather than 0.3.0: Core-12 revised it once more to declare hypothesis_disposition as an evaluative slot (the Evaluative mixin the adapter reads), so the cell pins 0.4.0; the id keeps the name of the revision it was scoped for. Carried into v4.3 unchanged: this entry states what v4.2 landed, not what v4.3 expects. research moves again at the v4.3 coordinate, to 0.5.0, and that movement belongs to SUBJECT_ELEMENT; versions records what the pinned commit carries for the two packs this entry named and moved_since_run_08 names which of them left the v4.2 expectation.",
+        "why": "Twenty-five of run-04's sixty-one typed gaps are one pack limit, the approximate value stored as an exact interval, and two more are the absent contribution-role vocabulary (overseer journal, run-04's gaps read by cause). The same limit turned an approximate 0.7 GPa into a closed [0.7, 0.7] in run-05 and the reviewer judged that row PARTIAL.",
+        "carried_from": "run-19",
+        "moved_since_run_08": [
+          "research"
+        ],
+        "carried_since": "run-08"
+      },
+      {
+        "id": "PUBLIC_COST_RECORD",
+        "subject": "paper-v4/experiment-v4/run-20/results/usage.json",
+        "usage_schema": "malleus.paper-v4.producer-usage/v1",
+        "derived_by": "paper-v4/experiment-v4/run-20/usage_from_launch_log.py",
+        "frozen_set_membership": "REQUIRED",
+        "detail": "results/usage.json is a required member of the frozen artifact set, derived from the launch log rather than typed: each stage figure is the difference between one cumulative harness reading and the one before it, and the record carries a review block beside the producer stages. No stage number is entered by hand.",
+        "why": "Deep sweep D-19 and D-09. Four of six cells publish no cost artifact and their figures live in private files, so a cost table in the paper cannot be recomputed from public bytes.",
+        "carried_from": "run-19",
+        "carried_since": "run-08"
+      },
+      {
+        "id": "QUERY_CASE_KINDS_V3",
+        "subject": "paper-v4/experiment-v4/run-20/native_query.py, paper-v4/experiment-v4/run-20/bind_from_surface.py",
+        "binding_schema": "malleus.paper-v4.native-query-binding/v3",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v2",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "case_kinds": [
+          "ENTITY",
+          "RELATION",
+          "SUBJECT"
+        ],
+        "defect_of": "run-08",
+        "detail": "The native query binding moves to v3 with three case kinds, all type-only and value-blind. RELATION is run-08's shape: a source type, a relation type, a target type and a projection each. ENTITY names one record type and its projected fields and no relation, so every admitted record of that type is a row whose witness is itself. SUBJECT names a source-asserted record type and a subject entity type, and every record of the first whose subject resolves to a record of the second is a row projecting both. native_query.py executes all three, keeps the source-free guard and the forbidden-attempt counters unchanged, and traces every witness through trace_population_record. bind_from_surface.py expands the evaluator's type sets into all three: RELATION as now, ENTITY for every type in the question's set, and SUBJECT for every ordered pair of a subject-bearing type in the set with an entity type in the set. cases_sha256 still digests the queries alone and the binding stays frozen at ontology acceptance exactly as run-08's, with only bound_after_replay_receipt_sha256 moving after the replay. Carried into v4.4: the three kinds, the executor and the freeze stage are this cell's too. One line of the ENTITY expansion is restricted, under ENTITY_KIND_RESTRICTED, and the binding schema moves to v4 with it.",
+        "why": "handover/2026-09-05-v42-rca.md, follow-up 2, approved in E-0139, and E-0138. Run-08's binding returned 5, 2, 0 and 1 rows over four questions from 2,084 cases because the surface it could reach was relations only, while the answers existed as unattached records: 34 depth quantities and 20 CO2 quantities among 131 observations. An entity-level case kind would have returned every one of them for CQ-03.",
+        "carried_from": "run-19",
+        "restricted_by": "ENTITY_KIND_RESTRICTED",
+        "carried_since": "run-09"
+      },
+      {
+        "id": "REVIEW_PROTOCOL_V2",
+        "subject": "paper-v4/evaluation-v4/review-protocol-v2.json",
+        "protocol_schema": "malleus.paper-v4.source-grounded-review-protocol/v2",
+        "review_materials": [
+          "selected_reading",
+          "competency_questions",
+          "query_binding",
+          "query_result",
+          "population_trace",
+          "retained_capture",
+          "query_trace_summary"
+        ],
+        "materials_added": [
+          "retained_capture",
+          "query_trace_summary"
+        ],
+        "prior_protocol": {
+          "path": "paper-v4/evaluation-v4/review-protocol.json",
+          "still_binds": [
+            "run-02",
+            "run-03",
+            "run-04",
+            "run-05",
+            "run-06",
+            "run-07",
+            "run-08"
+          ]
+        },
+        "validator_change": "NONE_REVIEW_PY_READS_REVIEW_MATERIALS_FROM_THE_PROTOCOL_BYTES",
+        "detail": "A second frozen protocol file, written before this cell's producer runs, listing seven review materials instead of five. The fixed identities, the judgment labels, the question ids, the authorship and the forbidden record fields are the v1 file's, unchanged; the materials list and the provenance keys that name the supersession are the whole difference. review.py needs no change and gets none: validate_review_input_manifest compares the manifest's material names with the review_materials of whichever protocol bytes it is given, so the seven-material manifest validates and a five-material manifest is refused against this file. test_review_v4.py's run-02 pins are untouched, protocol digest included.",
+        "why": "The two review-surface debts run-08's reviewer recorded (E-0139, and the overseer journal of 2026-09-05). The retained capture and the query trace summary have been named by the review task as inputs since run-02 and could not be listed in the manifest's materials, because that list is fixed by the frozen protocol; both were bound only transitively, the capture through the trace's evidence digest and the trace summary through stage_identities. Closing it needs a protocol revision before the next cell's freeze or a documented deviation; this is the revision.",
+        "carried_from": "run-19",
+        "carried_since": "run-09"
+      },
+      {
+        "id": "REVIEW_TASK_V2",
+        "subject": "paper-v4/evaluation-v4/review-task.template.md",
+        "instantiated_at": "FREEZE",
+        "placeholders": [
+          "{{RUN_ID}}",
+          "{{ROWS_CQ_01}}",
+          "{{ROWS_CQ_02}}",
+          "{{ROWS_CQ_03}}",
+          "{{ROWS_CQ_04}}",
+          "{{ROWS_TOTAL}}",
+          "{{WITNESS_COUNT}}"
+        ],
+        "additions": [
+          "STATEMENT_READ_THROUGH_RETAINED_CAPTURE",
+          "STATEMENT_SHA256_CHECKED_PER_CLAIM",
+          "DERIVATION_LOCALITY_PER_ROW"
+        ],
+        "detail": "The review task becomes a template with placeholders for the run id, the rows per question and the witness count, instantiated at freeze so a wrapped row count cannot survive from a previous cell. Two additions to run-04's task: the reviewer may read the located assertion's statement through the retained capture and must check each claim's statement_sha256 against it; and for each row the reviewer states whether the formalizing assertion's block is the block cited. The citation-veracity check of the accepted ontology's grounding blocks stays an overseer step before phase two, recorded in the launch log, because the reviewer has no network. Carried into v4.3 as the template REVIEW_TASK_V3 extends: run-02 to run-08 keep this file, and run-09's task is instantiated from the v3 template instead.",
+        "why": "handover/2026-09-05-run-04-review-rca.md points 1 and 2: the task restricted the retained capture to locator resolution, which withheld reading text already inside the allowed surface and blinded the reviewer to the one field that binds a claim to its words; and the reviewer found the hub-assertion pattern by accident, which makes it a step next time. Deep sweep D-11 and the run-05 row-count defect give the rest.",
+        "carried_from": "run-19",
+        "superseded_by": "REVIEW_TASK_V3",
+        "carried_since": "run-08"
+      },
+      {
+        "id": "REVIEW_TASK_V3",
+        "subject": "paper-v4/evaluation-v4/review-task-v3.template.md",
+        "supersedes": "REVIEW_TASK_V2",
+        "instantiated_at": "FREEZE",
+        "placeholders": [
+          "{{RUN_ID}}",
+          "{{ROWS_CQ_01}}",
+          "{{ROWS_CQ_02}}",
+          "{{ROWS_CQ_03}}",
+          "{{ROWS_CQ_04}}",
+          "{{ROWS_TOTAL}}",
+          "{{WITNESS_COUNT}}"
+        ],
+        "additions": [
+          "ROW_KIND_READ_FROM_THE_ROW",
+          "SUBJECT_IN_BLOCK_PER_SUBJECT_AND_ENTITY_ROW"
+        ],
+        "carried_duties": [
+          "STATEMENT_READ_THROUGH_RETAINED_CAPTURE",
+          "STATEMENT_SHA256_CHECKED_PER_CLAIM",
+          "DERIVATION_LOCALITY_PER_ROW"
+        ],
+        "rationale_tokens": [
+          "DIGEST_OK",
+          "DIGEST_MISMATCH",
+          "DERIVATION_LOCAL",
+          "DERIVATION_NON_LOCAL",
+          "SUBJECT_IN_BLOCK",
+          "SUBJECT_NOT_IN_BLOCK",
+          "NO_SUBJECT_IN_ROW"
+        ],
+        "detail": "A third template, instantiated at freeze with the same placeholders as v2. It keeps every duty of run-08's task: the statement read through the retained capture, the statement digest recomputed per located claim, and the derivation-locality token per row. It adds the three row kinds and what each one's witness is, says that a SUBJECT or an ENTITY row is judged on the block the witness's own derivation reaches, and requires a third fixed token on those rows stating whether the subject named in the row occurs in that block: SUBJECT_IN_BLOCK, SUBJECT_NOT_IN_BLOCK or NO_SUBJECT_IN_ROW. RELATION rows carry two tokens and no third. The tokens stay at the head of rationale because the record grammar is closed at four row keys and the validator is frozen. The citation-veracity check stays an overseer step before phase two.",
+        "why": "The two new case kinds return rows that have no relation, so run-08's task cannot judge them: it tells the reviewer to find the relation's formalizing block. And the axis the v4.2 RCA turns on, whether a record is attached to what it is about, is exactly what a reviewer can check on the reading and nothing mechanical can: the adapter checks that the subject's name occurs in a formalizing statement, not that the attachment is the right one.",
+        "carried_from": "run-19",
+        "carried_since": "run-09",
+        "superseded_by": "REVIEW_TASK_V4"
+      },
+      {
+        "id": "REVIEW_TASK_V4",
+        "subject": "paper-v4/evaluation-v4/review-task-v4.template.md",
+        "supersedes": "REVIEW_TASK_V3",
+        "instantiated_at": "FREEZE",
+        "instantiated_to": "paper-v4/evaluation-v4/run-20/review-task.md",
+        "placeholders": [
+          "{{RUN_ID}}",
+          "{{ROWS_CQ_01}}",
+          "{{ROWS_CQ_02}}",
+          "{{ROWS_CQ_03}}",
+          "{{ROWS_CQ_04}}",
+          "{{ROWS_TOTAL}}",
+          "{{WITNESS_COUNT}}"
+        ],
+        "additions": [],
+        "removals": [
+          "DERIVATION_LOCALITY_ON_SUBJECT_AND_ENTITY_ROWS"
+        ],
+        "carried_duties": [
+          "STATEMENT_READ_THROUGH_RETAINED_CAPTURE",
+          "STATEMENT_SHA256_CHECKED_PER_CLAIM",
+          "DERIVATION_LOCALITY_PER_RELATION_ROW",
+          "ROW_KIND_READ_FROM_THE_ROW",
+          "SUBJECT_IN_BLOCK_PER_SUBJECT_AND_ENTITY_ROW"
+        ],
+        "rationale_tokens": [
+          "DIGEST_OK",
+          "DIGEST_MISMATCH",
+          "DERIVATION_LOCAL",
+          "DERIVATION_NON_LOCAL",
+          "SUBJECT_IN_BLOCK",
+          "SUBJECT_NOT_IN_BLOCK",
+          "NO_SUBJECT_IN_ROW"
+        ],
+        "locality_token_scope": "RELATION_ROWS_ONLY",
+        "prior_locality_token_scope": "EVERY_ROW",
+        "defect_of": "run-10",
+        "producer_visible": false,
+        "detail": "A fourth template, instantiated at freeze with the same seven placeholders as v3. It keeps every duty of v3: the statement read through the retained capture, the statement digest recomputed per located claim, the three row kinds and what each one's witness is, and the subject-in-block token on SUBJECT and ENTITY rows. One thing moves. The derivation-locality token, DERIVATION_LOCAL or DERIVATION_NON_LOCAL, is written on RELATION rows only. A SUBJECT row already carries the subject token, which is the same statement of fact for that kind of row, and an ENTITY row's locality was local by construction and recorded anyway. On those two kinds the token restated what the row already said. The template states the reason in its own words. The tokens stay at the head of rationale because the record grammar is closed at four row keys and the validator is frozen, and the frozen protocol does not move: this is a task change, not a protocol change. The producer never sees any of it. Carried into v4.7 unchanged: the template is the same file, the seven placeholders are the same, and only the cell it is instantiated to moves.",
+        "why": "handover/2026-09-05-v44-rca.md section 5, the first of two review-surface defects, queued for the harness after run-11. The locality token was defined for relation rows, whether the relation's block is among its endpoints' blocks, and applied to every row. On a SUBJECT row the subject entity is introduced once and referred to everywhere, so 232 of run-10's 552 rows were tokened NON_LOCAL for that reason alone; the token was reporting how the reading introduces names, not whether the evidence pointer reached the block the claim rests on. For a SUBJECT row the subject check is the locality: the name occurs in the record's own formalizing statement, which is what SUBJECT_IN_BLOCK already says.",
+        "carried_from": "run-19",
+        "carried_since": "run-12"
+      },
+      {
+        "id": "SONNET_5_PRODUCER_AT_V4_10",
+        "subject": "paper-v4/experiment-v4/run-19/run-contract.json#producer",
+        "subject_block": "producer",
+        "kind": "MODEL_CELL",
+        "defect_of": "none",
+        "detail": "The producer block's three model fields and nothing else: requested_model sonnet, model family Claude Sonnet 5, model id claude-sonnet-5. Every other key of run-18's producer block reaches this cell unchanged, the harness is run-18's byte for byte with the run id moved, native_query.py is copied without a substitution, the spawn message is run-18's with the run id moved, the installed skill is the same bytes at the same Core commit, and Core does not move: the coordinate is c95dba7b86bb61487bda9a52458e1ea47cce20ab at governance head OVR-000415, the one run-18 pinned. The model field is the only difference, which is what makes this a matrix cell rather than an iteration. What it measures is Core-20's pre-flight refusal list on the producer that ran run-16: that cell's first runner attempt returned fifty defects in one diagnostic, 45 SUBJECT_NOT_NAMED, 4 MODALITY_NOT_ASSERTED and 1 EVALUATIVE_SLOT_NOT_EVALUATED, and its validator covered two of the adapter's rules before the return and all of them after.",
+        "why": "handover/2026-09-06-v410-rca.md. Run-18 measured the list on Haiku 4.5 and the falsifier fired: the list changed neither what that producer checked before it stopped nor what it did on a return, and the RCA's own non-claim is that its effect on the producers that did build validators from the rules is not measured, because no cell of theirs has run at v4.10. This is that cell for Sonnet 5, and the defect count run-16 returned is what makes the effect countable.",
+        "harness_delta": "NONE",
+        "core_delta": "NONE",
+        "edit_site": "THE_PRODUCER_BLOCK_NOT_ANY_HARNESS_FILE",
+        "executor": "RUN_18S_NATIVE_QUERY_BYTE_FOR_BYTE",
+        "spawn_message": "RUN_18S_WITH_THE_RUN_ID_MOVED",
+        "skill": "THE_SAME_DECLARED_BYTES_AT_THE_SAME_CORE_COMMIT",
+        "requested_model": "sonnet",
+        "model_family": "Claude Sonnet 5",
+        "model_id": "claude-sonnet-5",
+        "prior_requested_model": "haiku",
+        "prior_model_id": "claude-haiku-4-5-20251001",
+        "prior_sonnet_cells": [
+          "run-05",
+          "run-16"
+        ],
+        "prior_sonnet_cell_protocols": {
+          "run-05": "v4.1",
+          "run-16": "v4.9"
+        },
+        "prior_sonnet_cell_outcome": "ADMITTED_AND_REPLAYED",
+        "harness_matched_cell": "run-18",
+        "model_matched_cells": [
+          "run-05",
+          "run-16"
+        ],
+        "measured_against": [
+          "run-16",
+          "run-18"
+        ],
+        "producer_visible": true,
+        "producer_visible_note": "A producer is the model that runs it, so the change is visible to the producer in the only sense that matters and to nothing else: no input, no message and no file it reads differs from run-18's.",
+        "case_fields_changed": [],
+        "case_kinds_changed": [],
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "result_schema": "malleus.paper-v4.query-result/v3",
+        "prior_result_schema": "malleus.paper-v4.query-result/v3",
+        "expected": "FEWER_THAN_FIFTY_DEFECTS_AT_THE_FIRST_RUNNER_ATTEMPT_AND_ADMISSION_WITHIN_TWO_STRUCTURAL_RETURNS",
+        "expected_stated_before_the_run": true,
+        "expected_detail": "Under the v4.10 skill a Sonnet 5 producer returns fewer than fifty defects at the first runner attempt, where run-16 returned fifty at v4.9, and reaches admission within the two structural returns the manifest allows, as run-16 did with one. The basis is run-16's own report: its validator covered two of the adapter's rules before the return and all of them after, and the paragraph Core-20 adds names every rule of both enums with the check in plain words before the producer writes anything. Nothing is expected of coverage, of row counts or of the review.",
+        "falsifier": "FIFTY_OR_MORE_DEFECTS_AT_THE_FIRST_RUNNER_ATTEMPT_OR_A_THIRD_STRUCTURAL_REFUSAL",
+        "falsifier_basis": "Both halves are read off this cell's own launch log and need no comparison to decide: the first runner attempt's aggregated diagnostic carries its own defect count, and two structural returns are the cap the manifest declares. Fifty or more defects at the first attempt refuses the first half; a third structural refusal refuses the second and ends the cell where run-18 ended.",
+        "secondary_measures": {
+          "disposition": "READ_BY_THE_RCA_NOT_EXPECTED_IN_EITHER_DIRECTION",
+          "counted_by": "CORE_19_CENSUS_AT_ADMISSION",
+          "subjects_formalized_only_by_an_anchor_assertion": {
+            "run-16": 48
+          },
+          "records_carrying_a_locator": {
+            "run-16": 0
+          },
+          "blocks_declared_nothing_assertable": {
+            "run-16": 128
+          },
+          "note": "Run-16 met the subject rule by attaching a naming clause to records whose value sentence names no subject, carried no locator or statement digest on any of its 194 records, and declared 128 blocks nothing-assertable. Core-19's census now reports the block split and the provenance coverage at admission, so a repeat is visible there rather than at review. None of the three is an expectation of this cell and none can falsify it."
+        },
+        "cost": "NONE_AT_THE_HARNESS_THE_ONLY_DIFFERENCE_IS_WHICH_MODEL_THE_AGENT_TOOL_SPAWNS",
+        "not_this_cell": "Nothing is claimed about any model. One cell per model per protocol is one observation, and a difference between two single sessions is not a measurement of either. Run-05 ran at v4.1 under a different skill and a different spawn message, and run-16 ran at v4.9 without the pre-flight paragraph, so they bound this cell's expectation and nothing else; a cell that returns fewer defects has not shown that the paragraph caused it, only that the outcome the RCA predicted from it occurred.",
+        "carried_since": "run-19",
+        "carried_from": "run-19",
+        "carried": "THE_CLOSED_CELLS_OWN_RECORD_NOT_THIS_CELLS_PRODUCER",
+        "subject_cell": "run-19",
+        "outcome": "EXPECTATION_HELD_THREE_DEFECTS_AT_THE_FIRST_RUNNER_ATTEMPT_AND_ONE_STRUCTURAL_RETURN_E-0185",
+        "carried_note": "This entry is run-19's and stays run-19's. Its subject is run-19's producer block and its Sonnet 5 fields are the ones that cell ran; its expectation held, which E-0185 records. Run-20's own producer entry is OPUS_5_PRODUCER_AT_V4_10 and names the Opus 5 fields."
+      },
+      {
+        "id": "SONNET_5_PRODUCER_AT_V4_9",
+        "subject": "paper-v4/experiment-v4/run-16/run-contract.json#producer",
+        "subject_block": "producer",
+        "kind": "MODEL_CELL",
+        "defect_of": "none",
+        "detail": "The producer block's three model fields and nothing else: requested_model sonnet, model family Claude Sonnet 5, model id claude-sonnet-5. Every other key of run-15's producer block reaches this cell unchanged, the harness is run-15's byte for byte with the run id moved, native_query.py is copied without a substitution, the spawn message is run-15's with the run id moved, the installed skill is the same bytes at the same Core commit, and Core does not move: the coordinate is dc5254795a78648591d3a1b0bcf602af8d443dc1 at governance head OVR-000413, the one run-15 pinned. The model field is the only difference, which is what makes this a matrix cell rather than an iteration. It is measured against run-05, the prior Sonnet 5 cell, which ran at v4.1 under a different skill, a different pack set and a spawn message whose stop rule has since been rewritten, and against run-15, the Opus 5 cell at this same harness.",
+        "why": "handover/2026-09-05-v49-rca.md. Three Opus cells at a stable Core found no Core defect: what they found is producer variance, reviewer threshold and two design properties of the type-only binding. With Core stable since dc52547 and the harness at v4.9, the matrix cells the paper needs next are the model cells, and a further Core change now would restart comparability across the three Opus cells.",
+        "harness_delta": "NONE",
+        "core_delta": "NONE",
+        "edit_site": "THE_PRODUCER_BLOCK_NOT_ANY_HARNESS_FILE",
+        "executor": "RUN_15S_NATIVE_QUERY_BYTE_FOR_BYTE",
+        "spawn_message": "RUN_15S_WITH_THE_RUN_ID_MOVED",
+        "skill": "THE_SAME_DECLARED_BYTES_AT_THE_SAME_CORE_COMMIT",
+        "requested_model": "sonnet",
+        "model_family": "Claude Sonnet 5",
+        "model_id": "claude-sonnet-5",
+        "prior_requested_model": "opus",
+        "prior_model_id": "claude-opus-5",
+        "prior_sonnet_cell": "run-05",
+        "prior_sonnet_cell_protocol": "v4.1",
+        "harness_matched_cell": "run-15",
+        "measured_against": [
+          "run-15",
+          "run-05"
+        ],
+        "producer_visible": true,
+        "producer_visible_note": "A producer is the model that runs it, so the change is visible to the producer in the only sense that matters and to nothing else: no input, no message and no file it reads differs from run-15's.",
+        "case_fields_changed": [],
+        "case_kinds_changed": [],
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "result_schema": "malleus.paper-v4.query-result/v3",
+        "prior_result_schema": "malleus.paper-v4.query-result/v3",
+        "expected": "MORE_THAN_27_OF_186_BLOCKS_AT_MOST_TWO_RETURNS_AT_EACH_STAGE_AND_NO_UNSUPPORTED_ROW",
+        "expected_stated_before_the_run": true,
+        "expected_detail": "A Sonnet 5 producer under the v4.9 skill covers more than 27 of 186 blocks, which is where run-05 stopped by choice under the v4.1 spawn message; it returns at most twice at the gate and at most twice at the runner, the caps the manifest declares; and its rows judge with no UNSUPPORTED, which is what every cell from run-13 on has done.",
+        "falsifier": "ANY_OF_THE_THREE_FAILING",
+        "falsifier_basis": "Each of the three is read off this cell's own frozen files and needs no comparison to decide: the block count is in the census, the returns are in the launch log's gate and runner lists, and the UNSUPPORTED count is in the preliminary review record. A cell that stops at 27 blocks again, that exhausts a return cap, or that returns one UNSUPPORTED row refuses the expectation as stated.",
+        "cost": "NONE_AT_THE_HARNESS_THE_ONLY_DIFFERENCE_IS_WHICH_MODEL_THE_AGENT_TOOL_SPAWNS",
+        "not_this_cell": "Nothing is claimed about either model. One cell per model is one observation, and a difference between two single sessions is not a measurement of either. Run-05 ran at v4.1 against a different skill and a different spawn message, so it bounds this cell's expectation and nothing else.",
+        "carried_since": "run-16",
+        "carried_from": "run-19",
+        "carried": "THE_CLOSED_CELLS_OWN_RECORD_NOT_THIS_CELLS_PRODUCER",
+        "subject_cell": "run-16",
+        "carried_note": "This entry is run-16's and stays run-16's. Its subject is run-16's producer block, not this cell's, and its three model fields are the Sonnet 5 ones run-16 ran. It reaches this cell through run-19, which ran those same three fields at this Core coordinate and recorded that in SONNET_5_PRODUCER_AT_V4_10; this one is here because the change list is the whole record of what this harness has been asked to carry."
+      },
+      {
+        "id": "STOP_RULE_CLARIFIED",
+        "subject": "paper-v4/experiment-v4/run-20/spawn-message.md",
+        "sentence": "Reviewing the next block is not invention; stop only when every block is REVIEWED or listed in `nothing_assertable`, or when the next addition would require invention.",
+        "detail": "One sentence after \"Stop when another addition would require invention.\" Nothing else in the message changes: it is run-04's message with the run id substituted. The added sentence names REVIEWED and nothing_assertable, both of which the installed skill and the capture grammar already carry, and it carries no modelling instruction and no question-derived string.",
+        "why": "Deep sweep D-22. Run-05 reviewed 27 of 186 blocks against run-02's and run-04's 186, on a stop rule the skill's own step 6 contradicts in terms. A five-fold coverage difference between cells whose only declared variable was the model is a confound, and the sentence is what removes it.",
+        "carried_from": "run-19",
+        "carried_since": "run-08"
+      },
+      {
+        "id": "SUBJECT_ELEMENT",
+        "subject": "ontology/packs/research.yaml, src/malleus/_contract_pipeline/document.py",
+        "core_task": "Core-13",
+        "baseline_commit": "f59477154a2b20f9ffbf6b1f72f6104ee2e1f6c5",
+        "expected_versions": {
+          "research": "0.5.0"
+        },
+        "versions": {
+          "research": "0.5.0"
+        },
+        "expected_reasons": [
+          "SUBJECT_NOT_NAMED"
+        ],
+        "reasons": [
+          "DIGEST_NOT_LOCATED",
+          "SUBJECT_NOT_NAMED"
+        ],
+        "census_axes": [
+          "SUBJECT_COVERAGE"
+        ],
+        "census_axes_disposition": "REPORTED_NOT_REFUSED",
+        "pin_status": "CARRIED_FROM_RUN_19",
+        "detail": "The research pack's SourceAsserted mixin gains an optional single subject reference, ranged on Entity, to the thing the assertion is about. Every record that wears the mixin can carry it, so an observation, a claim or an asserted ratio names its subject as structure rather than inside free text. The document adapter checks it at capture by name: the subject entity's name, whitespace collapsed and case folded, must occur in a statement that formalizes the record, and a SUBJECT_NOT_NAMED refusal names every record that fails, aggregated. Subject coverage joins the census as a reported axis, neither gated nor refused. The pin script fills the pack version and the reason names from the pinned commit, as run-08's pin.py did for Core-12; the baseline is the v4.2 coordinate, so nothing Core-12 landed is counted here. Carried into v4.5 unchanged: this entry states what v4.3 landed, not what v4.5 expects. Its reasons are read between the v4.2 and the v4.3 coordinates, both fixed commits, so a reason Core-15 adds cannot be attributed to Core-13; the pin only records whether SUBJECT_NOT_NAMED is still in force at this coordinate.",
+        "why": "handover/2026-09-05-v42-rca.md, follow-up 1, approved in E-0139. Run-08's graph held 131 observations and 85 claims and not one relation from any of them to a feature, a sample, a campaign or another claim, while 23 of its 131 observations carried the subject as text inside quantity_kind. The producer's ontology had no predicate for 'this observation is about that thing' and neither did the pack, so the path of least resistance was free text the query surface cannot read. A subject reference at the pack level is connected by definition, checkable, and cheaper than a relation record; an observation with no nameable subject becomes a gap the census counts.",
+        "carried": "RUN_19_READ_AT_THE_FIXED_V4_3_COORDINATE",
+        "landed_commit": "f6c8c71fd95711fd8f1bec811dff94cd61e535a0",
+        "still_present_at_pin": true,
+        "carried_from": "run-19",
+        "carried_since": "run-09"
+      },
+      {
+        "id": "SUBJECT_TAGS_PROJECTED",
+        "subject": "paper-v4/experiment-v4/run-20/native_query.py",
+        "defect_of": "run-11",
+        "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "prior_binding_schema": "malleus.paper-v4.native-query-binding/v4",
+        "binding_stage": "ONTOLOGY_ACCEPTANCE",
+        "case_fields_changed": [],
+        "case_kinds_changed": [],
+        "projected_slot": "tags",
+        "projected_on": "THE_SUBJECT_SIDE_OF_A_SUBJECT_ROW_ONLY",
+        "projected_when": "THE_SUBJECT_RECORD_CARRIES_THE_SLOT",
+        "edit_site": "EXECUTOR_NOT_BINDER",
+        "producer_visible": false,
+        "detail": "native_query.py projects the subject entity's tags beside whatever the binder named for the subject side of a SUBJECT row, wherever the subject record carries the slot. _project already drops a field the record does not have, so a subject with no tags projects exactly what it projected in run-12. The edit is in the executor and not in the binder, because the binder's projection is per record type and its housekeeping set is what the RELATION and ENTITY kinds are projected through too: adding tags there would move every row of every kind and the case bytes with them. Nothing else moves. The case field set is closed at the same keys, output_fields is unchanged, cases_sha256 still digests the queries alone, the binding schema stays malleus.paper-v4.native-query-binding/v4, and the record side of a SUBJECT row, the RELATION rows and the ENTITY rows are byte for byte what run-12's executor returned. The producer never sees the file. run-13's test_pipeline.py states the delta as three exact substitutions and reverses them back to run-12's bytes, so a fourth edit fails the test rather than travelling unnoticed. Carried into v4.9 with the executor it lives in. The subject side still projects tags wherever the subject record carries them; what it projects them beside is now the fields the subject record's own type declares rather than the fields the case named, which is ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION's doing and not this entry's. A subject with no tags still projects exactly what it projected before. Carried into run-16 inside an executor that is run-15's byte for byte. Carried into run-17 inside an executor that is run-16's byte for byte. Carried into run-18 inside an executor that is run-17's byte for byte. Carried into run-19 inside an executor that is run-18's byte for byte. Carried into run-20 inside an executor that is run-19's byte for byte.",
+        "why": "Run-11's preliminary review, carried in the overseer journal as the first item of the harness queue after run-12. Nine SUBJECT rows were tokened SUBJECT_NOT_IN_BLOCK because the row showed the entity's name, the full form, where the block wrote the abbreviation one of the entity's tags carries. The check at capture is Core-15's and accepts either form, so the adapter had already agreed the name is in the block; the row was showing the reviewer less than the check had read. Projecting tags beside the name puts the reviewer and the adapter on the same evidence. It is a review-surface change and not a measurement change: no row is added, removed or reordered. The v4.6 RCA states the effect expected of it: the subject-in-block token no longer flagging an abbreviation the entity's tag already carries.",
+        "carried_from": "run-19",
+        "carried": "RUN_19S_TAGS_EDIT_UNCHANGED_INSIDE_THE_CARRIED_V4_9_EXECUTOR",
+        "carried_since": "run-13"
+      }
+    ],
+    "v4_2_cells_followed": [
+      {
+        "run_id": "run-08",
+        "path": "paper-v4/experiment-v4/run-08",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_RATIFIED",
+        "ledger_entries": [
+          "E-0136",
+          "E-0137",
+          "E-0138",
+          "E-0139"
+        ],
+        "superseded": false
+      }
+    ],
+    "v4_3_cells_followed": [
+      {
+        "run_id": "run-09",
+        "path": "paper-v4/experiment-v4/run-09",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+        "ledger_entries": [
+          "E-0140",
+          "E-0141",
+          "E-0142",
+          "E-0143"
+        ],
+        "superseded": false
+      }
+    ],
+    "v4_4_cells_followed": [
+      {
+        "run_id": "run-10",
+        "path": "paper-v4/experiment-v4/run-10",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+        "ledger_entries": [
+          "E-0144",
+          "E-0145",
+          "E-0146",
+          "E-0148"
+        ],
+        "superseded": false
+      }
+    ],
+    "opening_ledger_entry": "E-0187",
+    "v4_5_cells_followed": [
+      {
+        "run_id": "run-11",
+        "path": "paper-v4/experiment-v4/run-11",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+        "ledger_entries": [
+          "E-0147",
+          "E-0149",
+          "E-0150",
+          "E-0151"
+        ],
+        "superseded": false
+      }
+    ],
+    "v4_6_cells_followed": [
+      {
+        "run_id": "run-12",
+        "path": "paper-v4/experiment-v4/run-12",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+        "ledger_entries": [
+          "E-0153",
+          "E-0154",
+          "E-0155"
+        ],
+        "superseded": false
+      }
+    ],
+    "v4_7_cells_followed": [
+      {
+        "run_id": "run-13",
+        "path": "paper-v4/experiment-v4/run-13",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+        "ledger_entries": [
+          "E-0156",
+          "E-0158",
+          "E-0159",
+          "E-0160"
+        ],
+        "superseded": false
+      }
+    ],
+    "v4_8_cells_followed": [
+      {
+        "run_id": "run-14",
+        "path": "paper-v4/experiment-v4/run-14",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+        "ledger_entries": [
+          "E-0162",
+          "E-0163",
+          "E-0164",
+          "E-0165"
+        ],
+        "superseded": false
+      }
+    ],
+    "v4_9_cells_followed": [
+      {
+        "run_id": "run-15",
+        "path": "paper-v4/experiment-v4/run-15",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+        "ledger_entries": [
+          "E-0166",
+          "E-0167",
+          "E-0168",
+          "E-0169"
+        ],
+        "superseded": false
+      },
+      {
+        "run_id": "run-16",
+        "path": "paper-v4/experiment-v4/run-16",
+        "requested_model": "sonnet",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PENDING",
+        "ledger_entries": [
+          "E-0170",
+          "E-0171",
+          "E-0172"
+        ],
+        "superseded": false
+      },
+      {
+        "run_id": "run-17",
+        "path": "paper-v4/experiment-v4/run-17",
+        "requested_model": "haiku",
+        "outcome": "ONTOLOGY_ACCEPTED_POPULATION_REFUSED",
+        "ledger_entries": [
+          "E-0174",
+          "E-0175",
+          "E-0176",
+          "E-0177"
+        ],
+        "superseded": false
+      }
+    ],
+    "measured_against": {
+      "run_id": "run-15",
+      "basis": "THE_SAME_PRODUCER_MODEL_AT_THE_SAME_HARNESS_ONE_CORE_COORDINATE_EARLIER",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "protocol_version": "v4.9",
+      "core_commit": "dc5254795a78648591d3a1b0bcf602af8d443dc1",
+      "governance_head": "OVR-000413",
+      "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+      "terminal_status": "ADMITTED_AT_THE_FIRST_RUNNER_ATTEMPT",
+      "ontology_attempts": 2,
+      "gate_statuses": [
+        "REFUSED",
+        "ACCEPTED"
+      ],
+      "gate_diagnostic_returns": 1,
+      "gate_refusal_reason": "IMPORT_READER_REFUSED",
+      "gate_refusal_detail": "Attempt 01 refused at contract compilation: the schema root carried default_prefix, which the LinkML adapter rejects as a root field. Returned as diagnostic 1 of 2; attempt 02 is attempt 01 minus that line and was accepted.",
+      "accepted_fact_count": 3221,
+      "runner_attempts": 1,
+      "runner_statuses": [
+        "ADMITTED_AND_REPLAYED"
+      ],
+      "structural_diagnostic_returns": 0,
+      "first_attempt_defects": 0,
+      "first_attempt_defects_by_reason": {},
+      "runner_refusals": [],
+      "runner_refusal_note": "Run-15's first runner attempt was admitted, so there is no refusal to read and no defect count to compare a first attempt against. The defect count at the first attempt is a secondary measure of this cell and not the figure its expectation is stated against.",
+      "assertions": 358,
+      "records": 351,
+      "records_by_family": {
+        "detail": "315 entities, 1 event and 35 relations, in the admitted capture.",
+        "entities": 315,
+        "events": 1,
+        "relations": 35
+      },
+      "blocks_total": 186,
+      "blocks_asserted": 185,
+      "blocks_declared_nothing_assertable": 1,
+      "blocks_untouched": 0,
+      "blocks_source": "Counted from run-15's frozen capture, the same three labels Core-19's census now writes at admission. Run-15 ran before Core-19, so its own census.json reads 186 blocks REVIEWED and reports no split.",
+      "source_asserted_records": 351,
+      "records_with_locator": 142,
+      "records_with_statement_digest": 142,
+      "provenance_rule": "A record counts here when its properties carry a non-empty assertion_locator, and for the digest when they carry a non-empty statement_sha256, which is the rule the document adapter's provenance census applies at admission.",
+      "provenance_source": "Counted from run-15's frozen capture. Run-15 ran before Core-19, so its own census.json carries no provenance_coverage axis at all.",
+      "subjects_total": 144,
+      "subjects_proposed": 80,
+      "subjects_attachable": 20,
+      "subjects_ambiguous": 18,
+      "subjects_unnamed": 26,
+      "subjects_formalized_only_by_an_anchor_assertion": 0,
+      "anchor_rule": "A record counts here when every assertion that formalizes its subject field formalizes no other field of that record.",
+      "non_local_relations": 0,
+      "relations": 35,
+      "largest_assertion_fan_out": 24,
+      "producer_tokens": 351253,
+      "producer_tokens_by_phase": {
+        "ontology_attempt_01": 163709,
+        "ontology_attempt_02": 6170,
+        "population": 181374
+      },
+      "producer_tokens_source": "paper-v4/experiment-v4/run-15/results/usage.json",
+      "launch_log_source": "paper-v4/experiment-v4/run-15/results/launch-log.json",
+      "capture_source": "private/paper-v4-v4-run-15/producer/work/document-population.json",
+      "public_results": "FROZEN_IN_RESULTS_THE_CELL_WAS_ADMITTED",
+      "rows": 433,
+      "rows_by_question": {
+        "CQ-01": 28,
+        "CQ-02": 104,
+        "CQ-03": 154,
+        "CQ-04": 147
+      },
+      "rows_by_kind": {
+        "ENTITY": 192,
+        "RELATION": 24,
+        "SUBJECT": 217
+      },
+      "witnesses": 160,
+      "review": {
+        "status": "PRELIMINARY_NOT_RATIFIED",
+        "record": "paper-v4/evaluation-v4/run-15/review-record.preliminary.md",
+        "responsiveness": [
+          "PARTIAL",
+          "RESPONSIVE",
+          "PARTIAL",
+          "PARTIAL"
+        ],
+        "supported": 427,
+        "partial": 6,
+        "unsupported": 0,
+        "rows": 433,
+        "rows_with_a_digest_token": 214,
+        "digest_note": "142 of run-15's 351 records carry both assertion_locator and statement_sha256, so the protocol's one mechanical binding of a claim to its sentence did run on this cell: 214 rows carry a digest token and every one of them reads DIGEST_OK."
+      },
+      "entries": [
+        "E-0166",
+        "E-0167",
+        "E-0168",
+        "E-0169"
+      ],
+      "rca": "handover/2026-09-05-v49-rca.md",
+      "reason": "Run-15 is this cell with one Core coordinate less and one harness version less. Same producer model, same document, the same eight declared inputs but the skill; what moved between them is Core-19, which makes the census report the block split and the provenance coverage at admission, and Core-20, which puts the two enums' refusal reasons in front of the producer before it writes. Its outcome, no runner return and no UNSUPPORTED row in 433, is what this cell's expectation is stated against, and it is read from run-15's own frozen results rather than from the ledger.",
+      "and_against_the_v4_10_sonnet_cell": {
+        "run_id": "run-19",
+        "basis": "THE_SONNET_5_CELL_AT_THIS_SAME_CORE_COORDINATE",
+        "requested_model": "sonnet",
+        "model_family": "Claude Sonnet 5",
+        "model_id": "claude-sonnet-5",
+        "protocol_version": "v4.10",
+        "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "governance_head": "OVR-000415",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PENDING",
+        "terminal_status": "ADMITTED_AT_THE_SECOND_RUNNER_ATTEMPT",
+        "ontology_attempts": 1,
+        "gate_statuses": [
+          "ACCEPTED"
+        ],
+        "gate_diagnostic_returns": 0,
+        "accepted_fact_count": 2794,
+        "runner_attempts": 2,
+        "runner_statuses": [
+          "REFUSED",
+          "ADMITTED_AND_REPLAYED"
+        ],
+        "structural_diagnostic_returns": 1,
+        "first_attempt_defects": 3,
+        "first_attempt_defects_by_reason": {
+          "SUBJECT_NOT_NAMED": 3
+        },
+        "refusal_reasons": [
+          "SUBJECT_NOT_NAMED"
+        ],
+        "assertions": 157,
+        "records": 204,
+        "records_by_family": {
+          "entities": 174,
+          "events": 1,
+          "relations": 29
+        },
+        "blocks_total": 186,
+        "blocks_asserted": 59,
+        "blocks_declared_nothing_assertable": 127,
+        "blocks_untouched": 0,
+        "records_with_locator": 0,
+        "records_with_statement_digest": 0,
+        "subjects_total": 121,
+        "subjects_proposed": 26,
+        "subjects_attachable": 22,
+        "subjects_ambiguous": 13,
+        "subjects_unnamed": 60,
+        "subjects_formalized_only_by_an_anchor_assertion": 0,
+        "non_local_relations": 10,
+        "relations": 29,
+        "largest_assertion_fan_out": 8,
+        "rows": 154,
+        "rows_by_question": {
+          "CQ-01": 15,
+          "CQ-02": 37,
+          "CQ-03": 52,
+          "CQ-04": 50
+        },
+        "rows_by_kind": {
+          "ENTITY": 79,
+          "SUBJECT": 75
+        },
+        "witnesses": 54,
+        "producer_tokens": 517488,
+        "producer_tokens_by_phase": {
+          "ontology_attempt_01": 217330,
+          "population": 282297,
+          "correction_01": 17861
+        },
+        "producer_tokens_source": "paper-v4/experiment-v4/run-19/results/usage.json",
+        "launch_log_source": "paper-v4/experiment-v4/run-19/results/launch-log.json",
+        "capture_source": "private/paper-v4-v4-run-19/producer/work/document-population.json",
+        "public_results": "FROZEN_IN_RESULTS_THE_CELL_WAS_ADMITTED",
+        "review": "NOT_READ_BY_THIS_CELL",
+        "review_note": "Run-19's preliminary review was being written in a separate session while this cell was opened, and it has no ledger entry yet. No label of its rows is read here, and the half of this cell's expectation that a review decides is stated against run-15's, which E-0169 journals.",
+        "entries": [
+          "E-0183",
+          "E-0184",
+          "E-0185"
+        ],
+        "rca": "NOT_READ_BY_THIS_CELL_THE_CELLS_RCA_IS_NOT_WRITTEN_YET",
+        "not_a_control": "Run-19 is not this cell's control. It is the same list and the same harness at the same Core commit read by a different producer, and it was admitted at the second attempt after three defects where run-16 at v4.9 returned fifty. What it bounds is what the list did for one producer that turns rules into code; it says nothing about what it does for another. Its review is not written, so no label of its rows is compared here."
+      },
+      "expected": "ADMISSION_WITHIN_TWO_STRUCTURAL_RETURNS_AND_NO_UNSUPPORTED_ROW_AT_REVIEW",
+      "falsifier": "A_THIRD_STRUCTURAL_REFUSAL_OR_AN_UNSUPPORTED_ROW_AT_REVIEW",
+      "secondary_measures": {
+        "disposition": "READ_BY_THE_RCA_NOT_EXPECTED_IN_EITHER_DIRECTION",
+        "counted_by": "CORE_19_CENSUS_AT_ADMISSION",
+        "blocks_declared_nothing_assertable": {
+          "run-15": 1,
+          "run-19": 127
+        },
+        "records_carrying_a_locator": {
+          "run-15": 142,
+          "run-19": 0
+        },
+        "first_runner_attempt_defects": {
+          "run-13": 0,
+          "run-14": 7,
+          "run-15": 0,
+          "run-19": 3
+        },
+        "note": "Three figures the RCA reads beside the outcome. Core-19's census now writes the block split and the provenance coverage at admission, where run-15's own census reports 186 of 186 blocks REVIEWED and carries no provenance axis; run-15's split and its 142 located records are recomputed from its capture. The defect count at the first runner attempt is what Core-20's list is meant to move, and the three Opus cells at v4.7, v4.8 and v4.9 gave 0, 7 and 0 without it. None of the three is an expectation of this cell and none can falsify it."
+      },
+      "cost": "NONE_AT_THE_HARNESS_THE_ONLY_DIFFERENCE_IS_WHICH_MODEL_THE_AGENT_TOOL_SPAWNS",
+      "sources": [
+        "handover/2026-09-05-v49-rca.md",
+        "handover/2026-09-06-v410-rca.md",
+        "paper-v4/experiment-v4/run-15/results/launch-log.json",
+        "paper-v4/experiment-v4/run-15/results/usage.json",
+        "paper-v4/experiment-v4/run-15/results/census.json",
+        "paper-v4/experiment-v4/run-15/results/query-trace-summary.json",
+        "paper-v4/evaluation-v4/run-15/review-record.preliminary.md",
+        "private/paper-v4-v4-run-15/producer/work/document-population.json",
+        "paper-v4/experiment-v4/run-19/results/launch-log.json",
+        "paper-v4/experiment-v4/run-19/results/usage.json",
+        "paper-v4/experiment-v4/run-19/results/census.json",
+        "private/paper-v4-v4-run-19/producer/work/document-population.json",
+        "E-0166",
+        "E-0167",
+        "E-0168",
+        "E-0169",
+        "E-0183",
+        "E-0184",
+        "E-0185"
+      ]
+    },
+    "v4_10_cells_followed": [
+      {
+        "run_id": "run-18",
+        "path": "paper-v4/experiment-v4/run-18",
+        "requested_model": "haiku",
+        "outcome": "ONTOLOGY_ACCEPTED_POPULATION_REFUSED",
+        "ledger_entries": [
+          "E-0180",
+          "E-0181",
+          "E-0182"
+        ],
+        "superseded": false
+      },
+      {
+        "run_id": "run-19",
+        "path": "paper-v4/experiment-v4/run-19",
+        "requested_model": "sonnet",
+        "outcome": "ADMITTED_AND_REPLAYED_REVIEW_PENDING",
+        "ledger_entries": [
+          "E-0183",
+          "E-0184",
+          "E-0185"
+        ],
+        "superseded": false
+      }
+    ]
+  },
+  "scope": {
+    "documents": 1,
+    "producer_loops": 1,
+    "staged_session_variant": false,
+    "new_multi_producer_matrix": false,
+    "protocol_version": "v4.10",
+    "matrix_cell": "THIRD_OF_V4_10",
+    "first_cell_of_v4_1": "run-04",
+    "first_cell_of_v4_1_path": "paper-v4/experiment-v4/run-04",
+    "v4_1_cells_preceding": [
+      "run-04",
+      "run-05",
+      "run-06",
+      "run-07"
+    ],
+    "v4_cells": [
+      "run-02",
+      "run-03"
+    ],
+    "model_matched_cell": "run-15",
+    "variable": "OPUS_5_PRODUCER_AT_THE_CORE_20_COORDINATE",
+    "harness": "IDENTICAL_TO_RUN_19",
+    "v4_2_cells_preceding": [
+      "run-08"
+    ],
+    "model_matched_cells": [
+      "run-04",
+      "run-08",
+      "run-09",
+      "run-10",
+      "run-11",
+      "run-12",
+      "run-13",
+      "run-14",
+      "run-15"
+    ],
+    "measured_against_cell": "run-15",
+    "measured_against_rows": 433,
+    "v4_3_cells_preceding": [
+      "run-09"
+    ],
+    "v4_4_cells_preceding": [
+      "run-10"
+    ],
+    "v4_5_cells_preceding": [
+      "run-11"
+    ],
+    "v4_6_cells_preceding": [
+      "run-12"
+    ],
+    "v4_7_cells_preceding": [
+      "run-13"
+    ],
+    "v4_8_cells_preceding": [
+      "run-14"
+    ],
+    "v4_9_cells_preceding": [
+      "run-15",
+      "run-16",
+      "run-17"
+    ],
+    "harness_matched_cell": "run-19",
+    "model_matched_cell_protocol": "v4.9",
+    "also_measured_against_cells": [
+      "run-19"
+    ],
+    "also_measured_against_outcome": "RUN_19_ADMITTED_AND_REPLAYED_REVIEW_PENDING",
+    "also_moved": "NOTHING_CORE_IS_HELD_AT_THE_COMMIT_RUN_19_PINNED",
+    "measured_against_outcome": "ADMITTED_AND_REPLAYED_REVIEW_PRELIMINARY",
+    "v4_10_cells_preceding": [
+      "run-18",
+      "run-19"
+    ]
+  },
+  "source": {
+    "source_id": "source:yu-2025-mid-atlantic-ridge",
+    "pdf_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+  },
+  "core_gate": {
+    "status": "PINNED_TO_THE_V4_10_CORE_COORDINATE",
+    "verification_owner": "OVERSEER_BEFORE_PRODUCER_SPAWN",
+    "pinned_by": "paper-v4/experiment-v4/run-20/pin.py",
+    "execution_baseline": {
+      "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+      "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
+    },
+    "governance_head": {
+      "entry_id": "OVR-000415",
+      "head_hash": "sha256:19353a947c5094e8129a2db80c46a0596786594877088015aeb259229caeabe9"
+    },
+    "required_pieces": [
+      "FULL_DOMAIN_HISTORY_PROFILE",
+      "GROUNDED_PACKS_AND_PACK_GROUNDING",
+      "NASCENT_PROJECT_PLAYBOOK",
+      "AGGREGATE_REFUSAL_DIAGNOSTICS",
+      "EVENT_FAMILY_ADMISSION",
+      "DERIVATION_CONTENT_CHECKS"
+    ],
+    "verified_pieces": {
+      "AGGREGATE_REFUSAL_DIAGNOSTICS": {
+        "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082",
+        "paper_audit": "DIGEST_PINNED",
+        "governance_entry": "OVR-000395",
+        "shape": "ONE_SORTED_DEFECT_SET_PER_REFUSAL",
+        "plan_compiler_sha256": "sha256:d5d66dfa92d2055cf0782fb708d2da9f54e768a25f60c0c3ecdadd141dab229e",
+        "rite_module_sha256": "sha256:d2d76fe0181f74d5352b7535d19d7a6925ae0ca45ccb8393c0eaf1b64b06ba11"
+      },
+      "DERIVATION_CONTENT_CHECKS": {
+        "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082",
+        "paper_audit": "DIGEST_PINNED",
+        "document_adapter_path": "src/malleus/_contract_pipeline/document.py",
+        "document_adapter_sha256": "sha256:0d3922344de2245310e6255e4c7e703d36be8669f44a755a1f0af4c6b642885b",
+        "refusal_reasons": [
+          "DIGEST_MISMATCH",
+          "DIGEST_NOT_LOCATED",
+          "EVALUATIVE_SLOT_NOT_EVALUATED",
+          "FIELDS_NOT_CLOSED",
+          "GAP_REQUIRED",
+          "MALFORMED_CAPTURE",
+          "MALFORMED_READING",
+          "MODALITY_NOT_ASSERTED",
+          "NOT_VERBATIM",
+          "READING_MISMATCH",
+          "SUBJECT_NOT_NAMED",
+          "UNKNOWN_ASSERTION_LOCATOR",
+          "UNKNOWN_BLOCK",
+          "UNKNOWN_FORMALIZATION_TARGET",
+          "UNKNOWN_GAP_KIND",
+          "UNKNOWN_MODALITY",
+          "UNSUPPORTED_GRAMMAR"
+        ]
+      },
+      "EVENT_FAMILY_ADMISSION": {
+        "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082",
+        "paper_audit": "DIGEST_PINNED",
+        "profile_id": "source-assertion",
+        "event_role": [
+          "Event"
+        ],
+        "admitted_families": [
+          "entities",
+          "events",
+          "relations"
+        ],
+        "event_participations": "ONLY_WHEN_THE_COMPILED_CONTRACT_DECLARES_EventParticipation",
+        "plan_compiler_sha256": "sha256:d5d66dfa92d2055cf0782fb708d2da9f54e768a25f60c0c3ecdadd141dab229e"
+      },
+      "FULL_DOMAIN_HISTORY_PROFILE": {
+        "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082",
+        "paper_audit": "DIGEST_PINNED",
+        "profile_id": "source-assertion",
+        "profile_path": "src/malleus/profiles/source-assertion.json",
+        "profile_file_sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46",
+        "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
+      },
+      "GROUNDED_PACKS_AND_PACK_GROUNDING": {
+        "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082",
+        "paper_audit": "DIGEST_PINNED",
+        "grounding_rite_sha256": "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709",
+        "pack_sha256": {
+          "chronology": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1",
+          "metrology": "sha256:be843436a99ea38c1147d8b4296e560348fe34fa8ec5a23d176868239cd01fef",
+          "research": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b"
+        },
+        "pack_version": {
+          "chronology": "0.1.0",
+          "metrology": "0.3.0",
+          "research": "0.5.0"
+        }
+      },
+      "NASCENT_PROJECT_PLAYBOOK": {
+        "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082",
+        "paper_audit": "DIGEST_PINNED",
+        "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "skill_sha256": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81"
+      }
+    }
+  },
+  "history": {
+    "profile_id": "source-assertion",
+    "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+    "semantic_unit": "COMPOSITION",
+    "origin": "PARTIAL_IMPORT",
+    "composition": "ONE_ATOMIC_CAPTURE_BATCH",
+    "knowledge_valid_time": "ORDER_ONLY_CAPTURE_ID",
+    "assertion_and_domain_time": "OPTIONAL_PER_ASSERTION_RETAINED_EVIDENCE",
+    "modality_rule": "REPLAY_RECORD_TO_RETAINED_ASSERTION_TRACE_REQUIRED"
+  },
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "workspace_layout": "CLAUDE",
+    "session": "FRESH_SINGLE_SESSION",
+    "spawned_by": "OVERSEER",
+    "inputs": [
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "SELECTED_READING",
+      "MALLEUS_ROOT",
+      "LINKML_TYPES",
+      "SHIPPED_GROUNDED_PACKS",
+      "SOURCE_ASSERTION_PROFILE"
+    ],
+    "forbidden_inputs": [
+      "COMPETENCY_QUESTIONS",
+      "QUERY_BINDING",
+      "ANSWER_ORACLE",
+      "PRIOR_ONTOLOGY",
+      "PRIOR_POPULATION",
+      "PRIOR_RESULT",
+      "MANUSCRIPT",
+      "REPOSITORY_DOCUMENTATION",
+      "NETWORK"
+    ],
+    "network": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "fallback": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 2,
+    "max_ontology_revision_rounds": 2,
+    "revision_trigger": "SOURCE_LOCATED_TYPED_GAP",
+    "terminal_rule": "STOP_WHEN_EVERY_BLOCK_IS_REVIEWED_OR_NOTHING_ASSERTABLE_OR_THE_NEXT_ADDITION_WOULD_REQUIRE_INVENTION",
+    "spawn_message": "ISOLATION_ONLY_NO_MODELLING_INSTRUCTION_PLUS_STOP_RULE_CLARIFICATION"
+  },
+  "population": {
+    "questions_visible": false,
+    "constructible_types": "ALL_CONCRETE_ENTITY_EVENT_AND_RELATION_TYPES",
+    "population_surface_schema": "malleus.paper-v4.population-surface/v2",
+    "event_participations": "ONLY_WHEN_THE_COMPILED_CONTRACT_DECLARES_EventParticipation",
+    "field_level_source_derivations": "REQUIRED",
+    "typed_gaps": "REQUIRED_WHEN_ASSERTION_IS_NOT_FORMALIZED",
+    "human_repair": "FORBIDDEN",
+    "stage_acceptance_event": "ONTOLOGY_ACCEPTED_FOR_POPULATION",
+    "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY"
+  },
+  "query": {
+    "binding_owner": "PAPER_EVALUATOR",
+    "binding_time": "AT_ONTOLOGY_ACCEPTANCE_BEFORE_PHASE_TWO",
+    "binding_stage": "ONTOLOGY_ACCEPTANCE",
+    "binding_expansion": "paper-v4/experiment-v4/run-20/bind_from_surface.py",
+    "binding_input": "ONE_TYPE_SET_FILE_PER_QUESTION_FROM_THE_ACCEPTED_SURFACE",
+    "binding_digest_recorded_at": "ONTOLOGY_ACCEPTANCE_IN_THE_LAUNCH_LOG",
+    "binding_revision_after_rows": "FORBIDDEN",
+    "producer_visibility": "WITHHELD",
+    "execution_state": "REPLAY_DERIVED_GRAPH_ONLY",
+    "source_reads": "FORBIDDEN",
+    "network": "FORBIDDEN",
+    "embedding_index": "FORBIDDEN",
+    "knowledge_state_identity": "EXCLUDED",
+    "evidence_selection": "BY_RECORD_ID_NEVER_BY_POSITION",
+    "binding_executor": "paper-v4/experiment-v4/run-20/native_query.py",
+    "binding_schema": "malleus.paper-v4.native-query-binding/v4",
+    "case_kinds": [
+      "ENTITY",
+      "RELATION",
+      "SUBJECT"
+    ],
+    "case_value_blindness": "TYPE_ONLY_NO_ROW_RECORD_OR_VALUE_ENTERS_A_CASE",
+    "subject_reference_slot": "subject",
+    "entity_case_scope": "TYPES_IN_THE_SET_THAT_CARRY_NO_SUBJECT",
+    "subject_row_projection": "THE_SUBJECT_SIDE_PROJECTS_TAGS_BESIDE_ITS_OWN_TYPES_FIELDS",
+    "result_schema": "malleus.paper-v4.query-result/v3",
+    "prior_result_schema": "malleus.paper-v4.query-result/v2",
+    "row_identity": "ONE_ROW_PER_DISTINCT_WITNESS_PER_QUESTION",
+    "row_witness": "THE_ROWS_KIND_AND_ITS_RECORD_IDS",
+    "row_projection": "THE_WITNESS_RECORDS_OWN_TYPE_AS_THE_SURFACE_DECLARES_IT_NEVER_THE_CASES",
+    "row_ordinals": "CASE_ORDINALS_SORTED_IN_PLACE_OF_CASE_ORDINAL",
+    "row_order": "BY_FIRST_PRODUCING_CASE_ORDINAL"
+  },
+  "launch_log": {
+    "schema": "malleus.paper-v4.producer-launch-log/v2",
+    "path": "paper-v4/experiment-v4/run-20/results/launch-log.json",
+    "published": "AS_IS_IN_RESULTS_AT_FREEZE",
+    "required_keys": [
+      "schema",
+      "run",
+      "protocol",
+      "launches",
+      "gate",
+      "runner",
+      "query",
+      "review"
+    ],
+    "runner_records": "EXECUTION_COMMIT_PER_ATTEMPT",
+    "citation_veracity_check": "OVERSEER_STEP_BEFORE_PHASE_TWO_RECORDED_IN_GATE",
+    "usage_record": {
+      "path": "paper-v4/experiment-v4/run-20/results/usage.json",
+      "schema": "malleus.paper-v4.producer-usage/v1",
+      "derived_by": "paper-v4/experiment-v4/run-20/usage_from_launch_log.py",
+      "stages": "DIFFERENCED_FROM_THE_CUMULATIVE_FIGURES",
+      "frozen_set_membership": "REQUIRED"
+    }
+  },
+  "evaluation": {
+    "questions_enter_at": "ONTOLOGY_ACCEPTANCE_QUERY_BINDING",
+    "method": "SOURCE_GROUNDED_HUMAN_INSPECTION",
+    "numeric_score": "FORBIDDEN",
+    "preliminary_inspector": "FRESH_CLAUDE_SESSION",
+    "paper_evidence_requires": "LUIS_RATIFICATION",
+    "competency_questions": {
+      "path": "paper-v4/experiment-v4/competency-questions.json",
+      "sha256": "sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86",
+      "producer_visibility": "WITHHELD"
+    },
+    "review_protocol": {
+      "path": "paper-v4/evaluation-v4/review-protocol-v2.json",
+      "sha256": "sha256:88b69f6e80a3b9eac3a2c990178186df9c52fed3ced5c4e020162b0c202fa795",
+      "materials": 7
+    },
+    "review_task": {
+      "template": "paper-v4/evaluation-v4/review-task-v4.template.md",
+      "instantiated_at": "FREEZE",
+      "instantiated_to": "paper-v4/evaluation-v4/run-20/review-task.md",
+      "blank_record": "paper-v4/evaluation-v4/run-20/review-record.blank.md",
+      "placeholders": [
+        "{{RUN_ID}}",
+        "{{ROWS_CQ_01}}",
+        "{{ROWS_CQ_02}}",
+        "{{ROWS_CQ_03}}",
+        "{{ROWS_CQ_04}}",
+        "{{ROWS_TOTAL}}",
+        "{{WITNESS_COUNT}}"
+      ],
+      "additions": [],
+      "removals": [],
+      "carried_duties": [
+        "STATEMENT_READ_THROUGH_RETAINED_CAPTURE",
+        "STATEMENT_SHA256_CHECKED_PER_CLAIM",
+        "DERIVATION_LOCALITY_PER_RELATION_ROW",
+        "ROW_KIND_READ_FROM_THE_ROW",
+        "SUBJECT_IN_BLOCK_PER_SUBJECT_AND_ENTITY_ROW"
+      ],
+      "citation_veracity": "OVERSEER_STEP_BEFORE_PHASE_TWO_THE_REVIEWER_HAS_NO_NETWORK",
+      "carried_from": "run-19"
+    },
+    "prior_review_protocol": {
+      "path": "paper-v4/evaluation-v4/review-protocol.json",
+      "sha256": "sha256:7cee52a7d6ea5018fe8443e621c72280b05c2bb5cc1e4a2eeaa27208665ed379",
+      "binds": [
+        "run-02",
+        "run-03",
+        "run-04",
+        "run-05",
+        "run-06",
+        "run-07",
+        "run-08"
+      ]
+    }
+  },
+  "manuscript": {
+    "of_record": "1.2.1 on branch paper-v4-multimodel, tag paper-v4-multimodel-v2",
+    "v4_result": "NEW_SECTION_IN_THE_SUCCESSOR_OF_1_2_1",
+    "lean_draft": "SUPPORT_DOCUMENT_ONLY"
+  },
+  "completion": [
+    "ONTOLOGY_DIAGNOSTIC_HISTORY",
+    "ACCEPTED_ONTOLOGY_AND_REVISIONS",
+    "QUERY_BINDING_FROZEN_AT_ACCEPTANCE",
+    "DOCUMENT_CAPTURE_AND_CENSUS",
+    "POPULATION_PLAN_AND_TYPED_GAPS",
+    "ADMITTED_LEDGER",
+    "REOPEN_REPLAY_RECEIPT",
+    "QUERY_RESULTS",
+    "PUBLIC_LAUNCH_LOG_AND_COST_RECORD",
+    "SOURCE_GROUNDED_PRELIMINARY_INSPECTION",
+    "CLEAN_REPRODUCTION_RECEIPT",
+    "MANUSCRIPT_SECTION"
+  ],
+  "offline_validation": {
+    "script": "paper-v4/experiment-v4/run-20/offline_validation.py",
+    "record": "paper-v4/experiment-v4/run-20/offline-validation.json",
+    "schema": "malleus.paper-v4.run-20-offline-validation/v1",
+    "executes": "NOTHING",
+    "reads": [
+      "paper-v4/experiment-v4/run-09/results/query-type-sets.json",
+      "paper-v4/experiment-v4/run-09/ontology-run/population-surface.json",
+      "paper-v4/experiment-v4/run-09/results/native-query-binding.json",
+      "private/paper-v4-v4-run-09/query/query-result.json",
+      "paper-v4/evaluation-v4/run-09/review-record.preliminary.md"
+    ],
+    "writes": "COUNTS_ONLY_NO_ROW_CONTENT_AND_NO_READING_TEXT",
+    "run_once_before": "THE_PRODUCER_IS_SPAWNED",
+    "change_id": "ENTITY_KIND_RESTRICTED",
+    "carried_from": "run-19",
+    "validates": "THE_V4_4_DELTA_CARRIED_INTO_V4_9_AND_THE_V4_9_REMOVAL_ON_RUN_09S_RECORD",
+    "and_change_id": "ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION",
+    "rows_kept": 630,
+    "rows_one_per_witness": 463,
+    "rows_re_projected": 167,
+    "rows_re_projected_under_another_label": 0
+  }
+}
