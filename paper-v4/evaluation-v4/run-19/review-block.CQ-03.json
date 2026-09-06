@@ -1,0 +1,438 @@
+{
+  "question_id": "CQ-03",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "One half of the question is answered squarely. Rows carry the primary-melt carbon dioxide range for the central segment with its unit and an explicit estimate status, and the neighbouring segment's range beside it for contrast. The other half is not answered. No returned row carries an earthquake depth range as a bounded quantity: the rows that reach the deep seismicity give a scope phrase or a modality and no bounds, and the depth quantities that do come back are brittle-ductile boundary depths at other features, which is a different quantity. The requested depth range is therefore present only as description, so the rows address part of the question.",
+  "source_locators": [
+    "page:2:block:004",
+    "page:5:block:005",
+    "page:8:block:007",
+    "page:1:block:001"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this transform fault in its abbreviated form while placing the studied ridge between it and the northern one, and the name is the only thing this row asserts."
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the ridge in full in its title and again in the reported finding, which is all the row carries."
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the first discontinuity under this name and calls the pair of them non-transform discontinuities, so the name and the feature kind both hold."
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block reports an extinct vent field on the eastern flank of the first discontinuity, stated flatly, which carries the name, the feature kind and the inactive status."
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the second discontinuity under this name within the same enumeration of subsections, and calls them non-transform discontinuities."
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the core complex sitting east of the ridge axis, which supplies both the name and the feature kind."
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this subsection and, in the following sentence, calls the intersection segment amagmatic, so the compound feature kind is covered as well as the name."
+    },
+    {
+      "row_index": 7,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The first block gives the fault and its kind directly. The second infers inactivity from an absence of deep seismicity and states it as a suggestion, whereas the row records the status flatly, so that qualifier is missing."
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this short ridge segment in the enumeration of subsections and gives its kind."
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block treats the axial valley as an existing feature while locating a shallow cluster on its western side, which covers the name and the kind the row projects."
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the segment lying south of the second discontinuity and identifies it as a ridge segment."
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names this transform fault, abbreviated, as the northern bound of the studied ridge and again at the intersection it forms with it."
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006",
+        "page:8:block:007"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW One block names the solubility model as the thing applied to the melt; the other gives the published model it comes from, the three input parameters, and the degassing question it was run to settle, which is what the description states."
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The code-availability block names this tool and the structural analysis it was used for, which is the whole of the row."
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the worldwide maximum-depth compilation, the rule of accepting a depth only when several events constrain it so as to avoid location bias, and the accompanying factors the description lists."
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block states that first-motion polarities picked on the vertical component were used with this package to obtain focal mechanisms."
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:006"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the double-difference program and the relocation step it performed, which is what the row calls it."
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block gives the local magnitude scale, the same expression term by term, the simulated Wood-Anderson amplitude and the hypocentral distance in kilometres. The extractor mangles the minus glyph but the formula is recoverable from the block."
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:003",
+        "page:7:block:008"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW One block records the four-way classification of locations; the other lists the three criteria and states which category meets all of them and which meet fewer, matching the description."
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block states that published geochemical analyses of basalt samples collected inside the instrument network footprint were compiled."
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:004",
+        "page:7:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW One block names the search algorithm used for the initial hypocentres; the other gives the confidence ellipsoid from the posterior samples and the iterative station corrections that the description repeats."
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block names the trigger algorithm and the package containing it as the automatic detection step."
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block states that this program was used to search for the minimum one-dimensional model as a check on the model already chosen."
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block covers the construction of the candidate models from the wide-angle refraction profile, the depth to which they are constrained, and the selection of the averaged model for locating events and computing mechanisms, which is the description."
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW The block attributes the completeness magnitude and the b-value to this software, which is what the row names it for."
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW One block establishes that published analyses inside the network footprint were compiled; the other states that the samples of this segment were among those analysed, which is the sample set the row names."
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:004",
+        "page:8:block:005"
+      ],
+      "rationale": "NO_SUBJECT_IN_ROW One block establishes the compilation inside the network footprint; the other states that the samples of the adjacent southern segment were analysed alongside those of the studied one."
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block reports the deep events along the ridge axis in the authors' own declarative voice, which matches the recorded modality, and the ridge it names in that sentence is the subject the row shows."
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block denies active venting on this segment's axis, so both the negated modality and the segment as what is being spoken about are supported."
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block concludes plainly that magmatic accretion dominates at this segment, which fits the recorded modality and makes the segment the thing the claim is about."
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block states that this segment shows no evidence of detachment faulting, which is a negation whose subject is that segment."
+    },
+    {
+      "row_index": 31,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block supports the degassing statement and names the segment, but it makes the point about seafloor basalts in general and rests it on samples from this segment and its southern neighbour alike, so the block does not establish this one segment as what the record is about."
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the count and says those events lie along the ridge, which is both the scope phrase the row carries and the feature the subset is about."
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block lists normal-depth seismicity beneath the southern discontinuity as one of its key observations, which is the scope the row records and the feature it belongs to."
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block places the shallow events at the intersection corner and off-axis west of this segment, in the wording the row's scope follows, and that segment is what the subset is about."
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:004"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block records the deep microseismicity beneath this segment's ridge axis, which matches both the scope phrase and the subject."
+    },
+    {
+      "row_index": 36,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The blocks support the count and the region it covers, and the first names the segment. But the same block says the located events span all four subsections and the transform fault, so it does not support this one subsection as the thing the subset is about."
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the count for events along the transform fault, which is at once the scope and the feature the subset is about."
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block states the half-spreading rate for the ridge in this area with its unit and no hedge, and the ridge is the subject."
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives this discontinuity's along-strike length with the unit and the approximation marker the row carries."
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block reads the brittle-ductile boundary beneath this discontinuity off the seismicity and gives the depth with the same approximation, for that feature."
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the ridge offset for this discontinuity with its unit and approximation."
+    },
+    {
+      "row_index": 42,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:5:block:003"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block supports the pressure range and names the segment, but the range is a general triggering threshold carried over from earlier work rather than a quantity determined for this segment, and the block ties it to the segment only as a suggestion, so neither the subject attribution nor that framing is carried by the row."
+    },
+    {
+      "row_index": 43,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block supports the upper bound on the boundary depth, but only west of this segment's axis and only out to a stated crustal age, and the same block reports much deeper seismicity beneath the axis itself. The row carries no such restriction, so a needed qualifier is absent."
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives this segment's along-strike length with the unit and the approximation the row records."
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the width of this segment's median valley with its unit, in the same sentence that identifies the segment."
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the strike of the neo-volcanic ridge inside this segment, which reads directly as the angle from north the row records."
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the pre-eruptive concentration range for this segment, its unit, and that the range is an estimate, which covers every field the row carries."
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:005",
+        "page:8:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK Three blocks carry this. The first gives the approximate range for the primary melts; the other two attach the same range to this segment and label it as calculated from the trace-element proxies, so the bounds, the unit, the estimate status and the subject are all supported."
+    },
+    {
+      "row_index": 49,
+      "source_support": "PARTIAL",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block supports the temperature bound, the unit and the segment, but it offers the figure as a possible reason for the absence of deeper events and points to earlier work, rather than presenting it as a model result. The determination the row records is not carried by this block."
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the length of the southern magmatic segment with its unit, and that segment is the subject."
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "rationale": "SUBJECT_IN_BLOCK The block gives the calculated melt concentration range for the southern segment with its unit, which matches the bounds, the estimate status and the subject."
+    }
+  ]
+}

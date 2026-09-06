@@ -6479,3 +6479,57 @@ sets, not as a reason to set one.
 
 Non-claim: admission is structural acceptance. No preliminary review exists
 yet; the review judges the rows as rows.
+
+### E-0186, run-19 (Sonnet 5 at v4.10) preliminary review: RESPONSIVE, RESPONSIVE, PARTIAL, PARTIAL; 135 SUPPORTED, 19 PARTIAL, none UNSUPPORTED; the answers are in the graph and unreachable
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/run-19/review-block.CQ-01.json` to
+`review-block.CQ-04.json` (two fresh Opus 5 sessions, CQ-01 with CQ-02 and
+CQ-03 with CQ-04, dispatched 05:14Z under task v4 and protocol v2 with the
+aboutness instruction), merged and validated as
+`review-record.preliminary.md`
+(`sha256:3ddb63d4037643f3d5ecb2e1b81415e83c294a76f55c6e7dc791ae0ece0b38cd`),
+manifest
+`sha256:9eba71ed0582c12653b71aeb7417a4be5509933e4cbf1bbd928c033fe6de35d6`.
+
+Results: CQ-01 RESPONSIVE, 14 SUPPORTED, 1 PARTIAL; CQ-02 RESPONSIVE, 31 and
+6; CQ-03 PARTIAL, 46 and 6; CQ-04 PARTIAL, 44 and 6. 154 rows, no
+UNSUPPORTED, no NOT_EVALUABLE; no RELATION row and so no locality token; no
+digest token, because no record of this population carries a locator or a
+digest (as run-16). The nineteen PARTIAL rows are seven findings, six of them
+the same six records judged in both CQ-03 and CQ-04: a fault status recorded
+flat where the block only suggests it; a degassing claim scoped to one
+segment where the block covers two; a region-wide catalogue subset attributed
+to one subsection; a cited pore-pressure threshold attributed to RC2; a
+boundary depth carried without its off-axis restriction; a temperature
+recorded as MODELLED where the block offers it as a possibility; and, in
+CQ-01, a campaign duration that is the recording window.
+
+Why CQ-03 and CQ-04 are PARTIAL, in the second session's words and in the
+population trace: the CO2 half of CQ-03 is answered on one row; the deep
+earthquake depth range and the preferred mechanism are records of the graph
+(`entity:claim:co2-degassing-hypothesis` with its disposition,
+`entity:observation:rc2-deep-16-19km`, `entity:observation:rc2-deep-depth`)
+that carry no subject, and a subject-bearing record without a subject has no
+case in the v4 binding: no ENTITY case since v4.4, no SUBJECT case without a
+subject. The answers exist and no question can reach them. Against run-16,
+whose producer met the same rule by anchoring 48 subjects and whose review
+demoted the anchored rows, this producer left 95 subjects unset and the
+binding left the records unreachable. Measured by script on the frozen cells,
+the records a set names that are subject-bearing and subject-less: run-13
+158, run-14 71, run-15 64, run-16 4, run-19 95; reaching them as one ENTITY
+row per question would add up to that many rows to each question that names
+the type (run-19: 53, 95, 95, 95 on top of 15, 37, 52, 50). That is the flood
+v4.4 cut, now one row per witness, and the ruling on whether to pay it is
+Luis's: the binding is a design choice, and moving it changes every cell's
+comparability.
+
+What the reviewers could not decide: whether the absent digests are a
+producer omission or a graph without them (the population file is outside
+the review surface; it is the former, the pack leaving the slots optional);
+the ML formula's glyphs on page 8 as the text layer renders them;
+responsiveness judged on coverage, not precision, with most rows records the
+question does not ask about.
+
+Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
