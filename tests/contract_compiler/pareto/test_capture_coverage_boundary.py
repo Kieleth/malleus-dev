@@ -275,7 +275,8 @@ def test_shop_replay_contains_only_supplied_relationships(tmp_path, relation):
     assert replay.graph.get_node("count:request")["quantity"] == 2
     assert "name" not in replay.graph.get_node("claim:fill")
     trace = api.trace_population_record(replay=replay, record_id="claim:fill")
-    assert any(item.record_id == "capture:shop-note" for item in trace.evidence)
+    retained = {item.record_id: item.content for item in trace.evidence}
+    assert retained["capture:shop-note"] == _canonical(capture)
     assert _canonical(capture) == adapted.capture_bytes
 
 
