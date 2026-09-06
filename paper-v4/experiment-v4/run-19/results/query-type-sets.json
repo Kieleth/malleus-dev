@@ -1,0 +1,31 @@
+{
+  "CQ-01": [
+    "Instrument",
+    "Campaign",
+    "Observation",
+    "Method"
+  ],
+  "CQ-02": [
+    "GeologicalFeature",
+    "EarthquakeCatalogSubset",
+    "Observation",
+    "Claim"
+  ],
+  "CQ-03": [
+    "Observation",
+    "QuantityValue",
+    "Ratio",
+    "GeologicalFeature",
+    "EarthquakeCatalogSubset",
+    "Sample",
+    "Method",
+    "Claim"
+  ],
+  "CQ-04": [
+    "Claim",
+    "Observation",
+    "GeologicalFeature",
+    "EarthquakeCatalogSubset",
+    "Method"
+  ]
+}

@@ -1,0 +1,232 @@
+id: https://malleus.dev/schema/projects/mar-transform-co2-seismicity
+name: mar_transform_co2_seismicity
+title: Mid-Atlantic Ridge Transform-Zone CO2-Degassing Seismicity Project Ontology
+description: >-
+  Project ontology for a single research article reporting a microseismicity study
+  linking deep mantle earthquakes at the Mid-Atlantic Ridge (Romanche transform zone)
+  to CO2 degassing from ascending melt. Domain: marine seismology, plate-boundary
+  structural geology, and igneous geochemistry (MORB volatile content). Adds five
+  project classes not covered by the imported packs (geological features, seismic
+  events, catalog subsets, persons, organizations) and reuses the research,
+  metrology, and chronology packs directly for everything else: measurements,
+  claims, methods, instruments, samples, sources, evidence, and contributions.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  marseis: https://malleus.dev/schema/projects/mar-transform-co2-seismicity/
+  prov: http://www.w3.org/ns/prov#
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+  LocationQualityCategory:
+    description: >-
+      The earthquake-location quality category the source assigns, from its own
+      closed A/B/C/D scheme. The exact numeric criteria for each category are the
+      source's own methodology and are recorded as data (on a Method or Claim
+      record), not repeated here.
+    permissible_values:
+      A:
+        description: Meets all of the source's stated location-quality criteria.
+      B:
+        description: Meets two of the source's stated location-quality criteria.
+      C:
+        description: Meets two of the source's stated location-quality criteria.
+      D:
+        description: Meets only one of the source's stated location-quality criteria.
+
+# -------------------------------------------------------------------
+# Classes
+# -------------------------------------------------------------------
+
+classes:
+
+  GeologicalFeature:
+    is_a: Entity
+    mixins:
+      - Statusable
+    description: >-
+      A named, spatially delimited part of the seafloor, crust, lithosphere, or
+      mantle that the source repeatedly refers to and reports facts about: a ridge
+      segment, a transform fault, a ridge-transform intersection, a non-transform
+      discontinuity, an oceanic core complex, a detachment fault, a hydrothermal
+      vent field, a volcano, or a named layer such as the crust or mantle beneath a
+      given segment. Status (ACTIVE/INACTIVE/DESTROYED) captures source statements
+      such as "this detachment fault is inactive" or "an extinct hydrothermal vent
+      field". Distinctions the source itself draws between feature kinds are kept as
+      the feature_type slot value, not as separate classes.
+    slots:
+      - feature_type
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology and marine geomorphology of mid-ocean ridge systems
+          taxonomy: DDC 551.8
+          none_found: true
+          search: >-
+            Checked BFO for a generic named-feature class: BFO's Independent
+            Continuant and Site concepts are maximally generic and carry no domain
+            vocabulary for a ridge segment, a transform fault, an oceanic core
+            complex, or a boundary such as the brittle-ductile boundary. Checked
+            SOSA/SSN's FeatureOfInterest, already considered and rejected at the
+            research pack level for the same reason: it names the role a thing
+            plays in one observation, not a vocabulary for the persisting seafloor
+            and mantle features the source names repeatedly across many
+            observations and claims. The CGI/OGC GeoSciML standard is known to
+            define geologic feature and structure classes, but no version or URL
+            for it could be confirmed with confidence here, so it is not cited.
+            No exact term was found.
+          invented_terms:
+            - GeologicalFeature
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+      - Counted
+      - SourceAsserted
+    description: >-
+      An individually identified earthquake the source names and characterizes on
+      its own terms, such as the 2016 Mw 7.1 Romanche transform-fault earthquake and
+      its subevents. Quantified carries its magnitude (quantity_kind e.g. "moment
+      magnitude (Mw)"); Counted carries a reported subevent count where the source
+      gives one; SourceAsserted's subject links it to the GeologicalFeature it is
+      reported on (e.g. the Romanche transform fault). Aggregate, unnamed groups of
+      earthquakes reported as statistics (a count with a depth range, an
+      uncertainty, a magnitude-of-completeness) are EarthquakeCatalogSubset records,
+      not SeismicEvent records, because Malleus keeps Entity and Event disjoint and
+      an Observation's subject must be an Entity.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: >-
+                QuakeML Basic Event Description (BED), seismological event data
+                exchange schema
+              vocabulary_url: https://quakeml.org/
+              borrowed_terms:
+                - Event
+                - Origin
+                - Magnitude
+          invented_terms:
+            - SeismicEvent
+          invention_search: >-
+            QuakeML's own class is named Event, but the Malleus root ontology
+            already reserves the bare name Event for its own top-level occurrent
+            class, so the project class carries a Seismic prefix rather than
+            reusing the bare borrowed term. The concept and its
+            hypocenter-time-magnitude shape are QuakeML's Event, Origin, and
+            Magnitude, borrowed directly; only the name is local.
+
+  EarthquakeCatalogSubset:
+    is_a: Entity
+    mixins:
+      - Counted
+      - SourceAsserted
+    description: >-
+      A named, counted subset of the source's earthquake catalog, grouped by an
+      interpretive criterion the source itself applies: a region ("beneath the
+      segment RC2 axis"), a location-quality category, a depth band, or a temporal
+      window. Counted's count/count_scope carries the size and the criterion in the
+      source's own wording; SourceAsserted's subject links the subset to the
+      GeologicalFeature it characterizes. Every other quantity the source reports
+      about such a subset (a depth range, an RMS residual, an azimuthal gap, a
+      magnitude, an uncertainty) is a separate Observation record whose subject is
+      this record, so that one subset can carry many independently sourced
+      quantities without collapsing them into one record's single quantity slot.
+    slots:
+      - location_quality
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          none_found: true
+          search: >-
+            Checked QuakeML: it models one seismic event and its origins and
+            magnitudes, not a named, counted, source-defined subset of a catalog
+            grouped by an interpretive criterion such as region, depth range, or
+            location-quality category, which is what this source repeatedly
+            reports instead of individually identified events. Checked SOSA/SSN's
+            ObservationCollection: it groups Observation records, not the
+            earthquakes an observation is about. No exact term was found.
+          invented_terms:
+            - EarthquakeCatalogSubset
+
+  Person:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      An individual credited by the source: an author of the article, named in the
+      Author contributions section by initials.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O (PROV Ontology), 2013 W3C Recommendation
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+          invented_terms: []
+
+  Organization:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      An institution the source credits or names: a funding body, an operator of a
+      research vessel or cruise, a host institution.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O (PROV Ontology), 2013 W3C Recommendation
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Organization
+          invented_terms: []
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  feature_type:
+    range: string
+    description: >-
+      The kind of geological or tectonic feature this is, in the source's own
+      wording (for example ridge segment, transform fault, ridge-transform
+      intersection, non-transform discontinuity, oceanic core complex, detachment
+      fault, hydrothermal vent field, volcano, crust, mantle, lithosphere).
+
+  location_quality:
+    range: LocationQualityCategory
+    description: >-
+      The location-quality category the source assigns to this subset of its
+      earthquake catalog.

@@ -1,0 +1,329 @@
+{
+ "schema": "malleus.paper-v4.producer-launch-log/v2",
+ "run": "run-19",
+ "protocol": "v4.10",
+ "launches": [
+  {
+   "ordinal": 1,
+   "role": "PRODUCER",
+   "phase": "ONTOLOGY",
+   "first_stage": "ONTOLOGY_ATTEMPT_01",
+   "launched_at": "2026-09-06T04:14:28Z",
+   "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+   "requested_model": "sonnet",
+   "model_family": "Claude Sonnet 5",
+   "model_id": "claude-sonnet-5",
+   "spawn_message": "paper-v4/experiment-v4/run-19/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+   "outcome": "POPULATION_READY",
+   "execution": {
+    "pinned_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "paper_commit": "40b1a4b",
+    "staged_at": "2026-09-06T04:14:28Z",
+    "interpreter": "VERIFIED by prepare_producer.py preflight"
+   },
+   "usage_cumulative": {
+    "tokens": 217330,
+    "tool_uses": 24,
+    "duration_ms": 896737
+   },
+   "usage_by_resume": [
+    {
+     "after": "POPULATION",
+     "tokens": 499627,
+     "tool_uses": 104,
+     "duration_ms": 2861495
+    },
+    {
+     "after": "POPULATION_CORRECTION_01_SUBJECT_NOT_NAMED",
+     "tokens": 517488,
+     "tool_uses": 119,
+     "duration_ms": 3037756
+    }
+   ],
+   "usage_note": "tool_uses and duration_ms in usage_by_resume are cumulative sums of the harness's per-resume figures",
+   "producer_observations": [
+    "the producer reports checking its file against every refusal the skill's pre-flight list names before stopping, and stripping 73 subject assignments its sentences did not name rather than anchoring them (run-16 anchored 48)"
+   ],
+   "phase_two": {
+    "dispatched_at": "2026-09-06T04:30:59Z",
+    "dispatched_at_source": "the harness transcript's timestamp of the SendMessage call",
+    "after_binding_frozen_at": "2026-09-06T04:30:49Z",
+    "message": "run-18's phase-two message with run-19's coordinates and fact count",
+    "capture_id": "capture:paper-v4:yu-2025:v4:19",
+    "plan_id": "plan:paper-v4:yu-2025:v4:19",
+    "staged": [
+     "producer/accepted/population-surface.json",
+     "producer/accepted/diagnostic.json"
+    ]
+   }
+  }
+ ],
+ "gate": [
+  {
+   "attempt": 1,
+   "ontology_sha256": "sha256:39f026b25c3bcacb836bd8c040a0790ea1961e3014ce6a4f45c8df52d8a7c9a4",
+   "status": "ACCEPTED",
+   "validated_fact_set_sha256": "sha256:c714531df6a77bba2670d444dbfe04e240ad326384c5d2392217fbc3a44fb569",
+   "fact_count": 2794,
+   "accepted_at": "2026-09-06T04:30:09Z",
+   "families_admitted": [
+    "entities",
+    "events",
+    "relations"
+   ],
+   "surface_families": {
+    "ENTITY": 17,
+    "EVENT": 2,
+    "RELATION": 2
+   },
+   "event_types": [
+    "Event",
+    "SeismicEvent"
+   ],
+   "relation_types": [
+    "ContributionRelation",
+    "ResearchRelation"
+   ],
+   "subject_bearing_types": [
+    "Claim",
+    "Observation",
+    "EarthquakeCatalogSubset",
+    "SeismicEvent"
+   ],
+   "note": "accepted at attempt 01; five project classes (GeologicalFeature, SeismicEvent, EarthquakeCatalogSubset, Person, Organization), one enum, two slots; every quantity on the metrology Observation shape; two grounding blocks cited (QuakeML, PROV-O) and two in the none_found form; EarthquakeCatalogSubset is a subject-bearing Entity for counted bodies of earthquakes, the producer's answer to Observation.subject ranging on Entity",
+   "producer_observations": [
+    "the producer reports having confirmed that private/ is gitignored at the repository root, a look at a repository file outside the declared inputs; no question, answer or evaluation material was reachable that way; recorded as an isolation observation",
+    "no ambient inquisitor reported; no question to the parent"
+   ],
+   "phase_two_inputs_staged": [
+    "accepted/population-surface.json",
+    "accepted/diagnostic.json"
+   ],
+   "diagnostic_returns_used": 0,
+   "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-06T04:30:49Z",
+    "checked_at_precision": "minute, from the session clock",
+    "urls": 2,
+    "fabricated": 0,
+    "fabricated_basis": "both vocabularies are real and define the borrowed terms; the two uncited blocks declare none_found",
+    "result": "www.w3.org/TR/prov-o fetched in run-13's check (2026-09-05): defines Agent, Person, Organization; quakeml.org serves a certificate for quake.ethz.ch, and quake.ethz.ch/quakeml fetched in run-13's check states QuakeML is an XML representation of seismological data; Event, Origin and Magnitude are its element names, not confirmed on the landing page",
+    "unverified": [
+     "https://quakeml.org/ (transport; standard confirmed at quake.ethz.ch/quakeml)"
+    ]
+   }
+  }
+ ],
+ "runner": [
+  {
+   "attempt": 1,
+   "transaction_time": "2026-09-06T05:04:22Z",
+   "execution_commit": "40b1a4b",
+   "core_note": "Core files at the pinned coordinate c95dba7 (OVR-000415); commits between are paper files",
+   "status": "REFUSED",
+   "stage": "DOCUMENT_ADAPTER",
+   "reason": "SUBJECT_NOT_NAMED",
+   "classification": "STRUCTURAL_REFUSAL_RETURNED_TO_PRODUCER",
+   "detail": "3 defects in one aggregated refusal, all SUBJECT_NOT_NAMED: the three hypothesis claims (CO2 degassing, cold thick lithosphere, hydrothermal cooling) name RC2 as subject where the formalizing sentences do not name it; run-16 at v4.9 returned 50 defects at this attempt (45 SUBJECT_NOT_NAMED)",
+   "overseer_reading": "the producer reports having run the list's checks and stripped 73 unnamed subjects before stopping; the three that remain are the same three claims run-16's producer also set on RC2 and the same class run-12's Opus producer was returned for (E-0155): a hypothesis raised about the segment whose disposing sentence names no segment. The expectation of E-0183 (fewer than fifty) held; admission waits on this return",
+   "structural_diagnostic_returned_to_producer_at": "2026-09-06T05:04:47Z",
+   "structural_diagnostic_return_ordinal": 1,
+   "structural_diagnostic_return_limit": 2,
+   "hand_repair": false,
+   "leftovers": "refused-runner-attempt-01/"
+  },
+  {
+   "attempt": 2,
+   "transaction_time": "2026-09-06T05:08:04Z",
+   "execution_commit": "40b1a4b",
+   "core_note": "Core files at the pinned coordinate c95dba7 (OVR-000415); commits between are paper files",
+   "status": "ADMITTED_AND_REPLAYED",
+   "graph": {
+    "entities": 174,
+    "event_participations": 0,
+    "events": 1,
+    "relations": 29,
+    "signals": 0
+   },
+   "ledger_event_count": 14,
+   "records_traced": 204,
+   "reopen_matches_admitted": {
+    "export_records": true,
+    "receipt": true
+   },
+   "census": {
+    "assertions": {
+     "FULLY_FORMALIZED": 156,
+     "PARTLY_FORMALIZED": 0,
+     "UNFORMALIZED": 1
+    },
+    "blocks_asserted": 59,
+    "blocks_declared_nothing_assertable": 127,
+    "blocks_untouched": 0,
+    "blocks_reviewed": 186,
+    "blocks_total": 186,
+    "capture_sha256": "sha256:62615b340125e4f3dd984f3b0cec0daa7e1bd1e03207b641ad2fae666c52bfa0",
+    "gaps_by_kind": {
+     "RELATION_ABSENT": 1
+    }
+   },
+   "derivation_census": {
+    "non_local_relations": 10,
+    "top_hubs": [
+     {
+      "assertion": "assertion:148",
+      "records": 8
+     },
+     {
+      "assertion": "assertion:29",
+      "records": 6
+     },
+     {
+      "assertion": "assertion:15",
+      "records": 5
+     },
+     {
+      "assertion": "assertion:98",
+      "records": 5
+     },
+     {
+      "assertion": "assertion:143",
+      "records": 4
+     }
+    ],
+    "fan_out_distribution": {
+     "0": 1,
+     "1": 116,
+     "2": 24,
+     "3": 9,
+     "4": 3,
+     "5": 2,
+     "6": 1,
+     "8": 1
+    }
+   },
+   "subject_coverage": {
+    "ambiguous": 13,
+    "attachable": 22,
+    "by_type": {
+     "Claim": {
+      "ambiguous": 4,
+      "attachable": 7,
+      "proposed": 5,
+      "total": 40,
+      "unnamed": 24,
+      "with_subject": 5,
+      "without_subject": 35
+     },
+     "EarthquakeCatalogSubset": {
+      "ambiguous": 1,
+      "attachable": 1,
+      "proposed": 6,
+      "total": 13,
+      "unnamed": 5,
+      "with_subject": 6,
+      "without_subject": 7
+     },
+     "Observation": {
+      "ambiguous": 8,
+      "attachable": 14,
+      "proposed": 14,
+      "total": 67,
+      "unnamed": 31,
+      "with_subject": 14,
+      "without_subject": 53
+     },
+     "SeismicEvent": {
+      "ambiguous": 0,
+      "attachable": 0,
+      "proposed": 1,
+      "total": 1,
+      "unnamed": 0,
+      "with_subject": 1,
+      "without_subject": 0
+     }
+    },
+    "proposed": 26,
+    "total": 121,
+    "unnamed": 60,
+    "with_subject": 26,
+    "without_subject": 95
+   },
+   "provenance_coverage": {
+    "by_type": {
+     "Claim": {
+      "total": 40,
+      "with_digest": 0,
+      "with_locator": 0
+     },
+     "EarthquakeCatalogSubset": {
+      "total": 13,
+      "with_digest": 0,
+      "with_locator": 0
+     },
+     "Observation": {
+      "total": 67,
+      "with_digest": 0,
+      "with_locator": 0
+     },
+     "SeismicEvent": {
+      "total": 1,
+      "with_digest": 0,
+      "with_locator": 0
+     }
+    },
+    "total": 121,
+    "with_digest": 0,
+    "with_locator": 0
+   },
+   "gaps_by_kind": {
+    "RELATION_ABSENT": 1
+   },
+   "structural_diagnostic_returns_used": 1,
+   "admitted_at": "2026-09-06T05:08:04Z",
+   "correction_note": "the producer replaced its lenient subject self-check with the strict one (only assertions formalizing the subject path count), stripped 26 more subjects to unset (97 of 204 records without one), and retargeted one assertion that had lost its only target; 157 assertions unchanged"
+  }
+ ],
+ "query": {
+  "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+  "bound_at": "2026-09-06T04:30:49Z",
+  "type_sets": "query-type-sets.json",
+  "type_sets_sha256": "sha256:9a9d196b1e6b85edda232647af4040fefff48d0954890823f8c6879326d014df",
+  "type_sets_note": "query-type-sets.note.json",
+  "binding_at_acceptance": "query-binding.acceptance.json",
+  "binding_at_acceptance_sha256": "sha256:1e1c9e6339facb5767846e401b409146d42f5c1e45989076b44b9509f6cb614c",
+  "cases_sha256": "sha256:d6ecaa6008ec3ecec1730acc0ab047264c1ed368bed6d0c90b572065ba92c3fb",
+  "cases": 308,
+  "cases_by_kind": {
+   "ENTITY": 11,
+   "RELATION": 242,
+   "SUBJECT": 55
+  },
+  "phase_two_dispatched_after": true,
+  "executed_at": "2026-09-06T05:08:40Z",
+  "binding_executed": "results/native-query-binding.json",
+  "bound_after_replay_receipt_sha256": "sha256:ca15450e3689db4255a17a63d7ebfc0a914cdcf68d22aa012435808b0375086d",
+  "cases_sha256_matches_acceptance": true,
+  "result": "query/query-result.json",
+  "result_schema": "malleus.paper-v4.query-result/v3",
+  "rows_by_question": {
+   "NQ-CQ-01": 15,
+   "NQ-CQ-02": 37,
+   "NQ-CQ-03": 52,
+   "NQ-CQ-04": 50
+  },
+  "rows_total": 154,
+  "rows_by_kind": {
+   "ENTITY": 79,
+   "SUBJECT": 75
+  },
+  "rows_from_more_than_one_case": 0,
+  "forbidden_attempts": {
+   "embedding_import": 0,
+   "file_read": 0,
+   "network": 0
+  },
+  "graph_state_digest": "sha256:39cc597f8bb12bf626e6666f19094c33545c9833fbaecd83b854f3aec9d2cf69"
+ },
+ "review": {}
+}

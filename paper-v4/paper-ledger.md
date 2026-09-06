@@ -6417,3 +6417,65 @@ Non-claim: no producer has run under this cell. The expected effect and the
 falsifier are E-0183's: fewer than run-16's fifty defects at the first runner
 attempt and admission within two returns; fifty or more, or a third refusal,
 falsifies.
+
+### E-0185, run-19 (Sonnet 5 at v4.10) is admitted at the second runner attempt after three defects; the list changed what the producer checked
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-19/ontology-run/`, `paper-v4/experiment-v4/run-19/results/`,
+`private/paper-v4-v4-run-19/` (ledger, query result, population plan, the
+refused first runner attempt, withheld files), `paper-v4/evaluation-v4/run-19/`
+(review inputs under protocol v2 and task v4).
+
+Ontology: accepted at attempt 01, 2,794 facts, 17 entity types, 2 event
+types, 2 relation types, 4 subject-bearing types. Five project classes: a
+feature type, a named seismic event, an EarthquakeCatalogSubset entity for
+counted bodies of earthquakes (subject-bearing), Person and Organization;
+every quantity on the metrology Observation shape; two grounding blocks cited
+(QuakeML, PROV-O, both checked earlier) and two in the none_found form.
+
+Population: 157 assertions; 59 blocks asserted, 127 declared
+nothing-assertable, 0 untouched, as the Core-19 census now reports; 204
+records (174 entities, 1 event, 29 relations); 1 typed gap
+(RELATION_ABSENT). The producer reports checking its file against every
+refusal the skill's pre-flight list names before stopping and stripping 73
+subjects its sentences did not name. Runner attempt 1 refused three defects,
+all SUBJECT_NOT_NAMED (the three hypothesis claims with RC2 as subject, whose
+disposing sentences name no segment, the class E-0155 recorded for run-12);
+run-16, the same model at v4.9 without the list, returned fifty at this
+attempt. Returned as diagnostic 1 of 2. The producer replaced a lenient
+self-check with the strict one, stripped 26 more subjects to unset and
+retargeted one assertion; it did not anchor. Attempt 2 admitted under
+`actor:overseer-run-19`: fourteen ledger events, replay reproducing
+admission, 204 traced. Census: 156 fully, 1 unformalized; 10 of 29 relations
+non-local; largest hub 8. Subject coverage 26 of 121 proposed, 22 attachable,
+13 ambiguous, 60 unnamed, none formalized through an anchor (run-16: 99 of
+103 proposed, 48 anchored). Provenance coverage 0 of 121 with a locator or a
+digest (run-16: 0 of 194).
+
+Query: the v4 binding frozen at acceptance (308 cases: 11 ENTITY, 242
+RELATION, 55 SUBJECT) executed unchanged after replay under the v4.9
+executor: CQ-01 15, CQ-02 37, CQ-03 52, CQ-04 50, 154 rows (79 ENTITY, 75
+SUBJECT, no RELATION row: the 29 relations are contribution and research
+relations between agents and works, which no set names) over 54 witnesses, no
+forbidden attempt. The rows are a third of run-16's 433 because 95 records
+carry no subject and are unreachable under the v4.4 restriction.
+
+Execution coordinate: inputs pinned at `c95dba7` (E-0184); the runner
+executed at main `40b1a4b`, whose Core files are the pinned coordinate's.
+
+Cost, from `results/usage.json`: ontology attempt 01 217,330; population
+282,297; correction 17,861; producer total 517,488 (run-16: 529,350 with one
+correction of 88,264).
+
+Expected effect (E-0183): fewer than fifty defects at the first runner
+attempt, admission within two returns. Both held: three, and one return. What
+the list changed on this producer, by its own report and by the census: it
+ran the checks before stopping, and where the check failed it left the
+subject unset instead of manufacturing a naming clause. What it did not
+change: no locator on any record, so the digest check did not run here
+either; the list names the digest checks as checks on a digest the producer
+sets, not as a reason to set one.
+
+Non-claim: admission is structural acceptance. No preliminary review exists
+yet; the review judges the rows as rows.
