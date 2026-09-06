@@ -7311,3 +7311,45 @@ otherwise.
 
 Non-claim: no row is added or removed by this entry, and no review label
 depends on it. Runs 11, 14, 16, 19 and 21 are unaffected.
+
+### E-0199, the other half of E-0198 measured: 117 executed rows in six frozen cells belong to types the question's set never named
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/unlisted_rows.py` over the frozen public
+type sets of runs 08 to 21 and the private query results and export records
+of the same cells. No harness change, no cell run.
+
+Method: for every ENTITY and SUBJECT row of every question, the witness
+record's own type is read from the cell's export records and compared with
+the question's frozen type set. RELATION rows are not counted; no set names
+a relation type.
+
+Result, rows of unlisted types per cell and question:
+
+| cell | CQ-01 | CQ-02 | CQ-03 | CQ-04 | cell total |
+|---|---|---|---|---|---|
+| run-09 | 0 | 17 (MeltBody 5, VolcanicStructure 4, LithosphericLayer 4, HydrothermalField 3, TectonicPlate 1) | 0 | 0 | 17 |
+| run-10 | 5 (NumericalModel) | 17 (GeochemicalObservation) | 0 | 0 | 22 |
+| run-12 | 0 | 18 (GeochemicalObservation) | 0 | 0 | 18 |
+| run-13 | 6 (VelocityModel 3, SolubilityModel 2, ThermalModel 1) | 16 (GeochemicalObservation) | 0 | 0 | 22 |
+| run-15 | 0 | 0 | 8 (SoftwareTool) | 8 (SoftwareTool) | 16 |
+| run-20 | 6 (GeophysicalModel) | 0 | 8 (SoftwareTool) | 8 (SoftwareTool) | 22 |
+
+Runs 08, 11, 14, 16, 19 and 21: none. Run-08's two per-question omissions
+(E-0198) produced no row because that cell reached relations only. Total
+117 rows of 8,367 ENTITY and SUBJECT rows across the twelve cells.
+
+Reading: every one of these rows was reached through a listed parent
+(Method, Observation, EarthFeature and their kin), projected by its own
+type, reviewed as a row, and counted in the cell's row total. None is added
+or removed by this entry. The cells whose type-set notes said a subtype was
+left out of a question, and whose rows carried it anyway, are run-13
+(CQ-01, CQ-02), run-15 (CQ-03, CQ-04) and run-20 (CQ-01, CQ-03, CQ-04);
+runs 09, 10 and 12 predate the notes. From v4.11 the binder refuses the
+sets that produced these rows, so the next cell's set names every type its
+rows can carry.
+
+Non-claim: the count says which rows the sets did not name, not whether
+those rows answered the question; the reviews judged that already, row by
+row.
