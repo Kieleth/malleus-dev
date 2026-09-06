@@ -1,0 +1,86 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:621ed081b8bb601a8a22f66012d77561ebe6dd0f685199fd5057e943728ee3bd",
+        "before_digest": "sha256:e51959bacbee61f35a23b6bfe113ee30383013d5d2630b5cd25732bf0586e646",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:21cc5d21e1701a4fad03c34a019969e7153021b51b9290505d7802879c3639fa",
+        "before_digest": "sha256:6b0018974e769cf06918c1dace64259e5c5e0aab03d66dbbee01fd5be47bf5ca",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:3b4dd80007e899f6fa6e42a9d26e6047376873396fd1800d1da493ce48ed6da9",
+        "before_digest": "sha256:d5d66dfa92d2055cf0782fb708d2da9f54e768a25f60c0c3ecdadd141dab229e",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:70392d0b73093c1e970cf033f8794851f8a0ebfb9309928eee9496918bd21a50",
+        "before_digest": "sha256:20abf02b2417eecc371285000d1e4165a14470a551f798164c712e26584dcff7",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_governed_population.py"
+      },
+      {
+        "after_digest": "sha256:399fa0421bfc77c41abd979118a16cf9384ff2f3ed56ccb6bc6082a952b40429",
+        "before_digest": "sha256:8b3f56c18a56710a736f16b68e7105521734ccf27dde4b79ea1d704a7224a745",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      },
+      {
+        "after_digest": "sha256:b541f0aa6e8fb406faacc0e1b45507b7076524dc74694ea83191075e4ef27e3d",
+        "before_digest": "sha256:6c06a07d8480e5a45da5ad350cba8712fbee43b9ac1b5c238f61ff38652e5f41",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:01e5d85868c02ac5d14b51854e15ac8068bbe09a4f7b48e60ee4fb42fd495d23",
+        "before_digest": "sha256:23f03bab9b2248ecf995f781156fbd145c133048373583173e0fe89633ab8c93",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:65e9f063fc9ccaece6f2a1dda854fc604e7d45fc58a190e368e65afac59ef6ce",
+  "entry_id": "OVR-000418",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9127d5a1352123e7017ffafae4474f49cc2b03e4a345b8b74b6a8ceadd2a98fa",
+  "recorded_at": "2026-09-06T23:40:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "345a98924621aea6696880d068880ae340a1e122",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1324cccf56f6a6e712140d804d3f1e0a1dab4a2d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 418,
+  "subject": {
+    "id": "population-plan-locator-resolution",
+    "type": "DOCUMENT"
+  },
+  "summary": "The population-plan compiler resolves every derivation and gap locator against the retained bytes of its source under a declared row-numbering convention, and the acolyte states that convention.",
+  "why": "E-0202: Core required a nonempty locator string and read it no further, so the reviewer of a row cell was the first thing in the path to compare a row:N:field with the row it names. E-0204 is the cost: an isolated producer numbered rows from 1 by physical line with the CSV header as line 1 and said so, the fixture and the review task number data rows from 0 with the header excluded, nobody had declared either, and under the task's convention 13 of 15 locators named a row past the end. The convention is now declared, row:N:field with N counting data rows from 0, a CSV header excluded and its names the fields, a JSONL non-empty line a row and its top-level keys the fields, field[i] element i of a JSON array; it is the one the fixtures already wrote. At admission the compiler parses the bytes retained under the named source, under the media type they carry, and refuses LOCATOR_NOT_RESOLVABLE with every miss in one detail. Resolution runs for text/csv and application/x-ndjson only: a reading declares neither, so a document capture's assertion locators stay the document adapter's to check. Values are never compared. Decision 27 in design/KNOWLEDGE_PACKS.md carries the whole ruling."
+}
