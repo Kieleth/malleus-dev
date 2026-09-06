@@ -1,7 +1,8 @@
 """Per frozen cell and question: executed ENTITY and SUBJECT rows whose witness
 record's own type the question's type set never named (E-0199). Reads the
 frozen public type sets and the private query results and export records,
-which exist only where the private run directories do; nothing typed."""import json
+which exist only where the private run directories do; nothing typed."""
+import json
 from collections import Counter
 from pathlib import Path
 ROOT=Path('/Users/luis/Projects/malleus-dev')
