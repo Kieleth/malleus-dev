@@ -33,10 +33,66 @@ the existing counter; guidance tests must fail before the correction.
 
 ## Evidence
 
-RED: the new six-case test file reports 2 failed, 4 passed. The failures are
+RED `97baf9636273d15484251e2931fdfeae9e42001d`: the new six-case test file reports
+2 failed, 4 passed. The failures are
 the public-doc and installed-acolyte guidance guards. The four behavioral
 cases already pass and characterize existing behavior, not a runtime fix.
 Command: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest
 -q -p no:cacheprovider tests/contract_compiler/pareto/test_capture_coverage_boundary.py`
 (the isolated checkout uses the existing project `.venv` by absolute path).
-GREEN and final validation remain pending.
+GREEN `2ba6e7c84cf414ed105db1b12cb5c86a6744f81b` changes only the acolyte,
+public compiler documentation and its existing Inquisitor wording guard.
+`229ab9d65b03fb22a82995a856ee8e96dddd5eb4` additionally checks exact capture
+bytes recovered through the public trace, not merely the retained record ID.
+
+The public receipt values remain FULLY_FORMALIZED, PARTLY_FORMALIZED and
+UNFORMALIZED. The docs label them mapped fields with no declared gaps, mapped
+fields with declared gaps, and no mapped fields. No runtime output changed.
+Proposition IDs identify records; optional labels do not replace statements or
+retained evidence. Relationship mappings need source support, direction,
+endpoints and retained context/attribution, not two names in one sentence.
+
+Verified checks in the isolated project environment:
+
+- New test file: 6 passed, including exact reopened capture bytes.
+- New file plus `tests/test_inquisition.py`: 113 passed, 1 skipped. The skip
+  requires an untracked doctrine file absent from the clean checkout.
+- Complete `tests/contract_compiler/pareto` plus
+  `research/ontology_driven_kg_realization/experiments/small_shop`: 699 passed,
+  3 failed. Each failure also reproduces on the unchanged base `70eec64`.
+- Changed-file Ruff check, new-file format check, skill quick validator and
+  `git diff --check`: passed. The existing Inquisitor file has unrelated
+  formatting differences; no bulk formatting changes were retained.
+
+## Separate baseline debt
+
+Three existing evidence-regeneration guards fail on both the unchanged base
+and this correction:
+
+1. `correction/test_correction_vertical.py::test_checked_in_evidence_is_exactly_regenerated`
+2. `object_event/test_run.py::test_ret040_admits_reopens_replays_queries_and_traces`
+3. `showcase/test_evidence.py::test_regeneration_is_canonical_byte_identical_and_matches_runner`
+
+Paths above are relative to the Small Shop experiments directory. Regenerated
+receipt/explanation identities differ from the committed expected bytes. This
+read-only reproduction establishes pre-existing drift, not its introducing
+commit. Existing failing guards already expose the class. Reconcile current
+versus historical evidence in a separate bounded cut; do not overwrite frozen
+receipts to make this correction green. No full-suite-green claim is made.
+
+## Self-audit and exclusions
+
+Self-inquisition used source rubric version 12 and the Malleus development
+completion gate. Lowest affected profile remains the optional document adapter
+under compiler-enabled structural history. The new public-path fixture proves
+composition for this case, not domain completeness, inference, truth, arbitrary
+adopter adequacy or cross-language replaceability. The ignored local
+`MALLEUS_INQUISITION.md` contains the detailed scope table. No root ontology or
+runtime boundary changed, so no root-schema rite is claimed.
+
+All twelve frozen Sol inputs and its accepted ontology were verified unchanged.
+Sol's population plans are ready but have not yet passed the parent admission
+gate. This correction is not a controlled comparison with that frozen run.
+
+Final documentation/governance checks and the broader repository check are
+pending; results will be recorded here before handoff.
