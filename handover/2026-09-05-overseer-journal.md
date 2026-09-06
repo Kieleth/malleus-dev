@@ -523,3 +523,11 @@ Admitted at runner attempt 2 after the producer applied the strict subject readi
 Review merged from two sessions: R, R, P, R; 417 SUPPORTED, 17 PARTIAL, 0 UNSUPPORTED; 251 digests verified; every SUBJECT row in its block. Record E-0190. RCA at `handover/2026-09-06-run-20-opus-v410-rca.md`. The expectation held on both parts. Mechanically the cleanest cell of the loop; CQ-03's PARTIAL is the reviewers' material-ambiguity line, run-13's reviewer having read the same shape as RESPONSIVE.
 
 Nine iterations and eleven cells since the loop started. Every next step is a ruling of Luis's; the loop pauses with the full progress report in chat, per his rule of 02:40Z.
+
+## Reliability measurement (2026-09-06T08:40Z): a third blind judgement of CQ-03 in run-20 and run-13
+
+No ruling has come. The one measurement that needs none and bears on the record-cell choice: the reviewers' threshold on CQ-03, which read RESPONSIVE in run-13 and PARTIAL in runs 15, 19 and 20 on the same shape (several ranges returned, none marked as the answer). Two fresh Opus sessions re-judge CQ-03 of run-20 (158 rows) and of run-13 (176 rows) under the identical task, blind to the existing blocks, writing to a `reliability/` subdirectory beside each cell's review. The frozen records do not move; the outcome is the per-row agreement with the recorded block and whether the responsiveness label holds, recorded as numbers in the ledger. Dispatched 08:40Z.
+
+### Reliability measured (09:25Z)
+
+Run-20 CQ-03: PARTIAL both times; row agreement 147 of 158 (0.930), Cohen's kappa 0.118; of the recorded seven PARTIAL rows one survived the blind reading, and five other rows became PARTIAL. Run-13 CQ-03: recorded RESPONSIVE, blind PARTIAL for the reason runs 15, 19 and 20 gave; row agreement 174 of 176 (0.989), kappa 0.745. Every digest verified by every session; no UNSUPPORTED row anywhere. The support rate is stable and the PARTIAL set is not: a PARTIAL is a threshold judgement, and the threshold is the session's. Run-13's R R R R did not reproduce on CQ-03. E-0191; `paper-v4/evaluation-v4/reliability.py` committed as the measure. The loop pauses on Luis's rulings with the updated report.

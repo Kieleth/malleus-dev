@@ -6828,3 +6828,52 @@ every source-asserted record digest-bound.
 
 Non-claim: PRELIMINARY_COMPLETE is not paper evidence until Luis ratifies.
 Whether run-20 is the cell of record is Luis's.
+
+### E-0191, reliability of the review: blind re-judgements of CQ-03 in run-20 and run-13
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/run-20/reliability/review-block.CQ-03.json`
+(`sha256:e26901e379230a153f9542bbe01cd2dadf681563f47b77434d87a1184300b246`),
+`paper-v4/evaluation-v4/run-13/reliability/review-block.CQ-03.json`
+(`sha256:7f2aefcce6355a1351168b3bea271a20e83cc0326e90fb990bc5d98faa1f7c94`),
+each written by a fresh Opus 5 session under the cell's own task v4 and
+protocol v2, blind to the recorded block, with the same seven materials
+verified by digest; the recorded blocks under E-0161 and E-0190;
+`paper-v4/evaluation-v4/reliability.py`, which computes the figures below
+from the two files and nothing else.
+
+Why: CQ-03 read RESPONSIVE in run-13 and PARTIAL in runs 15, 19 and 20 on the
+same shape (several depth bands and concentration ranges returned, none
+marked as the answer). Whether that is the cells or the reviewers is a
+number, not an impression.
+
+Run-20 CQ-03, 158 rows: recorded PARTIAL, blind PARTIAL. Row agreement 147
+of 158 (0.930): 6 recorded PARTIALs read SUPPORTED blind, 5 recorded
+SUPPORTEDs read PARTIAL; of the recorded seven PARTIAL rows one survives.
+Cohen's kappa 0.118 against an expected agreement of 0.921. Both sessions
+verified every digest (95 rows), both found one non-local relation, neither
+found an UNSUPPORTED row.
+
+Run-13 CQ-03, 176 rows: recorded RESPONSIVE, blind PARTIAL, the blind
+session's reason being the one the three later cells' reviewers gave. Row
+agreement 174 of 176 (0.989), two recorded SUPPORTEDs read PARTIAL, both
+subject-attribution calls. Cohen's kappa 0.745 against an expected agreement
+of 0.956. Both sessions verified every digest (114 rows).
+
+Reading: the support rate is stable (96 to 97 per cent SUPPORTED either way
+on both cells) and no reviewer found an UNSUPPORTED row; which rows carry
+PARTIAL is not stable, because a PARTIAL is an aboutness or qualifier
+judgement at a threshold each session sets for itself. The responsiveness
+label on CQ-03 turns on the material-ambiguity line: run-13's RESPONSIVE did
+not reproduce, and the loop's four Opus cells at v4.7 to v4.10 stand on the
+same footing there. For the paper: report support as a rate with this
+disagreement beside it; report responsiveness with the threshold stated; the
+ruling on the reviewers' lines is what makes either label reproducible. For
+the record cell: the one thing that favoured run-13 over run-20 was a
+reading a second reviewer did not repeat.
+
+Non-claim: two blocks, two re-judgements, one document; the figures are
+what they are and no more. Neither reliability block is part of the
+preliminary record of its cell; the recorded blocks and records are
+unchanged.

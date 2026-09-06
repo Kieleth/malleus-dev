@@ -1,0 +1,1650 @@
+{
+  "question_id": "CQ-03",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The rows do reach both quantities the question asks for and carry them with their units and their determination status: the depth band of the deep events beneath the central segment appears on seismic observation rows whose modality is measured, and the calculated gas content of that segment's primary melts appears on geochemical observation rows whose modality is calculated and whose determination is estimated, each attached by subject to the segment and named in its own quantity kind. What stops this being fully responsive is that the returned set does not distinguish the answer from its neighbours. Several distinct depth bands and several distinct gas-content ranges come back side by side, the primary-melt figure arriving both as a headline calculation and separately from each element proxy, alongside pre-eruptive ranges and the southern segment's ranges, with nothing in the rows marking which of them the paper reports as its result. The subject of every one of those value rows is the ridge segment rather than the melt, so the melt identity survives only inside the quantity-kind text. The type-only binding also returns a large body of rows about velocity models, location and magnitude methods, data resources and boundaries that the question does not ask about. A reader can assemble a correct answer from these rows, but has to choose between candidates the rows leave unranked, which is material ambiguity rather than a missing part.",
+  "source_locators": [
+    "page:1:block:001",
+    "page:2:block:004",
+    "page:2:block:006",
+    "page:5:block:005",
+    "page:8:block:006",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the cruise reports as a resource available for the experiment and carries the same access address the row projects.",
+      "source_locators": [
+        "page:8:block:008"
+      ]
+    },
+    {
+      "row_index": 1,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the sample database the compilation drew on and gives the same web address the row projects.",
+      "source_locators": [
+        "page:6:block:005",
+        "page:8:block:005"
+      ]
+    },
+    {
+      "row_index": 2,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The two blocks the row's derivations reach name the deposited catalogue and carry its identifier, whose digits run on into the second block.",
+      "source_locators": [
+        "page:8:block:008",
+        "page:8:block:009"
+      ]
+    },
+    {
+      "row_index": 3,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block reports basalt widely present on the sea floor of this ridge portion, which is what a record for that material asserts.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 4,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces mid-ocean ridge basalt samples under that abbreviation as the material analysed.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 5,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names mylonite as the rock of the high-temperature shear zones it discusses.",
+      "source_locators": [
+        "page:3:block:003"
+      ]
+    },
+    {
+      "row_index": 6,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block reports peridotite observed on the sea floor, which is what a record for that material asserts.",
+      "source_locators": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "row_index": 7,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the ascending melt as the body the degassing is attributed to.",
+      "source_locators": [
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 8,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the pre-eruptive melts as those whose gas content was estimated and separates them from the melts in equilibrium with the source.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 9,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the primary melts as those whose gas content was estimated from the corrected element proxies.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 10,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the ascending melt as the body the degassing is attributed to.",
+      "source_locators": [
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 11,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the pre-eruptive melts as those whose gas content was estimated and separates them from the melts in equilibrium with the source.",
+      "source_locators": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 12,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the primary melts as those whose gas content was estimated from the corrected element proxies.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 13,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the relocation method used on the hypocentres.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:7:block:006"
+      ]
+    },
+    {
+      "row_index": 14,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the magnitude scale on which the event sizes were determined.",
+      "source_locators": [
+        "page:8:block:002"
+      ]
+    },
+    {
+      "row_index": 15,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the non-linear location algorithm used to obtain the hypocentres.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 16,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the search algorithm of the location program used for the initial hypocentres.",
+      "source_locators": [
+        "page:7:block:004"
+      ]
+    },
+    {
+      "row_index": 17,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the trigger algorithm used to detect the first arrivals.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 18,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the diagram method that yielded the velocity ratio.",
+      "source_locators": [
+        "page:7:block:002"
+      ]
+    },
+    {
+      "row_index": 19,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the solubility model used to place the saturation pressure and depth of the melt.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 20,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the published solubility model used to compute theoretical solubilities for the measured samples.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 21,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block attributes its temperature estimate at depth to thermal modelling, which is what a record for that model asserts.",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 22,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the search for the best one-dimensional velocity model for the location work.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 23,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the fastest of the trial velocity models by that label and says where it came from.",
+      "source_locators": [
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 24,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the selected average velocity model by that label as the best fitting one.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 25,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the solubility model used to place the saturation pressure and depth of the melt.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 26,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the published solubility model used to compute theoretical solubilities for the measured samples.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 27,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block attributes its temperature estimate at depth to thermal modelling, which is what a record for that model asserts.",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 28,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the search for the best one-dimensional velocity model for the location work.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 29,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the fastest of the trial velocity models by that label and says where it came from.",
+      "source_locators": [
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 30,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the selected average velocity model by that label as the best fitting one.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 31,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block gives the barium ratio with its spread as one of the global proxy correlations, matching the row's numerator, denominator, value and uncertainty. The record carries a statement digest in the trace but this case's projection withholds it, so no digest comparison was possible and no digest token is written.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 32,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block gives the rubidium ratio with its spread as one of the global proxy correlations, matching the row's numerator, denominator, value and uncertainty. The record carries a statement digest in the trace but this case's projection withholds it, so no digest comparison was possible and no digest token is written.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 33,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block gives the wave-velocity ratio derived from the diagram method, matching the row's numerator, denominator and value. The record carries a statement digest in the trace but this case's projection withholds it, so no digest comparison was possible and no digest token is written.",
+      "source_locators": [
+        "page:7:block:002"
+      ]
+    },
+    {
+      "row_index": 34,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the ridge segment between the two bounding transform faults, which is the entity the row projects.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 35,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the intersection subsection under that label and calls it amagmatic, which is the character the row projects.",
+      "source_locators": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "row_index": 36,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW One cited block introduces the subsection under that label; the other states its magmatic origin, which is the character the row projects.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 37,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW One cited block names the southern segment; the other states its magmatic character.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 38,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block reports basalt widely present on the sea floor of this ridge portion, which is what a record for that material asserts.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 39,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces mid-ocean ridge basalt samples under that abbreviation as the material analysed.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 40,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names mylonite as the rock of the high-temperature shear zones it discusses.",
+      "source_locators": [
+        "page:3:block:003"
+      ]
+    },
+    {
+      "row_index": 41,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block reports peridotite observed on the sea floor, which is what a record for that material asserts.",
+      "source_locators": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "row_index": 42,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The caption block names melt inclusions among the sample sets plotted.",
+      "source_locators": [
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 43,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The caption block names the basalt samples along the two segments as a plotted set.",
+      "source_locators": [
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 44,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The caption block names popping rocks among the sample sets plotted.",
+      "source_locators": [
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 45,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The caption block names the rock samples shown on the bathymetric map.",
+      "source_locators": [
+        "page:2:block:007"
+      ]
+    },
+    {
+      "row_index": 46,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the solubility model used to place the saturation pressure and depth of the melt.",
+      "source_locators": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 47,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the published solubility model used to compute theoretical solubilities for the measured samples.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 48,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the brittle-ductile boundary under that abbreviation, which is the boundary kind the row projects.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 49,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the isotherm drawn in the schematic, which matches the row's name and its kind.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 50,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block introduces the lithosphere-asthenosphere boundary under that abbreviation, which is the boundary kind the row projects.",
+      "source_locators": [
+        "page:5:block:010"
+      ]
+    },
+    {
+      "row_index": 51,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block names the Moho interface expected beneath the segment; the row's boundary kind is the standard name for that interface.",
+      "source_locators": [
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 52,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block states that oceanic crust forms from mantle-derived melt, which supports a layer record for the crust.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 53,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block contrasts the cooled brittle lithosphere with the partly molten material beneath it, which supports a layer record for it.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 54,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block places the source of the melt in the mantle, which supports a layer record for it.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 55,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block attributes its temperature estimate at depth to thermal modelling, which is what a record for that model asserts.",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 56,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block describes the search for the best one-dimensional velocity model for the location work.",
+      "source_locators": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "row_index": 57,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the fastest of the trial velocity models by that label and says where it came from.",
+      "source_locators": [
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 58,
+      "source_support": "SUPPORTED",
+      "rationale": "NO_SUBJECT_IN_ROW The block identifies the selected average velocity model by that label as the best fitting one.",
+      "source_locators": [
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 59,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_NON_LOCAL The block the relation's own derivation reaches names both segments and places one next to the other, which is what the adjacency asserts; the magmatic character of each endpoint comes from the other cited blocks. That block is not among the blocks that formalize either endpoint, so the pointer holds on the reading while sitting outside the endpoints' own blocks.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:004",
+        "page:8:block:005"
+      ]
+    },
+    {
+      "row_index": 60,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The caption block the relation derives from places the sampled material along the segment named as the target, which is what the sampling relation asserts, and the same block also formalizes the sample record; the target's magmatic character comes from its own cited block.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 61,
+      "source_support": "SUPPORTED",
+      "rationale": "DERIVATION_LOCAL The caption block the relation derives from places the sampled material along the southern segment named as the target, and the same block also formalizes the sample record; the target's magmatic character comes from its own cited block.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:6:block:005"
+      ]
+    },
+    {
+      "row_index": 62,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence says the corrected element proxies were used to estimate the gas content of the primary melts, so the claim is about the melts the row names as subject.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 63,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence infers from the depth of the microseismicity that the ascending melt sits, fractionates and evolves at those depths, so the claim is about that melt.",
+      "source_locators": [
+        "page:5:block:002",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 64,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence reports the compilation of published analyses of that material's samples inside the network footprint, so the claim is about the material the row names.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 65,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence asserts widespread basalt on the sea floor there; the block carries the whole sentence that the retained statement breaks off mid-word.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 66,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence asserts that sea-floor basalts are largely degassed, which is a statement about the material the row names.",
+      "source_locators": [
+        "page:2:block:001",
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 67,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence says the corrected element proxies were used to estimate the gas content of the primary melts, so the claim is about the melts the row names as subject.",
+      "source_locators": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 68,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence infers from the depth of the microseismicity that the ascending melt sits, fractionates and evolves at those depths, so the claim is about that melt.",
+      "source_locators": [
+        "page:5:block:002",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 69,
+      "source_support": "PARTIAL",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence explains what the coloured lines in the schematic show and names a simulated thermal model as where they came from. The block carries the sentence, but its topic is the figure's annotation and the model appears as the source, so the record is only partly about the subject the row shows.",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 70,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence reports that the trial one-dimensional models were used to locate events and that one was then selected, so the claim is about the velocity models the row names.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 71,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence compares the selected model against the minimum model on residuals and on how many events each locates, which is a statement about that model.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 72,
+      "source_support": "PARTIAL",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence explains what the coloured lines in the schematic show and names a simulated thermal model as where they came from. The block carries the sentence, but its topic is the figure's annotation and the model appears as the source, so the record is only partly about the subject the row shows.",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 73,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence reports that the trial one-dimensional models were used to locate events and that one was then selected, so the claim is about the velocity models the row names.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 74,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence compares the selected model against the minimum model on residuals and on how many events each locates, which is a statement about that model.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 75,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence judges the adopted ratio reasonable on residuals and event yield, so the claim is about the ratio the row names.",
+      "source_locators": [
+        "page:7:block:002",
+        "page:7:block:003"
+      ]
+    },
+    {
+      "row_index": 76,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence judges the adopted ratio reasonable on residuals and event yield, so the claim is about the ratio the row names.",
+      "source_locators": [
+        "page:7:block:002",
+        "page:7:block:003"
+      ]
+    },
+    {
+      "row_index": 77,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence describes the strike of the deep events beneath that segment's axis and its relation to the axial faults, which is a statement about that segment's seismicity.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:4:block:003"
+      ]
+    },
+    {
+      "row_index": 78,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence concludes from the resolution tests that the deep events under that segment's axis are required by the data, which is about that segment's seismicity.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:001"
+      ]
+    },
+    {
+      "row_index": 79,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence marks the degassing account of that segment's deep microseismicity as the authors' preferred one, which carries both the description and the preferred disposition the row projects.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 80,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence denies any observed active venting on that segment's axis, which matches the negated modality and is about that segment.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 81,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence denies events deeper than the stated bound beneath that segment's axis, which matches the negated modality.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:007"
+      ]
+    },
+    {
+      "row_index": 82,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence proposes the small pressure rise from degassing as the trigger of the events under that segment's axis, which matches the hypothesised modality.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:003"
+      ]
+    },
+    {
+      "row_index": 83,
+      "source_support": "PARTIAL",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence qualifies the microseismicity record as a brief snapshot and mentions the segment as the setting whose processes it illuminates. The block carries the sentence, but the record is about the observation window rather than about the segment, so the subject attribution is only partly carried.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 84,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence attributes normal velocity ratios to that segment on tomographic grounds, so the claim is about it.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:003"
+      ]
+    },
+    {
+      "row_index": 85,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence reports the compilation of published analyses of that material's samples inside the network footprint, so the claim is about the material the row names.",
+      "source_locators": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 86,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence asserts widespread basalt on the sea floor there; the block carries the whole sentence that the retained statement breaks off mid-word.",
+      "source_locators": [
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 87,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence asserts that sea-floor basalts are largely degassed, which is a statement about the material the row names.",
+      "source_locators": [
+        "page:2:block:001",
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 88,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence explains how the boundary is fixed from the deepest earthquakes at slow and ultraslow ridges, which is about the boundary the row names.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 89,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence says what the heavy line in the schematic stands for and which isotherm constrains it, which is about that boundary.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 90,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence predicts the boundary shallowing away from the intersection and gives the reason, which is about that boundary.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 91,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence suggests that melt at that boundary owes to carbon dioxide and water together, which matches the hypothesised modality and concerns the boundary the row names.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 92,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK Both blocks the record derives from carry the authors' preferred attribution of the deep events to degassing and the volume change it causes, so the description and the preferred disposition both hold; the events are placed in the layer the row names.",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:002",
+        "page:5:block:002"
+      ]
+    },
+    {
+      "row_index": 93,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence has the rising melt keep degassing and produce events in the mantle across a depth interval, so the claim concerns that layer.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 94,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence states how oceanic crust is formed, which is directly about the layer the row names.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 95,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the chain from volume change through strain rate to deep events in the mantle, so the claim concerns that layer.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:5:block:003"
+      ]
+    },
+    {
+      "row_index": 96,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence places most of the events in the mantle below a stated depth, which is about that layer.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 97,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence concludes that the mantle beneath that segment's axis is hot, which is directly about the layer the row names.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 98,
+      "source_support": "PARTIAL",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence records a gap in understanding of how the melts reach the surface and names the upper mantle as where the gap bites. The block carries the sentence, but the record is about the state of knowledge rather than about the layer, so the subject attribution is only partly carried.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:1:block:003"
+      ]
+    },
+    {
+      "row_index": 99,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence reads the sea-floor evidence as exhumed mantle supporting a tectonic origin, which is a statement about that material.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:001"
+      ]
+    },
+    {
+      "row_index": 100,
+      "source_support": "PARTIAL",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence explains what the coloured lines in the schematic show and names a simulated thermal model as where they came from. The block carries the sentence, but its topic is the figure's annotation and the model appears as the source, so the record is only partly about the subject the row shows.",
+      "source_locators": [
+        "page:3:block:001",
+        "page:7:block:012"
+      ]
+    },
+    {
+      "row_index": 101,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence reports that the trial one-dimensional models were used to locate events and that one was then selected, so the claim is about the velocity models the row names.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 102,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence compares the selected model against the minimum model on residuals and on how many events each locates, which is a statement about that model.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:004"
+      ]
+    },
+    {
+      "row_index": 103,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives how many one-dimensional models were built and where they came from, which matches the count and scope the row projects; the models are the subject the row names.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 104,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives how many one-dimensional models were built and where they came from, which matches the count and scope the row projects; the models are the subject the row names.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 105,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the crustal thickness beneath that segment with its tolerance, matching the row's value, uncertainty, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 106,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the observed depth interval of the deep events beneath that segment's axis, matching the row's bounds, unit and measured modality.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:2:block:006",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 107,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence places the deep microseismicity in an approximate depth band beneath that segment's ridge axis, matching the row's bounds, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:2:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 108,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence describes the subset drawn from the events beneath that segment for the depth test and gives the band it spans, matching the row's bounds and unit.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 109,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the size of the subset built from events beneath that segment for the depth test, matching the row's count and scope.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 110,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence bounds the depth of the off-axis events west of that segment's axis, matching the row's upper bound and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 111,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the thickness of the older crust on the western flank with its tolerance, matching the row's value and uncertainty; the quantity is a property of the layer the row names.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 112,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives how many one-dimensional models were built and where they came from, which matches the count and scope the row projects; the models are the subject the row names.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 113,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the lower bound on barium in that segment's samples, matching the row's bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 114,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the calculated gas content of melts generated along that segment, matching the row's bounds, unit, calculated modality and estimated determination.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 115,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the lower calculated range for the southern segment, matching the row's bounds, unit and estimated determination.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 116,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for that segment after fractional crystallisation, matching the row's bounds, unit and estimated determination.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 117,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence states the floor on the gas content of that segment's primary melts, matching the row's lower bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 118,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for that segment from the barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 119,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for the southern segment from the barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 120,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for that segment from the olivine-corrected barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 121,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for the southern segment from the olivine-corrected barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 122,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for that segment from the rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 123,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for the southern segment from the rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 124,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for that segment from the olivine-corrected rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 125,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for the southern segment from the olivine-corrected rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 126,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the lower bound on rubidium in that segment's samples, matching the row's bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 127,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence carries the water content proposed at the base of that boundary, matching the row's upper bound, unit and modelled determination.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 128,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives how many one-dimensional models were built. This case's projection drops the count, so only the observation's attachment to the velocity model is at stake, and the block carries that.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 129,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives how many one-dimensional models were built. This case's projection drops the count, so only the observation's attachment to the velocity model is at stake, and the block carries that.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 130,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the span of trial velocity ratios used in the location tests, matching the row's bounds; the quantity observed is the ratio the row names as subject.",
+      "source_locators": [
+        "page:7:block:002"
+      ]
+    },
+    {
+      "row_index": 131,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the span of trial velocity ratios used in the location tests, matching the row's bounds; the quantity observed is the ratio the row names as subject.",
+      "source_locators": [
+        "page:7:block:002"
+      ]
+    },
+    {
+      "row_index": 132,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the lower bound on barium in that segment's samples, matching the row's bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 133,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the calculated gas content of melts generated along that segment, matching the row's bounds, unit, calculated modality and estimated determination.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 134,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The same located sentence gives the lower calculated range for the southern segment, matching the row's bounds, unit and estimated determination.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:5:block:005"
+      ]
+    },
+    {
+      "row_index": 135,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for that segment after fractional crystallisation, matching the row's bounds, unit and estimated determination.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:006"
+      ]
+    },
+    {
+      "row_index": 136,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence states the floor on the gas content of that segment's primary melts, matching the row's lower bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 137,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for that segment from the barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 138,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for the southern segment from the barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 139,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for that segment from the olivine-corrected barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 140,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for the southern segment from the olivine-corrected barium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 141,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for that segment from the rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 142,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the pre-eruptive range for the southern segment from the rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "row_index": 143,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for that segment from the olivine-corrected rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 144,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the primary-melt range for the southern segment from the olivine-corrected rubidium proxy, matching the row's bounds, unit and estimation basis.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "row_index": 145,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the crustal thickness beneath that segment with its tolerance, matching the row's value, uncertainty, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 146,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the observed depth interval of the deep events beneath that segment's axis, matching the row's bounds, unit and measured modality.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:2:block:006",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 147,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence places the deep microseismicity in an approximate depth band beneath that segment's ridge axis, matching the row's bounds, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:2:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 148,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence describes the subset drawn from the events beneath that segment for the depth test and gives the band it spans, matching the row's bounds and unit.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 149,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence describes the subset built from events beneath that segment for the depth test. This case's projection drops the count, so only the observation's attachment to the segment is at stake, and the block carries that.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 150,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence bounds the depth of the off-axis events west of that segment's axis, matching the row's upper bound and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 151,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the lower bound on rubidium in that segment's samples, matching the row's bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 152,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the length of that segment, matching the row's value, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 153,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the length of that segment, matching the row's value and unit.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:5:block:004"
+      ]
+    },
+    {
+      "row_index": 154,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the length of the segment between the two transform faults, matching the row's value, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "row_index": 155,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence puts the boundary at the stated depth beneath the southern discontinuity, matching the row's value and approximate qualification.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 156,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the depth the boundary would take under the cold thick lithosphere explanation, matching the row's value and the hypothesised modality.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 157,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence bounds the boundary's depth off axis, matching the row's upper bound and open qualification.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 158,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the isotherm with its tolerance to which the deepest earthquakes correspond when the boundary is defined, matching the row's value, uncertainty and unit.",
+      "source_locators": [
+        "page:1:block:004"
+      ]
+    },
+    {
+      "row_index": 159,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence carries the melt fraction proposed at the base of that boundary, matching the row's value and approximate qualification.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 160,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence carries the water content proposed at the base of that boundary, matching the row's upper bound, unit and modelled determination.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 161,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the sub-solidus temperature at which melt persists for anhydrous peridotite at that boundary, matching the row's value and unit.",
+      "source_locators": [
+        "page:5:block:010",
+        "page:6:block:001"
+      ]
+    },
+    {
+      "row_index": 162,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the thickness of the older crust on the western flank with its tolerance, matching the row's value and uncertainty; the quantity is a property of the layer the row names.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 163,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the depth interval in the mantle over which continued degassing would produce events, matching the row's bounds and unit.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:5:block:009"
+      ]
+    },
+    {
+      "row_index": 164,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the depth at which extensive dry melting begins; the depth is a property of the layer the row names, and the bounds and unit match.",
+      "source_locators": [
+        "page:1:block:002"
+      ]
+    },
+    {
+      "row_index": 165,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence attributes the cold-edge effect to lithosphere of the stated age, matching the row's value and unit.",
+      "source_locators": [
+        "page:1:block:004",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "row_index": 166,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence puts the events in mantle above the stated temperature, matching the row's lower bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:002"
+      ]
+    },
+    {
+      "row_index": 167,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence carries the modelled temperature range at those depths beneath the segment axis, matching the row's bounds, unit and modelled determination.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 168,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence bounds the age of a magmatically accreted young crust, matching the row's upper bound, unit and open qualification.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:7:block:009"
+      ]
+    },
+    {
+      "row_index": 169,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives how many one-dimensional models were built. This case's projection drops the count, so only the observation's attachment to the velocity model is at stake, and the block carries that.",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:003"
+      ]
+    },
+    {
+      "row_index": 170,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the crustal thickness beneath that segment with its tolerance, matching the row's value, uncertainty, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:011"
+      ]
+    },
+    {
+      "row_index": 171,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the observed depth interval of the deep events beneath that segment's axis, matching the row's bounds, unit and measured modality.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:2:block:006",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 172,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence places the deep microseismicity in an approximate depth band beneath that segment's ridge axis, matching the row's bounds, unit and approximate qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:2:block:004",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 173,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence describes the subset drawn from the events beneath that segment for the depth test and gives the band it spans, matching the row's bounds and unit.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001",
+        "page:7:block:010"
+      ]
+    },
+    {
+      "row_index": 174,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence bounds the depth of the off-axis events west of that segment's axis, matching the row's upper bound and open qualification.",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001",
+        "page:3:block:001"
+      ]
+    },
+    {
+      "row_index": 175,
+      "source_support": "SUPPORTED",
+      "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The located sentence gives the thickness of the older crust on the western flank with its tolerance, matching the row's value and uncertainty; the quantity is a property of the layer the row names.",
+      "source_locators": [
+        "page:1:block:002",
+        "page:2:block:006"
+      ]
+    }
+  ]
+}
