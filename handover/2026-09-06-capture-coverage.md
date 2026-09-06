@@ -94,5 +94,26 @@ All twelve frozen Sol inputs and its accepted ontology were verified unchanged.
 Sol's population plans are ready but have not yet passed the parent admission
 gate. This correction is not a controlled comparison with that frozen run.
 
-Final documentation/governance checks and the broader repository check are
-pending; results will be recorded here before handoff.
+Final scoped gate after governance: 117 passed, 1 skipped. Exact selector:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q -p no:cacheprovider \
+  tests/contract_compiler/pareto/test_capture_coverage_boundary.py \
+  tests/test_inquisition.py \
+  tests/test_docs.py::test_strict_html_build_is_source_pure \
+  tests/test_docs.py::test_autodoc_and_autosummary_render_the_existing_package_root \
+  tests/test_docs.py::test_doctest_builder_executes_an_infrastructure_only_example \
+  tests/test_contract_compiler_ledger.py::test_overseer_ledger_and_projection_are_current
+```
+
+The isolated checkout used the existing project interpreter by absolute path.
+The standalone ledger checker validates all 419 entries at OVR-000419,
+`sha256:24801d5f3460666237e790806ce0c5dab5f624994da82003cf46e6da7c169448`.
+Governance commit: `672f26aa3f8abe65f7da2a43ff411e5353439f7c`.
+
+A broad repository attempt started before governance and was interrupted after
+1,092 passed, 5 failed and 3 deselected. All five failures were the then-pending
+document digest revision, not new runtime failures. A larger post-governance
+selection was interrupted after 254 passed, with no failures, in favour of the
+completed scoped gate above. Neither interrupted run is a full-suite result.
+No package/dependency work or cross-task publication was performed.
