@@ -6692,3 +6692,26 @@ measurement of the model, and what changes across them is the protocol. A cell
 that is admitted with no UNSUPPORTED row will not have shown that Core-20's list
 caused anything, only that the outcome the three stable Opus cells gave held
 once more at a moved Core coordinate. Whether the expectation holds is open.
+
+### E-0188, run-20's pin verified by the overseer at the Core-20 coordinate, unchanged
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-20/run-contract.json` and
+`producer-input-manifest.json`, `pin.py --commit c95dba7` run again by the
+overseer after E-0187, the governance ledger through OVR-000415.
+
+Run-20 pins the Core coordinate runs 18 and 19 ran at: Core commit
+`c95dba7b86bb61487bda9a52458e1ea47cce20ab`, governance head OVR-000415,
+Core-19 and Core-20 read LANDED by AST. The overseer's re-run of the pin
+rewrote nothing. No declared input moved against run-19; the harness is
+run-19's byte for byte except the run id and the producer's model fields
+(Opus 5, `claude-opus-5`). Paper-24 corrected run-19's contract's locator
+count for run-15 (142 of 351, read from `properties` as the adapter reads
+it; run-19's test had read the record's top level and found 0) and two
+carried strings that had drifted; E-0187 records them.
+
+Non-claim: no producer has run under this cell. The expected effect and the
+falsifier are E-0187's: admission within two structural returns and no
+UNSUPPORTED row at review; a third refusal or one UNSUPPORTED row falsifies.
+This cell is the candidate cell of record pending Luis's ruling.
