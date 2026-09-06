@@ -649,3 +649,7 @@ Run-22's producer (Opus 5) launched at 22:55Z on the spawn message with the run 
 ## Handover called (2026-09-06T23:05Z): no more loop
 
 Luis: proceed to handover once the two running tasks finish, no more loop. The dynamic loop is stopped. Run-22's producer reported ONTOLOGY_READY at 23:08Z (ten project classes; GeologicFeature and SeismicEvent grounded to BFO for the category with the domain vocabularies recorded as citations owed rather than recalled; 176,353 tokens); not gated, phase two not dispatched; launch 1 recorded as ended with this session and the two honest continuations written in the launch log and the handover (relaunch as ordinal 2, or a recorded two-session deviation; Luis's choice). Waiting on Core-22's report to write E-0211 and close.
+
+### Core-22 landed, recovered (23:40Z); the session closes
+
+Core-22's three commits are on main; the agent was stopped by accident before its report and could not be resumed, so E-0211 is written from the artifacts: the convention in the skill, the aggregating refusal in the compiler, OVR-000418 with matching digests, the touched tests (334) and Core's full suite at HEAD (3,134 passed, 3 skipped) run by the overseer in a throwaway worktree. Core-23 not dispatched. The handover file, the journal, the ledger and the memory carry everything a fresh session needs; the run-22 producer session ends with this one. This session stops here at Luis's instruction.

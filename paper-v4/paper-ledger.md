@@ -7992,3 +7992,45 @@ OVR-000415, Core-19 and Core-20 LANDED, packs chronology 0.1.0, metrology
 at its identity and recorded as the one input moved since run-21.
 
 Non-claim: the producer has not run.
+
+### E-0211, Core-22 landed: every population-plan locator is resolved against its retained source at admission under the fixture's convention codified; recovered from the artifacts after the agent was stopped
+
+Date: 2026-09-06
+
+Sources: Core commits 345a989 (RED), 1324ccc (GREEN: population.py, the
+skill, decision 27 in `design/KNOWLEDGE_PACKS.md`, tests/test_inquisition.py)
+and 70eec64 (governance entry OVR-000418, seven revised documents with
+before and after digests); the skill's structured-source section as
+committed; `_resolve_locators` in `src/malleus/_contract_pipeline/population.py`;
+the tests Core-22 touched run by the overseer (334 passed); Core's full
+suite at HEAD run by the overseer in a throwaway worktree: 3,134 passed, 3
+skipped (Core-21's 3,126 plus eight). The agent (Opus 5) was stopped by
+accident at 23:08Z after its last commit and before its report, and cannot
+be resumed; this entry is written from what it committed, not from a
+report.
+
+The change, as committed. The convention: a locator over a source retained
+as text/csv or application/x-ndjson is `row:N:field`, N counting data rows
+from 0, the CSV header not a row and `field` one of its header names, a
+JSONL line a row and `field` a top-level key, `field[i]` element i of an
+array value; nothing else is a locator. The compiler parses each declared
+structured source once, resolves every derivation and gap locator, and
+refuses once with `LOCATOR_NOT_RESOLVABLE` carrying every miss (a row past
+the end, an unknown field, an index past the array, a source not readable
+as its media type); resolvability only, no value comparison (a derivation
+names the field a value came from). The pre-flight list in the skill
+carries the new reason, and the `event_participations` bullet Core-21 left
+incomplete now states both conditions (a nonempty Event role and an
+EventParticipation type in the compiled contract).
+
+What it closes: E-0202 (Core never resolved a locator) and E-0204's cause F
+(the undeclared convention). Under this Core, shop-01's plans, numbered
+from 1 by physical line, would refuse at admission with every miss named,
+instead of reaching a reviewer at 20:40Z.
+
+Not done: Core-23 (a valid-time kind for "none stated", E-0203 cause C)
+was not dispatched; it is the next Core entry on Luis's word, one writer on
+Core's ledger.
+
+Non-claim: no paper cell ran under this Core; every frozen cell is pinned
+at c95dba7, which predates it.
