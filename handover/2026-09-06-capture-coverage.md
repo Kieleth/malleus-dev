@@ -117,3 +117,17 @@ document digest revision, not new runtime failures. A larger post-governance
 selection was interrupted after 254 passed, with no failures, in favour of the
 completed scoped gate above. Neither interrupted run is a full-suite result.
 No package/dependency work or cross-task publication was performed.
+
+## Local main integration
+
+The six isolated commits landed through `44e280834a0735be7a6ff3b2f21597e9d3cae48c`.
+All eight scoped files match the validated isolated branch exactly. The original
+TDD commits remain reachable through the local tag
+`evidence/capture-coverage-2026-09-06`, pointing at
+`ae71c8a16d1e648fb43d51603d2fbd31b435f11c`. The existing ledger guard requires
+this evidence reference because cherry-picking gives the main copies different
+IDs. Nothing was rewritten. Any later publication must carry this evidence tag
+with the commits; no remote push occurred in this task.
+
+On local main, all 419 ledger entries validate and the six new cases plus the
+existing installed-playbook guard pass, 7 passed. Unrelated work remains intact.
