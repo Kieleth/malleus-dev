@@ -9,7 +9,7 @@ Purpose: a fresh session continues the loop from this file, the journal (`handov
 - Iteration 10 (v4.11) added `paper-v4/experiment-v4/type_set_closure.py`: a type set must list every surface subtype of every listed type; the next cell's binder calls it before writing the acceptance binding (shop-01's did).
 - Luis's rulings of 2026-09-06 ~20:55Z are in E-0205 verbatim. Master plan items 9 to 12 in `paper-v4/paper-master-plan.md`.
 - Latest paper commit on main at this writing: 66f56c5 (E-0205). Gate at that commit: 1592 passed (evaluation-v4 ignored while Paper-28 writes there).
-- Next free ledger entry: E-0209 (E-0206 questions v3, E-0207 protocol v3, E-0208 Core-21 written). Only the overseer writes `paper-v4/paper-ledger.md`; agents never do.
+- Next free ledger entry: E-0211 (E-0209 run-22 opening, E-0210 its pin written; Core-22's landing entry next). Only the overseer writes `paper-v4/paper-ledger.md`; agents never do.
 
 ## In flight (agents dispatched by this session; their reports arrive as task notifications; if the session is lost, their work is on disk, uncommitted unless they committed as instructed)
 
@@ -18,7 +18,7 @@ Purpose: a fresh session continues the loop from this file, the journal (`handov
 3. Paper-28 (Opus): DONE 21:30Z, E-0207. `paper-v4/evaluation-v4/review-protocol-v3.json`, v3 task template and blank record, `review.py` accepting v2 and v3 (declared evidence surface and locator convention; coverage per required semantic with derived responsiveness; assembly descriptor; controls; LOCATOR_NOT_RESOLVABLE → NOT_EVALUABLE by rule; support once per witness). Commits RED/GREEN, no push.
 
 
-4. Paper-29 (Opus), dispatched 21:40Z: harness v4.12 and run-22 opened as the second replicate of the record condition (producer condition byte for byte with run-21; binder reaches subject-less records of listed subject-bearing types as ENTITY rows; closure check inside the binder; canonical profile staging; the thirty questions of competency-questions-v3.json; review package under protocol v3). Commits RED/GREEN by pathspec, no push, no ledger entry (the overseer writes E-0208 as run-22's opening from its report). After it: pin re-run, launch the run-22 Opus producer, thirty type sets at acceptance.
+4. Paper-29: DONE 22:45Z (765862e, db6cb22; E-0209 opening, E-0210 pin; gate 1746). Run-22's Opus producer LAUNCHED 22:55Z (workspace private/paper-v4-v4-run-22/producer; launch log open at paper commit 59c3159); on its ONTOLOGY_READY: gate with run-22/compile_ontology_candidate.py, citation check, thirty type sets (one per id in competency-questions-v3.json), bind with `run-22/bind_from_surface.py --surface ... --contract gate/attempt-0N/validated-contract.json --type-sets ... --replay-receipt PENDING --output ...` (the binder now requires --contract and runs the closure itself), stage accepted/, record, dispatch phase two with run-21's message text and v4:22 ids. Paper-29 was: harness v4.12 and run-22 opened as the second replicate of the record condition (producer condition byte for byte with run-21; binder reaches subject-less records of listed subject-bearing types as ENTITY rows; closure check inside the binder; canonical profile staging; the thirty questions of competency-questions-v3.json; review package under protocol v3). Commits RED/GREEN by pathspec, no push, no ledger entry (the overseer writes E-0208 as run-22's opening from its report). After it: pin re-run, launch the run-22 Opus producer, thirty type sets at acceptance.
 
 ## Next steps in order (all ruled)
 
