@@ -827,8 +827,9 @@ itself and in your report. A later Core change declares the convention and
 resolves the locator at admission; until it does, do not expect a reader to
 share yours.
 
-The worked plan below populates two rows of one CSV under the shipped
-`state-version` profile. The source, byte for byte:
+The worked plan below populates the one data row of one CSV under the
+shipped `state-version` profile, as two entities and the relation between
+them. The source, byte for byte:
 
 <!-- malleus-nascent-structured-plan:start -->
 ```csv

@@ -1,0 +1,289 @@
+{
+  "schema": "malleus.paper-v4.source-grounded-review-protocol/v3",
+  "status": "FROZEN_BEFORE_NEXT_CELL",
+  "protocol_file": "paper-v4/evaluation-v4/review-protocol-v3.json",
+  "protocol_file_version": "v3",
+  "supersedes": {
+    "protocol_file": "paper-v4/evaluation-v4/review-protocol-v2.json",
+    "sha256": "sha256:88b69f6e80a3b9eac3a2c990178186df9c52fed3ced5c4e020162b0c202fa795",
+    "binds": "CELLS_OPENED_AFTER_THIS_FILE_IS_FROZEN",
+    "still_binds": [
+      "run-09",
+      "run-10",
+      "run-11",
+      "run-12",
+      "run-13",
+      "run-14",
+      "run-15",
+      "run-16",
+      "run-17",
+      "run-18",
+      "run-19",
+      "run-20",
+      "run-21"
+    ],
+    "does_not_bind": [
+      "shop-01"
+    ],
+    "does_not_bind_reason": "shop-01 closed before this file existed and its record was frozen unvalidated (E-0201, E-0204). Whether that cell is re-reviewed under this protocol is a ruling, not a consequence of freezing this file.",
+    "difference": "EVIDENCE_SURFACE_DECLARED_PER_CELL, LOCATORS_RESOLVED, SUPPORT_JUDGED_PER_WITNESS, RESPONSIVENESS_DERIVED_FROM_COVERAGE, ASSEMBLY_AS_DESCRIPTOR, CONTROLS_REPORTED"
+  },
+  "frozen_before": "THE_FIRST_CELL_OPENED_AFTER_2026-09-06",
+  "implements": [
+    "handover/2026-09-06-grading-rca.md",
+    "handover/2026-09-06-shop-01-rca.md"
+  ],
+  "purpose": [
+    "SOURCE_SUPPORT",
+    "SEMANTIC_COVERAGE"
+  ],
+  "evidence_surface": {
+    "declared_by": "REVIEW_INPUT_MANIFEST",
+    "declared_by_note": "v2 fixed one surface in the protocol and a row cell could not be validated against it. Here the protocol names the kinds it recognises and the manifest of each cell declares which one that cell uses, the source materials with their digests, and the locator convention.",
+    "surface_kinds": {
+      "SELECTED_READING_TEXT_LAYER": {
+        "locator_kind": "SELECTED_READING_BLOCK_ID",
+        "locator_form": "the block id as the selected reading writes it",
+        "resolution": "MEMBERSHIP_IN_THE_SELECTED_READING_BLOCK_IDS",
+        "fixed_identity_keys": [
+          "competency_questions_sha256",
+          "selected_reading_sha256",
+          "source_sha256"
+        ],
+        "source_pdf_role": "OPTIONAL_PROJECTION_FIDELITY_CROSS_CHECK_ONLY"
+      },
+      "STRUCTURED_ROWS": {
+        "locator_kind": "SOURCE_ROW_FIELD",
+        "locator_form": "SOURCE_ID_HASH_ROW_FIELD",
+        "locator_example": "source:small-shop:warehouse#row:0:order",
+        "resolution": "OPENED_IN_THE_DECLARED_SOURCE_FILE_UNDER_THE_DECLARED_CONVENTION",
+        "fixed_identity_keys": [
+          "competency_questions_sha256",
+          "source_sha256"
+        ],
+        "source_sha256_shape": "AN_OBJECT_KEYED_BY_SOURCE_ID",
+        "locator_convention_keys": {
+          "form": "SOURCE_ID_HASH_ROW_FIELD",
+          "first_row_index": "0_OR_1, the index the first row carries",
+          "csv_header_is_a_row": "TRUE_OR_FALSE, whether a CSV header line is counted as a row"
+        },
+        "locator_convention_note": "shop-01's producer counted physical lines from 1 with the CSV header as line 1 and its review task counted data rows from 0 with the header excluded; neither was declared anywhere, and thirteen of fifteen derivations read as unresolvable under the convention the reviewer used (E-0204). A cell that declares neither knob is refused."
+      }
+    },
+    "graph_claim_path": "QUERY_ROW_TO_TRACE_POPULATION_RECORD_TO_CAPTURE_ASSERTION_OR_SOURCE_ROW"
+  },
+  "fixed_identities": {
+    "declared_by": "REVIEW_INPUT_MANIFEST",
+    "required_keys_by_surface_kind": {
+      "SELECTED_READING_TEXT_LAYER": [
+        "competency_questions_sha256",
+        "selected_reading_sha256",
+        "source_sha256"
+      ],
+      "STRUCTURED_ROWS": [
+        "competency_questions_sha256",
+        "source_sha256"
+      ]
+    }
+  },
+  "stage_identities": {
+    "declared_by": "REVIEW_INPUT_MANIFEST",
+    "required_keys": [
+      "accepted_ontology_sha256",
+      "ledger_head",
+      "population_trace_summary_sha256",
+      "query_binding_sha256",
+      "query_result_sha256",
+      "query_trace_summary_sha256",
+      "replay_receipt_sha256"
+    ]
+  },
+  "question_ids": {
+    "declared_by": "REVIEW_INPUT_MANIFEST_AND_THE_COMPETENCY_QUESTION_FILE",
+    "note": "v2 pinned CQ-01 to CQ-04 and refused any other cell's questions. Here the manifest declares the cell's question ids and they must equal, in order, the ids of the competency question file the manifest binds by digest.",
+    "required_semantics": "EVERY_QUESTION_CARRIES_AT_LEAST_ONE"
+  },
+  "judgments": {
+    "source_support": [
+      "SUPPORTED",
+      "PARTIAL",
+      "UNSUPPORTED",
+      "NOT_EVALUABLE"
+    ],
+    "source_support_unit": "ONE_DISTINCT_WITNESS",
+    "source_support_unit_note": "Run-21 judged 490 rows over 182 witnesses. Support is judged once per distinct witness and the rows that share a witness reference that judgement, so the same fact is never judged twice with two outcomes.",
+    "row_resolution": [
+      "VALUE_MATCHES_ROW",
+      "VALUE_DERIVED_FROM_ROW",
+      "VALUE_DIFFERS_FROM_ROW",
+      "LOCATOR_NOT_RESOLVABLE"
+    ],
+    "row_resolution_applies_to": "STRUCTURED_ROWS",
+    "row_resolution_definitions": {
+      "VALUE_MATCHES_ROW": "the record's value on that path equals the value in the field the locator names",
+      "VALUE_DERIVED_FROM_ROW": "the value follows from the field by a stated transformation: an identifier prefix, a constant from a coded field, a unit attached to a bare number",
+      "VALUE_DIFFERS_FROM_ROW": "the locator resolves and the value neither equals the field nor follows from it by a stated transformation",
+      "LOCATOR_NOT_RESOLVABLE": "the locator does not name a declared source, or the row is outside the file under the declared convention, or the field is absent from that row"
+    },
+    "row_resolution_note": "VALUE_DERIVED_FROM_ROW is added because shop-01's task read equality where the grammar means derivation: four endpoint identifiers minted by prefixing a row value and a relation type taken from a coded field can never equal their field, and the Small Shop fixture's own hand-written plan derives ORDER_CONTAINS_UNIT the same way, so the fixture would have failed its own review (E-0204). VALUE_DIFFERS_FROM_ROW is kept from the shop-01 task because without it a locator that resolves to an unfaithful value has no token.",
+    "locator_not_resolvable_rule": "A witness whose resolution is LOCATOR_NOT_RESOLVABLE carries source_support NOT_EVALUABLE, never PARTIAL and never UNSUPPORTED, and records the reason in its rationale. Two sessions labelled the same unresolvable locator PARTIAL and UNSUPPORTED in one cell; the label for a mechanical fact is a rule, not a judgement (E-0204).",
+    "coverage_absent_reasons": [
+      "NOT_MODELLED",
+      "WITHHELD_STATEMENT",
+      "UNREACHED_RECORD",
+      "NOT_IN_SOURCE",
+      "LOCATOR_NOT_RESOLVABLE"
+    ],
+    "coverage_rule": "For each item of the question's required_semantics, in the question file's order, the reviewer names the row index of a row whose witness is SUPPORTED, or whose resolution is VALUE_DERIVED_FROM_ROW, and whose projected fields carry that item; or names one absent reason from the list above and writes why.",
+    "question_responsiveness": [
+      "COVERED",
+      "PARTIAL",
+      "NONE"
+    ],
+    "question_responsiveness_is": "DERIVED_BY_THE_VALIDATOR",
+    "question_responsiveness_derivation": "COVERED when every required semantic names a row; NONE when none does; PARTIAL otherwise, with the absent items as the record of what is missing. The record states the label and the validator refuses a label its derivation does not produce.",
+    "question_responsiveness_note": "v2's chosen label folded a coverage failure, a withheld statement, an unreachable record, a superset binding and an unjoined answer into one word whose threshold each session set for itself; fourteen of twenty-eight labels were PARTIAL for five different reasons, and CQ-03's label did not reproduce under a blind re-judgement (E-0191). The reviewer's judgement moves to the unit that reproduced: one row against one thing.",
+    "assembly": [
+      "ONE_ROW",
+      "LINKED_ROWS",
+      "UNLINKED_ROWS"
+    ],
+    "assembly_is": "A_DESCRIPTOR_NEVER_A_GRADE",
+    "assembly_note": "Recorded per question and never an input to any label. It reports what run-21's CQ-04 PARTIAL was reporting, that the answer is two claim rows nothing joins, without lowering a label for an exclusion the protocol makes on purpose."
+  },
+  "controls": {
+    "declared_by": "THE_COMPETENCY_QUESTION_FILE",
+    "field": "expected_outcome",
+    "kinds": {
+      "NOT_IN_SOURCE": {
+        "expected_question_responsiveness": "NONE",
+        "reads": "a COVERED here is a fabrication finding"
+      },
+      "EXCLUDED_SURFACE": {
+        "expected_question_responsiveness": "NONE",
+        "reads": "the answer is only in a figure or a table, which the question file's scope excludes"
+      },
+      "PARAPHRASE": {
+        "expected_question_responsiveness": "THE_SAME_AS_THE_NAMED_QUESTION",
+        "names": "of",
+        "reads": "a difference is a reliability finding"
+      }
+    },
+    "validator_behaviour": "REPORTS_EACH_CONTROL_OUTCOME_AS_A_FINDING_AND_REFUSES_NOTHING",
+    "note": "Every question of the four-question set has its answer in the paper, so nothing measured the false-positive side. A control is reviewed like any other question; only its outcome is read differently, and by a person."
+  },
+  "authorship": {
+    "preliminary_evaluator_kind": "CLAUDE_PRELIMINARY",
+    "preliminary_evaluator_kind_note": "v2 names CODEX_PRELIMINARY and every cell since run-09 recorded a deviation from it. Codex's tokens were exhausted on 2026-09-04 (handover/2026-09-04-overseer-takeover.md), so this protocol names the evaluator that actually runs. A cell using any other kind records a deviation, as before, and does not edit this file.",
+    "ratifier_evaluator_kind": "HUMAN_AUTHOR",
+    "ratifier_actor_id": "actor:luis",
+    "evidence_rule": "ONLY_A_HUMAN_RATIFIED_RECORD_IS_PAPER_EVIDENCE"
+  },
+  "review_materials": {
+    "required": {
+      "SELECTED_READING_TEXT_LAYER": [
+        "selected_reading",
+        "competency_questions",
+        "query_binding",
+        "query_result",
+        "population_trace",
+        "retained_capture",
+        "query_trace_summary"
+      ],
+      "STRUCTURED_ROWS": [
+        "competency_questions",
+        "query_binding",
+        "query_result",
+        "population_trace",
+        "query_trace_summary"
+      ]
+    },
+    "sources_are_materials": true,
+    "sources_are_materials_note": "Every source the evidence surface declares is also a material, by the same path and the same digest. On the text layer the selected reading is that material; on rows there is one per source file.",
+    "additional_permitted": true,
+    "additional_permitted_note": "A cell may list more, a retained population plan per source among them. v2 fixed the list at seven and shop-01 had to bind four retained plans it could not name.",
+    "retained_from_v2": {
+      "retained_capture": "The review task has named the retained capture as an input since run-02 and the v1 manifest could not list it. It is a material.",
+      "query_trace_summary": "The same debt for the per-witness trace. It is a material."
+    }
+  },
+  "withheld_from_producer": [
+    "competency_questions",
+    "query_binding",
+    "answer_oracle",
+    "canonical_answer",
+    "automated_score",
+    "manuscript_results"
+  ],
+  "forbidden_record_fields": [
+    "accuracy",
+    "answer",
+    "answer_key",
+    "answers",
+    "automated_score",
+    "canonical_answer",
+    "correctness",
+    "exact_match",
+    "numeric_score",
+    "oracle",
+    "oracle_sha256",
+    "score"
+  ],
+  "record": {
+    "schema": "malleus.paper-v4.source-grounded-review/v3",
+    "root_keys": [
+      "inputs",
+      "preliminary",
+      "questions",
+      "ratification",
+      "schema",
+      "status",
+      "witnesses"
+    ],
+    "witness_keys": [
+      "rationale",
+      "resolution",
+      "source_locators",
+      "source_support",
+      "witness_key"
+    ],
+    "witness_keys_note": "resolution is carried on a STRUCTURED_ROWS cell and is absent on a SELECTED_READING_TEXT_LAYER cell, where a block id is resolved by membership and there is no row to open.",
+    "question_keys": [
+      "assembly",
+      "coverage",
+      "question_id",
+      "question_responsiveness",
+      "responsiveness_rationale",
+      "rows",
+      "source_locators"
+    ],
+    "row_keys": [
+      "row_index",
+      "witness_key"
+    ],
+    "coverage_keys": [
+      "absent_reason",
+      "note",
+      "row_index",
+      "semantic"
+    ],
+    "statuses": [
+      "BLANK",
+      "PRELIMINARY_COMPLETE",
+      "HUMAN_RATIFIED",
+      "HUMAN_REJECTED"
+    ]
+  },
+  "validator": {
+    "path": "paper-v4/evaluation-v4/review.py",
+    "entry_points": [
+      "validate_protocol",
+      "validate_review_input_manifest",
+      "validate_blank_review",
+      "validate_review",
+      "control_outcomes"
+    ],
+    "checks": "identities, the declared surface and its locators, witness uniqueness and row coverage, the unresolvable-locator rule, coverage against required_semantics, and the derived responsiveness label",
+    "never": "chooses, changes or aggregates a judgment"
+  }
+}

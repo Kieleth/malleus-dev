@@ -1,0 +1,74 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:e51959bacbee61f35a23b6bfe113ee30383013d5d2630b5cd25732bf0586e646",
+        "before_digest": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:6b0018974e769cf06918c1dace64259e5c5e0aab03d66dbbee01fd5be47bf5ca",
+        "before_digest": "sha256:ea49fdf603ad4fac749c9ba7d8320ddf97b05070e0b0ba098bd70f145467a74b",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:9df7833078e7db1a4fa021088f50ae5fb0e8a7128509ac329a91d8ea89dc4850",
+        "before_digest": "sha256:2d518060f6e55778c8f426fda54a7c056ad17557bad2340dded5be087052dc5f",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:634b2ff3ba7faa33d8574ebb5265ec21bdf1de07e8f96c8e1a64e04cbeeff8d5",
+        "before_digest": "sha256:abb625fd7ebc00c389c60a05cc58e78071feea248b566830844d249143dc91a7",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json"
+      },
+      {
+        "after_digest": "sha256:0ad62294f3d67fb80d7993292a8b2ab3825739befd07fb3036cfab8fa0d724d4",
+        "before_digest": "sha256:eb13559485083ccd056267f01116df47501ee82a93a7d7233e1276e1b439a484",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:b0a1e35a53498da39e2a6ff2e4819e7703cae247ea240fe7efd0d3615baa0db3",
+  "entry_id": "OVR-000416",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:19353a947c5094e8129a2db80c46a0596786594877088015aeb259229caeabe9",
+  "recorded_at": "2026-09-06T21:20:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "e5ad722baff876f0bfc0ca42843242bb86c56af8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "75c6291c538ee9b7836a5b5a42493f561311d5b7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 416,
+  "subject": {
+    "id": "plan-grammar-and-shop-evidence",
+    "type": "DOCUMENT"
+  },
+  "summary": "The Small Shop public-population evidence is re-frozen at the current Core and joins testpaths, and the acolyte's structured-source path carries the plan grammar with one worked plan a guard compiles.",
+  "why": "E-0200 re-ran the public-path driver at the current Core: graph, records, queries and counts reproduce byte for byte and six identities do not, having moved at e4fa5fd, which re-pinned two of its own fixtures and not this one. The fixture's test_run.py sat outside pyproject's testpaths, so its failure on the evidence bytes was invisible to a bare pytest; the directory is listed now and the file carries a fresh run's bytes, the eight sections E-0200 names as unchanged staying byte-identical. E-0203 gave the same skill and the same Core five row files: two of its three runner refusals trace to a structured-source path that is one sentence naming no grammar, one of them through the parent, and E-0204 found the row-numbering convention nobody declared. The skill now states the grammar string, the canonical bytes, the twelve closed root keys, the closed shapes below them, the profile's identity against a staged file's digest, the two valid-time kinds, that a derivation names the field and not the value, and that the locator convention is undefined. Decision 26 carries the figures. No pack, adapter or compiler change, and admission is unchanged."
+}
