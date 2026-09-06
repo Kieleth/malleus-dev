@@ -6394,3 +6394,26 @@ measurement of the model, and what changes across them is the protocol. A cell
 that returns fewer defects will not have shown that the paragraph caused it,
 only that the outcome the RCA predicted from it occurred. Whether the
 expectation holds is open.
+
+### E-0184, run-19's pin verified by the overseer at the Core-20 coordinate, unchanged
+
+Date: 2026-09-06
+
+Sources: `paper-v4/experiment-v4/run-19/run-contract.json` and
+`producer-input-manifest.json`, `pin.py --commit c95dba7` run again by the
+overseer after E-0183, the governance ledger through OVR-000415.
+
+Run-19 pins the Core coordinate run-18 ran at: Core commit
+`c95dba7b86bb61487bda9a52458e1ea47cce20ab`, governance head OVR-000415,
+Core-19 and Core-20 read LANDED by AST. The overseer's re-run of the pin
+rewrote nothing. No declared input moved against run-18; the harness is
+run-18's byte for byte except the run id and the producer's model fields
+(Sonnet 5, `claude-sonnet-5`). Paper-23 recomputed run-16's anchor figure
+from its capture under a stated rule (48 of 99 proposed subjects formalized
+only by assertions that formalize no other field of the record) and carries
+the rule in the contract.
+
+Non-claim: no producer has run under this cell. The expected effect and the
+falsifier are E-0183's: fewer than run-16's fifty defects at the first runner
+attempt and admission within two returns; fifty or more, or a third refusal,
+falsifies.
