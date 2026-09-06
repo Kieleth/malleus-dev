@@ -2427,6 +2427,169 @@ class TestSkillsAreInstallable:
             "with_locator": 0,
         }
 
+    STRUCTURED_PLAN_CONTRACT = b"""\
+id: https://example.malleus.dev/acolyte-structured
+name: acolyte_structured
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  test: https://example.malleus.dev/acolyte-structured/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  ProjectLinkKind:
+    permissible_values:
+      ORDER_CONTAINS_UNIT:
+classes:
+  ProjectObject:
+    is_a: Entity
+    slot_usage:
+      name:
+        required: true
+  ProjectLinksRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: ProjectLinkKind
+        required: true
+        equals_string: ORDER_CONTAINS_UNIT
+      source_id:
+        range: ProjectObject
+        required: true
+      target_id:
+        range: ProjectObject
+        required: true
+"""
+
+    def test_structured_source_plan_example_compiles(self, tmp_path, capsys):
+        """Core-21. The skill's whole instruction for a structured source was
+        one sentence: write an adapter that emits the same neutral population
+        plan. It named no grammar, no encoding, no root keys and no shapes, so
+        a producer given rows had to learn them from refusals, and two of its
+        three returns were things Core enforces and the skill never stated.
+        The section now carries a worked plan. Parse it out, canonicalise it
+        and compile it, so a plan the compiler would refuse fails here rather
+        than in a producer's fourth attempt."""
+        from importlib import import_module
+        from hashlib import sha256
+
+        from tests.contract_compiler.pareto.test_knowledge_change_history import (
+            _generic_compilation,
+        )
+        from tests.contract_compiler.pareto.test_protocol_machine import _effective
+
+        compiler = import_module("malleus.compiler")
+        population = import_module("malleus._contract_pipeline.population")
+
+        assert main(
+            ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
+        ) == 0
+        capsys.readouterr()
+        installed_skill = (
+            tmp_path / ".codex" / "skills" / "malleus-acolyte" / "SKILL.md"
+        )
+        source_skill = self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        assert installed_skill.read_bytes() == source_skill.read_bytes()
+        skill = installed_skill.read_text(encoding="utf-8")
+        heading = "### Current structured-source plan template"
+        marker = "malleus-nascent-structured-plan"
+        start, end = f"<!-- {marker}:start -->", f"<!-- {marker}:end -->"
+        assert heading in skill and start in skill and end in skill, (
+            "the acolyte carries no worked population plan; the structured "
+            "path names no grammar and a producer has to learn it by refusal"
+        )
+        section = skill.split(heading, 1)[1].split("\n## ", 1)[0]
+        region = section.split(start, 1)[1].split(end, 1)[0]
+        plan = json.loads(region.split("```json", 1)[1].split("```", 1)[0])
+        source_bytes = (
+            region.split("```csv\n", 1)[1].split("\n```", 1)[0] + "\n"
+        ).encode("utf-8")
+
+        # The closed sets are Core's, so read them from Core and let the
+        # example fail here when Core moves.
+        assert set(plan) == population._ROOT_FIELDS
+        assert plan["grammar"] == population._GRAMMAR
+        assert {gap["kind"] for gap in plan["gaps"]} <= population._GAP_KINDS
+        assert set(plan["adapter"]) == {"adapter_id", "version"}
+        assert all(
+            set(member) == {"source_id", "sha256"} for member in plan["sources"]
+        )
+        assert all(
+            set(member) == {"evidence_id", "sha256"} for member in plan["evidence"]
+        )
+        assert set(plan["history_profile"]) == {"profile_id", "sha256"}
+        assert set(plan["valid_time"]) == {"kind", "value"}
+        assert plan["valid_time"]["kind"] in {"INSTANT", "ORDER_ONLY"}
+        assert all(
+            set(derivation) == {"locator", "path", "record_id", "source_id"}
+            for derivation in plan["derivations"]
+        )
+        assert all(
+            set(gap) == {"kind", "locator", "source_id", "statement"}
+            for gap in plan["gaps"]
+        )
+        assert set(plan["records"]) == {"entities", "relations"}
+
+        # The prose names every root key and every gap kind, and invents
+        # neither a kind nor a refusal.
+        for field in sorted(population._ROOT_FIELDS):
+            assert f"`{field}`" in section, field
+        named = set(re.findall(r"[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+", section))
+        assert population._GAP_KINDS <= named
+        invented = sorted(
+            named
+            - population._GAP_KINDS
+            - {reason.name for reason in population.PopulationPlanRefusalReason}
+            - {"ORDER_ONLY", "ORDER_CONTAINS_UNIT", "STATE_VERSION_PROFILE"}
+        )
+        assert not invented, (
+            f"the structured section names refusals or kinds Core has not: {invented}"
+        )
+
+        # The profile digest is the shipped profile's identity, never a staged
+        # file's digest: that mistake cost a producer a whole return.
+        profile = compiler.STATE_VERSION_PROFILE
+        assert plan["history_profile"]["profile_id"] == profile.profile_id
+        assert plan["history_profile"]["sha256"] == profile.identity
+        assert plan["sources"][0]["sha256"] == (
+            "sha256:" + sha256(source_bytes).hexdigest()
+        )
+
+        compiled = _generic_compilation(self.STRUCTURED_PLAN_CONTRACT)
+        partial = _effective(
+            validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
+        )
+        assert population._is_digest(plan["contract_identity"])
+        assert plan["contract_identity"] != partial.identity
+        plan["contract_identity"] = partial.identity
+        compilation = compiler.compile_population_plan(
+            plan,
+            partial_contract=partial,
+            contract_view=compiled.view,
+            base_state=compiler.PopulationBaseState.empty(),
+            history_profile=profile,
+        )
+        assert compilation.status is compiler.PopulationPlanStatus.CHANGE_SET
+        assert compilation.plan_id == plan["plan_id"]
+        assert compilation.canonical_plan_bytes == json.dumps(
+            plan,
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        assert {operation.record_id for operation in compilation.operations} == {
+            record["id"]
+            for family in plan["records"].values()
+            for record in family
+        }
+        assert compilation.source_record_ids == (plan["sources"][0]["source_id"],)
+        assert plan["evidence"][0]["evidence_id"] in compilation.evidence_record_ids
+        assert compilation.valid_time.kind == plan["valid_time"]["kind"]
+        assert compilation.supersedes == ()
+
     def test_nascent_playbook_names_live_python_and_cli_surfaces(
         self, tmp_path, capsys
     ):

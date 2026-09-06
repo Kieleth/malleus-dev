@@ -259,5 +259,6 @@ testpaths = [
     "tests/test_recon_ontology.py",
     "tests/test_recon.py",
     "research/methodology_gedanken_e2e/tests",
+    "research/ontology_driven_kg_realization/experiments/small_shop/public_population",
 ]
 python_files = ["test_*.py"]
