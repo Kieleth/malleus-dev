@@ -7820,3 +7820,54 @@ runs 09 to 21 or shop-01 changes.
 
 Non-claim: no cell has been run against this set; whether the tiers
 separate cells is what the replicates will show.
+
+### E-0207, review protocol v3 is frozen: a declared evidence surface per cell, support once per witness, coverage per required semantic with a derived responsiveness label, assembly as a descriptor, controls, and a rule for an unresolvable locator
+
+Date: 2026-09-06
+
+Sources: `paper-v4/evaluation-v4/review-protocol-v3.json`
+(`sha256:17b5744a71a1e6a9ab1985f43b3e28d4d683f2d7d369e7decdb375171c2edc21`),
+`review-task-protocol-v3.template.md`, `review-record-protocol-v3.blank.md`,
+`review.py` (v2 kept, v3 added, dispatch by the record's declared version),
+`test_review_protocol_v3.py` (63 tests; RED e069c17 "41 failed, 22 passed",
+the 22 being the v2 regression), written by Paper-28 (Opus 5) from
+`handover/2026-09-06-grading-rca.md` and the shop-01 RCA at Luis's ruling
+(E-0205, item 3). Paper-28's GREEN content landed in commit 82dbb34, a Core
+session's commit that swept the paper files Paper-28 had staged in the
+shared index; the content is intact and the gate at HEAD reads 1655 passed.
+
+As frozen. Per witness, once: `source_support` (SUPPORTED, PARTIAL,
+UNSUPPORTED, NOT_EVALUABLE); on a STRUCTURED_ROWS surface, `row_resolution`
+(VALUE_MATCHES_ROW, VALUE_DERIVED_FROM_ROW, VALUE_DIFFERS_FROM_ROW,
+LOCATOR_NOT_RESOLVABLE), and a LOCATOR_NOT_RESOLVABLE witness carries
+NOT_EVALUABLE, never PARTIAL or UNSUPPORTED (E-0204). Per question: coverage
+per required semantic, a row index or ABSENT with one of NOT_MODELLED,
+WITHHELD_STATEMENT, UNREACHED_RECORD, NOT_IN_SOURCE, LOCATOR_NOT_RESOLVABLE;
+`question_responsiveness` COVERED, PARTIAL or NONE derived by the validator
+from the coverage, a stated label the derivation does not produce refused;
+`assembly` ONE_ROW, LINKED_ROWS or UNLINKED_ROWS, a descriptor and never a
+grade. Controls (NOT_IN_SOURCE, EXCLUDED_SURFACE expecting NONE; PARAPHRASE
+expecting the named question's label) reported as findings, refusing
+nothing. The manifest declares the surface kind (SELECTED_READING_TEXT_LAYER
+or STRUCTURED_ROWS), the source materials with digests, and for rows the
+locator convention; row locators take the form `<source_id>#row:N:field`
+and the validator resolves them. The record carries a `witnesses` array;
+each `rows` entry is `{row_index, witness_key}` with the key derived as
+`relation_id` for RELATION and `record_id` otherwise, which yields run-21's
+182 witnesses exactly. v3 names CLAUDE_PRELIMINARY as the preliminary
+evaluator, where v2 named CODEX_PRELIMINARY and every cell since run-09
+recorded a deviation. Every v2 record, human and preliminary, of runs 13 to
+21 validates unchanged under v2 (regression in the new tests).
+
+Where Paper-28 departed from the RCA, as it reported: a fourth row token
+kept for a value that neither equals nor follows from its field; no
+resolution token on the text layer; the record's shape changes (witnesses
+out of rows); a SUPPORTED-or-derived witness may carry a semantic; the
+locator form is tightened, so shop-01's record would need its locators
+rewritten to validate under v3, which v3 states in `supersedes.does_not_bind`.
+
+Status: FROZEN; binds cells opened after it; binds no closed cell. The v3
+validator accepts `competency-questions-v3.json` (30 questions read).
+
+Non-claim: no review has run under v3. Whether shop-01 is re-reviewed under
+it is a ruling Luis has not given.

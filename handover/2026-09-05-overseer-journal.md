@@ -631,3 +631,7 @@ Verbatim in E-0205. In flight since 20:55Z, in parallel on disjoint files: a fre
 ### Questions v3 frozen; continuation handover written (21:15Z)
 
 The thirty questions came back from the reading-only session with a 104-check self-report and no digit from the paper in any question; read in full, frozen unedited as FROZEN_BEFORE_V3_CELLS, E-0206. At Luis's request the session's state, the per-cell procedure with its commands, the conventions, the scratchpad inventory and the ruled next steps are in `handover/2026-09-06-overseer-continuation.md`, with a memory pointer, so a fresh session can continue. Core-21 and Paper-28 still running.
+
+### Protocol v3 landed (21:30Z); a shared-index sweep
+
+Paper-28 delivered protocol v3 with 63 tests and reported its departures from the design one by one; E-0207. Its GREEN commit never happened as its own: between its `git add` and its `git commit`, Core-21 committed in the same working tree and the shared index carried Paper-28's four staged files into OVR-000416's commit (82dbb34). Content intact, gate at HEAD 1655. Rule earned: an agent commits its paths by pathspec (`git commit -- <paths>`) in the same command as the add, never a bare commit after a separate add; the overseer does the same from here. Written into the continuation handover.
