@@ -1,4 +1,13 @@
-# Overseer continuation handover, 2026-09-06 (written at Luis's request, 21:10Z)
+# Overseer handover, 2026-09-06 (final for this session; Luis at 23:05Z: proceed to handover once the two running tasks finish, no more loop)
+
+## Read this first
+
+This session stops after two pending reports land (the run-22 producer's phase one; Core-22's landing). The loop is not to be continued by this session. A fresh session resumes only on Luis's instruction, from this file, the journal, the ledger and the memory.
+
+Two things a fresh session cannot inherit:
+- **The run-22 producer session.** The protocol runs both phases in one question-blind producer session. That session belongs to this overseer session and cannot be resumed elsewhere. If run-22's phase one has produced `work/ontology-attempt-01.yaml`, the honest continuation is to relaunch the producer as launch ordinal 2 in the same workspace after moving `work/` aside (`work.launch-1/`), recording in the launch log that launch 1 ended with this overseer session; dispatching phase two to a different session would be a protocol deviation and must be recorded as one if chosen. Cost of the relaunch: about 140,000 tokens for phase one.
+- **The other agents' sessions.** Their work is on disk and committed where they were told to commit; nothing needs resuming.
+
 
 Purpose: a fresh session continues the loop from this file, the journal (`handover/2026-09-05-overseer-journal.md`), the ledger (`paper-v4/paper-ledger.md`) and the memory (`~/.claude/projects/-Users-luis-Projects-malleus-dev/memory/`). Everything below is fact as of the timestamp; nothing is a plan Luis has not ruled.
 
