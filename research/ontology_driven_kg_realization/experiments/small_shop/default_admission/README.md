@@ -28,6 +28,9 @@ inputs must produce identical ledger and evidence bytes.
 Two negative stories: a preparation made stale by a later ledger event refuses
 without another write; a relation naming a nonexistent endpoint refuses before
 retention or partial population. Existing lower-level tests remain in place.
+The whole demonstration is a sequence of commits, not one atomic transaction.
+Successful source registration and preparation can persist before admission;
+the refusal tests check their named boundaries, not rollback of earlier work.
 
 ## Identity and scope
 
@@ -75,3 +78,7 @@ fresh runs byte for byte, inspect Core-generated checks, and trace every
 current and superseded record. A plan's only template edit is its current
 contract identity. Test discovery already includes the new test under
 `tests/`; no CI or packaging configuration changes are needed.
+
+The [handover report](../../../../../handover/2026-09-06-core-shop-default-admission.md)
+records the RED/GREEN commits, exact commands, output identities, and the three
+older evidence-regeneration failures also reproduced at the starting commit.
