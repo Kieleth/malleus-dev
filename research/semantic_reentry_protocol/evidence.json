@@ -1,0 +1,98 @@
+{
+  "artifact_kind": "research-local prerequisite audit, not protocol evidence",
+  "status": "BLOCKED_ON_CORE_PURE_COMPOSITION_BOUNDARY",
+  "producer_implemented": false,
+  "semantic_reentry_e2e_green": false,
+  "baseline": {
+    "commit": "7c5fdb491721122b6e0c7243862935acc8303a1f",
+    "tree": "155ac29b6fd87709f4d765c00d6c340411f9441c"
+  },
+  "owned_directory": "research/semantic_reentry_protocol",
+  "runtime": {
+    "python": "3.12.9",
+    "executable_used": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "source_selection": "PYTHONPATH=src:. in the isolated frozen checkout",
+    "dependency_configuration": "The unchanged repository pyproject.toml and lock/configuration files; no new dependencies or ad-hoc installation"
+  },
+  "file_sha256": {
+    "test_prerequisites.py": "117d7185f0c890e4617c3b37694cff467aa49b6e586cdabfa6ab636d47e74c38"
+  },
+  "input_sha256": {
+    "fixtures/small_shop_fulfilment_correction_v1/input/tbox/small-shop-correction.yaml": "54e4e170d704056008296c91d1398b024d3a3c3897aba2640599375bf6f42b62",
+    "fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl": "a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081",
+    "experiments/small_shop/correction/mapping.json": "77bcc53ef39b301a940ee051c1afd6d3e08e90ba6e8bd344a7ba14ff6f101795",
+    "experiments/small_shop/public_population/plans/ret010.json": "3fbf7b59199ac58de24b2924a484e900d43a117dbb6cc262fd636c1dfa8d0f2a",
+    "experiments/small_shop/public_population/plans/supplier-e4.json": "f41275c76212e39523a5f330f7feb2d675e2a9b4e052c8a8cca9b3c25267a78f",
+    "experiments/small_shop/public_population/plans/supplier-e7.json": "2ffa3b1a8364788b22ade0632ce88a972228f403a6a6c34f7a30f208bf6d8cdd"
+  },
+  "input_path_root": "research/ontology_driven_kg_realization",
+  "template_adaptation": "New instantiated plan bytes rebind only contract_identity and history_profile.sha256. Frozen templates are not edited or represented as unchanged instantiated inputs.",
+  "runs": [
+    {
+      "name": "focused prerequisite audit",
+      "command": "PYTHONPATH=src:. PYTHONDONTWRITEBYTECODE=1 /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -p no:cacheprovider research/semantic_reentry_protocol/test_prerequisites.py",
+      "exit_code": 0,
+      "passed": 10,
+      "xfailed": 1,
+      "failed": 0
+    },
+    {
+      "name": "explicit RED pure-stage requirement",
+      "command": "PYTHONPATH=src:. PYTHONDONTWRITEBYTECODE=1 /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -p no:cacheprovider --runxfail -k pure_stage research/semantic_reentry_protocol/test_prerequisites.py",
+      "exit_code": 1,
+      "failed": 1,
+      "deselected": 10,
+      "observation": "Population preparation returns an existing KCS and preserves the accepted KG, but appends ledger evidence. It is not a pure synthesizer boundary. This is an unmet Re-entry capability, not an existing Core contract violation."
+    },
+    {
+      "name": "unified relevant gate",
+      "command": "PYTHONPATH=src:. PYTHONDONTWRITEBYTECODE=1 /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -p no:cacheprovider tests/contract_compiler/pareto research/ontology_driven_kg_realization/experiments/small_shop research/semantic_reentry_protocol --junitxml=/private/tmp/malleus-reentry.5gFZdN-gate.xml",
+      "exit_code": 1,
+      "passed": 725,
+      "failed": 3,
+      "xfailed": 1,
+      "failures": [
+        "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py::test_checked_in_evidence_is_exactly_regenerated",
+        "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py::test_ret040_admits_reopens_replays_queries_and_traces",
+        "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py::test_regeneration_is_canonical_byte_identical_and_matches_runner"
+      ],
+      "failure_ownership": "These match the three pre-existing Core-owned evidence-regeneration mismatches disclosed before this run. They were not modified or re-frozen here. The unified gate is not GREEN."
+    }
+  ],
+  "test_development_correction": {
+    "error": "Initial test assumed query rows nested fields under properties, confusing query output with export_records output.",
+    "guardrail": "The final test asserts the complete independent flattened public query row, including ID, type, occurrence and all domain fields.",
+    "test": "test_core_correction_admission_reopen_trace_and_complement"
+  },
+  "review": {
+    "kind": "one-pass independent read-only boundary review plus changed-file review",
+    "required_corrections_applied": [
+      "Mark producer and Re-entry laws as proposed, not implemented.",
+      "Require no-op before new retention; reuse already-retained request artifacts.",
+      "Disclose mutable disposable replay projections and source-value checking gap."
+    ]
+  },
+  "core_request": {
+    "owner_thread": "01a02f71-fec6-7382-9c68-c3efd3dba5d4",
+    "requirement": "Core-owned KCS composition over an immutable accepted-base and retained-input closure, without exposing a writable history or mutable graph to the synthesizer and without copying private KCS wire grammar outside Core.",
+    "current_seams": [
+      "compile_population_plan is pure but returns PopulationPlanCompilation, not KCS.",
+      "prepare_population_change retains evidence before composing a KCS.",
+      "KnowledgeChangeHistory.compose_change_set is write-free but receives the full writable history."
+    ],
+    "authorization": "Not yet authorized or promised by Core; acknowledged for assessment after its approved checkpoint.",
+    "next_dependency_order": [
+      "Operator/Core approve the smallest pure composition boundary.",
+      "Core implements and tests it, then supplies exact committed coordinates.",
+      "Re-entry pins that approved baseline and implements the bounded producer with reserved positive and negative tests.",
+      "Run actual Re-entry E2E and relevant gate, then audit isolated commits before any separately authorized integration."
+    ]
+  },
+  "exclusions": [
+    "No producer, prepared-candidate filtering substitute or generic Re-entry object",
+    "No Core, ontology, canonical Shop, paper, evaluation or capture edits",
+    "No external actions, demand, supply-gap facts, executor or observer",
+    "No claim of source truth, source authenticity, epistemic assent or domain adequacy",
+    "No merge, push, publication or shared-ref movement"
+  ]
+}
