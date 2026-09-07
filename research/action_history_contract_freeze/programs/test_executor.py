@@ -255,6 +255,34 @@ def test_unknown_runtime_format_cannot_silently_pass():
         run(args)
 
 
+def test_repeated_execution_reuses_only_exact_validated_immutable_contract_bytes(monkeypatch):
+    kernel = import_module("malleus._contract_pipeline.finite_executor")
+    args = grant()
+    kernel._contract_view.cache_clear()
+    original = kernel.load_validated_contract_artifact
+    calls = []
+
+    def counted(source):
+        calls.append(source)
+        return original(source)
+
+    monkeypatch.setattr(kernel, "load_validated_contract_artifact", counted)
+    try:
+        assert run(args) == run(args)
+        assert calls == [args["record_contract_bytes"]]
+        view = kernel._contract_view(args["record_contract_bytes"])
+        with pytest.raises(AttributeError, match="immutable"):
+            view.artifact_bytes = b"changed"
+        malformed = args["record_contract_bytes"] + b" "
+        for _ in range(2):
+            with pytest.raises(api().ExecutionRefusal, match="INPUT_SHAPE"):
+                run({**args, "record_contract_bytes": malformed})
+        assert calls == [args["record_contract_bytes"], malformed, malformed]
+        assert kernel._contract_view.cache_info().maxsize == 4
+    finally:
+        kernel._contract_view.cache_clear()
+
+
 def test_a_property_named_format_is_not_a_schema_format_directive():
     args = neutral()
     args["program"]["inputs"]["artifact"]["context"] = obj(
