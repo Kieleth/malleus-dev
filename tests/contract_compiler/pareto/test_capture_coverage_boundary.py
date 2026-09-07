@@ -290,6 +290,23 @@ def test_declared_gap_changes_accounting_not_missing_relation_detection(tmp_path
         "UNFORMALIZED": 0,
     }
     assert json.loads(adapted.canonical_plan_bytes)["records"]["relations"] == []
+    admitted = api.admit_structural_change(
+        history=history,
+        preparation=_prepare(history, adapted),
+        transaction_time=TIME,
+        actor_id=ACTOR,
+    )
+    before = history.path.read_bytes()
+    replay = api.KnowledgeChangeHistory.reopen(history.path).replay()
+    assert replay.receipt == admitted.receipt
+    trace = api.trace_population_record(replay, "claim:fill")
+    evidence = {item.record_id: item.content for item in trace.evidence}
+    assert evidence["capture:shop-note"] == _canonical(capture)
+    gaps = json.loads(evidence["plan:shop-note:gaps"])
+    assert gaps["gaps"] == json.loads(adapted.canonical_plan_bytes)["gaps"]
+    assert {gap["kind"] for gap in gaps["gaps"]} == {"MODALITY_NOT_EXPRESSIBLE"}
+    assert replay.graph.query_relations() == []
+    assert history.path.read_bytes() == before
 
 
 def test_supplied_dangling_relationship_refuses_before_writing(tmp_path):
