@@ -14,14 +14,15 @@ from research.action_history_contract_freeze.programs.check_executor import (
 from research.action_history_contract_freeze.programs.test_initialization_history import (
     reopen,
 )
-from research.action_history_contract_freeze.programs.test_proposal_history import (
-    inputs,
-    pair,
-    submit,
+from research.action_history_contract_freeze.programs import (
+    test_proposal_history as proposal_fixture,
 )
 from research.action_history_contract_freeze.programs.test_registration_history import (
     TIME,
 )
+
+
+inputs = proposal_fixture.inputs
 
 
 @pytest.fixture(scope="module")
@@ -31,7 +32,9 @@ def proposed(tmp_path_factory, inputs):
     )
     content, checkpoint, init_record, sources = inputs
     history = reopen(tmp_path_factory.mktemp("actual-check-prefix"), content)
-    submit(history, pair(history, checkpoint, init_record, sources))
+    proposal_fixture.submit(
+        history, proposal_fixture.pair(history, checkpoint, init_record, sources)
+    )
     return history.path.read_bytes(), runner
 
 

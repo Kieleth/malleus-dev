@@ -156,6 +156,16 @@ The pure check/control tests do not replace those integration stages. Robotics
 and Semantic Re-entry remain blocked on that complete shared handoff, not on
 each other. This isolated work has not changed main or either consumer.
 
+The owning-history regression gate now passes 499 tests, including all program,
+initialization, proposal, source, selection, state and knowledge-history tests.
+The next read-only orchestration step executes both selected TYPE monitors on
+the actual replayed proposal and action, selected record-contract bytes and
+retained producer definition/implementation. Six tests pass: real deterministic
+outputs and five forged invocation/identity refusals. The helper accepts only
+history and invocation, not a record map, compiled bytes or outcome. It returns
+the prefix coordinates alongside the existing pure computation result and
+writes nothing. These outputs are not yet admitted assessments or permission.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix
