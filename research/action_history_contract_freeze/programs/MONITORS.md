@@ -56,6 +56,29 @@ binding obligation, not a claimed completed monitor package.
 
 ## Fields and hash domains
 
+`monitor-output-fields.json` is the research field census for six selected
+record variants: completed TYPE/authority assessments, their failure records,
+and their unavailable assessments. Groups remove repeated field descriptions;
+each path names a field origin, not an executable operation or a new wire.
+The test-only constructor materializes lexical specimens and validates them
+against compiled Assent. It does not resolve records or run a checker.
+
+The `closure` origins deliberately remain unbound. They require the exact
+resolved input and provenance record sequences, not lists guessed from IDs.
+They differ per output: an unavailable assessment cites its failure record,
+while that failure cannot cite itself. The `computed` origins likewise require
+actual producer results. Test witnesses are neither verified inputs nor check
+evidence. The census cannot make the check package executable.
+
+These are minimal selected variants, not all optional Assent field combinations.
+Logical fields are absent. The direct-grant variants carry the exact evaluated
+grant; an absent-grant variant is not silently substituted. Completed outputs
+omit `monitor_failure_id`; unavailable outputs bind it to the paired failure.
+The failed check's error code supplies the unavailable reason code. Failure
+classification and message originate in actual check execution, never ambient
+caller metadata. The final record hash includes all selected fields and omits
+only itself, using the existing Assent record-hash operation.
+
 Every output uses the full existing Assent record type and validates under its
 exact compiled contract. Metadata comes from explicit invocation input:
 

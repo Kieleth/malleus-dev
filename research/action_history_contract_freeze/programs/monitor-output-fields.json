@@ -1,0 +1,106 @@
+{
+  "status": "STATIC_FIELD_CENSUS",
+  "content_hash": "record_hash(record_type, every field except content_hash)",
+  "unbound": [
+    "producer_implementation",
+    "retained_input_wrappers",
+    "input_closure_order",
+    "source_closure_order",
+    "lifecycle_validation_and_atomic_persistence"
+  ],
+  "groups": {
+    "record": {
+      "generation_event_id": ["invocation", "event", "id"],
+      "generated_at": ["invocation", "event", "generated_at"],
+      "responsible_actor_id": ["invocation", "event", "responsible_actor_id"],
+      "responsible_role": ["invocation", "event", "responsible_role"],
+      "source_record_ids": ["closure", "source_record_ids"],
+      "proposal_id": ["records", "proposal", "id"],
+      "proposal_content_hash": ["records", "proposal", "content_hash"],
+      "monitor_id": ["records", "monitor", "id"],
+      "monitor_hash": ["records", "monitor", "content_hash"],
+      "monitor_version": ["records", "monitor", "artifact_version"]
+    },
+    "assessment": {
+      "id": ["invocation", "output_ids", "assessment"],
+      "input_record_ids": ["closure", "input_record_ids"]
+    },
+    "completed": {
+      "assessment_outcome": ["computed", "completed", "outcome"],
+      "reason_codes": ["computed", "completed", "reason_codes"],
+      "rationale": ["computed", "completed", "rationale"]
+    },
+    "authority": {
+      "action_proposal_id": ["records", "action", "id"],
+      "action_content_hash": ["records", "action", "content_hash"],
+      "evaluated_actor_id": ["inputs", "executor_id"],
+      "authority_policy_id": ["records", "authorization_policy", "id"],
+      "authority_policy_hash": ["records", "authorization_policy", "content_hash"],
+      "evaluated_authority_grant_id": ["records", "grant", "id"],
+      "evaluated_authority_grant_hash": ["records", "grant", "content_hash"]
+    },
+    "failure": {
+      "id": ["invocation", "output_ids", "failure"],
+      "failure_category": ["computed", "failure", "category"],
+      "error_code": ["computed", "failure", "error_code"],
+      "error_message": ["computed", "failure", "error_message"]
+    },
+    "unavailable": {
+      "monitor_failure_id": ["invocation", "output_ids", "failure"],
+      "reason_codes": ["computed", "failure", "reason_codes"],
+      "rationale": ["computed", "failure", "rationale"]
+    }
+  },
+  "variants": {
+    "type_result": {
+      "record_type": "TypeAssessment",
+      "groups": ["record", "assessment", "completed"],
+      "fields": {
+        "base_acceptance_head": ["records", "proposal", "base_acceptance_head"]
+      },
+      "constants": {"assessment_kind": "TYPE"}
+    },
+    "authority_result": {
+      "record_type": "AuthorityAssessment",
+      "groups": ["record", "assessment", "completed", "authority"],
+      "fields": {
+        "base_acceptance_head": ["current", "action_acceptance_head"],
+        "checked_policy_predicates": ["computed", "completed", "checked_predicates"],
+        "violated_policy_predicates": ["computed", "completed", "violated_predicates"]
+      },
+      "constants": {"assessment_kind": "AUTHORITY"}
+    },
+    "type_failure": {
+      "record_type": "MonitorFailure",
+      "groups": ["record", "failure"],
+      "fields": {
+        "base_acceptance_head": ["records", "proposal", "base_acceptance_head"]
+      },
+      "constants": {"failed_assessment_kind": "TYPE"}
+    },
+    "authority_failure": {
+      "record_type": "MonitorFailure",
+      "groups": ["record", "failure", "authority"],
+      "fields": {
+        "base_acceptance_head": ["current", "action_acceptance_head"]
+      },
+      "constants": {"failed_assessment_kind": "AUTHORITY"}
+    },
+    "type_unavailable": {
+      "record_type": "UnavailableAssessment",
+      "groups": ["record", "assessment", "unavailable"],
+      "fields": {
+        "base_acceptance_head": ["records", "proposal", "base_acceptance_head"]
+      },
+      "constants": {"assessment_kind": "TYPE", "assessment_outcome": "UNKNOWN"}
+    },
+    "authority_unavailable": {
+      "record_type": "UnavailableAuthorityAssessment",
+      "groups": ["record", "assessment", "unavailable", "authority"],
+      "fields": {
+        "base_acceptance_head": ["current", "action_acceptance_head"]
+      },
+      "constants": {"assessment_kind": "AUTHORITY", "assessment_outcome": "UNKNOWN"}
+    }
+  }
+}
