@@ -849,6 +849,242 @@ def _history_receipt(
     return KnowledgeHistoryReceipt(source, _digest(source))
 
 
+@dataclass(frozen=True, slots=True)
+class KnowledgeChangeContext:
+    """In-memory composition input, created by a verified history replay.
+
+    Contains no writer or graph. The private fingerprint checks consistency,
+    not authenticity, and introduces no persisted context wire format. Treat
+    arbitrary Python code as trusted code, not as a sandboxed producer.
+    """
+
+    base_acceptance_head: str
+    base_accepted_state_digest: str
+    base_ledger_event_count: int
+    base_ledger_head: str
+    base_materialization_head: str
+    contract_identity: str
+    receipt_identity: str
+    retained_inputs: tuple[KnowledgeRetainedInput, ...]
+    _fingerprint: str
+
+
+def _composition_fingerprint(context: KnowledgeChangeContext) -> str:
+    heads = {
+        "base_acceptance_head": context.base_acceptance_head,
+        "base_ledger_head": context.base_ledger_head,
+        "base_materialization_head": context.base_materialization_head,
+    }
+    identities = {
+        "base_accepted_state_digest": context.base_accepted_state_digest,
+        "contract_identity": context.contract_identity,
+        "receipt_identity": context.receipt_identity,
+    }
+    if (
+        any(type(value) is not str or not _is_head(value) for value in heads.values())
+        or any(
+            type(value) is not str or not _is_digest(value)
+            for value in identities.values()
+        )
+        or type(context.base_ledger_event_count) is not int
+        or context.base_ledger_event_count < 0
+        or type(context.retained_inputs) is not tuple
+    ):
+        raise _refuse(
+            KnowledgeChangeRefusalReason.IDENTITY_MISMATCH,
+            "composition context has invalid base or retained-input fields",
+        )
+    retained = []
+    seen: set[str] = set()
+    for member in context.retained_inputs:
+        if (
+            type(member) is not KnowledgeRetainedInput
+            or any(
+                type(value) is not str or not value
+                for value in (
+                    member.record_id,
+                    member.identity,
+                    member.media_type,
+                    member.role,
+                )
+            )
+            or type(member.content) is not bytes
+            or member.identity != _digest(member.content)
+            or member.role not in _HEAD_ROLES
+            or member.record_id in seen
+        ):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.IDENTITY_MISMATCH,
+                "composition context retained inputs are inconsistent",
+            )
+        seen.add(member.record_id)
+        retained.append(
+            {
+                "record_id": member.record_id,
+                "identity": member.identity,
+                "media_type": member.media_type,
+                "role": member.role,
+            }
+        )
+    return _digest(
+        _canonical(
+            {
+                **heads,
+                **identities,
+                "base_ledger_event_count": context.base_ledger_event_count,
+                "retained_inputs": retained,
+            }
+        )
+    )
+
+
+def _validated_composition_context(value: object) -> KnowledgeChangeContext:
+    if type(value) is not KnowledgeChangeContext:
+        raise _refuse(
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+            "a KnowledgeChangeContext from history.composition_context() is required",
+        )
+    if _composition_fingerprint(value) != value._fingerprint:
+        raise _refuse(
+            KnowledgeChangeRefusalReason.IDENTITY_MISMATCH,
+            "composition context fields do not match its fingerprint",
+        )
+    return value
+
+
+def compose_change_set(
+    *,
+    context: KnowledgeChangeContext,
+    change_set_id: str,
+    source_record_ids: tuple[str, ...],
+    evidence_record_ids: tuple[str, ...],
+    operations: tuple[KnowledgeOperation, ...],
+    valid_time: KnowledgeValidTime,
+    supersedes: tuple[str, ...],
+) -> KnowledgeChangeSet:
+    """Compose existing KCS bytes from a fixed context, without I/O or admission.
+
+    Retention must precede context creation. This function cannot discover later
+    ledger movement; admission still checks freshness and structural validity.
+    """
+
+    context = _validated_composition_context(context)
+
+    if not isinstance(change_set_id, str) or not change_set_id:
+        raise _refuse(
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+            "change-set ID is required",
+        )
+    tuple_inputs = (
+        (source_record_ids, "source record IDs"),
+        (evidence_record_ids, "evidence record IDs"),
+        (operations, "operations"),
+        (supersedes, "supersession references"),
+    )
+    for values, label in tuple_inputs:
+        if not isinstance(values, tuple):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+                f"{label} must be an ordered tuple",
+            )
+    for values, label in (
+        (source_record_ids, "source record ID"),
+        (evidence_record_ids, "evidence record ID"),
+        (supersedes, "supersession reference"),
+    ):
+        if any(not isinstance(value, str) or not value for value in values):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+                f"{label} must be a nonempty string",
+            )
+    if any(not isinstance(operation, KnowledgeOperation) for operation in operations):
+        raise _refuse(
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+            "operations must contain only KnowledgeOperation values",
+        )
+    if not isinstance(valid_time, KnowledgeValidTime):
+        raise _refuse(
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+            "valid time must be a KnowledgeValidTime value",
+        )
+
+    retained_inputs = {member.record_id: member for member in context.retained_inputs}
+
+    def closure(
+        record_ids: tuple[str, ...],
+        *,
+        roles: frozenset[str],
+        id_field: str,
+        label: str,
+    ) -> list[dict[str, str]]:
+        members: list[dict[str, str]] = []
+        for record_id in record_ids:
+            retained = retained_inputs.get(record_id)
+            if retained is None or retained.role not in roles:
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.UNRETAINED_INPUT,
+                    f"{label} {record_id} is not retained with an accepted role",
+                )
+            members.append({id_field: record_id, "sha256": retained.identity})
+        return members
+
+    operation_payloads: list[dict[str, object]] = []
+    for operation in operations:
+        payload: dict[str, object] = {
+            "depends_on": list(operation.depends_on),
+            "operation_id": operation.operation_id,
+            "operation_type": operation.operation_type,
+            "ordinal": operation.ordinal,
+            "properties": _thaw(operation.properties),
+            "record_id": operation.record_id,
+            "record_type": operation.record_type,
+        }
+        if (
+            operation.operation_type == "CREATE_RELATION"
+            or operation.source_id is not None
+            or operation.target_id is not None
+        ):
+            payload["source_id"] = operation.source_id
+            payload["target_id"] = operation.target_id
+        if operation.supersedes_record_id is not None:
+            payload[_SUPERSESSION_FIELD] = operation.supersedes_record_id
+        operation_payloads.append(payload)
+
+    return KnowledgeChangeSet.from_bytes(
+        _canonical(
+            {
+                "base_acceptance_head": context.base_acceptance_head,
+                "base_accepted_state_digest": context.base_accepted_state_digest,
+                "base_ledger_event_count": context.base_ledger_event_count,
+                "base_ledger_head": context.base_ledger_head,
+                "base_materialization_head": context.base_materialization_head,
+                "change_set_id": change_set_id,
+                "contract_identity": context.contract_identity,
+                "contract_kind": _CONTRACT_KIND,
+                "evidence": closure(
+                    evidence_record_ids,
+                    roles=_EVIDENCE_ROLES,
+                    id_field="evidence_id",
+                    label="evidence",
+                ),
+                "grammar": _CHANGE_GRAMMAR,
+                "operations": operation_payloads,
+                "sources": closure(
+                    source_record_ids,
+                    roles=frozenset({"RETAINED_SOURCE"}),
+                    id_field="source_id",
+                    label="source",
+                ),
+                "supersedes": list(supersedes),
+                "valid_time": {
+                    "kind": valid_time.kind,
+                    "value": valid_time.value,
+                },
+            }
+        )
+    )
+
+
 class KnowledgeChangeHistory:
     def __init__(
         self,
@@ -1103,6 +1339,29 @@ class KnowledgeChangeHistory:
             actor_id=actor_id,
         )[0]
 
+    def composition_context(self) -> KnowledgeChangeContext:
+        """Take one verified, immutable composition snapshot.
+
+        This factory reads the ledger. Pass only its return value to a producer;
+        retain any needed evidence before taking this final snapshot.
+        """
+
+        replay = self.replay()
+        context = KnowledgeChangeContext(
+            base_acceptance_head=replay.acceptance_head,
+            base_accepted_state_digest=replay.graph.state_digest(),
+            base_ledger_event_count=replay.ledger_event_count,
+            base_ledger_head=replay.ledger_head,
+            base_materialization_head=replay.materialization_head,
+            contract_identity=replay.partial_contract.identity,
+            receipt_identity=replay.receipt.identity,
+            retained_inputs=tuple(
+                sorted(replay.retained_inputs, key=lambda member: member.record_id)
+            ),
+            _fingerprint="",
+        )
+        return replace(context, _fingerprint=_composition_fingerprint(context))
+
     def compose_change_set(
         self,
         *,
@@ -1113,122 +1372,16 @@ class KnowledgeChangeHistory:
         valid_time: KnowledgeValidTime,
         supersedes: tuple[str, ...],
     ) -> KnowledgeChangeSet:
-        """Compose one private change set against the exact current history."""
+        """Compose using the same pure mechanism after one verified replay."""
 
-        if not isinstance(change_set_id, str) or not change_set_id:
-            raise _refuse(
-                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
-                "change-set ID is required",
-            )
-        tuple_inputs = (
-            (source_record_ids, "source record IDs"),
-            (evidence_record_ids, "evidence record IDs"),
-            (operations, "operations"),
-            (supersedes, "supersession references"),
-        )
-        for values, label in tuple_inputs:
-            if not isinstance(values, tuple):
-                raise _refuse(
-                    KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
-                    f"{label} must be an ordered tuple",
-                )
-        for values, label in (
-            (source_record_ids, "source record ID"),
-            (evidence_record_ids, "evidence record ID"),
-            (supersedes, "supersession reference"),
-        ):
-            if any(not isinstance(value, str) or not value for value in values):
-                raise _refuse(
-                    KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
-                    f"{label} must be a nonempty string",
-                )
-        if any(
-            not isinstance(operation, KnowledgeOperation) for operation in operations
-        ):
-            raise _refuse(
-                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
-                "operations must contain only KnowledgeOperation values",
-            )
-        if not isinstance(valid_time, KnowledgeValidTime):
-            raise _refuse(
-                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
-                "valid time must be a KnowledgeValidTime value",
-            )
-
-        replay = self.replay()
-
-        def closure(
-            record_ids: tuple[str, ...],
-            *,
-            roles: frozenset[str],
-            id_field: str,
-            label: str,
-        ) -> list[dict[str, str]]:
-            members: list[dict[str, str]] = []
-            for record_id in record_ids:
-                retained = replay._retained.get(record_id)
-                if retained is None or retained.role not in roles:
-                    raise _refuse(
-                        KnowledgeChangeRefusalReason.UNRETAINED_INPUT,
-                        f"{label} {record_id} is not retained with an accepted role",
-                    )
-                members.append({id_field: record_id, "sha256": retained.identity})
-            return members
-
-        operation_payloads: list[dict[str, object]] = []
-        for operation in operations:
-            payload: dict[str, object] = {
-                "depends_on": list(operation.depends_on),
-                "operation_id": operation.operation_id,
-                "operation_type": operation.operation_type,
-                "ordinal": operation.ordinal,
-                "properties": _thaw(operation.properties),
-                "record_id": operation.record_id,
-                "record_type": operation.record_type,
-            }
-            if (
-                operation.operation_type == "CREATE_RELATION"
-                or operation.source_id is not None
-                or operation.target_id is not None
-            ):
-                payload["source_id"] = operation.source_id
-                payload["target_id"] = operation.target_id
-            if operation.supersedes_record_id is not None:
-                payload[_SUPERSESSION_FIELD] = operation.supersedes_record_id
-            operation_payloads.append(payload)
-
-        return KnowledgeChangeSet.from_bytes(
-            _canonical(
-                {
-                    "base_acceptance_head": replay.acceptance_head,
-                    "base_accepted_state_digest": replay.graph.state_digest(),
-                    "base_ledger_event_count": replay.ledger_event_count,
-                    "base_ledger_head": replay.ledger_head,
-                    "base_materialization_head": replay.materialization_head,
-                    "change_set_id": change_set_id,
-                    "contract_identity": replay.partial_contract.identity,
-                    "contract_kind": _CONTRACT_KIND,
-                    "evidence": closure(
-                        evidence_record_ids,
-                        roles=_EVIDENCE_ROLES,
-                        id_field="evidence_id",
-                        label="evidence",
-                    ),
-                    "grammar": _CHANGE_GRAMMAR,
-                    "operations": operation_payloads,
-                    "sources": closure(
-                        source_record_ids,
-                        roles=frozenset({"RETAINED_SOURCE"}),
-                        id_field="source_id",
-                        label="source",
-                    ),
-                    "supersedes": list(supersedes),
-                    "valid_time": {
-                        "kind": valid_time.kind,
-                        "value": valid_time.value,
-                    },
-                }
-            )
+        return compose_change_set(
+            context=self.composition_context(),
+            change_set_id=change_set_id,
+            source_record_ids=source_record_ids,
+            evidence_record_ids=evidence_record_ids,
+            operations=operations,
+            valid_time=valid_time,
+            supersedes=supersedes,
         )
 
     def compose_contract_revision(
@@ -1975,6 +2128,8 @@ class KnowledgeChangeHistory:
 
 
 __all__ = [
+    "KnowledgeChangeContext",
+    "compose_change_set",
     "KnowledgeAnchorInput",
     "KnowledgeAnchorResult",
     "KnowledgeChangeHistory",

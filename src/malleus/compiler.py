@@ -46,6 +46,7 @@ from malleus._contract_pipeline.document import (
     adapt_document_assertions,
 )
 from malleus._contract_pipeline.knowledge import (
+    KnowledgeChangeContext,
     KnowledgeAnchorInput,
     KnowledgeAnchorResult,
     KnowledgeChangeHistory,
@@ -59,6 +60,7 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeRecordHistory,
     KnowledgeRetainedInput,
     KnowledgeValidTime,
+    compose_change_set,
 )
 from malleus._contract_pipeline.machine import (
     MachineArtifactRefusal,
@@ -531,6 +533,7 @@ __all__ = (
     "ElaborationRefusalReason",
     "KnowledgeAnchorInput",
     "KnowledgeAnchorResult",
+    "KnowledgeChangeContext",
     "KnowledgeChangeHistory",
     "KnowledgeChangeHistoryBinding",
     "KnowledgeChangeRefusal",
@@ -580,6 +583,7 @@ __all__ = (
     "compile_contract_revision",
     "compile_population_plan",
     "compose_normative_profile",
+    "compose_change_set",
     "compose_partial_effective_contract",
     "create_structural_history",
     "execute_event",
