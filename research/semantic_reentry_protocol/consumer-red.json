@@ -1,0 +1,50 @@
+{
+  "status": "CONSUMER_RED_NO_IMPLEMENTATION",
+  "parent_handoff": "1bbff3c2e064b776ac68728f6a86c739ee16e9f7",
+  "parent_tree": "639f37cd38e3bf5be92ae82ea7f1ffcadcd499ed",
+  "frozen_packet_changed": false,
+  "new_files": {
+    "CONSUMER_CONTRACT.md": "sha256:96976adcbd052d8f47d100d01df37b2f6963e0855446768da94575e22246ee4a",
+    "test_consumer.py": "sha256:09ff43cff327325e92c58a185c4c7ba4476a38e3ed1fbd98216bd811d9dd32e6"
+  },
+  "test_command": "PYTHONPATH=src:. PYTHONDONTWRITEBYTECODE=1 /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -p no:cacheprovider --tb=no research/semantic_reentry_protocol/test_consumer.py",
+  "test_result": {
+    "exit_code": 1,
+    "passed": 1,
+    "failed": 50,
+    "reason": "consumer.py does not exist; ModuleNotFoundError at the deferred consumer import",
+    "interpretation": "TDD specification only. The 50 failures do not demonstrate 50 implementation defects or exercised guardrails. No policy or integration GREEN is claimed."
+  },
+  "focused_red": {
+    "selector": "-k ready_finding",
+    "failed": 1,
+    "deselected": 50,
+    "reason": "ModuleNotFoundError: research.semantic_reentry_protocol.consumer"
+  },
+  "consumer_scope": [
+    "Immutable canonical local Re-entry Contract",
+    "Pure request assessment from bytes copied from real accepted replay",
+    "Source-value and explicit mapping agreement",
+    "Exact replacement footprint and preservation policy",
+    "Stale input, identity, unsupported operator, ambiguity and budget refusal",
+    "No-op before retention at a newly bound satisfied state"
+  ],
+  "core_surface_reviewed_read_only": {
+    "commit": "741d41b06005db76b032113a8ebc37fc6ef68283",
+    "tree": "08e14a5650f5e94c90a4fd26cc12626e21a79ef1",
+    "symbols": [
+      "malleus.compiler.KnowledgeChangeContext",
+      "KnowledgeChangeHistory.composition_context",
+      "malleus.compiler.compose_change_set"
+    ],
+    "result": "Independent code/test inspection found no concrete consumer-contract mismatch. Core tests were not independently executed in this RED cut.",
+    "integration_bound": false,
+    "final_api_coordinate_pending": true
+  },
+  "exclusions": [
+    "No Core or KCS serializer implementation",
+    "No substitute composition context or simulated Core API",
+    "No full producer or end-to-end synthesis claim",
+    "No canonical Shop, ontology, source, paper or Core governance edits"
+  ]
+}
