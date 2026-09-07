@@ -232,10 +232,11 @@ def test_check_invocation_and_implementation_binding_refuse_before_output(
     assert args == before
 
 
+@pytest.mark.parametrize("kind", ["TYPE", "DIRECT_GRANT"])
 def test_actual_checker_failure_produces_paired_unknown_not_satisfied(
-    compiled, monkeypatch
+    compiled, monkeypatch, kind
 ):
-    engine, args = inputs(compiled, "TYPE")
+    engine, args = inputs(compiled, kind)
 
     def unavailable(*args, **kwargs):
         raise RuntimeError("engine unavailable")
@@ -244,11 +245,47 @@ def test_actual_checker_failure_produces_paired_unknown_not_satisfied(
     result = engine.execute(**args).data
     failure, assessment = result["records"]
     assert failure["record_type"] == "MonitorFailure"
-    assert assessment["record_type"] == "UnavailableAssessment"
+    assert assessment["record_type"] == (
+        "UnavailableAssessment" if kind == "TYPE" else "UnavailableAuthorityAssessment"
+    )
     assert assessment["record"]["assessment_outcome"] == "UNKNOWN"
     assert assessment["record"]["monitor_failure_id"] == failure["record"]["id"]
     assert failure["record"]["id"] in assessment["record"]["source_record_ids"]
     assert failure["record"]["id"] not in failure["record"]["source_record_ids"]
+
+
+def test_implementation_claim_must_name_this_loaded_implementation():
+    engine = api().load_check_executor()
+    with pytest.raises(api().CheckRefusal, match="implementation"):
+        api().CheckExecutor(engine.definition_bytes, b"not executable producer bytes")
+
+
+def test_unknown_check_instruction_is_not_misreported_as_a_violated_predicate(compiled):
+    engine, args = inputs(compiled, "TYPE")
+    definition = json.loads(engine.definition_bytes)
+    definition["rules"]["TYPE"][0]["steps"][0]["opcode"] = "UNSUPPORTED_CHECK"
+    changed = api().CheckExecutor(
+        canonical_json(definition).encode(), engine.implementation_bytes
+    )
+    source = source_record(candidate(), "definition", changed.definition_bytes)
+    args["records"][source["id"]] = {"record_type": "SourceArtifact", "record": source}
+    args["retained_bytes"][source["id"]] = changed.definition_bytes
+    monitor = args["records"]["monitor:actual"]["record"]
+    index = monitor["input_artifact_ids"].index(source["id"])
+    monitor["input_artifact_record_hashes"][index] = source["content_hash"]
+    monitor["artifact_hash"] = monitor_specification_digest(
+        schema_version=monitor["monitor_schema_version"],
+        monitor_id=monitor["id"],
+        monitor_version=monitor["artifact_version"],
+        assessment_kind=monitor["assessment_kind"],
+        implementation_hash=monitor["monitor_implementation_hash"],
+        input_artifact_ids=monitor["input_artifact_ids"],
+        input_artifact_record_hashes=monitor["input_artifact_record_hashes"],
+    )
+    monitor["content_hash"] = record_hash("MonitorSpecificationArtifact", monitor)
+    args["invocation"]["monitor"]["record_hash"] = monitor["content_hash"]
+    with pytest.raises(api().CheckRefusal, match="instruction"):
+        changed.execute(**args)
 
 
 def test_pure_check_has_no_clock_source_store_writer_or_io(compiled, monkeypatch):
