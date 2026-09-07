@@ -341,3 +341,34 @@ def test_nonempty_verified_prefix_shape_and_canonical_round_trip():
     assert not validator.is_valid(
         {**value, "prefix": {**value["prefix"], "event_count": 0}}
     )
+
+
+def assert_local_binding(binding):
+    expected = {
+        "DEFINITION.md",
+        "contexts.schema.json",
+        "instructions.schema.json",
+        "capabilities.schema.json",
+        "test_definition.py",
+    }
+    assert set(binding["local_files"]) == expected
+    for name, digest in binding["local_files"].items():
+        assert "sha256:" + sha256((HERE / name).read_bytes()).hexdigest() == digest, (
+            name
+        )
+
+
+def test_definition_packet_binds_every_declared_local_file():
+    assert_local_binding(json.loads((HERE / "definition-inputs.json").read_bytes()))
+
+
+def test_packet_binding_guard_rejects_changed_digest_and_missing_file():
+    binding = json.loads((HERE / "definition-inputs.json").read_bytes())
+    changed = deepcopy(binding)
+    changed["local_files"]["contexts.schema.json"] = "sha256:" + "0" * 64
+    with pytest.raises(AssertionError, match="contexts.schema.json"):
+        assert_local_binding(changed)
+    missing = deepcopy(binding)
+    del missing["local_files"]["contexts.schema.json"]
+    with pytest.raises(AssertionError):
+        assert_local_binding(missing)
