@@ -27,6 +27,12 @@ one finite program. An explicit selection event names an already retained
 evidence artifact and its digest. A history selects once; replacement requires
 a future migration decision. Selection is not an authority grant.
 
+The interpreter admits only its exact installed instruction grammar. The bundle
+retains that grammar for inspection and identity, not as permission to redefine
+operators, lookup scopes or unknown fields. A permissive caller-supplied schema
+refuses before selection or execution. Supporting another grammar requires an
+explicit interpreter capability, not a schema-validation bypass.
+
 `append_protocol_events` accepts a transaction name, exact expected full
 head/count and a nonempty ordered tuple of event drafts. Each draft carries
 event ID/type, actor, transaction time, data and named raw retention inputs.
@@ -74,3 +80,21 @@ ProtocolTransaction consumes VerifiedPrefix
 ProtocolTransaction produces ProtocolReplay
 ProtocolReplay preserves DomainProjection
 ActionLifecycle dependsOn ProtocolTransaction
+
+## Integration evidence during execution work
+
+The full current Shop selector reports 205 passed and five frozen-evidence
+comparison failures. The same five tests pass at original Core `2a112405`.
+The first differing full-Shop ledger entry is the retained compiled contract:
+only its producer digest and resulting evidence digest differ. The producer is
+the already repaired compiler `51c019d49c3cd7d75330e02c5d728a873254cc4b56ca122dda078b15c25bcb3f`,
+not the original `5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf`.
+These are not action-program effects.
+
+The existing independent compatibility probe was rerun on exported original
+Core and this isolated implementation. All six scenarios pass exact parity
+under the already frozen `gate.json` difference list: fresh Shop, document,
+object-event, public population, showcase and correction. No new excluded
+field, golden rewrite or skipped failure was introduced. The raw current Shop
+selector is not claimed green. Frozen evidence remains evidence of its exact
+historical producer, while current behavioral parity remains separately tested.

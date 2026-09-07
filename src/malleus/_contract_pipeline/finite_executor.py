@@ -9,6 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from hashlib import sha256
 import json
+from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker, ValidationError, validators
 
@@ -38,6 +39,21 @@ class ExecutionRefusal(ValueError):
     def __init__(self, reason, detail, *, step=None):
         self.reason, self.detail, self.step = reason, detail, step
         super().__init__(f"{reason}: {detail}")
+
+
+# Definition data is loaded with the installed interpreter, never fetched or
+# replaced by an invocation. Pure execution below performs no I/O.
+_INSTRUCTION_SCHEMA_CANONICAL = canonical_json(
+    json.loads(Path(__file__).with_name("finite-instructions.json").read_bytes())
+)
+
+
+def validate_instruction_schema(schema):
+    if canonical_json(schema) != _INSTRUCTION_SCHEMA_CANONICAL:
+        raise ExecutionRefusal(
+            "UNSUPPORTED_INSTRUCTION_SCHEMA",
+            "the installed finite interpreter requires its exact instruction grammar",
+        )
 
 
 @dataclass(frozen=True)
@@ -210,6 +226,7 @@ def execute_program(
     try:
         if type(record_contract_bytes) is not bytes:
             raise ValueError("exact compiled record-contract bytes required")
+        validate_instruction_schema(instruction_schema)
         program, profile, inputs, applied_records, state = deepcopy(
             (program, profile, inputs, applied_records, state)
         )

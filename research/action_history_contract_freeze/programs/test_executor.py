@@ -161,7 +161,11 @@ def test_complete_grant_program_executes_and_introduces_real_typed_record():
 
 @pytest.mark.parametrize("fault", ["comparison", "scope", "extra_field"])
 def test_caller_cannot_redefine_the_executable_instruction_grammar(fault):
-    args = resolution("APPLIED_AND_EARLIER_STAGED", introduced=True) if fault == "scope" else neutral()
+    args = (
+        resolution("APPLIED_AND_EARLIER_STAGED", introduced=True)
+        if fault == "scope"
+        else neutral()
+    )
     args["instruction_schema"] = {"type": "object"}
     if fault == "comparison":
         args["program"]["steps"][1]["comparison"] = "GUESS_LESS_OR_EQUAL"

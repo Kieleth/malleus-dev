@@ -213,11 +213,19 @@ def test_declared_package_closure_contains_every_finite_history_dependency():
     import tomllib
 
     root = Path(__file__).resolve().parents[3]
-    includes = tomllib.loads((root / "pyproject.toml").read_text())["tool"]["hatch"]["build"]["include"]
-    required = {f"/src/malleus/_contract_pipeline/{name}" for name in (
-        "finite_program.py", "finite_executor.py", "finite_control.py",
-        "protocol_runtime.py", "finite-instructions.json",
-    )}
+    includes = tomllib.loads((root / "pyproject.toml").read_text())["tool"]["hatch"][
+        "build"
+    ]["include"]
+    required = {
+        f"/src/malleus/_contract_pipeline/{name}"
+        for name in (
+            "finite_program.py",
+            "finite_executor.py",
+            "finite_control.py",
+            "protocol_runtime.py",
+            "finite-instructions.json",
+        )
+    }
     assert required <= set(includes)
 
 
