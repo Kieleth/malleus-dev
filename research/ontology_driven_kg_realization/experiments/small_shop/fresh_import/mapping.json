@@ -1,0 +1,14 @@
+{
+  "adapter": {"adapter_id": "small-shop-synthetic-supplier-jsonl", "version": "1"},
+  "evidence_id": "artifact:small-shop:fresh-import:mapping",
+  "record_type": "SupplierOrderState",
+  "record_id_prefix": "supplier-import:",
+  "identity_field": "source_occurrence_id",
+  "fields": {
+    "source_occurrence_id": "NONEMPTY_STRING",
+    "supplier_order_id": "NONEMPTY_STRING",
+    "product_code": "NONEMPTY_STRING",
+    "ordered_quantity": "NONNEGATIVE_INTEGER"
+  },
+  "valid_time": {"kind": "NONE_STATED", "value": null}
+}
