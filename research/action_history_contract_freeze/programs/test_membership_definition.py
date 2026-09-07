@@ -151,3 +151,17 @@ def test_retained_membership_cases_are_definition_evidence_not_runtime_results()
         {"value": "AMEND", "members": ["AMEND", "AMEND"], "expected": "PASS"},
         {"value": "AMEND", "members": ["AMEND", "READ"], "expected": "PASS"},
     ]
+
+
+def test_current_definition_keeps_approved_choices_closed_without_runtime_claim():
+    binding = json.loads((HERE.parent / "definition-inputs.json").read_bytes())
+    accepted = " ".join(binding["accepted_decisions"])
+    assert "TRANSACTION_DECISION.md" in accepted
+    assert "MEMBERSHIP_DECISION.md" in accepted
+    assert binding["interpreter"] == "NOT_IMPLEMENTED"
+    assert binding["event_programs"] == "NOT_FROZEN"
+    definition = (HERE.parent / "DEFINITION.md").read_text()
+    current = definition.split("## Review choices", 1)[1].split("## ", 1)[0]
+    assert "transaction choice is CLOSED" in current
+    assert "membership addition is APPROVED" in current
+    assert "Neither\n   transaction choice" not in current
