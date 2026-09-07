@@ -59,5 +59,66 @@ caller-controlled.
 
 ## Validation and disposition
 
-Pending implementation and focused validation. This record does not yet claim
-GREEN or a full-repository pass.
+Evidence RED: `f4148ae3de0d25b0653e10d3fb681647df61b06b`, 7 failed and 8
+passed. Six failures require the separate current evidence; one proves the
+unsafe default output. GREEN: `8097c489f82cc6a0673f198ab1e6a81d74b96281`,
+15 passed. The only research runtime change is the output default; an unused
+historical-expectation constant was removed from the object-event runner.
+No file under `src/`, ontology, source fixture, mapping or package configuration
+changed.
+
+Walkthrough RED: `2fcf08fdbea02922ad01e1e223eb09c9ef822115`, 1 failed and
+1 passed. The missing documented query failed; the extended existing gap
+test passed admission, reopen and trace without a production fix. The exact
+query now reads the generated public history, prints quantity `2`, the `e4`
+predecessor and `row:1:quantity`, and preserves ledger bytes.
+
+Checks use `PYTHONDONTWRITEBYTECODE=1`, `PYTHONPATH=src:.`, and
+`.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short`:
+
+- All eleven `test_evidence_archive.py` cases, the three original failing
+  nodes, and `showcase/test_evidence.py::test_evidence_command_defaults_to_build_not_frozen_results`:
+  15 passed.
+- `public_population/test_run.py` under the Shop directory,
+  `tests/contract_compiler/pareto/test_unstated_valid_time.py` and
+  `tests/contract_compiler/pareto/test_capture_coverage_boundary.py`, plus
+  `tests/test_docs.py::test_public_small_shop_walkthrough_matches_recorded_showcase`
+  and `tests/test_docs.py::test_repository_python_examples_are_ast_checked`:
+  27 passed. The three files in the documented command account for 25 of these.
+- `tests/contract_compiler/pareto` plus
+  `research/ontology_driven_kg_realization/experiments/small_shop`:
+  **731 passed, no failures or skips**. This closes the three recorded failures.
+- Changed Python Ruff checks, new/changed focused test formatting and diff
+  checks pass. All 31 local Markdown links in the three touched guides resolve.
+
+A separate fresh public run and reopen reproduced 48 ledger events, five
+changes, one revision, ten historical and nine current records. Its ledger
+bytes are `sha256:b471008f63e320456f4f42d5170780fac95e173cfe57156c8e345e054e39cec8`.
+The existing public-run evidence already matched and remains unchanged.
+
+This is a focused compiler/Shop result, not a whole-repository, package-build,
+release or remote-publication claim. A final isolated docs and governance check
+is recorded with the committed handoff rather than changing these results.
+
+## Scoped self-inquisition
+
+Rubric 12. The lowest affected profile is optional compiler-enabled semantic
+history. No root ontology changed, so root schema rites are NOT RUN.
+
+| Claim | Role | Direct evidence | Unsupported transfer | Verdict |
+| --- | --- | --- | --- | --- |
+| Current outputs reproduce without rewriting history | CONFORMANCE_FIXTURE | Exact regeneration and eight archived hashes | No claim that fresh history must retain an old producer fingerprint | PASS |
+| Shop answers are unchanged by the evidence refresh | CONFORMANCE_FIXTURE | Exact graphs, occurrence observations, existing independent oracles and 731 tests | No universal semantic-equivalence claim | PASS |
+| The walkthrough runs, not merely names APIs | CONFORMANCE_FIXTURE | Unmodified code snippet executed against a from-empty public run; no ledger mutation | No new API or public wire | PASS |
+| Correction and time choices remain explicit | ADOPTER_CHOICE | Existing supplier controls with/without supersession and NONE_STATED | Later append is not correction or domain chronology | PASS |
+| A declared gap survives the full route | OPTIONAL_PROFILE | Synthetic capture, admission, reopen, exact gap artifact and source trace | No automatic discovery of omitted semantics | PASS |
+
+## Separate next requirement, not implemented
+
+The isolated Re-entry task requests a pure KCS composer over an immutable
+replay/base context. Current `compile_population_plan` returns operations;
+`prepare_population_change` retains evidence; the pure `compose_change_set`
+method still requires a writable history receiver. That is an explicit
+capability-boundary request, not a defect in the three repaired tests. Core
+must select its scope before implementation. No new composer, Re-entry object,
+source-value verifier, or quiescence layer is claimed here.

@@ -1,6 +1,113 @@
 # Small Shop end-to-end walkthrough
 
-> **Scope:** This page explains one recorded, research-local showcase. The
+## Start here: can we explain why the graph says quantity 2?
+
+A supplier-order file contains two reports: quantity `1` at `e4`, quantity `2`
+at `e7`. A database can store the latest number. This example asks for more:
+which source row supplied it, what allowed it into the graph, what it replaced,
+and whether we can rebuild that answer without the original working files.
+
+The current public-path run answers those questions. It also carries the
+shop's order, inventory, invoices and payment through the same path:
+
+```text
+Ontology bytes -> compiled contract: what records are allowed
+Source bytes + authored population plans: what we propose to record
+Checks + admission -> one append-only history: what was accepted
+Reopen + replay -> knowledge graph: what can now be queried
+Record trace -> retained plan and source: why this record is here
+```
+
+The compiler does not invent an ontology or decide that a later report is a
+correction. In this fixture, the author explicitly selects the `state-version`
+profile and supplies the `e4` to `e7` replacement in the plan. Malleus checks and
+executes that declaration. Structural acceptance is not proof that the source
+is true or that the author's mapping captures everything it means.
+
+Run the existing public-path example from the repository root:
+
+```bash
+python -m research.ontology_driven_kg_realization.experiments.small_shop.public_population.run --output build/small-shop-public-population
+```
+
+It writes `history.jsonl` and `evidence.json`. A second invocation reopens the
+same history without appending. The full test repeats that operation and
+compares exact bytes. The result is 48 ledger events, five accepted changes,
+one additive ontology revision, ten historical records and nine current
+records. This is the complete **selected fixture**, not the whole shop domain.
+
+Inspect the actual inputs and outputs in order:
+
+| Part | Exact artifact | What to look for |
+| --- | --- | --- |
+| Ontology | [Target schema](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_full_public_v1/input/tbox/small-shop.yaml) | `SupplierOrderState` and its required properties |
+| Source | [Supplier rows](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl) | The two quantities, with no date or replacement field |
+| Plan | [e7 population plan](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json) | Field derivations, explicit supersession and chosen valid time |
+| Contract and history | [Recorded evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json) | Contract identities, revision and exact ledger digest |
+| Graph and provenance | The same evidence file's `graph`, `queries` and `records` | Quantity `2` currently, with the retained `e4` predecessor and source trace |
+
+### Ask the rebuilt graph
+
+After running the command above, this code reads the ledger, not a saved graph:
+
+```python
+from pathlib import Path
+from malleus.compiler import KnowledgeChangeHistory, trace_population_record
+
+replay = KnowledgeChangeHistory.reopen(
+    Path("build/small-shop-public-population/history.jsonl")
+).replay()
+row = replay.graph.query("SupplierOrderState", supplier_order_id="B")[0]
+trace = trace_population_record(replay, row["id"])
+print(row["ordered_quantity"])
+print(trace.record_history.supersedes_record_id)
+for derivation in trace.derivations:
+    if tuple(derivation["path"]) == ("properties", "ordered_quantity"):
+        print(derivation["locator"])
+```
+
+It prints `2`, `supplier-order-state:B:e4`, and `row:1:quantity`. The locator
+uses zero-based rows. The trace also returns the exact retained source bytes,
+not just a path that might now point to a different file. A test executes this
+exact snippet and verifies that reading it leaves the ledger unchanged.
+
+### Four distinctions we test, not assume
+
+These are separate conformance cases. They are not four hidden modes of the
+five-plan run above.
+
+| Input decision | Replayed result | What it proves |
+| --- | --- | --- |
+| Two supplier reports, no replacement instruction | Both quantities remain current | Later recording alone does not mean correction |
+| Explicit `e7` replacement of `e4` | Only quantity `2` is current; quantity `1` remains in history | Correction changes the view without erasing its predecessor |
+| Neither report states a valid date | `NONE_STATED` with explicit null survives the plan, change and trace | Recording order is not an invented domain date |
+| A synthetic clerk-note capture declares that its graph cannot express modality | `MODALITY_NOT_EXPRESSIBLE` remains in retained evidence after reopen | A declared limitation is visible, not silently promoted into a graph fact |
+
+The first three use the retained supplier rows. The fourth is explicitly a
+synthetic companion fixture, not extra data attributed to the literature.
+A gap is declared by the adopter; passing the capture census does not prove
+that every source meaning was captured or every missing relation discovered.
+
+Run the full path and these controls together:
+
+```bash
+python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py tests/contract_compiler/pareto/test_unstated_valid_time.py tests/contract_compiler/pareto/test_capture_coverage_boundary.py
+```
+
+### Earlier evidence is still evidence
+
+The detailed walkthrough below describes the older fixture-specific runner.
+Its recorded files are preserved, not recomputed in place. A compiler
+diagnostic edit changed the producer fingerprint and therefore the histories'
+fingerprints without changing these graph results. The
+[6 September evidence generation](../research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_06/README.md)
+records the current correction, object-event and older showcase runs separately.
+Their tests require exact current bytes and protect the earlier files by hash.
+The public-path evidence linked above already matched and was not rewritten.
+
+## Historical showcase in detail
+
+> **Scope:** The remaining sections explain the earlier research-local showcase. The
 > runner, mappings, query facade, and evidence formats are private surfaces,
 > not stable public APIs or wire contracts.
 
@@ -270,6 +377,10 @@ superseded records. The read API never invents a missing plan for the older
 history.
 
 Run and query the same path from the repository root:
+
+These commands execute the current runner into `build/`. Its fingerprints
+match the separate current evidence generation, not the historical coordinate
+table above; the graph answers remain the same.
 
 ```bash
 python -m research.ontology_driven_kg_realization.experiments.small_shop.showcase.run --output build/small-shop-showcase

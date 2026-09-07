@@ -4,6 +4,11 @@ This fixture runs the complete five-stage Small Shop dataset through the public
 `malleus.compiler` facade. It is the integration proof for the population work,
 not a new protocol layer.
 
+For a source-to-answer explanation and an executable read-only query, start
+with the [Small Shop walkthrough](../../../../../docs/SMALL_SHOP_WALKTHROUGH.md).
+It separates this five-plan run from the companion controls for reports without
+correction, unstated valid time and retained capture gaps.
+
 The useful simplification is that the domain choices are visible as data. Five
 small canonical population plans say which source bytes support which records,
 where each field came from, which history profile applies, and what the `e7`
