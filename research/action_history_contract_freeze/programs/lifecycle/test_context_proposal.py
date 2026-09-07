@@ -107,7 +107,6 @@ def test_atomic_pair_is_explicit_and_static_only():
         "CONTEXT_NOT_EARLIER_STAGED",
         "WRONG_PROPOSAL_ID",
         "WRONG_ACTION_ID",
-        "WRONG_EPISODE_KEY",
         "WRONG_ACTION_MEMBER",
         "WRONG_MEMBER_HASH",
         "DUPLICATE_ACTION_KEY",
@@ -230,6 +229,19 @@ def test_selected_record_variant_refuses_non_action_members_and_revisions():
         assert record["properties"][field]["maxItems"] == 1
     for field in ("revises_proposal_id", "candidate_artifact_id"):
         assert field not in record["properties"]
+
+
+def test_episode_metadata_does_not_alias_independent_protocol_lineage_keys():
+    # O retains the episode key by content identity. No accepted rule says
+    # proposal_key, action_key and episode_key must have equal strings.
+    for step in packet()["program"]["steps"]:
+        if step["opcode"] != "REQUIRE_COMPARE":
+            continue
+        operands = (step["left"], step["right"])
+        assert not (
+            any(o["path"][-1] == "episode_key" for o in operands)
+            and any(o["path"][-1] in {"proposal_key", "action_key"} for o in operands)
+        )
 
 
 def test_policy_reference_hashes_keep_existing_record_identity_semantics():
