@@ -1,0 +1,10 @@
+id: https://example.org/entity-contract-control
+name: entity_contract_control
+prefixes:
+  control: https://example.org/entity-contract-control/
+imports:
+  - linkml:types
+  - malleus
+classes:
+  LocalEntity:
+    is_a: Entity

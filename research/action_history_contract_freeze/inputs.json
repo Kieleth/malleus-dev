@@ -1,0 +1,37 @@
+{
+  "core_commit": "2a11240556532c2b6160ac0bfa5ab1165e862fd2",
+  "core_tree": "2f376922f108601d871361d9a7b53e4b5e156ad5",
+  "classification": "CONFORMANCE_FIXTURE",
+  "purpose": "Contract-input feasibility audit, not action execution conformance",
+  "design_commit": "7d64747bbc39495a6766e3f00c6379755d24b298",
+  "design_tree": "5961c4ec600646731431a60fe5e855e0ff34adbe",
+  "status": "BLOCKED_BEFORE_EXECUTABLE_CONTRACT_FREEZE",
+  "repository_inputs": {
+    "ontology/assent.yaml": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234",
+    "ontology/malleus.yaml": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3",
+    "src/malleus/_contract_pipeline/elaborate.py": "sha256:714cf83f07b4f9552bb956cd6f2ceeee5bc90e7985ae7cc0bd6212c4a760a524",
+    "src/malleus/_contract_pipeline/machine.py": "sha256:a6d1044a0f0d9e8ee50ca7157f4a636745ee1b718b5ca2ee65fdff9c3a6f1770",
+    "src/malleus/assent.py": "sha256:c2087b2eae8c067b86fa11761223d9539289d75059859396f52c12da27af6662",
+    "src/malleus/control.py": "sha256:7e2fba25b9cf8435fc57e14b131ee5fa0834e608ef5291d35e41b6e95833c481",
+    "src/malleus/ledger.py": "sha256:6565c03473d5ec2aba6d76cee0cdab122ac1bff8f9b4190ab28fcb09a3c34b9f"
+  },
+  "linkml_types": {
+    "package": "linkml_runtime",
+    "resource": "linkml_model/model/schema/types.yaml",
+    "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+  },
+  "observed_environment": {
+    "linkml": "1.11.1",
+    "linkml-runtime": "1.11.1",
+    "pytest": "9.1.1",
+    "jsonschema": "4.26.0",
+    "pyyaml": "6.0.3"
+  },
+  "missing_outputs": [
+    "validated compiled Assent record contract identity",
+    "compiled adopter contract importing exact Assent",
+    "executable action machine and profile contract",
+    "closed initialization and original-context artifact instances",
+    "identified real check producer closure"
+  ]
+}

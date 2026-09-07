@@ -1,0 +1,11 @@
+id: https://example.org/action-contract-probe
+name: action_contract_probe
+prefixes:
+  probe: https://example.org/action-contract-probe/
+imports:
+  - linkml:types
+  - assent
+classes:
+  LocalAction:
+    is_a: ActionProposal
+    description: Neutral import probe, not the supplier action contract.
