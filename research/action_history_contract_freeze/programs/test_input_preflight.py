@@ -7,7 +7,7 @@ import json
 import pytest
 
 from malleus.assent import make_record
-from malleus.ledger import content_digest, record_hash
+from malleus.ledger import LedgerError, content_digest, record_hash
 from research.action_history_contract_freeze.programs.test_input_carrier import (
     HERE,
     candidate,
@@ -254,9 +254,62 @@ def test_selected_contract_is_required_exact_validated_bytes(compiled, content):
     assert value == before
 
 
-def test_additional_presence_uses_existing_assent_requirements():
+def test_required_collections_use_existing_assent_requirements():
     from malleus.assent import PRESENT_FIELDS
 
-    declaration = candidate()["required_presence"]
+    assert "required_presence" not in candidate()
+    declaration = candidate()["required_collections"]
     assert declaration["ProtocolRecord"] == ["source_record_ids"]
     assert set(declaration["ProposedSubgraph"]) == PRESENT_FIELDS["ProposedSubgraph"]
+
+
+@pytest.mark.parametrize(
+    "role,field",
+    [
+        ("action", "source_record_ids"),
+        ("proposal", "claim_version_ids"),
+        ("proposal", "evidence_ids"),
+        ("proposal", "evidence_assertion_ids"),
+        ("proposal", "action_proposal_ids"),
+    ],
+)
+@pytest.mark.parametrize("replacement", [None, []], ids=["null", "empty-list"])
+def test_required_collection_shape_is_not_key_presence(
+    compiled, role, field, replacement
+):
+    value = specimen(compiled)
+    wrapper = value["records"][f"{role}:shape"]
+    wrapper["record"][field] = replacement
+    wrapper["record"]["content_hash"] = record_hash(
+        wrapper["record_type"], wrapper["record"]
+    )
+    reference = next(
+        item["value"] for item in value["invocation"]["inputs"] if item["role"] == role
+    )
+    reference["record_hash"] = wrapper["record"]["content_hash"]
+    before = deepcopy(value)
+    try:
+        if replacement is None:
+            with pytest.raises(api().PacketRefusal) as caught:
+                run(value)
+            assert caught.value.reason == "INPUT_RECORD_SHAPE"
+        else:
+            result = run(value)
+            assert result["status"] == "STATIC_INPUTS_VALID"
+            assert result["retention_verified"] is False
+            assert result["runtime_executed"] is False
+    finally:
+        assert value == before
+
+
+def test_record_canonicalization_failure_is_a_packet_refusal(compiled):
+    value = specimen(compiled)
+    value["records"]["action:shape"]["record"]["responsible_actor_id"] = chr(0xD800)
+    before = deepcopy(value)
+    try:
+        with pytest.raises(api().PacketRefusal) as caught:
+            run(value)
+        assert caught.value.reason == "INPUT_RECORD_SHAPE"
+        assert isinstance(caught.value.__cause__, LedgerError)
+    finally:
+        assert value == before
