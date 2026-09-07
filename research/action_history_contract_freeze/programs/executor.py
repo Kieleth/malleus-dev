@@ -27,6 +27,11 @@ from research.action_history_contract_freeze.programs.packet_validator import (
     validate_interval,
     validate_program,
 )
+from research.action_history_contract_freeze.programs.control_executor import (
+    CAPABILITIES,
+    require_coverage,
+    select_control,
+)
 
 
 class ExecutionRefusal(ValueError):
@@ -207,7 +212,7 @@ def execute_program(
         validate_program(
             program, instruction_schema=instruction_schema, profile=profile
         )
-        if program["required_capabilities"]:
+        if set(program["required_capabilities"]) - CAPABILITIES.keys():
             raise ExecutionRefusal(
                 "UNSUPPORTED_CAPABILITY",
                 "no producer invocation runs inside this kernel",
@@ -331,6 +336,24 @@ def execute_program(
             elif opcode == "REQUIRE_INTERVAL":
                 if not _inside(values["inner"], values["outer"]):
                     raise ValueError("interval is not contained")
+            elif opcode in {"REQUIRE_COVERAGE", "SELECT_CONTROL"}:
+                if values["context"]["recipe"] not in program["required_capabilities"]:
+                    raise ExecutionRefusal(
+                        "UNDECLARED_CAPABILITY",
+                        values["context"]["recipe"],
+                        step=ordinal,
+                    )
+                if opcode == "REQUIRE_COVERAGE":
+                    require_coverage(
+                        values["required"], values["outputs"], values["context"]
+                    )
+                else:
+                    output = select_control(
+                        values["policy"], values["outputs"], values["context"]
+                    )
+                    # Existing result dataclasses use tuples. The artifact uses JSON lists.
+                    output = json.loads(canonical_json(output))
+                    _validate(profile["control_result_schema"], output)
             elif opcode == "INTRODUCE_RECORDS":
                 dependencies = values["dependencies"]
                 if (
