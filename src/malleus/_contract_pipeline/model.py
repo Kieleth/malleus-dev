@@ -14,6 +14,10 @@ if TYPE_CHECKING:
 
 
 FACT_NAMESPACE = "https://malleus.dev/contract-facts/"
+DATE_RANGE_ID = "https://w3id.org/linkml/types/date"
+SEED_PRIMITIVE_IDS = frozenset(
+    FACT_NAMESPACE + name for name in ("Boolean", "DateTime", "Float", "Integer", "String")
+) | {DATE_RANGE_ID}
 RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 RDFS_SUBCLASS = "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 ARTIFACT_GRAMMAR = "malleus.validated-contract-artifact/private-v0"
@@ -63,8 +67,38 @@ _SYMBOL_POLICY_DESCRIPTOR = {
     "id": SYMBOL_POLICY_ID,
     "ownership_exception": "explicit-imported-global-slot-adoption",
 }
+CALENDAR_DATE_METAMODELS = {
+    base: "urn:malleus:contract-metamodel:calendar-date:v0:sha256:"
+    + digest(
+        {
+            "base": base,
+            "domain": "malleus.contract-metamodel/calendar-date/v0",
+            "additional_primitive": DATE_RANGE_ID,
+            "composition": (
+                "Extend the base seed target set by this primitive only; "
+                "all other rules apply unchanged."
+            ),
+            "representation": (
+                "JSON string, canonical YYYY-MM-DD, real proleptic Gregorian "
+                "date, years 0001 through 9999; no coercion or normalization."
+            ),
+        }
+    ).removeprefix("sha256:")
+    for base in (SEED_METAMODEL_ID, EXPRESSION_METAMODEL_ID)
+}
+
+
+def select_metamodel(*, expressions: bool, calendar_date: bool) -> str:
+    base = EXPRESSION_METAMODEL_ID if expressions else SEED_METAMODEL_ID
+    return CALENDAR_DATE_METAMODELS[base] if calendar_date else base
+
+
 def metamodel(identity: str) -> dict[str, str]:
-    if identity not in {SEED_METAMODEL_ID, EXPRESSION_METAMODEL_ID}:
+    if identity not in {
+        SEED_METAMODEL_ID,
+        EXPRESSION_METAMODEL_ID,
+        *CALENDAR_DATE_METAMODELS.values(),
+    }:
         raise ValueError("unknown internal contract metamodel")
     return {"id": identity, "sha256": "sha256:" + identity.rsplit(":", 1)[-1]}
 CANONICALIZATION = {

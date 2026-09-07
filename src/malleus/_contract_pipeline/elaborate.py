@@ -31,11 +31,11 @@ from .model import (
     ARTIFACT_CAPABILITY,
     ARTIFACT_GRAMMAR,
     CANONICALIZATION,
-    EXPRESSION_METAMODEL_ID,
+    DATE_RANGE_ID,
     FACT_NAMESPACE,
     PRODUCER_ID,
     RDFS_SUBCLASS,
-    SEED_METAMODEL_ID,
+    SEED_PRIMITIVE_IDS,
     SYMBOL_POLICY,
     SYMBOL_POLICY_ID,
     AnnotationEvidence,
@@ -60,13 +60,15 @@ from .model import (
     ValidatedContractCompilation,
     canonical_json,
     metamodel,
+    select_metamodel,
 )
 from .view import _fact_set_digest, load_validated_contract_artifact
 
 
 _MISSING = object()
-_SEED_SCALARS = ("Boolean", "DateTime", "Float", "Integer", "String")
-_SEED_SCALAR_NAMES = ", ".join(name.lower() for name in _SEED_SCALARS)
+_SEED_SCALAR_NAMES = ", ".join(
+    sorted(identifier.rsplit("/", 1)[-1].lower() for identifier in SEED_PRIMITIVE_IDS)
+)
 _BOOLEAN_FIELDS = ("required", "multivalued", "identifier", "inlined")
 _OPTIONAL_FIELDS = ("equals_string", "minimum", "maximum", "value_presence")
 _CONSTRAINT_FIELDS = ("range_id", *_BOOLEAN_FIELDS, *_OPTIONAL_FIELDS)
@@ -323,9 +325,7 @@ class _Elaborator:
         slot_use: bool,
     ) -> None:
         target = self.declarations.get(constraint.range_id)
-        is_seed = constraint.range_id in {
-            FACT_NAMESPACE + name for name in _SEED_SCALARS
-        }
+        is_seed = constraint.range_id in SEED_PRIMITIVE_IDS
         if not is_seed and target is None:
             raise _refuse(
                 ElaborationRefusalReason.INVALID_RANGE,
@@ -767,8 +767,15 @@ class _Elaborator:
             adapter_profile_sha256=adapter_hash,
             binder_profile_id=self.binding.profile_id,
             binder_profile_sha256=self.binding.profile_sha256,
-            metamodel_id=(
-                EXPRESSION_METAMODEL_ID if expressions else SEED_METAMODEL_ID
+            metamodel_id=select_metamodel(
+                expressions=bool(expressions),
+                calendar_date=(
+                    any(
+                        slot.constraints.range_id == DATE_RANGE_ID
+                        for slot in (*slots, *slot_uses)
+                    )
+                    or any(scalar.typeof_id == DATE_RANGE_ID for scalar in scalars)
+                ),
             ),
             symbol_policy_id=SYMBOL_POLICY_ID,
         )

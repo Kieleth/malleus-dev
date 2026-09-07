@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from hashlib import sha256
 import json
@@ -17,13 +17,16 @@ from malleus._contract_compiler import ContractFact
 from .model import (
     ARTIFACT_CAPABILITY,
     ARTIFACT_GRAMMAR,
+    CALENDAR_DATE_METAMODELS,
     CANONICALIZATION,
     CANONICALIZATION_ID,
+    DATE_RANGE_ID,
     EXPRESSION_METAMODEL_ID,
     FACT_NAMESPACE,
     RDF_TYPE,
     RDFS_SUBCLASS,
     SEED_METAMODEL_ID,
+    SEED_PRIMITIVE_IDS,
     SYMBOL_POLICY,
     SYMBOL_POLICY_ID,
     ArtifactRefusal,
@@ -31,6 +34,7 @@ from .model import (
     EffectiveConstraints,
     canonical_json,
     metamodel,
+    select_metamodel,
 )
 
 
@@ -44,10 +48,7 @@ _KINDS = {
     "SlotCondition",
     "SlotUse",
 }
-_SEEDS = {
-    FACT_NAMESPACE + name
-    for name in ("Boolean", "DateTime", "Float", "Integer", "String")
-}
+_SEEDS = SEED_PRIMITIVE_IDS
 _P = {name: FACT_NAMESPACE + name for name in (
     "abstract",
     "enumValue",
@@ -463,6 +464,10 @@ class ContractView:
             errors.append(f"Property '{name}' must be a boolean")
         elif terminal == FACT_NAMESPACE + "DateTime" and not _valid_datetime(value):
             errors.append(f"Property '{name}' must be an ISO 8601 datetime string")
+        elif terminal == DATE_RANGE_ID and not _valid_date(value):
+            errors.append(
+                f"Property '{name}' must be a canonical YYYY-MM-DD calendar date string"
+            )
         elif constraint.range_id in self._enums:
             if not isinstance(value, str) or value not in self._enums[constraint.range_id]:
                 errors.append(f"Invalid value '{value}' for {name}")
@@ -767,8 +772,13 @@ def _validate_fact_set(
     expression_present = any(kind in {
         "ExactlyOneAlternative", "ExactlyOneGroup", "SlotCondition"
     } for kind in kinds.values())
-    expected_metamodel = (
-        EXPRESSION_METAMODEL_ID if expression_present else SEED_METAMODEL_ID
+    expected_metamodel = select_metamodel(
+        expressions=expression_present,
+        calendar_date=any(
+            fact.predicate in {_P["valueRange"], _P["typeof"]}
+            and fact.object == DATE_RANGE_ID
+            for fact in facts
+        ),
     )
     if metamodel_id != expected_metamodel:
         raise _refuse(
@@ -1122,6 +1132,15 @@ def _validate_evidence(value: object) -> tuple[tuple[str, bool], ...]:
     return tuple(sorted(schema_authorities))
 
 
+def _valid_date(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    try:
+        return date.fromisoformat(value).isoformat() == value
+    except ValueError:
+        return False
+
+
 def _valid_datetime(value: Any) -> bool:
     if not isinstance(value, str) or not value.strip():
         return False
@@ -1190,7 +1209,11 @@ def load_validated_contract_artifact(artifact_bytes: bytes) -> ContractView:
     declared_metamodel = payload["metamodel"]
     known_metamodels = {
         identity: metamodel(identity)
-        for identity in (SEED_METAMODEL_ID, EXPRESSION_METAMODEL_ID)
+        for identity in (
+            SEED_METAMODEL_ID,
+            EXPRESSION_METAMODEL_ID,
+            *CALENDAR_DATE_METAMODELS.values(),
+        )
     }
     if (
         not isinstance(declared_metamodel, dict)
