@@ -208,6 +208,19 @@ def test_private_kernel_imports_no_research_runtime():
         )
 
 
+def test_declared_package_closure_contains_every_finite_history_dependency():
+    from pathlib import Path
+    import tomllib
+
+    root = Path(__file__).resolve().parents[3]
+    includes = tomllib.loads((root / "pyproject.toml").read_text())["tool"]["hatch"]["build"]["include"]
+    required = {f"/src/malleus/_contract_pipeline/{name}" for name in (
+        "finite_program.py", "finite_executor.py", "finite_control.py",
+        "protocol_runtime.py", "finite-instructions.json",
+    )}
+    assert required <= set(includes)
+
+
 def test_real_pair_appends_and_reopens_without_a_second_log(tmp_path):
     history, args = selected_history(tmp_path)
     before = history.replay()
