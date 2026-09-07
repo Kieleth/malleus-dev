@@ -56,6 +56,10 @@ The fixed interpreter input frame is:
   compiled record-contract, instruction grammar, profile and history-binding
   identities. Initialization can bind the real selected definitions without
   embedding the bundle's own hash inside itself. No caller supplies this frame.
+- `current.state.value`, when explicitly declared: a copy of the actual prior
+  protocol fold state. The program declares its closed shape. It is read input,
+  not another state authority or a way to supply replacement state. The existing
+  finite effects remain the only route to stage protocol-index changes.
 
 There are no caller-supplied applied records or trusted current-state objects.
 RESOLVE_RECORD uses only prior protocol introductions. Introductions cannot
@@ -107,6 +111,13 @@ and the exact existing current records through initialization and JSONL-only
 reopen. The source and record-contract identities remain separate from the
 domain effective contract. This is initialization over the current Shop state,
 not a supplier amendment, an effect, or a completed action lifecycle.
+
+The regression command covering programs, owning transactions, retention,
+selection and knowledge history passes 473 tests, with initialization tested
+separately above. The optional owner-state input adds three passing tests for
+actual prior-state reads, stale claims and forged claims. An initial test setup
+mixed two fixture clocks; the corrected helper requires one exact transaction
+time, leaving the ledger's monotonic-time guard unchanged.
 
 ## Remaining execution work
 

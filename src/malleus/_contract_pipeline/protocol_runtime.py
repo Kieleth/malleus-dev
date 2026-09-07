@@ -136,7 +136,7 @@ def load_bundle(source):
             if (
                 set(bindings) != {"event", "current", "artifact"}
                 or set(bindings["event"]) != {str(i) for i in range(len(kinds))}
-                or set(bindings["current"]) != {"context"}
+                or set(bindings["current"]) not in ({"context"}, {"context", "state"})
                 or set(bindings["artifact"])
                 not in ({"constants"}, {"constants", "selection"})
             ):
@@ -432,6 +432,9 @@ class ProtocolFold:
                     "history_binding_identity": history_binding_identity,
                 }
             }
+        current = {"context": {"value": self.context}}
+        if "state" in transaction["program"]["inputs"]["current"]:
+            current["state"] = {"value": deepcopy(self.state)}
         try:
             execution = execute_program(
                 program=transaction["program"],
@@ -439,7 +442,7 @@ class ProtocolFold:
                 instruction_schema=self.bundle["instruction_schema"],
                 inputs={
                     "event": frames,
-                    "current": {"context": {"value": self.context}},
+                    "current": current,
                     "artifact": artifacts,
                 },
                 applied_records=self.records,

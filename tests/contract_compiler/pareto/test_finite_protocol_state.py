@@ -6,6 +6,9 @@ import pytest
 
 from malleus.compiler import KnowledgeChangeHistory
 from malleus.ledger import content_digest
+from research.action_history_contract_freeze.programs.lifecycle.test_prerequisites import (
+    T0,
+)
 from tests.contract_compiler.pareto.test_finite_protocol_history import (
     api,
     append,
@@ -122,7 +125,7 @@ def inspect(history, state, identifier):
                 "event_id": identifier,
                 "event_type": "INSPECTED",
                 "actor_id": "actor:test",
-                "transaction_time": TRANSACTION_TIME,
+                "transaction_time": T0,
                 "data": {"identity": content_digest(state)},
                 "retained": {},
             },
@@ -134,7 +137,7 @@ def test_state_input_comes_from_prior_fold_and_is_recomputed_on_reopen(tmp_path)
     history, args = setup(tmp_path)
     initial = history.replay().protocol_replay.data["state"]
     inspect(history, initial, "inspect:initial")
-    changed = append(history, drafts(history, args))
+    changed = append_pair(history, args)
     state = changed.protocol_replay.data["state"]
     assert state != initial
     after = inspect(history, state, "inspect:changed")
@@ -146,10 +149,17 @@ def test_state_input_comes_from_prior_fold_and_is_recomputed_on_reopen(tmp_path)
 def test_state_claims_cannot_replace_actual_state(tmp_path, fault):
     history, args = setup(tmp_path)
     state = history.replay().protocol_replay.data["state"]
-    append(history, drafts(history, args))
+    append_pair(history, args)
     if fault == "invented":
         state["action_acceptance_head"] = content_digest("invented")
     before = history.path.read_bytes()
     with pytest.raises(api().ProtocolProgramRefusal, match="WRONG_CURRENT_STATE"):
         inspect(history, state, "inspect:forged")
     assert history.path.read_bytes() == before
+
+
+def append_pair(history, args):
+    events = drafts(history, args)
+    events[0]["transaction_time"] = events[1]["transaction_time"]
+    assert events[1]["transaction_time"] == T0
+    return append(history, events)
