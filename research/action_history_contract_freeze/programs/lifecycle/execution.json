@@ -1,0 +1,139 @@
+{
+  "status": "BLOCKED_KEYED_EFFECT",
+  "runtime_executed": false,
+  "scope": "Minimal full-record variant and static bindings, not a completed lifecycle event",
+  "program": {
+    "name": "execution-minimal-record-variant",
+    "inputs": {
+      "event": {
+        "header": {
+          "type": "object", "additionalProperties": false,
+          "required": ["event_id", "transaction_time", "actor_id"],
+          "properties": {
+            "event_id": {"type": "string"},
+            "transaction_time": {"type": "string", "format": "aware-instant"},
+            "actor_id": {"type": "string"}
+          }
+        },
+        "records": {
+          "type": "object", "additionalProperties": false, "required": ["value"],
+          "properties": {"value": {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["record_type", "record"],
+              "properties": {
+                "record_type": {"type": "string", "const": "ActionExecution"},
+                "record": {
+                  "type": "object", "additionalProperties": false,
+                  "required": ["id", "content_hash", "generation_event_id", "generated_at", "responsible_actor_id", "responsible_role", "source_record_ids", "dispatch_id", "dispatch_hash", "executor_id", "execution_started_at", "execution_ended_at", "execution_status", "execution_result_hash"],
+                  "properties": {
+                    "id": {"type": "string"},
+                    "content_hash": {"type": "string", "format": "sha256"},
+                    "generation_event_id": {"type": "string"},
+                    "generated_at": {"type": "string", "format": "aware-instant"},
+                    "responsible_actor_id": {"type": "string"},
+                    "responsible_role": {"type": "string"},
+                    "source_record_ids": {"type": "array", "items": {"type": "string"}},
+                    "dispatch_id": {"type": "string"},
+                    "dispatch_hash": {"type": "string", "format": "sha256"},
+                    "executor_id": {"type": "string"},
+                    "execution_started_at": {"type": "string", "format": "aware-instant"},
+                    "execution_ended_at": {"type": "string", "format": "aware-instant"},
+                    "execution_status": {"type": "string", "enum": ["SUCCEEDED", "FAILED", "ABORTED"]},
+                    "execution_result_hash": {"type": "string", "format": "sha256"}
+                  }
+                }
+              }
+            }
+          }}
+        },
+        "dependencies": {
+          "type": "object", "additionalProperties": false, "required": ["value"],
+          "properties": {"value": {"type": "array", "items": {"type": "string"}}}
+        }
+      },
+      "artifact": {
+        "record_contract": {
+          "type": "object", "additionalProperties": false, "required": ["value"],
+          "properties": {"value": {
+            "type": "object", "additionalProperties": false,
+            "required": ["contract_identity", "record_type"],
+            "properties": {
+              "contract_identity": {"type": "string", "format": "sha256"},
+              "record_type": {"type": "string", "const": "ActionExecution"}
+            }
+          }}
+        },
+        "constants": {
+          "type": "object", "additionalProperties": false,
+          "required": ["executor_role", "dispatch_type"],
+          "properties": {
+            "executor_role": {"type": "string", "const": "executor"},
+            "dispatch_type": {"type": "string", "const": "ActionDispatch"}
+          }
+        }
+      },
+      "current": {
+        "applied": {
+          "type": "object", "additionalProperties": false, "required": ["dispatch_ids"],
+          "properties": {"dispatch_ids": {"type": "array", "items": {"type": "string"}}}
+        }
+      }
+    },
+    "required_capabilities": [],
+    "introductions": [{"name": "execution", "depends_on": []}],
+    "steps": [
+      {"opcode": "VALIDATE_RECORD", "record": {"root": "event", "name": "records", "path": ["value", 0, "record"]}, "contract": {"root": "artifact", "name": "record_contract", "path": ["value"]}, "result": "checked-execution", "refusal": "INVALID_EXECUTION_RECORD"},
+      {"opcode": "HASH", "recipe": "RECORD", "value": {"root": "event", "name": "records", "path": ["value", 0, "record"]}, "record_type": {"root": "event", "name": "records", "path": ["value", 0, "record_type"]}, "result": "execution-hash", "refusal": "INVALID_EXECUTION_HASH_INPUT"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "DIGEST", "comparison": "EQ", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "content_hash"]}, "right": {"root": "result", "name": "execution-hash", "path": ["value"]}, "refusal": "EXECUTION_HASH_MISMATCH"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "generation_event_id"]}, "right": {"root": "event", "name": "header", "path": ["event_id"]}, "refusal": "GENERATION_EVENT_MISMATCH"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "INSTANT", "comparison": "EQ", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "generated_at"]}, "right": {"root": "event", "name": "header", "path": ["transaction_time"]}, "refusal": "GENERATION_TIME_MISMATCH"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "responsible_actor_id"]}, "right": {"root": "event", "name": "header", "path": ["actor_id"]}, "refusal": "RESPONSIBLE_ACTOR_MISMATCH"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "responsible_actor_id"]}, "right": {"root": "event", "name": "records", "path": ["value", 0, "record", "executor_id"]}, "refusal": "EXECUTOR_MUST_RECORD"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "responsible_role"]}, "right": {"root": "artifact", "name": "constants", "path": ["executor_role"]}, "refusal": "EXECUTOR_ROLE_REQUIRED"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "INSTANT", "comparison": "LT", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "execution_started_at"]}, "right": {"root": "event", "name": "records", "path": ["value", 0, "record", "execution_ended_at"]}, "refusal": "EXECUTION_INTERVAL_INVALID"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "INSTANT", "comparison": "EQ", "left": {"root": "event", "name": "records", "path": ["value", 0, "record", "execution_ended_at"]}, "right": {"root": "event", "name": "records", "path": ["value", 0, "record", "generated_at"]}, "refusal": "EXECUTION_END_NOT_EVENT_TIME"},
+      {"opcode": "RESOLVE_RECORD", "record_id": {"root": "event", "name": "records", "path": ["value", 0, "record", "dispatch_id"]}, "record_hash": {"root": "event", "name": "records", "path": ["value", 0, "record", "dispatch_hash"]}, "record_type": {"root": "artifact", "name": "constants", "path": ["dispatch_type"]}, "scope": "APPLIED", "result": "dispatch", "refusal": "DISPATCH_REFERENCE_INVALID"},
+      {"opcode": "REQUIRE_MEMBER", "value_kind": "STRING", "value": {"root": "result", "name": "dispatch", "path": ["value", "id"]}, "members": {"root": "current", "name": "applied", "path": ["dispatch_ids"]}, "refusal": "DISPATCH_NOT_APPLIED"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "result", "name": "dispatch", "path": ["value", "executor_id"]}, "right": {"root": "event", "name": "records", "path": ["value", 0, "record", "executor_id"]}, "refusal": "DISPATCH_EXECUTOR_MISMATCH"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "INSTANT", "comparison": "LE", "left": {"root": "result", "name": "dispatch", "path": ["value", "dispatched_at"]}, "right": {"root": "event", "name": "records", "path": ["value", 0, "record", "execution_started_at"]}, "refusal": "EXECUTION_BEFORE_DISPATCH"},
+      {"opcode": "REQUIRE_MEMBER", "value_kind": "STRING", "value": {"root": "result", "name": "dispatch", "path": ["value", "id"]}, "members": {"root": "event", "name": "records", "path": ["value", 0, "record", "source_record_ids"]}, "refusal": "REQUIRED_DISPATCH_SOURCE_MISSING"},
+      {"opcode": "REQUIRE_UNIQUE", "records": {"root": "event", "name": "records", "path": ["value"]}, "key_paths": [["record", "dispatch_id"]], "target_index": "execution_by_dispatch", "refusal": "DUPLICATE_EXECUTION"},
+      {"opcode": "INTRODUCE_RECORDS", "records": {"root": "event", "name": "records", "path": ["value"]}, "dependencies": {"root": "event", "name": "dependencies", "path": ["value"]}, "result": "introduced", "refusal": "INVALID_INTRODUCTION"},
+      {"opcode": "SET_PROTOCOL_STATE", "target": "PROTOCOL_INDEX", "name": "execution_by_dispatch", "keys": [{"root": "event", "name": "records", "path": ["value", 0, "record", "dispatch_id"]}], "value": {"root": "event", "name": "records", "path": ["value", 0, "record", "id"]}, "refusal": "INVALID_EXECUTION_INDEX_UPDATE"}
+    ]
+  },
+  "profile": {
+    "targets": {
+      "execution_by_dispatch": {
+        "target": "PROTOCOL_INDEX", "storage_path": ["protocol", "execution_by_dispatch"],
+        "value_schema": {"type": "string"}
+      }
+    },
+    "capabilities": [],
+    "record_schemas": {
+      "ActionDispatch": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "content_hash", "generation_event_id", "generated_at", "responsible_actor_id", "responsible_role", "source_record_ids", "action_proposal_id", "action_content_hash", "authorization_decision_id", "authorization_decision_hash", "executor_id", "dispatch_adapter_id", "base_acceptance_head", "dispatched_at"],
+        "properties": {
+          "id": {"type": "string"},
+          "content_hash": {"type": "string", "format": "sha256"},
+          "generation_event_id": {"type": "string"},
+          "generated_at": {"type": "string", "format": "aware-instant"},
+          "responsible_actor_id": {"type": "string"},
+          "responsible_role": {"type": "string"},
+          "source_record_ids": {"type": "array", "items": {"type": "string"}},
+          "action_proposal_id": {"type": "string"},
+          "action_content_hash": {"type": "string", "format": "sha256"},
+          "authorization_decision_id": {"type": "string"},
+          "authorization_decision_hash": {"type": "string", "format": "sha256"},
+          "executor_id": {"type": "string"},
+          "dispatch_adapter_id": {"type": "string"},
+          "base_acceptance_head": {"type": "string", "format": "ledger-head", "x-coordinate": "ACTION_ACCEPTANCE"},
+          "dispatched_at": {"type": "string", "format": "aware-instant"}
+        }
+      }
+    }
+  }
+}

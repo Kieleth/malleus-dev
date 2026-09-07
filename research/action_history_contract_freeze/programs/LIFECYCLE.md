@@ -134,3 +134,13 @@ requirements with the approved membership instruction. This packet has a
 complete lifecycle obligation census, not evidence that the eleven
 instructions suffice. Real check producers and interpreter implementations are
 still UNBOUND. No initialization instance or action lifecycle has run.
+
+### Concrete execution candidate
+
+`lifecycle/execution.json` now retains one minimal full-record variant. Its
+17-instruction record/reference prefix passes static checking; the complete
+candidate refuses because `SET_PROTOCOL_STATE` cannot identify an index entry.
+See `lifecycle/KEYED_EFFECT_DECISION.md` for the proposed explicit key operand
+and the remaining input-binding obligations. This is a definition gap, not a
+runtime failure or a completed lifecycle program. No instruction refinement is
+accepted merely by retaining the candidate.
