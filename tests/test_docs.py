@@ -2736,6 +2736,84 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         assert stale_readme_claim not in readme
 
 
+def test_current_entrypages_lead_to_default_shop_admission() -> None:
+    shop = "research/ontology_driven_kg_realization/experiments/small_shop"
+    for page in (ROOT / "README.md", DOCS / "index.md"):
+        source = page.read_text(encoding="utf-8")
+        assert f"{shop}/default_admission/README.md" in source
+        assert f"{shop}/public_population/evidence.json" in source
+        assert "custom-policy" in source
+
+
+def test_principles_name_shipped_compiler_and_machine_without_portability_claim() -> (
+    None
+):
+    import malleus.compiler as api
+
+    source = " ".join((DOCS / "PRINCIPLES.md").read_text().split())
+    for name in (
+        "compile_linkml_contract",
+        "ValidatedContractArtifact",
+        "ProtocolMachineProgram",
+        "PolicyProgram",
+        "execute_event",
+    ):
+        assert name in api.__all__
+        assert getattr(api, name) is not None
+        assert f"`{name}`" in source
+    assert "production compiler and runtime API do not exist yet" not in source
+    assert (
+        "not a claim that the generic interpreter or compiled machine artifact ships today"
+        not in source
+    )
+    assert "cross-language parity is not established" in source
+    assert "does not force adopters to claim those profiles" in source
+
+
+def test_principles_separate_retained_byte_checks_from_assent_declarations() -> None:
+    import malleus.compiler as api
+
+    source = " ".join((DOCS / "PRINCIPLES.md").read_text().split())
+    assert callable(api.adapt_document_assertions)
+    assert callable(api.trace_population_record)
+    assert "Nothing in the library reads the bytes" not in source
+    assert "malleus does not verify the digest against any bytes" not in source
+    assert "does not yet verify quoted spans" not in source
+    assert "`KnowledgeChangeHistory` verifies supplied retained bytes" in source
+    assert "`adapt_document_assertions`" in source
+    assert "whitespace-normalized" in source
+    assert "Assent's `SourceArtifact`" in source
+    assert "does not detect that a source changed" in source
+    assert "source authenticity or truth" in source
+
+
+def test_principles_expose_public_history_without_claiming_assent_cutover() -> None:
+    import malleus.compiler as api
+
+    source = " ".join((DOCS / "PRINCIPLES.md").read_text().split())
+    for name in ("KnowledgeChangeSet", "KnowledgeChangeHistory", "compose_change_set"):
+        assert name in api.__all__
+        assert f"`{name}`" in source
+    assert "A private compiler pipeline now proves both boundaries" not in source
+    assert "The public compiler history starts from an empty graph" in source
+    assert "The Assent projector still takes a caller-supplied graph base" in source
+    assert "stable wire" in source
+
+
+def test_public_reference_qualifies_event_support_by_profile_role() -> None:
+    import malleus.compiler as api
+
+    source = " ".join(APPROVED_REFERENCE_PATH.read_text().split())
+    profile = json.loads(api.SOURCE_ASSERTION_PROFILE.canonical_bytes)
+    assert profile["ontology_roles"]["event"] == ["Event"]
+    assert profile["semantic_unit"] == "COMPOSITION"
+    assert "selected profile's declared Event role" in source
+    assert "rather than its semantic unit" in source
+    assert "EventParticipation" in source
+    assert "Signal population remains unsupported" in source
+    assert "when a plan contains event or signal records" not in source
+
+
 def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
     guide = (DOCS / "SMALL_SHOP_WALKTHROUGH.md").read_text(encoding="utf-8")
     normalized = " ".join(guide.split())
