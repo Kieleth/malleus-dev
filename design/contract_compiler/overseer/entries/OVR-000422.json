@@ -1,0 +1,51 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000422",
+  "ledger": "overseer",
+  "sequence": 422,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:81fbf446199e95dfc4966b187bf4f1e9bcc94eb377a9263ca3179f876c7dbdd4",
+  "recorded_at": "2026-09-07T01:04:19Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "shop-evidence-website-links",
+    "type": "DOCUMENT"
+  },
+  "summary": "Correct the Shop website evidence links without changing runtime or archived results.",
+  "why": "The exact detached 1632e6a gate produced 735 passes and one strict HTML failure: a research README exists on disk but is not a Sphinx source page. Point the walkthrough to the three current downloadable JSON artifacts under the existing builder behavior. Retain the hard strict-build test, warning policy and all evidence bytes. A live retry before this document rebind correctly stopped on governed digest drift and supplies no HTML pass. This successor closes the two document digests forward-only; final documentation validation runs against this bound cut. No compiler, fixture, package, paper or Re-entry change.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d71a75fd5c3a8dc854a148992108aceebe2c58e1c5cacea1015d31d221593469",
+        "after_digest": "sha256:6e9d81a760adbcd75331b970339a439abb863c0cf459c6c926bb61710394aee4"
+      },
+      {
+        "path": "handover/2026-09-06-shop-evidence-refresh.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ca77ada41eb5226d4684c6697e419bcf6ec1678b8c312dad1409e2e18bfce7d1",
+        "after_digest": "sha256:41c42d504a9b42930406cf38f7f7c9e589fc0a12c826c02a785d3c4d4d6ebd9f"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "1632e6aed1191b3d7d23d37f9eeaee8671789cfd",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "entry_hash": "sha256:6735225d3d481c19ff67833c16b5a1c25cfaa8da6e846567948220aeb56c6bc2"
+}

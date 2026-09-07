@@ -100,6 +100,26 @@ This is a focused compiler/Shop result, not a whole-repository, package-build,
 release or remote-publication claim. A final isolated docs and governance check
 is recorded with the committed handoff rather than changing these results.
 
+## Clean-snapshot documentation correction
+
+Exact committed tip `1632e6aed1191b3d7d23d37f9eeaee8671789cfd`, tree
+`86c8fa8b499c640b39145bfdd06c901ab4210d62`, was tested in a detached local
+clone. The 731-test selector above plus strict HTML, doctest, Python-example
+AST validation, the historical walkthrough guard and the current-ledger test
+returned 735 passed and 1 failed. Strict HTML found one new Markdown link to an
+out-of-tree research README, which Sphinx treats as an unknown source document.
+File existence alone, checked earlier, does not prove website link resolution.
+
+The correction links the three current JSON evidence files instead. They are
+downloadable artifacts under the existing Sphinx behavior. No builder policy,
+warning suppression, runtime, test expectation or evidence byte is changed.
+`test_strict_html_build_is_source_pure` is the existing hard guard for this
+class; its failure was preserved at the committed tip rather than hidden.
+A first live retry stopped at the expected governance digest check because
+the corrected documentation was not yet rebound. It returned 1 failed and
+1 passed and does not count as HTML validation. The append-only successor
+binds these two corrected document files before the final HTML check.
+
 ## Scoped self-inquisition
 
 Rubric 12. The lowest affected profile is optional compiler-enabled semantic

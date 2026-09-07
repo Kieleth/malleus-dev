@@ -100,8 +100,10 @@ The detailed walkthrough below describes the older fixture-specific runner.
 Its recorded files are preserved, not recomputed in place. A compiler
 diagnostic edit changed the producer fingerprint and therefore the histories'
 fingerprints without changing these graph results. The
-[6 September evidence generation](../research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_06/README.md)
-records the current correction, object-event and older showcase runs separately.
+[6 September correction evidence](../research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_06/correction/explanation.json),
+[occurrence evidence](../research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_06/object_event/evidence.json),
+and [showcase evidence](../research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_06/showcase/explanation.json)
+record the current runs separately.
 Their tests require exact current bytes and protect the earlier files by hash.
 The public-path evidence linked above already matched and was not rewritten.
 
