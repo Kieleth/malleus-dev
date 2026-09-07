@@ -164,3 +164,26 @@ It does not implement resolution. The candidate's `unresolved` list retains
 the owning history's obligations, including prerequisite closure, source
 semantic hashing, authenticated headers and a final head/count check before
 commit. No event, check producer or stateful instruction was executed here.
+
+### Prerequisite registration specimens
+
+`lifecycle/PREREQUISITE_PLAN.md` defines the next bounded cut. The four
+`*-registration.json` additions cover a finite-ended grant, a monitor with two
+SourceArtifact inputs, and epistemic/authorization policies with two monitor
+references. These are full-record conformance specimens, not restrictions on
+other Assent registrations. Their status remains `STATIC_VALID_PARTIAL`.
+
+The existing twelve instructions express metadata and record hashes, canonical
+ID/permission lists, applied dependency record hashes and required source
+membership. Monitor and policy semantic hashes use explicit field comparisons
+against a supplied preimage before `HASH VALUE`. Record, artifact and byte
+identities remain distinct. The test-side preimage field map is not a runtime
+mapper or another instruction language.
+
+`lifecycle/registration-nonblank-gap.json` preserves a shared expressibility
+gap: whitespace-only strings pass the compiled shape and list ordering but
+fail existing Assent nonblank checks. No new instruction, regex, normalization
+or callback closes that gap. Other arities/optional variants, authenticating
+the applied history and source closure, concrete producers, instruction
+execution and atomic persistence remain unimplemented. See
+`lifecycle/PREREQUISITE_REPORT.md` for the exact test evidence.

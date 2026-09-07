@@ -12,7 +12,10 @@ instead of adding a primitive or narrowing the claimed registration language.
 Smallest observations: full specimens validate against compiled Assent;
 declared metadata, hash and applied dependency paths pass static checking;
 declared semantic preimages agree with the existing control digest functions;
-wrong hash categories and missing operands refuse statically. Real control
+dependency paths name the required hash category and missing operands refuse
+statically. A digest-shaped value alone cannot distinguish record and artifact
+identity. Path assertions and distinct-value hash witnesses check that binding;
+the future runtime must verify the actual referenced records. Real control
 helpers distinguish malformed values independently of static success.
 
 Reuse: source registration's shared prelude and global-ID target, complete
