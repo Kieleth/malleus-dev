@@ -48,9 +48,9 @@ def test_input_origins_close_the_declared_monitor_roles_without_runtime_claims()
     roles = set(bindings["record_inputs"]) | set(bindings["byte_inputs"])
     roles |= set(bindings["scalar_inputs"])
     assert set(origins["monitor_inputs"]) == roles
-    assert set(origins["invocation_order"]) == set(monitors["checks"])
-    for kind, definition in monitors["checks"].items():
-        assert origins["invocation_order"][kind] == definition["ordered_inputs"]
+    assert set(origins["invocation_order"]) == {"TYPE", "DIRECT_GRANT"}
+    for kind in origins["invocation_order"]:
+        assert origins["invocation_order"][kind] == monitors[kind]["ordered_inputs"]
     assert origins["status"] == "DEFINITION_ONLY"
     assert origins["runtime_resolution"] == "UNIMPLEMENTED"
     for role in bindings["byte_inputs"]:
@@ -230,3 +230,54 @@ def test_selected_record_variant_refuses_non_action_members_and_revisions():
         assert record["properties"][field]["maxItems"] == 1
     for field in ("revises_proposal_id", "candidate_artifact_id"):
         assert field not in record["properties"]
+
+
+def test_policy_reference_hashes_keep_existing_record_identity_semantics():
+    # ProtocolLedger._artifact_ref resolves policy references by content_hash,
+    # not artifact_hash. Both are digests but they name different objects.
+    steps = packet()["program"]["steps"]
+    for code in ("EPIS_POLICY_HASH_MISMATCH", "AUTH_POLICY_HASH_MISMATCH"):
+        step = next(s for s in steps if s["refusal"] == code)
+        assert step["right"]["path"] == ["value", "content_hash"]
+
+
+@pytest.mark.parametrize(
+    "record_type", ["EpistemicPolicyArtifact", "AuthorizationPolicyArtifact"]
+)
+def test_resolved_policy_shapes_preserve_all_compiled_required_fields(record_type):
+    digest = content_digest({"purpose": "policy shape only"})
+    fields = {
+        "artifact_kind": "EPISTEMIC_POLICY"
+        if record_type == "EpistemicPolicyArtifact"
+        else "AUTHORIZATION_POLICY",
+        "artifact_version": "shape-v1",
+        "artifact_hash": digest,
+        "policy_schema_version": "1",
+        "required_monitor_ids": ["monitor:shape"],
+        "required_monitor_record_hashes": [digest],
+    }
+    if record_type == "EpistemicPolicyArtifact":
+        fields.update(
+            ruleset_id="rules:shape",
+            ruleset_record_hash=digest,
+            ruleset_artifact_hash=digest,
+            violation_verdicts=["REJECT"],
+            unknown_verdicts=["DEFER"],
+            control_precedence=["REJECT", "CONTEST", "DEFER"],
+        )
+    policy = make_record(
+        record_type,
+        id="policy:shape",
+        event_id="event:shape",
+        generated_at="2026-09-07T00:00:00Z",
+        actor_id="actor:shape",
+        role="registrar",
+        source_record_ids=[],
+        **fields,
+    )
+    assert policy["content_hash"] != policy["artifact_hash"]
+    assert _compile().view.validate_instance(record_type, policy) == []
+    shape = packet()["profile"]["record_schemas"][record_type]
+    assert set(shape["properties"]) == set(policy)
+    assert set(shape["required"]) == set(policy)
+    Draft202012Validator(shape, format_checker=FORMATS).validate(policy)

@@ -1,0 +1,152 @@
+{
+  "status": "DEFINITION_ONLY",
+  "runtime_resolution": "UNIMPLEMENTED",
+  "owning_history": "THE_SAME_VERIFIED_KCS_AND_PROTOCOL_HISTORY",
+  "identity_rules": {
+    "content_bytes": "Exact retained bytes, source_content_digest and source_byte_length",
+    "protocol_record": "Exact record type and complete record_hash, including provenance",
+    "semantic_artifact": "artifact_hash under that artifact's existing content contract",
+    "no_substitution": "A valid hash in one category does not satisfy another category"
+  },
+  "invocation_order": {
+    "TYPE": [
+      "proposal",
+      "action",
+      "record_contract"
+    ],
+    "DIRECT_GRANT": [
+      "proposal",
+      "action",
+      "executor_id",
+      "grant",
+      "scope_association",
+      "requested_interval",
+      "authorization_policy",
+      "original_context",
+      "current_context"
+    ]
+  },
+  "monitor_inputs": {
+    "proposal": {
+      "origin": "VERIFIED_APPLIED_RECORD",
+      "scope": "APPLIED",
+      "record_type": "ProposedSubgraph",
+      "identity_field": "content_hash"
+    },
+    "action": {
+      "origin": "VERIFIED_APPLIED_RECORD",
+      "scope": "APPLIED",
+      "record_type": "ActionProposal",
+      "identity_field": "content_hash"
+    },
+    "grant": {
+      "origin": "VERIFIED_APPLIED_RECORD",
+      "scope": "APPLIED",
+      "record_type": "AuthorityGrant",
+      "identity_field": "content_hash"
+    },
+    "authorization_policy": {
+      "origin": "VERIFIED_APPLIED_RECORD",
+      "scope": "APPLIED",
+      "record_type": "AuthorizationPolicyArtifact",
+      "identity_field": "content_hash"
+    },
+    "executor_id": {
+      "origin": "INVOCATION_SCALAR",
+      "type": "string",
+      "not_a_retained_artifact": true
+    },
+    "record_contract": {
+      "origin": "RETAINED_SOURCE_BYTES_AND_APPLIED_CARRIER",
+      "scope": "APPLIED",
+      "carrier": "SourceArtifact",
+      "bytes_identity_field": "source_content_digest",
+      "record_identity_field": "content_hash",
+      "semantic_identity_field": "artifact_hash",
+      "content": "compiled-record-contract"
+    },
+    "scope_association": {
+      "origin": "RETAINED_SOURCE_BYTES_AND_APPLIED_CARRIER",
+      "scope": "APPLIED",
+      "carrier": "SourceArtifact",
+      "bytes_identity_field": "source_content_digest",
+      "record_identity_field": "content_hash",
+      "semantic_identity_field": "artifact_hash",
+      "content": "scope"
+    },
+    "requested_interval": {
+      "origin": "RETAINED_SOURCE_BYTES_AND_APPLIED_CARRIER",
+      "scope": "APPLIED",
+      "carrier": "SourceArtifact",
+      "bytes_identity_field": "source_content_digest",
+      "record_identity_field": "content_hash",
+      "semantic_identity_field": "artifact_hash",
+      "content": "interval"
+    },
+    "original_context": {
+      "origin": "RETAINED_SOURCE_BYTES_AND_APPLIED_CARRIER",
+      "scope": "APPLIED",
+      "carrier": "SourceArtifact",
+      "bytes_identity_field": "source_content_digest",
+      "record_identity_field": "content_hash",
+      "semantic_identity_field": "artifact_hash",
+      "content": "original-context"
+    },
+    "current_context": {
+      "origin": "RETAINED_SOURCE_BYTES_AND_APPLIED_CARRIER",
+      "scope": "APPLIED",
+      "carrier": "SourceArtifact",
+      "bytes_identity_field": "source_content_digest",
+      "record_identity_field": "content_hash",
+      "semantic_identity_field": "artifact_hash",
+      "content": "current",
+      "freshness": "VERIFY_RETAINED_PREFIX_THEN_COMPARE_CURRENT_A_AND_D"
+    }
+  },
+  "transaction_inputs": {
+    "prerequisites": {
+      "scope": "APPLIED",
+      "origin": "VERIFIED_PRETRANSACTION_PREFIX",
+      "required": [
+        "initialization",
+        "epistemic_policy",
+        "authorization_policy",
+        "goal",
+        "preservation",
+        "mapping",
+        "pre_state_source",
+        "record_contract"
+      ]
+    },
+    "original_context": {
+      "scope": "APPLIED_AND_EARLIER_STAGED",
+      "origin": "FIRST_EVENT_OF_THIS_ATOMIC_PAIR",
+      "available_to": "SECOND_EVENT_ONLY",
+      "commit_alone": false
+    },
+    "current": {
+      "scope": "APPLIED",
+      "origin": "OWNING_REPLAY_BEFORE_TRANSACTION",
+      "caller_dictionary_is_authority": false
+    },
+    "headers": {
+      "origin": "OWNING_HISTORY_STAGED_EVENT_HEADERS",
+      "caller_constructs_trusted_sequence": false
+    }
+  },
+  "current_context_rule": "A retained context names a real historical prefix before its own retention. Verify that prefix; do not require its head to equal a later full head merely because protocol events advanced. Recheck current action and domain coordinates independently; commit still compares expected full head and count.",
+  "unresolved_runtime_contracts": [
+    "Resolve full applied Assent records and their indexes from the owning history",
+    "Bind full SourceArtifact wrappers to the history retention event's flat ID/digest fields",
+    "Verify content IDs, decoded content, byte identities and required prerequisite membership before staging",
+    "Compute exact monitor static dependency sets and consumed-source order through real producers",
+    "Execute and commit the pair atomically with final full-head/count comparison"
+  ],
+  "non_claims": [
+    "No record resolution",
+    "No trusted replay construction",
+    "No check execution",
+    "No event append",
+    "No source or domain-state mutation"
+  ]
+}
