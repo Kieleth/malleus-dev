@@ -260,6 +260,16 @@ def test_implementation_claim_must_name_this_loaded_implementation():
         api().CheckExecutor(engine.definition_bytes, b"not executable producer bytes")
 
 
+def test_implementation_capsule_retains_the_core_kernel_not_only_import_shims():
+    from importlib import import_module
+    from pathlib import Path
+
+    capsule = json.loads(api().load_check_executor().implementation_bytes)
+    for name in ("finite_program", "finite_executor", "finite_control"):
+        module = import_module(f"malleus._contract_pipeline.{name}")
+        assert capsule[f"core/{name}.py"] == Path(module.__file__).read_text()
+
+
 def test_unknown_check_instruction_is_not_misreported_as_a_violated_predicate(compiled):
     engine, args = inputs(compiled, "TYPE")
     definition = json.loads(engine.definition_bytes)
