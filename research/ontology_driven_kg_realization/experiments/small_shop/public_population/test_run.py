@@ -94,6 +94,42 @@ def test_full_run_uses_only_the_public_core_facade() -> None:
     )
 
 
+def test_full_shop_crosses_snapshot_only_composition_without_changing_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    contexts = []
+
+    def coordinator(history, **arguments):
+        context = history.composition_context()
+        contexts.append(context)
+        # Only immutable context and explicit values enter the public composer.
+        return compiler.compose_change_set(context=context, **arguments)
+
+    monkeypatch.setattr(
+        compiler.KnowledgeChangeHistory, "compose_change_set", coordinator
+    )
+    output = tmp_path / "snapshot-shop"
+    result = _module().run_full_shop(output)
+    ledger = (output / "history.jsonl").read_bytes()
+    assert result.evidence_bytes == EXPECTED_EVIDENCE.read_bytes()
+    assert len(contexts) == 5
+    assert len({context.contract_identity for context in contexts}) == 2
+    for context, change in zip(contexts, result.replay.change_sets, strict=True):
+        assert change.base_ledger_head == context.base_ledger_head
+        assert change.base_accepted_state_digest == context.base_accepted_state_digest
+    assert (
+        result.replay.graph.query("SupplierOrderState", supplier_order_id="B")[0][
+            "ordered_quantity"
+        ]
+        == 2
+    )
+    trace = compiler.trace_population_record(result.replay, "supplier-order-state:B:e7")
+    assert trace.record_history.supersedes_record_id == "supplier-order-state:B:e4"
+    assert _module().run_full_shop(output).evidence_bytes == result.evidence_bytes
+    assert len(contexts) == 5
+    assert (output / "history.jsonl").read_bytes() == ledger
+
+
 def test_walkthrough_query_executes_against_the_full_public_run(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:

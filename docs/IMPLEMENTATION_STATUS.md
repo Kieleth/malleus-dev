@@ -21,13 +21,17 @@ and retains exact source-and-mapping plus structural check receipts, preserves
 both versions in record history, and derives only the `e7` version into the
 current graph. Its answer key remains outside execution.
 
-A private, domain-neutral composer removes the repeated mechanical assembly of
-those change sets. It binds an explicit operation list and valid-time decision
-to the current contract, ledger, accepted-state, and retained-input identities,
-then returns an immutable `KnowledgeChangeSet` carrying canonical bytes without
-writing anything. Admission and replay remain separate. Source parsing, domain
-mapping, checks, policy, and protocol-event construction remain outside the
-helper.
+A domain-neutral composer removes the repeated mechanical assembly of those
+change sets. `KnowledgeChangeHistory.composition_context()` reads verified
+history once and returns an immutable `KnowledgeChangeContext`, with no writer,
+path or graph. The public `malleus.compiler.compose_change_set` binds explicit
+operations and valid time to this context's contract, base coordinates and
+retained input identities. It returns the existing canonical `KnowledgeChangeSet`
+without I/O. The history method delegates to this same implementation. Admission
+still rejects a stale base, including an intervening evidence-only append.
+The context's consistency fingerprint is not an authenticated checkpoint or
+new persisted grammar. Source parsing, domain mapping, checks, policy, no-op
+decisions and protocol-event construction remain outside the composer.
 
 Packages built from this source expose the reusable pieces through
 `malleus.compiler`: exact-source LinkML contract compilation, population-plan

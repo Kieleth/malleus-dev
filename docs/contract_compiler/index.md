@@ -180,30 +180,41 @@ The mapping file is deliberately fixture-local. Generalizing it before another
 real consumer needs the seam would turn this bounded proof into a speculative
 DSL.
 
-## Private change-set composer
+## Read-only change-set composition
 
 The Small Shop population and correction proofs repeated one mechanical step:
 assembling a `KnowledgeChangeSet` from the current history coordinates and
-already retained inputs. A private helper now owns only that repetition. Given
+already retained inputs. One composer owns only that repetition. Given
 an explicit change-set ID, retained source record IDs, retained evidence record
 IDs, ordered operations, valid time, and superseded change-set IDs, it returns
 the canonical immutable change set. Every input is required, including an empty
 supersession list.
 
-The helper resolves source and evidence hashes from the current ledger, binds
-the exact contract and base-state coordinates, and refuses missing or
-wrong-role records. It is pure: composing a change changes neither the ledger
-nor the accepted graph. Admission remains a separate call, and replay remains
-the only way to derive accepted state. If history advances between composition
-and admission, admission refuses the stale change without mutation.
+The coordinator calls `history.composition_context()` after retaining needed
+source and plan evidence. This reads and verifies history once and returns a
+`KnowledgeChangeContext`: immutable base coordinates, contract and receipt
+identities, and retained input bytes and roles. No graph, writer, path or
+callback enters this value. The factory accepts no caller-supplied replay graph.
+
+The public `malleus.compiler.compose_change_set` takes `context` plus the six
+existing composition arguments listed above. It resolves IDs against that
+context, preserves the existing KCS bytes and refuses missing or wrong-role
+inputs. Context field substitution refuses with `IDENTITY_MISMATCH`. Its
+consistency fingerprint is not an authenticated checkpoint or a sandbox.
+Composition performs no I/O and changes neither history nor accepted state.
+The history method delegates to this same composer rather than a second
+serializer. Admission remains separate, and replay derives accepted state.
+An intervening append, including evidence-only retention, makes admission
+refuse the stale change. The pure composer cannot discover later writes.
 
 This removes boilerplate, not responsibility. Domain adapters still parse
 source bytes and choose record IDs, properties, operations, valid-time meaning,
 and supersession. Checks and policy still decide whether the proposed change is
-acceptable. Protocol events still record that lifecycle. The helper is private
-research code, is not exported by `malleus`, and is not a stable public wire or
-application API. Public promotion requires another independent consumer and a
-separately governed compatibility contract.
+acceptable. Protocol events still record that lifecycle. The Python API is
+exported through `malleus.compiler`, not the package root. Its KCS grammar
+remains `private-v0`; the in-memory context adds no persisted wire. This is a
+reference implementation of the optional compiler-enabled semantic-history
+profile, not a mandatory protocol tool or a Semantic Re-entry implementation.
 
 ## Local CI and compiler TDD
 
