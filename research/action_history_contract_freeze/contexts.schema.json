@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed action-history context shapes, not executable state",
+  "$defs": {
+    "name": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$", "maxLength": 71},
+    "head": {"oneOf": [{"const": "GENESIS"}, {"$ref": "#/$defs/digest"}]},
+    "artifact": {
+      "type": "object",
+      "properties": {"id": {"$ref": "#/$defs/name"}, "bytes_sha256": {"$ref": "#/$defs/digest"}},
+      "required": ["id", "bytes_sha256"], "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "properties": {"id": {"$ref": "#/$defs/name"}, "record_hash": {"$ref": "#/$defs/digest"}},
+      "required": ["id", "record_hash"], "additionalProperties": false
+    },
+    "prefix": {
+      "oneOf": [
+        {"type": "object", "properties": {"head": {"const": "GENESIS"}, "event_count": {"type": "integer", "const": 0}},
+         "required": ["head", "event_count"], "additionalProperties": false},
+        {"type": "object", "properties": {"head": {"$ref": "#/$defs/digest"}, "event_count": {"type": "integer", "minimum": 1}},
+         "required": ["head", "event_count"], "additionalProperties": false}
+      ]
+    },
+    "domain": {
+      "type": "object",
+      "properties": {
+        "effective_contract_identity": {"$ref": "#/$defs/digest"},
+        "kcs_acceptance_head": {"$ref": "#/$defs/head"},
+        "materialization_head": {"$ref": "#/$defs/head"},
+        "accepted_graph_digest": {"$ref": "#/$defs/digest"}
+      },
+      "required": ["effective_contract_identity", "kcs_acceptance_head", "materialization_head", "accepted_graph_digest"],
+      "additionalProperties": false
+    },
+    "common": {
+      "type": "object",
+      "properties": {
+        "id": {"$ref": "#/$defs/name"},
+        "prefix": {"$ref": "#/$defs/prefix"},
+        "domain": {"$ref": "#/$defs/domain"},
+        "epistemic_policy": {"$ref": "#/$defs/record"},
+        "authorization_policy": {"$ref": "#/$defs/record"}
+      },
+      "required": ["id", "prefix", "domain", "epistemic_policy", "authorization_policy"]
+    }
+  },
+  "oneOf": [
+    {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "schema": {"const": "malleus.action-history.initialization/research-v1"},
+            "profile": {"$ref": "#/$defs/artifact"},
+            "record_contract": {"$ref": "#/$defs/artifact"},
+            "machine": {"$ref": "#/$defs/artifact"},
+            "history_binding": {"$ref": "#/$defs/artifact"}
+          },
+          "required": ["schema", "profile", "record_contract", "machine", "history_binding"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "schema": {"const": "malleus.action-history.original-context/research-v1"},
+            "initialization_identity": {"$ref": "#/$defs/digest"},
+            "action_acceptance_head": {"$ref": "#/$defs/digest"},
+            "proposal_id": {"$ref": "#/$defs/name"},
+            "action_id": {"$ref": "#/$defs/name"},
+            "episode_key": {"$ref": "#/$defs/name"},
+            "goal": {"$ref": "#/$defs/artifact"},
+            "preservation": {"$ref": "#/$defs/artifact"},
+            "mapping": {"$ref": "#/$defs/artifact"},
+            "pre_state_source": {"$ref": "#/$defs/artifact"}
+          },
+          "required": ["schema", "initialization_identity", "action_acceptance_head", "proposal_id", "action_id", "episode_key", "goal", "preservation", "mapping", "pre_state_source"]
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  ]
+}

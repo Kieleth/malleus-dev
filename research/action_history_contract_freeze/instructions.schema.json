@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed finite instruction shapes, no executor",
+  "$defs": {
+    "name": {"type": "string", "minLength": 1},
+    "path": {
+      "type": "array", "minItems": 1,
+      "items": {"oneOf": [{"$ref": "#/$defs/name"}, {"type": "integer", "minimum": 0}]}
+    },
+    "operand": {
+      "type": "object",
+      "properties": {
+        "root": {"enum": ["event", "applied_record", "original", "current", "artifact", "result"]},
+        "name": {"$ref": "#/$defs/name"}, "path": {"$ref": "#/$defs/path"}
+      },
+      "required": ["root", "name", "path"], "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "VALIDATE_RECORD"}, "record": {"$ref": "#/$defs/operand"},
+        "contract": {"$ref": "#/$defs/operand"}, "result": {"$ref": "#/$defs/name"},
+        "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "record", "contract", "result", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "HASH"}, "recipe": {"enum": ["VALUE", "RECORD", "ARTIFACT"]},
+        "value": {"$ref": "#/$defs/operand"}, "record_type": {"$ref": "#/$defs/operand"},
+        "artifact_contract": {"$ref": "#/$defs/operand"}, "result": {"$ref": "#/$defs/name"},
+        "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "recipe", "value", "result", "refusal"], "additionalProperties": false,
+      "allOf": [
+        {"if": {"properties": {"recipe": {"const": "RECORD"}}}, "then": {"required": ["record_type"]},
+         "else": {"not": {"required": ["record_type"]}}},
+        {"if": {"properties": {"recipe": {"const": "ARTIFACT"}}}, "then": {"required": ["artifact_contract"]},
+         "else": {"not": {"required": ["artifact_contract"]}}}
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "RESOLVE_RECORD"}, "record_id": {"$ref": "#/$defs/operand"},
+        "record_type": {"$ref": "#/$defs/operand"}, "record_hash": {"$ref": "#/$defs/operand"},
+        "scope": {"enum": ["APPLIED", "APPLIED_AND_EARLIER_STAGED"]},
+        "result": {"$ref": "#/$defs/name"}, "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "record_id", "record_type", "record_hash", "scope", "result", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "REQUIRE_COMPARE"}, "left": {"$ref": "#/$defs/operand"},
+        "right": {"$ref": "#/$defs/operand"}, "comparison": {"enum": ["EQ", "NE", "LT", "LE"]},
+        "value_kind": {"enum": ["STRING", "DIGEST", "HEAD", "INTEGER", "BOOLEAN", "INSTANT"]},
+        "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "left", "right", "comparison", "value_kind", "refusal"], "additionalProperties": false,
+      "if": {"properties": {"value_kind": {"enum": ["STRING", "DIGEST", "HEAD", "BOOLEAN"]}}},
+      "then": {"properties": {"comparison": {"enum": ["EQ", "NE"]}}}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "REQUIRE_UNIQUE"}, "records": {"$ref": "#/$defs/operand"},
+        "key_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "target_index": {"$ref": "#/$defs/name"}, "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "records", "key_paths", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "REQUIRE_COVERAGE"}, "required": {"$ref": "#/$defs/operand"},
+        "outputs": {"$ref": "#/$defs/operand"}, "context": {"$ref": "#/$defs/operand"},
+        "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "required", "outputs", "context", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "REQUIRE_INTERVAL"}, "inner": {"$ref": "#/$defs/operand"},
+        "outer": {"$ref": "#/$defs/operand"}, "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "inner", "outer", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "SELECT_CONTROL"}, "policy": {"$ref": "#/$defs/operand"},
+        "outputs": {"$ref": "#/$defs/operand"}, "context": {"$ref": "#/$defs/operand"},
+        "result": {"$ref": "#/$defs/name"}, "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "policy", "outputs", "context", "result", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "INTRODUCE_RECORDS"}, "records": {"$ref": "#/$defs/operand"},
+        "dependencies": {"$ref": "#/$defs/operand"}, "result": {"$ref": "#/$defs/name"},
+        "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "records", "dependencies", "result", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "opcode": {"const": "SET_PROTOCOL_STATE"}, "target": {"enum": ["PROTOCOL_INDEX", "ACTION_ACCEPTANCE_HEAD"]},
+        "name": {"$ref": "#/$defs/name"}, "value": {"$ref": "#/$defs/operand"},
+        "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "target", "name", "value", "refusal"], "additionalProperties": false
+    }
+  ]
+}

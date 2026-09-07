@@ -1,0 +1,34 @@
+{
+  "purpose": "Review-packet byte bindings, not a protocol artifact or executable bundle",
+  "status": "REVIEW_REQUIRED",
+  "compiler": {
+    "commit": "1be958e88dce865c8e785638d1c15508c92bd1d2",
+    "tree": "8334a558442eb64ec90973d6d0ab08eba3b85ce6",
+    "compatibility_packet_commit": "ff0e1b31f3b44be56a63465b9180d7bbf4c17e54"
+  },
+  "semantic_basis": {
+    "commit": "f221c0994df530170c80726be29ff876d3dd195e",
+    "tree": "2bad91898a27618107997c526f9cbc99cbaf5c2b",
+    "files": {
+      "research/semantic_reentry_external_design/CORE_CONTRACT.md": "sha256:605eaabcba2e7cb1e71ed0a21b13d29f610a761bd759774bf7e75eac6bfa770c",
+      "research/semantic_reentry_external_design/ADOPTER_CONTRACT.md": "sha256:1fa219abe205aaf33d4b77184829827e6631bd86e9c392fad95a107e688b5067",
+      "research/semantic_reentry_external_design/FREEZE_GATE.md": "sha256:d646d9c44f1104b13a1b22be25558bf6bc41d67a5c5be384ee7ae68950966bf2"
+    }
+  },
+  "local_files": {
+    "DEFINITION.md": "sha256:3a4172e992cc6f4d0a367d2e8606310b38a9c3e18ffa1d7698c22a9407ac5090",
+    "contexts.schema.json": "sha256:43f5e2f040e408d18de9448b56145284caa83b901c810f1ac08a2776c4f2dd68",
+    "instructions.schema.json": "sha256:3951a88c0db38aab91148c61276410d3189bb1f2e47ad54f2dd48f50d6cee6f5",
+    "capabilities.schema.json": "sha256:0e832d453c078b382071e19b3eea001255f4bf5518509c52b350082d645800b3",
+    "test_definition.py": "sha256:253a667d04cbfe2fc2d776dedc8ed20f6d47e312acfa2673e23b9cacc4f4a70f"
+  },
+  "producer_implementations": {"TYPE": "UNBOUND", "DIRECT_GRANT": "UNBOUND"},
+  "interpreter": "NOT_IMPLEMENTED",
+  "event_programs": "NOT_FROZEN",
+  "executable_context_instances": "NOT_INSTANTIATED",
+  "pending_review": [
+    "Original-context registration immediately precedes proposal",
+    "Finite instruction names, operand shapes and type restrictions",
+    "Complete event programs, monitor invocation/output bindings and referenced content contracts before runtime"
+  ]
+}

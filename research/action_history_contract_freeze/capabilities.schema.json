@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed pure check-producer bindings, no producer instances",
+  "$defs": {
+    "name": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$", "maxLength": 71},
+    "artifact": {
+      "type": "object",
+      "properties": {"id": {"$ref": "#/$defs/name"}, "bytes_sha256": {"$ref": "#/$defs/digest"}},
+      "required": ["id", "bytes_sha256"], "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "properties": {"id": {"$ref": "#/$defs/name"}, "record_hash": {"$ref": "#/$defs/digest"}},
+      "required": ["id", "record_hash"], "additionalProperties": false
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "id": {"$ref": "#/$defs/name"}, "version": {"$ref": "#/$defs/name"},
+        "bytes_sha256": {"$ref": "#/$defs/digest"}
+      },
+      "required": ["id", "version", "bytes_sha256"], "additionalProperties": false
+    },
+    "common": {
+      "type": "object",
+      "properties": {
+        "contract": {"$ref": "#/$defs/artifact"},
+        "implementation": {"$ref": "#/$defs/implementation"}, "effects": {"const": "PURE"}
+      },
+      "required": ["contract", "implementation", "effects"]
+    }
+  },
+  "oneOf": [
+    {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "kind": {"const": "TYPE"},
+            "inputs": {
+              "type": "object",
+              "properties": {
+                "proposal": {"$ref": "#/$defs/record"}, "action": {"$ref": "#/$defs/record"},
+                "record_contract": {"$ref": "#/$defs/artifact"}
+              },
+              "required": ["proposal", "action", "record_contract"], "additionalProperties": false
+            }
+          },
+          "required": ["kind", "inputs"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "kind": {"const": "DIRECT_GRANT"},
+            "inputs": {
+              "type": "object",
+              "properties": {
+                "proposal": {"$ref": "#/$defs/record"}, "action": {"$ref": "#/$defs/record"},
+                "executor_id": {"$ref": "#/$defs/name"}, "grant": {"$ref": "#/$defs/record"},
+                "scope_association": {"$ref": "#/$defs/artifact"}, "requested_interval": {"$ref": "#/$defs/artifact"},
+                "authorization_policy": {"$ref": "#/$defs/record"},
+                "original_context": {"$ref": "#/$defs/artifact"}, "current_context": {"$ref": "#/$defs/artifact"}
+              },
+              "required": ["proposal", "action", "executor_id", "grant", "scope_association", "requested_interval", "authorization_policy", "original_context", "current_context"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["kind", "inputs"]
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  ]
+}

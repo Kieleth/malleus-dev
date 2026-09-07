@@ -87,6 +87,12 @@ original context, verified current state, an identified artifact or a prior
 instruction result. Paths are nonempty ordered field/index components.
 Unknown roots, missing values, invalid paths and forward/local cycles refuse;
 there is no ambient lookup, expression evaluation or callable import.
+Names select declared bindings, not filesystem or Python names. A path walks
+object keys or zero-based array indices. Each bound value must expose the
+declared wrapper field, including whole-record values; there is no implicit
+empty-path or missing-field default. STRING, DIGEST, HEAD and BOOLEAN allow
+equality/inequality only. INTEGER and timezone-aware INSTANT additionally allow
+ordering. These exact choices are proposed parts of the vocabulary review.
 
 The program is a finite ordered list, with no recursion, jumps, loops or
 user-supplied code. An array operand is consumed only by the named finite-list
@@ -149,6 +155,56 @@ UNBOUND or specification-only implementation cannot instantiate that shape.
 Schema validation alone cannot prove that digest-named implementation bytes
 exist or execute the declared checks. Those are still runtime conformance
 obligations. Shape tests use labeled synthetic witnesses, never live monitors.
+
+This binding is not a complete monitor invocation envelope. The future event
+program must also bind the existing assessment's record ID, generation_event_id,
+generated_at, responsible_actor_id, responsible_role and exact monitor record.
+No clock, ID allocator or actor default may fill them. Existing monitor_hash
+means the MonitorSpecificationArtifact record hash, while its
+monitor_implementation_hash identifies producer bytes; they are not aliases.
+The monitor_version comes from that monitor record's artifact_version.
+Proposal hash, base_acceptance_head, input_record_ids and authority-specific
+action/actor/policy/grant fields must derive from the declared input records.
+Outcomes, reasons and checked/violated predicates are computed by the real
+producer. Monitor input-array ordering and those complete output bindings must
+be frozen with the event programs before runtime implementation.
+
+Likewise, requested_interval, scope_association and current_context currently
+have exact artifact-reference shapes, not newly implemented content parsers.
+Their content must close against the approved interval, equality-scope and
+verified-context semantics before any instance can execute. This packet does
+not make an arbitrary digest a valid interval or authority claim.
+
+## What the tests establish
+
+The standard declared JSON Schema validator checks these three local schemas.
+Their references are internal to each file; validation requires no network or
+generated code. Tests cover both closed contexts, every instruction, both check
+bindings, canonical context identity, missing and mistyped inputs, mixed
+coordinate fields, unknown execution hooks and absent implementation slots.
+The current public machine parser still rejects the candidate grammar.
+
+Shape validation is not static program validation, state/reference validation,
+real check execution or failure-atomic append. In particular, choosing
+PROTOCOL_INDEX in a syntactically valid instruction does not establish that a
+named index is permitted: the future program validator must resolve it to a
+declared protocol-owned index and reject any alias to domain state. Repeated
+output names, forward references and cyclic introductions remain execution
+contract obligations until the event-program checker exists.
+
+## Review choices, not silently accepted decisions
+
+1. Confirm or revise the immediate context-registration/proposal ordering above.
+2. Review the ten finite instruction shapes and operand/type restrictions against
+   the approved lifecycle. No general expression language is selected.
+3. Freeze the event-to-instruction programs, monitor invocation/output bindings
+   and referenced interval/scope/current-context content contracts before
+   approving runtime implementation. The real TYPE and direct-grant producers,
+   their identities and the interpreter remain absent.
+
+The permitted next step is independent definition review. Disagreement changes
+this proposed packet, not historical protocol data. None of these shape checks
+approves the remaining semantic decisions.
 
 ## Review and completion boundary
 
