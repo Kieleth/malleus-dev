@@ -1,0 +1,122 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000424",
+  "ledger": "overseer",
+  "sequence": 424,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:3e4642b1835bb74700c9f11f15c54b620c5d9912691e23fa6f4998ac35f3c428",
+  "recorded_at": "2026-09-07T02:57:05Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-adoption-docs",
+    "type": "DOCUMENT"
+  },
+  "summary": "Lead the Shop walkthrough with existing default structural admission and correct stale capability claims.",
+  "why": "Luis approved parallel documentation and conformance work plus consumer-led requirement discovery. RED distinguishes the old Shop entrypoint and five stale capability claims. GREEN uses the existing runner and no caller-authored check outcomes, preserves frozen predecessor evidence, moves the executable query guard to the default run, and distinguishes public compiler/history/Event roles from unchanged Assent limits. No runtime, ontology, dependencies, packaging or release change. Re-entry and Robotics stay isolated on frozen Core and report concrete generic gaps only. Focused gates: 9 runner tests, 23 historical/time/gap controls, 16 capability/docs checks; groups overlap. Combined validation is recorded in the slice report. Broad gate: 1243 passed and two strict HTML failures for one out-of-tree README link. The corrective explicit-download RED is 605a971; affected HTML/autodoc/entry/AST rerun passes four tests without relaxing warnings. This is decomposed validation, not one uninterrupted all-green full suite.",
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "README.md",
+        "after_digest": "sha256:9c4d7f71fdb708f9f1c982d8ba73f86b93c2b1e7c26dbd6455c52d5fc7883e32",
+        "change": "MODIFIED",
+        "before_digest": "sha256:dd0ec9d2c25a5aa121da9b8df85b0647f67c5dcf0b31ec59709e958ae1c12c76"
+      },
+      {
+        "path": "docs/PRINCIPLES.md",
+        "after_digest": "sha256:d50d61c673ae4bd004f91f42fc424d3aef173b5d7eb8ebe51f4c55988ac06717",
+        "change": "MODIFIED",
+        "before_digest": "sha256:8e096b9f4cc624271093cbebafdd32289bff5ef85c1debc6770b0ce1bbffd788"
+      },
+      {
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md",
+        "after_digest": "sha256:482b49e70c6e1a119964c694a87c099169cd8da2693013b66f78b8a37d7146bc",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6e9d81a760adbcd75331b970339a439abb863c0cf459c6c926bb61710394aee4"
+      },
+      {
+        "path": "docs/index.md",
+        "after_digest": "sha256:6868f0671d42ac123b1cc32cc617199fa76ee102b69cb7fa31506e937191c0d7",
+        "change": "MODIFIED",
+        "before_digest": "sha256:97243aa0e739ecc2618e0ddcbedbc23b7fe0017e7a56beacb60d564b0bd6381a"
+      },
+      {
+        "path": "docs/reference/index.md",
+        "after_digest": "sha256:49fac01c6af6f2f0c90fdd5bf4e03f106c476995bd16634f34cb7bd39c495e41",
+        "change": "MODIFIED",
+        "before_digest": "sha256:72c0fbfcc72d25390198f29e6cef41b1e93d1583edf1211e495304190dee0df9"
+      },
+      {
+        "path": "tests/test_docs.py",
+        "after_digest": "sha256:e39f7420485b8e21aa81824aa691a89bccc97d661736140eb3a3ee35d9791b66",
+        "change": "MODIFIED",
+        "before_digest": "sha256:63cea82a8cf87c5fbbe33d84a097f944cc0f8af04be450af18f97fa8b37bdae3"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_default_shop_walkthrough.py",
+        "after_digest": "sha256:14e81c35eb04ce8a61474a0d28f4d1ae41a957981fb996811eb43d60026a059b",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py",
+        "after_digest": "sha256:f5717245164522ccdf3455ef31752910c2ad52910d6530159d184cf02d2192b2",
+        "change": "MODIFIED",
+        "before_digest": "sha256:b22349f2b73bd4774402b223041d1a9cd75d9094b6ac426ac1da86736f531477"
+      },
+      {
+        "path": "handover/2026-09-06-core-adoption-docs.md",
+        "after_digest": "sha256:7e142e6ea8b1e98851bc8de3fae57afc68fcbb1985f1ca5ff777f427ca32b58a",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "5fb4a1981dfe902d48bb982a8e49e24f8ff13688",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2d28043ccade98dd1d23551c840470bab43e7f97",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3c1967de0296f6ae454fdaefd79daac1bd67e6e2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "COORDINATES",
+      "target": "01a05f67-22dc-7043-8174-c24ee9ccb09f",
+      "type": "TASK"
+    },
+    {
+      "relation": "COORDINATES",
+      "target": "01a079a5-4cfe-71e2-b4ab-33791c0d9078",
+      "type": "TASK"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "605a971427a945f64c1c233995b90518f879f14a"
+    }
+  ],
+  "entry_hash": "sha256:af48500da4e3f57686bcc4580263fa301aa56ff8e4d6d5a2cdee4361234302e2"
+}

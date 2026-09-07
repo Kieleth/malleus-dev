@@ -14,7 +14,7 @@ For the current five-change demonstration, read the
 [Small Shop end-to-end walkthrough](SMALL_SHOP_WALKTHROUGH.md). It extends the
 historical milestones below with settlement, one ledger, replay-derived current
 state, named queries, and exact change-level provenance. Its
-[default-admission runner](../research/ontology_driven_kg_realization/experiments/small_shop/default_admission/README.md)
+{download}`default-admission runner <../research/ontology_driven_kg_realization/experiments/small_shop/default_admission/README.md>`
 uses Core's shipped structural checks and admission helper, with no
 caller-authored check outcomes. It writes fresh history and evidence, then
 reopens the history to query the current quantity and trace its source bytes.
