@@ -318,6 +318,21 @@ def test_proposal_failure_preserves_exact_history(tmp_path, inputs, fault):
         ]
         proposal["content_hash"] = record_hash("ProposedSubgraph", proposal)
     before = history.path.read_bytes()
-    with pytest.raises(api().ProtocolProgramRefusal):
+    reasons = {
+        "missing-second": "PROTOCOL_PROGRAM_REFUSAL",
+        "bad-proposal": "WRONG_MEMBER_HASH",
+        "stale-prefix": "STALE_FULL_COUNT",
+        "stale-domain": "STALE_GRAPH",
+        "stale-action": "STALE_ACTION_HEAD",
+        "wrong-initialization": "WRONG_INITIALIZATION",
+        "forged-checkpoint": "UNAPPLIED_INITIALIZATION_CONTENT",
+        "missing-source": "UNAPPLIED_CONTEXT_SOURCE",
+        "wrong-source-digest": "MISBOUND_CONTEXT_SOURCE_BYTES",
+        "context-artifact-hash": "SOURCE_SEMANTIC_HASH_MISMATCH",
+        "policy": "WRONG_EPIS_POLICY_ID",
+        "duplicate-action-key": "DUPLICATE_ACTION_KEY",
+    }
+    with pytest.raises(api().ProtocolProgramRefusal) as caught:
         submit(history, events)
+    assert caught.value.reason == reasons[fault]
     assert history.path.read_bytes() == before

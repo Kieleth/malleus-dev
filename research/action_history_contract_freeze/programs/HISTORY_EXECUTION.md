@@ -129,9 +129,28 @@ reuse, owner-state, finite-executor and check-producer gate passes 76 tests.
 
 ## Remaining execution work
 
-The actual action context/proposal program must next cross this same owning
-gate as one atomic pair. The neutral pair test is not that proof. Then bind
-the real check outputs, epistemic decision/transition, authority assessment,
+The actual context/proposal definition now crosses the owning gate as one
+atomic pair. It retains the original context, introduces the complete concrete
+LocalAction and ProposedSubgraph records, then sets PROPOSED/PENDING and their
+associations. It reads the real initialization index, verifies the complete
+retained checkpoint against that identity, resolves both selected policies and
+all four retained context-source references. The source-registration recipe
+checks byte, artifact and record identities separately. No caller-supplied
+current state or applied records are trusted.
+
+Thirteen tests pass, including twelve refusals with exact reason codes and
+byte preservation: incomplete transaction, wrong member, stale full/domain/
+action coordinates, wrong initialization, forged checkpoint, wrong source
+record/bytes, wrong artifact semantic hash, wrong policy and reused action key.
+The combined populated Shop initialization and proposal gate passes 22 tests.
+The same 13-test proposal selector took 428.81 seconds before static-definition
+reuse and 47.90 seconds after it. These are local observed runs, not a benchmark
+or performance guarantee. The graph, KCSs and action head remain unchanged.
+
+This proves the protocol transaction with the previously selected neutral
+LocalAction specimen. It does not yet prove a concrete supplier amendment or
+the complete shared consumer boundary. Next bind the real check outputs,
+epistemic decision/transition, authority assessment,
 authorization, dispatch, terminal execution receipt and separate observation.
 The pure check/control tests do not replace those integration stages. Robotics
 and Semantic Re-entry remain blocked on that complete shared handoff, not on
