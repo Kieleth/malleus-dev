@@ -44,8 +44,8 @@ def specimen():
         "name": "neutral-context-fragment",
         "inputs": {
             "event": {"context": obj(identity=digest)},
-            "original": {"action": state},
-            "current": {"action": state},
+            "original": {"action": deepcopy(state)},
+            "current": {"action": deepcopy(state)},
             "artifact": {"context": obj(value=obj(id=scalar("string")))},
         },
         "required_capabilities": [],
@@ -170,9 +170,97 @@ def test_equal_lexical_types_do_not_alias_action_and_domain_heads():
     program["inputs"]["current"]["action"]["properties"]["value"]["x-coordinate"] = (
         "KCS_ACCEPTANCE"
     )
+    assert (
+        program["inputs"]["original"]["action"]["properties"]["value"]["x-coordinate"]
+        == "ACTION_ACCEPTANCE"
+    )
     with pytest.raises(api().PacketRefusal) as caught:
         validate(program)
     assert caught.value.reason == "COORDINATE_DOMAIN"
+
+
+@pytest.mark.parametrize(
+    "invalid", [True, {"type": ["string", "null"]}, {"type": "object"}]
+)
+def test_unsupported_input_schema_refuses_typed(invalid):
+    program = specimen()
+    program["inputs"]["event"]["context"] = invalid
+    with pytest.raises(api().PacketRefusal) as caught:
+        validate(program)
+    assert caught.value.reason == "DEFINITION_SCHEMA"
+
+
+@pytest.mark.parametrize(
+    "opcode",
+    [
+        "VALIDATE_RECORD",
+        "HASH",
+        "RESOLVE_RECORD",
+        "REQUIRE_UNIQUE",
+        "REQUIRE_COVERAGE",
+        "REQUIRE_INTERVAL",
+        "SELECT_CONTROL",
+        "INTRODUCE_RECORDS",
+    ],
+)
+def test_remaining_instruction_types_resolve_from_explicit_wrappers(opcode):
+    program, declaration = specimen(), profile()
+    record = obj(
+        id=scalar("string"), content_hash={"type": "string", "format": "sha256"}
+    )
+    records = {"type": "array", "minItems": 1, "items": record}
+    interval = obj(start={"type": "string", "format": "aware-instant"})
+    program["inputs"]["event"]["payload"] = obj(
+        record=record,
+        records=records,
+        dependencies={"type": "array", "items": scalar("string")},
+        record_id=scalar("string"),
+        record_hash={"type": "string", "format": "sha256"},
+        record_type={"type": "string", "const": "NeutralRecord"},
+        contract=obj(identity=scalar("string")),
+        required=records,
+        outputs=records,
+        context=obj(id=scalar("string")),
+        inner=interval,
+        outer=interval,
+        policy=obj(id=scalar("string")),
+    )
+    fields = {
+        "VALIDATE_RECORD": ["record", "contract"],
+        "HASH": ["record_type"],
+        "RESOLVE_RECORD": ["record_id", "record_type", "record_hash"],
+        "REQUIRE_UNIQUE": ["records"],
+        "REQUIRE_COVERAGE": ["required", "outputs", "context"],
+        "REQUIRE_INTERVAL": ["inner", "outer"],
+        "SELECT_CONTROL": ["policy", "outputs", "context"],
+        "INTRODUCE_RECORDS": ["records", "dependencies"],
+    }
+    step = {"opcode": opcode, "refusal": "INVALID_INPUT"}
+    step.update({name: operand("event", "payload", name) for name in fields[opcode]})
+    if opcode in {
+        "VALIDATE_RECORD",
+        "HASH",
+        "RESOLVE_RECORD",
+        "SELECT_CONTROL",
+        "INTRODUCE_RECORDS",
+    }:
+        step["result"] = "checked"
+    if opcode == "HASH":
+        step.update(recipe="RECORD", value=operand("event", "payload", "record"))
+    if opcode == "RESOLVE_RECORD":
+        step["scope"] = "APPLIED"
+        declaration["record_schemas"] = {"NeutralRecord": record}
+    if opcode == "REQUIRE_UNIQUE":
+        step["key_paths"] = [["id"]]
+    if opcode == "SELECT_CONTROL":
+        declaration["control_result_schema"] = obj(verdict=scalar("string"))
+    program["steps"] = [step]
+    assert validate(program, declaration)["status"] == "STATIC_VALID"
+    first_operand = next(value for value in step.values() if isinstance(value, dict))
+    first_operand["path"] = ["unknown"]
+    with pytest.raises(api().PacketRefusal) as caught:
+        validate(program, declaration)
+    assert caught.value.reason == "UNRESOLVED_PATH"
 
 
 def test_results_are_single_assignment_and_not_caller_inputs():
