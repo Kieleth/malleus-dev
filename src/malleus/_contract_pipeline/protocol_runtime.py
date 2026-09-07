@@ -197,9 +197,10 @@ def transaction_entries(
         closed(event, _DRAFT_FIELDS)
         if type(event["data"]) is not dict or type(event["retained"]) is not dict:
             refuse("explicit event data and retention maps required")
-        for identifier, value in event["retained"].items():
-            text(identifier)
-            closed(value, {"content", "media_type", "role", "encoding"})
+        for name, value in event["retained"].items():
+            text(name)
+            closed(value, {"record_id", "content", "media_type", "role", "encoding"})
+            text(value["record_id"])
             if type(value["content"]) is not bytes:
                 refuse("retention input requires exact bytes")
             value["content_base64"] = b64encode(value.pop("content")).decode("ascii")
@@ -329,9 +330,13 @@ class ProtocolFold:
             if type(data["retained"]) is not dict or type(data["data"]) is not dict:
                 refuse("explicit data and retention objects required")
             metadata = {}
-            for identifier, binding in data["retained"].items():
-                text(identifier)
-                closed(binding, {"content_base64", "media_type", "role", "encoding"})
+            for name, binding in data["retained"].items():
+                text(name)
+                closed(
+                    binding,
+                    {"record_id", "content_base64", "media_type", "role", "encoding"},
+                )
+                identifier = text(binding["record_id"])
                 if (
                     identifier in reserved_ids
                     or identifier in self.records
@@ -348,7 +353,8 @@ class ProtocolFold:
                 encoding = binding["encoding"]
                 if encoding not in {"BYTES", "CANONICAL_JSON"}:
                     refuse("explicit supported retention encoding required")
-                metadata[identifier] = {
+                metadata[name] = {
+                    "record_id": identifier,
                     "identity": digest(content),
                     "byte_length": len(content),
                     "media_type": text(binding["media_type"]),
@@ -356,7 +362,7 @@ class ProtocolFold:
                     "encoding": encoding,
                 }
                 if encoding == "CANONICAL_JSON":
-                    metadata[identifier]["value"] = decode(content)
+                    metadata[name]["value"] = decode(content)
                 retained[identifier] = (
                     identifier,
                     content,
