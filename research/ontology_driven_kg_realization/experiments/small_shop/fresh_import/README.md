@@ -54,3 +54,46 @@ Excluded: generic mapping DSL, schema changes, source truth, supplier effects,
 automatic correction, Semantic Re-entry, release/version changes, and an
 independently replaceable adapter claim. Another implementation would need to
 produce the same plan and pass these cases before replaceability is claimed.
+
+## Run and inspect
+
+From this repository's configured environment:
+
+```bash
+python -m research.ontology_driven_kg_realization.experiments.small_shop.fresh_import.run --output build/small-shop-fresh-import
+```
+
+The output directory must not already exist. `shop/history.jsonl` is the one
+history: it first records the original five Shop changes and its contract
+revision, then the new two-row import as a sixth change. `shop/evidence.json`
+is the preserved pre-import report. `evidence.json` reports the extended
+history, row counts, source digest, quantities and every field locator.
+
+The IDs `supplier-import:synthetic%3Areceipt%3AC` and
+`supplier-import:synthetic%3Areceipt%3AD` encode the occurrence strings without
+normalizing them. Repeated occurrence IDs refuse; repeated supplier-order IDs
+do not mean supersession. Blank JSONL lines do not count as rows.
+
+Read the new records using the same public interface as any adopter:
+
+```python
+from pathlib import Path
+from malleus.compiler import KnowledgeChangeHistory, trace_population_record
+
+replay = KnowledgeChangeHistory.reopen(
+    Path("build/small-shop-fresh-import/shop/history.jsonl")
+).replay()
+print(replay.graph.query("SupplierOrderState", supplier_order_id="SYN-C"))
+trace = trace_population_record(replay, "supplier-import:synthetic%3Areceipt%3AC")
+print(trace.derivations)
+print(trace.sources[0].content.decode("utf-8"))
+```
+
+The expected quantity for SYN-C is 3. Its quantity locator is
+`row:0:ordered_quantity`. SYN-D has quantity 5 at `row:1:ordered_quantity`.
+The trace retains the complete source file, exact mapping and adapter bytes,
+not a reconstructed imitation of the input.
+
+This slice closes initial fresh-file import only. Later work can add an
+explicit supplier-correction contract, another source format, or an external
+observer when a real consumer requires them. None runs as an implicit fallback.

@@ -53,6 +53,14 @@ def test_mapper_is_read_only_and_derives_every_field_from_new_rows(monkeypatch):
             contract_identity="sha256:" + "a" * 64,
         )
     assert plan["valid_time"] == {"kind": "NONE_STATED", "value": None}
+    changed = adapter.adapt_supplier_rows(
+        source_bytes=source.replace(b'"ordered_quantity":5', b'"ordered_quantity":9'),
+        source_id=SOURCE_ID,
+        plan_id=PLAN_ID,
+        contract_identity="sha256:" + "a" * 64,
+    )
+    assert changed["records"]["entities"][1]["properties"]["ordered_quantity"] == 9
+    assert changed["sources"] != plan["sources"]
     assert plan["supersessions"] == []
     assert [
         row["properties"]["ordered_quantity"] for row in plan["records"]["entities"]
@@ -142,6 +150,15 @@ def test_fresh_import_replays_and_traces_after_complete_shop(tmp_path):
         trace = api.trace_population_record(replay, record_id)
         assert trace.record_history.valid_from.kind == "NONE_STATED"
         assert trace.sources[0].content == (HERE / "supplier-orders.jsonl").read_bytes()
+        retained_evidence = {item.record_id: item.content for item in trace.evidence}
+        assert (
+            retained_evidence["artifact:small-shop:fresh-import:mapping"]
+            == (HERE / "mapping.json").read_bytes()
+        )
+        assert (
+            retained_evidence["artifact:small-shop:fresh-import:adapter"]
+            == (HERE / "adapter.py").read_bytes()
+        )
         assert {d["locator"] for d in trace.derivations} == {
             f"row:{row_index}:{field}"
             for field in (

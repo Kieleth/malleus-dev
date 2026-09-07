@@ -1,5 +1,6 @@
 {
   "adapter": {"adapter_id": "small-shop-synthetic-supplier-jsonl", "version": "1"},
+  "plan_grammar": "malleus.population-plan/private-v0",
   "evidence_id": "artifact:small-shop:fresh-import:mapping",
   "record_type": "SupplierOrderState",
   "record_id_prefix": "supplier-import:",
