@@ -569,13 +569,12 @@ def _range_probe(range_name: str) -> dict[str, bytes]:
     }
 
 
-@pytest.mark.parametrize("range_name", ("date", "uri"))
+@pytest.mark.parametrize("range_name", ("uri",))
 def test_an_unbound_range_names_the_range_and_what_binds(range_name: str) -> None:
-    """Two producer runs spent their first ontology attempt on a `date` or a
-    `uri` slot. The compiler binds five seed scalars and the schema language
-    offers nineteen built-ins, and the refusal said neither: it named the slot,
-    called the range unbound, and left the producer to guess which ranges are
-    not."""
+    """Unsupported lexical types name the current admitted range set.
+
+    Calendar date is now supported; URI remains an explicit refusal.
+    """
 
     api = _api()
 
@@ -588,21 +587,35 @@ def test_an_unbound_range_names_the_range_and_what_binds(range_name: str) -> Non
     assert refusal.value.detail == (
         "https://example.org/schema/probe/accepted_date has an unbound range "
         f"https://w3id.org/linkml/types/{range_name}; a range binds as one of "
-        "the seed scalars boolean, datetime, float, integer, string, or a "
+        "the seed scalars boolean, date, datetime, float, integer, string, or a "
         "class or enum declared in the closure"
     )
 
 
 def test_a_seed_scalar_range_binds() -> None:
-    """The five the refusal names are the five that bind."""
+    """Every scalar named in the refusal actually binds."""
 
     api = _api()
 
-    for range_name in ("boolean", "datetime", "float", "integer", "string"):
+    for range_name in ("boolean", "date", "datetime", "float", "integer", "string"):
         compiled = api.compile_linkml_contract(
             root_locator="probe", sources=_range_probe(range_name)
         )
         assert compiled.artifact.validated_fact_set_sha256.startswith("sha256:")
+
+
+def test_date_support_preserves_predecessor_shop_semantic_identity() -> None:
+    """Measured from immutable RED 9ec32d4, not a regenerated answer key.
+
+    Compiler byte attestation changes, but the exact non-date contract does not.
+    """
+    compiled = _compiled_shop(_api())
+    assert compiled.artifact.facts_sha256 == (
+        "sha256:b20ea4ce27f052fc00b9310ca30cf437b451949e0daf33d717a690fb895beb3a"
+    )
+    assert compiled.artifact.validated_fact_set_sha256 == (
+        "sha256:0af9eb01495af3c7ed063cb8ca340b63b475eb72feeb2f81fe9be48720fd515e"
+    )
 
 
 def test_compiler_cli_compiles_exact_named_sources() -> None:
