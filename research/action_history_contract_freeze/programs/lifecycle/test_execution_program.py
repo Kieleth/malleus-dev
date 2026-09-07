@@ -50,11 +50,15 @@ def test_execution_record_reference_prefix_is_static_only_and_unchanged():
     assert value == before
 
 
-def test_full_candidate_refuses_until_the_keyed_effect_is_defined():
+def test_full_candidate_is_statically_valid_with_the_approved_key():
     value = packet()["program"]
-    with pytest.raises(PacketRefusal) as caught:
-        check(value)
-    assert caught.value.reason == "INSTRUCTION_SHAPE"
+    before = deepcopy(value)
+    assert check(value) == {
+        "status": "STATIC_VALID",
+        "steps": 18,
+        "runtime_executed": False,
+    }
+    assert value == before
     effect = value["steps"][-1]
     assert effect["keys"] == [
         {
@@ -68,8 +72,16 @@ def test_full_candidate_refuses_until_the_keyed_effect_is_defined():
         "name": "records",
         "path": ["value", 0, "record", "id"],
     }
-    assert packet()["status"] == "BLOCKED_KEYED_EFFECT"
+    assert packet()["status"] == "STATIC_VALID_PARTIAL"
     assert packet()["runtime_executed"] is False
+
+
+def test_receipt_index_write_cannot_regress_to_an_inferred_key():
+    value = packet()["program"]
+    del value["steps"][-1]["keys"]
+    with pytest.raises(PacketRefusal) as caught:
+        check(value)
+    assert caught.value.reason == "INSTRUCTION_SHAPE"
 
 
 def test_every_execution_preflight_binding_is_explicit_in_the_retained_program():
