@@ -67,6 +67,24 @@ def _contract_view(artifact_bytes):
     return load_validated_contract_artifact(artifact_bytes)
 
 
+@lru_cache(maxsize=32)
+def _validated_definition(program, instruction_schema, profile):
+    """Cache only successful static checks keyed by complete canonical data."""
+    validate_program(
+        json.loads(program),
+        instruction_schema=json.loads(instruction_schema),
+        profile=json.loads(profile),
+    )
+
+
+def validate_program_definition(program, *, instruction_schema, profile):
+    _validated_definition(
+        canonical_json(program),
+        canonical_json(instruction_schema),
+        canonical_json(profile),
+    )
+
+
 @dataclass(frozen=True)
 class ProgramExecution:
     canonical_bytes: bytes
@@ -242,7 +260,7 @@ def execute_program(
             (program, profile, inputs, applied_records, state)
         )
         canonical_json([program, profile, inputs, applied_records, state])
-        validate_program(
+        validate_program_definition(
             program, instruction_schema=instruction_schema, profile=profile
         )
         if set(program["required_capabilities"]) - CAPABILITIES.keys():

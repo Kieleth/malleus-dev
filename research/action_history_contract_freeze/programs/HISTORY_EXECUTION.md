@@ -119,6 +119,14 @@ actual prior-state reads, stale claims and forged claims. An initial test setup
 mixed two fixture clocks; the corrected helper requires one exact transaction
 time, leaving the ledger's monotonic-time guard unchanged.
 
+Exact definition validation is also reused with a 32-entry bound. Profiling one
+selected bundle found eight repeated static program checks, with schema
+metavalidation accounting for most of its load. The key includes the complete
+canonical program, profile and instruction schema. Changed definitions are
+rechecked; failures are not cached. Runtime operands, state, records, producer
+outputs and admission are still checked on every execution. The definition
+reuse, owner-state, finite-executor and check-producer gate passes 76 tests.
+
 ## Remaining execution work
 
 The actual action context/proposal program must next cross this same owning

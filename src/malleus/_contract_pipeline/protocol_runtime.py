@@ -14,9 +14,10 @@ from .finite_executor import (
     ExecutionRefusal,
     execute_program,
     validate_instruction_schema,
+    validate_program_definition,
     _contract_view,
 )
-from .finite_program import PacketRefusal, validate_program
+from .finite_program import PacketRefusal
 from malleus.ledger import GENESIS, canonical_json, content_digest
 
 
@@ -127,7 +128,7 @@ def load_bundle(source):
             for kind in kinds:
                 text(kind)
             program = transaction["program"]
-            validate_program(
+            validate_program_definition(
                 program,
                 profile=bundle["profile"],
                 instruction_schema=bundle["instruction_schema"],
