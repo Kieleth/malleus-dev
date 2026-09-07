@@ -1,0 +1,34 @@
+{
+  "status": "PROPOSED_REUSE_NOT_RUNTIME_BINDING",
+  "carrier": {"record_type": "SourceArtifact", "artifact_kind": "SOURCE"},
+  "identity_fields": {
+    "reference_id": "id",
+    "reference_bytes_sha256": "source_content_digest",
+    "record_hash": "content_hash",
+    "semantic_artifact_hash": "artifact_hash",
+    "byte_length": "source_byte_length"
+  },
+  "record_inputs": {
+    "proposal": "ProposedSubgraph",
+    "action": "ActionProposal",
+    "grant": "AuthorityGrant",
+    "authorization_policy": "AuthorizationPolicyArtifact"
+  },
+  "scalar_inputs": {"executor_id": "string"},
+  "byte_inputs": {
+    "record_contract": "compiled-record-contract",
+    "scope_association": "scope",
+    "requested_interval": "interval",
+    "original_context": "original-context",
+    "current_context": "current"
+  },
+  "unbound": [
+    "carrier_selection",
+    "history_retention_event_binding",
+    "applied_prefix_resolution",
+    "content_id_association",
+    "static_dependency_set",
+    "input_and_source_closure_order",
+    "producer_implementations"
+  ]
+}
