@@ -53,6 +53,11 @@ def test_input_origins_close_the_declared_monitor_roles_without_runtime_claims()
         assert origins["invocation_order"][kind] == monitors[kind]["ordered_inputs"]
     assert origins["status"] == "DEFINITION_ONLY"
     assert origins["runtime_resolution"] == "UNIMPLEMENTED"
+    assert isinstance(origins["current_context_rule"], str)
+    assert all(
+        isinstance(item, str) for item in origins["unresolved_runtime_contracts"]
+    )
+    assert all(isinstance(item, str) for item in origins["non_claims"])
     for role in bindings["byte_inputs"]:
         entry = origins["monitor_inputs"][role]
         assert entry["scope"] == "APPLIED"
@@ -85,6 +90,8 @@ def test_atomic_pair_is_explicit_and_static_only():
     assert value["transaction"] == decision
     assert value["status"] == "STATIC_VALID_PARTIAL"
     assert value["runtime_executed"] is False
+    assert isinstance(value["scope"], str)
+    assert all(isinstance(item, str) for item in value["unresolved"])
     assert value["program"]["introductions"] == [
         {"name": "context", "depends_on": []},
         {"name": "action", "depends_on": ["context"]},

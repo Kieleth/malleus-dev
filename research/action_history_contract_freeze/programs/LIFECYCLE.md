@@ -65,7 +65,7 @@ UNEXECUTED, not skipped tests and not part of the passing static-test count.
 | Initialization: retained checkpoint, full prefix, D, exact profile/record contract/machine/binding/policies | Verify checkpoint contents against actual replay; HASH VALUE checkpoint; REQUIRE_UNIQUE initialization; retain checkpoint; SET_PROTOCOL_STATE initialization and A to checkpoint identity. L advances, D unchanged. | Valid nonempty-history initialization; second initialization refusal; wrong L, D, policy or implementation binding refuses without append. |
 | Prerequisite registration: full artifact/grant/source wrapper plus supplied bytes | VALIDATE_RECORD; HASH RECORD and selected artifact/byte recipe; RESOLVE_RECORD dependencies; REQUIRE_UNIQUE global ID; grant grantor equals recording actor; source declared byte identity/length equal supplied bytes; INTRODUCE_RECORDS. | Corrupt bytes, wrong grantor, missing dependency, duplicate ID and wrong hash category refuse. No context or proposal is implied. |
 | Original-context registration: O over actual L/D/A, proposal/action IDs, episode and prerequisite references | Compare every O L/D/A/policy/initialization coordinate with current replay; HASH VALUE O; stage retention. This is only the first half of the approved atomic pair. No independently committed state. | Wrong prefix or missing retained O input refuses; invalid second event preserves exact prior bytes and indexes. |
-| Proposal: full ProposedSubgraph and one first-revision concrete ActionProposal, exact O association | Validate full records; resolve pinned policies; compare proposal/action IDs and key to O; verify record/member hashes, first revision and closed member categories; check unused IDs/action key; introduce dependencies before dependents; stage proposal PROPOSED, action PENDING, action-to-proposal/key/context indexes. Commit both logical events once. A and D unchanged. | Both events retained together; wrong member, stale O, duplicate root key, extra/unrelated event or missing half refuses. A proposal is not ACCEPT or AUTHORIZE. |
+| Proposal: full ProposedSubgraph and one first-revision concrete ActionProposal, exact O association | Validate full records; resolve pinned policies; compare proposal/action IDs to O and retain its episode metadata without aliasing lineage keys; verify record/member hashes, first revision and closed member categories; check unused IDs/action key; introduce dependencies before dependents; stage proposal PROPOSED, action PENDING, action-to-proposal/key/context indexes. Commit both logical events once. A and D unchanged. | Both events retained together; wrong member, stale O, duplicate root key, extra/unrelated event or missing half refuses. A proposal is not ACCEPT or AUTHORIZE. |
 | Epistemic assessment: complete TypeAssessment, or MonitorFailure plus UnavailableAssessment | Resolve applied proposal and selected TYPE monitor; check complete record/provenance/input/monitor bindings and current A/original D; verify completed or paired unavailable variant; require uniqueness per proposal/monitor; introduce exact output(s). | Missing/wrong producer output, replayed record hash, proposal, source ID or monitor version refuses. A real unavailability pair is retained atomically, not converted into SATISFIED. |
 | Epistemic decision: exact policy, complete ordered outputs, EpistemicDecision, TransitionRecord | REQUIRE_COVERAGE; SELECT_CONTROL recomputes policy verdict/evaluation/trigger order; compare every decision field; validate transition subject/from/to/trigger/event/sequence/time. ACCEPT introduces both and hashes the existing acceptance_result_head preimage with previous A, proposal/decision hashes and empty revisions. Other verdicts leave A. No application/KCS. | All satisfied, rejected and unavailable variants; missing output refuses; forged verdict/evaluation refuses; ACCEPT changes A only; stale A or original D refuses. |
 | Authority assessment: applied ACCEPT, action/proposal, executor, exact grant/policy/scope/interval/O/current context and output | Resolve applied ACCEPT and current A/D; validate real DIRECT_GRANT output with exact action/actor/policy/evaluated grant and monitor; require uniqueness per action/actor/A/monitor/grant; introduce AuthorityAssessment or atomic failure/unavailable pair. | Wrong actor, policy, grant, input closure or stale context refuses; unavailable is UNKNOWN, not omitted. |
@@ -148,3 +148,19 @@ still UNBOUND. No initialization instance or action lifecycle has run.
 key operand. Removing the key refuses. See `lifecycle/KEYED_EFFECT_DECISION.md`
 for the accepted refinement and the remaining input-binding obligations. This
 closes the missing key's definition, not the complete lifecycle or runtime.
+
+### Concrete context/proposal candidate
+
+`lifecycle/context-proposal.json` adds one 69-instruction static specimen for
+the approved pair. It retains complete minimal SourceArtifact, LocalAction and
+ProposedSubgraph variants and complete policy record variants. Policy reference
+fields resolve `content_hash`, as existing Assent does; a policy's semantic
+`artifact_hash` is not a substitute. Original context and proposal/action IDs
+are associated without equating episode, proposal and action lineage keys.
+
+`retained-input-origins.json` names the applied-prefix origins of both check
+input sets and the earlier-staged context exception inside the transaction.
+It does not implement resolution. The candidate's `unresolved` list retains
+the owning history's obligations, including prerequisite closure, source
+semantic hashing, authenticated headers and a final head/count check before
+commit. No event, check producer or stateful instruction was executed here.

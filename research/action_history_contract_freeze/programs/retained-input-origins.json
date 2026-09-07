@@ -9,11 +9,7 @@
     "no_substitution": "A valid hash in one category does not satisfy another category"
   },
   "invocation_order": {
-    "TYPE": [
-      "proposal",
-      "action",
-      "record_contract"
-    ],
+    "TYPE": ["proposal","action","record_contract"],
     "DIRECT_GRANT": [
       "proposal",
       "action",
@@ -27,35 +23,11 @@
     ]
   },
   "monitor_inputs": {
-    "proposal": {
-      "origin": "VERIFIED_APPLIED_RECORD",
-      "scope": "APPLIED",
-      "record_type": "ProposedSubgraph",
-      "identity_field": "content_hash"
-    },
-    "action": {
-      "origin": "VERIFIED_APPLIED_RECORD",
-      "scope": "APPLIED",
-      "record_type": "ActionProposal",
-      "identity_field": "content_hash"
-    },
-    "grant": {
-      "origin": "VERIFIED_APPLIED_RECORD",
-      "scope": "APPLIED",
-      "record_type": "AuthorityGrant",
-      "identity_field": "content_hash"
-    },
-    "authorization_policy": {
-      "origin": "VERIFIED_APPLIED_RECORD",
-      "scope": "APPLIED",
-      "record_type": "AuthorizationPolicyArtifact",
-      "identity_field": "content_hash"
-    },
-    "executor_id": {
-      "origin": "INVOCATION_SCALAR",
-      "type": "string",
-      "not_a_retained_artifact": true
-    },
+    "proposal": {"origin":"VERIFIED_APPLIED_RECORD","scope":"APPLIED","record_type":"ProposedSubgraph","identity_field":"content_hash"},
+    "action": {"origin":"VERIFIED_APPLIED_RECORD","scope":"APPLIED","record_type":"ActionProposal","identity_field":"content_hash"},
+    "grant": {"origin":"VERIFIED_APPLIED_RECORD","scope":"APPLIED","record_type":"AuthorityGrant","identity_field":"content_hash"},
+    "authorization_policy": {"origin":"VERIFIED_APPLIED_RECORD","scope":"APPLIED","record_type":"AuthorizationPolicyArtifact","identity_field":"content_hash"},
+    "executor_id": {"origin":"INVOCATION_SCALAR","type":"string","not_a_retained_artifact":true},
     "record_contract": {
       "origin": "RETAINED_SOURCE_BYTES_AND_APPLIED_CARRIER",
       "scope": "APPLIED",
@@ -107,16 +79,7 @@
     "prerequisites": {
       "scope": "APPLIED",
       "origin": "VERIFIED_PRETRANSACTION_PREFIX",
-      "required": [
-        "initialization",
-        "epistemic_policy",
-        "authorization_policy",
-        "goal",
-        "preservation",
-        "mapping",
-        "pre_state_source",
-        "record_contract"
-      ]
+      "required": ["initialization","epistemic_policy","authorization_policy","goal","preservation","mapping","pre_state_source","record_contract"]
     },
     "original_context": {
       "scope": "APPLIED_AND_EARLIER_STAGED",
@@ -124,15 +87,8 @@
       "available_to": "SECOND_EVENT_ONLY",
       "commit_alone": false
     },
-    "current": {
-      "scope": "APPLIED",
-      "origin": "OWNING_REPLAY_BEFORE_TRANSACTION",
-      "caller_dictionary_is_authority": false
-    },
-    "headers": {
-      "origin": "OWNING_HISTORY_STAGED_EVENT_HEADERS",
-      "caller_constructs_trusted_sequence": false
-    }
+    "current": {"scope":"APPLIED","origin":"OWNING_REPLAY_BEFORE_TRANSACTION","caller_dictionary_is_authority":false},
+    "headers": {"origin":"OWNING_HISTORY_STAGED_EVENT_HEADERS","caller_constructs_trusted_sequence":false}
   },
   "current_context_rule": "A retained context names a real historical prefix before its own retention. Verify that prefix; do not require its head to equal a later full head merely because protocol events advanced. Recheck current action and domain coordinates independently; commit still compares expected full head and count.",
   "unresolved_runtime_contracts": [
@@ -142,11 +98,5 @@
     "Compute exact monitor static dependency sets and consumed-source order through real producers",
     "Execute and commit the pair atomically with final full-head/count comparison"
   ],
-  "non_claims": [
-    "No record resolution",
-    "No trusted replay construction",
-    "No check execution",
-    "No event append",
-    "No source or domain-state mutation"
-  ]
+  "non_claims": ["No record resolution","No trusted replay construction","No check execution","No event append","No source or domain-state mutation"]
 }

@@ -33,6 +33,14 @@ reference. Interval, equality-scope and current-context contents use the contrac
 in this packet; O uses the previously frozen original-context schema. A digest
 with no resolved bytes or record is not an executable input.
 
+`retained-input-origins.json` now records those origins as definition data.
+All monitor records and byte carriers must be applied before invocation; only
+the context/proposal transaction itself may resolve its newly staged context.
+A retained current-context artifact refers to its real prior prefix, not to
+the later prefix produced by retaining it. Runtime must verify that prefix and
+independently compare current action/domain coordinates. No history resolver
+or concrete producer is supplied by the table.
+
 ## Three orders that must not be conflated
 
 1. Invocation inputs follow the exact semantic-role sequence in

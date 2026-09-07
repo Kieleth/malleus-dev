@@ -1,16 +1,11 @@
 {
   "status": "STATIC_VALID_PARTIAL",
   "runtime_executed": false,
-  "scope": "Finite full-record variant; static bindings only. Not an executable event handler or completed lifecycle.",
+  "scope": "Finite full-record variant; static bindings only. Not an executable event handler or completed lifecycle. Episode metadata is content-bound, not an alias for either independent protocol lineage key.",
   "transaction": {
     "role": "OPTIONAL_PROFILE",
     "decision": "2026-09-07-context-and-proposal-atomic",
-    "atomic_batches": [
-      [
-        "original-context-registration",
-        "proposal-recording"
-      ]
-    ],
+    "atomic_batches": [["original-context-registration","proposal-recording"]],
     "context_prefix": "BEFORE_TRANSACTION",
     "validation": "COMPLETE_BATCH_BEFORE_COMMIT",
     "visibility": "COMMITTED_PAIR_ONLY",
@@ -19,12 +14,7 @@
     "success_proposal_state": "PROPOSED",
     "action_acceptance": "UNCHANGED",
     "domain_state": "UNCHANGED",
-    "commit_preconditions": [
-      "EXPECTED_FULL_HEAD",
-      "EXPECTED_FULL_EVENT_COUNT",
-      "ORIGINAL_DOMAIN_CURRENT",
-      "ORIGINAL_ACTION_ACCEPTANCE_CURRENT"
-    ],
+    "commit_preconditions": ["EXPECTED_FULL_HEAD","EXPECTED_FULL_EVENT_COUNT","ORIGINAL_DOMAIN_CURRENT","ORIGINAL_ACTION_ACCEPTANCE_CURRENT"],
     "runtime_status": "UNIMPLEMENTED"
   },
   "unresolved": [
@@ -42,24 +32,16 @@
         "context": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
+          "required": ["value"],
           "properties": {
             "value": {
               "type": "array",
               "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": [
-                  "record_type",
-                  "record"
-                ],
+                "required": ["record_type","record"],
                 "properties": {
-                  "record_type": {
-                    "type": "string",
-                    "const": "SourceArtifact"
-                  },
+                  "record_type": {"type":"string","const":"SourceArtifact"},
                   "record": {
                     "type": "object",
                     "additionalProperties": false,
@@ -81,62 +63,21 @@
                       "source_locator"
                     ],
                     "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "content_hash": {
-                        "type": "string",
-                        "format": "sha256"
-                      },
-                      "generation_event_id": {
-                        "type": "string"
-                      },
-                      "generated_at": {
-                        "type": "string",
-                        "format": "aware-instant"
-                      },
-                      "responsible_actor_id": {
-                        "type": "string"
-                      },
-                      "responsible_role": {
-                        "type": "string"
-                      },
-                      "source_record_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "uniqueItems": true
-                      },
-                      "artifact_kind": {
-                        "type": "string",
-                        "const": "SOURCE"
-                      },
-                      "artifact_version": {
-                        "type": "string"
-                      },
-                      "artifact_hash": {
-                        "type": "string",
-                        "format": "sha256"
-                      },
-                      "source_schema_version": {
-                        "type": "string",
-                        "const": "1"
-                      },
-                      "source_content_digest": {
-                        "type": "string",
-                        "format": "sha256"
-                      },
-                      "source_byte_length": {
-                        "type": "integer",
-                        "minimum": 0
-                      },
-                      "source_media_type": {
-                        "type": "string"
-                      },
-                      "source_locator": {
-                        "type": "string"
-                      }
+                      "id": {"type":"string"},
+                      "content_hash": {"type":"string","format":"sha256"},
+                      "generation_event_id": {"type":"string"},
+                      "generated_at": {"type":"string","format":"aware-instant"},
+                      "responsible_actor_id": {"type":"string"},
+                      "responsible_role": {"type":"string"},
+                      "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+                      "artifact_kind": {"type":"string","const":"SOURCE"},
+                      "artifact_version": {"type":"string"},
+                      "artifact_hash": {"type":"string","format":"sha256"},
+                      "source_schema_version": {"type":"string","const":"1"},
+                      "source_content_digest": {"type":"string","format":"sha256"},
+                      "source_byte_length": {"type":"integer","minimum":0},
+                      "source_media_type": {"type":"string"},
+                      "source_locator": {"type":"string"}
                     }
                   }
                 }
@@ -149,24 +90,16 @@
         "action": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
+          "required": ["value"],
           "properties": {
             "value": {
               "type": "array",
               "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": [
-                  "record_type",
-                  "record"
-                ],
+                "required": ["record_type","record"],
                 "properties": {
-                  "record_type": {
-                    "type": "string",
-                    "const": "LocalAction"
-                  },
+                  "record_type": {"type":"string","const":"LocalAction"},
                   "record": {
                     "type": "object",
                     "additionalProperties": false,
@@ -186,55 +119,19 @@
                       "authorization_policy_hash"
                     ],
                     "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "content_hash": {
-                        "type": "string",
-                        "format": "sha256"
-                      },
-                      "generation_event_id": {
-                        "type": "string"
-                      },
-                      "generated_at": {
-                        "type": "string",
-                        "format": "aware-instant"
-                      },
-                      "responsible_actor_id": {
-                        "type": "string"
-                      },
-                      "responsible_role": {
-                        "type": "string"
-                      },
-                      "source_record_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "uniqueItems": true
-                      },
-                      "action_type": {
-                        "type": "string",
-                        "const": "LOCAL_ACTION"
-                      },
-                      "action_payload_hash": {
-                        "type": "string",
-                        "format": "sha256"
-                      },
-                      "action_key": {
-                        "type": "string"
-                      },
-                      "revision": {
-                        "type": "integer",
-                        "const": 1
-                      },
-                      "authorization_policy_id": {
-                        "type": "string"
-                      },
-                      "authorization_policy_hash": {
-                        "type": "string",
-                        "format": "sha256"
-                      }
+                      "id": {"type":"string"},
+                      "content_hash": {"type":"string","format":"sha256"},
+                      "generation_event_id": {"type":"string"},
+                      "generated_at": {"type":"string","format":"aware-instant"},
+                      "responsible_actor_id": {"type":"string"},
+                      "responsible_role": {"type":"string"},
+                      "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+                      "action_type": {"type":"string","const":"LOCAL_ACTION"},
+                      "action_payload_hash": {"type":"string","format":"sha256"},
+                      "action_key": {"type":"string"},
+                      "revision": {"type":"integer","const":1},
+                      "authorization_policy_id": {"type":"string"},
+                      "authorization_policy_hash": {"type":"string","format":"sha256"}
                     }
                   }
                 }
@@ -247,24 +144,16 @@
         "proposal": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
+          "required": ["value"],
           "properties": {
             "value": {
               "type": "array",
               "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": [
-                  "record_type",
-                  "record"
-                ],
+                "required": ["record_type","record"],
                 "properties": {
-                  "record_type": {
-                    "type": "string",
-                    "const": "ProposedSubgraph"
-                  },
+                  "record_type": {"type":"string","const":"ProposedSubgraph"},
                   "record": {
                     "type": "object",
                     "additionalProperties": false,
@@ -288,90 +177,23 @@
                       "action_proposal_ids"
                     ],
                     "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "content_hash": {
-                        "type": "string",
-                        "format": "sha256"
-                      },
-                      "generation_event_id": {
-                        "type": "string"
-                      },
-                      "generated_at": {
-                        "type": "string",
-                        "format": "aware-instant"
-                      },
-                      "responsible_actor_id": {
-                        "type": "string"
-                      },
-                      "responsible_role": {
-                        "type": "string"
-                      },
-                      "source_record_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "uniqueItems": true
-                      },
-                      "proposal_key": {
-                        "type": "string"
-                      },
-                      "revision": {
-                        "type": "integer",
-                        "const": 1
-                      },
-                      "base_acceptance_head": {
-                        "type": "string",
-                        "format": "ledger-head",
-                        "x-coordinate": "ACTION_ACCEPTANCE"
-                      },
-                      "epistemic_policy_id": {
-                        "type": "string"
-                      },
-                      "epistemic_policy_hash": {
-                        "type": "string",
-                        "format": "sha256"
-                      },
-                      "member_content_hashes": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "sha256"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      },
-                      "claim_version_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "maxItems": 0
-                      },
-                      "evidence_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "maxItems": 0
-                      },
-                      "evidence_assertion_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "maxItems": 0
-                      },
-                      "action_proposal_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
+                      "id": {"type":"string"},
+                      "content_hash": {"type":"string","format":"sha256"},
+                      "generation_event_id": {"type":"string"},
+                      "generated_at": {"type":"string","format":"aware-instant"},
+                      "responsible_actor_id": {"type":"string"},
+                      "responsible_role": {"type":"string"},
+                      "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+                      "proposal_key": {"type":"string"},
+                      "revision": {"type":"integer","const":1},
+                      "base_acceptance_head": {"type":"string","format":"ledger-head","x-coordinate":"ACTION_ACCEPTANCE"},
+                      "epistemic_policy_id": {"type":"string"},
+                      "epistemic_policy_hash": {"type":"string","format":"sha256"},
+                      "member_content_hashes": {"type":"array","items":{"type":"string","format":"sha256"},"minItems":1,"maxItems":1},
+                      "claim_version_ids": {"type":"array","items":{"type":"string"},"maxItems":0},
+                      "evidence_ids": {"type":"array","items":{"type":"string"},"maxItems":0},
+                      "evidence_assertion_ids": {"type":"array","items":{"type":"string"},"maxItems":0},
+                      "action_proposal_ids": {"type":"array","items":{"type":"string"},"minItems":1,"maxItems":1}
                     }
                   }
                 }
@@ -384,101 +206,39 @@
         "context_header": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "event_id",
-            "transaction_time",
-            "actor_id"
-          ],
-          "properties": {
-            "event_id": {
-              "type": "string"
-            },
-            "transaction_time": {
-              "type": "string",
-              "format": "aware-instant"
-            },
-            "actor_id": {
-              "type": "string"
-            }
-          }
+          "required": ["event_id","transaction_time","actor_id"],
+          "properties": {"event_id":{"type":"string"},"transaction_time":{"type":"string","format":"aware-instant"},"actor_id":{"type":"string"}}
         },
         "proposal_header": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "event_id",
-            "transaction_time",
-            "actor_id"
-          ],
-          "properties": {
-            "event_id": {
-              "type": "string"
-            },
-            "transaction_time": {
-              "type": "string",
-              "format": "aware-instant"
-            },
-            "actor_id": {
-              "type": "string"
-            }
-          }
+          "required": ["event_id","transaction_time","actor_id"],
+          "properties": {"event_id":{"type":"string"},"transaction_time":{"type":"string","format":"aware-instant"},"actor_id":{"type":"string"}}
         },
         "context_dependencies": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
-          "properties": {
-            "value": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "uniqueItems": true
-            }
-          }
+          "required": ["value"],
+          "properties": {"value":{"type":"array","items":{"type":"string"},"uniqueItems":true}}
         },
         "action_dependencies": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
-          "properties": {
-            "value": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "uniqueItems": true
-            }
-          }
+          "required": ["value"],
+          "properties": {"value":{"type":"array","items":{"type":"string"},"uniqueItems":true}}
         },
         "proposal_dependencies": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
-          "properties": {
-            "value": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "uniqueItems": true
-            }
-          }
+          "required": ["value"],
+          "properties": {"value":{"type":"array","items":{"type":"string"},"uniqueItems":true}}
         }
       },
       "original": {
         "context": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
+          "required": ["value"],
           "properties": {
             "value": {
               "type": "object",
@@ -501,184 +261,68 @@
                 "pre_state_source"
               ],
               "properties": {
-                "schema": {
-                  "type": "string",
-                  "const": "malleus.action-history.original-context/research-v1"
-                },
-                "id": {
-                  "type": "string"
-                },
+                "schema": {"type":"string","const":"malleus.action-history.original-context/research-v1"},
+                "id": {"type":"string"},
                 "prefix": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "head",
-                    "event_count"
-                  ],
+                  "required": ["head","event_count"],
                   "properties": {
-                    "head": {
-                      "type": "string",
-                      "format": "ledger-head",
-                      "x-coordinate": "FULL_HISTORY"
-                    },
-                    "event_count": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "x-coordinate": "FULL_EVENT_COUNT"
-                    }
+                    "head": {"type":"string","format":"ledger-head","x-coordinate":"FULL_HISTORY"},
+                    "event_count": {"type":"integer","minimum":0,"x-coordinate":"FULL_EVENT_COUNT"}
                   }
                 },
                 "domain": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "effective_contract_identity",
-                    "kcs_acceptance_head",
-                    "materialization_head",
-                    "accepted_graph_digest"
-                  ],
+                  "required": ["effective_contract_identity","kcs_acceptance_head","materialization_head","accepted_graph_digest"],
                   "properties": {
-                    "effective_contract_identity": {
-                      "type": "string",
-                      "format": "sha256",
-                      "x-coordinate": "DOMAIN_CONTRACT"
-                    },
-                    "kcs_acceptance_head": {
-                      "type": "string",
-                      "format": "ledger-head",
-                      "x-coordinate": "KCS_ACCEPTANCE"
-                    },
-                    "materialization_head": {
-                      "type": "string",
-                      "format": "ledger-head",
-                      "x-coordinate": "MATERIALIZATION"
-                    },
-                    "accepted_graph_digest": {
-                      "type": "string",
-                      "format": "sha256",
-                      "x-coordinate": "ACCEPTED_GRAPH"
-                    }
+                    "effective_contract_identity": {"type":"string","format":"sha256","x-coordinate":"DOMAIN_CONTRACT"},
+                    "kcs_acceptance_head": {"type":"string","format":"ledger-head","x-coordinate":"KCS_ACCEPTANCE"},
+                    "materialization_head": {"type":"string","format":"ledger-head","x-coordinate":"MATERIALIZATION"},
+                    "accepted_graph_digest": {"type":"string","format":"sha256","x-coordinate":"ACCEPTED_GRAPH"}
                   }
                 },
-                "action_acceptance_head": {
-                  "type": "string",
-                  "format": "ledger-head",
-                  "x-coordinate": "ACTION_ACCEPTANCE"
-                },
-                "initialization_identity": {
-                  "type": "string",
-                  "format": "sha256"
-                },
+                "action_acceptance_head": {"type":"string","format":"ledger-head","x-coordinate":"ACTION_ACCEPTANCE"},
+                "initialization_identity": {"type":"string","format":"sha256"},
                 "epistemic_policy": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "id",
-                    "record_hash"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "record_hash": {
-                      "type": "string",
-                      "format": "sha256"
-                    }
-                  }
+                  "required": ["id","record_hash"],
+                  "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
                 },
                 "authorization_policy": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "id",
-                    "record_hash"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "record_hash": {
-                      "type": "string",
-                      "format": "sha256"
-                    }
-                  }
+                  "required": ["id","record_hash"],
+                  "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
                 },
-                "proposal_id": {
-                  "type": "string"
-                },
-                "action_id": {
-                  "type": "string"
-                },
-                "episode_key": {
-                  "type": "string"
-                },
+                "proposal_id": {"type":"string"},
+                "action_id": {"type":"string"},
+                "episode_key": {"type":"string"},
                 "goal": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "id",
-                    "bytes_sha256"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "bytes_sha256": {
-                      "type": "string",
-                      "format": "sha256"
-                    }
-                  }
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
                 },
                 "preservation": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "id",
-                    "bytes_sha256"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "bytes_sha256": {
-                      "type": "string",
-                      "format": "sha256"
-                    }
-                  }
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
                 },
                 "mapping": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "id",
-                    "bytes_sha256"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "bytes_sha256": {
-                      "type": "string",
-                      "format": "sha256"
-                    }
-                  }
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
                 },
                 "pre_state_source": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": [
-                    "id",
-                    "bytes_sha256"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "bytes_sha256": {
-                      "type": "string",
-                      "format": "sha256"
-                    }
-                  }
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
                 }
               }
             }
@@ -689,109 +333,41 @@
         "base": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "prefix",
-            "domain",
-            "action_acceptance_head",
-            "initialization_identity",
-            "epistemic_policy",
-            "authorization_policy"
-          ],
+          "required": ["prefix","domain","action_acceptance_head","initialization_identity","epistemic_policy","authorization_policy"],
           "properties": {
             "prefix": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "head",
-                "event_count"
-              ],
+              "required": ["head","event_count"],
               "properties": {
-                "head": {
-                  "type": "string",
-                  "format": "ledger-head",
-                  "x-coordinate": "FULL_HISTORY"
-                },
-                "event_count": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "x-coordinate": "FULL_EVENT_COUNT"
-                }
+                "head": {"type":"string","format":"ledger-head","x-coordinate":"FULL_HISTORY"},
+                "event_count": {"type":"integer","minimum":0,"x-coordinate":"FULL_EVENT_COUNT"}
               }
             },
             "domain": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "effective_contract_identity",
-                "kcs_acceptance_head",
-                "materialization_head",
-                "accepted_graph_digest"
-              ],
+              "required": ["effective_contract_identity","kcs_acceptance_head","materialization_head","accepted_graph_digest"],
               "properties": {
-                "effective_contract_identity": {
-                  "type": "string",
-                  "format": "sha256",
-                  "x-coordinate": "DOMAIN_CONTRACT"
-                },
-                "kcs_acceptance_head": {
-                  "type": "string",
-                  "format": "ledger-head",
-                  "x-coordinate": "KCS_ACCEPTANCE"
-                },
-                "materialization_head": {
-                  "type": "string",
-                  "format": "ledger-head",
-                  "x-coordinate": "MATERIALIZATION"
-                },
-                "accepted_graph_digest": {
-                  "type": "string",
-                  "format": "sha256",
-                  "x-coordinate": "ACCEPTED_GRAPH"
-                }
+                "effective_contract_identity": {"type":"string","format":"sha256","x-coordinate":"DOMAIN_CONTRACT"},
+                "kcs_acceptance_head": {"type":"string","format":"ledger-head","x-coordinate":"KCS_ACCEPTANCE"},
+                "materialization_head": {"type":"string","format":"ledger-head","x-coordinate":"MATERIALIZATION"},
+                "accepted_graph_digest": {"type":"string","format":"sha256","x-coordinate":"ACCEPTED_GRAPH"}
               }
             },
-            "action_acceptance_head": {
-              "type": "string",
-              "format": "ledger-head",
-              "x-coordinate": "ACTION_ACCEPTANCE"
-            },
-            "initialization_identity": {
-              "type": "string",
-              "format": "sha256"
-            },
+            "action_acceptance_head": {"type":"string","format":"ledger-head","x-coordinate":"ACTION_ACCEPTANCE"},
+            "initialization_identity": {"type":"string","format":"sha256"},
             "epistemic_policy": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "id",
-                "record_hash"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "record_hash": {
-                  "type": "string",
-                  "format": "sha256"
-                }
-              }
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
             },
             "authorization_policy": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "id",
-                "record_hash"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "record_hash": {
-                  "type": "string",
-                  "format": "sha256"
-                }
-              }
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
             }
           }
         }
@@ -800,1901 +376,170 @@
         "context_contract": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
+          "required": ["value"],
           "properties": {
             "value": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "contract_identity",
-                "record_type"
-              ],
-              "properties": {
-                "contract_identity": {
-                  "type": "string",
-                  "format": "sha256"
-                },
-                "record_type": {
-                  "type": "string",
-                  "const": "SourceArtifact"
-                }
-              }
+              "required": ["contract_identity","record_type"],
+              "properties": {"contract_identity":{"type":"string","format":"sha256"},"record_type":{"type":"string","const":"SourceArtifact"}}
             }
           }
         },
         "action_contract": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
+          "required": ["value"],
           "properties": {
             "value": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "contract_identity",
-                "record_type"
-              ],
-              "properties": {
-                "contract_identity": {
-                  "type": "string",
-                  "format": "sha256"
-                },
-                "record_type": {
-                  "type": "string",
-                  "const": "LocalAction"
-                }
-              }
+              "required": ["contract_identity","record_type"],
+              "properties": {"contract_identity":{"type":"string","format":"sha256"},"record_type":{"type":"string","const":"LocalAction"}}
             }
           }
         },
         "proposal_contract": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "value"
-          ],
+          "required": ["value"],
           "properties": {
             "value": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "contract_identity",
-                "record_type"
-              ],
-              "properties": {
-                "contract_identity": {
-                  "type": "string",
-                  "format": "sha256"
-                },
-                "record_type": {
-                  "type": "string",
-                  "const": "ProposedSubgraph"
-                }
-              }
+              "required": ["contract_identity","record_type"],
+              "properties": {"contract_identity":{"type":"string","format":"sha256"},"record_type":{"type":"string","const":"ProposedSubgraph"}}
             }
           }
         },
         "retention": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "bytes_sha256",
-            "byte_length"
-          ],
-          "properties": {
-            "bytes_sha256": {
-              "type": "string",
-              "format": "sha256"
-            },
-            "byte_length": {
-              "type": "integer",
-              "minimum": 0
-            }
-          }
+          "required": ["bytes_sha256","byte_length"],
+          "properties": {"bytes_sha256":{"type":"string","format":"sha256"},"byte_length":{"type":"integer","minimum":0}}
         },
         "constants": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "source_type",
-            "epistemic_type",
-            "authorization_type",
-            "registrar_role",
-            "proposer_role",
-            "proposed",
-            "pending"
-          ],
+          "required": ["source_type","epistemic_type","authorization_type","registrar_role","proposer_role","proposed","pending"],
           "properties": {
-            "source_type": {
-              "type": "string",
-              "const": "SourceArtifact"
-            },
-            "epistemic_type": {
-              "type": "string",
-              "const": "EpistemicPolicyArtifact"
-            },
-            "authorization_type": {
-              "type": "string",
-              "const": "AuthorizationPolicyArtifact"
-            },
-            "registrar_role": {
-              "type": "string",
-              "const": "registrar"
-            },
-            "proposer_role": {
-              "type": "string",
-              "const": "proposer"
-            },
-            "proposed": {
-              "type": "string",
-              "const": "PROPOSED"
-            },
-            "pending": {
-              "type": "string",
-              "const": "PENDING"
-            }
+            "source_type": {"type":"string","const":"SourceArtifact"},
+            "epistemic_type": {"type":"string","const":"EpistemicPolicyArtifact"},
+            "authorization_type": {"type":"string","const":"AuthorizationPolicyArtifact"},
+            "registrar_role": {"type":"string","const":"registrar"},
+            "proposer_role": {"type":"string","const":"proposer"},
+            "proposed": {"type":"string","const":"PROPOSED"},
+            "pending": {"type":"string","const":"PENDING"}
           }
         }
       }
     },
     "required_capabilities": [],
-    "introductions": [
-      {
-        "name": "context",
-        "depends_on": []
-      },
-      {
-        "name": "action",
-        "depends_on": [
-          "context"
-        ]
-      },
-      {
-        "name": "proposal",
-        "depends_on": [
-          "context",
-          "action"
-        ]
-      }
-    ],
+    "introductions": [{"name":"context","depends_on":[]},{"name":"action","depends_on":["context"]},{"name":"proposal","depends_on":["context","action"]}],
     "steps": [
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "HEAD",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "prefix",
-            "head"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "prefix",
-            "head"
-          ]
-        },
-        "refusal": "STALE_FULL_HEAD"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "INTEGER",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "prefix",
-            "event_count"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "prefix",
-            "event_count"
-          ]
-        },
-        "refusal": "STALE_FULL_COUNT"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "domain",
-            "effective_contract_identity"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "domain",
-            "effective_contract_identity"
-          ]
-        },
-        "refusal": "STALE_CONTRACT"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "HEAD",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "domain",
-            "kcs_acceptance_head"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "domain",
-            "kcs_acceptance_head"
-          ]
-        },
-        "refusal": "STALE_KCS_HEAD"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "HEAD",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "domain",
-            "materialization_head"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "domain",
-            "materialization_head"
-          ]
-        },
-        "refusal": "STALE_MATERIALIZATION"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "domain",
-            "accepted_graph_digest"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "domain",
-            "accepted_graph_digest"
-          ]
-        },
-        "refusal": "STALE_GRAPH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "HEAD",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "action_acceptance_head"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "action_acceptance_head"
-          ]
-        },
-        "refusal": "STALE_ACTION_HEAD"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "initialization_identity"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "initialization_identity"
-          ]
-        },
-        "refusal": "WRONG_INITIALIZATION"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "epistemic_policy",
-            "id"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "epistemic_policy",
-            "id"
-          ]
-        },
-        "refusal": "WRONG_EPIS_POLICY_ID"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "epistemic_policy",
-            "record_hash"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "epistemic_policy",
-            "record_hash"
-          ]
-        },
-        "refusal": "WRONG_EPIS_POLICY_RECORD"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "authorization_policy",
-            "id"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "authorization_policy",
-            "id"
-          ]
-        },
-        "refusal": "WRONG_AUTH_POLICY_ID"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "authorization_policy",
-            "record_hash"
-          ]
-        },
-        "right": {
-          "root": "current",
-          "name": "base",
-          "path": [
-            "authorization_policy",
-            "record_hash"
-          ]
-        },
-        "refusal": "WRONG_AUTH_POLICY_RECORD"
-      },
-      {
-        "opcode": "VALIDATE_RECORD",
-        "record": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record"
-          ]
-        },
-        "contract": {
-          "root": "artifact",
-          "name": "context_contract",
-          "path": [
-            "value"
-          ]
-        },
-        "result": "checked-context",
-        "refusal": "INVALID_CONTEXT_RECORD"
-      },
-      {
-        "opcode": "HASH",
-        "recipe": "RECORD",
-        "value": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record"
-          ]
-        },
-        "record_type": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record_type"
-          ]
-        },
-        "result": "context-hash",
-        "refusal": "INVALID_CONTEXT_HASH_INPUT"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "content_hash"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "context-hash",
-          "path": [
-            "value"
-          ]
-        },
-        "refusal": "CONTEXT_HASH_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "generation_event_id"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "context_header",
-          "path": [
-            "event_id"
-          ]
-        },
-        "refusal": "CONTEXT_GENERATION_EVENT_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "INSTANT",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "generated_at"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "context_header",
-          "path": [
-            "transaction_time"
-          ]
-        },
-        "refusal": "CONTEXT_GENERATED_AT_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "responsible_actor_id"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "context_header",
-          "path": [
-            "actor_id"
-          ]
-        },
-        "refusal": "CONTEXT_RESPONSIBLE_ACTOR_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "responsible_role"
-          ]
-        },
-        "right": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "registrar_role"
-          ]
-        },
-        "refusal": "CONTEXT_ROLE_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_UNIQUE",
-        "records": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value"
-          ]
-        },
-        "key_paths": [
-          [
-            "record",
-            "id"
-          ]
-        ],
-        "target_index": "global_ids",
-        "refusal": "DUPLICATE_CONTEXT_ID"
-      },
-      {
-        "opcode": "VALIDATE_RECORD",
-        "record": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record"
-          ]
-        },
-        "contract": {
-          "root": "artifact",
-          "name": "action_contract",
-          "path": [
-            "value"
-          ]
-        },
-        "result": "checked-action",
-        "refusal": "INVALID_ACTION_RECORD"
-      },
-      {
-        "opcode": "HASH",
-        "recipe": "RECORD",
-        "value": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record"
-          ]
-        },
-        "record_type": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record_type"
-          ]
-        },
-        "result": "action-hash",
-        "refusal": "INVALID_ACTION_HASH_INPUT"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "content_hash"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "action-hash",
-          "path": [
-            "value"
-          ]
-        },
-        "refusal": "ACTION_HASH_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "generation_event_id"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "proposal_header",
-          "path": [
-            "event_id"
-          ]
-        },
-        "refusal": "ACTION_GENERATION_EVENT_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "INSTANT",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "generated_at"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "proposal_header",
-          "path": [
-            "transaction_time"
-          ]
-        },
-        "refusal": "ACTION_GENERATED_AT_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "responsible_actor_id"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "proposal_header",
-          "path": [
-            "actor_id"
-          ]
-        },
-        "refusal": "ACTION_RESPONSIBLE_ACTOR_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "responsible_role"
-          ]
-        },
-        "right": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "proposer_role"
-          ]
-        },
-        "refusal": "ACTION_ROLE_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_UNIQUE",
-        "records": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value"
-          ]
-        },
-        "key_paths": [
-          [
-            "record",
-            "id"
-          ]
-        ],
-        "target_index": "global_ids",
-        "refusal": "DUPLICATE_ACTION_ID"
-      },
-      {
-        "opcode": "VALIDATE_RECORD",
-        "record": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record"
-          ]
-        },
-        "contract": {
-          "root": "artifact",
-          "name": "proposal_contract",
-          "path": [
-            "value"
-          ]
-        },
-        "result": "checked-proposal",
-        "refusal": "INVALID_PROPOSAL_RECORD"
-      },
-      {
-        "opcode": "HASH",
-        "recipe": "RECORD",
-        "value": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record"
-          ]
-        },
-        "record_type": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record_type"
-          ]
-        },
-        "result": "proposal-hash",
-        "refusal": "INVALID_PROPOSAL_HASH_INPUT"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "content_hash"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "proposal-hash",
-          "path": [
-            "value"
-          ]
-        },
-        "refusal": "PROPOSAL_HASH_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "generation_event_id"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "proposal_header",
-          "path": [
-            "event_id"
-          ]
-        },
-        "refusal": "PROPOSAL_GENERATION_EVENT_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "INSTANT",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "generated_at"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "proposal_header",
-          "path": [
-            "transaction_time"
-          ]
-        },
-        "refusal": "PROPOSAL_GENERATED_AT_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "responsible_actor_id"
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "proposal_header",
-          "path": [
-            "actor_id"
-          ]
-        },
-        "refusal": "PROPOSAL_RESPONSIBLE_ACTOR_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "responsible_role"
-          ]
-        },
-        "right": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "proposer_role"
-          ]
-        },
-        "refusal": "PROPOSAL_ROLE_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_UNIQUE",
-        "records": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value"
-          ]
-        },
-        "key_paths": [
-          [
-            "record",
-            "id"
-          ]
-        ],
-        "target_index": "global_ids",
-        "refusal": "DUPLICATE_PROPOSAL_ID"
-      },
-      {
-        "opcode": "HASH",
-        "recipe": "VALUE",
-        "value": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value"
-          ]
-        },
-        "result": "context-content-hash",
-        "refusal": "INVALID_CONTEXT_CONTENT"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_content_digest"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "context-content-hash",
-          "path": [
-            "value"
-          ]
-        },
-        "refusal": "CONTEXT_BYTES_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_content_digest"
-          ]
-        },
-        "right": {
-          "root": "artifact",
-          "name": "retention",
-          "path": [
-            "bytes_sha256"
-          ]
-        },
-        "refusal": "RETAINED_CONTEXT_BYTES_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "INTEGER",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_byte_length"
-          ]
-        },
-        "right": {
-          "root": "artifact",
-          "name": "retention",
-          "path": [
-            "byte_length"
-          ]
-        },
-        "refusal": "RETAINED_CONTEXT_LENGTH_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "right": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "id"
-          ]
-        },
-        "refusal": "CONTEXT_ID_MISMATCH"
-      },
-      {
-        "opcode": "RESOLVE_RECORD",
-        "record_id": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "epistemic_policy",
-            "id"
-          ]
-        },
-        "record_hash": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "epistemic_policy",
-            "record_hash"
-          ]
-        },
-        "record_type": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "epistemic_type"
-          ]
-        },
-        "scope": "APPLIED",
-        "result": "epistemic_policy",
-        "refusal": "EPIS_POLICY_NOT_APPLIED"
-      },
-      {
-        "opcode": "RESOLVE_RECORD",
-        "record_id": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "authorization_policy",
-            "id"
-          ]
-        },
-        "record_hash": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "authorization_policy",
-            "record_hash"
-          ]
-        },
-        "record_type": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "authorization_type"
-          ]
-        },
-        "scope": "APPLIED",
-        "result": "authorization_policy",
-        "refusal": "AUTH_POLICY_NOT_APPLIED"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "HEAD",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "base_acceptance_head"
-          ]
-        },
-        "right": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "action_acceptance_head"
-          ]
-        },
-        "refusal": "PROPOSAL_A_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "right": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "proposal_id"
-          ]
-        },
-        "refusal": "WRONG_PROPOSAL_ID"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "right": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "action_id"
-          ]
-        },
-        "refusal": "WRONG_ACTION_ID"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "proposal_key"
-          ]
-        },
-        "right": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "episode_key"
-          ]
-        },
-        "refusal": "WRONG_EPISODE_KEY"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "action_key"
-          ]
-        },
-        "right": {
-          "root": "original",
-          "name": "context",
-          "path": [
-            "value",
-            "episode_key"
-          ]
-        },
-        "refusal": "WRONG_ACTION_EPISODE_KEY"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "action_proposal_ids",
-            0
-          ]
-        },
-        "right": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "refusal": "WRONG_ACTION_MEMBER"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "member_content_hashes",
-            0
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "action-hash",
-          "path": [
-            "value"
-          ]
-        },
-        "refusal": "WRONG_MEMBER_HASH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "epistemic_policy_id"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "epistemic_policy",
-          "path": [
-            "value",
-            "id"
-          ]
-        },
-        "refusal": "EPIS_POLICY_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "epistemic_policy_hash"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "epistemic_policy",
-          "path": [
-            "value",
-            "artifact_hash"
-          ]
-        },
-        "refusal": "EPIS_POLICY_HASH_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "STRING",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "authorization_policy_id"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "authorization_policy",
-          "path": [
-            "value",
-            "id"
-          ]
-        },
-        "refusal": "AUTH_POLICY_ID_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "authorization_policy_hash"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "authorization_policy",
-          "path": [
-            "value",
-            "artifact_hash"
-          ]
-        },
-        "refusal": "AUTH_POLICY_HASH_MISMATCH"
-      },
-      {
-        "opcode": "REQUIRE_MEMBER",
-        "value_kind": "STRING",
-        "value": {
-          "root": "result",
-          "name": "epistemic_policy",
-          "path": [
-            "value",
-            "id"
-          ]
-        },
-        "members": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_record_ids"
-          ]
-        },
-        "refusal": "PROPOSAL_SOURCE_POLICY_MISSING"
-      },
-      {
-        "opcode": "REQUIRE_MEMBER",
-        "value_kind": "STRING",
-        "value": {
-          "root": "result",
-          "name": "authorization_policy",
-          "path": [
-            "value",
-            "id"
-          ]
-        },
-        "members": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_record_ids"
-          ]
-        },
-        "refusal": "ACTION_SOURCE_POLICY_MISSING"
-      },
-      {
-        "opcode": "REQUIRE_MEMBER",
-        "value_kind": "STRING",
-        "value": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "members": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_record_ids"
-          ]
-        },
-        "refusal": "PROPOSAL_SOURCE_CONTEXT_MISSING"
-      },
-      {
-        "opcode": "REQUIRE_MEMBER",
-        "value_kind": "STRING",
-        "value": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "members": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_record_ids"
-          ]
-        },
-        "refusal": "ACTION_SOURCE_CONTEXT_MISSING"
-      },
-      {
-        "opcode": "REQUIRE_MEMBER",
-        "value_kind": "STRING",
-        "value": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "members": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "source_record_ids"
-          ]
-        },
-        "refusal": "PROPOSAL_ACTION_SOURCE_MISSING"
-      },
-      {
-        "opcode": "REQUIRE_UNIQUE",
-        "records": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value"
-          ]
-        },
-        "key_paths": [
-          [
-            "record",
-            "action_key"
-          ]
-        ],
-        "target_index": "latest_action_by_key",
-        "refusal": "DUPLICATE_ACTION_KEY"
-      },
-      {
-        "opcode": "REQUIRE_UNIQUE",
-        "records": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value"
-          ]
-        },
-        "key_paths": [
-          [
-            "record",
-            "id"
-          ]
-        ],
-        "target_index": "context_by_proposal",
-        "refusal": "DUPLICATE_CONTEXT_ASSOCIATION"
-      },
-      {
-        "opcode": "INTRODUCE_RECORDS",
-        "records": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value"
-          ]
-        },
-        "dependencies": {
-          "root": "event",
-          "name": "context_dependencies",
-          "path": [
-            "value"
-          ]
-        },
-        "result": "introduced-context",
-        "refusal": "INTRODUCE_CONTEXT"
-      },
-      {
-        "opcode": "RESOLVE_RECORD",
-        "record_id": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "record_hash": {
-          "root": "result",
-          "name": "context-hash",
-          "path": [
-            "value"
-          ]
-        },
-        "record_type": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "source_type"
-          ]
-        },
-        "scope": "APPLIED_AND_EARLIER_STAGED",
-        "result": "staged-context",
-        "refusal": "CONTEXT_NOT_EARLIER_STAGED"
-      },
-      {
-        "opcode": "REQUIRE_COMPARE",
-        "value_kind": "DIGEST",
-        "comparison": "EQ",
-        "left": {
-          "root": "result",
-          "name": "staged-context",
-          "path": [
-            "value",
-            "source_content_digest"
-          ]
-        },
-        "right": {
-          "root": "result",
-          "name": "context-content-hash",
-          "path": [
-            "value"
-          ]
-        },
-        "refusal": "STAGED_CONTEXT_BYTES_MISMATCH"
-      },
-      {
-        "opcode": "INTRODUCE_RECORDS",
-        "records": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value"
-          ]
-        },
-        "dependencies": {
-          "root": "event",
-          "name": "action_dependencies",
-          "path": [
-            "value"
-          ]
-        },
-        "result": "introduced-action",
-        "refusal": "INTRODUCE_ACTION"
-      },
-      {
-        "opcode": "INTRODUCE_RECORDS",
-        "records": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value"
-          ]
-        },
-        "dependencies": {
-          "root": "event",
-          "name": "proposal_dependencies",
-          "path": [
-            "value"
-          ]
-        },
-        "result": "introduced-proposal",
-        "refusal": "INTRODUCE_PROPOSAL"
-      },
-      {
-        "opcode": "SET_PROTOCOL_STATE",
-        "target": "PROTOCOL_INDEX",
-        "name": "context_by_proposal",
-        "keys": [
-          {
-            "root": "event",
-            "name": "proposal",
-            "path": [
-              "value",
-              0,
-              "record",
-              "id"
-            ]
-          }
-        ],
-        "value": {
-          "root": "event",
-          "name": "context",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "refusal": "INVALID_CONTEXT_BY_PROPOSAL_UPDATE"
-      },
-      {
-        "opcode": "SET_PROTOCOL_STATE",
-        "target": "PROTOCOL_INDEX",
-        "name": "proposal_states",
-        "keys": [
-          {
-            "root": "event",
-            "name": "proposal",
-            "path": [
-              "value",
-              0,
-              "record",
-              "id"
-            ]
-          }
-        ],
-        "value": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "proposed"
-          ]
-        },
-        "refusal": "INVALID_PROPOSAL_STATES_UPDATE"
-      },
-      {
-        "opcode": "SET_PROTOCOL_STATE",
-        "target": "PROTOCOL_INDEX",
-        "name": "authorization_states",
-        "keys": [
-          {
-            "root": "event",
-            "name": "action",
-            "path": [
-              "value",
-              0,
-              "record",
-              "id"
-            ]
-          }
-        ],
-        "value": {
-          "root": "artifact",
-          "name": "constants",
-          "path": [
-            "pending"
-          ]
-        },
-        "refusal": "INVALID_AUTHORIZATION_STATES_UPDATE"
-      },
-      {
-        "opcode": "SET_PROTOCOL_STATE",
-        "target": "PROTOCOL_INDEX",
-        "name": "action_to_proposal",
-        "keys": [
-          {
-            "root": "event",
-            "name": "action",
-            "path": [
-              "value",
-              0,
-              "record",
-              "id"
-            ]
-          }
-        ],
-        "value": {
-          "root": "event",
-          "name": "proposal",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "refusal": "INVALID_ACTION_TO_PROPOSAL_UPDATE"
-      },
-      {
-        "opcode": "SET_PROTOCOL_STATE",
-        "target": "PROTOCOL_INDEX",
-        "name": "latest_action_by_key",
-        "keys": [
-          {
-            "root": "event",
-            "name": "action",
-            "path": [
-              "value",
-              0,
-              "record",
-              "action_key"
-            ]
-          }
-        ],
-        "value": {
-          "root": "event",
-          "name": "action",
-          "path": [
-            "value",
-            0,
-            "record",
-            "id"
-          ]
-        },
-        "refusal": "INVALID_LATEST_ACTION_BY_KEY_UPDATE"
-      }
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"original","name":"context","path":["value","prefix","head"]},"right":{"root":"current","name":"base","path":["prefix","head"]},"refusal":"STALE_FULL_HEAD"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INTEGER","comparison":"EQ","left":{"root":"original","name":"context","path":["value","prefix","event_count"]},"right":{"root":"current","name":"base","path":["prefix","event_count"]},"refusal":"STALE_FULL_COUNT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"original","name":"context","path":["value","domain","effective_contract_identity"]},"right":{"root":"current","name":"base","path":["domain","effective_contract_identity"]},"refusal":"STALE_CONTRACT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"original","name":"context","path":["value","domain","kcs_acceptance_head"]},"right":{"root":"current","name":"base","path":["domain","kcs_acceptance_head"]},"refusal":"STALE_KCS_HEAD"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"original","name":"context","path":["value","domain","materialization_head"]},"right":{"root":"current","name":"base","path":["domain","materialization_head"]},"refusal":"STALE_MATERIALIZATION"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"original","name":"context","path":["value","domain","accepted_graph_digest"]},"right":{"root":"current","name":"base","path":["domain","accepted_graph_digest"]},"refusal":"STALE_GRAPH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"original","name":"context","path":["value","action_acceptance_head"]},"right":{"root":"current","name":"base","path":["action_acceptance_head"]},"refusal":"STALE_ACTION_HEAD"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"original","name":"context","path":["value","initialization_identity"]},"right":{"root":"current","name":"base","path":["initialization_identity"]},"refusal":"WRONG_INITIALIZATION"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"original","name":"context","path":["value","epistemic_policy","id"]},"right":{"root":"current","name":"base","path":["epistemic_policy","id"]},"refusal":"WRONG_EPIS_POLICY_ID"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"original","name":"context","path":["value","epistemic_policy","record_hash"]},"right":{"root":"current","name":"base","path":["epistemic_policy","record_hash"]},"refusal":"WRONG_EPIS_POLICY_RECORD"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"original","name":"context","path":["value","authorization_policy","id"]},"right":{"root":"current","name":"base","path":["authorization_policy","id"]},"refusal":"WRONG_AUTH_POLICY_ID"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"original","name":"context","path":["value","authorization_policy","record_hash"]},"right":{"root":"current","name":"base","path":["authorization_policy","record_hash"]},"refusal":"WRONG_AUTH_POLICY_RECORD"},
+      {"opcode":"VALIDATE_RECORD","record":{"root":"event","name":"context","path":["value",0,"record"]},"contract":{"root":"artifact","name":"context_contract","path":["value"]},"result":"checked-context","refusal":"INVALID_CONTEXT_RECORD"},
+      {"opcode":"HASH","recipe":"RECORD","value":{"root":"event","name":"context","path":["value",0,"record"]},"record_type":{"root":"event","name":"context","path":["value",0,"record_type"]},"result":"context-hash","refusal":"INVALID_CONTEXT_HASH_INPUT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","content_hash"]},"right":{"root":"result","name":"context-hash","path":["value"]},"refusal":"CONTEXT_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","generation_event_id"]},"right":{"root":"event","name":"context_header","path":["event_id"]},"refusal":"CONTEXT_GENERATION_EVENT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","generated_at"]},"right":{"root":"event","name":"context_header","path":["transaction_time"]},"refusal":"CONTEXT_GENERATED_AT_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","responsible_actor_id"]},"right":{"root":"event","name":"context_header","path":["actor_id"]},"refusal":"CONTEXT_RESPONSIBLE_ACTOR_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","responsible_role"]},"right":{"root":"artifact","name":"constants","path":["registrar_role"]},"refusal":"CONTEXT_ROLE_MISMATCH"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"context","path":["value"]},"key_paths":[["record","id"]],"target_index":"global_ids","refusal":"DUPLICATE_CONTEXT_ID"},
+      {"opcode":"VALIDATE_RECORD","record":{"root":"event","name":"action","path":["value",0,"record"]},"contract":{"root":"artifact","name":"action_contract","path":["value"]},"result":"checked-action","refusal":"INVALID_ACTION_RECORD"},
+      {"opcode":"HASH","recipe":"RECORD","value":{"root":"event","name":"action","path":["value",0,"record"]},"record_type":{"root":"event","name":"action","path":["value",0,"record_type"]},"result":"action-hash","refusal":"INVALID_ACTION_HASH_INPUT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","content_hash"]},"right":{"root":"result","name":"action-hash","path":["value"]},"refusal":"ACTION_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","generation_event_id"]},"right":{"root":"event","name":"proposal_header","path":["event_id"]},"refusal":"ACTION_GENERATION_EVENT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","generated_at"]},"right":{"root":"event","name":"proposal_header","path":["transaction_time"]},"refusal":"ACTION_GENERATED_AT_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","responsible_actor_id"]},"right":{"root":"event","name":"proposal_header","path":["actor_id"]},"refusal":"ACTION_RESPONSIBLE_ACTOR_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","responsible_role"]},"right":{"root":"artifact","name":"constants","path":["proposer_role"]},"refusal":"ACTION_ROLE_MISMATCH"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"action","path":["value"]},"key_paths":[["record","id"]],"target_index":"global_ids","refusal":"DUPLICATE_ACTION_ID"},
+      {"opcode":"VALIDATE_RECORD","record":{"root":"event","name":"proposal","path":["value",0,"record"]},"contract":{"root":"artifact","name":"proposal_contract","path":["value"]},"result":"checked-proposal","refusal":"INVALID_PROPOSAL_RECORD"},
+      {"opcode":"HASH","recipe":"RECORD","value":{"root":"event","name":"proposal","path":["value",0,"record"]},"record_type":{"root":"event","name":"proposal","path":["value",0,"record_type"]},"result":"proposal-hash","refusal":"INVALID_PROPOSAL_HASH_INPUT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","content_hash"]},"right":{"root":"result","name":"proposal-hash","path":["value"]},"refusal":"PROPOSAL_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","generation_event_id"]},"right":{"root":"event","name":"proposal_header","path":["event_id"]},"refusal":"PROPOSAL_GENERATION_EVENT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","generated_at"]},"right":{"root":"event","name":"proposal_header","path":["transaction_time"]},"refusal":"PROPOSAL_GENERATED_AT_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","responsible_actor_id"]},"right":{"root":"event","name":"proposal_header","path":["actor_id"]},"refusal":"PROPOSAL_RESPONSIBLE_ACTOR_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","responsible_role"]},"right":{"root":"artifact","name":"constants","path":["proposer_role"]},"refusal":"PROPOSAL_ROLE_MISMATCH"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"proposal","path":["value"]},"key_paths":[["record","id"]],"target_index":"global_ids","refusal":"DUPLICATE_PROPOSAL_ID"},
+      {"opcode":"HASH","recipe":"VALUE","value":{"root":"original","name":"context","path":["value"]},"result":"context-content-hash","refusal":"INVALID_CONTEXT_CONTENT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","source_content_digest"]},"right":{"root":"result","name":"context-content-hash","path":["value"]},"refusal":"CONTEXT_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","source_content_digest"]},"right":{"root":"artifact","name":"retention","path":["bytes_sha256"]},"refusal":"RETAINED_CONTEXT_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INTEGER","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","source_byte_length"]},"right":{"root":"artifact","name":"retention","path":["byte_length"]},"refusal":"RETAINED_CONTEXT_LENGTH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"context","path":["value",0,"record","id"]},"right":{"root":"original","name":"context","path":["value","id"]},"refusal":"CONTEXT_ID_MISMATCH"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"original","name":"context","path":["value","epistemic_policy","id"]},"record_hash":{"root":"original","name":"context","path":["value","epistemic_policy","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["epistemic_type"]},"scope":"APPLIED","result":"epistemic_policy","refusal":"EPIS_POLICY_NOT_APPLIED"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"original","name":"context","path":["value","authorization_policy","id"]},"record_hash":{"root":"original","name":"context","path":["value","authorization_policy","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["authorization_type"]},"scope":"APPLIED","result":"authorization_policy","refusal":"AUTH_POLICY_NOT_APPLIED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","base_acceptance_head"]},"right":{"root":"original","name":"context","path":["value","action_acceptance_head"]},"refusal":"PROPOSAL_A_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","id"]},"right":{"root":"original","name":"context","path":["value","proposal_id"]},"refusal":"WRONG_PROPOSAL_ID"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","id"]},"right":{"root":"original","name":"context","path":["value","action_id"]},"refusal":"WRONG_ACTION_ID"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","action_proposal_ids",0]},"right":{"root":"event","name":"action","path":["value",0,"record","id"]},"refusal":"WRONG_ACTION_MEMBER"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","member_content_hashes",0]},"right":{"root":"result","name":"action-hash","path":["value"]},"refusal":"WRONG_MEMBER_HASH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","epistemic_policy_id"]},"right":{"root":"result","name":"epistemic_policy","path":["value","id"]},"refusal":"EPIS_POLICY_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"proposal","path":["value",0,"record","epistemic_policy_hash"]},"right":{"root":"result","name":"epistemic_policy","path":["value","content_hash"]},"refusal":"EPIS_POLICY_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","authorization_policy_id"]},"right":{"root":"result","name":"authorization_policy","path":["value","id"]},"refusal":"AUTH_POLICY_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"action","path":["value",0,"record","authorization_policy_hash"]},"right":{"root":"result","name":"authorization_policy","path":["value","content_hash"]},"refusal":"AUTH_POLICY_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"result","name":"epistemic_policy","path":["value","id"]},"members":{"root":"event","name":"proposal","path":["value",0,"record","source_record_ids"]},"refusal":"PROPOSAL_SOURCE_POLICY_MISSING"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"result","name":"authorization_policy","path":["value","id"]},"members":{"root":"event","name":"action","path":["value",0,"record","source_record_ids"]},"refusal":"ACTION_SOURCE_POLICY_MISSING"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"event","name":"context","path":["value",0,"record","id"]},"members":{"root":"event","name":"proposal","path":["value",0,"record","source_record_ids"]},"refusal":"PROPOSAL_SOURCE_CONTEXT_MISSING"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"event","name":"context","path":["value",0,"record","id"]},"members":{"root":"event","name":"action","path":["value",0,"record","source_record_ids"]},"refusal":"ACTION_SOURCE_CONTEXT_MISSING"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"event","name":"action","path":["value",0,"record","id"]},"members":{"root":"event","name":"proposal","path":["value",0,"record","source_record_ids"]},"refusal":"PROPOSAL_ACTION_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"action","path":["value"]},"key_paths":[["record","action_key"]],"target_index":"latest_action_by_key","refusal":"DUPLICATE_ACTION_KEY"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"proposal","path":["value"]},"key_paths":[["record","id"]],"target_index":"context_by_proposal","refusal":"DUPLICATE_CONTEXT_ASSOCIATION"},
+      {"opcode":"INTRODUCE_RECORDS","records":{"root":"event","name":"context","path":["value"]},"dependencies":{"root":"event","name":"context_dependencies","path":["value"]},"result":"introduced-context","refusal":"INTRODUCE_CONTEXT"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"event","name":"context","path":["value",0,"record","id"]},"record_hash":{"root":"result","name":"context-hash","path":["value"]},"record_type":{"root":"artifact","name":"constants","path":["source_type"]},"scope":"APPLIED_AND_EARLIER_STAGED","result":"staged-context","refusal":"CONTEXT_NOT_EARLIER_STAGED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"result","name":"staged-context","path":["value","source_content_digest"]},"right":{"root":"result","name":"context-content-hash","path":["value"]},"refusal":"STAGED_CONTEXT_BYTES_MISMATCH"},
+      {"opcode":"INTRODUCE_RECORDS","records":{"root":"event","name":"action","path":["value"]},"dependencies":{"root":"event","name":"action_dependencies","path":["value"]},"result":"introduced-action","refusal":"INTRODUCE_ACTION"},
+      {"opcode":"INTRODUCE_RECORDS","records":{"root":"event","name":"proposal","path":["value"]},"dependencies":{"root":"event","name":"proposal_dependencies","path":["value"]},"result":"introduced-proposal","refusal":"INTRODUCE_PROPOSAL"},
+      {"opcode":"SET_PROTOCOL_STATE","target":"PROTOCOL_INDEX","name":"context_by_proposal","keys":[{"root":"event","name":"proposal","path":["value",0,"record","id"]}],"value":{"root":"event","name":"context","path":["value",0,"record","id"]},"refusal":"INVALID_CONTEXT_BY_PROPOSAL_UPDATE"},
+      {"opcode":"SET_PROTOCOL_STATE","target":"PROTOCOL_INDEX","name":"proposal_states","keys":[{"root":"event","name":"proposal","path":["value",0,"record","id"]}],"value":{"root":"artifact","name":"constants","path":["proposed"]},"refusal":"INVALID_PROPOSAL_STATES_UPDATE"},
+      {"opcode":"SET_PROTOCOL_STATE","target":"PROTOCOL_INDEX","name":"authorization_states","keys":[{"root":"event","name":"action","path":["value",0,"record","id"]}],"value":{"root":"artifact","name":"constants","path":["pending"]},"refusal":"INVALID_AUTHORIZATION_STATES_UPDATE"},
+      {"opcode":"SET_PROTOCOL_STATE","target":"PROTOCOL_INDEX","name":"action_to_proposal","keys":[{"root":"event","name":"action","path":["value",0,"record","id"]}],"value":{"root":"event","name":"proposal","path":["value",0,"record","id"]},"refusal":"INVALID_ACTION_TO_PROPOSAL_UPDATE"},
+      {"opcode":"SET_PROTOCOL_STATE","target":"PROTOCOL_INDEX","name":"latest_action_by_key","keys":[{"root":"event","name":"action","path":["value",0,"record","action_key"]}],"value":{"root":"event","name":"action","path":["value",0,"record","id"]},"refusal":"INVALID_LATEST_ACTION_BY_KEY_UPDATE"}
     ]
   },
   "profile": {
     "targets": {
-      "global_ids": {
-        "target": "PROTOCOL_INDEX",
-        "storage_path": [
-          "protocol",
-          "global_ids"
-        ],
-        "key_schemas": [
-          {
-            "type": "string"
-          }
-        ],
-        "value_schema": {
-          "type": "string"
-        }
-      },
+      "global_ids": {"target":"PROTOCOL_INDEX","storage_path":["protocol","global_ids"],"key_schemas":[{"type":"string"}],"value_schema":{"type":"string"}},
       "context_by_proposal": {
         "target": "PROTOCOL_INDEX",
-        "storage_path": [
-          "protocol",
-          "context_by_proposal"
-        ],
-        "key_schemas": [
-          {
-            "type": "string"
-          }
-        ],
-        "value_schema": {
-          "type": "string"
-        }
+        "storage_path": ["protocol","context_by_proposal"],
+        "key_schemas": [{"type":"string"}],
+        "value_schema": {"type":"string"}
       },
       "proposal_states": {
         "target": "PROTOCOL_INDEX",
-        "storage_path": [
-          "protocol",
-          "proposal_states"
-        ],
-        "key_schemas": [
-          {
-            "type": "string"
-          }
-        ],
-        "value_schema": {
-          "type": "string"
-        }
+        "storage_path": ["protocol","proposal_states"],
+        "key_schemas": [{"type":"string"}],
+        "value_schema": {"type":"string"}
       },
       "authorization_states": {
         "target": "PROTOCOL_INDEX",
-        "storage_path": [
-          "protocol",
-          "authorization_states"
-        ],
-        "key_schemas": [
-          {
-            "type": "string"
-          }
-        ],
-        "value_schema": {
-          "type": "string"
-        }
+        "storage_path": ["protocol","authorization_states"],
+        "key_schemas": [{"type":"string"}],
+        "value_schema": {"type":"string"}
       },
       "action_to_proposal": {
         "target": "PROTOCOL_INDEX",
-        "storage_path": [
-          "protocol",
-          "action_to_proposal"
-        ],
-        "key_schemas": [
-          {
-            "type": "string"
-          }
-        ],
-        "value_schema": {
-          "type": "string"
-        }
+        "storage_path": ["protocol","action_to_proposal"],
+        "key_schemas": [{"type":"string"}],
+        "value_schema": {"type":"string"}
       },
       "latest_action_by_key": {
         "target": "PROTOCOL_INDEX",
-        "storage_path": [
-          "protocol",
-          "latest_action_by_key"
-        ],
-        "key_schemas": [
-          {
-            "type": "string"
-          }
-        ],
-        "value_schema": {
-          "type": "string"
-        }
+        "storage_path": ["protocol","latest_action_by_key"],
+        "key_schemas": [{"type":"string"}],
+        "value_schema": {"type":"string"}
       }
     },
     "capabilities": [],
@@ -2720,62 +565,21 @@
           "source_locator"
         ],
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "content_hash": {
-            "type": "string",
-            "format": "sha256"
-          },
-          "generation_event_id": {
-            "type": "string"
-          },
-          "generated_at": {
-            "type": "string",
-            "format": "aware-instant"
-          },
-          "responsible_actor_id": {
-            "type": "string"
-          },
-          "responsible_role": {
-            "type": "string"
-          },
-          "source_record_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true
-          },
-          "artifact_kind": {
-            "type": "string",
-            "const": "SOURCE"
-          },
-          "artifact_version": {
-            "type": "string"
-          },
-          "artifact_hash": {
-            "type": "string",
-            "format": "sha256"
-          },
-          "source_schema_version": {
-            "type": "string",
-            "const": "1"
-          },
-          "source_content_digest": {
-            "type": "string",
-            "format": "sha256"
-          },
-          "source_byte_length": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "source_media_type": {
-            "type": "string"
-          },
-          "source_locator": {
-            "type": "string"
-          }
+          "id": {"type":"string"},
+          "content_hash": {"type":"string","format":"sha256"},
+          "generation_event_id": {"type":"string"},
+          "generated_at": {"type":"string","format":"aware-instant"},
+          "responsible_actor_id": {"type":"string"},
+          "responsible_role": {"type":"string"},
+          "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "artifact_kind": {"type":"string","const":"SOURCE"},
+          "artifact_version": {"type":"string"},
+          "artifact_hash": {"type":"string","format":"sha256"},
+          "source_schema_version": {"type":"string","const":"1"},
+          "source_content_digest": {"type":"string","format":"sha256"},
+          "source_byte_length": {"type":"integer","minimum":0},
+          "source_media_type": {"type":"string"},
+          "source_locator": {"type":"string"}
         }
       },
       "EpistemicPolicyArtifact": {
@@ -2794,64 +598,34 @@
           "artifact_hash",
           "policy_schema_version",
           "required_monitor_ids",
-          "required_monitor_record_hashes"
+          "required_monitor_record_hashes",
+          "ruleset_id",
+          "ruleset_record_hash",
+          "ruleset_artifact_hash",
+          "violation_verdicts",
+          "unknown_verdicts",
+          "control_precedence"
         ],
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "content_hash": {
-            "type": "string",
-            "format": "sha256"
-          },
-          "generation_event_id": {
-            "type": "string"
-          },
-          "generated_at": {
-            "type": "string",
-            "format": "aware-instant"
-          },
-          "responsible_actor_id": {
-            "type": "string"
-          },
-          "responsible_role": {
-            "type": "string"
-          },
-          "source_record_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true
-          },
-          "artifact_kind": {
-            "type": "string",
-            "const": "EPISTEMIC_POLICY"
-          },
-          "artifact_version": {
-            "type": "string"
-          },
-          "artifact_hash": {
-            "type": "string",
-            "format": "sha256"
-          },
-          "policy_schema_version": {
-            "type": "string",
-            "const": "1"
-          },
-          "required_monitor_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "required_monitor_record_hashes": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "sha256"
-            }
-          }
+          "id": {"type":"string"},
+          "content_hash": {"type":"string","format":"sha256"},
+          "generation_event_id": {"type":"string"},
+          "generated_at": {"type":"string","format":"aware-instant"},
+          "responsible_actor_id": {"type":"string"},
+          "responsible_role": {"type":"string"},
+          "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "artifact_kind": {"type":"string","const":"EPISTEMIC_POLICY"},
+          "artifact_version": {"type":"string"},
+          "artifact_hash": {"type":"string","format":"sha256"},
+          "policy_schema_version": {"type":"string","const":"1"},
+          "required_monitor_ids": {"type":"array","items":{"type":"string"}},
+          "required_monitor_record_hashes": {"type":"array","items":{"type":"string","format":"sha256"}},
+          "ruleset_id": {"type":"string"},
+          "ruleset_record_hash": {"type":"string","format":"sha256"},
+          "ruleset_artifact_hash": {"type":"string","format":"sha256"},
+          "violation_verdicts": {"type":"array","items":{"type":"string"}},
+          "unknown_verdicts": {"type":"array","items":{"type":"string"}},
+          "control_precedence": {"type":"array","items":{"type":"string"}}
         }
       },
       "AuthorizationPolicyArtifact": {
@@ -2873,61 +647,19 @@
           "required_monitor_record_hashes"
         ],
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "content_hash": {
-            "type": "string",
-            "format": "sha256"
-          },
-          "generation_event_id": {
-            "type": "string"
-          },
-          "generated_at": {
-            "type": "string",
-            "format": "aware-instant"
-          },
-          "responsible_actor_id": {
-            "type": "string"
-          },
-          "responsible_role": {
-            "type": "string"
-          },
-          "source_record_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true
-          },
-          "artifact_kind": {
-            "type": "string",
-            "const": "AUTHORIZATION_POLICY"
-          },
-          "artifact_version": {
-            "type": "string"
-          },
-          "artifact_hash": {
-            "type": "string",
-            "format": "sha256"
-          },
-          "policy_schema_version": {
-            "type": "string",
-            "const": "1"
-          },
-          "required_monitor_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "required_monitor_record_hashes": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "sha256"
-            }
-          }
+          "id": {"type":"string"},
+          "content_hash": {"type":"string","format":"sha256"},
+          "generation_event_id": {"type":"string"},
+          "generated_at": {"type":"string","format":"aware-instant"},
+          "responsible_actor_id": {"type":"string"},
+          "responsible_role": {"type":"string"},
+          "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "artifact_kind": {"type":"string","const":"AUTHORIZATION_POLICY"},
+          "artifact_version": {"type":"string"},
+          "artifact_hash": {"type":"string","format":"sha256"},
+          "policy_schema_version": {"type":"string","const":"1"},
+          "required_monitor_ids": {"type":"array","items":{"type":"string"}},
+          "required_monitor_record_hashes": {"type":"array","items":{"type":"string","format":"sha256"}}
         }
       }
     }
