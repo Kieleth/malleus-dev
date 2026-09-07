@@ -1,0 +1,134 @@
+{
+  "schema": "malleus.semantic-reentry.integration-evidence/research-v0",
+  "status": "BOUNDED_INTERNAL_CORRECTION_GREEN",
+  "claim": "One source-backed Shop ViewDelta yields the existing pinned KCS, ordinary admission and JSONL-only replay yield e7 with unchanged complement, and a fresh invocation yields no candidate.",
+  "core": {
+    "commit": "79ae2feff7fc59436ef405fd91fe5a38c8253394",
+    "tree": "f1b7bbb9b98df036edbbb813b746f97552b47247"
+  },
+  "consumer_green": {
+    "commit": "195cdcb70838f6701b014018b9bd1faaa14db36c",
+    "tree": "a42f6842f1a6d167ab6a6a9cb7fed0f1d6369f18"
+  },
+  "history": {
+    "original_prerequisite": "1bbff3c2e064b776ac68728f6a86c739ee16e9f7",
+    "original_consumer_red": "a990d4ab7f54d028d4abeef119d8b2ca2c7f698d",
+    "integration_red": "925a90bc51785568120fcd970ecaadab1c78a44f",
+    "initial_green": "7948da2696848776e739e040da8da07479370de1",
+    "guardrail_red": "fd09ffbd386513d5986771cac4490ffda005beb8",
+    "original_six_artifacts_byte_identical": true,
+    "red_results": {
+      "consumer": {
+        "passed": 1,
+        "failed": 50,
+        "cause": "missing consumer module, specification RED"
+      },
+      "integration": {
+        "failed": 11,
+        "cause": "missing synthesis module"
+      },
+      "guardrails": {
+        "failed": 4,
+        "cause": "three missing refusals and one untyped nested-shape error"
+      }
+    }
+  },
+  "environment": {
+    "python": "3.12.9",
+    "ruff": "0.11.9",
+    "executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "dependencies": "existing declared project environment, no installation performed",
+    "variables": {
+      "PYTHONPATH": "src:.",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    }
+  },
+  "verification": {
+    "focused": {
+      "selector": "research/semantic_reentry_protocol",
+      "passed": 76,
+      "xfailed": 1,
+      "exit_code": 0
+    },
+    "unified_relevant_gate": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "tests/contract_compiler/pareto",
+        "research/ontology_driven_kg_realization/experiments/small_shop",
+        "research/semantic_reentry_protocol"
+      ],
+      "development_run": {
+        "passed": 831,
+        "xfailed": 1,
+        "seconds": 174.37,
+        "exit_code": 0
+      },
+      "clean_detached_run": {
+        "commit": "195cdcb70838f6701b014018b9bd1faaa14db36c",
+        "tree": "a42f6842f1a6d167ab6a6a9cb7fed0f1d6369f18",
+        "worktree": "/private/tmp/malleus-reentry-verify.bzFT9Y",
+        "passed": 831,
+        "xfailed": 1,
+        "seconds": 180.24,
+        "exit_code": 0,
+        "clean_after_run": true
+      }
+    },
+    "historical_xfail": "Frozen prerequisite test demonstrates that prepare_population_change appends evidence. This expected failure is not an unmet requirement of the new writer-free composer.",
+    "independent_guardrail_review": {
+      "passed": 4,
+      "no_additional_core_requirement": true
+    },
+    "ruff": {
+      "check": "PASS",
+      "format": "PASS",
+      "files": [
+        "consumer.py",
+        "synthesis.py",
+        "test_integration.py",
+        "test_guardrails.py",
+        "conftest.py"
+      ]
+    },
+    "integration_result": "integration-result.json",
+    "integration_result_checked_by": "test_observed_correction_admission_reopen_trace_complement_and_quiescence"
+  },
+  "diff_audit": {
+    "base": "79ae2feff7fc59436ef405fd91fe5a38c8253394",
+    "scope": "research/semantic_reentry_protocol/**",
+    "outside_scope_diff": "EMPTY",
+    "whitespace_check": "PASS",
+    "code_and_tests_unchanged_by_evidence_handoff": true,
+    "no_merge_push_publication_or_shared_branch_change": true
+  },
+  "limitations": [
+    "Retained e4 and e7 source occurrences, not an observed external supplier transition during this experiment.",
+    "Supplied-plan validation, not autonomous observation discovery or a generic source-to-plan adapter.",
+    "No demand, SupplyGap finding, ActionProposal, external authorization, effect execution or outcome observation.",
+    "Local research contract is preserved in the result artifact, not introduced as a Core ledger object or public package API.",
+    "Trusted coordinator extracts record history and immutable compiler inputs from public replay; no hostile caller authentication or arbitrary Python sandbox.",
+    "No source truth, epistemic assent, stable public wire, second producer replaceability, full repository gate or release claim.",
+    "No non-invertibility witness or generic GoalPredicate/action-model laws in this bounded slice."
+  ],
+  "file_sha256": {
+    "research/semantic_reentry_protocol/CONSUMER_CONTRACT.md": "sha256:96976adcbd052d8f47d100d01df37b2f6963e0855446768da94575e22246ee4a",
+    "research/semantic_reentry_protocol/INTEGRATION.md": "sha256:e338f8cb9cf7f1b927e7fc33ee839cf9b4016ce58ab9364e019c8f4f77d9eca0",
+    "research/semantic_reentry_protocol/README.md": "sha256:8f9dd0153f96ac0e3d38ec34883c3aa1af974fb44b474de448b3087b359590b8",
+    "research/semantic_reentry_protocol/conftest.py": "sha256:72ebb778a562288aa8a45cd1da0db3de74adafb128d33b73c0d95f563f5d1f23",
+    "research/semantic_reentry_protocol/consumer-red.json": "sha256:fcd9f294f695dcc288832691e336680ad31f47f46a949fd04c91ade3257a631a",
+    "research/semantic_reentry_protocol/consumer.py": "sha256:5bbcdd413a9979094946f7b97e43301bf297bfc6fec494c489f8c8133dc7e8ba",
+    "research/semantic_reentry_protocol/evidence.json": "sha256:6e6ed12bc96677d9471725f5f26d7d71fa1d7a66ce1ce83d7dca59cc76880554",
+    "research/semantic_reentry_protocol/integration-result.json": "sha256:92a0966a9a8eb7928f77f063337e0c56fc3c1cbfa5fb029dc482d2d685514b5f",
+    "research/semantic_reentry_protocol/synthesis.py": "sha256:a4c4000ba60395ecdb2eb467053ae5b1d249a9ddd9de1b516c425d73a317110b",
+    "research/semantic_reentry_protocol/test_consumer.py": "sha256:09ff43cff327325e92c58a185c4c7ba4476a38e3ed1fbd98216bd811d9dd32e6",
+    "research/semantic_reentry_protocol/test_guardrails.py": "sha256:cbb4e8a874c71bdfd94b865002472dfcb56bafe8ef3b84d60b8bd37017e6f320",
+    "research/semantic_reentry_protocol/test_integration.py": "sha256:c8cc6c440b55e1a68f03c0bc86363540e58583a823ef9de8be50d6489e1e063f",
+    "research/semantic_reentry_protocol/test_prerequisites.py": "sha256:117d7185f0c890e4617c3b37694cff467aa49b6e586cdabfa6ab636d47e74c38"
+  },
+  "manifest_hash_note": "This file excludes its own hash and the containing handoff commit to avoid a self-reference. Both are reported with the final handoff."
+}
