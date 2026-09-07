@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Approved proposal transaction definition, not an event wire",
+  "type": "object",
+  "properties": {
+    "role": {"const": "OPTIONAL_PROFILE"},
+    "decision": {"const": "2026-09-07-context-and-proposal-atomic"},
+    "atomic_batches": {
+      "const": [["original-context-registration", "proposal-recording"]]
+    },
+    "context_prefix": {"const": "BEFORE_TRANSACTION"},
+    "validation": {"const": "COMPLETE_BATCH_BEFORE_COMMIT"},
+    "visibility": {"const": "COMMITTED_PAIR_ONLY"},
+    "refusal": {"const": "PRESERVE_PRIOR_BYTES_AND_STATE"},
+    "orphan_context": {"const": "NOT_PERMITTED"},
+    "success_proposal_state": {"const": "PROPOSED"},
+    "action_acceptance": {"const": "UNCHANGED"},
+    "domain_state": {"const": "UNCHANGED"},
+    "commit_preconditions": {
+      "const": [
+        "EXPECTED_FULL_HEAD",
+        "EXPECTED_FULL_EVENT_COUNT",
+        "ORIGINAL_DOMAIN_CURRENT",
+        "ORIGINAL_ACTION_ACCEPTANCE_CURRENT"
+      ]
+    },
+    "runtime_status": {"const": "UNIMPLEMENTED"}
+  },
+  "required": [
+    "role", "decision", "atomic_batches", "context_prefix", "validation",
+    "visibility", "refusal", "orphan_context", "success_proposal_state",
+    "action_acceptance", "domain_state", "commit_preconditions", "runtime_status"
+  ],
+  "additionalProperties": false
+}

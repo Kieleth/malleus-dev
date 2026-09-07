@@ -82,3 +82,28 @@ ProposalTransaction consumes TypedProposalAndAction
 ProposalTransaction requires OneFailureAtomicCommit
 DefinitionFixture conformsTo ApprovedTransactionDecision
 FutureActionRuntime conformsTo TransactionPersistenceTests
+
+## Decision recording evidence
+
+RED `dd23691` records this decision and its tests before the machine-readable
+definition exists: 18 expected failures and one passing scope control.
+Adding the definition and schema makes all 19 tests pass. Combined with the
+previous 140-test selection, the exact result is 159 passed, zero skipped.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. python -m pytest -q -p no:cacheprovider -c pyproject.toml \
+  research/action_history_contract_freeze/test_transaction_decision.py \
+  research/action_history_contract_freeze/test_definition.py \
+  tests/contract_compiler/pareto/test_assent_contract_compatibility.py \
+  tests/contract_compiler/pareto/test_contract_alternatives.py \
+  tests/contract_compiler/pareto/test_public_compiler.py \
+  tests/test_assent_ontology.py \
+  tests/test_compiler_compatibility_gate.py --tb=short
+```
+
+Execution uses the already-configured project interpreter; no installation or
+network is required. Ruff, format and diff checks pass. This is definition
+validation, not behavioral action TDD. No lifecycle program, check producer or
+persistence implementation is added by this decision recording. The earlier
+frozen packet, production code, ontology, shared main and downstream tasks are
+unchanged. The enclosing Git commit identifies these four successor files.

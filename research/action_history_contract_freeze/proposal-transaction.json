@@ -1,0 +1,20 @@
+{
+  "role": "OPTIONAL_PROFILE",
+  "decision": "2026-09-07-context-and-proposal-atomic",
+  "atomic_batches": [["original-context-registration", "proposal-recording"]],
+  "context_prefix": "BEFORE_TRANSACTION",
+  "validation": "COMPLETE_BATCH_BEFORE_COMMIT",
+  "visibility": "COMMITTED_PAIR_ONLY",
+  "refusal": "PRESERVE_PRIOR_BYTES_AND_STATE",
+  "orphan_context": "NOT_PERMITTED",
+  "success_proposal_state": "PROPOSED",
+  "action_acceptance": "UNCHANGED",
+  "domain_state": "UNCHANGED",
+  "commit_preconditions": [
+    "EXPECTED_FULL_HEAD",
+    "EXPECTED_FULL_EVENT_COUNT",
+    "ORIGINAL_DOMAIN_CURRENT",
+    "ORIGINAL_ACTION_ACCEPTANCE_CURRENT"
+  ],
+  "runtime_status": "UNIMPLEMENTED"
+}
