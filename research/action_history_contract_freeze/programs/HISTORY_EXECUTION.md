@@ -30,6 +30,10 @@ a future migration decision. Selection is not an authority grant.
 `append_protocol_events` accepts a transaction name, exact expected full
 head/count and a nonempty ordered tuple of event drafts. Each draft carries
 event ID/type, actor, transaction time, data and named raw retention inputs.
+Each retention input name is a program-local role, not the retained record ID.
+Its explicit `record_id` names the introduced record. This lets the same
+identified source-registration program bind different source IDs without
+changing program paths or treating a role name as a global identifier.
 The envelope records the selected bundle identity, transaction identity and
 zero-based ordinal. The complete selected sequence is required. No partial
 transaction may survive append or replay, including a transaction split by an
