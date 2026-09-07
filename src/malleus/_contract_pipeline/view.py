@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime
 from decimal import Decimal
 from hashlib import sha256
@@ -32,6 +32,7 @@ from .model import (
     ArtifactRefusal,
     ArtifactRefusalReason,
     EffectiveConstraints,
+    ElaboratedCondition,
     canonical_json,
     metamodel,
     select_metamodel,
@@ -199,6 +200,7 @@ class ContractView:
         "_classes",
         "_content_hash",
         "_enums",
+        "_expressions",
         "_facts",
         "_kinds",
         "_scalars",
@@ -273,11 +275,43 @@ class ContractView:
                 for class_id, slots in slot_uses.items()
             }
         )
-        self._slots = MappingProxyType({
-            subject: _constraints(values)
-            for subject, values in self._values.items()
-            if self._kinds[subject] == "Slot"
-        })
+        self._slots = MappingProxyType(
+            {
+                subject: _constraints(values)
+                for subject, values in self._values.items()
+                if self._kinds[subject] == "Slot"
+            }
+        )
+        conditions: dict[str, list[ElaboratedCondition]] = defaultdict(list)
+        for subject, values in self._values.items():
+            if self._kinds[subject] == "SlotCondition":
+                conditions[str(values[_P["inAlternative"]][0])].append(
+                    ElaboratedCondition(
+                        slot_id=str(values[_P["usesSlot"]][0]),
+                        required=(
+                            _boolean(values, _P["required"])
+                            if _P["required"] in values
+                            else None
+                        ),
+                        equals_string=_optional(values, _P["equalsString"]),
+                        value_presence=_optional(values, _P["valuePresence"]),
+                    )
+                )
+        alternatives: dict[str, list[tuple[ElaboratedCondition, ...]]] = defaultdict(
+            list
+        )
+        for subject, values in self._values.items():
+            if self._kinds[subject] == "ExactlyOneAlternative":
+                alternatives[str(values[_P["inGroup"]][0])].append(
+                    tuple(conditions[subject])
+                )
+        self._expressions = MappingProxyType(
+            {
+                str(values[_P["onClass"]][0]): tuple(alternatives[subject])
+                for subject, values in self._values.items()
+                if self._kinds[subject] == "ExactlyOneGroup"
+            }
+        )
         self._sealed = True
 
     @property
@@ -425,6 +459,75 @@ class ContractView:
                 errors.append(f"Property '{name}' must be absent for {type_name}")
             if slot_id in normalized and normalized[slot_id] is not None:
                 errors.extend(self._validate_value(name, normalized[slot_id], constraint))
+        errors.extend(self._validate_class_expressions(class_id, normalized, uses))
+        return errors
+
+    def _validate_class_expressions(self, class_id, data, uses) -> list[str]:
+        ancestors: set[str] = set()
+        pending = [class_id]
+        while pending:
+            current = pending.pop()
+            if current in ancestors:
+                continue
+            ancestors.add(current)
+            definition = self._classes[current]
+            pending.extend(definition.mixins)
+            if definition.parent is not None:
+                pending.append(definition.parent)
+        errors = []
+        for owner in sorted(ancestors):
+            if owner not in self._expressions:
+                continue
+            results = [
+                self._alternative_errors(conditions, data, uses)
+                for conditions in self._expressions[owner]
+            ]
+            matches = sum(not result for result in results)
+            if matches != 1:
+                detail = (
+                    "; ".join(
+                        min(results, key=lambda result: (len(result), tuple(result)))
+                    )
+                    if matches == 0
+                    else "multiple alternatives match"
+                )
+                errors.append(
+                    f"Class '{owner}' must satisfy exactly one declared alternative; "
+                    f"matched {matches}; {detail}"
+                )
+        return errors
+
+    def _alternative_errors(self, conditions, data, uses) -> list[str]:
+        errors = []
+        for condition in conditions:
+            slot_id = condition.slot_id
+            name = slot_id.rsplit("/", 1)[-1]
+            base = uses[slot_id]
+            if condition.value_presence == "ABSENT":
+                if slot_id in data:
+                    errors.append(f"Property '{name}' must be absent")
+                continue
+            value = data.get(slot_id)
+            if (
+                base.required
+                or condition.required is True
+                or condition.value_presence == "PRESENT"
+            ) and (slot_id not in data or value is None or value == "" or value == []):
+                errors.append(f"Required slot '{name}' missing")
+                continue
+            if condition.equals_string is not None:
+                if slot_id not in data or value is None:
+                    errors.append(
+                        f"Property '{name}' must equal '{condition.equals_string}'"
+                    )
+                else:
+                    errors.extend(
+                        self._validate_value(
+                            name,
+                            value,
+                            replace(base, equals_string=condition.equals_string),
+                        )
+                    )
         return errors
 
     def _validate_value(
