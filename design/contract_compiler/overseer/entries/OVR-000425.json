@@ -1,0 +1,101 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000425",
+  "ledger": "overseer",
+  "sequence": 425,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:af48500da4e3f57686bcc4580263fa301aa56ff8e4d6d5a2cdee4361234302e2",
+  "recorded_at": "2026-09-07T03:35:02Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "fresh-shop-import",
+    "type": "DOCUMENT"
+  },
+  "summary": "Prove a fresh synthetic supplier file through the existing public Shop compiler, admission, replay and trace.",
+  "why": "Luis selected fresh import before publication. A Shop-owned JSONL mapper copies two synthetic rows through an explicit mapping artifact, with NONE_STATED time and no inferred correction. Core runtime, ontology and dependencies remain unchanged. Twelve RED cases precede GREEN. The complete compiler Pareto plus Shop selection passes 767 tests. Mapping, source and implementation bytes survive trace; malformed rows and stale admission preserve their stated pre-call ledger bytes. The walkthrough points to separately frozen evidence. After rebind, strict HTML, repository example AST and current-ledger projection checks pass together, three passed. Existing strict guards remain unchanged. No source truth, epistemic acceptance, automatic supplier effect, stable wire or release claim.",
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:81ce100a6a0df1fc2fd201e1820c85d1bdcd25fc9b139e8813153a83dc62bc35",
+        "before_digest": "sha256:482b49e70c6e1a119964c694a87c099169cd8da2693013b66f78b8a37d7146bc"
+      },
+      {
+        "path": "handover/2026-09-07-fresh-shop-import.md",
+        "change": "CREATED",
+        "after_digest": "sha256:2ea19b25ea54e80d7e7a601e4a3533a6f3fb55525ae8e20a489d3072f2680b98"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/README.md",
+        "change": "CREATED",
+        "after_digest": "sha256:648d2a4a76ef49c8d38eb706d8e0f474b862a3ea1f42a92ff5068aaf885e81c0"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/adapter.py",
+        "change": "CREATED",
+        "after_digest": "sha256:ea01afb331e73b6a49ae774a11286d619d60e151cb69e971d5c443084531e54f"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/run.py",
+        "change": "CREATED",
+        "after_digest": "sha256:6367044c3e2d1828a96a88dfeefdfd6e8a57ce1f337f15724b0b72632d9527b7"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/mapping.json",
+        "change": "CREATED",
+        "after_digest": "sha256:8bb9760fdc82a9e62fd0346eb13af23a85390429bd343b475b7fe745e3378615"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/supplier-orders.jsonl",
+        "change": "CREATED",
+        "after_digest": "sha256:82f9db1da18a9187ed1c1839e761b719e63f64881e912264d631361325f419ea"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/evidence.json",
+        "change": "CREATED",
+        "after_digest": "sha256:60b510ad59a0e86951bea809152c577a1fade06e34aaf7e8485290f56b40931f"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_fresh_shop_import.py",
+        "change": "CREATED",
+        "after_digest": "sha256:509f84373c94c32551bbe0a9319c79936cf5953bf959b08b0a4aa9648fd7534f"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "c3829d9629b02678b62fa6224c8eccc1bcc8c442"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "747581b45bafa6a2f289be861e50e273905cff37"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "9588e73dfc6bb7aef60d82f24e5e099c4a4cb521"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-001"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:3cd7a67f54a9b6516bf63b5e7a5f97e0d3cb6a5395397356f08dcf45a3a87fce"
+}

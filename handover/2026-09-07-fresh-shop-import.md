@@ -86,9 +86,22 @@ In this local clone the interpreter was supplied by absolute path from the
 configured workspace environment. The doc follow-up now executes the command
 parsed from the fresh-import README rather than merely importing the runner.
 That test and the repository example AST check passed. Strict HTML correctly
-refused the new walkthrough before its governance digest was rebound; its
-final check follows the append-only document revision. This is not a runtime
-failure or justification for relaxing the validator.
+refused the new walkthrough before its governance digest was rebound. After
+that rebind, strict HTML, repository example AST and current-ledger projection
+checks passed together: three passed. The validator was not relaxed.
+
+The exact final documentation/ledger selector is:
+
+```text
+tests/test_docs.py::test_strict_html_build_is_source_pure
+tests/test_docs.py::test_repository_python_examples_are_ast_checked
+tests/test_contract_compiler_ledger.py::test_overseer_ledger_and_projection_are_current
+```
+
+An initial invocation used a nonexistent ledger test name and collected no
+tests. It was corrected from the actual on-disk test declaration; only the
+three-test rerun above is evidence. No full-repository or package gate is
+claimed for this fixture-only addition.
 
 Frozen run coordinates:
 
@@ -105,6 +118,13 @@ files/tests and a guide section. No uncommitted paper or unrelated research
 bytes are included. Normal Git publication needs a narrow user exception to
 the MCP-only server rule because the available connector cannot transport
 the exact existing commit objects. No remote write has been performed.
+
+While the Shop work ran in isolation, the separately approved Re-entry slice
+landed at `c88e9a46a34b913528bbaa73c52e751d2db864a8`. Its task reports 1,321
+passed plus one preserved historical xfail, followed by two smoke tests.
+That result is not added to the Shop count. Its fifteen added paths are
+research-only. Core runtime bytes are identical between that landing and the
+base used here; the local merge preserves both exact histories.
 
 ## Scoped self-inquisition
 
