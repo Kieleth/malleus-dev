@@ -130,25 +130,6 @@ def test_full_shop_crosses_snapshot_only_composition_without_changing_evidence(
     assert (output / "history.jsonl").read_bytes() == ledger
 
 
-def test_walkthrough_query_executes_against_the_full_public_run(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
-) -> None:
-    guide = (ROOT / "docs/SMALL_SHOP_WALKTHROUGH.md").read_text()
-    section = guide.split("### Ask the rebuilt graph", 1)[1]
-    code = section.split("```python\n", 1)[1].split("```", 1)[0]
-    monkeypatch.chdir(tmp_path)
-    output = Path("build/small-shop-public-population")
-    _module().run_full_shop(output)
-    before = (output / "history.jsonl").read_bytes()
-    exec(compile(code, "SMALL_SHOP_WALKTHROUGH.md", "exec"), {})
-    assert capsys.readouterr().out.splitlines() == [
-        "2",
-        "supplier-order-state:B:e4",
-        "row:1:quantity",
-    ]
-    assert (output / "history.jsonl").read_bytes() == before
-
-
 def test_full_run_admits_reopens_queries_and_traces_every_record(
     tmp_path: Path,
 ) -> None:

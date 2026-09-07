@@ -13,14 +13,20 @@ before semantic history entirely. Start with the
 For the current five-change demonstration, read the
 [Small Shop end-to-end walkthrough](SMALL_SHOP_WALKTHROUGH.md). It extends the
 historical milestones below with settlement, one ledger, replay-derived current
-state, named queries, and exact change-level provenance.
+state, named queries, and exact change-level provenance. Its
+[default-admission runner](../research/ontology_driven_kg_realization/experiments/small_shop/default_admission/README.md)
+uses Core's shipped structural checks and admission helper, with no
+caller-authored check outcomes. It writes fresh history and evidence, then
+reopens the history to query the current quantity and trace its source bytes.
+The source mapping remains authored; structural admission does not prove it true.
 
-The newer
-[full public-path conformance evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
-executes all five changes through `malleus.compiler`, records one additive
+The earlier
+[custom-policy public-path conformance evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
+also executes all five changes through `malleus.compiler`, records one additive
 ontology revision, and traces every current and superseded record back to its
 retained population plan, field derivations, source bytes, and mapping bytes.
-It keeps the earlier research evidence unchanged.
+It remains frozen as a lower-level example, separate from the default run's
+generated output. Neither runner rewrites earlier research evidence.
 
 A separate
 [object-event evidence record](../research/ontology_driven_kg_realization/experiments/small_shop/object_event/evidence.json)

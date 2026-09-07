@@ -7,8 +7,9 @@ at `e7`. A database can store the latest number. This example asks for more:
 which source row supplied it, what allowed it into the graph, what it replaced,
 and whether we can rebuild that answer without the original working files.
 
-The current public-path run answers those questions. It also carries the
-shop's order, inventory, invoices and payment through the same path:
+This repository-local run answers those questions through the public `malleus.compiler`
+API. It also carries the shop's order, inventory, invoices and payment through
+the same path:
 
 ```text
 Ontology bytes -> compiled contract: what records are allowed
@@ -22,19 +23,29 @@ The compiler does not invent an ontology or decide that a later report is a
 correction. In this fixture, the author explicitly selects the `state-version`
 profile and supplies the `e4` to `e7` replacement in the plan. Malleus checks and
 executes that declaration. Structural acceptance is not proof that the source
-is true or that the author's mapping captures everything it means.
+is true or that the author's mapping captures everything it means. It does not
+establish epistemic acceptance or authorize an action.
 
-Run the existing public-path example from the repository root:
+The runner uses Core's `create_structural_history` and
+`admit_structural_change` helpers. Core checks each prepared change and records
+the structural outcome; the example does not author `SATISFIED` results or load
+a Shop-specific admission policy. This shipped default is one optional
+implementation, not a requirement of every Malleus adopter. Source registration
+and the source-to-record mapping remain explicit adopter work.
+
+From a configured environment at the repository root, run the default-admission
+example:
 
 ```bash
-python -m research.ontology_driven_kg_realization.experiments.small_shop.public_population.run --output build/small-shop-public-population
+python -m research.ontology_driven_kg_realization.experiments.small_shop.default_admission.run --output build/small-shop-default-admission
 ```
 
-It writes `history.jsonl` and `evidence.json`. A second invocation reopens the
-same history without appending. The full test repeats that operation and
-compares exact bytes. The result is 48 ledger events, five accepted changes,
-one additive ontology revision, ten historical records and nine current
-records. This is the complete **selected fixture**, not the whole shop domain.
+Choose a new output directory. The runner refuses an existing directory and
+cannot overwrite a previous run. It writes `history.jsonl` and `evidence.json`;
+use the read-only code below to reopen that history. The result is 50 ledger
+events, five accepted changes, one additive ontology revision, ten historical
+records and nine current records. This is the complete **selected fixture**,
+not the whole shop domain.
 
 Inspect the actual inputs and outputs in order:
 
@@ -42,9 +53,16 @@ Inspect the actual inputs and outputs in order:
 | --- | --- | --- |
 | Ontology | [Target schema](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_full_public_v1/input/tbox/small-shop.yaml) | `SupplierOrderState` and its required properties |
 | Source | [Supplier rows](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl) | The two quantities, with no date or replacement field |
-| Plan | [e7 population plan](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json) | Field derivations, explicit supersession and chosen valid time |
-| Contract and history | [Recorded evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json) | Contract identities, revision and exact ledger digest |
-| Graph and provenance | The same evidence file's `graph`, `queries` and `records` | Quantity `2` currently, with the retained `e4` predecessor and source trace |
+| Plan template | [e7 population plan](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json) | Field derivations, explicit supersession and chosen valid time |
+| Run inputs | [Default-run input list](../research/ontology_driven_kg_realization/experiments/small_shop/default_admission/inputs.json) | Exact source, ontology and template paths, in the declared step order |
+| Contract and history | Generated `build/small-shop-default-admission/evidence.json` | Structural-bundle identity, revision count and exact ledger digest |
+| Graph and provenance | The generated evidence file's `graph`, `queries` and `records` | Quantity `2` currently, with the retained `e4` predecessor and source trace |
+
+The runner retains the linked plan template and changes only its contract
+identity to bind Core's selected structural bundle. The resulting plan is also
+retained in the ledger. Source values, field derivations, valid times and
+supersession rules are unchanged. Generated evidence describes this new run;
+it does not replace any committed predecessor receipt.
 
 ### Ask the rebuilt graph
 
@@ -55,7 +73,7 @@ from pathlib import Path
 from malleus.compiler import KnowledgeChangeHistory, trace_population_record
 
 replay = KnowledgeChangeHistory.reopen(
-    Path("build/small-shop-public-population/history.jsonl")
+    Path("build/small-shop-default-admission/history.jsonl")
 ).replay()
 row = replay.graph.query("SupplierOrderState", supplier_order_id="B")[0]
 trace = trace_population_record(replay, row["id"])
@@ -91,12 +109,16 @@ that every source meaning was captured or every missing relation discovered.
 Run the full path and these controls together:
 
 ```bash
-python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py tests/contract_compiler/pareto/test_unstated_valid_time.py tests/contract_compiler/pareto/test_capture_coverage_boundary.py
+python -m pytest -q tests/contract_compiler/pareto/test_default_shop_walkthrough.py tests/contract_compiler/pareto/test_small_shop_default_admission.py tests/contract_compiler/pareto/test_unstated_valid_time.py tests/contract_compiler/pareto/test_capture_coverage_boundary.py
 ```
 
 ### Earlier evidence is still evidence
 
-The detailed walkthrough below describes the older fixture-specific runner.
+The older [public-population evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
+records a 48-event run with an explicit fixture policy. It remains a tested
+lower-level example, not the default admission path above.
+
+The detailed walkthrough below describes an earlier fixture-specific runner.
 Its recorded files are preserved, not recomputed in place. A compiler
 diagnostic edit changed the producer fingerprint and therefore the histories'
 fingerprints without changing these graph results. The
@@ -105,7 +127,7 @@ fingerprints without changing these graph results. The
 and [showcase evidence](../research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_06/showcase/explanation.json)
 record the current runs separately.
 Their tests require exact current bytes and protect the earlier files by hash.
-The public-path evidence linked above already matched and was not rewritten.
+The 48-event public-population evidence already matched and was not rewritten.
 
 ## Historical showcase in detail
 

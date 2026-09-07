@@ -4,9 +4,14 @@ This page exercises Sphinx autodoc and autosummary against the public package
 root, migration module, narrow compiler facade, and pack checkers. It
 does not promote private compiler stages or CLI implementation modules.
 
-`compile_population_plan` raises `PopulationPlanRefusal` with reason
-`PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED` when a plan contains event or
-signal records.
+`compile_population_plan` compiles concrete Event records according to the
+selected profile's declared Event role rather than its semantic unit. A
+source-assertion batch can therefore describe Events without becoming an
+occurrence. EventParticipation records require the corresponding optional
+vocabulary and typed Event-to-Entity endpoints. Signal population remains
+unsupported and raises `PopulationPlanRefusal` with reason
+`PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED`, as do Event records when the
+selected profile declares no Event role.
 
 `adapt_document_assertions` validates a document capture and emits the same
 neutral population-plan grammar. Captured assertions remain evidence rather

@@ -36,15 +36,20 @@ executes and retains the exact source-and-mapping and structural check receipts
 used for each change. This remains a private research runner, but its
 [sources, contracts, history, current graph, and limits are all inspectable](docs/index.md#correct-one-fact-without-rewriting-the-past).
 
-The latest integration run combines the full five-stage dataset behind the
-public `malleus.compiler` facade. Five explicit population plans create the
+Start with the [Small Shop walkthrough](docs/SMALL_SHOP_WALKTHROUGH.md) and its
+[default-admission runner](research/ontology_driven_kg_realization/experiments/small_shop/default_admission/README.md).
+It uses Core's shipped structural checks and admission helper, so the example
+does not have to supply check outcomes. Five explicit population plans create the
 order, unit, invoices, payment, settlement relations, and two supplier-order
 states. One additive ontology revision separates the smaller starting contract
 from the later vocabulary. Reopen and replay derive nine current records, while
 the history keeps ten, including the superseded `B@e4` state. Every record is
-then traced to exact retained source and mapping bytes. See the
-[full public-path conformance run](research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
-and its [committed evidence](research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json).
+then traced to exact retained source and mapping bytes. The runner writes fresh
+history and evidence; it never overwrites a previous run. The earlier
+[custom-policy conformance run](research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
+and its [committed evidence](research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
+remain available as a lower-level example. Structural admission is not a verdict
+on source truth or the adequacy of the authored mapping.
 
 That run now binds a separate, explicit `state-version` history profile. The
 ontology defines the allowed Small Shop records. The profile declares that each

@@ -77,20 +77,24 @@ receives no unrestricted callback or arbitrary-code escape hatch. A capability
 adapter has an explicit contract, identity, effects, refusal behavior, and
 conformance evidence.
 
-This is an accepted design boundary for the optional compiler-enabled and
-machine-executed profiles. It is not a claim that the generic interpreter or
-compiled machine artifact ships today, and it does not force adopters to claim
-those profiles.
+The public `malleus.compiler` facade ships `ProtocolMachineProgram`,
+`PolicyProgram`, and `execute_event`: identified machine and policy artifacts
+plus a reference executor. The default structural-admission bundle uses them.
+Their grammars remain private and cross-language parity is not established.
+The existing Assent runtime has not been replaced by this machine. This
+implements a bounded part of the optional compiler-enabled and machine-executed
+profiles; it does not force adopters to claim those profiles.
 
 ## 1. Encoding is the step you cannot skip
 
 Between a source and a conclusion there has to be an identified, typed
 intermediate.
 
-Malleus cannot mechanically gate untyped prose. OD-005 selects a subject,
-predicate, and object interpreted under a declared contract as the canonical
-contract-fact atom. The production compiler and runtime API do not exist yet,
-and a complete semantic change may require several records admitted atomically.
+Malleus cannot mechanically gate untyped prose. The compiler represents ontology
+meaning as subject, predicate, and object facts under a declared contract.
+The public `compile_linkml_contract` function compiles exact source bytes into a
+`ValidatedContractArtifact` and a runtime contract view. A complete semantic
+change may require several records admitted atomically.
 Range checks, endpoint contracts, executable rules, atomic staging, assent,
 and bitemporal replay operate on typed records or atomic packages under that
 contract. Evidence-bearing records additionally bind their sources. Citations
@@ -126,24 +130,27 @@ about diligence into a statement anyone can recheck. It is also the property
 most often faked by accident, because a quote that was hand-copied looks
 exactly like a quote that was verified, right up until someone measures.
 
-Malleus now provides part of this property, and the part matters less than the
-part it does not. `SourceArtifact` records a **declared** byte identity: a
-SHA-256 digest, a length, a media type, and a locator, all supplied by the
-caller and hashed together. Nothing in the library reads the bytes, so a
-digest and a length that describe no file anywhere are accepted and replay.
-What the record gives you is immutability and attribution: the assertion
-cannot be edited later without detection, and `Evidence` names exactly which
-assertion it was made against.
+Two implemented paths provide different guarantees. Assent's `SourceArtifact`
+stores a **declared** byte identity: a SHA-256 digest, length, media type, and
+locator supplied by the caller. That record alone does not read or verify the
+bytes. `Evidence` binds the exact source record, but Assent does not declare or
+check a quoted span. Its `citation-byte-verification` gap remains listed in
+`IMPLEMENTATION_STATUS.md`.
 
-What it does not give you, stated so nobody has to discover it: malleus does
-not verify the digest against any bytes, does not reopen the locator, does not
-declare a quoted span, and **does not detect that a source changed**. Register
-new bytes and you get a second artifact; the first stays valid for the bytes
-it describes and the old evidence keeps pointing at it, unflagged. Nothing
-goes stale, because nothing is watching. That boundary is
-`citation-byte-verification` in `IMPLEMENTATION_STATUS.md`, and until it
-exists both the verification and the supersession check belong to the
-adopter's write path.
+The compiler path goes further. `KnowledgeChangeHistory` verifies supplied
+retained bytes against their declared identities before retaining them and
+again during replay. The optional `adapt_document_assertions` adapter checks
+captured clauses against whitespace-normalized supplied reading blocks.
+`trace_population_record` follows a replayed record back to its retained plan,
+derivations, and source evidence. These checks establish byte correspondence,
+not source authenticity or truth. They do not fetch a locator or prove that a
+reading accurately transcribes its original document.
+
+Malleus still **does not detect that a source changed** automatically. Register
+new bytes and the prior artifact remains available; its old evidence keeps
+pointing to it. Choosing whether new evidence supersedes a prior record still
+belongs to an explicit adopter policy. No observer runs merely because a
+source was registered.
 
 Rite: `quotation_is_byte_exact`, with `citation_integrity` as its companion.
 One checks that the cited id resolves. The other checks that the cited bytes
@@ -213,12 +220,12 @@ validates and canonicalizes. A custom frontend may replace it only by producing
 the same normative intermediate and passing the same conformance suite. The
 compiled runtime must not require LinkML.
 
-That is an accepted architectural constraint, not a shipped plugin claim. The
-current `OntologyRegistry` still interprets LinkML-shaped YAML directly, the
-public package still declares LinkML dependencies, and no public
-`ContractFrontend` or `EffectiveContractArtifact` API exists. The contract
-kernel and frontend-neutrality experiment must establish those boundaries
-before promotion.
+The public compiler now exposes the validated-artifact and runtime-view seam.
+`OntologyRegistry` remains a separate direct LinkML-shaped YAML path, and the
+package still declares LinkML dependencies. There is no public abstraction
+named `ContractFrontend` or `EffectiveContractArtifact`; the shipped artifact
+is `ValidatedContractArtifact`. These pieces do not establish a general plugin
+system or prove replacement by another frontend.
 
 The broader software doctrine adapts Eric S. Raymond's
 [*The Art of Unix Programming*](https://www.informit.com/store/art-of-unix-programming-9780131429017):
@@ -283,12 +290,14 @@ authentic, independently retained expected head and event count. Historical
 ledger. A selected-prefix checkpoint alone remains valid after removal of a
 later tail and therefore does not authenticate that tail. Core retains no
 checkpoint itself, and the ledger is not externally witnessed or tamper-proof.
-The current public Assent projector also starts from a caller-supplied graph
-base rather than the accepted empty-plus-genesis boundary, and it does not yet
-expose a generic `KnowledgeChangeSet` artifact. A private compiler pipeline now
-proves both boundaries for controlled research cases. The missing public
-cutover remains an implementation gap against the accepted target, not a
-license for a second state authority.
+The Assent projector still takes a caller-supplied graph base and its candidate
+artifact, rather than the compiler's `KnowledgeChangeSet`. The public compiler
+history starts from an empty graph and retains each admitted change set in
+`KnowledgeChangeHistory`. Reopen reconstructs the graph from that history.
+The public `compose_change_set` function composes the same immutable change
+artifact from a verified read-only context; it neither admits nor writes it.
+This is a supported public Python path, not a stable wire or an Assent cutover.
+The missing Assent cutover does not license a second state authority.
 
 Stronger integrity belongs behind a separate contract boundary. A witness can
 consume a committed protocol-ledger head and emit a signed or transparency-
@@ -331,8 +340,8 @@ The analogy is useful only when distributed across the architecture:
 - Typed records and atomic candidate subgraphs are encoded change units.
 - The ledger is the retained historical sequence.
 - Readers, projectors, rules, and runtime profiles are the expression
-  machinery. Persisting and binding their identities is a target closure
-  requirement, not current behavior.
+  machinery. The compiler history retains its contract, machine, policy and
+  binding artifacts. A general projection-closure contract remains future work.
 - The accepted temporal KG is one expressed view.
 
 Calling either the ontology or the ledger alone "the DNA" hides the other
@@ -351,10 +360,10 @@ system self-corrects. It does not. See principle 3.
 and provenance, but it does not cite the observation supporting a domain claim.
 Malleus aims for evidence-bearing assertions to point at byte-exact sources.
 That citation graph is exactly what the genome analogy does not explain.
-Malleus now binds evidence to a content-addressed source record, but it does not
-yet verify quoted spans. Keep that boundary central where the analogy is
-silent. See principle 2 and `citation-byte-verification` in
-`IMPLEMENTATION_STATUS.md`.
+The document adapter checks captured clauses against supplied reading blocks;
+Assent's source record alone does not. Neither proves the source true. Keep
+those boundaries central where the analogy is silent. See principle 2 and the
+Assent `citation-byte-verification` limitation in `IMPLEMENTATION_STATUS.md`.
 
 Use the analogy to motivate questions. Never cite it as support for a claim.
 
