@@ -69,6 +69,12 @@ validation-contract bytes. Original-context contents must be that specific
 variant, not an initialization object. JSON role contents are canonical; the
 preflight does not normalize bytes or fetch a source locator.
 
+The binding declares `required_collections`, not presence-only fields. Every
+such field must contain a list: empty is structurally valid, null is not.
+Record canonicalization errors become INPUT_RECORD_SHAPE refusals with the
+lower-layer cause retained. See `INPUT_PREFLIGHT_CORRECTION.md` for the
+consumer-discovered defects, retained RED cases and corrected evidence.
+
 This is a specimen consistency check, not history resolution. It checks only
 the invocation's role inputs; monitor and implementation references receive
 envelope shape checking only. Event metadata and policy/context associations
