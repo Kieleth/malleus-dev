@@ -1,5 +1,5 @@
 {
-  "status": "BLOCKED_KEYED_EFFECT",
+  "status": "STATIC_VALID_PARTIAL",
   "runtime_executed": false,
   "scope": "Minimal full-record variant and static bindings, not a completed lifecycle event",
   "program": {
@@ -108,6 +108,7 @@
     "targets": {
       "execution_by_dispatch": {
         "target": "PROTOCOL_INDEX", "storage_path": ["protocol", "execution_by_dispatch"],
+        "key_schemas": [{"type": "string"}],
         "value_schema": {"type": "string"}
       }
     },

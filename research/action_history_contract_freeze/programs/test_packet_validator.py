@@ -79,6 +79,7 @@ def specimen():
                 "opcode": "SET_PROTOCOL_STATE",
                 "target": "PROTOCOL_INDEX",
                 "name": "context-identities",
+                "keys": [operand("event", "context", "identity")],
                 "value": operand("result", "context-digest", "value"),
                 "refusal": "INVALID_STATE_TARGET",
             },
@@ -92,6 +93,7 @@ def profile():
             "context-identities": {
                 "target": "PROTOCOL_INDEX",
                 "storage_path": ["protocol", "context-identities"],
+                "key_schemas": [{"type": "string", "format": "sha256"}],
                 "value_schema": {"type": "string", "format": "sha256"},
             },
         },

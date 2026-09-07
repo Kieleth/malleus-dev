@@ -1,10 +1,12 @@
 """Keyed instruction definitions only. No assignment or action executes."""
 
 from copy import deepcopy
+import json
 
 import pytest
 
 from research.action_history_contract_freeze.programs.test_packet_validator import (
+    HERE,
     api,
     obj,
     operand,
@@ -174,3 +176,15 @@ def test_index_uniqueness_and_assignment_share_the_declared_key_shape():
     refuses(program, profile, "INDEX_KEY_ARITY")
     step["key_paths"] = [["other"]]
     refuses(program, profile, "OPERAND_TYPE")
+
+
+def test_key_approval_is_recorded_without_claiming_runtime_readiness():
+    binding = json.loads((HERE.parent / "definition-inputs.json").read_bytes())
+    assert any(
+        "KEYED_EFFECT_DECISION.md" in item for item in binding["accepted_decisions"]
+    )
+    assert binding["interpreter"] == "NOT_IMPLEMENTED"
+    assert binding["event_programs"] == "NOT_FROZEN"
+    decision = (HERE / "lifecycle/KEYED_EFFECT_DECISION.md").read_text()
+    assert "Status: ACCEPTED" in decision
+    assert "This does not authorize runtime work" in decision

@@ -113,17 +113,27 @@ Python event handlers.
 | RESOLVE_RECORD | Resolve ID, exact type/subtype and record hash in applied prefix or explicitly declared earlier same-batch introductions. Missing or ambiguous references refuse. |
 | REQUIRE_COMPARE | Compare typed operands with EQ, NE, LT or LE. No coercion. Time operands require timezone-aware instants and compare actual instants; unbounded interval ends are handled only by the interval instruction. |
 | REQUIRE_MEMBER | Require one STRING value to equal a member of a finite STRING list. Exact equality only, no normalization or coercion. Empty lists refuse; order and repetition do not affect membership. Malformed operands refuse before comparison. No result or state effect. |
-| REQUIRE_UNIQUE | Require unique keys in the declared finite record list and absence from the named replay index when supplied. Composite keys are ordered tuples, not concatenated strings. |
+| REQUIRE_UNIQUE | Require unique keys in the declared finite record list and absence from the named replay index when supplied. Match that index's declared key arity/types. Composite keys are ordered tuples, not concatenated strings. |
 | REQUIRE_COVERAGE | Match the exact required monitor ID/hash pairs to one output each, including proposal, action, actor, policy and acceptance context. Missing, extra, duplicate or mismatched outputs refuse. |
 | REQUIRE_INTERVAL | Verify a declared inner interval lies within the outer interval. Starts are included, ends excluded; an absent outer end is unbounded, an absent inner end needs an unbounded outer end. No timezone inference. |
 | SELECT_CONTROL | Apply the identified policy's explicit outcome map and precedence to its complete validated check set. Recompute the existing evaluation hash. No outcome or verdict may be supplied as a shortcut. |
 | INTRODUCE_RECORDS | Stage the finite validated record list and its declared dependencies, enforcing global ID/hash/provenance consistency. Publish nothing until the owning atomic batch commits. |
-| SET_PROTOCOL_STATE | Stage only declared protocol indexes or the action-acceptance head. Domain graph, contract, KCS list and KCS heads are forbidden targets. |
+| SET_PROTOCOL_STATE | For a declared protocol index, assign the value at explicit ordered string keys matching its key schemas, preserving every other entry. Require uniqueness separately when replacement is forbidden. The scalar action-acceptance head forbids keys. Domain graph, contract, KCS list and KCS heads are forbidden targets. |
 
 VALUE hashing reuses `content_digest`; RECORD reuses `record_hash`. ARTIFACT is
 not a universal hash shortcut: its exact retained contract must identify the
 existing schema-specific semantic-hash projection. Event-envelope hashing
 remains the ledger owner's job and is not an instruction.
+
+The keyed refinement is accepted in `programs/lifecycle/KEYED_EFFECT_DECISION.md`.
+An index target declares nonempty ordered `key_schemas`; its `value_schema`
+describes one entry, not the whole index. `SET_PROTOCOL_STATE.keys` contains
+operands in that same order. Static checking compares arity, string type,
+declared format and coordinate domain. Composite keys are tuples, never joined
+strings or inferred paths. Assignment can insert or replace; an insert-only
+program declares the earlier `REQUIRE_UNIQUE`. Updates are staged until the
+owning transaction commits, and refusal publishes none. These last state and
+transaction laws still require a future executor and runtime evidence.
 
 These declarations define required capabilities, not implementations. Detailed
 event-to-instruction programs and their static operand resolution remain a
@@ -199,7 +209,8 @@ event programs and runtime conformance remain absent.
 ## Review choices, not silently accepted decisions
 
 1. The transaction choice is CLOSED: context then proposal, one failure-atomic
-   transaction. The membership addition is APPROVED. Neither decision should
+   transaction. The membership addition is APPROVED. Keyed protocol-index
+   assignment is also APPROVED. None of these decisions should
    be reopened merely because the complete runtime is not implemented.
 2. Review the eleven finite instruction shapes and operand/type restrictions against
    the approved lifecycle. No general expression language is selected.

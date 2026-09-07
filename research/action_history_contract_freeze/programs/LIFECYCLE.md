@@ -113,6 +113,12 @@ global introductions, latest action key, action/proposal association, monitor
 output uniqueness, authorization state, dispatch, execution and observation.
 They are replay products, never another ledger or external state.
 
+Each index declares ordered string `key_schemas` and an entry `value_schema`.
+Its assignment instruction supplies explicit `keys` in that order. Assignment
+preserves other entries; `REQUIRE_UNIQUE` separately states insertion-only
+requirements against the same key shape. Scalar action-head assignment has no
+keys. All effects remain staged inside the approved transaction.
+
 Static introduction names are symbolic program positions, not runtime IDs.
 They must be unique and depend only on earlier named introductions. Actual
 source_record_ids and object IDs still need the full runtime checks above.
@@ -137,10 +143,8 @@ still UNBOUND. No initialization instance or action lifecycle has run.
 
 ### Concrete execution candidate
 
-`lifecycle/execution.json` now retains one minimal full-record variant. Its
-17-instruction record/reference prefix passes static checking; the complete
-candidate refuses because `SET_PROTOCOL_STATE` cannot identify an index entry.
-See `lifecycle/KEYED_EFFECT_DECISION.md` for the proposed explicit key operand
-and the remaining input-binding obligations. This is a definition gap, not a
-runtime failure or a completed lifecycle program. No instruction refinement is
-accepted merely by retaining the candidate.
+`lifecycle/execution.json` retains one minimal full-record variant. Its full
+18-instruction candidate now passes static checking with the approved explicit
+key operand. Removing the key refuses. See `lifecycle/KEYED_EFFECT_DECISION.md`
+for the accepted refinement and the remaining input-binding obligations. This
+closes the missing key's definition, not the complete lifecycle or runtime.

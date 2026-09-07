@@ -194,6 +194,14 @@ def _target(profile, name, target):
     return declaration["value_schema"]
 
 
+def _index_keys(profile, name, actual):
+    expected = profile["targets"][name]["key_schemas"]
+    if len(actual) != len(expected):
+        _refuse("INDEX_KEY_ARITY", f"{name} requires {len(expected)} ordered keys")
+    for key, schema in zip(actual, expected, strict=True):
+        _same_type(key, schema)
+
+
 def validate_program(program, *, instruction_schema, profile):
     """Check finite declarations only; never authenticate inputs or run steps."""
     _local_references(instruction_schema)
@@ -222,7 +230,8 @@ def validate_program(program, *, instruction_schema, profile):
     if not isinstance(profile["targets"], dict):
         _refuse("DEFINITION_SHAPE", "targets must be named")
     for name, declaration in profile["targets"].items():
-        _closed(declaration, {"target", "storage_path", "value_schema"})
+        fields = {"target", "storage_path", "value_schema"}
+        _closed(declaration, fields, {"key_schemas"})
         expected = (
             ["protocol", name]
             if declaration["target"] == "PROTOCOL_INDEX"
@@ -233,6 +242,17 @@ def validate_program(program, *, instruction_schema, profile):
             or declaration["storage_path"] != expected
         ):
             _refuse("DOMAIN_STATE_TARGET", name)
+        if declaration["target"] == "PROTOCOL_INDEX":
+            _closed(declaration, fields | {"key_schemas"})
+            keys = declaration["key_schemas"]
+            if not isinstance(keys, list) or not keys:
+                _refuse("DEFINITION_SHAPE", "index key schemas must be a nonempty list")
+            for key in keys:
+                _schema(key)
+                if key["type"] != "string":
+                    _refuse("DEFINITION_SHAPE", "index keys must be strings")
+        else:
+            _closed(declaration, fields)
         _schema(declaration["value_schema"])
     _dependencies(program["introductions"])
     if not isinstance(program["steps"], list) or not program["steps"]:
@@ -322,14 +342,18 @@ def validate_program(program, *, instruction_schema, profile):
             require(values["records"], "array")
             if "items" not in values["records"]:
                 _refuse("UNRESOLVED_PATH", "unique list has no item schema")
-            for path in step["key_paths"]:
-                if _path(values["records"]["items"], path)["type"] in {
+            keys = [
+                _path(values["records"]["items"], path) for path in step["key_paths"]
+            ]
+            for key in keys:
+                if key["type"] in {
                     "object",
                     "array",
                 }:
                     _refuse("OPERAND_TYPE", "unique key must be scalar")
             if "target_index" in step:
                 _target(profile, step["target_index"], "PROTOCOL_INDEX")
+                _index_keys(profile, step["target_index"], keys)
         elif opcode in {"REQUIRE_COVERAGE", "SELECT_CONTROL"}:
             require(values["outputs"], "array")
             require(values["context"], "object")
@@ -356,6 +380,10 @@ def validate_program(program, *, instruction_schema, profile):
             result_schema = values["records"]
         elif opcode == "SET_PROTOCOL_STATE":
             expected = _target(profile, step["name"], step["target"])
+            if step["target"] == "PROTOCOL_INDEX":
+                _index_keys(
+                    profile, step["name"], [resolve(key) for key in step["keys"]]
+                )
             _same_type(values["value"], expected)
         else:
             _refuse("UNKNOWN_INSTRUCTION", opcode)

@@ -124,6 +124,7 @@ def test_membership_has_no_result_to_consume_or_domain_write():
             "opcode": "SET_PROTOCOL_STATE",
             "target": "PROTOCOL_INDEX",
             "name": "context-identities",
+            "keys": [operand("applied_record", "action", "record", "action_type")],
             "value": operand("result", "membership", "value"),
             "refusal": "NO_RESULT",
         }

@@ -240,6 +240,7 @@ INSTRUCTIONS = [
         "opcode": "SET_PROTOCOL_STATE",
         "target": "PROTOCOL_INDEX",
         "name": "records",
+        "keys": [OPERAND],
         "value": OPERAND,
     },
 ]

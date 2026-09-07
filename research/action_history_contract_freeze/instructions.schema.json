@@ -122,9 +122,13 @@
       "properties": {
         "opcode": {"const": "SET_PROTOCOL_STATE"}, "target": {"enum": ["PROTOCOL_INDEX", "ACTION_ACCEPTANCE_HEAD"]},
         "name": {"$ref": "#/$defs/name"}, "value": {"$ref": "#/$defs/operand"},
+        "keys": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/operand"}},
         "refusal": {"$ref": "#/$defs/name"}
       },
-      "required": ["opcode", "target", "name", "value", "refusal"], "additionalProperties": false
+      "required": ["opcode", "target", "name", "value", "refusal"], "additionalProperties": false,
+      "if": {"properties": {"target": {"const": "PROTOCOL_INDEX"}}},
+      "then": {"required": ["keys"]},
+      "else": {"not": {"required": ["keys"]}}
     }
   ]
 }

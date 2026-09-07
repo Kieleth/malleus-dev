@@ -11,15 +11,17 @@ index effect must identify both its key and value. Do not infer a key from
 `ActionExecution` or `dispatch_id` in Python.
 
 Smallest observation: the record/reference prefix resolves statically and its
-declared record shapes match concrete compiled Assent records. The full candidate
-must refuse while the instruction grammar cannot express its keyed index effect.
-This refusal is a definition gap, not a passing action lifecycle.
+declared record shapes match concrete compiled Assent records. The original
+checkpoint retained a full candidate that refused for its missing keyed effect.
+Luis has since approved the explicit key refinement. The current full candidate
+must pass static checking, while a keyless index write refuses. Neither outcome
+is a passing action lifecycle.
 
 Reuse the eleven-instruction grammar and static validator, compiled Assent,
 record hashing and the existing `execution_by_dispatch[dispatch_id] = id`
-semantics in assent.py. The proposed `keys` operand only makes that existing
-required effect explicit, but it changes an instruction contract and remains
-unapproved. Do not implement it before Luis decides.
+semantics in assent.py. The approved `keys` operand makes that existing required
+effect explicit. `KEYED_EFFECT_DECISION.md` records the authority and bounded
+static implementation plan; no runtime implementation is authorized.
 
 The prefix must not be sold as a complete event: full-history input resolution,
 record admission, preservation checks, atomic persistence and replay remain
