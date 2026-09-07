@@ -1701,7 +1701,10 @@ class KnowledgeChangeHistory:
                         | revision_ids
                     )
                     for values in protocol.consume(
-                        event, context=context, reserved_ids=reserved
+                        event,
+                        context=context,
+                        reserved_ids=reserved,
+                        history_binding_identity=self.binding.identity,
                     ):
                         member = KnowledgeRetainedInput(*values)
                         retained[member.record_id] = member

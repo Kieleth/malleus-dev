@@ -137,7 +137,8 @@ def load_bundle(source):
                 set(bindings) != {"event", "current", "artifact"}
                 or set(bindings["event"]) != {str(i) for i in range(len(kinds))}
                 or set(bindings["current"]) != {"context"}
-                or set(bindings["artifact"]) != {"constants"}
+                or set(bindings["artifact"])
+                not in ({"constants"}, {"constants", "selection"})
             ):
                 refuse("program requires the fixed owner input frame")
     except (KeyError, TypeError, ValueError, PacketRefusal) as error:
@@ -293,7 +294,7 @@ class ProtocolFold:
         ):
             refuse("stale full ledger head/count", "STALE_PROTOCOL_BASE")
 
-    def consume(self, event, *, context, reserved_ids):
+    def consume(self, event, *, context, reserved_ids, history_binding_identity):
         if self.bundle is None:
             refuse("finite program set is not selected")
         payload = event["payload"]
@@ -416,6 +417,21 @@ class ProtocolFold:
             != payload["transaction_identity"]
         ):
             refuse("transaction identity differs from exact event drafts")
+        artifacts = {"constants": {"value": self.bundle["constants"]}}
+        if "selection" in transaction["program"]["inputs"]["artifact"]:
+            artifacts["selection"] = {
+                "value": {
+                    "bundle_identity": self.bundle_identity,
+                    "record_contract_identity": digest(
+                        raw(self.bundle["record_contract_base64"])
+                    ),
+                    "profile_identity": content_digest(self.bundle["profile"]),
+                    "instruction_schema_identity": content_digest(
+                        self.bundle["instruction_schema"]
+                    ),
+                    "history_binding_identity": history_binding_identity,
+                }
+            }
         try:
             execution = execute_program(
                 program=transaction["program"],
@@ -424,7 +440,7 @@ class ProtocolFold:
                 inputs={
                     "event": frames,
                     "current": {"context": {"value": self.context}},
-                    "artifact": {"constants": {"value": self.bundle["constants"]}},
+                    "artifact": artifacts,
                 },
                 applied_records=self.records,
                 state=self.state,

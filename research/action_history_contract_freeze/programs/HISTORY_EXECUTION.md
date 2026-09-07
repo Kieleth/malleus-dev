@@ -52,6 +52,10 @@ The fixed interpreter input frame is:
 - `current.context.value`: actual pre-transaction full head/count, domain
   contract, KCS acceptance/materialization heads, graph digest and action head.
 - `artifact.constants.value`: exact constants from the selected bundle.
+- `artifact.selection.value`, when explicitly declared: owner-derived bundle,
+  compiled record-contract, instruction grammar, profile and history-binding
+  identities. Initialization can bind the real selected definitions without
+  embedding the bundle's own hash inside itself. No caller supplies this frame.
 
 There are no caller-supplied applied records or trusted current-state objects.
 RESOLVE_RECORD uses only prior protocol introductions. Introductions cannot
