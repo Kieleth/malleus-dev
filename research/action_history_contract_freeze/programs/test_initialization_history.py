@@ -176,6 +176,23 @@ def test_initialization_retains_checkpoint_and_derives_only_action_head(
     assert KnowledgeChangeHistory.reopen(history.path).replay().receipt == after.receipt
 
 
+def test_initialization_preserves_populated_shop_history(tmp_path, initialized_inputs):
+    content, checkpoint, references = initialized_inputs
+    history = reopen(tmp_path, content)
+    before = history.replay()
+    assert len(before.change_sets) == 5
+    assert len(before.contract_revisions) == 1
+    assert before.graph.get_node("supplier-order-state:B:e7")["ordered_quantity"] == 2
+    assert before.record_history["supplier-order-state:B:e4"].superseded_by == "supplier-order-state:B:e7"
+    after = append(history, "initialize", event(checkpoint, references))
+    reopened = KnowledgeChangeHistory.reopen(history.path).replay()
+    assert after.receipt == reopened.receipt
+    assert after.graph.export_records() == before.graph.export_records()
+    assert after.record_history == before.record_history
+    assert after.change_sets == before.change_sets
+    assert after.contract_revisions == before.contract_revisions
+
+
 @pytest.mark.parametrize(
     "fault", ["prefix", "count", "domain", "definition", "policy", "source", "second"]
 )
