@@ -39,14 +39,19 @@ def initialized_inputs(tmp_path_factory):
     build = import_module(
         "research.action_history_contract_freeze.programs.initialization_bundle"
     ).add_initialization
-    directory = tmp_path_factory.mktemp("initialization-prefix")
-    run_full_shop(directory)
-    history = KnowledgeChangeHistory.reopen(directory / "history.jsonl")
     bundle = build(
         builder().build_registration_bundle(compiled().artifact_bytes),
         source_ids=SOURCE_IDS,
         policy_ids=POLICY_IDS,
     )
+    return initialization_prefix(
+        tmp_path_factory.mktemp("initialization-prefix"), bundle
+    )
+
+
+def initialization_prefix(directory, bundle):
+    run_full_shop(directory)
+    history = KnowledgeChangeHistory.reopen(directory / "history.jsonl")
     history.append_anchors(
         anchors=(_evidence_anchor("action-programs", canonical(bundle)),),
         transaction_time=TIME,
