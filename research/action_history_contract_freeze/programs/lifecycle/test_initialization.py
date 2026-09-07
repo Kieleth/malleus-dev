@@ -9,7 +9,7 @@ import pytest
 
 from malleus.assent import ProtocolError, _canonical_unique
 from malleus.ledger import content_digest, record_hash
-from malleus.source import source_artifact_digest
+from malleus.source import SourceError, source_artifact_digest
 from research.action_history_contract_freeze.programs.packet_validator import (
     FORMATS,
     PacketRefusal,
@@ -20,7 +20,10 @@ from research.action_history_contract_freeze.programs.test_input_carrier import 
     source_record,
 )
 from research.action_history_contract_freeze.test_definition import shape_witness
-from tests.contract_compiler.pareto.test_assent_contract_compatibility import _compile
+from tests.contract_compiler.pareto.test_assent_contract_compatibility import (
+    _compile,
+    _records,
+)
 
 
 HERE = Path(__file__).parent
@@ -171,6 +174,31 @@ def test_source_hash_projection_matches_existing_recipe_and_not_provenance_hash(
     )
 
 
+def test_source_contract_keeps_existing_field_checks_not_only_hash_projection():
+    value = packet("source-registration")["semantic_hash_contract"]
+    checks = value["field_checks"]
+    assert checks == {
+        "source_schema_version": "1",
+        "nonblank_fields": [
+            "id",
+            "artifact_version",
+            "source_media_type",
+            "source_locator",
+        ],
+        "digest_fields": ["source_content_digest"],
+        "nonnegative_integer_fields": ["source_byte_length"],
+    }
+    record = source_record(candidate(), "source-fields", b"exact bytes")
+    for field in checks["nonblank_fields"]:
+        changed = {**record, field: " \t"}
+        preimage = {
+            key: changed[name] for key, name in value["preimage_fields"].items()
+        }
+        preimage["schema_version"] = preimage.pop("source_schema_version")
+        with pytest.raises(SourceError):
+            source_artifact_digest(**preimage)
+
+
 @pytest.mark.parametrize(
     "fault", ["domain-head", "unbound-input", "wrong-a-source", "domain-target"]
 )
@@ -211,3 +239,30 @@ def test_existing_order_rule_and_missing_instruction_are_separate_observations()
     assert check(unique_only)["status"] == "STATIC_VALID"
     assert value["attempted_instruction"]["value_kind"] == "STRING"
     assert value["attempted_instruction"]["comparison"] == "LT"
+
+
+def test_order_gap_is_reachable_with_a_complete_real_grant_not_only_strings():
+    value = packet("registration-order-gap")
+    original = next(
+        record for kind, record, _, _ in _records() if kind == "AuthorityGrant"
+    )
+    compiled = _compile().view
+    hashes = []
+    for items in (value["positive"], value["negative"]):
+        grant = {**original, "permitted_action_types": items}
+        grant["content_hash"] = record_hash("AuthorityGrant", grant)
+        assert compiled.validate_instance("AuthorityGrant", grant) == []
+        hashes.append(grant["content_hash"])
+    assert hashes[0] != hashes[1]
+
+
+def test_existing_keyed_uniqueness_does_not_accept_bare_string_items():
+    value = packet("registration-order-gap")
+    witness = value["scalar_uniqueness_witness"]
+    with pytest.raises(PacketRefusal) as caught:
+        check(witness)
+    assert caught.value.reason == "UNRESOLVED_PATH"
+    item = witness["program"]["inputs"]["event"]["values"]["properties"]["value"][
+        "items"
+    ]
+    assert item == {"type": "string"}

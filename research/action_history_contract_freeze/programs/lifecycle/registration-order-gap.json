@@ -1,0 +1,177 @@
+{
+  "status": "INSTRUCTION_DECISION_REQUIRED",
+  "runtime_executed": false,
+  "positive": [
+    "AMEND",
+    "READ"
+  ],
+  "negative": [
+    "READ",
+    "AMEND"
+  ],
+  "attempted_instruction": {
+    "opcode": "REQUIRE_COMPARE",
+    "value_kind": "STRING",
+    "comparison": "LT",
+    "left": {
+      "root": "event",
+      "name": "values",
+      "path": [
+        "value",
+        0,
+        "name"
+      ]
+    },
+    "right": {
+      "root": "event",
+      "name": "values",
+      "path": [
+        "value",
+        1,
+        "name"
+      ]
+    },
+    "refusal": "NONCANONICAL_NAME_ORDER"
+  },
+  "requirements": [
+    "AuthorityGrant.permitted_action_types",
+    "MonitorSpecificationArtifact.input_artifact_ids"
+  ],
+  "existing_rule": "Values must equal sorted unique values; source bytes are not normalized.",
+  "program": {
+    "name": "unsupported-string-order-witness",
+    "inputs": {
+      "event": {
+        "values": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      }
+    },
+    "required_capabilities": [],
+    "introductions": [],
+    "steps": [
+      {
+        "opcode": "REQUIRE_UNIQUE",
+        "records": {
+          "root": "event",
+          "name": "values",
+          "path": [
+            "value"
+          ]
+        },
+        "key_paths": [
+          [
+            "name"
+          ]
+        ],
+        "refusal": "DUPLICATE_NAMES"
+      },
+      {
+        "opcode": "REQUIRE_COMPARE",
+        "value_kind": "STRING",
+        "comparison": "LT",
+        "left": {
+          "root": "event",
+          "name": "values",
+          "path": [
+            "value",
+            0,
+            "name"
+          ]
+        },
+        "right": {
+          "root": "event",
+          "name": "values",
+          "path": [
+            "value",
+            1,
+            "name"
+          ]
+        },
+        "refusal": "NONCANONICAL_NAME_ORDER"
+      }
+    ]
+  },
+  "profile": {
+    "targets": {},
+    "capabilities": []
+  },
+  "non_claims": [
+    "Not a new instruction definition",
+    "Not a grant registration program",
+    "No runtime execution"
+  ],
+  "scalar_uniqueness_witness": {
+    "program": {
+      "name": "unsupported-bare-string-uniqueness-witness",
+      "inputs": {
+        "event": {
+          "values": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "value": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        }
+      },
+      "required_capabilities": [],
+      "introductions": [],
+      "steps": [
+        {
+          "opcode": "REQUIRE_UNIQUE",
+          "records": {
+            "root": "event",
+            "name": "values",
+            "path": [
+              "value"
+            ]
+          },
+          "key_paths": [
+            [
+              "name"
+            ]
+          ],
+          "refusal": "DUPLICATE_NAMES"
+        }
+      ]
+    },
+    "profile": {
+      "targets": {},
+      "capabilities": []
+    }
+  }
+}

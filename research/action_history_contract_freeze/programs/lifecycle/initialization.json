@@ -1,0 +1,534 @@
+{
+  "status": "STATIC_VALID_PARTIAL",
+  "runtime_executed": false,
+  "scope": "Initialization checkpoint retention and A assignment, one finite static specimen, no bootstrap execution.",
+  "semantic_hash_contract": {
+    "record_type": "SourceArtifact",
+    "hash_recipe": "VALUE",
+    "preimage_fields": {
+      "source_schema_version": "source_schema_version",
+      "artifact_id": "id",
+      "artifact_version": "artifact_version",
+      "source_content_digest": "source_content_digest",
+      "source_byte_length": "source_byte_length",
+      "source_media_type": "source_media_type",
+      "source_locator": "source_locator"
+    },
+    "field_checks": {
+      "source_schema_version": "1",
+      "nonblank_fields": ["id","artifact_version","source_media_type","source_locator"],
+      "digest_fields": ["source_content_digest"],
+      "nonnegative_integer_fields": ["source_byte_length"]
+    }
+  },
+  "program": {
+    "name": "initialization-checkpoint-static-specimen",
+    "inputs": {
+      "event": {
+        "records": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["record_type","record"],
+                "properties": {
+                  "record_type": {"type":"string","const":"SourceArtifact"},
+                  "record": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "content_hash",
+                      "generation_event_id",
+                      "generated_at",
+                      "responsible_actor_id",
+                      "responsible_role",
+                      "source_record_ids",
+                      "artifact_kind",
+                      "artifact_version",
+                      "artifact_hash",
+                      "source_schema_version",
+                      "source_content_digest",
+                      "source_byte_length",
+                      "source_media_type",
+                      "source_locator"
+                    ],
+                    "properties": {
+                      "id": {"type":"string"},
+                      "content_hash": {"type":"string","format":"sha256"},
+                      "generation_event_id": {"type":"string"},
+                      "generated_at": {"type":"string","format":"aware-instant"},
+                      "responsible_actor_id": {"type":"string"},
+                      "responsible_role": {"type":"string"},
+                      "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+                      "artifact_kind": {"type":"string","const":"SOURCE"},
+                      "artifact_version": {"type":"string"},
+                      "artifact_hash": {"type":"string","format":"sha256"},
+                      "source_schema_version": {"type":"string","const":"1"},
+                      "source_content_digest": {"type":"string","format":"sha256"},
+                      "source_byte_length": {"type":"integer","minimum":0},
+                      "source_media_type": {"type":"string"},
+                      "source_locator": {"type":"string"}
+                    }
+                  }
+                }
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
+          }
+        },
+        "header": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["event_id","transaction_time","actor_id"],
+          "properties": {"event_id":{"type":"string"},"transaction_time":{"type":"string","format":"aware-instant"},"actor_id":{"type":"string"}}
+        },
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {"value":{"type":"array","items":{"type":"string"},"uniqueItems":true}}
+        }
+      },
+      "artifact": {
+        "record_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["contract_identity","record_type"],
+              "properties": {"contract_identity":{"type":"string","format":"sha256"},"record_type":{"type":"string","const":"SourceArtifact"}}
+            }
+          }
+        },
+        "source_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["record_type","hash_recipe","preimage_fields","field_checks"],
+              "properties": {
+                "record_type": {"type":"string","const":"SourceArtifact"},
+                "hash_recipe": {"type":"string","const":"VALUE"},
+                "preimage_fields": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "source_schema_version",
+                    "artifact_id",
+                    "artifact_version",
+                    "source_content_digest",
+                    "source_byte_length",
+                    "source_media_type",
+                    "source_locator"
+                  ],
+                  "properties": {
+                    "source_schema_version": {"type":"string","const":"source_schema_version"},
+                    "artifact_id": {"type":"string","const":"id"},
+                    "artifact_version": {"type":"string","const":"artifact_version"},
+                    "source_content_digest": {"type":"string","const":"source_content_digest"},
+                    "source_byte_length": {"type":"string","const":"source_byte_length"},
+                    "source_media_type": {"type":"string","const":"source_media_type"},
+                    "source_locator": {"type":"string","const":"source_locator"}
+                  }
+                },
+                "field_checks": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["source_schema_version","nonblank_fields","digest_fields","nonnegative_integer_fields"],
+                  "properties": {
+                    "source_schema_version": {"type":"string","const":"1"},
+                    "nonblank_fields": {"type":"array","items":{"type":"string"},"const":["id","artifact_version","source_media_type","source_locator"]},
+                    "digest_fields": {"type":"array","items":{"type":"string"},"const":["source_content_digest"]},
+                    "nonnegative_integer_fields": {"type":"array","items":{"type":"string"},"const":["source_byte_length"]}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bytes_sha256","byte_length"],
+          "properties": {"bytes_sha256":{"type":"string","format":"sha256"},"byte_length":{"type":"integer","minimum":0}}
+        },
+        "constants": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["registrar_role","source_type","epistemic_policy_type","authorization_policy_type"],
+          "properties": {
+            "registrar_role": {"type":"string","const":"registrar"},
+            "source_type": {"type":"string","const":"SourceArtifact"},
+            "epistemic_policy_type": {"type":"string","const":"EpistemicPolicyArtifact"},
+            "authorization_policy_type": {"type":"string","const":"AuthorizationPolicyArtifact"}
+          }
+        },
+        "checkpoint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["schema","id","prefix","domain","epistemic_policy","authorization_policy","profile","record_contract","machine","history_binding"],
+              "properties": {
+                "schema": {"type":"string","const":"malleus.action-history.initialization/research-v1"},
+                "id": {"type":"string"},
+                "prefix": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["head","event_count"],
+                  "properties": {
+                    "head": {"type":"string","format":"ledger-head","x-coordinate":"FULL_HISTORY"},
+                    "event_count": {"type":"integer","minimum":0,"x-coordinate":"FULL_EVENT_COUNT"}
+                  }
+                },
+                "domain": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["effective_contract_identity","kcs_acceptance_head","materialization_head","accepted_graph_digest"],
+                  "properties": {
+                    "effective_contract_identity": {"type":"string","format":"sha256","x-coordinate":"DOMAIN_CONTRACT"},
+                    "kcs_acceptance_head": {"type":"string","format":"ledger-head","x-coordinate":"KCS_ACCEPTANCE"},
+                    "materialization_head": {"type":"string","format":"ledger-head","x-coordinate":"MATERIALIZATION"},
+                    "accepted_graph_digest": {"type":"string","format":"sha256","x-coordinate":"ACCEPTED_GRAPH"}
+                  }
+                },
+                "epistemic_policy": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id","record_hash"],
+                  "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+                },
+                "authorization_policy": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id","record_hash"],
+                  "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+                },
+                "profile": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
+                },
+                "record_contract": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
+                },
+                "machine": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
+                },
+                "history_binding": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id","bytes_sha256"],
+                  "properties": {"id":{"type":"string"},"bytes_sha256":{"type":"string","format":"sha256"}}
+                }
+              }
+            }
+          }
+        },
+        "singleton": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {"type":"object","additionalProperties":false,"required":["key"],"properties":{"key":{"type":"string","const":"ACTIVE"}}},
+              "minItems": 1,
+              "maxItems": 1
+            }
+          }
+        }
+      },
+      "current": {
+        "base": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["prefix","domain","epistemic_policy","authorization_policy"],
+          "properties": {
+            "prefix": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["head","event_count"],
+              "properties": {
+                "head": {"type":"string","format":"ledger-head","x-coordinate":"FULL_HISTORY"},
+                "event_count": {"type":"integer","minimum":0,"x-coordinate":"FULL_EVENT_COUNT"}
+              }
+            },
+            "domain": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["effective_contract_identity","kcs_acceptance_head","materialization_head","accepted_graph_digest"],
+              "properties": {
+                "effective_contract_identity": {"type":"string","format":"sha256","x-coordinate":"DOMAIN_CONTRACT"},
+                "kcs_acceptance_head": {"type":"string","format":"ledger-head","x-coordinate":"KCS_ACCEPTANCE"},
+                "materialization_head": {"type":"string","format":"ledger-head","x-coordinate":"MATERIALIZATION"},
+                "accepted_graph_digest": {"type":"string","format":"sha256","x-coordinate":"ACCEPTED_GRAPH"}
+              }
+            },
+            "epistemic_policy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+            },
+            "authorization_policy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+            }
+          }
+        },
+        "selected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["profile","record_contract","machine","history_binding"],
+          "properties": {
+            "profile": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+            },
+            "record_contract": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+            },
+            "machine": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+            },
+            "history_binding": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id","record_hash"],
+              "properties": {"id":{"type":"string"},"record_hash":{"type":"string","format":"sha256"}}
+            }
+          }
+        }
+      }
+    },
+    "required_capabilities": [],
+    "introductions": [{"name":"initialization","depends_on":[]}],
+    "steps": [
+      {"opcode":"VALIDATE_RECORD","record":{"root":"event","name":"records","path":["value",0,"record"]},"contract":{"root":"artifact","name":"record_contract","path":["value"]},"result":"checked-source","refusal":"INVALID_SOURCE_RECORD"},
+      {"opcode":"HASH","recipe":"RECORD","value":{"root":"event","name":"records","path":["value",0,"record"]},"record_type":{"root":"event","name":"records","path":["value",0,"record_type"]},"result":"source-record-hash","refusal":"INVALID_SOURCE_RECORD_HASH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","content_hash"]},"right":{"root":"result","name":"source-record-hash","path":["value"]},"refusal":"SOURCE_RECORD_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generation_event_id"]},"right":{"root":"event","name":"header","path":["event_id"]},"refusal":"GENERATION_EVENT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generated_at"]},"right":{"root":"event","name":"header","path":["transaction_time"]},"refusal":"GENERATED_AT_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_actor_id"]},"right":{"root":"event","name":"header","path":["actor_id"]},"refusal":"RESPONSIBLE_ACTOR_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_role"]},"right":{"root":"artifact","name":"constants","path":["registrar_role"]},"refusal":"SOURCE_ROLE_MISMATCH"},
+      {"opcode":"HASH","recipe":"ARTIFACT","value":{"root":"event","name":"records","path":["value",0,"record"]},"artifact_contract":{"root":"artifact","name":"source_contract","path":["value"]},"result":"source-artifact-hash","refusal":"INVALID_SOURCE_SEMANTIC_HASH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","artifact_hash"]},"right":{"root":"result","name":"source-artifact-hash","path":["value"]},"refusal":"SOURCE_SEMANTIC_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","source_content_digest"]},"right":{"root":"artifact","name":"retention","path":["bytes_sha256"]},"refusal":"SOURCE_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INTEGER","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","source_byte_length"]},"right":{"root":"artifact","name":"retention","path":["byte_length"]},"refusal":"SOURCE_LENGTH_MISMATCH"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"records","path":["value"]},"key_paths":[["record","id"]],"target_index":"global_ids","refusal":"DUPLICATE_SOURCE"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","prefix","head"]},"right":{"root":"current","name":"base","path":["prefix","head"]},"refusal":"STALE_FULL_HEAD"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INTEGER","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","prefix","event_count"]},"right":{"root":"current","name":"base","path":["prefix","event_count"]},"refusal":"STALE_FULL_COUNT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","domain","effective_contract_identity"]},"right":{"root":"current","name":"base","path":["domain","effective_contract_identity"]},"refusal":"STALE_DOMAIN_CONTRACT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","domain","kcs_acceptance_head"]},"right":{"root":"current","name":"base","path":["domain","kcs_acceptance_head"]},"refusal":"STALE_KCS_HEAD"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"HEAD","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","domain","materialization_head"]},"right":{"root":"current","name":"base","path":["domain","materialization_head"]},"refusal":"STALE_MATERIALIZATION"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","domain","accepted_graph_digest"]},"right":{"root":"current","name":"base","path":["domain","accepted_graph_digest"]},"refusal":"STALE_GRAPH"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"artifact","name":"singleton","path":["value"]},"key_paths":[["key"]],"target_index":"initialization","refusal":"ALREADY_INITIALIZED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","profile","id"]},"right":{"root":"current","name":"selected","path":["profile","id"]},"refusal":"PROFILE_ID_MISMATCH"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"artifact","name":"checkpoint","path":["value","profile","id"]},"record_hash":{"root":"current","name":"selected","path":["profile","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["source_type"]},"scope":"APPLIED","result":"profile","refusal":"PROFILE_NOT_APPLIED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"result","name":"profile","path":["value","source_content_digest"]},"right":{"root":"artifact","name":"checkpoint","path":["value","profile","bytes_sha256"]},"refusal":"PROFILE_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"artifact","name":"checkpoint","path":["value","profile","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"PROFILE_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","record_contract","id"]},"right":{"root":"current","name":"selected","path":["record_contract","id"]},"refusal":"RECORD_CONTRACT_ID_MISMATCH"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"artifact","name":"checkpoint","path":["value","record_contract","id"]},"record_hash":{"root":"current","name":"selected","path":["record_contract","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["source_type"]},"scope":"APPLIED","result":"record_contract","refusal":"RECORD_CONTRACT_NOT_APPLIED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"result","name":"record_contract","path":["value","source_content_digest"]},"right":{"root":"artifact","name":"checkpoint","path":["value","record_contract","bytes_sha256"]},"refusal":"RECORD_CONTRACT_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"artifact","name":"checkpoint","path":["value","record_contract","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"RECORD_CONTRACT_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","machine","id"]},"right":{"root":"current","name":"selected","path":["machine","id"]},"refusal":"MACHINE_ID_MISMATCH"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"artifact","name":"checkpoint","path":["value","machine","id"]},"record_hash":{"root":"current","name":"selected","path":["machine","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["source_type"]},"scope":"APPLIED","result":"machine","refusal":"MACHINE_NOT_APPLIED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"result","name":"machine","path":["value","source_content_digest"]},"right":{"root":"artifact","name":"checkpoint","path":["value","machine","bytes_sha256"]},"refusal":"MACHINE_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"artifact","name":"checkpoint","path":["value","machine","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"MACHINE_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","history_binding","id"]},"right":{"root":"current","name":"selected","path":["history_binding","id"]},"refusal":"HISTORY_BINDING_ID_MISMATCH"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"artifact","name":"checkpoint","path":["value","history_binding","id"]},"record_hash":{"root":"current","name":"selected","path":["history_binding","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["source_type"]},"scope":"APPLIED","result":"history_binding","refusal":"HISTORY_BINDING_NOT_APPLIED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"result","name":"history_binding","path":["value","source_content_digest"]},"right":{"root":"artifact","name":"checkpoint","path":["value","history_binding","bytes_sha256"]},"refusal":"HISTORY_BINDING_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"artifact","name":"checkpoint","path":["value","history_binding","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"HISTORY_BINDING_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","epistemic_policy","id"]},"right":{"root":"current","name":"base","path":["epistemic_policy","id"]},"refusal":"EPISTEMIC_POLICY_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","epistemic_policy","record_hash"]},"right":{"root":"current","name":"base","path":["epistemic_policy","record_hash"]},"refusal":"EPISTEMIC_POLICY_RECORD_HASH_MISMATCH"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"artifact","name":"checkpoint","path":["value","epistemic_policy","id"]},"record_hash":{"root":"artifact","name":"checkpoint","path":["value","epistemic_policy","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["epistemic_policy_type"]},"scope":"APPLIED","result":"epistemic_policy","refusal":"EPISTEMIC_POLICY_NOT_APPLIED"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"artifact","name":"checkpoint","path":["value","epistemic_policy","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"EPISTEMIC_POLICY_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","authorization_policy","id"]},"right":{"root":"current","name":"base","path":["authorization_policy","id"]},"refusal":"AUTHORIZATION_POLICY_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","authorization_policy","record_hash"]},"right":{"root":"current","name":"base","path":["authorization_policy","record_hash"]},"refusal":"AUTHORIZATION_POLICY_RECORD_HASH_MISMATCH"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"artifact","name":"checkpoint","path":["value","authorization_policy","id"]},"record_hash":{"root":"artifact","name":"checkpoint","path":["value","authorization_policy","record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["authorization_policy_type"]},"scope":"APPLIED","result":"authorization_policy","refusal":"AUTHORIZATION_POLICY_NOT_APPLIED"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"artifact","name":"checkpoint","path":["value","authorization_policy","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"AUTHORIZATION_POLICY_SOURCE_MISSING"},
+      {"opcode":"HASH","recipe":"VALUE","value":{"root":"artifact","name":"checkpoint","path":["value"]},"result":"checkpoint-hash","refusal":"INVALID_CHECKPOINT_CONTENT"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"artifact","name":"checkpoint","path":["value","id"]},"right":{"root":"event","name":"records","path":["value",0,"record","id"]},"refusal":"CHECKPOINT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"result","name":"checkpoint-hash","path":["value"]},"right":{"root":"event","name":"records","path":["value",0,"record","source_content_digest"]},"refusal":"CHECKPOINT_BYTES_MISMATCH"},
+      {"opcode":"INTRODUCE_RECORDS","records":{"root":"event","name":"records","path":["value"]},"dependencies":{"root":"event","name":"dependencies","path":["value"]},"result":"introduced-initialization","refusal":"INVALID_INITIALIZATION_INTRODUCTION"},
+      {"opcode":"SET_PROTOCOL_STATE","target":"PROTOCOL_INDEX","name":"initialization","keys":[{"root":"artifact","name":"singleton","path":["value",0,"key"]}],"value":{"root":"result","name":"checkpoint-hash","path":["value"]},"refusal":"INVALID_INITIALIZATION_INDEX"},
+      {"opcode":"SET_PROTOCOL_STATE","target":"ACTION_ACCEPTANCE_HEAD","name":"action_head","value":{"root":"result","name":"checkpoint-hash","path":["value"]},"refusal":"INVALID_INITIAL_ACTION_HEAD"}
+    ]
+  },
+  "profile": {
+    "targets": {
+      "global_ids": {"target":"PROTOCOL_INDEX","storage_path":["protocol","global_ids"],"key_schemas":[{"type":"string"}],"value_schema":{"type":"string"}},
+      "initialization": {
+        "target": "PROTOCOL_INDEX",
+        "storage_path": ["protocol","initialization"],
+        "key_schemas": [{"type":"string"}],
+        "value_schema": {"type":"string","format":"sha256"}
+      },
+      "action_head": {"target":"ACTION_ACCEPTANCE_HEAD","storage_path":["action_acceptance_head"],"value_schema":{"type":"string","format":"sha256"}}
+    },
+    "capabilities": [],
+    "record_schemas": {
+      "SourceArtifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "content_hash",
+          "generation_event_id",
+          "generated_at",
+          "responsible_actor_id",
+          "responsible_role",
+          "source_record_ids",
+          "artifact_kind",
+          "artifact_version",
+          "artifact_hash",
+          "source_schema_version",
+          "source_content_digest",
+          "source_byte_length",
+          "source_media_type",
+          "source_locator"
+        ],
+        "properties": {
+          "id": {"type":"string"},
+          "content_hash": {"type":"string","format":"sha256"},
+          "generation_event_id": {"type":"string"},
+          "generated_at": {"type":"string","format":"aware-instant"},
+          "responsible_actor_id": {"type":"string"},
+          "responsible_role": {"type":"string"},
+          "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "artifact_kind": {"type":"string","const":"SOURCE"},
+          "artifact_version": {"type":"string"},
+          "artifact_hash": {"type":"string","format":"sha256"},
+          "source_schema_version": {"type":"string","const":"1"},
+          "source_content_digest": {"type":"string","format":"sha256"},
+          "source_byte_length": {"type":"integer","minimum":0},
+          "source_media_type": {"type":"string"},
+          "source_locator": {"type":"string"}
+        }
+      },
+      "EpistemicPolicyArtifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "content_hash",
+          "generation_event_id",
+          "generated_at",
+          "responsible_actor_id",
+          "responsible_role",
+          "source_record_ids",
+          "artifact_kind",
+          "artifact_version",
+          "artifact_hash",
+          "policy_schema_version",
+          "required_monitor_ids",
+          "required_monitor_record_hashes",
+          "ruleset_id",
+          "ruleset_record_hash",
+          "ruleset_artifact_hash",
+          "violation_verdicts",
+          "unknown_verdicts",
+          "control_precedence"
+        ],
+        "properties": {
+          "id": {"type":"string"},
+          "content_hash": {"type":"string","format":"sha256"},
+          "generation_event_id": {"type":"string"},
+          "generated_at": {"type":"string","format":"aware-instant"},
+          "responsible_actor_id": {"type":"string"},
+          "responsible_role": {"type":"string"},
+          "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "artifact_kind": {"type":"string","const":"EPISTEMIC_POLICY"},
+          "artifact_version": {"type":"string"},
+          "artifact_hash": {"type":"string","format":"sha256"},
+          "policy_schema_version": {"type":"string","const":"1"},
+          "required_monitor_ids": {"type":"array","items":{"type":"string"}},
+          "required_monitor_record_hashes": {"type":"array","items":{"type":"string","format":"sha256"}},
+          "ruleset_id": {"type":"string"},
+          "ruleset_record_hash": {"type":"string","format":"sha256"},
+          "ruleset_artifact_hash": {"type":"string","format":"sha256"},
+          "violation_verdicts": {"type":"array","items":{"type":"string"}},
+          "unknown_verdicts": {"type":"array","items":{"type":"string"}},
+          "control_precedence": {"type":"array","items":{"type":"string"}}
+        }
+      },
+      "AuthorizationPolicyArtifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "content_hash",
+          "generation_event_id",
+          "generated_at",
+          "responsible_actor_id",
+          "responsible_role",
+          "source_record_ids",
+          "artifact_kind",
+          "artifact_version",
+          "artifact_hash",
+          "policy_schema_version",
+          "required_monitor_ids",
+          "required_monitor_record_hashes"
+        ],
+        "properties": {
+          "id": {"type":"string"},
+          "content_hash": {"type":"string","format":"sha256"},
+          "generation_event_id": {"type":"string"},
+          "generated_at": {"type":"string","format":"aware-instant"},
+          "responsible_actor_id": {"type":"string"},
+          "responsible_role": {"type":"string"},
+          "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "artifact_kind": {"type":"string","const":"AUTHORIZATION_POLICY"},
+          "artifact_version": {"type":"string"},
+          "artifact_hash": {"type":"string","format":"sha256"},
+          "policy_schema_version": {"type":"string","const":"1"},
+          "required_monitor_ids": {"type":"array","items":{"type":"string"}},
+          "required_monitor_record_hashes": {"type":"array","items":{"type":"string","format":"sha256"}}
+        }
+      }
+    }
+  },
+  "unresolved": [
+    "Validate the checkpoint through contexts.schema.json, including actual prefix head/count coherence",
+    "Resolve selected artifact roles and full applied records from the actual owning history, never a supplied dictionary cast",
+    "Verify retained bytes, exact schema-specific source hash semantics and all transitive dependencies before initialization",
+    "Bind selected profile, machine and history-binding artifact content to their real parsers and exact implemented capabilities",
+    "Authenticate enclosing event fields and full precommit head/count; initialize once by the owning atomic append",
+    "The scalar A assignment uses the computed checkpoint digest under the accepted identity rule, not another coordinate's digest",
+    "This specimen cannot bootstrap itself from hypothetical or absent producer/program bytes"
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "status": "STATIC_VALID_PARTIAL",
+  "runtime_executed": false,
+  "scope": "Full SourceArtifact registration specimen, no applied byte resolver or event commit.",
+  "semantic_hash_contract": {
+    "record_type": "SourceArtifact",
+    "hash_recipe": "VALUE",
+    "preimage_fields": {
+      "source_schema_version": "source_schema_version",
+      "artifact_id": "id",
+      "artifact_version": "artifact_version",
+      "source_content_digest": "source_content_digest",
+      "source_byte_length": "source_byte_length",
+      "source_media_type": "source_media_type",
+      "source_locator": "source_locator"
+    },
+    "field_checks": {
+      "source_schema_version": "1",
+      "nonblank_fields": ["id","artifact_version","source_media_type","source_locator"],
+      "digest_fields": ["source_content_digest"],
+      "nonnegative_integer_fields": ["source_byte_length"]
+    }
+  },
+  "program": {
+    "name": "source-registration-minimal-static-specimen",
+    "inputs": {
+      "event": {
+        "records": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["record_type","record"],
+                "properties": {
+                  "record_type": {"type":"string","const":"SourceArtifact"},
+                  "record": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "content_hash",
+                      "generation_event_id",
+                      "generated_at",
+                      "responsible_actor_id",
+                      "responsible_role",
+                      "source_record_ids",
+                      "artifact_kind",
+                      "artifact_version",
+                      "artifact_hash",
+                      "source_schema_version",
+                      "source_content_digest",
+                      "source_byte_length",
+                      "source_media_type",
+                      "source_locator"
+                    ],
+                    "properties": {
+                      "id": {"type":"string"},
+                      "content_hash": {"type":"string","format":"sha256"},
+                      "generation_event_id": {"type":"string"},
+                      "generated_at": {"type":"string","format":"aware-instant"},
+                      "responsible_actor_id": {"type":"string"},
+                      "responsible_role": {"type":"string"},
+                      "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+                      "artifact_kind": {"type":"string","const":"SOURCE"},
+                      "artifact_version": {"type":"string"},
+                      "artifact_hash": {"type":"string","format":"sha256"},
+                      "source_schema_version": {"type":"string","const":"1"},
+                      "source_content_digest": {"type":"string","format":"sha256"},
+                      "source_byte_length": {"type":"integer","minimum":0},
+                      "source_media_type": {"type":"string"},
+                      "source_locator": {"type":"string"}
+                    }
+                  }
+                }
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
+          }
+        },
+        "header": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["event_id","transaction_time","actor_id"],
+          "properties": {"event_id":{"type":"string"},"transaction_time":{"type":"string","format":"aware-instant"},"actor_id":{"type":"string"}}
+        },
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {"value":{"type":"array","items":{"type":"string"},"uniqueItems":true}}
+        }
+      },
+      "artifact": {
+        "record_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["contract_identity","record_type"],
+              "properties": {"contract_identity":{"type":"string","format":"sha256"},"record_type":{"type":"string","const":"SourceArtifact"}}
+            }
+          }
+        },
+        "source_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["record_type","hash_recipe","preimage_fields","field_checks"],
+              "properties": {
+                "record_type": {"type":"string","const":"SourceArtifact"},
+                "hash_recipe": {"type":"string","const":"VALUE"},
+                "preimage_fields": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "source_schema_version",
+                    "artifact_id",
+                    "artifact_version",
+                    "source_content_digest",
+                    "source_byte_length",
+                    "source_media_type",
+                    "source_locator"
+                  ],
+                  "properties": {
+                    "source_schema_version": {"type":"string","const":"source_schema_version"},
+                    "artifact_id": {"type":"string","const":"id"},
+                    "artifact_version": {"type":"string","const":"artifact_version"},
+                    "source_content_digest": {"type":"string","const":"source_content_digest"},
+                    "source_byte_length": {"type":"string","const":"source_byte_length"},
+                    "source_media_type": {"type":"string","const":"source_media_type"},
+                    "source_locator": {"type":"string","const":"source_locator"}
+                  }
+                },
+                "field_checks": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["source_schema_version","nonblank_fields","digest_fields","nonnegative_integer_fields"],
+                  "properties": {
+                    "source_schema_version": {"type":"string","const":"1"},
+                    "nonblank_fields": {"type":"array","items":{"type":"string"},"const":["id","artifact_version","source_media_type","source_locator"]},
+                    "digest_fields": {"type":"array","items":{"type":"string"},"const":["source_content_digest"]},
+                    "nonnegative_integer_fields": {"type":"array","items":{"type":"string"},"const":["source_byte_length"]}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bytes_sha256","byte_length"],
+          "properties": {"bytes_sha256":{"type":"string","format":"sha256"},"byte_length":{"type":"integer","minimum":0}}
+        },
+        "constants": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["registrar_role"],
+          "properties": {"registrar_role":{"type":"string","const":"registrar"}}
+        }
+      }
+    },
+    "required_capabilities": [],
+    "introductions": [{"name":"source","depends_on":[]}],
+    "steps": [
+      {"opcode":"VALIDATE_RECORD","record":{"root":"event","name":"records","path":["value",0,"record"]},"contract":{"root":"artifact","name":"record_contract","path":["value"]},"result":"checked-source","refusal":"INVALID_SOURCE_RECORD"},
+      {"opcode":"HASH","recipe":"RECORD","value":{"root":"event","name":"records","path":["value",0,"record"]},"record_type":{"root":"event","name":"records","path":["value",0,"record_type"]},"result":"source-record-hash","refusal":"INVALID_SOURCE_RECORD_HASH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","content_hash"]},"right":{"root":"result","name":"source-record-hash","path":["value"]},"refusal":"SOURCE_RECORD_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generation_event_id"]},"right":{"root":"event","name":"header","path":["event_id"]},"refusal":"GENERATION_EVENT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generated_at"]},"right":{"root":"event","name":"header","path":["transaction_time"]},"refusal":"GENERATED_AT_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_actor_id"]},"right":{"root":"event","name":"header","path":["actor_id"]},"refusal":"RESPONSIBLE_ACTOR_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_role"]},"right":{"root":"artifact","name":"constants","path":["registrar_role"]},"refusal":"SOURCE_ROLE_MISMATCH"},
+      {"opcode":"HASH","recipe":"ARTIFACT","value":{"root":"event","name":"records","path":["value",0,"record"]},"artifact_contract":{"root":"artifact","name":"source_contract","path":["value"]},"result":"source-artifact-hash","refusal":"INVALID_SOURCE_SEMANTIC_HASH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","artifact_hash"]},"right":{"root":"result","name":"source-artifact-hash","path":["value"]},"refusal":"SOURCE_SEMANTIC_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","source_content_digest"]},"right":{"root":"artifact","name":"retention","path":["bytes_sha256"]},"refusal":"SOURCE_BYTES_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INTEGER","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","source_byte_length"]},"right":{"root":"artifact","name":"retention","path":["byte_length"]},"refusal":"SOURCE_LENGTH_MISMATCH"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"records","path":["value"]},"key_paths":[["record","id"]],"target_index":"global_ids","refusal":"DUPLICATE_SOURCE"},
+      {"opcode":"INTRODUCE_RECORDS","records":{"root":"event","name":"records","path":["value"]},"dependencies":{"root":"event","name":"dependencies","path":["value"]},"result":"introduced-source","refusal":"INVALID_SOURCE_INTRODUCTION"}
+    ]
+  },
+  "profile": {
+    "targets": {
+      "global_ids": {"target":"PROTOCOL_INDEX","storage_path":["protocol","global_ids"],"key_schemas":[{"type":"string"}],"value_schema":{"type":"string"}}
+    },
+    "capabilities": []
+  },
+  "unresolved": [
+    "The owning retention adapter computes exact byte identity and length from supplied bytes, not caller metadata",
+    "The existing source semantic contract also validates nonblank fields, schema version and digest syntax",
+    "Dependencies must bind the actual complete source-record closure and resolve from the applied prefix",
+    "Record validation, semantic-hash projection, introduction and atomic persistence are not executed by this static packet"
+  ]
+}
