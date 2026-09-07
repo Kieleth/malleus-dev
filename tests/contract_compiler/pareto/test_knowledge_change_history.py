@@ -900,11 +900,13 @@ def test_composer_binds_and_replays_a_superseding_second_change(
     assert reopened.receipt.canonical_bytes == admitted.receipt.canonical_bytes
 
 
-def test_history_composer_remains_private() -> None:
+def test_composer_is_public_only_through_compiler_facade() -> None:
     import malleus
+    import malleus.compiler as compiler
     import malleus._contract_pipeline as contract_pipeline
 
-    assert "compose_change_set" not in knowledge_module.__all__
+    assert compiler.compose_change_set is knowledge_module.compose_change_set
+    assert "compose_change_set" in compiler.__all__
     assert not hasattr(malleus, "compose_change_set")
     assert not hasattr(contract_pipeline, "compose_change_set")
     assert not hasattr(malleus, "KnowledgeChangeHistory")
