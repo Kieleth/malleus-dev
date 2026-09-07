@@ -13,7 +13,7 @@ from pathlib import Path
 from jsonschema import Draft202012Validator, ValidationError
 
 import malleus.compiler as api
-from malleus.ledger import canonical_json, record_hash
+from malleus.ledger import LedgerError, canonical_json, record_hash
 from malleus.source import SourceError, source_artifact_fields
 from research.action_history_contract_freeze.programs.packet_validator import (
     FORMATS,
@@ -46,16 +46,23 @@ def _record(reference, root, records, view, binding):
     if type(value) is not dict:
         raise PacketRefusal("INPUT_RECORD_SHAPE", record_id)
     errors = view.validate_instance(kind, value)
-    for ancestor, required in binding["required_presence"].items():
+    for ancestor, required in binding["required_collections"].items():
         if view.is_subtype_of(kind, ancestor):
             errors.extend(
-                f"missing {field}" for field in required if field not in value
+                f"{field} must be an explicit list"
+                for field in required
+                if field not in value or type(value[field]) is not list
             )
     if errors:
         raise PacketRefusal("INPUT_RECORD_SHAPE", f"{record_id}: {errors}")
     if value["id"] != record_id:
         raise PacketRefusal("INPUT_RECORD_ID", record_id)
-    digest = record_hash(kind, value)
+    try:
+        digest = record_hash(kind, value)
+    except LedgerError as error:
+        raise PacketRefusal(
+            "INPUT_RECORD_SHAPE", f"{record_id}: record is not canonical JSON"
+        ) from error
     if value["content_hash"] != digest:
         raise PacketRefusal("INPUT_RECORD_HASH", record_id)
     if "record_hash" in reference and reference["record_hash"] != digest:

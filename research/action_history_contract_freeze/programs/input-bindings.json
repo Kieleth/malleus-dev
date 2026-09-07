@@ -15,7 +15,7 @@
     "authorization_policy": "AuthorizationPolicyArtifact"
   },
   "scalar_inputs": {"executor_id": "string"},
-  "required_presence": {
+  "required_collections": {
     "ProtocolRecord": ["source_record_ids"],
     "ProposedSubgraph": ["claim_version_ids", "evidence_ids", "evidence_assertion_ids", "action_proposal_ids"]
   },
