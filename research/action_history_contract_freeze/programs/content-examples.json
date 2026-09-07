@@ -1,0 +1,22 @@
+{
+  "scope": {
+    "id": "scope:shape-only",
+    "comparison": "EXACT_RECORD_ID_AND_HASH",
+    "grant_scope": {"id": "scope:local", "record_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "action_scope": {"id": "scope:local", "record_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  },
+  "current": {
+    "id": "current:shape-only",
+    "prefix": {"head": "GENESIS", "event_count": 0},
+    "domain": {
+      "effective_contract_identity": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kcs_acceptance_head": "GENESIS",
+      "materialization_head": "GENESIS",
+      "accepted_graph_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "action_acceptance_head": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "initialization_identity": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "epistemic_policy": {"id": "policy:shape-only", "record_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "authorization_policy": {"id": "authority:shape-only", "record_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  }
+}

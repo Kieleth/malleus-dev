@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research check invocation/output binding definition",
+  "type": "object", "additionalProperties": false,
+  "properties": {
+    "TYPE": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "ordered_inputs": {"const": ["proposal", "action", "record_contract"]},
+        "assessment_type": {"const": "TypeAssessment"},
+        "failure_pair": {"const": ["MonitorFailure", "UnavailableAssessment"]}
+      },
+      "required": ["ordered_inputs", "assessment_type", "failure_pair"]
+    },
+    "DIRECT_GRANT": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "ordered_inputs": {"const": ["proposal", "action", "executor_id", "grant", "scope_association", "requested_interval", "authorization_policy", "original_context", "current_context"]},
+        "assessment_type": {"const": "AuthorityAssessment"},
+        "failure_pair": {"const": ["MonitorFailure", "UnavailableAuthorityAssessment"]}
+      },
+      "required": ["ordered_inputs", "assessment_type", "failure_pair"]
+    },
+    "explicit_metadata": {"const": ["assessment_id", "failure_id", "event_id", "generated_at", "responsible_actor_id", "responsible_role"]},
+    "output_bindings": {
+      "const": {
+        "monitor_hash": "monitor.content_hash",
+        "monitor_version": "monitor.artifact_version",
+        "monitor_implementation_hash": "implementation.bytes_sha256",
+        "proposal_content_hash": "proposal.content_hash",
+        "assessment_outcome": "producer.computed_outcome",
+        "reason_codes": "producer.computed_reason_codes",
+        "rationale": "producer.computed_rationale",
+        "checked_policy_predicates": "producer.computed_checked_predicates",
+        "violated_policy_predicates": "producer.computed_violated_predicates"
+      }
+    },
+    "failure_atomicity": {"const": "FAILURE_AND_UNAVAILABLE_SAME_EVENT"},
+    "effects": {"const": "PURE"},
+    "implementations": {"const": {"TYPE": "UNBOUND", "DIRECT_GRANT": "UNBOUND"}}
+  },
+  "required": ["TYPE", "DIRECT_GRANT", "explicit_metadata", "output_bindings", "failure_atomicity", "effects", "implementations"]
+}

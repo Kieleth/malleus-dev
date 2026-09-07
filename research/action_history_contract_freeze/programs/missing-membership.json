@@ -1,0 +1,19 @@
+{
+  "status": "OPERATOR_DECISION_REQUIRED",
+  "requirement": "Replay AUTHORIZE must check action_type is in grant.permitted_action_types",
+  "existing_enforcement": "src/malleus/assent.py: action[action_type] not in grant[permitted_action_types]",
+  "existing_declaration": "ontology/assent.yaml: permitted_action_types is multivalued string",
+  "instruction_attempt": {
+    "opcode": "REQUIRE_COMPARE",
+    "left": {"root": "applied_record", "name": "action", "path": ["record", "action_type"]},
+    "right": {"root": "applied_record", "name": "grant", "path": ["record", "permitted_action_types"]},
+    "comparison": "IN",
+    "value_kind": "STRING",
+    "refusal": "ACTION_TYPE_OUTSIDE_GRANT"
+  },
+  "positive": {"action_type": "AMEND", "permitted_action_types": ["READ", "AMEND"]},
+  "negative": {"action_type": "DELETE", "permitted_action_types": ["READ", "AMEND"]},
+  "smallest_proposal": "Add finite exact typed scalar membership as a separately reviewed operation; do not implement it in this packet",
+  "not_selected": ["restrict grants to one action type", "trust an authority outcome instead of replay validation", "arbitrary expression evaluator"],
+  "runtime_implemented": false
+}

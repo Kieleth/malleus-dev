@@ -1,0 +1,27 @@
+{
+  "TYPE": {
+    "ordered_inputs": ["proposal", "action", "record_contract"],
+    "assessment_type": "TypeAssessment",
+    "failure_pair": ["MonitorFailure", "UnavailableAssessment"]
+  },
+  "DIRECT_GRANT": {
+    "ordered_inputs": ["proposal", "action", "executor_id", "grant", "scope_association", "requested_interval", "authorization_policy", "original_context", "current_context"],
+    "assessment_type": "AuthorityAssessment",
+    "failure_pair": ["MonitorFailure", "UnavailableAuthorityAssessment"]
+  },
+  "explicit_metadata": ["assessment_id", "failure_id", "event_id", "generated_at", "responsible_actor_id", "responsible_role"],
+  "output_bindings": {
+    "monitor_hash": "monitor.content_hash",
+    "monitor_version": "monitor.artifact_version",
+    "monitor_implementation_hash": "implementation.bytes_sha256",
+    "proposal_content_hash": "proposal.content_hash",
+    "assessment_outcome": "producer.computed_outcome",
+    "reason_codes": "producer.computed_reason_codes",
+    "rationale": "producer.computed_rationale",
+    "checked_policy_predicates": "producer.computed_checked_predicates",
+    "violated_policy_predicates": "producer.computed_violated_predicates"
+  },
+  "failure_atomicity": "FAILURE_AND_UNAVAILABLE_SAME_EVENT",
+  "effects": "PURE",
+  "implementations": {"TYPE": "UNBOUND", "DIRECT_GRANT": "UNBOUND"}
+}

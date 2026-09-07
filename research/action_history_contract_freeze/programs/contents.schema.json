@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research scope and current-context content contracts",
+  "$defs": {
+    "id": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "format": "sha256"},
+    "head": {"oneOf": [{"const": "GENESIS"}, {"$ref": "#/$defs/digest"}]},
+    "record": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"id": {"$ref": "#/$defs/id"}, "record_hash": {"$ref": "#/$defs/digest"}},
+      "required": ["id", "record_hash"]
+    },
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "comparison": {"const": "EXACT_RECORD_ID_AND_HASH"},
+        "grant_scope": {"$ref": "#/$defs/record"},
+        "action_scope": {"$ref": "#/$defs/record"}
+      },
+      "required": ["id", "comparison", "grant_scope", "action_scope"]
+    },
+    "prefix": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "properties": {"head": {"const": "GENESIS"}, "event_count": {"type": "integer", "const": 0}}, "required": ["head", "event_count"]},
+        {"type": "object", "additionalProperties": false, "properties": {"head": {"$ref": "#/$defs/digest"}, "event_count": {"type": "integer", "minimum": 1}}, "required": ["head", "event_count"]}
+      ]
+    },
+    "domain": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "effective_contract_identity": {"$ref": "#/$defs/digest"},
+        "kcs_acceptance_head": {"$ref": "#/$defs/head"},
+        "materialization_head": {"$ref": "#/$defs/head"},
+        "accepted_graph_digest": {"$ref": "#/$defs/digest"}
+      },
+      "required": ["effective_contract_identity", "kcs_acceptance_head", "materialization_head", "accepted_graph_digest"]
+    },
+    "current": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "prefix": {"$ref": "#/$defs/prefix"},
+        "domain": {"$ref": "#/$defs/domain"},
+        "action_acceptance_head": {"$ref": "#/$defs/digest"},
+        "initialization_identity": {"$ref": "#/$defs/digest"},
+        "epistemic_policy": {"$ref": "#/$defs/record"},
+        "authorization_policy": {"$ref": "#/$defs/record"}
+      },
+      "required": ["id", "prefix", "domain", "action_acceptance_head", "initialization_identity", "epistemic_policy", "authorization_policy"]
+    }
+  }
+}

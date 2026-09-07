@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research proposed invocation envelope, not a producer instance",
+  "$defs": {
+    "id": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "format": "sha256"},
+    "record": {"type": "object", "additionalProperties": false, "properties": {"id": {"$ref": "#/$defs/id"}, "record_hash": {"$ref": "#/$defs/digest"}}, "required": ["id", "record_hash"]},
+    "artifact": {"type": "object", "additionalProperties": false, "properties": {"id": {"$ref": "#/$defs/id"}, "bytes_sha256": {"$ref": "#/$defs/digest"}}, "required": ["id", "bytes_sha256"]},
+    "record_input": {"type": "object", "additionalProperties": false, "properties": {"role": {"$ref": "#/$defs/id"}, "value": {"$ref": "#/$defs/record"}}, "required": ["role", "value"]},
+    "artifact_input": {"type": "object", "additionalProperties": false, "properties": {"role": {"$ref": "#/$defs/id"}, "value": {"$ref": "#/$defs/artifact"}}, "required": ["role", "value"]}
+  },
+  "type": "object", "additionalProperties": false,
+  "properties": {
+    "kind": {"enum": ["TYPE", "DIRECT_GRANT"]},
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"id": {"$ref": "#/$defs/id"}, "generated_at": {"type": "string", "format": "aware-instant"}, "responsible_actor_id": {"$ref": "#/$defs/id"}, "responsible_role": {"$ref": "#/$defs/id"}},
+      "required": ["id", "generated_at", "responsible_actor_id", "responsible_role"]
+    },
+    "output_ids": {"type": "object", "additionalProperties": false, "properties": {"assessment": {"$ref": "#/$defs/id"}, "failure": {"$ref": "#/$defs/id"}}, "required": ["assessment", "failure"]},
+    "monitor": {"$ref": "#/$defs/record"},
+    "implementation": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"id": {"$ref": "#/$defs/id"}, "version": {"$ref": "#/$defs/id"}, "bytes_sha256": {"$ref": "#/$defs/digest"}},
+      "required": ["id", "version", "bytes_sha256"]
+    },
+    "inputs": {"type": "array"}
+  },
+  "required": ["kind", "event", "output_ids", "monitor", "implementation", "inputs"],
+  "if": {"properties": {"kind": {"const": "TYPE"}}},
+  "then": {
+    "properties": {
+      "inputs": {
+        "minItems": 3, "maxItems": 3,
+        "prefixItems": [
+          {"allOf": [{"$ref": "#/$defs/record_input"}, {"properties": {"role": {"const": "proposal"}}}]},
+          {"allOf": [{"$ref": "#/$defs/record_input"}, {"properties": {"role": {"const": "action"}}}]},
+          {"allOf": [{"$ref": "#/$defs/artifact_input"}, {"properties": {"role": {"const": "record_contract"}}}]}
+        ]
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "inputs": {
+        "minItems": 9, "maxItems": 9,
+        "prefixItems": [
+          {"allOf": [{"$ref": "#/$defs/record_input"}, {"properties": {"role": {"const": "proposal"}}}]},
+          {"allOf": [{"$ref": "#/$defs/record_input"}, {"properties": {"role": {"const": "action"}}}]},
+          {"type": "object", "additionalProperties": false, "properties": {"role": {"const": "executor_id"}, "value": {"$ref": "#/$defs/id"}}, "required": ["role", "value"]},
+          {"allOf": [{"$ref": "#/$defs/record_input"}, {"properties": {"role": {"const": "grant"}}}]},
+          {"allOf": [{"$ref": "#/$defs/artifact_input"}, {"properties": {"role": {"const": "scope_association"}}}]},
+          {"allOf": [{"$ref": "#/$defs/artifact_input"}, {"properties": {"role": {"const": "requested_interval"}}}]},
+          {"allOf": [{"$ref": "#/$defs/record_input"}, {"properties": {"role": {"const": "authorization_policy"}}}]},
+          {"allOf": [{"$ref": "#/$defs/artifact_input"}, {"properties": {"role": {"const": "original_context"}}}]},
+          {"allOf": [{"$ref": "#/$defs/artifact_input"}, {"properties": {"role": {"const": "current_context"}}}]}
+        ]
+      }
+    }
+  }
+}
