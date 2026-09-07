@@ -13,8 +13,8 @@ inner content ID belongs to the explicit event program, not implicit aliasing.
 
 ## Bound slice before code
 
-Claim: a research preflight can check that a supplied invocation specimen's
-references agree with full typed record wrappers, exact byte payloads and the
+Claim: a research preflight can check that a supplied invocation's ordered
+role-input references agree with full typed record wrappers, exact byte payloads and the
 selected compiled record contract. It must refuse mismatched IDs, hash domains,
 bytes, content types and missing data. No checker is invoked.
 
@@ -29,7 +29,8 @@ loader, Assent record hashing, SourceArtifact field constructor, and the
 existing scope/interval/context parsers. This is research inspection tooling,
 not a second runtime resolver. Existing role names stay in the binding data.
 
-Excluded: actual applied-prefix resolution, time/state currentness, event or
+Excluded: monitor/implementation binding (the invocation envelope only checks
+their reference shapes), actual applied-prefix resolution, time/state currentness, event or
 provenance admission, complete static monitor dependencies, producer bytes,
 policy control, persistence, source effects, package changes, shared-main or
 adopter edits, merge and push. Static consistency cannot satisfy any of these.

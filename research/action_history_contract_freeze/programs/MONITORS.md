@@ -54,6 +54,30 @@ concrete record IDs must be instantiated and reviewed with the real producers.
 The present envelope does not instantiate them. This is a remaining executable
 binding obligation, not a claimed completed monitor package.
 
+The carrier choice is now accepted in `INPUT_BINDING_DECISION.md` and
+`input-bindings.json`: SourceArtifact describes exact bytes for the five
+declared byte-input roles. It does not define those bytes' role or validity.
+Record references retain record hashes; byte references name the carrier ID
+and raw-byte digest. Neither aliases the source artifact's semantic hash.
+There is no lookup fallback to the predecessor candidate table.
+
+The research `input_preflight.validate_input_specimen` checks the supplied
+ordered role inputs against full concrete record wrappers, compiled record
+shapes, recomputed record/source hashes, exact bytes and the existing content
+parsers. TYPE's supplied compiled-contract payload must equal the selected
+validation-contract bytes. Original-context contents must be that specific
+variant, not an initialization object. JSON role contents are canonical; the
+preflight does not normalize bytes or fetch a source locator.
+
+This is a specimen consistency check, not history resolution. It checks only
+the invocation's role inputs; monitor and implementation references receive
+envelope shape checking only. Event metadata and policy/context associations
+still need the event programs. The result explicitly scopes itself to
+INVOCATION_ROLE_INPUTS, says retention_verified is false, and says
+runtime_executed is false. Supplying a complete specimen cannot establish that
+records were applied, dependencies were complete, state is current, or a
+producer ran. Raw context IDs are not silently equated to carrier record IDs.
+
 ## Fields and hash domains
 
 `monitor-output-fields.json` is the research field census for six selected

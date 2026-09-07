@@ -127,6 +127,7 @@ def test_complete_input_specimen_is_static_not_applied_or_executed(compiled, kin
     before = deepcopy(value)
     assert run(value) == {
         "status": "STATIC_INPUTS_VALID",
+        "scope": "INVOCATION_ROLE_INPUTS",
         "retention_verified": False,
         "runtime_executed": False,
         "roles": [entry["role"] for entry in value["invocation"]["inputs"]],
@@ -240,3 +241,22 @@ def test_type_contract_cannot_differ_from_selected_validation_contract(compiled)
     with pytest.raises(api().PacketRefusal) as caught:
         run(value)
     assert caught.value.reason == "INPUT_CONTRACT_MISMATCH"
+
+
+@pytest.mark.parametrize("content", [b"{}", "not bytes", bytearray(b"{}")])
+def test_selected_contract_is_required_exact_validated_bytes(compiled, content):
+    value = specimen(compiled)
+    value["contract_bytes"] = content
+    before = deepcopy(value)
+    with pytest.raises(api().PacketRefusal) as caught:
+        run(value)
+    assert caught.value.reason == "INPUT_CONTRACT"
+    assert value == before
+
+
+def test_additional_presence_uses_existing_assent_requirements():
+    from malleus.assent import PRESENT_FIELDS
+
+    declaration = candidate()["required_presence"]
+    assert declaration["ProtocolRecord"] == ["source_record_ids"]
+    assert set(declaration["ProposedSubgraph"]) == PRESENT_FIELDS["ProposedSubgraph"]
