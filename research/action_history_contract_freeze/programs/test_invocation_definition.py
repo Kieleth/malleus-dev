@@ -46,7 +46,9 @@ def invocation():
 
 
 def validator():
-    from research.action_history_contract_freeze.programs.packet_validator import FORMATS
+    from research.action_history_contract_freeze.programs.packet_validator import (
+        FORMATS,
+    )
 
     schema = json.loads((HERE / "invocation.schema.json").read_bytes())
     Draft202012Validator.check_schema(schema)
@@ -152,3 +154,20 @@ def test_membership_gap_uses_real_multivalued_assent_field():
         record["permitted_action_types"]
         == attempt["positive"]["permitted_action_types"]
     )
+
+
+def test_first_revision_absence_and_null_are_preserved_not_normalized():
+    from malleus.ledger import record_hash
+    from tests.contract_compiler.pareto.test_assent_contract_compatibility import (
+        _compile,
+        _records,
+    )
+
+    view = _compile().view
+    kind, record, _, _ = next(row for row in _records() if row[0] == "LocalAction")
+    assert "revises_action_proposal_id" not in record
+    explicit_null = {**record, "revises_action_proposal_id": None}
+    explicit_null["content_hash"] = record_hash(kind, explicit_null)
+    assert view.validate_instance(kind, record) == []
+    assert view.validate_instance(kind, explicit_null) == []
+    assert explicit_null["content_hash"] != record["content_hash"]

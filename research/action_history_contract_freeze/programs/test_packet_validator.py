@@ -409,3 +409,22 @@ def test_monitor_contract_closes_input_order_and_separates_hash_domains():
         with pytest.raises(api().PacketRefusal):
             api().validate_monitor_contract(broken)
     assert contract["implementations"] == {"TYPE": "UNBOUND", "DIRECT_GRANT": "UNBOUND"}
+
+
+def test_schema_references_are_local_before_any_validation_can_resolve_them():
+    remote = {"$ref": "https://example.invalid/not-an-input"}
+    checker = api()._local_references
+    with pytest.raises(api().PacketRefusal) as caught:
+        checker(remote)
+    assert caught.value.reason == "DEFINITION_SCHEMA"
+    with pytest.raises(api().PacketRefusal) as caught:
+        api().validate_program(specimen(), instruction_schema=remote, profile=profile())
+    assert caught.value.reason == "DEFINITION_SCHEMA"
+
+
+def test_a_declared_constant_must_satisfy_its_own_type():
+    program = specimen()
+    program["inputs"]["event"]["context"]["properties"]["identity"]["const"] = False
+    with pytest.raises(api().PacketRefusal) as caught:
+        validate(program)
+    assert caught.value.reason == "DEFINITION_SCHEMA"
