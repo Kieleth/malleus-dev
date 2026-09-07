@@ -1,0 +1,198 @@
+{
+  "status": "STATIC_VALID_PARTIAL",
+  "runtime_executed": false,
+  "scope": "Bounded full-record conformance specimen only: two epistemic monitors and one ruleset. Other arities/variants and runtime registration remain unimplemented.",
+  "program": {
+    "name": "epistemic-registration-static-specimen",
+    "inputs": {
+      "event": {
+        "records": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["record_type","record"],
+                "properties": {
+                  "record_type": {"type":"string","const":"EpistemicPolicyArtifact"},
+                  "record": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["id","content_hash","generation_event_id","generated_at","responsible_actor_id","responsible_role","source_record_ids","artifact_kind","artifact_version","artifact_hash","policy_schema_version","required_monitor_ids","required_monitor_record_hashes","ruleset_id","ruleset_record_hash","ruleset_artifact_hash","violation_verdicts","unknown_verdicts","control_precedence"],
+                    "properties": {
+                      "id": {"type":"string"},
+                      "content_hash": {"type":"string","format":"sha256"},
+                      "generation_event_id": {"type":"string"},
+                      "generated_at": {"type":"string","format":"aware-instant"},
+                      "responsible_actor_id": {"type":"string"},
+                      "responsible_role": {"type":"string"},
+                      "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+                      "artifact_kind": {"type":"string","const":"EPISTEMIC_POLICY"},
+                      "artifact_version": {"type":"string"},
+                      "artifact_hash": {"type":"string","format":"sha256"},
+                      "policy_schema_version": {"type":"string","const":"1"},
+                      "required_monitor_ids": {"type":"array","items":{"type":"string"},"minItems":2,"maxItems":2},
+                      "required_monitor_record_hashes": {"type":"array","items":{"type":"string","format":"sha256"},"minItems":2,"maxItems":2},
+                      "ruleset_id": {"type":"string"},
+                      "ruleset_record_hash": {"type":"string","format":"sha256"},
+                      "ruleset_artifact_hash": {"type":"string","format":"sha256"},
+                      "violation_verdicts": {"type":"array","items":{"type":"string","enum":["REJECT","DEFER","CONTEST"]},"minItems":2,"maxItems":2},
+                      "unknown_verdicts": {"type":"array","items":{"type":"string","enum":["DEFER","CONTEST"]},"minItems":2,"maxItems":2},
+                      "control_precedence": {"type":"array","items":{"type":"string","enum":["REJECT","DEFER","CONTEST"]},"minItems":3,"maxItems":3,"uniqueItems":true}
+                    }
+                  }
+                }
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
+          }
+        },
+        "header": {"type":"object","additionalProperties":false,"required":["event_id","transaction_time","actor_id"],"properties":{"event_id":{"type":"string"},"transaction_time":{"type":"string","format":"aware-instant"},"actor_id":{"type":"string"}}},
+        "dependencies": {"type":"object","additionalProperties":false,"required":["value"],"properties":{"value":{"type":"array","items":{"type":"string"},"uniqueItems":true}}}
+      },
+      "artifact": {
+        "record_contract": {"type":"object","additionalProperties":false,"required":["value"],"properties":{"value":{"type":"object","additionalProperties":false,"required":["contract_identity","record_type"],"properties":{"contract_identity":{"type":"string","format":"sha256"},"record_type":{"type":"string","const":"EpistemicPolicyArtifact"}}}}},
+        "constants": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["registrar_role","dependency_type","permitted_monitor_kinds","ruleset_type","ruleset_kind"],
+          "properties": {"registrar_role":{"type":"string","const":"registrar"},"dependency_type":{"type":"string","const":"MonitorSpecificationArtifact"},"permitted_monitor_kinds":{"type":"array","items":{"type":"string"},"const":["TYPE","EVIDENCE_COMPLETENESS","CONFLICT","UNCERTAINTY","LOGICAL","TEMPORAL"]},"ruleset_type":{"type":"string","const":"ProtocolArtifact"},"ruleset_kind":{"type":"string","const":"RULE_SET"}}
+        },
+        "preimage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["schema_version","policy_id","policy_version","ruleset_id","ruleset_record_hash","ruleset_artifact_hash","requirements","control_precedence"],
+              "properties": {
+                "schema_version": {"type":"string","const":"1"},
+                "policy_id": {"type":"string"},
+                "policy_version": {"type":"string"},
+                "ruleset_id": {"type":"string"},
+                "ruleset_record_hash": {"type":"string","format":"sha256"},
+                "ruleset_artifact_hash": {"type":"string","format":"sha256"},
+                "requirements": {"type":"array","items":{"type":"object","additionalProperties":false,"required":["monitor_id","monitor_record_hash","violation_verdict","unknown_verdict"],"properties":{"monitor_id":{"type":"string"},"monitor_record_hash":{"type":"string","format":"sha256"},"violation_verdict":{"type":"string","enum":["REJECT","DEFER","CONTEST"]},"unknown_verdict":{"type":"string","enum":["DEFER","CONTEST"]}}},"minItems":2,"maxItems":2},
+                "control_precedence": {"type":"array","items":{"type":"string","enum":["REJECT","DEFER","CONTEST"]},"minItems":3,"maxItems":3}
+              }
+            }
+          }
+        }
+      }
+    },
+    "required_capabilities": [],
+    "introductions": [{"name":"record","depends_on":[]}],
+    "steps": [
+      {"opcode":"VALIDATE_RECORD","record":{"root":"event","name":"records","path":["value",0,"record"]},"contract":{"root":"artifact","name":"record_contract","path":["value"]},"result":"checked-record","refusal":"INVALID_RECORD"},
+      {"opcode":"HASH","recipe":"RECORD","value":{"root":"event","name":"records","path":["value",0,"record"]},"record_type":{"root":"event","name":"records","path":["value",0,"record_type"]},"result":"record-hash","refusal":"INVALID_RECORD_HASH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","content_hash"]},"right":{"root":"result","name":"record-hash","path":["value"]},"refusal":"RECORD_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generation_event_id"]},"right":{"root":"event","name":"header","path":["event_id"]},"refusal":"GENERATION_EVENT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generated_at"]},"right":{"root":"event","name":"header","path":["transaction_time"]},"refusal":"GENERATED_AT_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_actor_id"]},"right":{"root":"event","name":"header","path":["actor_id"]},"refusal":"RESPONSIBLE_ACTOR_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_role"]},"right":{"root":"artifact","name":"constants","path":["registrar_role"]},"refusal":"RESPONSIBLE_ROLE_MISMATCH"},
+      {"opcode":"REQUIRE_SORTED_UNIQUE_STRINGS","values":{"root":"event","name":"records","path":["value",0,"record","required_monitor_ids"]},"refusal":"NONCANONICAL_IDS_OR_PERMISSIONS"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"event","name":"records","path":["value",0,"record","required_monitor_ids",0]},"record_hash":{"root":"event","name":"records","path":["value",0,"record","required_monitor_record_hashes",0]},"record_type":{"root":"artifact","name":"constants","path":["dependency_type"]},"scope":"APPLIED","result":"dependency-0","refusal":"DEPENDENCY_0_NOT_APPLIED"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"result","name":"dependency-0","path":["value","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"DEPENDENCY_0_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"result","name":"dependency-0","path":["value","assessment_kind"]},"members":{"root":"artifact","name":"constants","path":["permitted_monitor_kinds"]},"refusal":"DEPENDENCY_0_WRONG_ASSESSMENT_KIND"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"event","name":"records","path":["value",0,"record","required_monitor_ids",1]},"record_hash":{"root":"event","name":"records","path":["value",0,"record","required_monitor_record_hashes",1]},"record_type":{"root":"artifact","name":"constants","path":["dependency_type"]},"scope":"APPLIED","result":"dependency-1","refusal":"DEPENDENCY_1_NOT_APPLIED"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"result","name":"dependency-1","path":["value","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"DEPENDENCY_1_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"result","name":"dependency-1","path":["value","assessment_kind"]},"members":{"root":"artifact","name":"constants","path":["permitted_monitor_kinds"]},"refusal":"DEPENDENCY_1_WRONG_ASSESSMENT_KIND"},
+      {"opcode":"RESOLVE_RECORD","record_id":{"root":"event","name":"records","path":["value",0,"record","ruleset_id"]},"record_hash":{"root":"event","name":"records","path":["value",0,"record","ruleset_record_hash"]},"record_type":{"root":"artifact","name":"constants","path":["ruleset_type"]},"scope":"APPLIED","result":"ruleset","refusal":"RULESET_NOT_APPLIED"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"result","name":"ruleset","path":["value","artifact_kind"]},"right":{"root":"artifact","name":"constants","path":["ruleset_kind"]},"refusal":"WRONG_RULESET_KIND"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","ruleset_artifact_hash"]},"right":{"root":"result","name":"ruleset","path":["value","artifact_hash"]},"refusal":"RULESET_SEMANTIC_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_MEMBER","value_kind":"STRING","value":{"root":"result","name":"ruleset","path":["value","id"]},"members":{"root":"event","name":"records","path":["value",0,"record","source_record_ids"]},"refusal":"RULESET_SOURCE_MISSING"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","policy_schema_version"]},"right":{"root":"artifact","name":"preimage","path":["value","schema_version"]},"refusal":"PREIMAGE_FIELD_0_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","id"]},"right":{"root":"artifact","name":"preimage","path":["value","policy_id"]},"refusal":"PREIMAGE_FIELD_1_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","artifact_version"]},"right":{"root":"artifact","name":"preimage","path":["value","policy_version"]},"refusal":"PREIMAGE_FIELD_2_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","ruleset_id"]},"right":{"root":"artifact","name":"preimage","path":["value","ruleset_id"]},"refusal":"PREIMAGE_FIELD_3_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","ruleset_record_hash"]},"right":{"root":"artifact","name":"preimage","path":["value","ruleset_record_hash"]},"refusal":"PREIMAGE_FIELD_4_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","ruleset_artifact_hash"]},"right":{"root":"artifact","name":"preimage","path":["value","ruleset_artifact_hash"]},"refusal":"PREIMAGE_FIELD_5_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","required_monitor_ids",0]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",0,"monitor_id"]},"refusal":"PREIMAGE_FIELD_6_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","required_monitor_record_hashes",0]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",0,"monitor_record_hash"]},"refusal":"PREIMAGE_FIELD_7_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","violation_verdicts",0]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",0,"violation_verdict"]},"refusal":"PREIMAGE_FIELD_8_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","unknown_verdicts",0]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",0,"unknown_verdict"]},"refusal":"PREIMAGE_FIELD_9_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","required_monitor_ids",1]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",1,"monitor_id"]},"refusal":"PREIMAGE_FIELD_10_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","required_monitor_record_hashes",1]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",1,"monitor_record_hash"]},"refusal":"PREIMAGE_FIELD_11_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","violation_verdicts",1]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",1,"violation_verdict"]},"refusal":"PREIMAGE_FIELD_12_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","unknown_verdicts",1]},"right":{"root":"artifact","name":"preimage","path":["value","requirements",1,"unknown_verdict"]},"refusal":"PREIMAGE_FIELD_13_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","control_precedence",0]},"right":{"root":"artifact","name":"preimage","path":["value","control_precedence",0]},"refusal":"PREIMAGE_FIELD_14_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","control_precedence",1]},"right":{"root":"artifact","name":"preimage","path":["value","control_precedence",1]},"refusal":"PREIMAGE_FIELD_15_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","control_precedence",2]},"right":{"root":"artifact","name":"preimage","path":["value","control_precedence",2]},"refusal":"PREIMAGE_FIELD_16_MISMATCH"},
+      {"opcode":"HASH","recipe":"VALUE","value":{"root":"artifact","name":"preimage","path":["value"]},"result":"semantic-hash","refusal":"INVALID_SEMANTIC_PREIMAGE"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","artifact_hash"]},"right":{"root":"result","name":"semantic-hash","path":["value"]},"refusal":"SEMANTIC_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"records","path":["value"]},"key_paths":[["record","id"]],"target_index":"global_ids","refusal":"DUPLICATE_RECORD"},
+      {"opcode":"INTRODUCE_RECORDS","records":{"root":"event","name":"records","path":["value"]},"dependencies":{"root":"event","name":"dependencies","path":["value"]},"result":"introduced-record","refusal":"INVALID_RECORD_INTRODUCTION"}
+    ]
+  },
+  "profile": {
+    "targets": {"global_ids":{"target":"PROTOCOL_INDEX","storage_path":["protocol","global_ids"],"key_schemas":[{"type":"string"}],"value_schema":{"type":"string"}}},
+    "capabilities": [],
+    "record_schemas": {
+      "MonitorSpecificationArtifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id","content_hash","generation_event_id","generated_at","responsible_actor_id","responsible_role","source_record_ids","artifact_kind","artifact_version","artifact_hash","monitor_schema_version","assessment_kind","monitor_implementation_hash","input_artifact_ids","input_artifact_record_hashes"],
+        "properties": {
+          "id": {"type":"string"},
+          "content_hash": {"type":"string","format":"sha256"},
+          "generation_event_id": {"type":"string"},
+          "generated_at": {"type":"string","format":"aware-instant"},
+          "responsible_actor_id": {"type":"string"},
+          "responsible_role": {"type":"string"},
+          "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "artifact_kind": {"type":"string","const":"MONITOR_SPECIFICATION"},
+          "artifact_version": {"type":"string"},
+          "artifact_hash": {"type":"string","format":"sha256"},
+          "monitor_schema_version": {"type":"string","const":"1"},
+          "assessment_kind": {"type":"string","enum":["TYPE","EVIDENCE_COMPLETENESS","CONFLICT","UNCERTAINTY","LOGICAL","TEMPORAL","AUTHORITY"]},
+          "monitor_implementation_hash": {"type":"string","format":"sha256"},
+          "input_artifact_ids": {"type":"array","items":{"type":"string"},"minItems":2,"maxItems":2},
+          "input_artifact_record_hashes": {"type":"array","items":{"type":"string","format":"sha256"},"minItems":2,"maxItems":2}
+        }
+      },
+      "ProtocolArtifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id","content_hash","generation_event_id","generated_at","responsible_actor_id","responsible_role","source_record_ids","artifact_kind","artifact_version","artifact_hash"],
+        "properties": {"id":{"type":"string"},"content_hash":{"type":"string","format":"sha256"},"generation_event_id":{"type":"string"},"generated_at":{"type":"string","format":"aware-instant"},"responsible_actor_id":{"type":"string"},"responsible_role":{"type":"string"},"source_record_ids":{"type":"array","items":{"type":"string"},"uniqueItems":true},"artifact_kind":{"type":"string"},"artifact_version":{"type":"string"},"artifact_hash":{"type":"string","format":"sha256"}}
+      }
+    }
+  },
+  "unresolved": [
+    "NONBLANK: whitespace-aware checks on the selected grant/monitor/policy fields are not expressed by the current compiled STRING shape or instruction set; see registration-nonblank-gap.json",
+    "Owning history authenticates record contracts, event headers, full head/count and all applied records before accepting these inputs",
+    "INTRODUCE_RECORDS must bind dependencies to the complete source_record_ids closure and global namespace, not caller-supplied projections",
+    "Bounded arities are conformance specimens, not an Assent restriction; other finite arities and absent/null variants remain uninstantiated",
+    "Actual producers, artifact instances, instruction execution, atomic introduction and persistence remain unimplemented"
+  ],
+  "semantic_preimage": {
+    "purpose": "Definition-only field map and shape template. Null holes are not runtime preimage values.",
+    "template": {"schema_version":null,"policy_id":null,"policy_version":null,"ruleset_id":null,"ruleset_record_hash":null,"ruleset_artifact_hash":null,"requirements":[{"monitor_id":null,"monitor_record_hash":null,"violation_verdict":null,"unknown_verdict":null},{"monitor_id":null,"monitor_record_hash":null,"violation_verdict":null,"unknown_verdict":null}],"control_precedence":[null,null,null]},
+    "bindings": [
+      {"record_path":["policy_schema_version"],"preimage_path":["schema_version"]},
+      {"record_path":["id"],"preimage_path":["policy_id"]},
+      {"record_path":["artifact_version"],"preimage_path":["policy_version"]},
+      {"record_path":["ruleset_id"],"preimage_path":["ruleset_id"]},
+      {"record_path":["ruleset_record_hash"],"preimage_path":["ruleset_record_hash"]},
+      {"record_path":["ruleset_artifact_hash"],"preimage_path":["ruleset_artifact_hash"]},
+      {"record_path":["required_monitor_ids",0],"preimage_path":["requirements",0,"monitor_id"]},
+      {"record_path":["required_monitor_record_hashes",0],"preimage_path":["requirements",0,"monitor_record_hash"]},
+      {"record_path":["violation_verdicts",0],"preimage_path":["requirements",0,"violation_verdict"]},
+      {"record_path":["unknown_verdicts",0],"preimage_path":["requirements",0,"unknown_verdict"]},
+      {"record_path":["required_monitor_ids",1],"preimage_path":["requirements",1,"monitor_id"]},
+      {"record_path":["required_monitor_record_hashes",1],"preimage_path":["requirements",1,"monitor_record_hash"]},
+      {"record_path":["violation_verdicts",1],"preimage_path":["requirements",1,"violation_verdict"]},
+      {"record_path":["unknown_verdicts",1],"preimage_path":["requirements",1,"unknown_verdict"]},
+      {"record_path":["control_precedence",0],"preimage_path":["control_precedence",0]},
+      {"record_path":["control_precedence",1],"preimage_path":["control_precedence",1]},
+      {"record_path":["control_precedence",2],"preimage_path":["control_precedence",2]}
+    ]
+  }
+}

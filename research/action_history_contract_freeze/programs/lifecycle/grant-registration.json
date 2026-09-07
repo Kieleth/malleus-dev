@@ -1,0 +1,83 @@
+{
+  "status": "STATIC_VALID_PARTIAL",
+  "runtime_executed": false,
+  "scope": "Bounded full-record conformance specimen only: finite-ended grant, arbitrary nonempty permission list. Other arities/variants and runtime registration remain unimplemented.",
+  "program": {
+    "name": "grant-registration-static-specimen",
+    "inputs": {
+      "event": {
+        "records": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["record_type","record"],
+                "properties": {
+                  "record_type": {"type":"string","const":"AuthorityGrant"},
+                  "record": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["id","content_hash","generation_event_id","generated_at","responsible_actor_id","responsible_role","source_record_ids","artifact_kind","artifact_version","artifact_hash","grantor_actor_id","grantee_actor_id","permitted_action_types","scope_record_id","may_subdelegate","grant_valid_from","grant_valid_to"],
+                    "properties": {
+                      "id": {"type":"string"},
+                      "content_hash": {"type":"string","format":"sha256"},
+                      "generation_event_id": {"type":"string"},
+                      "generated_at": {"type":"string","format":"aware-instant"},
+                      "responsible_actor_id": {"type":"string"},
+                      "responsible_role": {"type":"string"},
+                      "source_record_ids": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+                      "artifact_kind": {"type":"string","const":"AUTHORITY_GRANT"},
+                      "artifact_version": {"type":"string"},
+                      "artifact_hash": {"type":"string","format":"sha256"},
+                      "grantor_actor_id": {"type":"string"},
+                      "grantee_actor_id": {"type":"string"},
+                      "permitted_action_types": {"type":"array","items":{"type":"string"},"minItems":1},
+                      "scope_record_id": {"type":"string"},
+                      "may_subdelegate": {"type":"boolean"},
+                      "grant_valid_from": {"type":"string","format":"aware-instant"},
+                      "grant_valid_to": {"type":"string","format":"aware-instant"}
+                    }
+                  }
+                }
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
+          }
+        },
+        "header": {"type":"object","additionalProperties":false,"required":["event_id","transaction_time","actor_id"],"properties":{"event_id":{"type":"string"},"transaction_time":{"type":"string","format":"aware-instant"},"actor_id":{"type":"string"}}},
+        "dependencies": {"type":"object","additionalProperties":false,"required":["value"],"properties":{"value":{"type":"array","items":{"type":"string"},"uniqueItems":true}}}
+      },
+      "artifact": {"record_contract":{"type":"object","additionalProperties":false,"required":["value"],"properties":{"value":{"type":"object","additionalProperties":false,"required":["contract_identity","record_type"],"properties":{"contract_identity":{"type":"string","format":"sha256"},"record_type":{"type":"string","const":"AuthorityGrant"}}}}},"constants":{"type":"object","additionalProperties":false,"required":["registrar_role"],"properties":{"registrar_role":{"type":"string","const":"registrar"}}}}
+    },
+    "required_capabilities": [],
+    "introductions": [{"name":"record","depends_on":[]}],
+    "steps": [
+      {"opcode":"VALIDATE_RECORD","record":{"root":"event","name":"records","path":["value",0,"record"]},"contract":{"root":"artifact","name":"record_contract","path":["value"]},"result":"checked-record","refusal":"INVALID_RECORD"},
+      {"opcode":"HASH","recipe":"RECORD","value":{"root":"event","name":"records","path":["value",0,"record"]},"record_type":{"root":"event","name":"records","path":["value",0,"record_type"]},"result":"record-hash","refusal":"INVALID_RECORD_HASH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"DIGEST","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","content_hash"]},"right":{"root":"result","name":"record-hash","path":["value"]},"refusal":"RECORD_HASH_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generation_event_id"]},"right":{"root":"event","name":"header","path":["event_id"]},"refusal":"GENERATION_EVENT_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","generated_at"]},"right":{"root":"event","name":"header","path":["transaction_time"]},"refusal":"GENERATED_AT_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_actor_id"]},"right":{"root":"event","name":"header","path":["actor_id"]},"refusal":"RESPONSIBLE_ACTOR_ID_MISMATCH"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","responsible_role"]},"right":{"root":"artifact","name":"constants","path":["registrar_role"]},"refusal":"RESPONSIBLE_ROLE_MISMATCH"},
+      {"opcode":"REQUIRE_SORTED_UNIQUE_STRINGS","values":{"root":"event","name":"records","path":["value",0,"record","permitted_action_types"]},"refusal":"NONCANONICAL_IDS_OR_PERMISSIONS"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"STRING","comparison":"EQ","left":{"root":"event","name":"records","path":["value",0,"record","grantor_actor_id"]},"right":{"root":"event","name":"header","path":["actor_id"]},"refusal":"WRONG_GRANTOR"},
+      {"opcode":"REQUIRE_COMPARE","value_kind":"INSTANT","comparison":"LT","left":{"root":"event","name":"records","path":["value",0,"record","grant_valid_from"]},"right":{"root":"event","name":"records","path":["value",0,"record","grant_valid_to"]},"refusal":"INVALID_GRANT_INTERVAL"},
+      {"opcode":"REQUIRE_UNIQUE","records":{"root":"event","name":"records","path":["value"]},"key_paths":[["record","id"]],"target_index":"global_ids","refusal":"DUPLICATE_RECORD"},
+      {"opcode":"INTRODUCE_RECORDS","records":{"root":"event","name":"records","path":["value"]},"dependencies":{"root":"event","name":"dependencies","path":["value"]},"result":"introduced-record","refusal":"INVALID_RECORD_INTRODUCTION"}
+    ]
+  },
+  "profile": {"targets":{"global_ids":{"target":"PROTOCOL_INDEX","storage_path":["protocol","global_ids"],"key_schemas":[{"type":"string"}],"value_schema":{"type":"string"}}},"capabilities":[]},
+  "unresolved": [
+    "NONBLANK: whitespace-aware checks on the selected grant/monitor/policy fields are not expressed by the current compiled STRING shape or instruction set; see registration-nonblank-gap.json",
+    "Owning history authenticates record contracts, event headers, full head/count and all applied records before accepting these inputs",
+    "INTRODUCE_RECORDS must bind dependencies to the complete source_record_ids closure and global namespace, not caller-supplied projections",
+    "Bounded arities are conformance specimens, not an Assent restriction; other finite arities and absent/null variants remain uninstantiated",
+    "Actual producers, artifact instances, instruction execution, atomic introduction and persistence remain unimplemented"
+  ]
+}

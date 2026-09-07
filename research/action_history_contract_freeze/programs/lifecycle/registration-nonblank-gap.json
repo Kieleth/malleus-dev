@@ -1,0 +1,20 @@
+{
+  "status": "UNRESOLVED_VALUE_CONSTRAINT",
+  "runtime_executed": false,
+  "scope": "Existing whitespace-aware nonblank rule, not a new instruction proposal",
+  "positive": ["AMEND"],
+  "negative": [" \t\u2003"],
+  "observations": [
+    "Both values fit the compiled AuthorityGrant permitted_action_types string-list shape",
+    "Both values satisfy ordering and uniqueness, including the singleton case",
+    "Existing Assent _nonblank_values refuses the negative value",
+    "minLength and comparisons against a finite list of whitespace strings do not express the existing rule",
+    "No regex, trim, normalization, capability or instruction is added"
+  ],
+  "affected_fields": {
+    "AuthorityGrant": ["scope_record_id", "permitted_action_types[]"],
+    "MonitorSpecificationArtifact": ["id", "artifact_version", "input_artifact_ids[]"],
+    "EpistemicPolicyArtifact": ["id", "artifact_version", "ruleset_id", "required_monitor_ids[]"],
+    "AuthorizationPolicyArtifact": ["id", "artifact_version", "required_monitor_ids[]"]
+  }
+}

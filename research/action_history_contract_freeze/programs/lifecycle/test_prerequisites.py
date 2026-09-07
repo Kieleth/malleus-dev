@@ -68,6 +68,7 @@ def record(kind, identifier, **fields):
 
 
 def specimen(name):
+    # Shape/hash witnesses, not registrations in an authenticated applied history.
     digest = content_digest({"purpose": "shape only, not an implementation"})
     common = dict(artifact_version="shape-v1", artifact_hash=digest)
     if name == "grant":
@@ -85,17 +86,23 @@ def specimen(name):
             grant_valid_to=T1,
         )
     if name == "monitor":
-        return record(
+        value = record(
             KINDS[name],
             "monitor:shape",
             **common,
             artifact_kind="MONITOR_SPECIFICATION",
             monitor_schema_version="1",
             assessment_kind="TYPE",
-            monitor_implementation_hash=digest,
+            monitor_implementation_hash=content_digest({"role": "implementation"}),
             input_artifact_ids=["input:a", "input:b"],
-            input_artifact_record_hashes=[digest, digest],
+            input_artifact_record_hashes=[
+                content_digest({"input": "a"}),
+                content_digest({"input": "b"}),
+            ],
         )
+        value["artifact_hash"] = existing_digest(name, value)
+        value["content_hash"] = record_hash(KINDS[name], value)
+        return value
     fields = dict(
         **common,
         artifact_kind="EPISTEMIC_POLICY"
@@ -103,18 +110,24 @@ def specimen(name):
         else "AUTHORIZATION_POLICY",
         policy_schema_version="1",
         required_monitor_ids=["monitor:a", "monitor:b"],
-        required_monitor_record_hashes=[digest, digest],
+        required_monitor_record_hashes=[
+            content_digest({"monitor": "a"}),
+            content_digest({"monitor": "b"}),
+        ],
     )
     if name == "epistemic":
         fields.update(
             ruleset_id="ruleset:shape",
-            ruleset_record_hash=digest,
-            ruleset_artifact_hash=digest,
+            ruleset_record_hash=content_digest({"ruleset": "record"}),
+            ruleset_artifact_hash=content_digest({"ruleset": "artifact"}),
             violation_verdicts=["REJECT", "CONTEST"],
             unknown_verdicts=["DEFER", "CONTEST"],
             control_precedence=["REJECT", "DEFER", "CONTEST"],
         )
-    return record(KINDS[name], f"policy:{name}:shape", **fields)
+    value = record(KINDS[name], f"policy:{name}:shape", **fields)
+    value["artifact_hash"] = existing_digest(name, value)
+    value["content_hash"] = record_hash(KINDS[name], value)
+    return value
 
 
 def existing_digest(name, value):
@@ -206,7 +219,12 @@ def test_semantic_preimage_is_fully_bound_and_matches_existing_hash_recipe(name)
         for field in binding["preimage_path"][:-1]:
             target = target[field]
         target[binding["preimage_path"][-1]] = source
-    assert content_digest(preimage) == existing_digest(name, sample)
+    assert (
+        content_digest(preimage)
+        == existing_digest(name, sample)
+        == sample["artifact_hash"]
+    )
+    assert record_hash(KINDS[name], sample) == sample["content_hash"]
     shape = value["program"]["inputs"]["artifact"]["preimage"]
     Draft202012Validator(shape, format_checker=FORMATS).validate({"value": preimage})
     steps = value["program"]["steps"]
@@ -226,6 +244,23 @@ def test_semantic_preimage_is_fully_bound_and_matches_existing_hash_recipe(name)
     assert steps.index(hashed) > max(
         i for i, s in enumerate(steps) if s["refusal"].startswith("PREIMAGE_FIELD_")
     )
+    # Distinct witness hashes make a positional swap observable, not self-comparison.
+    changed = deepcopy(sample)
+    hashes = (
+        "input_artifact_record_hashes"
+        if name == "monitor"
+        else "required_monitor_record_hashes"
+    )
+    assert sample[hashes][0] != sample[hashes][1]
+    changed[hashes].reverse()
+    assert content_digest(preimage) != existing_digest(name, changed)
+    if name == "epistemic":
+        changed = {
+            **sample,
+            "ruleset_record_hash": sample["ruleset_artifact_hash"],
+            "ruleset_artifact_hash": sample["ruleset_record_hash"],
+        }
+        assert content_digest(preimage) != existing_digest(name, changed)
     # Provenance is record identity, not monitor or policy semantic identity.
     changed = {**sample, "responsible_actor_id": "actor:other"}
     assert existing_digest(name, changed) == existing_digest(name, sample)
