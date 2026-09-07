@@ -14,7 +14,7 @@ AssertionError location and comparison operands, never by test name alone.
 Unexpected failures, skips, collection changes, producer mixing or semantic
 differences fail this bounded gate. No assertion, fixture or receipt is edited.
 
-Reuse: local immutable Git archives, the configured project interpreter and
+Reuse: exact local detached Git checkouts, the configured project interpreter and
 pyproject dependencies, pytest report hooks, existing public compiler and Shop
 runners. Each subprocess imports only its selected archive. No download,
 dependency installation or alternate environment is introduced.
@@ -45,9 +45,9 @@ contain both exact commits in `gate.json`; missing objects refuse, never fetch.
 python scripts/check_compiler_compatibility.py --output /tmp/malleus-compatibility-result
 ```
 
-The output directory must be new. This one command exports both immutable Git
+The output directory must be new. This one command checks out both exact Git
 trees, runs the nine historical tests, runs the whole relevant candidate suite,
-and executes independent probes under both producers. Temporary archives and
+and executes independent probes under both producers. Temporary checkouts and
 generated histories are discarded; raw pytest reports/logs, probe outputs and
 the final bounded receipt remain under the requested output directory.
 Ambient Python paths and pytest options/plugins are removed in each worker.
@@ -92,3 +92,9 @@ compiler behavior or another permissible historical mismatch. A corrective RED
 executes that exact existing test inside the selected snapshot. The fix must
 retain the required local Git history and keep the original nine-failure
 binding unchanged. No extra exclusion or test mutation is authorized.
+
+The corrected setup uses local shared clones at detached exact commits, with
+the source repository's object store read-only. It performs no fetch, source
+ref update, index mutation or working-tree copy. Each selected checkout must
+also retain clean tracked bytes after its tests and probe. The historical
+receipts and the nine candidate comparison bindings are unchanged.

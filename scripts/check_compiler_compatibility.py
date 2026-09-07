@@ -10,13 +10,11 @@ import argparse
 from collections import Counter
 from hashlib import sha256
 from importlib import metadata
-import io
 import json
 import os
 from pathlib import Path
 import subprocess
 import sys
-import tarfile
 from tempfile import TemporaryDirectory
 
 
@@ -299,10 +297,20 @@ def export(commit, tree, destination):
     ).strip()
     if actual != tree:
         raise GateRefusal(f"Wrong tree for {commit}: {actual}, expected {tree}")
-    data = subprocess.check_output(["git", "archive", commit], cwd=ROOT)
-    destination.mkdir()
-    with tarfile.open(fileobj=io.BytesIO(data)) as archive:
-        archive.extractall(destination, filter="data")
+    # The journal tests consume historical Git objects as declared evidence.
+    # A local shared clone preserves them without copying a dirty working tree
+    # or updating any source repository branch, index or ref.
+    subprocess.run(
+        ["git", "clone", "--shared", "--no-checkout", str(ROOT), str(destination)],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "checkout", "--detach", commit],
+        cwd=destination,
+        check=True,
+        capture_output=True,
+    )
 
 
 def run_worker(mode, root, result_path, selectors=()):
@@ -353,6 +361,12 @@ def run_gate(output):
                 "pytest": raw,
                 "probe": run_worker("probe", archive, output / f"{label}-probe.json"),
             }
+            subprocess.run(
+                ["git", "diff", "--exit-code", "HEAD"],
+                cwd=archive,
+                check=True,
+                capture_output=True,
+            )
             print(f"{label} raw: {raw['phases']}", flush=True)
         for label in results:
             require_probe_coverage(results[label]["probe"])
