@@ -93,3 +93,31 @@ This is not a full repository or package gate, a consumer rebind, portability,
 replacement, policy legitimacy, source truth, external execution, or an E2E
 action result. The repaired compiler's nine historical exact-receipt failures
 remain visible in GATE.md; this definition slice does not rewrite or hide them.
+
+## Independent review and RED-ordering clarification
+
+The separate Re-entry review at `86c624934b88fd31cdc1286f29249534baeaa238`,
+tree `f0043806b922c7b8eeb8f7c78699068a58562fe3`, reproduced the exact 140-test
+selection on packet `63e1c3b`, with zero failures, errors or skips. Its report
+`research/semantic_reentry_external_design/CORE_DEFINITION_REVIEW.md` is bound
+by SHA-256 `8f11fd3d295051d5cd67ca492702363bf3649cb2e47f993d6fb1aa1c4f004151`.
+Core read that report and verified its digest and commit/tree. The review
+passes definition integrity and the reported shape-only scope; executable
+readiness stays open. Its synthetic probes confirm declared shape limits,
+not action behavior or new repaired runtime defects.
+
+The requested wording correction is guarded by RED `4be731f`: the targeted
+test failed before the edit. Implementation identities and live contexts gate
+successful executable freeze, not genuinely failing tests. Reviewed semantics,
+fixtures and expected refusals precede implementation; missing implementations
+continue to refuse real runs. No runtime work is authorized by this correction.
+The complete 140-test selection passes again after the correction, with zero
+skips; Ruff, format and diff checks pass. The local byte bindings are updated
+to the successor definition and test bytes.
+
+Adjacency remains an operator decision, not accepted by the independent
+recommendation. The next program packet must state whether context registration
+and proposal share one atomic batch. If separate commits are allowed, it must
+define orphan-registration behavior after refusal. No transaction shape,
+cancellation, retry or orphan recovery policy has been selected. The ten
+operations stay candidates until complete event programs demonstrate sufficiency.

@@ -195,6 +195,10 @@ contract obligations until the event-program checker exists.
 ## Review choices, not silently accepted decisions
 
 1. Confirm or revise the immediate context-registration/proposal ordering above.
+   The next program packet must also specify whether those events share one
+   atomic batch or use separate commits. If separate commits are permitted,
+   it must define orphan-registration behavior after proposal refusal. Neither
+   transaction choice nor an orphan recovery/cancellation policy is selected here.
 2. Review the ten finite instruction shapes and operand/type restrictions against
    the approved lifecycle. No general expression language is selected.
 3. Freeze the event-to-instruction programs, monitor invocation/output bindings
@@ -211,10 +215,15 @@ approves the remaining semantic decisions.
 This packet is a finite definition candidate, not a completed executable
 contract freeze. The designated-prefix ordering above and the exact instruction
 vocabulary need independent review against the already approved semantics.
-Still required before runtime RED: concrete event programs/static operand
-closure, actual producer and interpreter identities, instantiated initialization
-and original context over a real verified prefix, and positive/negative
-lifecycle fixtures. These are explicit missing artifacts, not successful gates.
+Freeze reviewed semantics, fixtures and expected refusals before implementation.
+Failing tests may precede implementation and must expose the missing boundary.
+They do not require an implementation digest or a live initialized context.
+Concrete event programs/static operand closure, actual producer and interpreter
+identities, instantiated initialization and original context over a real verified
+prefix, and passing lifecycle fixtures are required before successful executable
+freeze or an E2E claim. Missing implementations still refuse real runs; no
+placeholder digest makes readiness GREEN. This clarification does not authorize
+runtime work. These are explicit missing artifacts, not successful gates.
 
 Definition consumes ApprovedOneHistorySemantics
 Definition consumes VerifiedCompiledAssent

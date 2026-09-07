@@ -16,11 +16,11 @@
     }
   },
   "local_files": {
-    "DEFINITION.md": "sha256:3a4172e992cc6f4d0a367d2e8606310b38a9c3e18ffa1d7698c22a9407ac5090",
+    "DEFINITION.md": "sha256:7f809cbd51bb7443b537e16f5b6df32b9471f041efae236e4691525065ca8a72",
     "contexts.schema.json": "sha256:43f5e2f040e408d18de9448b56145284caa83b901c810f1ac08a2776c4f2dd68",
     "instructions.schema.json": "sha256:3951a88c0db38aab91148c61276410d3189bb1f2e47ad54f2dd48f50d6cee6f5",
     "capabilities.schema.json": "sha256:0e832d453c078b382071e19b3eea001255f4bf5518509c52b350082d645800b3",
-    "test_definition.py": "sha256:253a667d04cbfe2fc2d776dedc8ed20f6d47e312acfa2673e23b9cacc4f4a70f"
+    "test_definition.py": "sha256:367a3835d67eaf2350236ed4b8c17af252b38e412b8a8ff05d4d91238d6baea0"
   },
   "producer_implementations": {"TYPE": "UNBOUND", "DIRECT_GRANT": "UNBOUND"},
   "interpreter": "NOT_IMPLEMENTED",
@@ -28,6 +28,7 @@
   "executable_context_instances": "NOT_INSTANTIATED",
   "pending_review": [
     "Original-context registration immediately precedes proposal",
+    "Same atomic batch versus separate commits, and orphan-registration behavior if separate",
     "Finite instruction names, operand shapes and type restrictions",
     "Complete event programs, monitor invocation/output bindings and referenced content contracts before runtime"
   ]
