@@ -29,6 +29,15 @@ from malleus._contract_pipeline.revision import (
     ContractRevisionRefusalReason,
     compile_contract_revision,
 )
+from malleus._contract_pipeline.protocol_runtime import (
+    PROGRAM_EVENT,
+    SELECTION_EVENT,
+    ProtocolFold,
+    ProtocolReplay,
+    ProtocolProgramRefusal,
+    selection_entry,
+    transaction_entries,
+)
 from malleus.kg import KnowledgeGraph, OpStatus
 from malleus.ledger import GENESIS, JsonlLedger, LedgerError, content_digest
 
@@ -745,6 +754,7 @@ class KnowledgeHistoryReplay:
     _machine_receipts: tuple[MachineReceipt, ...]
     _record_history: Mapping[str, KnowledgeRecordHistory]
     _graphs_by_change: Mapping[str, KnowledgeGraph]
+    protocol_replay: ProtocolReplay | None = None
 
     @property
     def retained_inputs(self) -> tuple[KnowledgeRetainedInput, ...]:
@@ -1362,6 +1372,58 @@ class KnowledgeChangeHistory:
         )
         return replace(context, _fingerprint=_composition_fingerprint(context))
 
+    def select_protocol_programs(
+        self,
+        *,
+        record_id: str,
+        identity: str,
+        expected_head: str,
+        expected_count: int,
+        event_id: str,
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
+        """Select one retained private finite program set, without granting authority."""
+        entry = selection_entry(
+            record_id=record_id,
+            identity=identity,
+            expected_head=expected_head,
+            expected_count=expected_count,
+            event_id=event_id,
+            transaction_time=transaction_time,
+            actor_id=actor_id,
+        )
+        self._append((entry,), validate=self._validate_candidate)
+        return self.replay()
+
+    def append_protocol_events(
+        self,
+        *,
+        transaction: str,
+        events: tuple[dict[str, object], ...],
+        expected_head: str,
+        expected_count: int,
+    ) -> KnowledgeHistoryReplay:
+        """Append one complete selected finite transaction through this owner.
+
+        Checks and external effects are not executed here or during replay.
+        This private attachment is not the completed action-profile contract.
+        """
+        before = self.replay()
+        if before.protocol_replay is None:
+            raise ProtocolProgramRefusal(
+                "UNSELECTED_PROGRAM", "select retained programs first"
+            )
+        entries = transaction_entries(
+            bundle_identity=before.protocol_replay.data["bundle_identity"],
+            transaction=transaction,
+            events=events,
+            expected_head=expected_head,
+            expected_count=expected_count,
+        )
+        self._append(entries, validate=self._validate_candidate)
+        return self.replay()
+
     def compose_change_set(
         self,
         *,
@@ -1603,10 +1665,47 @@ class KnowledgeChangeHistory:
         record_history: dict[str, KnowledgeRecordHistory] = {}
         graphs_by_change: dict[str, KnowledgeGraph] = {}
         bootstrap_roles: set[str] = set()
+        protocol = ProtocolFold()
 
         for event in events:
             event_type = event["event_type"]
             payload = event["payload"]
+            if protocol.pending and event_type != PROGRAM_EVENT:
+                raise ProtocolProgramRefusal(
+                    "INCOMPLETE_TRANSACTION", "interrupted logical transaction"
+                )
+            if event_type in {SELECTION_EVENT, PROGRAM_EVENT}:
+                if bootstrap_roles != _REOPEN_ROLES:
+                    raise ProtocolProgramRefusal(
+                        "MISSING_BOOTSTRAP", "complete history bootstrap required"
+                    )
+                if event_type == SELECTION_EVENT:
+                    protocol.select(event, retained)
+                else:
+                    context = {
+                        "ledger_head": event["previous_event_hash"],
+                        "ledger_event_count": event["sequence"] - 1,
+                        "contract_identity": active_contract.identity,
+                        "acceptance_head": acceptance_head,
+                        "materialization_head": materialization_head,
+                        "graph_state_digest": projection.state_digest(),
+                        "action_acceptance_head": protocol.state[
+                            "action_acceptance_head"
+                        ],
+                    }
+                    reserved = (
+                        set(retained)
+                        | set(record_history)
+                        | {r.record_id for r in machine_state.records}
+                        | change_ids
+                        | revision_ids
+                    )
+                    for values in protocol.consume(
+                        event, context=context, reserved_ids=reserved
+                    ):
+                        member = KnowledgeRetainedInput(*values)
+                        retained[member.record_id] = member
+                continue
             if event_type == _REVISION_EVENT:
                 if bootstrap_roles != _REOPEN_ROLES:
                     raise _refuse(
@@ -1757,6 +1856,14 @@ class KnowledgeChangeHistory:
                     "retained change-set bytes are malformed",
                 )
                 change = KnowledgeChangeSet.from_bytes(source)
+                if change.change_set_id in protocol.records or any(
+                    operation.record_id in protocol.records
+                    for operation in change.operations
+                ):
+                    raise ProtocolProgramRefusal(
+                        "REUSED_RECORD_ID",
+                        "knowledge change reuses a protocol record ID",
+                    )
                 if (
                     payload["change_set_identity"] != change.identity
                     or payload["change_set_id"] != change.change_set_id
@@ -1797,6 +1904,7 @@ class KnowledgeChangeHistory:
                     or not isinstance(record_id, str)
                     or not record_id
                     or record_id in retained
+                    or record_id in protocol.records
                     or payload["retained_sha256"] != _digest(retained_bytes)
                 ):
                     raise _refuse(
@@ -1846,6 +1954,12 @@ class KnowledgeChangeHistory:
                         f"retention machine event refused: {result.receipt.refusal_code}",
                     )
                 machine_state = result.state
+                if protocol.records.keys() & {
+                    r.record_id for r in machine_state.records
+                }:
+                    raise ProtocolProgramRefusal(
+                        "REUSED_RECORD_ID", "machine record reuses a protocol record ID"
+                    )
                 machine_receipts.append(result.receipt)
                 retained[record_id] = KnowledgeRetainedInput(
                     record_id,
@@ -1869,6 +1983,10 @@ class KnowledgeChangeHistory:
                     f"machine event refused: {result.receipt.refusal_code}",
                 )
             machine_state = result.state
+            if protocol.records.keys() & {r.record_id for r in machine_state.records}:
+                raise ProtocolProgramRefusal(
+                    "REUSED_RECORD_ID", "machine record reuses a protocol record ID"
+                )
             machine_receipts.append(result.receipt)
             proposal = self.binding.data["proposal"]
             if event_type == proposal["event_type"]:
@@ -1936,6 +2054,15 @@ class KnowledgeChangeHistory:
             retained=retained,
             accepted_changes=tuple(accepted_changes),
         )
+        protocol_replay = protocol.snapshot()
+        if protocol_replay is not None:
+            source = _canonical(
+                {
+                    **json.loads(receipt.canonical_bytes),
+                    "protocol_replay_identity": protocol_replay.identity,
+                }
+            )
+            receipt = KnowledgeHistoryReceipt(source, _digest(source))
         return KnowledgeHistoryReplay(
             graph=projection,
             machine_state=machine_state,
@@ -1953,6 +2080,7 @@ class KnowledgeChangeHistory:
             _machine_receipts=tuple(machine_receipts),
             _record_history=MappingProxyType(dict(record_history)),
             _graphs_by_change=MappingProxyType(dict(graphs_by_change)),
+            protocol_replay=protocol_replay,
         )
 
     def _validate_change_base(

@@ -17,6 +17,7 @@ from malleus.compiler import load_validated_contract_artifact
 from malleus.control import monitor_specification_digest
 from malleus.ledger import GENESIS, canonical_json, record_hash
 from malleus.source import source_artifact_fields
+from malleus._contract_pipeline import finite_program, finite_executor, finite_control
 from research.action_history_contract_freeze.programs.executor import (
     ExecutionRefusal,
     VALUE_VALIDATOR,
@@ -454,12 +455,20 @@ def load_check_executor():
 # Trusted Python process, not an OS or in-memory monkeypatch attestation.
 _IMPLEMENTATION_BYTES = canonical_json(
     {
-        name: (HERE / name).read_text()
-        for name in (
-            "check_executor.py",
-            "executor.py",
-            "packet_validator.py",
-            "control_executor.py",
-        )
+        **{
+            name: (HERE / name).read_text()
+            for name in (
+                "check_executor.py",
+                "executor.py",
+                "packet_validator.py",
+                "control_executor.py",
+            )
+        },
+        **{
+            f"core/{module.__name__.rsplit('.', 1)[-1]}.py": Path(
+                module.__file__
+            ).read_text()
+            for module in (finite_program, finite_executor, finite_control)
+        },
     }
 ).encode()
