@@ -1,0 +1,120 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000426",
+  "ledger": "overseer",
+  "sequence": 426,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:3cd7a67f54a9b6516bf63b5e7a5f97e0d3cb6a5395397356f08dcf45a3a87fce",
+  "recorded_at": "2026-09-07T04:34:55Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "default-source-input-constructors",
+    "type": "DOCUMENT"
+  },
+  "summary": "Share default source and evidence input construction without changing retained history or admission.",
+  "why": "Luis approved this bounded Core cleanup. RED precedes GREEN; 37 focused constructor, CLI and fresh-Shop tests pass. The complete compiler/Shop/Re-entry selection passes 854 with one preserved historical xfail, and the docs/integration/ledger selection passes 490. The constructors only build existing KnowledgeAnchorInput values under the shipped structural bundle. The CLI and both Shop runners remove duplicated event construction. Existing append_anchors still owns atomic validation and persistence; custom bindings, ontology, source mapping and admission semantics remain unchanged. The complete fresh import reproduces its frozen ledger and report. Sphinx exposes the public calls. Core principles separate structural validity, source faithfulness and use-specific sufficiency without adding evaluation machinery. No dependency, package/version, release or remote publication change.",
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:6b8a474cb51c440b96443694ef35b22b711fbf1784923e4bd748cce0d608b1ca",
+        "before_digest": "sha256:da8a5db397b11980b4093e6d8e368eb9f4f6b23e30d35f741e6cc7c784413214"
+      },
+      {
+        "path": "docs/PRINCIPLES.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:c077d94347cf46dd81931e434bde417abfad77167a1db90faa300bd4a3e816f2",
+        "before_digest": "sha256:d50d61c673ae4bd004f91f42fc424d3aef173b5d7eb8ebe51f4c55988ac06717"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:de2d426006c2b98fe13f0be9919680773f4566ba50d2c6d86b477d1460b69a40",
+        "before_digest": "sha256:fece647deec895b04ba401381929d16683b175111b0a8953622c30fc75014549"
+      },
+      {
+        "path": "docs/reference/index.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:39b4bb11b00a347833e74fc56d8f2fbc70935c58167a93bc0584a527092cb677",
+        "before_digest": "sha256:49fac01c6af6f2f0c90fdd5bf4e03f106c476995bd16634f34cb7bd39c495e41"
+      },
+      {
+        "path": "handover/2026-09-07-source-input-constructors.md",
+        "change": "CREATED",
+        "after_digest": "sha256:de8f2892a97bc7e56edf248ad487d87b63b13aa6fb860d5ddb7514d7465fba97"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/default_admission/run.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:637aef7f7bab4830e353838ba2778b16f1cc79cddcff1e00bbccf1c97a121ead",
+        "before_digest": "sha256:1b92274e4438482518fa3b3d6929f1bce6949baaaf961d6f5dc50e2c8f489a02"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/run.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:205c4febe4ab02ec976d5361a9528d8d6958b60bda0d3ffa34284f59e857036d",
+        "before_digest": "sha256:6367044c3e2d1828a96a88dfeefdfd6e8a57ce1f337f15724b0b72632d9527b7"
+      },
+      {
+        "path": "src/malleus/compiler.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:4c3d757297c8fe3f89e40f00ec3d69c21dbad11d805bc2a23471f7cdfd8028b4",
+        "before_digest": "sha256:406dce11137235b90e703d39fb83d54b2c564c4335950f72e1c7b97e6e06449b"
+      },
+      {
+        "path": "src/malleus/compiler_cli.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:221d5c35e2f971fb0cbd51411d862d2ef91b71e7a45accf8ffef3088a7b78f73",
+        "before_digest": "sha256:95e1af4e99758aa5469f23114aae6c67a288f5cd86e19dc1189e7feeedc12d40"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_fresh_shop_import.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:11c91fbc5d63626a181377e9bbff632a749acf4b1bbb1ab4888ae8c8c7fd7483",
+        "before_digest": "sha256:509f84373c94c32551bbe0a9319c79936cf5953bf959b08b0a4aa9648fd7534f"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_source_input_constructors.py",
+        "change": "CREATED",
+        "after_digest": "sha256:36a0371d582f6a8f19f224fe51859d35603f51506c3ade337acaa14125fb21ea"
+      },
+      {
+        "path": "tests/test_docs.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:21be0313f8c1f89d39216afefab460e6c3a9569200f105db06b71d16013a6531",
+        "before_digest": "sha256:e39f7420485b8e21aa81824aa691a89bccc97d661736140eb3a3ee35d9791b66"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "70d88614ea80f2fb902029c4d8473e5dd0b331f6"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "f65e929ee10ccc65dc84482851ab1c654b2ac6e6"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-001"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:28c30eab6d34a29bc207749b3f6921011a946665a5376ea83e13c6c98592a629"
+}
