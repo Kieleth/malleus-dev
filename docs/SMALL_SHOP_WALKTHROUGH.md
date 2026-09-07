@@ -112,6 +112,29 @@ Run the full path and these controls together:
 python -m pytest -q tests/contract_compiler/pareto/test_default_shop_walkthrough.py tests/contract_compiler/pareto/test_small_shop_default_admission.py tests/contract_compiler/pareto/test_unstated_valid_time.py tests/contract_compiler/pareto/test_capture_coverage_boundary.py
 ```
 
+### Import a fresh supplier file
+
+The run above uses authored plans. A second example now starts with a new
+supplier file and generates its plan through a small Shop-owned adapter.
+Its two synthetic orders, SYN-C and SYN-D, report quantities 3 and 5. They
+are test data, not extra observations attributed to the retailer paper.
+
+```bash
+python -m research.ontology_driven_kg_realization.experiments.small_shop.fresh_import.run --output build/small-shop-fresh-import
+```
+
+This runs the complete Shop first, then imports both rows in one additional
+change. Reopen yields six changes, twelve historical records and eleven
+current records, with every previous record preserved. No source date is
+invented: both new records carry explicit `NONE_STATED` valid time. Malformed
+rows refuse before retention; stale admission refuses without further writes.
+
+See the {download}`fresh-import guide <../research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/README.md>`
+for the source format, explicit mapping, queries and limits, and its
+{download}`recorded evidence <../research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/evidence.json>`.
+The adapter owns the mapping. Core supplies compilation, admission, history
+and source trace without any Shop-specific runtime change.
+
 ### Earlier evidence is still evidence
 
 The older [public-population evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)

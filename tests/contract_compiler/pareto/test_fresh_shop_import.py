@@ -4,7 +4,10 @@ import ast
 from importlib import import_module
 import json
 from pathlib import Path
+import shlex
 import shutil
+import subprocess
+import sys
 
 import pytest
 
@@ -126,7 +129,13 @@ def test_malformed_supplier_file_refuses_before_history_writes(tmp_path, defect)
 
 def test_fresh_import_replays_and_traces_after_complete_shop(tmp_path):
     runner = _runner()
-    report = runner.run_import(tmp_path / "first")
+    guide = (HERE / "README.md").read_text()
+    command = shlex.split(guide.split("```bash\n", 1)[1].split("```", 1)[0])
+    assert command[:4] == ["python", "-m", MODULE + ".run", "--output"]
+    assert len(command) == 5
+    command[0], command[4] = sys.executable, str(tmp_path / "first")
+    subprocess.run(command, cwd=ROOT, capture_output=True, check=True)
+    report = json.loads((tmp_path / "first/evidence.json").read_bytes())
     assert runner.run_import(tmp_path / "second") == report
     path = tmp_path / "first/shop/history.jsonl"
     assert path.read_bytes() == (tmp_path / "second/shop/history.jsonl").read_bytes()

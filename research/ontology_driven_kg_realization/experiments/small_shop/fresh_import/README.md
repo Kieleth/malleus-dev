@@ -94,6 +94,13 @@ The expected quantity for SYN-C is 3. Its quantity locator is
 The trace retains the complete source file, exact mapping and adapter bytes,
 not a reconstructed imitation of the input.
 
+`evidence.json` beside this guide is the frozen observation from implementation
+`747581b45bafa6a2f289be861e50e273905cff37`: 59 events, six changes, twelve
+historical records and eleven current records. Later runs write separate
+output files; they never rewrite that observation. Byte-identical reproduction
+is relative to its exact code and dependency environment, not a promise that
+future compiler versions keep the same fingerprint.
+
 This slice closes initial fresh-file import only. Later work can add an
 explicit supplier-correction contract, another source format, or an external
 observer when a real consumer requires them. None runs as an implicit fallback.
