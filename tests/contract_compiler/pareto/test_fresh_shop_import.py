@@ -136,6 +136,7 @@ def test_fresh_import_replays_and_traces_after_complete_shop(tmp_path):
     command[0], command[4] = sys.executable, str(tmp_path / "first")
     subprocess.run(command, cwd=ROOT, capture_output=True, check=True)
     report = json.loads((tmp_path / "first/evidence.json").read_bytes())
+    assert report == json.loads((HERE / "evidence.json").read_bytes())
     assert runner.run_import(tmp_path / "second") == report
     path = tmp_path / "first/shop/history.jsonl"
     assert path.read_bytes() == (tmp_path / "second/shop/history.jsonl").read_bytes()
