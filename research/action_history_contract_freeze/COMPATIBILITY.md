@@ -148,3 +148,103 @@ zero and multiple matches, parent/mixin/local conjunction, nested records,
 qualified property names, immutable inputs, source-free reload and deterministic
 diagnostics. No ontology change, new expression grammar, action runtime or
 effect is authorized. Existing frozen evidence stays untouched.
+
+## Generic rule implementation result
+
+Class-rule RED `5818f636f570df2249e2770a118ba1c2083b8024` produced
+16 failures and 4 valid controls. GREEN
+`5c559c2d141c03b26f5b60ab4e2707f42f47c248`, tree
+`76fba63bdd6bfd3664eb6e190125ec32604e0261`, changes only `view.py` after
+that RED. It builds immutable condition indexes from the validated facts and
+executes each applicable parent, mixin and local group. It requires exactly one
+matching alternative per group. Inlined record validation uses the same path.
+No domain class, action, field or temporal variant name is encoded as a rule in
+the executor. The existing canonical facts and metamodels are unchanged by this
+rule-execution repair; the producer attestation correctly changes.
+
+The exact focused command combines `test_contract_alternatives.py`,
+`test_assent_contract_compatibility.py`, `test_public_compiler.py` and
+`tests/test_assent_ontology.py`: **92 passed**. The Semantic Re-entry consumer
+independently reports **108 passed** on an immutable archive of this GREEN,
+adding its 16 exact-Assent controls for all five ValidTime forms, missing fields,
+forbidden fields including null, timezone-database pin and source-free reload.
+Its independent RED against date-only `591cea9b` was 11 failed, 5 valid controls.
+
+Compiled Assent artifact SHA-256 at this GREEN:
+`4f633c124a2206431c676f91ba456a3b948b19711f2be6c07a0d655cc3e27f2d`.
+Compiled LocalAction artifact SHA-256:
+`d0cbe87318ebd7ff63d72c0774863427c615f59a49c2cbcbc3c39cddbe63d34a`.
+Their fact counts and validated fact identities remain the values above.
+
+The two-producer full fresh-Shop comparison was repeated after this GREEN.
+Again, whole contract artifacts differ only at the two producer-evidence leaves,
+and fresh-run reports differ only at the three ledger/receipt identity fields.
+Exported graph records and graph state remain exactly equal. Final producer
+identity is
+`sha256:51c019d49c3cd7d75330e02c5d728a873254cc4b56ca122dda078b15c25bcb3f`.
+Final fresh-run ledger SHA-256 is
+`31b03a8474150f514ee7c9e98b1f67ecb022b151040946a0c31a621cc9970e9a`;
+ledger head is
+`sha256:f883d08c0e0d2855620a18ceee52d9a54fd7c3c054332d8dcf8e5338566cfb8a`.
+State remains `ac6bc4c2a6be7ee851e0229b49276b11a8e0dbf91ed203705d611093c783e998`,
+with 59 events and 12 historical records. This is a new execution, not the old
+receipt under a new label.
+
+## Frozen-producer gate
+
+The raw current-wide relevant command, against frozen runtime GREEN `5c559c2`,
+is **1165 passed, 9 failed, 1 preserved historical xfail**:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. python -m pytest -q -p no:cacheprovider tests/contract_compiler/pareto tests/test_assent_ontology.py tests/test_protocol.py research/ontology_driven_kg_realization/experiments/small_shop research/semantic_reentry_protocol --tb=short
+```
+
+All nine failures are the unchanged frozen-reproduction selectors below.
+The compiler compatibility and generic rule tests pass. This is explicitly
+**not a GREEN current-wide gate**. The class-rule defect is closed; disposition
+of new execution attestations remains a landing issue, not a new source-truth
+claim or permission to rewrite historical outputs.
+
+All nine exact historical reproduction tests pass on the immutable exported
+predecessor `9ec32d4` with its unchanged `2a11240` runtime: **9 passed**.
+Run these exact selectors in that archive with the same configured interpreter:
+
+```text
+tests/contract_compiler/pareto/test_document_assertion_time.py::test_public_trace_reaches_each_assertions_own_time_or_absence
+tests/contract_compiler/pareto/test_fresh_shop_import.py::test_fresh_import_replays_and_traces_after_complete_shop
+tests/contract_compiler/pareto/test_population_trace.py::test_document_trace_reaches_assertion_locator_and_retained_capture
+research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py::test_checked_in_evidence_is_exactly_regenerated
+research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py::test_ret040_admits_reopens_replays_queries_and_traces
+research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_shop_crosses_snapshot_only_composition_without_changing_evidence
+research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_run_admits_reopens_queries_and_traces_every_record
+research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py::test_regeneration_is_canonical_byte_identical_and_matches_runner
+research/semantic_reentry_protocol/test_integration.py::test_observed_correction_admission_reopen_trace_complement_and_quiescence
+```
+
+This evidence does not redefine the current landing gate. No old receipt,
+oracle, fixture or exact-equality guard was weakened or overwritten. A future
+landing needs an explicit successor-evidence or per-producer gate disposition;
+this isolated compiler repair does not select a new publication mechanism.
+
+## Source audit at runtime GREEN
+
+SHA-256 of changed runtime and test files:
+
+| Path | SHA-256 |
+|---|---|
+| `src/malleus/_contract_pipeline/model.py` | `304787b128cbc1d0b3e547189ba7933187f5f0351bad54b341e6879f12bcda45` |
+| `src/malleus/_contract_pipeline/elaborate.py` | `96a4c41d0c5a99bde154e37a2a77552963cdd70a9f22645a9a5b0ac7deaf8c56` |
+| `src/malleus/_contract_pipeline/view.py` | `6f86928ffcb55786764d85c19cc605d5488d0a1b3177ddfb51c456a559fd5232` |
+| `tests/contract_compiler/pareto/test_assent_contract_compatibility.py` | `00fe3d144a90cb2079374d2050bd9524201741763d12d2e0fed7025f9b02bec0` |
+| `tests/contract_compiler/pareto/test_contract_alternatives.py` | `37cf47e1843ebeb0ed5f21c67988d5d191bb1afafff3c2bf7d2e7dc124bb378d` |
+| `tests/contract_compiler/pareto/test_public_compiler.py` | `2224a1d5a98f6eabcc862f01cca097d4783a8929e98f123a6d558000d739c541` |
+
+Assent source stays at
+`90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234`;
+root source stays at
+`5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3`.
+The base-to-head scope is these six files and this report only. Changed-file
+Ruff check, test-file formatting and aggregate diff checks pass. Existing runtime
+files have pre-existing whole-file formatter drift; only changed sections were
+formatted, with no broad formatting rewrite. No whole-repository, package,
+release, action-runtime or cross-language conformance claim is made.
