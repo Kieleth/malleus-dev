@@ -1,0 +1,40 @@
+{
+  "binding_sha256": "sha256:8ef2141dc76eeeb7663841ca0f819b0f3136d946729e7f66f8ef491480b653e0",
+  "dependencies": {
+    "PyYAML": "6.0.3",
+    "linkml": "1.11.1",
+    "linkml-runtime": "1.11.1",
+    "pytest": "9.1.1",
+    "tzdata": "2026.3"
+  },
+  "executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+  "gate_code": {
+    "files": {
+      "scripts/check_compiler_compatibility.py": "sha256:5c073b15f7f4b35cd7bbe4bb9c4963466e6bb2a2813c6f963b817b730240901a",
+      "scripts/compiler_compatibility_probe.py": "sha256:12d3ff514f082a96a37204b454a018cccf9d9497f01101e846c2359a25e4ac2f"
+    },
+    "identity": "sha256:7cf6b2dd8320043e7a6381b0b7460b68af04e0c4d88de06724ea35966488c935"
+  },
+  "non_claims": [
+    "Not full-repository CI",
+    "Not exact old receipts from a new producer",
+    "No action runtime, merge, push or release"
+  ],
+  "python": "3.12.9 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 12:55:12) [Clang 14.0.6 ]",
+  "raw_candidate_suite_is_green": false,
+  "results": {
+    "candidate": {
+      "commit": "1be958e88dce865c8e785638d1c15508c92bd1d2",
+      "probe_sha256": "sha256:e8bb0d77ad7738b18f2d0aa6744aeafaea6aa6dfbdd68cfb6e400e406de6b9d6",
+      "pytest_sha256": "sha256:bf256f8f1e051451a0ab74a23a9abae1cb1b1587a397a6b0b31fb7b50c9c6228",
+      "tree": "8334a558442eb64ec90973d6d0ab08eba3b85ce6"
+    },
+    "historical": {
+      "commit": "9ec32d40634c927f9c7c160e226152c3782f4c84",
+      "probe_sha256": "sha256:67562b8346f539f9ca23957708b92f30a7fd901b91f91aa0a96188d24964ffd3",
+      "pytest_sha256": "sha256:e6762b71f43299b64b6d7b36148ca1823ccd6b092b7009d9c4386b2c6495bc0f",
+      "tree": "be66144387617da1d1044401b8389ab1ae17b9fb"
+    }
+  },
+  "status": "BOUNDED_COMPATIBILITY_PASS"
+}

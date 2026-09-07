@@ -98,3 +98,33 @@ the source repository's object store read-only. It performs no fetch, source
 ref update, index mutation or working-tree copy. Each selected checkout must
 also retain clean tracked bytes after its tests and probe. The historical
 receipts and the nine candidate comparison bindings are unchanged.
+
+## Corrected complete result
+
+Implementation `2af45e03ee7d7bf528cef8db42c0798e6d99685b`, tree
+`11704829d941e126424ee0e7138a74c8d2195b5b`, completed the single command
+successfully. `gate-result.json` retains its execution receipt. Local detailed
+outputs are `/private/tmp/malleus-compiler-gate-history-corrected`.
+
+- Historical exact reproduction: **9 passed**, no skip or xfail.
+- Raw repaired producer: **1165 passed, 9 failed, 1 historical xfail**.
+- Independent paired probes: all six scenarios passed coverage and parity.
+- Gate refusal tests: **20 passed**. An independent consumer additionally
+  reproduced **36 passed** combining these with its 16 Assent record checks.
+- Changed-file Ruff, formatting and scoped diff checks passed.
+
+The 32 observed differing leaves are exclusively the compiler producer evidence,
+fresh-run ledger/receipt coordinates and generated legacy check-receipt identity
+coordinates listed in `gate.json`. Full graph records, state digests, source and
+mapping bytes, plans, capture modalities/times, check outcomes and supersession
+links agree. These are execution-specific identities, not discarded semantics.
+
+The first refused run remains documented above and its detailed local evidence
+is `/private/tmp/malleus-compiler-gate-88fd1db`. The setup correction added no
+failure allowance and changed no receipt or existing equality assertion.
+This satisfies the bounded compatibility gate only. Standard current-wide
+pytest is still red on the nine original exact-reproduction comparisons.
+No full-repository, package, action-runtime, integration, push or release claim
+is made. The entire gate slice adds only two scripts, a test file, this contract,
+its binding and its observed result; the repaired runtime remains byte-identical
+to `1be958e`. Shared main and downstream work remain untouched.
