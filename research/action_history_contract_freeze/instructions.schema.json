@@ -85,6 +85,14 @@
     {
       "type": "object",
       "properties": {
+        "opcode": {"const": "REQUIRE_SORTED_UNIQUE_STRINGS"},
+        "values": {"$ref": "#/$defs/operand"}, "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "values", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
         "opcode": {"const": "REQUIRE_COVERAGE"}, "required": {"$ref": "#/$defs/operand"},
         "outputs": {"$ref": "#/$defs/operand"}, "context": {"$ref": "#/$defs/operand"},
         "refusal": {"$ref": "#/$defs/name"}

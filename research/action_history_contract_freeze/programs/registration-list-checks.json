@@ -1,0 +1,52 @@
+{
+  "purpose": "Two list-check fragments over typed field projections, not full records or registration events",
+  "status": "STATIC_VALID_FRAGMENT",
+  "runtime_executed": false,
+  "program": {
+    "name": "registration-canonical-list-fragments",
+    "inputs": {
+      "event": {
+        "grant": {
+          "type": "object",
+          "properties": {
+            "record": {
+              "type": "object",
+              "properties": {"permitted_action_types": {"type": "array", "items": {"type": "string"}}},
+              "required": ["permitted_action_types"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["record"],
+          "additionalProperties": false
+        },
+        "monitor": {
+          "type": "object",
+          "properties": {
+            "record": {
+              "type": "object",
+              "properties": {"input_artifact_ids": {"type": "array", "items": {"type": "string"}}},
+              "required": ["input_artifact_ids"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["record"],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required_capabilities": [],
+    "introductions": [],
+    "steps": [
+      {
+        "opcode": "REQUIRE_SORTED_UNIQUE_STRINGS",
+        "values": {"root": "event", "name": "grant", "path": ["record", "permitted_action_types"]},
+        "refusal": "GRANT_ACTION_TYPES_NOT_CANONICAL"
+      },
+      {
+        "opcode": "REQUIRE_SORTED_UNIQUE_STRINGS",
+        "values": {"root": "event", "name": "monitor", "path": ["record", "input_artifact_ids"]},
+        "refusal": "MONITOR_INPUT_IDS_NOT_CANONICAL"
+      }
+    ]
+  }
+}

@@ -85,6 +85,11 @@ Luis has approved the finite STRING membership addition described in
 `programs/MEMBERSHIP_DECISION.md`. That decision adds REQUIRE_MEMBER, without
 approving an interpreter or proving the complete event programs. The earlier
 ten-instruction snapshot remains at `fdb4972`.
+The canonical string-list addition is also APPROVED in
+`programs/SORTED_LIST_DECISION.md`. It adds one list predicate, not scalar
+STRING ordering, a constraint framework or a callback. The prior language-gap
+packet remains historical evidence at `c72368d`. The current definition has
+twelve instructions; no interpreter or complete registration program is implied.
 `capabilities.schema.json` defines the separate TYPE and direct-grant producer
 binding shapes. These are research definitions, not accepted program grammars.
 Operands are explicit paths from the enclosing event, an applied record,
@@ -114,6 +119,7 @@ Python event handlers.
 | REQUIRE_COMPARE | Compare typed operands with EQ, NE, LT or LE. No coercion. Time operands require timezone-aware instants and compare actual instants; unbounded interval ends are handled only by the interval instruction. |
 | REQUIRE_MEMBER | Require one STRING value to equal a member of a finite STRING list. Exact equality only, no normalization or coercion. Empty lists refuse; order and repetition do not affect membership. Malformed operands refuse before comparison. No result or state effect. |
 | REQUIRE_UNIQUE | Require unique keys in the declared finite record list and absence from the named replay index when supplied. Match that index's declared key arity/types. Composite keys are ordered tuples, not concatenated strings. |
+| REQUIRE_SORTED_UNIQUE_STRINGS | Require one finite string list in strictly increasing lexicographic Unicode code-point order. Duplicates and malformed values refuse using the declared refusal. Empty and singleton lists pass this check only; nonempty/nonblank constraints remain separate. No normalization, sorting, result or state effect. |
 | REQUIRE_COVERAGE | Match the exact required monitor ID/hash pairs to one output each, including proposal, action, actor, policy and acceptance context. Missing, extra, duplicate or mismatched outputs refuse. |
 | REQUIRE_INTERVAL | Verify a declared inner interval lies within the outer interval. Starts are included, ends excluded; an absent outer end is unbounded, an absent inner end needs an unbounded outer end. No timezone inference. |
 | SELECT_CONTROL | Apply the identified policy's explicit outcome map and precedence to its complete validated check set. Recompute the existing evaluation hash. No outcome or verdict may be supplied as a shortcut. |

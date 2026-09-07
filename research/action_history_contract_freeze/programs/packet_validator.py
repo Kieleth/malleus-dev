@@ -320,6 +320,11 @@ def validate_program(program, *, instruction_schema, profile):
                 _refuse("UNRESOLVED_PATH", "membership list has no item schema")
             require(values["members"]["items"], "string")
             _same_type(values["value"], values["members"]["items"])
+        elif opcode == "REQUIRE_SORTED_UNIQUE_STRINGS":
+            require(values["values"], "array")
+            if "items" not in values["values"]:
+                _refuse("UNRESOLVED_PATH", "canonical list has no item schema")
+            require(values["values"]["items"], "string")
         elif opcode == "VALIDATE_RECORD":
             require(values["record"], "object")
             require(values["contract"], "object")

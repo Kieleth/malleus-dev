@@ -16,11 +16,11 @@
     }
   },
   "local_files": {
-    "DEFINITION.md": "sha256:5c84b249b172a6a7f8f30c77a581a759d1ef5ef9c191c4ac851a7db5a2a63a43",
+    "DEFINITION.md": "sha256:772ef3b01f52bfb3677777176b77740e3eef8b386f0bfbecc5c95c9488a74d8c",
     "contexts.schema.json": "sha256:43f5e2f040e408d18de9448b56145284caa83b901c810f1ac08a2776c4f2dd68",
-    "instructions.schema.json": "sha256:6c61d2b56efdc2c8d2b4d32651f6116e6ed031499a6aa580f1fcf532f35310e4",
+    "instructions.schema.json": "sha256:7f7bb23c4af8369eae7326873bb189d3546a5dcb9d31057dcae5cb9814dd54d1",
     "capabilities.schema.json": "sha256:0e832d453c078b382071e19b3eea001255f4bf5518509c52b350082d645800b3",
-    "test_definition.py": "sha256:b706496b56c8fbf615908250e583435fa9e71cef1e7a1d74bc84df32deb18f86"
+    "test_definition.py": "sha256:30ab87ecda8923d5dee80aa5ea22884fa30a9423728af58c1331c6e731ff1e57"
   },
   "producer_implementations": {"TYPE": "UNBOUND", "DIRECT_GRANT": "UNBOUND"},
   "interpreter": "NOT_IMPLEMENTED",
@@ -30,7 +30,8 @@
     "TRANSACTION_DECISION.md: original context then proposal, one failure-atomic transaction",
     "programs/MEMBERSHIP_DECISION.md: add exact finite STRING membership instruction",
     "programs/lifecycle/KEYED_EFFECT_DECISION.md: explicit ordered string keys for protocol-index assignments, no runtime activation",
-    "programs/INPUT_BINDING_DECISION.md: reuse SourceArtifact for exact check-input bytes with separate role-specific content validation, no runtime activation"
+    "programs/INPUT_BINDING_DECISION.md: reuse SourceArtifact for exact check-input bytes with separate role-specific content validation, no runtime activation",
+    "programs/SORTED_LIST_DECISION.md: one finite canonical string-list instruction, no rewriting or runtime activation"
   ],
   "pending_review": [
     "Finite instruction names, operand shapes and type restrictions",

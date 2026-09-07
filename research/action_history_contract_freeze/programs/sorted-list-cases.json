@@ -1,0 +1,21 @@
+{
+  "purpose": "Frozen expected value outcomes for a future interpreter, not execution evidence",
+  "runtime_executed": false,
+  "cases": [
+    {"values": ["AMEND", "READ"], "expected": "PASS"},
+    {"values": ["READ", "AMEND"], "expected": "REFUSE"},
+    {"values": ["AMEND", "AMEND"], "expected": "REFUSE"},
+    {"values": [], "expected": "PASS"},
+    {"values": ["AMEND"], "expected": "PASS"},
+    {"values": [""], "expected": "PASS"},
+    {"values": ["A", "a"], "expected": "PASS"},
+    {"values": ["A ", "A"], "expected": "REFUSE"},
+    {"values": ["e\u0301", "\u00e9"], "expected": "PASS"},
+    {"values": ["\ue000", "\ud800\udc00"], "expected": "PASS"},
+    {"values": ["\ud800\udc00", "\ue000"], "expected": "REFUSE"},
+    {"values": "AMEND", "expected": "REFUSE"},
+    {"values": ["A", null], "expected": "REFUSE"},
+    {"values": ["A", 1], "expected": "REFUSE"},
+    {"values": [{}], "expected": "REFUSE"}
+  ]
+}
