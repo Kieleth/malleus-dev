@@ -32,7 +32,7 @@ ROLES = (
 
 
 def candidate():
-    return json.loads((HERE / "input-carrier-candidate.json").read_bytes())
+    return json.loads((HERE / "input-bindings.json").read_bytes())
 
 
 @pytest.fixture(scope="module")
@@ -172,9 +172,9 @@ def test_table_covers_existing_invocation_roles_without_coercion(compiled):
         "artifact_kind": "SOURCE",
     }
     assert tuple(definition["byte_inputs"]) == ROLES
-    assert definition["status"] == "PROPOSED_REUSE_NOT_RUNTIME_BINDING"
+    assert definition["status"] == "ACCEPTED_CARRIER_NOT_RUNTIME_BINDING"
+    assert not (HERE / "input-carrier-candidate.json").exists()
     assert definition["unbound"] == [
-        "carrier_selection",
         "history_retention_event_binding",
         "applied_prefix_resolution",
         "content_id_association",

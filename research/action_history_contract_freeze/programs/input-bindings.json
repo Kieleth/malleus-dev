@@ -1,5 +1,5 @@
 {
-  "status": "PROPOSED_REUSE_NOT_RUNTIME_BINDING",
+  "status": "ACCEPTED_CARRIER_NOT_RUNTIME_BINDING",
   "carrier": {"record_type": "SourceArtifact", "artifact_kind": "SOURCE"},
   "identity_fields": {
     "reference_id": "id",
@@ -23,7 +23,6 @@
     "current_context": "current"
   },
   "unbound": [
-    "carrier_selection",
     "history_retention_event_binding",
     "applied_prefix_resolution",
     "content_id_association",

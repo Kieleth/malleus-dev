@@ -29,7 +29,8 @@
   "accepted_decisions": [
     "TRANSACTION_DECISION.md: original context then proposal, one failure-atomic transaction",
     "programs/MEMBERSHIP_DECISION.md: add exact finite STRING membership instruction",
-    "programs/lifecycle/KEYED_EFFECT_DECISION.md: explicit ordered string keys for protocol-index assignments, no runtime activation"
+    "programs/lifecycle/KEYED_EFFECT_DECISION.md: explicit ordered string keys for protocol-index assignments, no runtime activation",
+    "programs/INPUT_BINDING_DECISION.md: reuse SourceArtifact for exact check-input bytes with separate role-specific content validation, no runtime activation"
   ],
   "pending_review": [
     "Finite instruction names, operand shapes and type restrictions",
