@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 import json
 
-from jsonschema import Draft202012Validator, FormatChecker, ValidationError
+from jsonschema import Draft202012Validator, FormatChecker, ValidationError, validators
 
 from malleus.compiler import load_validated_contract_artifact
 from malleus.ledger import (
@@ -45,6 +45,12 @@ class ProgramExecution:
 
 
 FORMATS = FormatChecker(formats=[])
+VALUE_VALIDATOR = validators.extend(
+    Draft202012Validator,
+    type_checker=Draft202012Validator.TYPE_CHECKER.redefine(
+        "integer", lambda checker, value: type(value) is int
+    ),
+)
 
 
 @FORMATS.checks("sha256", raises=LedgerError)
@@ -83,7 +89,7 @@ def _formats(schema):
 
 def _validate(schema, value):
     _formats(schema)
-    Draft202012Validator(schema, format_checker=FORMATS).validate(value)
+    VALUE_VALIDATOR(schema, format_checker=FORMATS).validate(value)
 
 
 def _path(value, path):
@@ -355,6 +361,17 @@ def execute_program(
                         raise ValueError("explicit unique provenance IDs required")
                     if set(sources) - applied_records.keys() - introduced.keys():
                         raise ValueError("provenance is not applied or earlier-staged")
+                    for source in sources:
+                        prior = (
+                            introduced if source in introduced else applied_records
+                        )[source]
+                        _resolve(
+                            view,
+                            {source: prior},
+                            source,
+                            prior["record"]["content_hash"],
+                            prior["record_type"],
+                        )
                     required.update(sources)
                     introduced[identifier] = wrapper
                 if required != set(dependencies):
