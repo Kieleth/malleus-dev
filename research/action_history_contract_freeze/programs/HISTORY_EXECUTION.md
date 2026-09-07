@@ -78,6 +78,16 @@ The complete identified action programs and real producer/output binding still
 have to cross this gate. No main integration, stable wire, public promotion,
 multiwriter guarantee, new ledger, arbitrary callback or profile fallback.
 
+The bounded registration authoring module now binds the existing source,
+grant, monitor and policy instruction definitions to that owner frame. A
+retained RULE_SET uses the existing ProtocolArtifact record, with its exact
+byte digest. The owning ledger test registers actual producer implementation
+and definition bytes, four monitor records and the two policies, then reopens
+without invoking the authoring module. Six tests pass, including five
+misbound-monitor refusals with exact byte preservation. This two-input,
+two-monitor conformance variant does not claim every possible policy arity.
+Registration establishes identity and shape, not legitimacy or check execution.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix
