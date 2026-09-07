@@ -21,6 +21,7 @@ def scalar(kind, coordinate=None):
     value = {"type": kind}
     if coordinate is not None:
         value["x-coordinate"] = coordinate
+        value["format"] = "sha256"
     return value
 
 
@@ -160,6 +161,14 @@ def test_paths_require_guaranteed_fields_and_zero_based_array_bounds(optional):
 def test_compare_rejects_wrong_types(kind):
     program = specimen()
     program["inputs"]["current"]["action"]["properties"]["value"] = scalar(kind)
+    with pytest.raises(api().PacketRefusal) as caught:
+        validate(program)
+    assert caught.value.reason == "OPERAND_TYPE"
+
+
+def test_digest_operand_cannot_be_an_unconstrained_string():
+    program = specimen()
+    program["inputs"]["event"]["context"]["properties"]["identity"] = scalar("string")
     with pytest.raises(api().PacketRefusal) as caught:
         validate(program)
     assert caught.value.reason == "OPERAND_TYPE"

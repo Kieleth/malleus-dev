@@ -46,9 +46,11 @@ def invocation():
 
 
 def validator():
+    from research.action_history_contract_freeze.programs.packet_validator import FORMATS
+
     schema = json.loads((HERE / "invocation.schema.json").read_bytes())
     Draft202012Validator.check_schema(schema)
-    return Draft202012Validator(schema)
+    return Draft202012Validator(schema, format_checker=FORMATS)
 
 
 def test_invocation_has_no_implicit_ids_actors_or_clock():
@@ -82,6 +84,21 @@ def test_input_roles_cannot_be_reordered_duplicated_or_omitted():
     value = invocation()
     value["inputs"].pop()
     assert not check.is_valid(value)
+
+
+@pytest.mark.parametrize(
+    "field,value", [("generated_at", "2026-09-07"), ("generated_at", None)]
+)
+def test_invocation_requires_explicit_zoned_protocol_time(field, value):
+    candidate = invocation()
+    candidate["event"][field] = value
+    assert not validator().is_valid(candidate)
+
+
+def test_invocation_digest_must_be_a_digest_not_an_implementation_claim():
+    candidate = invocation()
+    candidate["implementation"]["bytes_sha256"] = "UNBOUND"
+    assert not validator().is_valid(candidate)
 
 
 def test_direct_grant_invocation_roles_are_explicit_and_closed():
