@@ -200,6 +200,30 @@ def test_wrong_git_tree_refuses_before_export(tmp_path):
     assert not (tmp_path / "archive").exists()
 
 
+def test_selected_snapshot_can_verify_the_real_committed_shop_journal(tmp_path):
+    api = gate()
+    root = tmp_path / "snapshot"
+    api.export(
+        "1be958e88dce865c8e785638d1c15508c92bd1d2",
+        "8334a558442eb64ec90973d6d0ab08eba3b85ce6",
+        root,
+    )
+    result = api.run_worker(
+        "pytest",
+        root,
+        tmp_path / "journal.json",
+        [
+            "research/ontology_driven_kg_realization/experiments/small_shop/test_journal.py::test_committed_seed_has_exact_records_and_cli_check"
+        ],
+    )
+    assert result["exit_code"] == 0, result["failures"]
+    assert result["phases"] == {
+        "setup:passed": 1,
+        "call:passed": 1,
+        "teardown:passed": 1,
+    }
+
+
 def test_execution_identity_includes_the_independent_probe_code(tmp_path):
     api = gate()
     for name in api.GATE_CODE:

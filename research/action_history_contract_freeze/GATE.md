@@ -81,3 +81,14 @@ The receipt binds both gate Python files, the manifest, selected commits/trees,
 actual producer identities, output hashes and observed environment. Editing the
 probe changes the gate-code identity. Code and binding must remain unchanged
 throughout the run. Existing receipt files and equality tests remain untouched.
+
+## First one-command run: correctly refused
+
+Candidate gate `88fd1db` passed 19 focused guards but the complete invocation
+refused: 1164 passed, 10 failed, 1 historical xfail. The extra failure was the
+existing committed Shop journal test. That test reads historical Git objects;
+an archive of tracked files lacks `.git`. This is a gate setup defect, not
+compiler behavior or another permissible historical mismatch. A corrective RED
+executes that exact existing test inside the selected snapshot. The fix must
+retain the required local Git history and keep the original nine-failure
+binding unchanged. No extra exclusion or test mutation is authorized.
