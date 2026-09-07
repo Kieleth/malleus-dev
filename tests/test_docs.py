@@ -2748,6 +2748,11 @@ def test_current_entrypages_lead_to_default_shop_admission() -> None:
         assert f"{shop}/default_admission/README.md" in source
         assert f"{shop}/public_population/evidence.json" in source
         assert "custom-policy" in source
+    # This guide is outside Sphinx's source tree: publish bytes, not a doc xref.
+    assert (
+        f"{{download}}`default-admission runner <../{shop}/default_admission/README.md>`"
+        in (DOCS / "index.md").read_text(encoding="utf-8")
+    )
 
 
 def test_principles_name_shipped_compiler_and_machine_without_portability_claim() -> (
