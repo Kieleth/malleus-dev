@@ -1,0 +1,37 @@
+{
+  "implementation": {"id": "malleus.action-checks", "version": "research-v1"},
+  "closure_order": "INVOCATION_ROLES_THEN_MONITOR_THEN_STATIC_INPUTS_FIRST_OCCURRENCE",
+  "constants": {"no_subdelegation": false},
+  "completed": {"satisfied": "SATISFIED", "violated": "VIOLATED", "success_reason": "MATCH", "rationale": "Finite checks over exact supplied inputs; no source-truth or grantor-legitimacy claim."},
+  "failure": {"category": "EXECUTION", "error_code": "ENGINE_FAILED", "rationale": "The selected check engine did not complete; no positive outcome is inferred."},
+  "grant_interval_fields": {"start": "grant_valid_from", "end": "grant_valid_to"},
+  "TYPE": [
+    {"name": "PROPOSAL_TYPE", "steps": [
+      {"opcode": "VALIDATE_RECORD", "record": {"root": "applied_record", "name": "proposal", "path": ["record"]}, "contract": {"root": "artifact", "name": "proposal_contract", "path": ["value"]}, "result": "validated", "refusal": "PROPOSAL_TYPE"}
+    ]},
+    {"name": "ACTION_TYPE", "steps": [
+      {"opcode": "VALIDATE_RECORD", "record": {"root": "applied_record", "name": "action", "path": ["record"]}, "contract": {"root": "artifact", "name": "action_contract", "path": ["value"]}, "result": "validated", "refusal": "ACTION_TYPE"}
+    ]}
+  ],
+  "DIRECT_GRANT": [
+    {"name": "GRANTEE_MATCH", "steps": [
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "applied_record", "name": "grant", "path": ["record", "grantee_actor_id"]}, "right": {"root": "event", "name": "executor_id", "path": ["value"]}, "refusal": "GRANTEE_MATCH"}
+    ]},
+    {"name": "ACTION_TYPE_PERMITTED", "steps": [
+      {"opcode": "REQUIRE_MEMBER", "value_kind": "STRING", "value": {"root": "applied_record", "name": "action", "path": ["record", "action_type"]}, "members": {"root": "applied_record", "name": "grant", "path": ["record", "permitted_action_types"]}, "refusal": "ACTION_TYPE_PERMITTED"}
+    ]},
+    {"name": "GRANT_SCOPE_BINDING", "steps": [
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "applied_record", "name": "grant", "path": ["record", "scope_record_id"]}, "right": {"root": "artifact", "name": "scope_association", "path": ["value", "grant_scope", "id"]}, "refusal": "GRANT_SCOPE_BINDING"}
+    ]},
+    {"name": "EXACT_SCOPE", "steps": [
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "STRING", "comparison": "EQ", "left": {"root": "artifact", "name": "scope_association", "path": ["value", "grant_scope", "id"]}, "right": {"root": "artifact", "name": "scope_association", "path": ["value", "action_scope", "id"]}, "refusal": "EXACT_SCOPE"},
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "DIGEST", "comparison": "EQ", "left": {"root": "artifact", "name": "scope_association", "path": ["value", "grant_scope", "record_hash"]}, "right": {"root": "artifact", "name": "scope_association", "path": ["value", "action_scope", "record_hash"]}, "refusal": "EXACT_SCOPE"}
+    ]},
+    {"name": "NO_SUBDELEGATION", "steps": [
+      {"opcode": "REQUIRE_COMPARE", "value_kind": "BOOLEAN", "comparison": "EQ", "left": {"root": "applied_record", "name": "grant", "path": ["record", "may_subdelegate"]}, "right": {"root": "artifact", "name": "no_subdelegation", "path": ["value"]}, "refusal": "NO_SUBDELEGATION"}
+    ]},
+    {"name": "GRANT_INTERVAL", "steps": [
+      {"opcode": "REQUIRE_INTERVAL", "inner": {"root": "artifact", "name": "requested_interval", "path": ["value"]}, "outer": {"root": "artifact", "name": "grant_interval", "path": ["value"]}, "refusal": "GRANT_INTERVAL"}
+    ]}
+  ]
+}

@@ -83,7 +83,12 @@ def _nonblank(value):
 
 def _formats(schema):
     if isinstance(schema, dict):
-        if "format" in schema and schema["format"] not in FORMATS.checkers:
+        if (
+            "type" in schema
+            and type(schema["type"]) is str
+            and "format" in schema
+            and schema["format"] not in FORMATS.checkers
+        ):
             raise ExecutionRefusal("UNSUPPORTED_FORMAT", str(schema["format"]))
         for item in schema.values():
             _formats(item)
