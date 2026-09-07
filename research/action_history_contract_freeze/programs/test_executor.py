@@ -159,6 +159,22 @@ def test_complete_grant_program_executes_and_introduces_real_typed_record():
     assert args == before
 
 
+@pytest.mark.parametrize("fault", ["comparison", "scope", "extra_field"])
+def test_caller_cannot_redefine_the_executable_instruction_grammar(fault):
+    args = resolution("APPLIED_AND_EARLIER_STAGED", introduced=True) if fault == "scope" else neutral()
+    args["instruction_schema"] = {"type": "object"}
+    if fault == "comparison":
+        args["program"]["steps"][1]["comparison"] = "GUESS_LESS_OR_EQUAL"
+    elif fault == "scope":
+        args["program"]["steps"][-1]["scope"] = "TRUST_ANYWHERE"
+    else:
+        args["program"]["steps"][0]["callback"] = "uninterpreted-but-accepted"
+    before = deepcopy(args)
+    with pytest.raises(api().ExecutionRefusal, match="UNSUPPORTED_INSTRUCTION_SCHEMA"):
+        run(args)
+    assert args == before
+
+
 @pytest.mark.parametrize(
     "fault,reason",
     [
