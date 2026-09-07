@@ -1,0 +1,149 @@
+{
+  "historical": {
+    "commit": "9ec32d40634c927f9c7c160e226152c3782f4c84",
+    "tree": "be66144387617da1d1044401b8389ab1ae17b9fb",
+    "selectors": [
+      "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py::test_checked_in_evidence_is_exactly_regenerated",
+      "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py::test_ret040_admits_reopens_replays_queries_and_traces",
+      "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_run_admits_reopens_queries_and_traces_every_record",
+      "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_shop_crosses_snapshot_only_composition_without_changing_evidence",
+      "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py::test_regeneration_is_canonical_byte_identical_and_matches_runner",
+      "research/semantic_reentry_protocol/test_integration.py::test_observed_correction_admission_reopen_trace_complement_and_quiescence",
+      "tests/contract_compiler/pareto/test_document_assertion_time.py::test_public_trace_reaches_each_assertions_own_time_or_absence",
+      "tests/contract_compiler/pareto/test_fresh_shop_import.py::test_fresh_import_replays_and_traces_after_complete_shop",
+      "tests/contract_compiler/pareto/test_population_trace.py::test_document_trace_reaches_assertion_locator_and_retained_capture"
+    ],
+    "expected_run": {
+      "collected_count": 9,
+      "collected_sha256": "sha256:a8c3a9c23bd17b3dc9e8dc83362146c65b5cf504641d49ece46b096fb33fb4d5",
+      "collection_errors": [],
+      "exit_code": 0,
+      "failures": {},
+      "phases": {
+        "call:passed": 9,
+        "setup:passed": 9,
+        "teardown:passed": 9
+      },
+      "producer": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+      "xfails": {}
+    }
+  },
+  "candidate": {
+    "commit": "1be958e88dce865c8e785638d1c15508c92bd1d2",
+    "tree": "8334a558442eb64ec90973d6d0ab08eba3b85ce6",
+    "selectors": [
+      "tests/contract_compiler/pareto",
+      "tests/test_assent_ontology.py",
+      "tests/test_protocol.py",
+      "research/ontology_driven_kg_realization/experiments/small_shop",
+      "research/semantic_reentry_protocol"
+    ],
+    "expected_run": {
+      "collected_count": 1175,
+      "collected_sha256": "sha256:097a1d773a04f47a591afaa6dfb59185b25fe4e7c2e2b2178d219eaf68783071",
+      "collection_errors": [],
+      "exit_code": 1,
+      "failures": {
+        "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py::test_checked_in_evidence_is_exactly_regenerated:call": {
+          "comparison": "sha256:76c8d4c92b78547c4795093fa5e4b6bc0e8b31c398d04da6ec62ef1beaffc166",
+          "line": 296,
+          "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py",
+          "type": "builtins.AssertionError"
+        },
+        "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py::test_ret040_admits_reopens_replays_queries_and_traces:call": {
+          "comparison": "sha256:2c20351739b04207d69ee287772f1ccef0491f52924e749794b309a8f77335ae",
+          "line": 35,
+          "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py",
+          "type": "builtins.AssertionError"
+        },
+        "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_run_admits_reopens_queries_and_traces_every_record:call": {
+          "comparison": "sha256:0fc932062bfcd48ba6fbe3f03fd8d3f1ac7b9cc6347d375a4e4fe47c657a6c78",
+          "line": 144,
+          "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py",
+          "type": "builtins.AssertionError"
+        },
+        "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_shop_crosses_snapshot_only_composition_without_changing_evidence:call": {
+          "comparison": "sha256:0fc932062bfcd48ba6fbe3f03fd8d3f1ac7b9cc6347d375a4e4fe47c657a6c78",
+          "line": 114,
+          "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py",
+          "type": "builtins.AssertionError"
+        },
+        "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py::test_regeneration_is_canonical_byte_identical_and_matches_runner:call": {
+          "comparison": "sha256:58154689fa021e65e0560e9f6b4253b6e27dff1ca43af2feffca4d6569ff4e98",
+          "line": 101,
+          "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py",
+          "type": "builtins.AssertionError"
+        },
+        "research/semantic_reentry_protocol/test_integration.py::test_observed_correction_admission_reopen_trace_complement_and_quiescence:call": {
+          "comparison": "sha256:972abc173fab4dc9adb87e73c8cad23b70935599000388734a168d29abcb1ccd",
+          "line": 153,
+          "path": "research/semantic_reentry_protocol/test_integration.py",
+          "type": "builtins.AssertionError"
+        },
+        "tests/contract_compiler/pareto/test_document_assertion_time.py::test_public_trace_reaches_each_assertions_own_time_or_absence:call": {
+          "comparison": "sha256:ae30dfc79afa2fe831ca524ef35e1acb01dd83d633204f4962d2a3dfde576202",
+          "line": 223,
+          "path": "tests/contract_compiler/pareto/test_population_trace.py",
+          "type": "builtins.AssertionError"
+        },
+        "tests/contract_compiler/pareto/test_fresh_shop_import.py::test_fresh_import_replays_and_traces_after_complete_shop:call": {
+          "comparison": "sha256:d44b6e1e5d590c26428e8ae772bbd1c17d15a65cc499559a4f10de45ac9db4a0",
+          "line": 139,
+          "path": "tests/contract_compiler/pareto/test_fresh_shop_import.py",
+          "type": "builtins.AssertionError"
+        },
+        "tests/contract_compiler/pareto/test_population_trace.py::test_document_trace_reaches_assertion_locator_and_retained_capture:call": {
+          "comparison": "sha256:ae30dfc79afa2fe831ca524ef35e1acb01dd83d633204f4962d2a3dfde576202",
+          "line": 223,
+          "path": "tests/contract_compiler/pareto/test_population_trace.py",
+          "type": "builtins.AssertionError"
+        }
+      },
+      "phases": {
+        "call:failed": 9,
+        "call:passed": 1165,
+        "call:skipped": 1,
+        "setup:passed": 1175,
+        "teardown:passed": 1175
+      },
+      "producer": "sha256:51c019d49c3cd7d75330e02c5d728a873254cc4b56ca122dda078b15c25bcb3f",
+      "xfails": {
+        "research/semantic_reentry_protocol/test_prerequisites.py::test_population_preparation_satisfies_pure_stage_requirement": "Open Core dependency: population preparation retains anchors; no agreed immutable-base KCS composer"
+      }
+    }
+  },
+  "parity_differences": [
+    "/artifact/evidence/producer/sha256",
+    "/artifact/evidence_sha256",
+    "/fresh_report/ledger_head",
+    "/fresh_report/ledger_sha256",
+    "/fresh_report/receipt_identity",
+    "/semantics/correction/check_receipts/2/record_id",
+    "/semantics/correction/check_receipts/2/value/base/acceptance_head",
+    "/semantics/correction/check_receipts/2/value/base/materialization_head",
+    "/semantics/correction/check_receipts/3/record_id",
+    "/semantics/correction/check_receipts/3/value/base/acceptance_head",
+    "/semantics/correction/check_receipts/3/value/base/materialization_head",
+    "/semantics/correction/check_receipts/4/record_id",
+    "/semantics/correction/check_receipts/4/value/base/acceptance_head",
+    "/semantics/correction/check_receipts/4/value/base/materialization_head",
+    "/semantics/correction/check_receipts/5/record_id",
+    "/semantics/correction/check_receipts/5/value/base/acceptance_head",
+    "/semantics/correction/check_receipts/5/value/base/materialization_head",
+    "/semantics/showcase/check_receipts/0/record_id",
+    "/semantics/showcase/check_receipts/0/value/change_set_identity",
+    "/semantics/showcase/check_receipts/0/value/verification_identity",
+    "/semantics/showcase/check_receipts/1/record_id",
+    "/semantics/showcase/check_receipts/1/value/change_set_identity",
+    "/semantics/showcase/check_receipts/1/value/verification_identity",
+    "/semantics/showcase/check_receipts/2/record_id",
+    "/semantics/showcase/check_receipts/2/value/change_set_identity",
+    "/semantics/showcase/check_receipts/2/value/verification_identity",
+    "/semantics/showcase/check_receipts/3/record_id",
+    "/semantics/showcase/check_receipts/3/value/change_set_identity",
+    "/semantics/showcase/check_receipts/3/value/verification_identity",
+    "/semantics/showcase/check_receipts/4/record_id",
+    "/semantics/showcase/check_receipts/4/value/change_set_identity",
+    "/semantics/showcase/check_receipts/4/value/verification_identity"
+  ]
+}
