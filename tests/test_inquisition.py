@@ -2514,7 +2514,9 @@ classes:
         )
         assert set(plan["history_profile"]) == {"profile_id", "sha256"}
         assert set(plan["valid_time"]) == {"kind", "value"}
-        assert plan["valid_time"]["kind"] in {"INSTANT", "ORDER_ONLY"}
+        assert compiler.KnowledgeValidTime.from_data(plan["valid_time"]).kind == (
+            plan["valid_time"]["kind"]
+        )
         assert all(
             set(derivation) == {"locator", "path", "record_id", "source_id"}
             for derivation in plan["derivations"]
@@ -2535,7 +2537,7 @@ classes:
             named
             - population._GAP_KINDS
             - {reason.name for reason in population.PopulationPlanRefusalReason}
-            - {"ORDER_ONLY", "ORDER_CONTAINS_UNIT", "STATE_VERSION_PROFILE"}
+            - {"ORDER_ONLY", "NONE_STATED", "ORDER_CONTAINS_UNIT", "STATE_VERSION_PROFILE"}
         )
         assert not invented, (
             f"the structured section names refusals or kinds Core has not: {invented}"

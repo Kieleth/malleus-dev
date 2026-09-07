@@ -935,24 +935,12 @@ def _aware_time(value: str) -> datetime:
 
 
 def _valid_time(raw: object) -> KnowledgeValidTime:
-    reason = PopulationPlanRefusalReason.UNSUPPORTED_VALID_TIME
-    value = _object(raw, reason, "valid time must be an object")
-    _exact(
-        value,
-        frozenset({"kind", "value"}),
-        reason,
-        "valid-time fields are not closed",
-    )
-    kind = _text(value["kind"], reason, "valid-time kind is required")
-    text = _text(value["value"], reason, "valid-time value is required")
-    if kind not in {"INSTANT", "ORDER_ONLY"}:
-        raise _refuse(reason, f"unsupported valid-time kind: {kind}")
-    if kind == "INSTANT":
-        try:
-            _aware_time(text)
-        except ValueError as error:
-            raise _refuse(reason, "instant valid time is malformed") from error
-    return KnowledgeValidTime(kind, text)
+    try:
+        return KnowledgeValidTime.from_data(raw)
+    except ValueError as error:
+        raise _refuse(
+            PopulationPlanRefusalReason.UNSUPPORTED_VALID_TIME, str(error)
+        ) from error
 
 
 def _merged_records(

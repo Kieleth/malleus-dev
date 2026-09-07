@@ -256,6 +256,38 @@ identified projector derives the accepted temporal graph by replay. This is a
 governed compiler target, not a claim that a public artifact class or generic
 runtime cutover ships today.
 
+## When the source states no valid time
+
+The public population/history path accepts an explicit absent-time value:
+
+```json
+{"valid_time":{"kind":"NONE_STATED","value":null}}
+```
+
+This means no domain time is stated, not that the record is true forever or
+that a row number establishes temporal order. `valid_time` and both inner keys
+remain required. `INSTANT` still needs a timezone-aware timestamp; `ORDER_ONLY`
+still needs a nonempty token with meaning chosen by the history profile.
+Missing keys, bare null, or a non-null NONE_STATED value refuse.
+
+For example, the Shop source reports supplier order B with quantity 1 in e4
+and quantity 2 in e7. Without a declared replacement, both reports remain in
+the replayed graph. With an explicit replacement, e4 remains in record history
+and e7 becomes current, but no replacement date is invented. Replacements
+across valid-time kinds remain unsupported. Ledger recording order is separate
+from domain time in both cases.
+
+`KnowledgeValidTime.from_data` parses this shape for both population plans and
+change sets. Reopen and `trace_population_record` retain the same value and
+source bytes. The document adapter continues to declare ORDER_ONLY capture
+import order; this does not change its per-assertion time evidence. The optional
+history implementation's current private wire is not a stable public grammar,
+and this addition does not change Assent's separate `ValidTime` model or add
+valid-time queries.
+
+The executable Shop witness is
+`tests/contract_compiler/pareto/test_unstated_valid_time.py`.
+
 ## What the capture census proves
 
 The optional document adapter counts mappings the producer supplied. It does

@@ -904,6 +904,28 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
     commit it pins.
 
 
+28. **Explicit unstated valid time, Core follow-on.** Luis approved the
+    missing-time implementation after Fable's completed handover. The optional
+    compiler/history reference implementation admits
+    `{"kind":"NONE_STATED","value":null}` in the existing population-plan
+    and change-set time field. Both keys are required; absence is never a
+    default. The value asserts no domain instant, relative domain order or
+    timeless validity. Transaction order remains the ledger's recording order.
+
+    This is one additive variant, parsed once by KnowledgeValidTime.from_data
+    and used by both consumers. INSTANT and ORDER_ONLY retain their prior
+    encodings and meaning. The document adapter continues to use ORDER_ONLY
+    for capture import. No domain profile or root ontology is changed.
+
+    The Shop conformance case retains the same two supplier rows, admits them
+    without deriving a replacement from row order, then reopens and traces both.
+    A separate case supplies an explicit replacement between NONE_STATED
+    records: current state changes, the prior record is retained, and no date
+    is invented. Existing cross-kind replacement refusal remains in force.
+    General time queries, cross-kind migration, and changes to historical
+    receipts or frozen model runs are excluded. Evidence is recorded in
+    `handover/2026-09-06-unstated-valid-time.md`.
+
 ## Open
 
 - Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.

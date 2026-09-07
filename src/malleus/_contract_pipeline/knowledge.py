@@ -287,8 +287,32 @@ def _aware_time(value: str) -> datetime:
 
 @dataclass(frozen=True, slots=True)
 class KnowledgeValidTime:
+    """Declared domain time, independent of ledger transaction order.
+
+    NONE_STATED carries explicit null, not an instant, an order token or a
+    claim of timeless validity. The current private grammar requires both keys.
+    """
+
     kind: str
-    value: str
+    value: str | None
+
+    @classmethod
+    def from_data(cls, raw: object) -> KnowledgeValidTime:
+        """Parse the shared plan/change-set shape; malformed values raise ValueError."""
+
+        data = _object(raw, "valid time must be an object")
+        _exact(data, frozenset({"kind", "value"}), "valid-time fields are not closed")
+        kind = _text(data["kind"], "valid-time kind is required")
+        if kind == "NONE_STATED":
+            if data["value"] is not None:
+                raise ValueError("NONE_STATED valid time requires explicit null")
+            return cls(kind, None)
+        if kind not in {"INSTANT", "ORDER_ONLY"}:
+            raise ValueError(f"unsupported valid-time kind: {kind}")
+        value = _text(data["value"], "valid-time value is required")
+        if kind == "INSTANT":
+            _aware_time(value)
+        return cls(kind, value)
 
 
 @dataclass(frozen=True, slots=True)
@@ -469,22 +493,7 @@ class KnowledgeChangeSet:
             ledger_head = _head(data["base_ledger_head"], "base ledger head is invalid")
             if (count == 0) != (ledger_head == GENESIS):
                 raise ValueError("base ledger head and count disagree")
-            valid_time_data = _object(
-                data["valid_time"], "valid time must be an object"
-            )
-            _exact(
-                valid_time_data,
-                frozenset({"kind", "value"}),
-                "valid time fields are not closed",
-            )
-            valid_time = KnowledgeValidTime(
-                kind=_text(valid_time_data["kind"], "valid-time kind is required"),
-                value=_text(valid_time_data["value"], "valid-time value is required"),
-            )
-            if valid_time.kind not in {"INSTANT", "ORDER_ONLY"}:
-                raise ValueError("valid-time kind is unsupported")
-            if valid_time.kind == "INSTANT":
-                _aware_time(valid_time.value)
+            valid_time = KnowledgeValidTime.from_data(data["valid_time"])
             operations = tuple(
                 _operation(raw, ordinal)
                 for ordinal, raw in enumerate(

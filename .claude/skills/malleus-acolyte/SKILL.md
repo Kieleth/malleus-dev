@@ -826,9 +826,9 @@ refusing:
   given, `STATE_VERSION_PROFILE.identity`, and a plan carrying a staged file's
   digest refuses `IDENTITY_MISMATCH`.
 - `valid_time`: `{kind, value}`, kind `INSTANT` with a timezone-aware ISO
-  instant, or `ORDER_ONLY` with a text order token that means only "after the
-  previous one". There is no third kind, and no kind says a change set has no
-  valid time; choose the one the source supports and record the choice.
+  instant, `ORDER_ONLY` with a nonempty text order token under the selected
+  history semantics, or `NONE_STATED` with explicit null when no domain time
+  is stated. Do not invent an instant or order token to fill this field.
 - `derivations`: `{locator, path, record_id, source_id}`, `path` a nonempty
   array of field names that resolves in the named record.
 - `gaps`: `{kind, locator, source_id, statement}`, kind one of
@@ -874,6 +874,25 @@ physical lines with the header as line 1 against data rows numbered from 0, and
 the same locator named a different row to each. The convention above is the one
 the fixtures already used; it is now the one Core enforces, so a plan that
 numbers rows any other way refuses instead of being read two ways.
+
+### Missing valid time
+
+When a structured source states neither a domain time nor a domain order, use
+this exact fragment in the existing private-v0 population plan:
+
+```json
+{"valid_time":{"kind":"NONE_STATED","value":null}}
+```
+
+Both keys remain required. This is not timeless truth or permission to invent
+an order from row numbers. The ledger still records transaction order; that
+does not establish domain order. Two reports remain two records unless the
+plan explicitly declares a replacement. A replacement between NONE_STATED
+records leaves its boundary date unstated; replacement across time kinds
+refuses. The document adapter keeps its separate ORDER_ONLY capture-import
+semantics and does not use this structured-source choice.
+
+### Worked structured-source plan
 
 The worked plan below populates the one data row of one CSV under the
 shipped `state-version` profile, as two entities and the relation between
