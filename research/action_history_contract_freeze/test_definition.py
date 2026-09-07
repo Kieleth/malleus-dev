@@ -111,6 +111,7 @@ def test_instruction_vocabulary_is_finite_and_cannot_write_domain_state():
         "REQUIRE_COMPARE",
         "REQUIRE_MEMBER",
         "REQUIRE_UNIQUE",
+        "REQUIRE_SORTED_UNIQUE_STRINGS",
         "REQUIRE_COVERAGE",
         "REQUIRE_INTERVAL",
         "SELECT_CONTROL",
@@ -210,6 +211,7 @@ INSTRUCTIONS = [
         "value_kind": "DIGEST",
     },
     {"opcode": "REQUIRE_UNIQUE", "records": OPERAND, "key_paths": [["id"]]},
+    {"opcode": "REQUIRE_SORTED_UNIQUE_STRINGS", "values": OPERAND},
     {
         "opcode": "REQUIRE_MEMBER",
         "value": OPERAND,
