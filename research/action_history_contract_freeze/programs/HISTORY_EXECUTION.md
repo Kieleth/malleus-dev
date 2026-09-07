@@ -88,6 +88,18 @@ misbound-monitor refusals with exact byte preservation. This two-input,
 two-monitor conformance variant does not claim every possible policy arity.
 Registration establishes identity and shape, not legitimacy or check execution.
 
+The initialization program now binds all four selected definition roles and
+both applied policies to actual full-prefix/domain coordinates. It retains the
+closed checkpoint through a SourceArtifact, derives the action head from its
+content, and enforces one initialization. The first isolated run passes eight
+tests, including seven atomic refusal cases. No action has been proposed by
+this test. Initializing the action profile does not mutate accepted knowledge.
+
+The interpreter reuses at most four immutable parsed record contracts keyed by
+their complete bytes. It never caches state, record checks, decisions or
+refusals. A hard test checks byte-key separation, failed-load revalidation and
+view immutability. This is parsing reuse, not another persistence authority.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix
