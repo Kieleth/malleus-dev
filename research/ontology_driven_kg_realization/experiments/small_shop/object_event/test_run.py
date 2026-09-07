@@ -9,7 +9,6 @@ from pathlib import Path
 import malleus.compiler as compiler
 
 from research.ontology_driven_kg_realization.experiments.small_shop.object_event.run import (
-    EXPECTED_EVIDENCE_PATH,
     ORACLE_PATH,
     PLAN_PATH,
     SOURCE_PATH,
@@ -17,6 +16,11 @@ from research.ontology_driven_kg_realization.experiments.small_shop.object_event
 )
 from research.ontology_driven_kg_realization.experiments.small_shop.public_population.run import (
     _canonical,
+)
+
+
+EXPECTED_EVIDENCE_PATH = (
+    Path(__file__).parent.parent / "evidence_2026_09_06/object_event/evidence.json"
 )
 
 

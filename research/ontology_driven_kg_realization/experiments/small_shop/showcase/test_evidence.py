@@ -31,7 +31,7 @@ from research.ontology_driven_kg_realization.experiments.small_shop.showcase.run
 
 
 HERE = Path(__file__).parent
-EVIDENCE = HERE / "evidence"
+EVIDENCE = HERE.parent / "evidence_2026_09_06/showcase"
 FILES = ("explanation.json", "graph.json", "queries.json", "receipt.json")
 E4_CHANGE = "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4"
 E4_RECORD = "supplier-order-state:B:e4"
@@ -63,6 +63,18 @@ def _value(source: bytes) -> dict[str, object]:
     assert isinstance(value, dict)
     assert source == _canonical(value)
     return value
+
+
+def test_evidence_command_defaults_to_build_not_frozen_results(monkeypatch) -> None:
+    destinations = []
+
+    def generate(destination):
+        destinations.append(destination)
+        return {}
+
+    monkeypatch.setattr(evidence_module, "generate_evidence", generate)
+    assert evidence_module.main(()) == 0
+    assert destinations == [Path("build/small-shop-showcase-evidence")]
 
 
 @pytest.fixture(scope="module")
