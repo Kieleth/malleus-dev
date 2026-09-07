@@ -235,6 +235,18 @@ def test_unknown_runtime_format_cannot_silently_pass():
         run(args)
 
 
+def test_a_property_named_format_is_not_a_schema_format_directive():
+    args = neutral()
+    args["program"]["inputs"]["artifact"]["context"] = obj(
+        value=obj(format={"type": "string"})
+    )
+    args["inputs"]["artifact"]["context"]["value"] = {"format": "a domain property"}
+    args["inputs"]["event"]["context"]["identity"] = content_digest(
+        {"format": "a domain property"}
+    )
+    assert run(args).data["runtime_executed"] is True
+
+
 @pytest.mark.parametrize(
     "values,member,valid",
     [
