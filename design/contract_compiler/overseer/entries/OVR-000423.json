@@ -1,0 +1,100 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000423",
+  "ledger": "overseer",
+  "sequence": 423,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:6735225d3d481c19ff67833c16b5a1c25cfaa8da6e846567948220aeb56c6bc2",
+  "recorded_at": "2026-09-07T01:57:24Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "read-only-change-composition",
+    "type": "DOCUMENT"
+  },
+  "summary": "Expose one immutable-context KCS composer without granting history writing authority.",
+  "why": "Luis approved Core ownership of reusable production mechanisms, with Semantic Re-entry providing requirements, experiments and the consumer. The history factory reads once; the public pure composer receives immutable coordinates and retained bytes only. The existing history composer delegates to the same serializer and KCS parser. Admission still rejects intervening evidence-only appends. RED 23 expected failures; GREEN history/context 114 passed; full compiler and Shop 755 passed; status and GraphRecipe 52 passed. Exact five-plan Shop evidence remains unchanged. Context consistency is not authentication or sandboxing; source-value agreement, local correction policy, no-op and Re-entry synthesis stay outside Core. No new persisted grammar, fixture semantics, package policy, paper mutation or release claim.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "after_digest": "sha256:29bd5fabb459f0eeff76c877f1ac07c3c4e0f7deae6983e82f849d1717f24dc9",
+        "change": "MODIFIED",
+        "before_digest": "sha256:0810bd51c61e431165266123e8aa4caa6b656435343cbcd9c70f286c694f9b08"
+      },
+      {
+        "path": "src/malleus/compiler.py",
+        "after_digest": "sha256:406dce11137235b90e703d39fb83d54b2c564c4335950f72e1c7b97e6e06449b",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d21bd8a997c45cbb8afa4a461bda1231b7bc6610380d2925c03a32ff6d1b775f"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_change_composition_context.py",
+        "after_digest": "sha256:b2858dd0259061ddc628e39a5f968c9c4063841b146487b4a51297a5f3870323",
+        "change": "CREATED"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+        "after_digest": "sha256:9771738d663490917d626ce2ff74910f717905c93cbcc9bf07b27bc8d3752973",
+        "change": "MODIFIED",
+        "before_digest": "sha256:399fa0421bfc77c41abd979118a16cf9384ff2f3ed56ccb6bc6082a952b40429"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py",
+        "after_digest": "sha256:b22349f2b73bd4774402b223041d1a9cd75d9094b6ac426ac1da86736f531477",
+        "change": "MODIFIED",
+        "before_digest": "sha256:73e21608001bb1409c3be231e189fe586dd05877a4cd46e93a4d676b702256e5"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "after_digest": "sha256:da8a5db397b11980b4093e6d8e368eb9f4f6b23e30d35f741e6cc7c784413214",
+        "change": "MODIFIED",
+        "before_digest": "sha256:27b3fb4764196eddfea8220e017ddafb1c0d2e2aaa5257a4a8323178b21281a6"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "after_digest": "sha256:fece647deec895b04ba401381929d16683b175111b0a8953622c30fc75014549",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ca24b318cb7eb84d148d257e7d7e9adbe261444112f85530be9314bd2681f861"
+      },
+      {
+        "path": "handover/2026-09-06-read-only-change-composition.md",
+        "after_digest": "sha256:0bc05df7e5614640883da671a870e205578364d7daf578283499ffa839006f6a",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "8e6c8db1b3045b008a40d7a695b3eb108fcc82a4",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "741d41b06005db76b032113a8ebc37fc6ef68283",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c399fea6b0d6b868d3ef3518c77cb7bcaa613582",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "COORDINATES",
+      "target": "01a05f67-22dc-7043-8174-c24ee9ccb09f",
+      "type": "TASK"
+    }
+  ],
+  "entry_hash": "sha256:3e4642b1835bb74700c9f11f15c54b620c5d9912691e23fa6f4998ac35f3c428"
+}

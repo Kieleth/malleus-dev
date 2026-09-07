@@ -98,6 +98,11 @@ facade-only export guard.
 - `tests/test_status.py` plus the GraphRecipe experiment: **52 passed**.
 - Changed-file Ruff and scoped diff checks pass.
 
+Whole-file formatting has one pre-existing difference in the unchanged YAML
+literal at `test_knowledge_change_history.py` lines 61-111. It is not part of
+this slice and is left untouched. The two production files, new context tests
+and changed public Shop test pass format checking.
+
 All pytest commands use `PYTHONDONTWRITEBYTECODE=1`, `PYTHONPATH=src:.`,
 `.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short` followed by
 the selectors above. This is not a full-repository or release claim.
