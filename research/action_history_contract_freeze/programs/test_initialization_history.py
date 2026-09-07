@@ -19,9 +19,10 @@ from research.action_history_contract_freeze.programs.test_registration_history 
 )
 from tests.contract_compiler.pareto.test_finite_protocol_history import api, canonical
 from tests.contract_compiler.pareto.test_knowledge_change_history import (
-    _anchored_history,
     _evidence_anchor,
-    TRANSACTION_TIME,
+)
+from research.ontology_driven_kg_realization.experiments.small_shop.public_population.run import (
+    run_full_shop,
 )
 
 
@@ -39,7 +40,8 @@ def initialized_inputs(tmp_path_factory):
         "research.action_history_contract_freeze.programs.initialization_bundle"
     ).add_initialization
     directory = tmp_path_factory.mktemp("initialization-prefix")
-    history = _anchored_history(directory)[0]
+    run_full_shop(directory)
+    history = KnowledgeChangeHistory.reopen(directory / "history.jsonl")
     bundle = build(
         builder().build_registration_bundle(compiled().artifact_bytes),
         source_ids=SOURCE_IDS,
@@ -47,7 +49,7 @@ def initialized_inputs(tmp_path_factory):
     )
     history.append_anchors(
         anchors=(_evidence_anchor("action-programs", canonical(bundle)),),
-        transaction_time=TRANSACTION_TIME,
+        transaction_time=TIME,
         actor_id="actor:test",
     )
     base = history.replay()
@@ -183,7 +185,10 @@ def test_initialization_preserves_populated_shop_history(tmp_path, initialized_i
     assert len(before.change_sets) == 5
     assert len(before.contract_revisions) == 1
     assert before.graph.get_node("supplier-order-state:B:e7")["ordered_quantity"] == 2
-    assert before.record_history["supplier-order-state:B:e4"].superseded_by == "supplier-order-state:B:e7"
+    assert (
+        before.record_history["supplier-order-state:B:e4"].superseded_by
+        == "supplier-order-state:B:e7"
+    )
     after = append(history, "initialize", event(checkpoint, references))
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
     assert after.receipt == reopened.receipt

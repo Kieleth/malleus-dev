@@ -100,6 +100,24 @@ their complete bytes. It never caches state, record checks, decisions or
 refusals. A hard test checks byte-key separation, failed-load revalidation and
 view immutability. This is parsing reuse, not another persistence authority.
 
+The follow-on integration fixture starts with the actual populated public
+Shop run rather than an empty neutral graph. All nine initialization tests
+pass. It retains five KCSs, one contract revision, the supplier e4/e7 lineage,
+and the exact existing current records through initialization and JSONL-only
+reopen. The source and record-contract identities remain separate from the
+domain effective contract. This is initialization over the current Shop state,
+not a supplier amendment, an effect, or a completed action lifecycle.
+
+## Remaining execution work
+
+The actual action context/proposal program must next cross this same owning
+gate as one atomic pair. The neutral pair test is not that proof. Then bind
+the real check outputs, epistemic decision/transition, authority assessment,
+authorization, dispatch, terminal execution receipt and separate observation.
+The pure check/control tests do not replace those integration stages. Robotics
+and Semantic Re-entry remain blocked on that complete shared handoff, not on
+each other. This isolated work has not changed main or either consumer.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix
