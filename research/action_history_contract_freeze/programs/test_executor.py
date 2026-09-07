@@ -255,7 +255,9 @@ def test_unknown_runtime_format_cannot_silently_pass():
         run(args)
 
 
-def test_repeated_execution_reuses_only_exact_validated_immutable_contract_bytes(monkeypatch):
+def test_repeated_execution_reuses_only_exact_validated_immutable_contract_bytes(
+    monkeypatch,
+):
     kernel = import_module("malleus._contract_pipeline.finite_executor")
     args = grant()
     kernel._contract_view.cache_clear()

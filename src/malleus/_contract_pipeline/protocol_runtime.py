@@ -14,9 +14,9 @@ from .finite_executor import (
     ExecutionRefusal,
     execute_program,
     validate_instruction_schema,
+    _contract_view,
 )
 from .finite_program import PacketRefusal, validate_program
-from .view import load_validated_contract_artifact
 from malleus.ledger import GENESIS, canonical_json, content_digest
 
 
@@ -113,7 +113,7 @@ def load_bundle(source):
         refuse("unsupported finite protocol grammar")
     try:
         validate_instruction_schema(bundle["instruction_schema"])
-        load_validated_contract_artifact(raw(bundle["record_contract_base64"]))
+        _contract_view(raw(bundle["record_contract_base64"]))
         if type(bundle["transactions"]) is not dict or not bundle["transactions"]:
             refuse("nonempty transaction declarations required")
         if type(bundle["constants"]) is not dict:

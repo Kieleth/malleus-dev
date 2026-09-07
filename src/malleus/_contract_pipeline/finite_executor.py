@@ -7,6 +7,7 @@ integration must supply and verify those snapshots before committing a result.
 
 from copy import deepcopy
 from dataclasses import dataclass
+from functools import lru_cache
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -54,6 +55,16 @@ def validate_instruction_schema(schema):
             "UNSUPPORTED_INSTRUCTION_SCHEMA",
             "the installed finite interpreter requires its exact instruction grammar",
         )
+
+
+@lru_cache(maxsize=4)
+def _contract_view(artifact_bytes):
+    """Reuse an immutable parsed definition, never state or validation results.
+
+    The key is the entire exact byte input, not a caller's claimed identity.
+    Failed loads are not cached. The size bound is implementation memory policy.
+    """
+    return load_validated_contract_artifact(artifact_bytes)
 
 
 @dataclass(frozen=True)
@@ -251,7 +262,7 @@ def execute_program(
         if type(applied_records) is not dict:
             raise ValueError("explicit applied-record map required")
         _state(state, profile)
-        view = load_validated_contract_artifact(record_contract_bytes)
+        view = _contract_view(record_contract_bytes)
         contract_identity = "sha256:" + sha256(record_contract_bytes).hexdigest()
     except ExecutionRefusal:
         raise
