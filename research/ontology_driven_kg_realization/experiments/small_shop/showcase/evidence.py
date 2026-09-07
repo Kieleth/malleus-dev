@@ -364,7 +364,7 @@ def main(argv: tuple[str, ...] | None = None) -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(__file__).with_name("evidence"),
+        default=Path("build/small-shop-showcase-evidence"),
     )
     arguments = parser.parse_args(argv)
     try:
