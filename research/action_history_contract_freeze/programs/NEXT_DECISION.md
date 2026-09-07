@@ -1,5 +1,10 @@
 # One new instruction decision
 
+Successor status: CLOSED by Luis's yes after `fdb4972`. See
+`MEMBERSHIP_DECISION.md` for the accepted bounded addition. The discussion below
+is the rationale for that decision, not a request to ask it again. Full event
+programs and runtime authorization are not established by this approval.
+
 The context/proposal transaction question is CLOSED. Nothing is waiting on
 Robotics, Paper or a second Re-entry acknowledgement.
 
@@ -30,18 +35,18 @@ grant check. This packet does not claim a mathematical impossibility theorem;
 it identifies the missing operation under the current declared operand and
 instruction contracts.
 
-## Smallest proposed change, not implemented
+## Proposal accepted by the successor decision
 
 Add one bounded `REQUIRE_MEMBER` instruction with explicit STRING value operand,
 finite STRING-list operand and typed refusal. It compares exact values without
 coercion and produces no output or state change. No arbitrary expressions,
 iteration program, predicate callback, scope hierarchy or new grant shape.
 
-Luis's decision is required before this is added to the instruction vocabulary.
+Luis's decision to add this to the instruction vocabulary is now recorded.
 Restricting grants to one action type or dropping replay's membership check are
 not selected fallbacks. This does not authorize an action runtime or producer.
 
-After a decision, freeze the instruction's positive/negative/type tests, finish
+The successor freezes the instruction's definition/type tests. Next finish
 the complete JSON event programs and their static closure, and bring the actual
 producer/interpreter implementation cut for review. Further discovered semantic
 gaps must be reported; this is not a claim that this one instruction alone proves
@@ -57,5 +62,6 @@ monitor invocation/output definitions are tested. `LIFECYCLE.md` maps all event
 roles to required checks, deltas and positive/negative runtime observations.
 
 The full executable event programs and real check producers remain unfinished.
-No production code, instruction grammar, ontology, history or external source
-is changed by this packet. The successful test results do not erase that gap.
+No production code, ontology, history or external source is changed. Only the
+research instruction grammar gains the approved membership operation. The
+successful static tests do not make the full program or runtime executable.

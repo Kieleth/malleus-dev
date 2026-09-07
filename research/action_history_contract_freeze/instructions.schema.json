@@ -67,6 +67,15 @@
     {
       "type": "object",
       "properties": {
+        "opcode": {"const": "REQUIRE_MEMBER"}, "value": {"$ref": "#/$defs/operand"},
+        "members": {"$ref": "#/$defs/operand"}, "value_kind": {"const": "STRING"},
+        "refusal": {"$ref": "#/$defs/name"}
+      },
+      "required": ["opcode", "value", "members", "value_kind", "refusal"], "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
         "opcode": {"const": "REQUIRE_UNIQUE"}, "records": {"$ref": "#/$defs/operand"},
         "key_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
         "target_index": {"$ref": "#/$defs/name"}, "refusal": {"$ref": "#/$defs/name"}

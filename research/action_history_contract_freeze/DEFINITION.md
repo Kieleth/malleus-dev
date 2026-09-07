@@ -60,14 +60,15 @@ source. It contains IDs, not hashes of the not-yet-introduced proposal/action.
 The later event binds this context identity to those exact record hashes. This
 avoids a context/action self-reference cycle without dropping the association.
 
-Proposed ordering for review: retain every required input first; capture the
+Approved ordering (`TRANSACTION_DECISION.md`): retain every required input first; capture the
 original context at that verified prefix; register that context; record the
 proposal immediately next. The registration must be the sole intervening
 event. The proposal checks that the original domain and action-acceptance
 coordinates remain current. This specifies the formerly unnamed designated
 prefix rule and does not permit arbitrary log movement or silent rebasing.
-This ordering is a newly explicit detail of the definition, not a runtime
-behavior already accepted or implemented.
+Context registration and proposal share one failure-atomic transaction, with
+no intermediate commit and no orphan context. This is an accepted definition,
+not implemented runtime behavior.
 
 Action-only ACCEPT computes the next action head with the existing
 `acceptance_result_head`, previous action head, proposal/decision record hashes,
@@ -80,6 +81,10 @@ verified context after actual evidence retention.
 ## Finite execution vocabulary
 
 `instructions.schema.json` defines typed declarations for this proposed cut.
+Luis has approved the finite STRING membership addition described in
+`programs/MEMBERSHIP_DECISION.md`. That decision adds REQUIRE_MEMBER, without
+approving an interpreter or proving the complete event programs. The earlier
+ten-instruction snapshot remains at `fdb4972`.
 `capabilities.schema.json` defines the separate TYPE and direct-grant producer
 binding shapes. These are research definitions, not accepted program grammars.
 Operands are explicit paths from the enclosing event, an applied record,
@@ -107,6 +112,7 @@ Python event handlers.
 | HASH | Use exactly the selected existing VALUE, RECORD or ARTIFACT recipe. RECORD excludes only content_hash; ARTIFACT uses the exact named artifact contract. Unknown recipes refuse. |
 | RESOLVE_RECORD | Resolve ID, exact type/subtype and record hash in applied prefix or explicitly declared earlier same-batch introductions. Missing or ambiguous references refuse. |
 | REQUIRE_COMPARE | Compare typed operands with EQ, NE, LT or LE. No coercion. Time operands require timezone-aware instants and compare actual instants; unbounded interval ends are handled only by the interval instruction. |
+| REQUIRE_MEMBER | Require one STRING value to equal a member of a finite STRING list. Exact equality only, no normalization or coercion. Empty lists refuse; order and repetition do not affect membership. Malformed operands refuse before comparison. No result or state effect. |
 | REQUIRE_UNIQUE | Require unique keys in the declared finite record list and absence from the named replay index when supplied. Composite keys are ordered tuples, not concatenated strings. |
 | REQUIRE_COVERAGE | Match the exact required monitor ID/hash pairs to one output each, including proposal, action, actor, policy and acceptance context. Missing, extra, duplicate or mismatched outputs refuse. |
 | REQUIRE_INTERVAL | Verify a declared inner interval lies within the outer interval. Starts are included, ends excluded; an absent outer end is unbounded, an absent inner end needs an unbounded outer end. No timezone inference. |
@@ -184,22 +190,18 @@ bindings, canonical context identity, missing and mistyped inputs, mixed
 coordinate fields, unknown execution hooks and absent implementation slots.
 The current public machine parser still rejects the candidate grammar.
 
-Shape validation is not static program validation, state/reference validation,
-real check execution or failure-atomic append. In particular, choosing
-PROTOCOL_INDEX in a syntactically valid instruction does not establish that a
-named index is permitted: the future program validator must resolve it to a
-declared protocol-owned index and reject any alias to domain state. Repeated
-output names, forward references and cyclic introductions remain execution
-contract obligations until the event-program checker exists.
+Shape validation is not state/reference authentication, real check execution or
+failure-atomic append. The separate research checker in `programs` now validates
+declared paths, basic types, index ownership, earlier results and introduction
+dependencies. Those static declarations are not trusted replay objects. Complete
+event programs and runtime conformance remain absent.
 
 ## Review choices, not silently accepted decisions
 
-1. Confirm or revise the immediate context-registration/proposal ordering above.
-   The next program packet must also specify whether those events share one
-   atomic batch or use separate commits. If separate commits are permitted,
-   it must define orphan-registration behavior after proposal refusal. Neither
-   transaction choice nor an orphan recovery/cancellation policy is selected here.
-2. Review the ten finite instruction shapes and operand/type restrictions against
+1. The transaction choice is CLOSED: context then proposal, one failure-atomic
+   transaction. The membership addition is APPROVED. Neither decision should
+   be reopened merely because the complete runtime is not implemented.
+2. Review the eleven finite instruction shapes and operand/type restrictions against
    the approved lifecycle. No general expression language is selected.
 3. Freeze the event-to-instruction programs, monitor invocation/output bindings
    and referenced interval/scope/current-context content contracts before

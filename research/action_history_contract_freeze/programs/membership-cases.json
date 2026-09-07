@@ -1,0 +1,13 @@
+{
+  "purpose": "Frozen expected value-level outcomes for a future interpreter, not execution evidence",
+  "runtime_executed": false,
+  "cases": [
+    {"value": "AMEND", "members": ["READ", "AMEND"], "expected": "PASS"},
+    {"value": "DELETE", "members": ["READ", "AMEND"], "expected": "REFUSE"},
+    {"value": "AMEND", "members": [], "expected": "REFUSE"},
+    {"value": "amend", "members": ["AMEND"], "expected": "REFUSE"},
+    {"value": "AMEND ", "members": ["AMEND"], "expected": "REFUSE"},
+    {"value": "AMEND", "members": ["AMEND", "AMEND"], "expected": "PASS"},
+    {"value": "AMEND", "members": ["AMEND", "READ"], "expected": "PASS"}
+  ]
+}

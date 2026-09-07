@@ -1,10 +1,11 @@
 # Event programs: obligation map and instruction gap
 
 Status: REVIEW_REQUIRED. This covers every selected lifecycle stage, but is
-not a complete executable program. The authorization program has an exact
-unexpressible check under the preceding ten-instruction grammar. See
-`missing-membership.json` and `NEXT_DECISION.md`. No unknown operation is
-implemented here. Completing this map does not close the execution gate.
+not a complete executable program. The exact missing membership instruction
+has been approved in `MEMBERSHIP_DECISION.md` and is now representable in the
+research grammar. `missing-membership.json` retains the prior failed attempt;
+it is not a current decision blocker. Completing this map does not close the
+execution gate or establish that the remaining instructions suffice.
 
 The accepted context/proposal transaction is fixed by `4cf8efe`. All stages
 below are protocol-only, in the same history as KCS admission. They may advance
@@ -68,7 +69,7 @@ UNEXECUTED, not skipped tests and not part of the passing static-test count.
 | Epistemic assessment: complete TypeAssessment, or MonitorFailure plus UnavailableAssessment | Resolve applied proposal and selected TYPE monitor; check complete record/provenance/input/monitor bindings and current A/original D; verify completed or paired unavailable variant; require uniqueness per proposal/monitor; introduce exact output(s). | Missing/wrong producer output, replayed record hash, proposal, source ID or monitor version refuses. A real unavailability pair is retained atomically, not converted into SATISFIED. |
 | Epistemic decision: exact policy, complete ordered outputs, EpistemicDecision, TransitionRecord | REQUIRE_COVERAGE; SELECT_CONTROL recomputes policy verdict/evaluation/trigger order; compare every decision field; validate transition subject/from/to/trigger/event/sequence/time. ACCEPT introduces both and hashes the existing acceptance_result_head preimage with previous A, proposal/decision hashes and empty revisions. Other verdicts leave A. No application/KCS. | All satisfied, rejected and unavailable variants; missing output refuses; forged verdict/evaluation refuses; ACCEPT changes A only; stale A or original D refuses. |
 | Authority assessment: applied ACCEPT, action/proposal, executor, exact grant/policy/scope/interval/O/current context and output | Resolve applied ACCEPT and current A/D; validate real DIRECT_GRANT output with exact action/actor/policy/evaluated grant and monitor; require uniqueness per action/actor/A/monitor/grant; introduce AuthorityAssessment or atomic failure/unavailable pair. | Wrong actor, policy, grant, input closure or stale context refuses; unavailable is UNKNOWN, not omitted. |
-| Authorization: applied ACCEPT, policy-ordered authority outputs, AuthorizationDecision, TransitionRecord | REQUIRE_COVERAGE; SELECT_CONTROL computes AUTHORIZE/BLOCK/CLARIFY. For AUTHORIZE compare grantee/executor, require exact action-type membership in grant list (MISSING INSTRUCTION), REQUIRE_INTERVAL authorization within grant, compare assessed grant and exact current A/D. Introduce decision and transition atomically, update action authorization index only. | Accepted knowledge without permission cannot authorize; false supplied verdict refuses; insufficient grant yields retained BLOCK under a real assessment; missing assessments refuse. |
+| Authorization: applied ACCEPT, policy-ordered authority outputs, AuthorizationDecision, TransitionRecord | REQUIRE_COVERAGE; SELECT_CONTROL computes AUTHORIZE/BLOCK/CLARIFY. For AUTHORIZE compare grantee/executor, REQUIRE_MEMBER action type in grant list, REQUIRE_INTERVAL authorization within grant, compare assessed grant and exact current A/D. Introduce decision and transition atomically, update action authorization index only. | Accepted knowledge without permission cannot authorize; false supplied verdict refuses; insufficient grant yields retained BLOCK under a real assessment; missing assessments refuse. |
 | Dispatch: exact AUTHORIZE, action, declared adapter and executor, ActionDispatch | Resolve action/authorization hashes and current authorization A/D; compare executor and dispatcher role; valid_from <= dispatch time; dispatch time < valid_to when bounded; REQUIRE_UNIQUE action dispatch; introduce dispatch and index. Never invoke adapter in commit. | Wrong executor, stale context, expired interval, absent permission or duplicate dispatch refuses before eligibility. |
 | Execution: applied dispatch and exact ActionExecution/result bytes | Resolve dispatch; executor records own receipt; dispatch time <= start < end; end equals generated_at; closed terminal status; verify result byte digest when retaining result bytes; require no terminal receipt for dispatch; introduce receipt/index. | Wrong dispatch/executor/time/hash or duplicate terminal receipt refuses. FAILED and ABORTED may be valid records; no world-state claim. Intervening D change is allowed. |
 | Observation: applied execution, exact outcome contract, independently supplied source and OutcomeObservation | Resolve execution and outcome-contract hashes; observer differs from executor; execution end <= observation time; source ID/record hash and retained bytes verified; closed observation type/result; uniqueness by execution/outcome-contract; introduce observation/index. | A receipt alone cannot supply observation; same observer/executor, wrong source/hash/time/contract or duplicate observation refuses. FAILED execution may still have a valid observation. D change is allowed; D is not written. |
@@ -128,8 +129,8 @@ negative decisions are persisted judgments. No failure audit append is implied.
 
 ## Required successor
 
-Resolve the exact membership operation proposal, then complete the executable
-JSON programs and test their full cross-record requirements. This packet has a
-complete lifecycle obligation census, not evidence that the ten candidate
+Complete the executable JSON programs and test their full cross-record
+requirements with the approved membership instruction. This packet has a
+complete lifecycle obligation census, not evidence that the eleven
 instructions suffice. Real check producers and interpreter implementations are
 still UNBOUND. No initialization instance or action lifecycle has run.

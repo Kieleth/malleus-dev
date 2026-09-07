@@ -102,6 +102,8 @@ def _schema(schema):
         _refuse("DEFINITION_SCHEMA", "a single explicit type is required")
     if "$ref" in schema or any(k in schema for k in ("oneOf", "anyOf", "allOf", "if")):
         _refuse("DEFINITION_SCHEMA", "expand variants before static path checking")
+    if "prefixItems" in schema:
+        _refuse("DEFINITION_SCHEMA", "positional arrays are outside this static subset")
     if schema["type"] == "object":
         if (
             schema.get("additionalProperties") is not False
@@ -291,6 +293,13 @@ def validate_program(program, *, instruction_schema, profile):
                             f"expected format {formats[step['value_kind']]}",
                         )
             _same_type(values["left"], values["right"])
+        elif opcode == "REQUIRE_MEMBER":
+            require(values["value"], "string")
+            require(values["members"], "array")
+            if "items" not in values["members"]:
+                _refuse("UNRESOLVED_PATH", "membership list has no item schema")
+            require(values["members"]["items"], "string")
+            _same_type(values["value"], values["members"]["items"])
         elif opcode == "VALIDATE_RECORD":
             require(values["record"], "object")
             require(values["contract"], "object")
