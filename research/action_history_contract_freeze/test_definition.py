@@ -178,6 +178,10 @@ def test_definition_does_not_claim_missing_producer_implementations_exist():
         in text
     )
     assert "not a completed executable\ncontract freeze" in text
+    prose = " ".join(text.split())
+    assert "Failing tests may precede implementation" in prose
+    assert "before successful executable freeze" in prose
+    assert "before runtime RED" not in prose
 
 
 OPERAND = {"root": "event", "name": "body", "path": ["record"]}
