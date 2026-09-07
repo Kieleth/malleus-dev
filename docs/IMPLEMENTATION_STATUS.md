@@ -33,6 +33,13 @@ The context's consistency fingerprint is not an authenticated checkpoint or
 new persisted grammar. Source parsing, domain mapping, checks, policy, no-op
 decisions and protocol-event construction remain outside the composer.
 
+Two pure default-bundle constructors, `structural_source_anchors` and
+`structural_evidence_anchor`, build source and evidence retention inputs from
+exact bytes, explicit IDs and media type. The CLI and Shop runners use these
+instead of repeating event assembly. They do not read files, write history,
+admit knowledge or interpret sources. Existing `append_anchors` still owns
+atomic validation and persistence. Custom bindings remain unchanged.
+
 Packages built from this source expose the reusable pieces through
 `malleus.compiler`: exact-source LinkML contract compilation, population-plan
 compilation, governed admission, reopen, replay, and the replayed graph's query

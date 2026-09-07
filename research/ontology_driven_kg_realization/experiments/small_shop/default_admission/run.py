@@ -31,23 +31,6 @@ def _digest(content: bytes) -> str:
     return "sha256:" + sha256(content).hexdigest()
 
 
-def _artifact(record_id: str, content: bytes, role: str, media_type: str):
-    return api.KnowledgeAnchorInput(
-        machine_event=_canonical(
-            {
-                "event_type": "ARTIFACT_REGISTERED",
-                "payload": {
-                    "artifact_id": record_id,
-                    "artifact_identity": _digest(content),
-                },
-            }
-        ),
-        retained_bytes=content,
-        role=role,
-        media_type=media_type,
-    )
-
-
 def _compile(which: str):
     return api.compile_linkml_contract(
         root_locator="small-shop",
@@ -77,22 +60,22 @@ def start_shop(path: Path, *, transaction_time: str, actor_id: str):
     }
     base = _compile("base")
     anchors = [
-        _artifact(
-            "artifact:small-shop:default-inputs",
-            INPUT_BYTES,
-            "RETAINED_EVIDENCE",
-            "application/json",
+        api.structural_evidence_anchor(
+            record_id="artifact:small-shop:default-inputs",
+            content=INPUT_BYTES,
+            media_type="application/json",
         ),
         *(
-            _artifact(key, value, "RETAINED_EVIDENCE", "application/json")
+            api.structural_evidence_anchor(
+                record_id=key, content=value, media_type="application/json"
+            )
             for key, value in sorted(evidence.items())
         ),
         *(
-            _artifact(
-                f"template:small-shop:{key}",
-                value,
-                "RETAINED_EVIDENCE",
-                "application/json",
+            api.structural_evidence_anchor(
+                record_id=f"template:small-shop:{key}",
+                content=value,
+                media_type="application/json",
             )
             for key, value in sorted(templates.items())
         ),
@@ -100,21 +83,11 @@ def start_shop(path: Path, *, transaction_time: str, actor_id: str):
     for source_id, content in sorted(sources.items()):
         artifact_id = f"artifact:{source_id}"
         media_type = INPUTS["sources"][source_id]["media_type"]
-        anchors.append(_artifact(artifact_id, content, "SOURCE_ARTIFACT", media_type))
-        anchors.append(
-            api.KnowledgeAnchorInput(
-                machine_event=_canonical(
-                    {
-                        "event_type": "SOURCE_REGISTERED",
-                        "payload": {
-                            "artifact_id": artifact_id,
-                            "source_id": source_id,
-                            "source_identity": _digest(content),
-                        },
-                    }
-                ),
-                retained_bytes=content,
-                role="RETAINED_SOURCE",
+        anchors.extend(
+            api.structural_source_anchors(
+                source_id=source_id,
+                artifact_id=artifact_id,
+                content=content,
                 media_type=media_type,
             )
         )

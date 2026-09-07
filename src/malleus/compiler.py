@@ -239,6 +239,84 @@ def _machine_event(event_type: str, **payload: object) -> bytes:
     return _canonical({"event_type": event_type, "payload": payload})
 
 
+def _structural_input(content: bytes, **labels: str) -> None:
+    if type(content) is not bytes:
+        raise KnowledgeChangeRefusal(
+            KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+            "content must be exact bytes",
+        )
+    for name, value in labels.items():
+        if not isinstance(value, str) or not value:
+            raise KnowledgeChangeRefusal(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                f"{name} must be a nonempty string",
+            )
+
+
+def structural_source_anchors(
+    *, source_id: str, artifact_id: str, content: bytes, media_type: str
+) -> tuple[KnowledgeAnchorInput, KnowledgeAnchorInput]:
+    """Construct the default bundle's artifact/source pair without I/O.
+
+    IDs and media type are caller decisions; the digest is derived from exact
+    ``content``. Empty bytes are allowed. Malformed supplied values raise
+    ``KnowledgeChangeRefusal`` with ``MALFORMED_HISTORY``. Construction
+    neither retains bytes nor accepts knowledge. Submit the returned tuple,
+    optionally with evidence anchors, to ``history.append_anchors`` for atomic
+    validation and persistence. Custom bindings use ``KnowledgeAnchorInput``
+    directly; this helper only targets ``STRUCTURAL_HISTORY_BUNDLE``.
+    """
+    _structural_input(
+        content, source_id=source_id, artifact_id=artifact_id, media_type=media_type
+    )
+    identity = _digest(content)
+    return (
+        KnowledgeAnchorInput(
+            machine_event=_machine_event(
+                "ARTIFACT_REGISTERED",
+                artifact_id=artifact_id,
+                artifact_identity=identity,
+            ),
+            retained_bytes=content,
+            media_type=media_type,
+            role="SOURCE_ARTIFACT",
+        ),
+        KnowledgeAnchorInput(
+            machine_event=_machine_event(
+                "SOURCE_REGISTERED",
+                artifact_id=artifact_id,
+                source_id=source_id,
+                source_identity=identity,
+            ),
+            retained_bytes=content,
+            media_type=media_type,
+            role="RETAINED_SOURCE",
+        ),
+    )
+
+
+def structural_evidence_anchor(
+    *, record_id: str, content: bytes, media_type: str
+) -> KnowledgeAnchorInput:
+    """Construct one default-bundle evidence anchor, without I/O or acceptance.
+
+    The same input rules as :func:`structural_source_anchors` apply. The
+    returned value binds exact bytes, not source faithfulness, truth or coverage.
+    Custom bindings still construct ``KnowledgeAnchorInput`` directly.
+    """
+    _structural_input(content, record_id=record_id, media_type=media_type)
+    return KnowledgeAnchorInput(
+        machine_event=_machine_event(
+            "ARTIFACT_REGISTERED",
+            artifact_id=record_id,
+            artifact_identity=_digest(content),
+        ),
+        retained_bytes=content,
+        media_type=media_type,
+        role="RETAINED_EVIDENCE",
+    )
+
+
 def create_structural_history(
     path: str | Path,
     *,
@@ -591,5 +669,7 @@ __all__ = (
     "population_retention_events",
     "prepare_population_change",
     "replay_events",
+    "structural_source_anchors",
+    "structural_evidence_anchor",
     "trace_population_record",
 )

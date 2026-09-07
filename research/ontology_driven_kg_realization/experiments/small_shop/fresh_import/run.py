@@ -22,23 +22,6 @@ TIME = "2026-09-06T01:00:00Z"
 ACTOR = "actor:small-shop-fresh-import"
 
 
-def evidence_anchor(record_id: str, content: bytes, media_type: str):
-    return api.KnowledgeAnchorInput(
-        machine_event=adapter.canonical(
-            {
-                "event_type": "ARTIFACT_REGISTERED",
-                "payload": {
-                    "artifact_id": record_id,
-                    "artifact_identity": adapter.digest(content),
-                },
-            }
-        ),
-        retained_bytes=content,
-        role="RETAINED_EVIDENCE",
-        media_type=media_type,
-    )
-
-
 def start_existing_shop(output: Path):
     run_shop(output)
     return api.KnowledgeChangeHistory.reopen(output / "history.jsonl")
@@ -65,43 +48,25 @@ def prepare_import(history, source: bytes, *, transaction_time: str, actor_id: s
         history_profile=api.STATE_VERSION_PROFILE,
     )
     artifact_id = "artifact:" + SOURCE_ID
-    source_identity = adapter.digest(source)
-    source_artifact = api.KnowledgeAnchorInput(
-        machine_event=adapter.canonical(
-            {
-                "event_type": "ARTIFACT_REGISTERED",
-                "payload": {
-                    "artifact_id": artifact_id,
-                    "artifact_identity": source_identity,
-                },
-            }
-        ),
-        retained_bytes=source,
-        role="SOURCE_ARTIFACT",
-        media_type="application/x-ndjson",
-    )
-    source_record = api.KnowledgeAnchorInput(
-        machine_event=adapter.canonical(
-            {
-                "event_type": "SOURCE_REGISTERED",
-                "payload": {
-                    "artifact_id": artifact_id,
-                    "source_id": SOURCE_ID,
-                    "source_identity": source_identity,
-                },
-            }
-        ),
-        retained_bytes=source,
-        role="RETAINED_SOURCE",
-        media_type="application/x-ndjson",
-    )
     mapping_id = json.loads(adapter.MAPPING_BYTES)["evidence_id"]
     history.append_anchors(
         anchors=(
-            source_artifact,
-            source_record,
-            evidence_anchor(mapping_id, adapter.MAPPING_BYTES, "application/json"),
-            evidence_anchor(IMPLEMENTATION_ID, implementation, "text/x-python"),
+            *api.structural_source_anchors(
+                source_id=SOURCE_ID,
+                artifact_id=artifact_id,
+                content=source,
+                media_type="application/x-ndjson",
+            ),
+            api.structural_evidence_anchor(
+                record_id=mapping_id,
+                content=adapter.MAPPING_BYTES,
+                media_type="application/json",
+            ),
+            api.structural_evidence_anchor(
+                record_id=IMPLEMENTATION_ID,
+                content=implementation,
+                media_type="text/x-python",
+            ),
         ),
         transaction_time=transaction_time,
         actor_id=actor_id,

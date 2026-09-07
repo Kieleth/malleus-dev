@@ -31,6 +31,8 @@ from malleus.compiler import (
     compose_partial_effective_contract,
     create_structural_history,
     population_retention_events,
+    structural_evidence_anchor,
+    structural_source_anchors,
     prepare_population_change,
     trace_population_record,
 )
@@ -48,10 +50,6 @@ def _canonical(value: object) -> bytes:
 
 def _digest(source: bytes) -> str:
     return "sha256:" + sha256(source).hexdigest()
-
-
-def _event(event_type: str, **payload: object) -> bytes:
-    return _canonical({"event_type": event_type, "payload": payload})
 
 
 def _plain(value: object) -> object:
@@ -149,44 +147,20 @@ def _run_retain(arguments: argparse.Namespace) -> int:
     registered: list[str] = []
     for source_id, artifact_id, raw_path, media_type in arguments.source or ():
         content = Path(raw_path).read_bytes()
-        anchors.append(
-            KnowledgeAnchorInput(
-                machine_event=_event(
-                    "ARTIFACT_REGISTERED",
-                    artifact_id=artifact_id,
-                    artifact_identity=_digest(content),
-                ),
-                retained_bytes=content,
+        anchors.extend(
+            structural_source_anchors(
+                source_id=source_id,
+                artifact_id=artifact_id,
+                content=content,
                 media_type=media_type,
-                role="SOURCE_ARTIFACT",
-            )
-        )
-        anchors.append(
-            KnowledgeAnchorInput(
-                machine_event=_event(
-                    "SOURCE_REGISTERED",
-                    artifact_id=artifact_id,
-                    source_id=source_id,
-                    source_identity=_digest(content),
-                ),
-                retained_bytes=content,
-                media_type=media_type,
-                role="RETAINED_SOURCE",
             )
         )
         registered.extend((artifact_id, source_id))
     for evidence_id, raw_path, media_type in arguments.evidence or ():
         content = Path(raw_path).read_bytes()
         anchors.append(
-            KnowledgeAnchorInput(
-                machine_event=_event(
-                    "ARTIFACT_REGISTERED",
-                    artifact_id=evidence_id,
-                    artifact_identity=_digest(content),
-                ),
-                retained_bytes=content,
-                media_type=media_type,
-                role="RETAINED_EVIDENCE",
+            structural_evidence_anchor(
+                record_id=evidence_id, content=content, media_type=media_type
             )
         )
         registered.append(evidence_id)

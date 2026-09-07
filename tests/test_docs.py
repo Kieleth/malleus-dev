@@ -312,6 +312,8 @@ APPROVED_REFERENCE_SOURCE = (
     "   malleus.compiler.trace_population_record\n"
     "   malleus.compiler.adapt_document_assertions\n"
     "   malleus.compiler.compile_contract_revision\n"
+    "   malleus.compiler.structural_source_anchors\n"
+    "   malleus.compiler.structural_evidence_anchor\n"
     "   malleus.compiler.KnowledgeChangeHistory\n"
     "   malleus.compiler.ContractRevision\n"
     "   malleus.compiler.ContractRevisionRefusal\n"
@@ -368,6 +370,10 @@ APPROVED_REFERENCE_SOURCE = (
     ".. autofunction:: malleus.compiler.adapt_document_assertions\n"
     "\n"
     ".. autofunction:: malleus.compiler.compile_contract_revision\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.structural_source_anchors\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.structural_evidence_anchor\n"
     "\n"
     ".. autoclass:: malleus.compiler.KnowledgeChangeHistory\n"
     "   :members: compose_contract_revision, record_contract_revision\n"
@@ -1339,6 +1345,8 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.trace_population_record",
         "malleus.compiler.adapt_document_assertions",
         "malleus.compiler.compile_contract_revision",
+        "malleus.compiler.structural_source_anchors",
+        "malleus.compiler.structural_evidence_anchor",
         "malleus.inquisition.validate_pack_conformance",
         "malleus.inquisition.validate_pack_grounding",
     )
@@ -1459,6 +1467,8 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.trace_population_record",
         "malleus.compiler.adapt_document_assertions",
         "malleus.compiler.compile_contract_revision",
+        "malleus.compiler.structural_source_anchors",
+        "malleus.compiler.structural_evidence_anchor",
         "malleus.compiler.KnowledgeChangeHistory",
         "malleus.compiler.KnowledgeChangeHistory.compose_contract_revision",
         "malleus.compiler.KnowledgeChangeHistory.record_contract_revision",

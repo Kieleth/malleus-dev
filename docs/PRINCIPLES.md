@@ -195,6 +195,27 @@ modules can compose into an unsound one at the interface.
 
 Rite: `evidence_does_not_transfer`.
 
+### Three independent acceptance claims
+
+| Claim | What establishes it |
+|---|---|
+| The proposal satisfies its declared structural and evidence-binding rules | Compiler and admission checks |
+| The representation faithfully expresses the source | Source-grounded semantic assessment |
+| The representation contains enough information for its intended use | Explicit coverage requirements and evaluation |
+
+Passing one does not establish the others. Replay establishes reconstruction,
+not source faithfulness or sufficiency: it can reproduce an omission or a
+misinterpretation exactly. Faithful source representation does not establish
+world truth. A partial representation may be admissible under its policy without
+being sufficient for a use. Removing optional structure to clear a check is not,
+by itself, semantic improvement.
+
+Core enforces declared contracts and retains identified check outcomes. Domain
+interpretation and purpose-specific assessment remain adopter-owned. State the
+contract and checks behind an acceptance claim; do not turn structural success
+into semantic verification. These distinctions add no evaluation API, mandatory
+completeness threshold, relation quota or automatic repair.
+
 ## 5. `COMMITTED` means the shape was valid
 
 Nothing more. Whether the record is true, trusted, or safe to act on is a

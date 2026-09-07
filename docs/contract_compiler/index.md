@@ -180,6 +180,40 @@ The mapping file is deliberately fixture-local. Generalizing it before another
 real consumer needs the seam would turn this bounded proof into a speculative
 DSL.
 
+## Default source and evidence inputs
+
+For `STRUCTURAL_HISTORY_BUNDLE`, the public `malleus.compiler` facade provides
+two pure constructors. `structural_source_anchors` takes explicit `source_id`,
+`artifact_id`, `content` bytes and `media_type`, and returns the ordered source
+artifact/source-record pair. `structural_evidence_anchor` takes `record_id`,
+`content` and `media_type`, and returns one evidence anchor. No field defaults
+or ID-generation policy are supplied. Empty bytes are valid; malformed content,
+IDs or media type raise `KnowledgeChangeRefusal` with `MALFORMED_HISTORY`.
+
+```python
+from malleus.compiler import structural_evidence_anchor, structural_source_anchors
+
+anchors = (
+    *structural_source_anchors(
+        source_id="source:input", artifact_id="artifact:input",
+        content=b"retained input", media_type="text/plain",
+    ),
+    structural_evidence_anchor(
+        record_id="evidence:mapping", content=b"declared mapping",
+        media_type="text/plain",
+    ),
+)
+```
+
+Construction performs no I/O or acceptance. The coordinator submits this tuple
+to `history.append_anchors(anchors=anchors, transaction_time=..., actor_id=...)`.
+That existing gate validates the complete batch before persisting it. A source
+registration records supplied bytes, not their authenticity or truth. Source
+interpretation, use-specific coverage and domain population remain separate.
+Custom machines and bindings continue to construct `KnowledgeAnchorInput`
+directly; these helpers are conveniences for the shipped default, not a new
+protocol requirement or stable wire.
+
 ## Read-only change-set composition
 
 The Small Shop population and correction proofs repeated one mechanical step:

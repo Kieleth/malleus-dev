@@ -162,3 +162,35 @@ def test_consumers_remove_handwritten_default_retention_events():
         assert "structural_evidence_anchor(" in source
         assert "SOURCE_REGISTERED" not in source
         assert "ARTIFACT_REGISTERED" not in source
+
+
+def test_documented_construction_executes_and_claims_stay_separate():
+    root = Path(__file__).resolve().parents[3]
+    guide = (root / "docs/contract_compiler/index.md").read_text()
+    section = guide.split("## Default source and evidence inputs\n", 1)[1]
+    example = section.split("```python\n", 1)[1].split("```", 1)[0]
+    namespace = {}
+    exec(compile(example, "constructor-documentation", "exec"), namespace)
+    assert [item.role for item in namespace["anchors"]] == [
+        "SOURCE_ARTIFACT",
+        "RETAINED_SOURCE",
+        "RETAINED_EVIDENCE",
+    ]
+    assert namespace["anchors"][1].retained_bytes == b"retained input"
+    principles = (root / "docs/PRINCIPLES.md").read_text()
+    claims = " ".join(
+        principles.split("### Three independent acceptance claims", 1)[1]
+        .split("## 5.", 1)[0]
+        .split()
+    )
+    for claim in (
+        "Compiler and admission checks",
+        "Source-grounded semantic assessment",
+        "Explicit coverage requirements and evaluation",
+        "Passing one does not establish the others",
+        "Replay establishes reconstruction, not source faithfulness or sufficiency",
+        "Faithful source representation does not establish world truth",
+        "purpose-specific assessment remain adopter-owned",
+        "no evaluation API",
+    ):
+        assert claim in claims

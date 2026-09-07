@@ -53,6 +53,8 @@ Reference imports must remain unique and set-equivalent.
    malleus.compiler.trace_population_record
    malleus.compiler.adapt_document_assertions
    malleus.compiler.compile_contract_revision
+   malleus.compiler.structural_source_anchors
+   malleus.compiler.structural_evidence_anchor
    malleus.compiler.KnowledgeChangeHistory
    malleus.compiler.ContractRevision
    malleus.compiler.ContractRevisionRefusal
@@ -109,6 +111,10 @@ Reference imports must remain unique and set-equivalent.
 .. autofunction:: malleus.compiler.adapt_document_assertions
 
 .. autofunction:: malleus.compiler.compile_contract_revision
+
+.. autofunction:: malleus.compiler.structural_source_anchors
+
+.. autofunction:: malleus.compiler.structural_evidence_anchor
 
 .. autoclass:: malleus.compiler.KnowledgeChangeHistory
    :members: compose_contract_revision, record_contract_revision

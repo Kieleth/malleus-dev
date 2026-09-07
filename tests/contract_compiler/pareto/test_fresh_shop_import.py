@@ -193,7 +193,11 @@ def test_stale_import_refuses_after_evidence_only_append(tmp_path):
     )
     history.append_anchors(
         anchors=(
-            runner.evidence_anchor("artifact:later", b"later evidence", "text/plain"),
+            api.structural_evidence_anchor(
+                record_id="artifact:later",
+                content=b"later evidence",
+                media_type="text/plain",
+            ),
         ),
         transaction_time=TIME,
         actor_id=ACTOR,
