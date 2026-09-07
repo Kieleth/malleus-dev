@@ -19,9 +19,19 @@ import pytest
 import malleus.compiler as api
 from research.semantic_reentry_protocol.test_consumer import bundle
 from research.semantic_reentry_protocol.test_prerequisites import (
-    ACTOR, E4, E7, MAPPING, SOURCE, TIME,
-    admit, artifact, canonical, compilation, complement, digest, load_plan,
-    prepare, shop,
+    ACTOR,
+    E4,
+    E7,
+    MAPPING,
+    SOURCE,
+    TIME,
+    admit,
+    artifact,
+    canonical,
+    complement,
+    digest,
+    load_plan,
+    prepare,
 )
 
 
@@ -54,13 +64,17 @@ def stage(history):
     return prepared, bind(history)
 
 
-def test_observed_correction_admission_reopen_trace_complement_and_quiescence(shop, tmp_path):
+def test_observed_correction_admission_reopen_trace_complement_and_quiescence(
+    shop, tmp_path
+):
     history, path = shop
     implementation, policy, _, before, initial = bind(history)
     before_retention = path.read_bytes()
     assessment = policy.assess_request(
-        contract=initial["contract"], view_bytes=initial["view_bytes"],
-        plan_bytes=initial["plan_bytes"], source_bytes=initial["source_bytes"],
+        contract=initial["contract"],
+        view_bytes=initial["view_bytes"],
+        plan_bytes=initial["plan_bytes"],
+        source_bytes=initial["source_bytes"],
         mapping_bytes=initial["mapping_bytes"],
         synthesizer_identity=implementation.SYNTHESIZER_IDENTITY,
     )
@@ -91,18 +105,25 @@ def test_observed_correction_admission_reopen_trace_complement_and_quiescence(sh
     assert reopened.receipt == final.receipt
     assert complement(reopened) == complement(before)
     query = reopened.graph.query("SupplierOrderState", supplier_order_id="B")
-    assert query == [{
-        "id": E7, "type": "SupplierOrderState", "supplier_order_id": "B",
-        "product_code": "Y", "source_occurrence_id": "e7", "ordered_quantity": 2,
-    }]
+    assert query == [
+        {
+            "id": E7,
+            "type": "SupplierOrderState",
+            "supplier_order_id": "B",
+            "product_code": "Y",
+            "source_occurrence_id": "e7",
+            "ordered_quantity": 2,
+        }
+    ]
     assert reopened.record_history[E4].superseded_by == E7
     assert reopened.record_history[E7].supersedes_record_id == E4
     trace = api.trace_population_record(reopened, E7)
     assert trace.change_set == candidate
     assert trace.sources[0].content == before.retained_bytes(SOURCE)
     assert trace.change_set.valid_time == api.KnowledgeValidTime("ORDER_ONLY", "e7")
-    assert json.loads(trace.population_plan_bytes)["supersessions"] == [{
-        "record_id": E7, "supersedes_record_id": E4}]
+    assert json.loads(trace.population_plan_bytes)["supersessions"] == [
+        {"record_id": E7, "supersedes_record_id": E4}
+    ]
 
     _, _, _, _, satisfied = bind(reopened_history)
     final_bytes = copy.read_bytes()
@@ -110,10 +131,11 @@ def test_observed_correction_admission_reopen_trace_complement_and_quiescence(sh
     assert copy.read_bytes() == final_bytes
     assert path.read_bytes() == final_bytes
     assert reopened_history.replay().receipt == reopened.receipt
-    print("SEMANTIC_REENTRY_INTEGRATION_EVIDENCE=" + canonical({
+    evidence = {
         "claim": "bounded retained-observation internal knowledge correction",
         "synthesizer_identity": implementation.SYNTHESIZER_IDENTITY,
         "contract_identity": inputs["contract"].identity,
+        "reentry_contract": json.loads(inputs["contract"].canonical_bytes),
         "change_set_id": candidate.change_set_id,
         "change_set_identity": candidate.identity,
         "base": json.loads(inputs["view_bytes"])["coordinates"],
@@ -126,7 +148,13 @@ def test_observed_correction_admission_reopen_trace_complement_and_quiescence(sh
         "mapping_sha256": digest(before.retained_bytes(MAPPING)),
         "traced_plan_sha256": trace.population_plan_identity,
         "no_op_candidates": 0,
-    }).decode())
+        "no_op_contract": json.loads(satisfied["contract"].canonical_bytes),
+    }
+    assert (
+        json.loads(Path(__file__).with_name("integration-result.json").read_bytes())
+        == evidence
+    )
+    print("SEMANTIC_REENTRY_INTEGRATION_EVIDENCE=" + canonical(evidence).decode())
 
 
 def test_identical_bound_inputs_produce_identical_existing_kcs_bytes(shop):
@@ -135,12 +163,16 @@ def test_identical_bound_inputs_produce_identical_existing_kcs_bytes(shop):
     before = path.read_bytes()
     first = implementation.synthesize(**inputs)
     second = implementation.synthesize(**inputs)
-    assert [member.canonical_bytes for member in first] == [prepared.change_set.canonical_bytes]
+    assert [member.canonical_bytes for member in first] == [
+        prepared.change_set.canonical_bytes
+    ]
     assert first == second
     assert path.read_bytes() == before
 
 
-def test_synthesis_never_uses_ambient_io_writer_or_live_graph_mutation(shop, monkeypatch):
+def test_synthesis_never_uses_ambient_io_writer_or_live_graph_mutation(
+    shop, monkeypatch
+):
     history, path = shop
     prepared, (implementation, _, _, replay, inputs) = stage(history)
     before = path.read_bytes()
@@ -154,12 +186,23 @@ def test_synthesis_never_uses_ambient_io_writer_or_live_graph_mutation(shop, mon
             blocked.setattr(owner, method, forbidden)
         for method in ("open", "read_bytes", "read_text", "write_bytes", "write_text"):
             blocked.setattr(Path, method, forbidden)
-        for method in ("replay", "admit", "append_anchors", "compose_change_set",
-                       "composition_context"):
+        for method in (
+            "replay",
+            "admit",
+            "append_anchors",
+            "compose_change_set",
+            "composition_context",
+        ):
             blocked.setattr(api.KnowledgeChangeHistory, method, forbidden)
         graph_type = type(replay.graph)
-        for method in ("create_entity", "create_relation", "create_signal",
-                       "create_event", "create_event_participation", "set_turn"):
+        for method in (
+            "create_entity",
+            "create_relation",
+            "create_signal",
+            "create_event",
+            "create_event_participation",
+            "set_turn",
+        ):
             original = getattr(graph_type, method)
 
             def guard(receiver, *args, _original=original, **kwargs):
@@ -186,9 +229,12 @@ def test_pinned_synthesis_needs_retention_but_cannot_perform_it(shop):
 def test_evidence_only_append_stales_candidate_at_ordinary_admission(shop):
     history, path = shop
     prepared, (implementation, _, _, replay, inputs) = stage(history)
-    candidate, = implementation.synthesize(**inputs)
-    history.append_anchors(anchors=(artifact("artifact:integration-head-change", b"{}"),),
-                           transaction_time=TIME, actor_id=ACTOR)
+    (candidate,) = implementation.synthesize(**inputs)
+    history.append_anchors(
+        anchors=(artifact("artifact:integration-head-change", b"{}"),),
+        transaction_time=TIME,
+        actor_id=ACTOR,
+    )
     before = path.read_bytes()
     assert history.replay().graph.state_digest() == replay.graph.state_digest()
     with pytest.raises(api.KnowledgeChangeRefusal) as refused:
@@ -200,7 +246,7 @@ def test_evidence_only_append_stales_candidate_at_ordinary_admission(shop):
 def test_old_contract_refuses_before_new_state_satisfaction(shop):
     history, path = shop
     prepared, (implementation, policy, _, _, inputs) = stage(history)
-    candidate, = implementation.synthesize(**inputs)
+    (candidate,) = implementation.synthesize(**inputs)
     admit(history, replace(prepared, change_set=candidate))
     _, _, _, _, latest = bind(history)
     latest["contract"] = inputs["contract"]
@@ -214,8 +260,11 @@ def test_old_contract_refuses_before_new_state_satisfaction(shop):
 def test_valid_context_from_different_head_cannot_match_old_read_model(shop):
     history, path = shop
     _, (implementation, policy, _, replay, inputs) = stage(history)
-    history.append_anchors(anchors=(artifact("artifact:integration-context-change", b"{}"),),
-                           transaction_time=TIME, actor_id=ACTOR)
+    history.append_anchors(
+        anchors=(artifact("artifact:integration-context-change", b"{}"),),
+        transaction_time=TIME,
+        actor_id=ACTOR,
+    )
     inputs["context"] = history.composition_context()
     assert history.replay().graph.state_digest() == replay.graph.state_digest()
     before = path.read_bytes()
@@ -237,7 +286,7 @@ def test_producer_cannot_bypass_bound_input_identity_checks(shop, input_name):
     assert path.read_bytes() == before
 
 
-def test_producer_imports_only_public_malleus_facade_and_no_test_helpers():
+def test_producer_imports_only_public_core_and_no_test_helpers():
     implementation = producer()
     tree = ast.parse(Path(implementation.__file__).read_text())
     modules = []
@@ -247,6 +296,15 @@ def test_producer_imports_only_public_malleus_facade_and_no_test_helpers():
         elif isinstance(node, ast.ImportFrom) and node.module:
             modules.append(node.module)
     assert "malleus.compiler" in modules
-    assert all(module == "malleus.compiler" for module in modules
-               if module == "malleus" or module.startswith("malleus."))
+    assert all(
+        module in {"malleus", "malleus.compiler"}
+        for module in modules
+        if module == "malleus" or module.startswith("malleus.")
+    )
+    assert {
+        name.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module == "malleus"
+        for name in node.names
+    } == {"KnowledgeGraph"}
     assert not any("test_" in module or module.endswith(".run") for module in modules)
