@@ -1,0 +1,95 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000420",
+  "ledger": "overseer",
+  "sequence": 420,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:24801d5f3460666237e790806ce0c5dab5f624994da82003cf46e6da7c169448",
+  "recorded_at": "2026-09-07T00:20:44Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "explicit-unstated-valid-time",
+    "type": "DOCUMENT"
+  },
+  "summary": "Admit explicit unstated valid time without inventing a timestamp or domain order.",
+  "why": "Luis approved the missing-time Core follow-on after the completed structured-source and locator work. Decision 28 selects NONE_STATED with explicit null in the current private population/change-set grammar. KnowledgeValidTime.from_data replaces the duplicated parsers; the public Shop tests prove compilation, atomic admission, reopen, trace, separate explicit replacement and cross-kind refusal. INSTANT and ORDER_ONLY retain their meanings. The document adapter, domain profiles, root ontology, Assent time model and frozen evidence remain unchanged. RED 7 failed and 9 passed; focused GREEN 358 passed; cumulative compiler and Shop gate 715 passed with the same three pre-existing evidence-regeneration failures documented separately. No release, stable-wire, time-inference, generic temporal-query, paper-evaluation or model-ranking claim is made.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "after_digest": "sha256:4c74a274c52e34feff3493f9ee935fea908c6914e83a0006ba0918f260f9c06d",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ddc28bbc894dbcd5996bb668d2a72c1534070098394756144095b570c2eacb9d"
+      },
+      {
+        "path": "design/KNOWLEDGE_PACKS.md",
+        "after_digest": "sha256:ce20b86bc690a08938d9ee2c1b7cfcd4a4f96cc2b7fe3b9a5f6b08637a4a3a1a",
+        "change": "MODIFIED",
+        "before_digest": "sha256:21cc5d21e1701a4fad03c34a019969e7153021b51b9290505d7802879c3639fa"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "after_digest": "sha256:ca24b318cb7eb84d148d257e7d7e9adbe261444112f85530be9314bd2681f861",
+        "change": "MODIFIED",
+        "before_digest": "sha256:92f03e7de4cb5149f44de5b29c811871b14c589a5a8b4837cd2e607a20055557"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "after_digest": "sha256:0810bd51c61e431165266123e8aa4caa6b656435343cbcd9c70f286c694f9b08",
+        "change": "MODIFIED",
+        "before_digest": "sha256:37795abe4624642e957040e3a3dd2e9527b20131232beb76697573850c2f290b"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/population.py",
+        "after_digest": "sha256:5a501a7c416b8414dbfcbe4d83f761ea0c148030b0b80f4b50c4047e650b747a",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3b4dd80007e899f6fa6e42a9d26e6047376873396fd1800d1da493ce48ed6da9"
+      },
+      {
+        "path": "tests/test_inquisition.py",
+        "after_digest": "sha256:60a344ffa895880ddf1c9268322a034c7906e27eacc00dbe7f7aab965c5f02df",
+        "change": "MODIFIED",
+        "before_digest": "sha256:149565630b48beaa34020e61658337c9e7bd3db95bed84f988da2876e46fbec6"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_unstated_valid_time.py",
+        "after_digest": "sha256:522b3472fa19e08ce42cdf893905e88f574ed7cc7f06852c3b2b461b2351a15d",
+        "change": "CREATED"
+      },
+      {
+        "path": "handover/2026-09-06-unstated-valid-time.md",
+        "after_digest": "sha256:adc13ab6adf956de9140264b572e7739de626a85199693fee266122025c45d9b",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "32804a0bfc7d18f207be4f8b254c87a6693aba6c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5c8b0cc9d7bdb9668df2d0c96e821ca635ea3e26",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d053424cb514365ab16eb31bbbaf6c6b89e5eccf",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "entry_hash": "sha256:152196c7b2b0d2cb8292aac8a4e58088dcdea68a6e889e54e9c5d52832670e7a"
+}
