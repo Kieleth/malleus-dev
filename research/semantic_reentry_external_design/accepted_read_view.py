@@ -6,6 +6,7 @@ import json
 
 from malleus import KnowledgeGraph
 import malleus.compiler as api
+from malleus.ledger import GENESIS
 
 
 class AcceptedViewRefusal(ValueError):
@@ -52,6 +53,8 @@ class AcceptedReadView:
     receipt_bytes: bytes
     records_bytes: bytes
     protocol_bytes: bytes
+    accepted_change_sets: tuple[api.KnowledgeChangeSet, ...]
+    record_history: tuple[tuple[str, api.KnowledgeRecordHistory], ...]
 
     @property
     def receipt_identity(self):
@@ -194,10 +197,123 @@ def _freeze(replay, context):
         "duplicate retained identity",
     )
 
+    changes, record_history = _accepted_lineage(replay, receipt, _object(records_bytes))
     return AcceptedReadView(
         context,
         replay.contract_view,
         replay.receipt.canonical_bytes,
         records_bytes,
         protocol_bytes,
+        changes,
+        record_history,
     )
+
+
+def _accepted_lineage(replay, receipt, records):
+    """Cross-check public accepted values, not replay or admit their operations."""
+    _require(
+        type(replay.change_sets) is tuple,
+        "MALFORMED_INPUT",
+        "accepted KCS tuple required",
+    )
+    changes = []
+    for value in replay.change_sets:
+        _require(
+            type(value) is api.KnowledgeChangeSet,
+            "MALFORMED_INPUT",
+            "typed accepted KCS required",
+        )
+        parsed = api.KnowledgeChangeSet.from_bytes(value.canonical_bytes)
+        _require(
+            parsed == value,
+            "STALE_BASE",
+            "accepted KCS value differs from canonical bytes",
+        )
+        changes.append(parsed)
+    _require(
+        len({c.change_set_id for c in changes}) == len(changes)
+        and len({c.identity for c in changes}) == len(changes),
+        "STALE_BASE",
+        "duplicate accepted change identity",
+    )
+    field = replay.binding.data["proposal"]["change_set_identity_field"]
+    _require(
+        receipt[field] == (changes[-1].identity if changes else GENESIS),
+        "STALE_BASE",
+        "accepted KCS order differs from the replay receipt",
+    )
+    operations = {}
+    for change in changes:
+        for operation in change.operations:
+            _require(
+                operation.record_id not in operations,
+                "STALE_BASE",
+                "duplicate historical record ID",
+            )
+            operations[operation.record_id] = change, operation
+    history = replay.record_history
+    _require(
+        set(history) == set(operations),
+        "STALE_BASE",
+        "accepted operations and record history differ",
+    )
+    result = []
+    for identifier, member in sorted(history.items()):
+        _require(
+            type(member) is api.KnowledgeRecordHistory,
+            "MALFORMED_INPUT",
+            "typed record history required",
+        )
+        change, operation = operations[identifier]
+        _require(
+            member.change_set_id == change.change_set_id
+            and member.operation == operation
+            and member.valid_from == change.valid_time
+            and member.supersedes_record_id == operation.supersedes_record_id,
+            "STALE_BASE",
+            "record history differs from its accepted KCS operation",
+        )
+        valid_to = None
+        if member.superseded_by is not None:
+            _require(
+                member.superseded_by in history
+                and history[member.superseded_by].supersedes_record_id == identifier,
+                "STALE_BASE",
+                "record successor link is not reciprocal",
+            )
+            valid_to = operations[member.superseded_by][0].valid_time
+        if member.supersedes_record_id is not None:
+            _require(
+                member.supersedes_record_id in history
+                and history[member.supersedes_record_id].superseded_by == identifier,
+                "STALE_BASE",
+                "record predecessor link is not reciprocal",
+            )
+        _require(
+            member.valid_to == valid_to,
+            "STALE_BASE",
+            "record validity interval differs from successor",
+        )
+        result.append(
+            (
+                identifier,
+                api.KnowledgeRecordHistory(
+                    operation=operation,
+                    change_set_id=change.change_set_id,
+                    valid_from=change.valid_time,
+                    valid_to=valid_to,
+                    supersedes_record_id=operation.supersedes_record_id,
+                    superseded_by=member.superseded_by,
+                ),
+            )
+        )
+    active = {
+        identifier for identifier, member in result if member.superseded_by is None
+    }
+    exported = {member["id"] for family in records.values() for member in family}
+    _require(
+        active == exported,
+        "STALE_BASE",
+        "active record history differs from graph exports",
+    )
+    return tuple(changes), tuple(result)
