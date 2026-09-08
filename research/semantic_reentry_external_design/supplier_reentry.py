@@ -465,6 +465,19 @@ class SupplierSourceModel:
         )
 
 
+def _require_modeled_goal(fragment, goal):
+    # Mapping support is intentionally wider than the permitted action result.
+    _need(
+        fragment is not None
+        and _object(fragment)["records"]["entities"][0]["properties"][
+            "ordered_quantity"
+        ]
+        == goal["quantity"],
+        "MODEL_DISAGREEMENT",
+        "prediction must satisfy the exact goal, not merely be mappable",
+    )
+
+
 class SupplierActionStrategy:
     entrypoint = "SupplierActionStrategy.payload"
 
@@ -492,11 +505,7 @@ class SupplierActionStrategy:
             mapping=mapping,
             source_id=logical_source_id,
         )
-        _need(
-            fragment is not None,
-            "MODEL_DISAGREEMENT",
-            "model did not predict an amendment",
-        )
+        _require_modeled_goal(fragment, goal)
         return _canonical(
             _permitted_payload(goal, operator, source_sha256, logical_source_id)
         )
@@ -809,6 +818,16 @@ def _linked_update(
         "EVIDENCE_DISAGREEMENT",
         "accepted correction differs from the exact observed mapping",
     )
+    _need(
+        observation["observation_result"]
+        == (
+            "CONFIRMED"
+            if target["properties"]["ordered_quantity"] == goal["quantity"]
+            else "CONTRADICTED"
+        ),
+        "EVIDENCE_DISAGREEMENT",
+        "observation result differs from the accepted observed quantity and goal",
+    )
     domain = original["domain"]
     _need(
         change.base_acceptance_head == domain["kcs_acceptance_head"]
@@ -899,19 +918,32 @@ def _episode(view, original, rule, goal, mapping, before, target):
         "EVIDENCE_DISAGREEMENT",
         "observation execution or contract binding differs",
     )
-    if observation["observation_result"] != "CONFIRMED":
+    if observation["observation_result"] == "INDETERMINATE":
         return "REFUSED", "EPISODE_TERMINAL"
     if target["id"] == mapping["initial_record_id"]:
+        _, captured = _source(view, observation["observed_source_artifact_id"])
+        mapped = supplier_components.map_observation(
+            captured,
+            before_bytes=before,
+            source_sha256=original["pre_state_source"]["bytes_sha256"],
+            goal=goal,
+            operator=rule["operator"],
+            mapping=mapping,
+            source_id=rule["logical_source_id"],
+        )
+        if mapped is None:
+            return "REFUSED", "EPISODE_TERMINAL"
         return "PENDING", "AWAITING_OBSERVED_KCS"
     _need(
-        target["id"] == mapping["replacement_record_id"]
-        and target["properties"]["ordered_quantity"] == goal["quantity"],
+        target["id"] == mapping["replacement_record_id"],
         "EVIDENCE_DISAGREEMENT",
         "current target is not this episode's observed correction",
     )
     _linked_update(
         view, original, rule, goal, mapping, before, target, observation, outcome
     )
+    if target["properties"]["ordered_quantity"] != goal["quantity"]:
+        return "REFUSED", "GOAL_UNSATISFIED"
     return "SATISFIED", "LINKED_OBSERVED_KCS"
 
 
@@ -998,11 +1030,7 @@ class SupplierReentrySynthesizer:
             mapping=mapping,
             source_id=rule["logical_source_id"],
         )
-        _need(
-            modeled is not None,
-            "MODEL_DISAGREEMENT",
-            "prediction must satisfy the goal and source frame",
-        )
+        _require_modeled_goal(modeled, goal)
         payload = _object(
             update_strategy.payload(
                 before_bytes=before,

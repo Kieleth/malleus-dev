@@ -11,6 +11,9 @@ _PROPERTY_SOURCES = {
     "product_code": "product_code",
     "supplier_order_id": "supplier_order_id",
 }
+# Bounded adopter support, not the action's permitted output or a Core rule.
+# Exact implementation bytes are retained by the observed-source adapter.
+OBSERVED_REPLACEMENT_QUANTITIES = (2, 3)
 
 
 class SupplierInputError(ValueError):
@@ -257,7 +260,7 @@ def map_observation(
         return None
     if not (
         before["quantity"] == operator["expected_quantity"]
-        and observed["quantity"] == operator["requested_quantity"]
+        and observed["quantity"] in OBSERVED_REPLACEMENT_QUANTITIES
         and observed["event_id"] == operator["new_source_occurrence_id"]
         and all(
             observed[field] == before[field]
@@ -266,7 +269,7 @@ def map_observation(
     ):
         _refuse(
             "UNSUPPORTED_CHANGE",
-            "Supplied row disagrees with the declared replacement or source frame",
+            "Require a supported observed replacement (2 or 3) and the declared source frame",
         )
     return _population_fields(
         observed,

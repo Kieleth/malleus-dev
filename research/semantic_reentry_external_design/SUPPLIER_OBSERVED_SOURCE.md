@@ -1,7 +1,7 @@
 # Observed supplier source to existing KCS
 
 REFERENCE_IMPLEMENTATION under the compiler-enabled state-version and experimental
-one-action profiles. The exact-two mapping and evidence policy are the approved
+one-action profiles. The bounded source mapping and evidence policy are the approved
 ADOPTER_CHOICE. Tests are CONFORMANCE_FIXTURE, not a new public protocol contract.
 
 Claim: exact independently captured supplier bytes can prepare one existing KCS
@@ -29,8 +29,11 @@ proposal domain. Legitimate unrelated accepted progress is not silently undone.
 
 Invoke the existing pure map_observation on those bytes and the explicit operator.
 The operator must agree with the accepted action. INDETERMINATE refuses. Unchanged
-bytes with CONTRADICTED yield None without retention. A mapped replacement requires
-CONFIRMED; an inconsistent verdict refuses. Unsupported quantities or source fields
+bytes with CONTRADICTED yield None without retention. The research-v2 mapper
+supports actual quantity 2 with CONFIRMED and actual quantity 3 with CONTRADICTED.
+Both can prepare the observed replacement; only 2 meets the exact-two goal.
+The observation result is checked separately from mapping support, and an
+inconsistent verdict refuses. Unsupported quantities or source fields
 remain evidence, not invented facts. Execution SUCCEEDED is never a prerequisite.
 
 Population requires RETAINED_SOURCE while protocol capture is SOURCE_ARTIFACT.

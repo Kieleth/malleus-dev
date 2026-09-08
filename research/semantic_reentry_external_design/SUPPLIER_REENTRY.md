@@ -69,7 +69,8 @@ the existing pure model_amendment. No world change is inferred from this output.
 
 SupplierActionStrategy.payload consumes pre-state and prediction bytes, their explicit
 goal/operator/mapping and logical source. It validates model agreement and the frame
-through the existing independent map_observation predicate, then returns the seven
+through the existing independent map_observation predicate and a separate exact
+goal check, then returns the seven
 canonical amendment payload fields. It produces no KCS, retention or effect.
 
 SupplierReentrySynthesizer.synthesize takes the bound contract and current accepted
@@ -101,8 +102,9 @@ Unsupported operations or ambiguity behavior return explicit refusal.
 
 Use the stable action key to reconcile existing work. Partial context/proposal/check/
 authorization/dispatch/receipt progress returns PENDING, not another candidate.
-Terminal rejection or unsupported/contradictory terminal observation cannot restore
-the attempt budget. Missing observation or missing admitted correction remains pending.
+Terminal rejection or unsupported observation cannot restore the attempt budget.
+A supported contradictory observation can await its ordinary KCS admission without
+restoring that budget. Missing observation or missing admitted correction remains pending.
 A successful receipt never proves the goal; a failed receipt remains failed.
 
 For acted satisfaction, locate the current target's accepted KCS through the view's
@@ -112,6 +114,12 @@ outcome contract and captured source bytes. Retained-only candidates, unrelated
 quantity-two facts, model output and receipt bytes cannot close the episode.
 Only linked observed admission plus the equality goal returns SATISFIED. A supporting
 observation may close the goal after FAILED without rewriting failure or asserting cause.
+With the research-v2 observed mapper, an actual quantity-three replacement is
+admissible but fails the exact-two goal. After verifying the same accepted
+observation closure, return REFUSED / GOAL_UNSATISFIED, current quantity 3,
+shortfall 0 and no candidate. Reopening or reevaluating does not restore the
+attempt budget. An invalid binding refuses EVIDENCE_DISAGREEMENT instead of
+using the unwanted quantity as a shortcut around evidence verification.
 
 Conformance: canonical contract/value round-trip; pure deterministic candidate and
 independent model/frame agreement; real subtype/submission; complete accepted-state

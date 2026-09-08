@@ -683,6 +683,7 @@ def synthesized_authorized_prefix(tmp_path_factory, reentry_prefix):
         "binding-type",
         "over-quantity",
         "over-quantity-binding-type",
+        "over-quantity-observation-result",
     ],
 )
 def test_synthesized_action_observed_kcs_and_fresh_quiescence(
@@ -736,6 +737,10 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert len(attempts) == 1
     assert authority.domain_frame(owner.replay()) == frame
     assert fresh_evaluation(owner, original).status == "PENDING"
+    if fault == "over-quantity-observation-result":
+        # A wrong observer judgment can be a valid recorded protocol object.
+        # The mapper must independently check its agreement with captured bytes.
+        monkeypatch.setattr(supplier_observation, "_classify", lambda *_: "CONFIRMED")
     supplier_observation.observe_supplier_execution(
         **observe.observation_arguments(owner, source)
     )
@@ -745,11 +750,12 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert actual == source.read_bytes()
     if fault.startswith("over-quantity"):
         assert json.loads(actual)["quantity"] == 3
-        assert (
-            captured.protocol_replay.data["records"]["observation:supplier:1"][
-                "record"
-            ]["observation_result"]
-            == "CONTRADICTED"
+        assert captured.protocol_replay.data["records"]["observation:supplier:1"][
+            "record"
+        ]["observation_result"] == (
+            "CONFIRMED"
+            if fault == "over-quantity-observation-result"
+            else "CONTRADICTED"
         )
     assert fresh_evaluation(owner, original).status != "SATISFIED"
     case = json.loads((entry.ingress.FIXTURE / "case.json").read_bytes())
@@ -796,7 +802,7 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
             return original_canonical(value)
 
         monkeypatch.setattr(supplier_observed_source, "_canonical", typed_binding_fault)
-    prepared = supplier_observed_source.prepare_observed_supplier_change(
+    preparation_arguments = dict(
         history=owner,
         **entry.position(owner),
         original_context_id=entry.CONTEXT,
@@ -811,6 +817,22 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         history_profile=core.STATE_VERSION_PROFILE,
         transaction_time=population.TIME,
         actor_id=population.ACTOR,
+    )
+    if fault == "over-quantity-observation-result":
+        before_mapping = owner.path.read_bytes(), owner.replay().receipt
+        with pytest.raises(
+            supplier_observed_source.SupplierObservationMappingError
+        ) as caught:
+            supplier_observed_source.prepare_observed_supplier_change(
+                **preparation_arguments
+            )
+        assert caught.value.reason == "EVIDENCE_DISAGREEMENT"
+        assert (owner.path.read_bytes(), owner.replay().receipt) == before_mapping
+        assert authority.domain_frame(owner.replay()) == frame
+        assert len(attempts) == 1
+        return
+    prepared = supplier_observed_source.prepare_observed_supplier_change(
+        **preparation_arguments
     )
     assert authority.domain_frame(owner.replay()) == frame
     if fault == "unchanged-success":
