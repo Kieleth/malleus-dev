@@ -148,6 +148,33 @@ def test_contract_and_view_cannot_receive_direct_graph_mutation(reentry_inputs):
     assert (owner.path.read_bytes(), view.records_bytes) == before
 
 
+def test_proposed_episode_is_pending_before_later_indexes_exist(reentry_inputs):
+    owner, view, original, contract = reentry_inputs
+    candidate = entry.synthesize(contract, view).candidates[0]
+    entry.entry.api().submit_supplier_proposal(
+        history=owner,
+        original_context_bytes=original,
+        action_bytes=candidate,
+        proposal_key="supplier:synthesized:proposal",
+        context_actor_id=entry.entry.ACTOR,
+        artifact_version="research-v1",
+        **entry.entry.position(owner),
+    )
+    state = owner.replay().protocol_replay.data["state"]["protocol"]
+    assert "dispatch_by_action" not in state
+    result = entry.fresh_evaluation(owner, original)
+    assert (result.status, result.reason) == ("PENDING", "AWAITING_DISPATCH")
+    assert not result.candidates
+
+
+def test_missing_declared_index_is_not_an_undeclared_index(reentry_inputs):
+    view = reentry_inputs[1]
+    assert entry.api()._index(view, "dispatch_by_action", [entry.entry.ACTION]) is None
+    with pytest.raises(entry.api().ReentryRefusal) as error:
+        entry.api()._index(view, "invented_lifecycle_index", [entry.entry.ACTION])
+    assert error.value.reason == "UNSUPPORTED"
+
+
 def test_implementation_capsule_contains_exact_selected_sources():
     api = entry.api()
     value = json.loads(api.IMPLEMENTATION_BYTES)
