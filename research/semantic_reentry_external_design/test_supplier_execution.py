@@ -249,3 +249,124 @@ def test_ineligible_dispatch_never_attempts_source(
         source.read_bytes(),
         owner.replay().receipt,
     ) == before
+
+
+def test_fresh_output_ids_cannot_retry_the_same_action(execution_inputs, monkeypatch):
+    args = execution_inputs
+    owner = args["history"]
+    api().dispatch_and_execute_supplier(**args)
+    repeated = dict(
+        args,
+        **entry.position(owner),
+        dispatch_id="dispatch:supplier:retry",
+        execution_id="execution:supplier:retry",
+    )
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("fresh output IDs bypassed the one-attempt action guard")
+
+    monkeypatch.setattr(api(), "_attempt", forbidden)
+    before = (
+        owner.path.read_bytes(),
+        args["source_path"].read_bytes(),
+        owner.replay().receipt,
+    )
+    with pytest.raises(ValueError) as caught:
+        api().dispatch_and_execute_supplier(**repeated)
+    authority.assert_native_refusal(caught.value, "DUPLICATE_DISPATCH_BY_ACTION")
+    assert (
+        owner.path.read_bytes(),
+        args["source_path"].read_bytes(),
+        owner.replay().receipt,
+    ) == before
+
+
+def test_receipt_retention_failure_does_not_restore_the_attempt_budget(
+    execution_inputs, monkeypatch
+):
+    args = execution_inputs
+    owner = args["history"]
+    frame = authority.domain_frame(owner.replay())
+    append = core.KnowledgeChangeHistory.append_protocol_events
+
+    def interrupted(history, **values):
+        if values["transaction"] == "execution":
+            raise OSError("controlled receipt retention failure")
+        return append(history, **values)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(
+            core.KnowledgeChangeHistory, "append_protocol_events", interrupted
+        )
+        with pytest.raises(OSError, match="receipt retention failure"):
+            api().dispatch_and_execute_supplier(**args)
+    reopened = core.KnowledgeChangeHistory.reopen(owner.path)
+    after = reopened.replay()
+    assert authority.domain_frame(after) == frame
+    records = after.protocol_replay.data["records"]
+    assert args["dispatch_id"] in records and args["execution_id"] not in records
+    assert json.loads(args["source_path"].read_bytes())["quantity"] == 2
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("unresolved dispatch was retried after reopen")
+
+    monkeypatch.setattr(api(), "_attempt", forbidden)
+    repeated = dict(
+        args,
+        history=reopened,
+        **entry.position(reopened),
+        dispatch_id="dispatch:supplier:retry",
+        execution_id="execution:supplier:retry",
+    )
+    before = reopened.path.read_bytes(), args["source_path"].read_bytes(), after.receipt
+    with pytest.raises(ValueError) as caught:
+        api().dispatch_and_execute_supplier(**repeated)
+    authority.assert_native_refusal(caught.value, "DUPLICATE_DISPATCH_BY_ACTION")
+    assert (
+        reopened.path.read_bytes(),
+        args["source_path"].read_bytes(),
+        reopened.replay().receipt,
+    ) == before
+
+
+def test_missing_execution_inputs_are_typed_without_defaults():
+    with pytest.raises(api().SupplierExecutionError, match="MALFORMED_INPUT"):
+        api().dispatch_and_execute_supplier()
+
+
+def test_substitute_execution_owner_is_not_consulted():
+    class Substitute:
+        def __getattr__(self, name):
+            pytest.fail("substitute execution owner consulted: " + name)
+
+    args = {
+        name: None
+        for name in inspect.signature(api().dispatch_and_execute_supplier).parameters
+    }
+    args["history"] = Substitute()
+    with pytest.raises(
+        api().SupplierExecutionError, match="actual owning Core history"
+    ):
+        api().dispatch_and_execute_supplier(**args)
+
+
+def test_execution_identity_imports_and_handlers_match_the_declared_boundary():
+    import ast
+    from hashlib import sha256
+
+    module = api()
+    assert module.IMPLEMENTATION_BYTES == Path(module.__file__).read_bytes()
+    assert (
+        module.IMPLEMENTATION_IDENTITY
+        == "sha256:" + sha256(module.IMPLEMENTATION_BYTES).hexdigest()
+    )
+    tree = ast.parse(module.IMPLEMENTATION_BYTES)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            assert node.module is not None
+            assert not node.module.startswith(("malleus._", "tests."))
+            assert not any(part.startswith("test_") for part in node.module.split("."))
+            assert "supplier_components" not in node.module
+        elif isinstance(node, ast.ExceptHandler):
+            assert node.type is not None
+            assert not any(isinstance(n, ast.Attribute) for n in ast.walk(node.type))
