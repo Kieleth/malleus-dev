@@ -277,6 +277,12 @@ def test_mapping_stage_cannot_import_effectors_or_admit_a_change():
     root = Path(__file__).resolve().parents[2]
     assert Path(core.__file__).resolve().is_relative_to(root / "src/malleus")
     assert Path(module.__file__).resolve().parent == Path(__file__).resolve().parent
+    gate = json.loads(
+        (Path(__file__).parent / "supplier-observed-source-gate.json").read_bytes()
+    )
+    assert str(Path(__file__).resolve().relative_to(root)) in gate["tests"]
+    assert len(gate["tests"]) == len(set(gate["tests"]))
+    assert all((root / path).is_file() for path in gate["tests"])
     for node in ast.walk(ast.parse(content)):
         if isinstance(node, ast.ImportFrom):
             assert node.module is not None
