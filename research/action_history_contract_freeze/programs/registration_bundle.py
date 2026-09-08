@@ -132,6 +132,23 @@ def bind_registration(name, packet, contract_identity):
         },
     }
     data = {k: deepcopy(v) for k, v in inputs["event"].items() if k != "header"}
+    # The original gap document retains the accepted field census. Bind it to
+    # actual event schemas; its historical unresolved status is not rewritten.
+    census = json.loads(
+        (HERE / "lifecycle" / "registration-nonblank-gap.json").read_bytes()
+    )["affected_fields"]
+    item = data["records"]["properties"]["value"]["items"]["properties"]
+    kind = item["record_type"]["const"]
+    if kind in census:
+        for field in census[kind]:
+            schema = item["record"]["properties"][field.removesuffix("[]")]
+            if field.endswith("[]"):
+                schema = schema["items"]
+            if schema["type"] != "string" or "format" in schema:
+                raise ValueError(
+                    f"nonblank census requires an unformatted string: {kind}.{field}"
+                )
+            schema["format"] = "nonblank"
     retained = obj()
     if "preimage" in inputs["artifact"]:
         data["preimage"] = deepcopy(inputs["artifact"]["preimage"])
