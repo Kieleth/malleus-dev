@@ -338,20 +338,22 @@ def _validate_references(
                     durable_commits = _durable_commits(repository)
                 if target in durable_commits:
                     continue
-                # Preserve the unresolved versus unretained diagnostic. Successful
-                # references need no separate cat-file or per-commit graph walk.
+                # Preserve commit peeling and unresolved/unretained diagnostics.
+                # Direct reachable commits need no per-reference Git command.
                 result = subprocess.run(
-                    ["git", "cat-file", "-e", f"{target}^{{commit}}"],
+                    ["git", "rev-parse", "--verify", f"{target}^{{commit}}"],
                     cwd=repository,
                     capture_output=True,
                     check=False,
+                    text=True,
                 )
                 if result.returncode:
                     raise LedgerValidationError(f"{context}: commit does not resolve")
-                raise LedgerValidationError(
-                    f"{context}: commit must be reachable from HEAD or an "
-                    "evidence/* tag"
-                )
+                if result.stdout.strip() not in durable_commits:
+                    raise LedgerValidationError(
+                        f"{context}: commit must be reachable from HEAD or an "
+                        "evidence/* tag"
+                    )
     return workstream_ids, decision_ids, canonical
 
 
