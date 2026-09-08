@@ -47,10 +47,14 @@ plan, KCS or public protocol artifact.
 Both functions reject missing/unknown rule fields and malformed source values.
 Inputs are one UTF-8 JSON object on one nonempty JSONL row. Duplicate keys,
 non-finite numbers, bool quantities, empty identifiers and multiple rows refuse.
-The mapper requires the declared new occurrence, exact target quantity,
+The mapper supports integer replacements 2 and 3 at the declared new occurrence,
 unchanged order/product and complete four-field mapping. It cannot infer
 initial-state admission or supersession authority from a supplied record ID.
 The public compiler remains responsible for checking that ID against its base.
+Mapping 3 preserves an undesired observed value; it does not change the model's
+strict one-to-two action or establish goal satisfaction. Other replacement
+quantities remain unsupported in this bounded adapter. See
+[the mismatch slice](OBSERVED_MISMATCH.md).
 
 Refusals are local SupplierInputError values with a reason string. They are not
 Core protocol events. Input dictionaries are not mutated, and outputs are

@@ -28,6 +28,7 @@ from research.semantic_reentry_external_design import (
     supplier_observed_source,
 )
 from research.semantic_reentry_external_design.accepted_read_view import (
+    AcceptedViewRefusal,
     freeze_accepted_replay,
 )
 from research.semantic_reentry_external_design.test_supplier_proposals import (
@@ -304,6 +305,75 @@ def fresh_evaluation(owner, original):
     return result
 
 
+def maintained_evaluation(reader, owner, original, prior):
+    """Conformance check over real public reads, with full replay as oracle.
+
+    Context acquisition still replays today. Keep it outside the region whose
+    no-full-replay claim is tested; never fabricate a composition fingerprint.
+    """
+    ledger_bytes = owner.path.read_bytes()
+    expected = owner.replay()
+    context = owner.composition_context()
+    position = dict(
+        expected_head_hash=expected.ledger_head,
+        expected_event_count=expected.ledger_event_count,
+    )
+    if prior.ledger_head != expected.ledger_head:
+        with pytest.raises(core.KnowledgeChangeRefusal, match="STALE_BASE"):
+            reader.current(**position)
+        with pytest.raises(AcceptedViewRefusal) as caught:
+            freeze_accepted_replay(replay=prior, context=context)
+        assert caught.value.reason == "STALE_BASE"
+        assert (
+            reader.current(
+                expected_head_hash=prior.ledger_head,
+                expected_event_count=prior.ledger_event_count,
+            ).receipt
+            == prior.receipt
+        )
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("maintained read/synthesis replayed history or invoked an effect")
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(core.KnowledgeChangeHistory, "replay", forbidden)
+        patch.setattr(core.KnowledgeHistoryProjection, "open", forbidden)
+        patch.setattr(core, "admit_structural_change", forbidden)
+        patch.setattr(supplier_execution, "dispatch_and_execute_supplier", forbidden)
+        patch.setattr(supplier_observation, "observe_supplier_execution", forbidden)
+        actual = reader.refresh(**position)
+        for field in (
+            "receipt",
+            "machine_state",
+            "record_history",
+            "retained_inputs",
+            "change_sets",
+            "contract_revisions",
+            "protocol_replay",
+            "acceptance_head",
+            "materialization_head",
+        ):
+            assert getattr(actual, field) == getattr(expected, field), field
+        assert actual.graph.snapshot() == expected.graph.snapshot()
+        for change in expected.change_sets:
+            assert actual.graph_at_change(change.change_set_id).snapshot() == (
+                expected.graph_at_change(change.change_set_id).snapshot()
+            )
+        view = freeze_accepted_replay(replay=actual, context=context)
+        contract = api().bind_supplier_reentry(
+            view=view, original_context_bytes=original, rule_source_id=RULE
+        )
+        result = synthesize(contract, view)
+        # A repeated published read and evaluation need no disk reads either.
+        patch.setattr(Path, "read_bytes", forbidden)
+        repeated = reader.current(**position)
+        assert repeated.receipt == actual.receipt
+        repeated_view = freeze_accepted_replay(replay=repeated, context=context)
+        assert synthesize(contract, repeated_view) == result
+    assert owner.path.read_bytes() == ledger_bytes
+    return actual, result
+
+
 def test_rule_variants_do_not_mutate_frozen_case():
     case = json.loads((entry.ingress.FIXTURE / "case.json").read_bytes())
     before = entry.ingress.canonical(case)
@@ -324,7 +394,7 @@ def test_model_prediction_must_meet_goal_and_frame(reentry_inputs, monkeypatch):
     monkeypatch.setattr(api().SupplierSourceModel, "predict", wrong_prediction)
     before = owner.path.read_bytes(), authority.domain_frame(owner.replay())
     result = synthesize(contract, view)
-    assert result.status == "REFUSED" and result.reason == "UNSUPPORTED_CHANGE"
+    assert result.status == "REFUSED" and result.reason == "MODEL_DISAGREEMENT"
     assert not result.candidates
     assert (owner.path.read_bytes(), authority.domain_frame(owner.replay())) == before
 
@@ -606,8 +676,11 @@ def synthesized_authorized_prefix(tmp_path_factory, reentry_prefix):
     owner, view, original, contract = reentry_inputs.__wrapped__(
         tmp_path_factory.mktemp("supplier-synthesized-lifecycle"), reentry_prefix
     )
-    frame = authority.domain_frame(owner.replay())
-    result = synthesize(contract, view)
+    prior = owner.replay()
+    frame = authority.domain_frame(prior)
+    reader = core.KnowledgeHistoryProjection.open(owner.path)
+    prior, result = maintained_evaluation(reader, owner, original, prior)
+    assert result == synthesize(contract, view)
     assert result.status == "CANDIDATES" and len(result.candidates) == 1
     entry.api().submit_supplier_proposal(
         history=owner,
@@ -618,11 +691,13 @@ def synthesized_authorized_prefix(tmp_path_factory, reentry_prefix):
         artifact_version="research-v1",
         **entry.position(owner),
     )
-    assert fresh_evaluation(owner, original).status == "PENDING"
+    prior, pending = maintained_evaluation(reader, owner, original, prior)
+    assert pending.status == "PENDING"
     for ordinal in range(2):
         entry.api().record_supplier_type_check(**entry.check_arguments(owner, ordinal))
     entry.api().decide_supplier_proposal(**entry.decision_arguments(owner))
-    assert fresh_evaluation(owner, original).status == "PENDING"
+    prior, pending = maintained_evaluation(reader, owner, original, prior)
+    assert pending.status == "PENDING"
     # Same real direct grant semantics, with this episode's actual bound goal scope.
     from malleus.ledger import content_digest
 
@@ -670,12 +745,22 @@ def synthesized_authorized_prefix(tmp_path_factory, reentry_prefix):
         )
     authority.api().decide_supplier_authorization(**authority.decision_arguments(args))
     assert authority.domain_frame(owner.replay()) == frame
-    assert fresh_evaluation(owner, original).status == "PENDING"
+    prior, pending = maintained_evaluation(reader, owner, original, prior)
+    assert pending.status == "PENDING"
     return owner.path, original, result.candidates[0]
 
 
 @pytest.mark.parametrize(
-    "fault", ["none", "after-write", "unchanged-success", "binding-type"]
+    "fault",
+    [
+        "none",
+        "after-write",
+        "unchanged-success",
+        "binding-type",
+        "over-quantity",
+        "over-quantity-binding-type",
+        "over-quantity-observation-result",
+    ],
 )
 def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     synthesized_authorized_prefix, tmp_path, monkeypatch, fault
@@ -685,14 +770,25 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     shutil.copyfile(prefix, path)
     owner = core.KnowledgeChangeHistory.reopen(path)
     before = owner.replay()
+    reader = core.KnowledgeHistoryProjection.open(path)
+    prior, pending = maintained_evaluation(reader, owner, original, before)
+    assert pending.status == "PENDING"
     frame = authority.domain_frame(before)
     source = tmp_path / "supplier.jsonl"
     source.write_bytes(before.retained_bytes(entry.ingress.SOURCE_ID))
     attempts = []
     actual_write = supplier_execution._write_source
+    expected_quantity = 3 if fault.startswith("over-quantity") else 2
 
     def controlled(stream, content):
         attempts.append(content)
+        if fault.startswith("over-quantity"):
+            # Bounded conformance perturbation of the actual write, not another
+            # action model or a fabricated observation/admission boundary.
+            assert json.loads(content)["quantity"] == 2
+            content = (
+                entry.ingress.canonical(dict(json.loads(content), quantity=3)) + b"\n"
+            )
         if fault != "unchanged-success":
             actual_write(stream, content)
         if fault == "after-write":
@@ -719,7 +815,12 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     )
     assert len(attempts) == 1
     assert authority.domain_frame(owner.replay()) == frame
-    assert fresh_evaluation(owner, original).status == "PENDING"
+    prior, pending = maintained_evaluation(reader, owner, original, prior)
+    assert pending.status == "PENDING"
+    if fault == "over-quantity-observation-result":
+        # A wrong observer judgment can be a valid recorded protocol object.
+        # The mapper must independently check its agreement with captured bytes.
+        monkeypatch.setattr(supplier_observation, "_classify", lambda *_: "CONFIRMED")
     supplier_observation.observe_supplier_execution(
         **observe.observation_arguments(owner, source)
     )
@@ -727,7 +828,17 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert authority.domain_frame(captured) == frame
     actual = captured.retained_bytes("source:supplier:captured:1")
     assert actual == source.read_bytes()
-    assert fresh_evaluation(owner, original).status != "SATISFIED"
+    if fault.startswith("over-quantity"):
+        assert json.loads(actual)["quantity"] == 3
+        assert captured.protocol_replay.data["records"]["observation:supplier:1"][
+            "record"
+        ]["observation_result"] == (
+            "CONFIRMED"
+            if fault == "over-quantity-observation-result"
+            else "CONTRADICTED"
+        )
+    prior, pending = maintained_evaluation(reader, owner, original, prior)
+    assert pending.status != "SATISFIED"
     case = json.loads((entry.ingress.FIXTURE / "case.json").read_bytes())
     if fault == "none":
         # The same current supplier value from an unrelated accepted source cannot
@@ -756,7 +867,7 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         )
         assert not unrelated_result.candidates
         assert authority.domain_frame(owner.replay()) == frame
-    if fault == "binding-type":
+    if fault in ("binding-type", "over-quantity-binding-type"):
         # Faulty mapper serialization, not a forged accepted view or substitute KCS.
         # Actual source, preparation, admission and replay still use real boundaries.
         original_canonical = supplier_observed_source._canonical
@@ -772,7 +883,7 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
             return original_canonical(value)
 
         monkeypatch.setattr(supplier_observed_source, "_canonical", typed_binding_fault)
-    prepared = supplier_observed_source.prepare_observed_supplier_change(
+    preparation_arguments = dict(
         history=owner,
         **entry.position(owner),
         original_context_id=entry.CONTEXT,
@@ -788,16 +899,35 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         transaction_time=population.TIME,
         actor_id=population.ACTOR,
     )
+    if fault == "over-quantity-observation-result":
+        before_mapping = owner.path.read_bytes(), owner.replay().receipt
+        with pytest.raises(
+            supplier_observed_source.SupplierObservationMappingError
+        ) as caught:
+            supplier_observed_source.prepare_observed_supplier_change(
+                **preparation_arguments
+            )
+        assert caught.value.reason == "EVIDENCE_DISAGREEMENT"
+        assert (owner.path.read_bytes(), owner.replay().receipt) == before_mapping
+        assert authority.domain_frame(owner.replay()) == frame
+        assert len(attempts) == 1
+        _, refused = maintained_evaluation(reader, owner, original, prior)
+        assert refused.status != "SATISFIED" and not refused.candidates
+        return
+    prepared = supplier_observed_source.prepare_observed_supplier_change(
+        **preparation_arguments
+    )
     assert authority.domain_frame(owner.replay()) == frame
     if fault == "unchanged-success":
         assert prepared is None
-        stopped = fresh_evaluation(owner, original)
+        prior, stopped = maintained_evaluation(reader, owner, original, prior)
         assert stopped.status == "REFUSED" and stopped.reason == "EPISODE_TERMINAL"
         assert not stopped.candidates
         assert authority.domain_frame(owner.replay()) == frame
         return
     assert type(prepared.change_set) is core.KnowledgeChangeSet
-    assert fresh_evaluation(owner, original).status == "PENDING"
+    prior, pending = maintained_evaluation(reader, owner, original, prior)
+    assert pending.status == "PENDING"
     # Even exact retained candidate bytes are not an accepted observed correction.
     retained_path = tmp_path / "retained-only.jsonl"
     shutil.copyfile(owner.path, retained_path)
@@ -829,7 +959,12 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         transaction_time=population.TIME,
         actor_id=population.ACTOR,
     )
-    assert final.graph.get_node(population.REPLACEMENT)["ordered_quantity"] == 2
+    prior, maintained_result = maintained_evaluation(reader, owner, original, prior)
+    assert prior.receipt == final.receipt
+    assert (
+        final.graph.get_node(population.REPLACEMENT)["ordered_quantity"]
+        == expected_quantity
+    )
     assert len(final.change_sets) == len(before.change_sets) + 1
     for family, members in before.graph.export_records().items():
         assert [
@@ -849,6 +984,7 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         == "supplier-order-state:B:e4"
     )
     trace = core.trace_population_record(final, population.REPLACEMENT)
+    assert core.trace_population_record(prior, population.REPLACEMENT) == trace
     assert trace.sources[0].content == actual
     assert (
         json.loads(
@@ -878,10 +1014,12 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     shutil.copyfile(owner.path, reopened_path)
 
     def forbidden(*args, **kwargs):
-        pytest.fail("reopen or satisfied evaluation invoked an effect/model")
+        pytest.fail("reopen or terminal evaluation invoked an effect/model")
 
     monkeypatch.setattr(supplier_execution, "_attempt", forbidden)
     monkeypatch.setattr(api().SupplierSourceModel, "predict", forbidden)
+    _, repeated_terminal = maintained_evaluation(reader, owner, original, prior)
+    assert repeated_terminal == maintained_result
     reopened = core.KnowledgeChangeHistory.reopen(reopened_path)
     reopened_replay = reopened.replay()
     assert reopened_replay.receipt == final.receipt
@@ -889,15 +1027,24 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert reopened_replay.protocol_replay == final.protocol_replay
     assert [p.name for p in reopen_directory.iterdir()] == ["history.jsonl"]
     bytes_before = reopened_path.read_bytes(), source.read_bytes()
-    stopped = fresh_evaluation(reopened, original)
-    if fault == "binding-type":
+    rebuilt_reader = core.KnowledgeHistoryProjection.open(reopened_path)
+    _, stopped = maintained_evaluation(
+        rebuilt_reader, reopened, original, reopened_replay
+    )
+    assert stopped == maintained_result == fresh_evaluation(reopened, original)
+    if fault in ("binding-type", "over-quantity-binding-type"):
         assert (stopped.status, stopped.reason) == ("REFUSED", "EVIDENCE_DISAGREEMENT")
         assert stopped.candidates == ()
         assert (reopened_path.read_bytes(), source.read_bytes()) == bytes_before
         assert len(attempts) == 1
         return
-    assert stopped.status == "SATISFIED" and stopped.reason == "LINKED_OBSERVED_KCS"
-    assert stopped.finding.current_quantity == 2 and stopped.finding.shortfall == 0
+    assert (stopped.status, stopped.reason) == (
+        ("REFUSED", "GOAL_UNSATISFIED")
+        if fault == "over-quantity"
+        else ("SATISFIED", "LINKED_OBSERVED_KCS")
+    )
+    assert stopped.finding.current_quantity == expected_quantity
+    assert stopped.finding.required_quantity == 2 and stopped.finding.shortfall == 0
     assert stopped.candidates == () and stopped.model_prediction is None
     assert fresh_evaluation(reopened, original) == stopped
     assert (reopened_path.read_bytes(), source.read_bytes()) == bytes_before

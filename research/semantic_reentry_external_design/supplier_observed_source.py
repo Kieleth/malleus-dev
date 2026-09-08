@@ -312,9 +312,16 @@ def prepare_observed_supplier_change(
         mapping=mapping,
         source_id=source_id,
     )
+    meets_goal = (
+        fragment is not None
+        and _object(fragment)["records"]["entities"][0]["properties"][
+            "ordered_quantity"
+        ]
+        == goal["quantity"]
+    )
     _need(
         observation["observation_result"]
-        == ("CONTRADICTED" if fragment is None else "CONFIRMED"),
+        == ("CONFIRMED" if meets_goal else "CONTRADICTED"),
         "EVIDENCE_DISAGREEMENT",
         "mapped source and recorded observation disagree",
     )
@@ -400,7 +407,7 @@ def prepare_observed_supplier_change(
     )
 
 
-ADAPTER_ID = "malleus.reentry.supplier.observed-source/research-v1"
+ADAPTER_ID = "malleus.reentry.supplier.observed-source/research-v2"
 ADAPTER_IDENTITY = _digest(
     ADAPTER_ID.encode()
     + b"\0"

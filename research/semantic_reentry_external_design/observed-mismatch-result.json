@@ -1,0 +1,209 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "SUPPORTED_UNDESIRED_OBSERVATION_WITH_STRICT_ACTION_GOAL_AND_NO_RETRY",
+  "status": "GREEN_RESEARCH_LOCAL_NOT_MERGED",
+  "base": {
+    "commit": "f99c886f939db95a003f6d30d2e73d3f2a341020",
+    "tree": "98a018cdc44947d36c6c9b4dd5432373d5234be8",
+    "core_source_tree": "31e11514b1f999dd145724c3a0f9b7e95c126595"
+  },
+  "red": {
+    "commit": "719426ad",
+    "tree": "07f9e24f0c274328a4d90e76b47a47daa189479f",
+    "observation": "The component and actual quantity-three capture paths refused UNSUPPORTED_CHANGE; the strict-model test required a distinct MODEL_DISAGREEMENT result."
+  },
+  "implementation": {
+    "commit": "aef6071479938e211e0103ad6a1b129a64ae96d6",
+    "tree": "10fee0bfd5520a15b14d5958a88492fe93afe853",
+    "python": "3.12.9",
+    "mapper_id": "malleus.reentry.supplier.observed-source/research-v2",
+    "mapper_identity": "sha256:d983b00f933232fb6cad5680d0bd4aa348c671167acdcd86562c8014a3e627f9",
+    "synthesizer_identity": "sha256:dff2842e297d9803cff5336b242746bec535dae4c627cb43d138700843f9b6e5"
+  },
+  "execution_binding": "The focused run began on the working-tree code later committed as aef60714; its runtime bytes stayed unchanged. All unified groups started at clean aef60714. Subsequent changes are documentation and this evidence receipt only.",
+  "unified_gate": "research/semantic_reentry_external_design/observed-mismatch-gate.json",
+  "partitions": {
+    "a": [
+      0,
+      1,
+      2,
+      7,
+      17
+    ],
+    "b": [
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10
+    ],
+    "c": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20
+    ]
+  },
+  "coverage": {
+    "collected": 436,
+    "reported": 436,
+    "unique": 436,
+    "missing": [],
+    "extra": [],
+    "failures": 0,
+    "skipped": 1
+  },
+  "validation": {
+    "red-component": {
+      "path": "/private/tmp/malleus-reentry-mismatch.RseymI/red-component.xml",
+      "sha256": "e6c2411a24c3d27980afd662550d81abc5ed0fa93f4da28a11683322cbe7406e",
+      "count": 1,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "red-e2e": {
+      "path": "/private/tmp/malleus-reentry-mismatch.RseymI/red-e2e.xml",
+      "sha256": "02c021717dd4c7f7c9f7c7941b065a3827a4da0ca754472a456f0c80a8ff8b58",
+      "count": 3,
+      "failed": 3,
+      "errors": 0,
+      "skipped": 0
+    },
+    "green-components": {
+      "path": "/private/tmp/malleus-reentry-mismatch.RseymI/green-components.xml",
+      "sha256": "42b1ab345c1a62acc1e0f726ddea1c7bb3a612979fab708965a5846f92e90621",
+      "count": 88,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "green-focused": {
+      "path": "/private/tmp/malleus-reentry-mismatch.RseymI/green-focused.xml",
+      "sha256": "cca77c04eb4ebf29f44b19372a0da267d1b9f08d0da53df11f25bb795b8f2eb4",
+      "count": 117,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "unified-a": {
+      "path": "/private/tmp/malleus-reentry-mismatch.RseymI/unified-a.xml",
+      "sha256": "6251d004343c7011a3e06de0c2332e12a7196db2a14be43e1a4679baff0046db",
+      "count": 135,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "unified-b": {
+      "path": "/private/tmp/malleus-reentry-mismatch.RseymI/unified-b.xml",
+      "sha256": "2c685ee165f646978f0f35b3e940b692c01f76a38ab3b7753a45af806e4aa815",
+      "count": 173,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "unified-c": {
+      "path": "/private/tmp/malleus-reentry-mismatch.RseymI/unified-c.xml",
+      "sha256": "7f89f7a39e4c05b9ae3cb09834b2ebb5f33d85e8df687d6d09d9d9a06bbe5f0a",
+      "count": 128,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 1,
+      "skip_details": [
+        {
+          "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+          "name": "test_public_and_private_doctrine_do_not_diverge",
+          "reason": "the paper-program doctrine is not present in this tree"
+        }
+      ]
+    }
+  },
+  "outcomes": [
+    {
+      "case": "over-quantity",
+      "goal_quantity": 2,
+      "accepted_quantity": 3,
+      "execution_status": "SUCCEEDED",
+      "observation_result": "CONTRADICTED",
+      "reentry_status": "REFUSED",
+      "reentry_reason": "GOAL_UNSATISFIED",
+      "shortfall": 0,
+      "candidate_count": 0,
+      "dispatch_count": 1,
+      "ledger_event_count": 74,
+      "ledger_head": "sha256:4a0e7c6d03bad5091ed9ade690daa610f1ae76809ea02df28a9d13662e66bd07",
+      "graph_digest": "sha256:ef6ff9da21ec17d1b1a08c8c2d6d3966a987300c6a0ed414db508de347d3c80e",
+      "ledger_path": "/private/tmp/malleus-reentry-mismatch.RseymI/unified-a/test_synthesized_action_observ4/history.jsonl",
+      "ledger_sha256": "838766e2ff364655cc2c1bf192c228f21ebb93329a2c69d3fe1db7045f6af57a"
+    },
+    {
+      "case": "over-quantity-binding-type",
+      "accepted_quantity": 3,
+      "reentry_status": "REFUSED",
+      "reentry_reason": "EVIDENCE_DISAGREEMENT",
+      "candidate_count": 0,
+      "dispatch_count": 1,
+      "ledger_event_count": 74,
+      "ledger_head": "sha256:cbdbca256665b8022d3cb6c65f1857b46095aa21c3758739d36d75702a1e1748",
+      "ledger_path": "/private/tmp/malleus-reentry-mismatch.RseymI/unified-a/test_synthesized_action_observ5/history.jsonl",
+      "ledger_sha256": "ddd8dffae11a904b7869901e8aa41153a5ea963f658810b9c7eef4f810671157"
+    },
+    {
+      "case": "over-quantity-observation-result",
+      "accepted_quantity": 1,
+      "observation_result": "CONFIRMED",
+      "actual_source_quantity": 3,
+      "preparation_refusal": "EVIDENCE_DISAGREEMENT",
+      "no_retention_during_refused_preparation": true,
+      "ledger_path": "/private/tmp/malleus-reentry-mismatch.RseymI/unified-a/test_synthesized_action_observ6/history.jsonl",
+      "ledger_sha256": "ec4c9eefb3dd7cdcc3c73a650c34bffec69c937e11094af0624c64bee9558919"
+    }
+  ],
+  "reproducibility": "All seven lifecycle histories are byte-identical between focused and unified runs. A separate read-only process reopened and reevaluated the two accepted quantity-three histories through production modules without test-helper imports. Evidence files are temporary local artifacts, not packaged runtime inputs.",
+  "source_and_history": "The actual captured B/Y/3 row at reentry-amendment-1 supersedes supplier-order-state:B:e4 through the ordinary change:plan:supplier:observed-population:1 KCS. All other accepted records and history are preserved. No canonical Shop fixture or quantity-two oracle supplies the observed three.",
+  "scope_audit": {
+    "core_changed": false,
+    "ontology_changed": false,
+    "locked_fixture_changed": false,
+    "paper_changed": false,
+    "new_dependencies": false,
+    "new_public_contract": false,
+    "direct_graph_writer": false,
+    "automatic_retry": false,
+    "merged": false,
+    "pushed": false,
+    "publication": false
+  },
+  "limitations": [
+    "Controlled write perturbation, not a second executor implementation or source-truth claim.",
+    "Exactly-two goal remains contract-local, not accepted customer demand.",
+    "Only observed replacements 2 and 3 are supported; action/model remains 1 to 2.",
+    "Independent capture implementation and actor ID, not OS isolation or institutional independence.",
+    "Configured-environment scoped tests, not full repository CI or clean-install proof.",
+    "No production supplier, delivery, Robotics, general planner, public Re-entry SDK or maintained-projector claim."
+  ],
+  "core_backlog": "/Users/luis/Projects/malleus-dev/handover/2026-09-08-core-backlog.md#accepted-backlog-maintained-ledger-fed-graph",
+  "landing_order": "Consumer-only change, based on f99c886f. This branch is not merged. Core owns any integration with its separately evolving projector work; verify the combined runtime epoch and relevant gate before landing.",
+  "content_hashes": {
+    "research/semantic_reentry_external_design/OBSERVED_MISMATCH.md": "1860a6186413c6fdbe70a733be3b45cbc1e28b341d0e0bf962dea0135d548301",
+    "research/semantic_reentry_external_design/README.md": "49dfaefbf113b125ec30c17cb3eb3e479d36b8c924c2e9232cc196b527ea0828",
+    "research/semantic_reentry_external_design/SUPPLIER_COMPONENTS.md": "d87a02f105a608c35986cf725cb0b250ef27c32807f28513ed5d00903024a21e",
+    "research/semantic_reentry_external_design/SUPPLIER_OBSERVED_SOURCE.md": "511ee7c40ccd90dbd958da9fc60c568dc00393f6f6dfc653c23f14d7c08983ae",
+    "research/semantic_reentry_external_design/SUPPLIER_REENTRY.md": "70937b2069dc5df301c9c2ed1e3740b522b1cb1e074749638caa9e80e0807108",
+    "research/semantic_reentry_external_design/observed-mismatch-gate.json": "3f717d64f07542157b3f7ebe1dfd0d35366ce71ce8a6d1b5704bdb061d4a939d",
+    "research/semantic_reentry_external_design/supplier_components.py": "2d7eedd9566fd9b5b062f09c194efdc4ba4b72d3589514cca4f98df6a5d3b172",
+    "research/semantic_reentry_external_design/supplier_observed_source.py": "6ebfe4758d9146cc073ff920cb09030db86f73d61c4b48a067a324ad9edb0ccc",
+    "research/semantic_reentry_external_design/supplier_reentry.py": "765791f62086b8d2fc29ba81370f2ef207b4994444e39954c2226dce4a5b030c",
+    "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py": "dc4a9bb164f67b878acf47dc2fca40a12807ea75d99f6dc8569c66c9b3d80e8f",
+    "research/semantic_reentry_external_design/test_supplier_components.py": "9187e798baf3af6fbfb0f755da3d0fe6c4f227f8d231ecd3b966c6f7d2ded7f1",
+    "research/semantic_reentry_external_design/test_supplier_reentry.py": "95ef23566cb1ce5df43156462cae8c5ee7f0bbb4118a876c1217d11d7d9a5f7c"
+  },
+  "manifest_scope": "Hashes cover all 12 changed content files other than this receipt. This receipt cannot contain its own hash or its final enclosing commit; those are supplied in the handoff."
+}
