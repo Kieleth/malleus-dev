@@ -70,3 +70,19 @@ receipt and unchanged domain. No effect occurs inside Core validation or replay.
 Pre-action checks: no server, endpoint, installation, paid/physical effect, Core,
 ontology, locked fixture or paper edit. Only the explicitly controlled synthetic
 file is writable through this stage. Required inputs have no inferred defaults.
+
+## Retry conformance fixture correction
+
+The first expanded 32-test execution/receipt gate passed 31 tests. Its fresh-ID
+retry test used dispatch time 06:10 after the prior receipt at 06:20. Core correctly
+returned KnowledgeChangeRefusal/MALFORMED_HISTORY for decreasing transaction time;
+the assertion incorrectly expected the later duplicate-action guard. A copied-log
+probe with 06:21 reached ProtocolProgramRefusal/DUPLICATE_DISPATCH_BY_ACTION instead.
+Neither probe changed source or ledger. This is a test-fixture defect, not a runtime
+repair or permission bypass. The original failed run remains retained.
+
+The corrected class regression checks the timestamp ordering explicitly and keeps
+both cases: backdated input must reach the exact outer ledger refusal; otherwise
+valid fresh IDs/times must reach the exact no-repeat refusal. Both assert no attempt
+and byte-identical source/history. The suite also separately covers a dispatch whose
+receipt retention failed after writing, so the missing receipt cannot restore budget.

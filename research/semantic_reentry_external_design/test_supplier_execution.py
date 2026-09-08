@@ -251,16 +251,30 @@ def test_ineligible_dispatch_never_attempts_source(
     ) == before
 
 
-def test_fresh_output_ids_cannot_retry_the_same_action(execution_inputs, monkeypatch):
+@pytest.mark.parametrize("backdated", [False, True])
+def test_fresh_output_ids_cannot_retry_the_same_action(
+    execution_inputs, monkeypatch, backdated
+):
+    from malleus.ledger import aware_datetime
+
     args = execution_inputs
     owner = args["history"]
     api().dispatch_and_execute_supplier(**args)
+    retry_time = args["dispatched_at"] if backdated else "2026-09-08T06:21:00Z"
     repeated = dict(
         args,
         **entry.position(owner),
         dispatch_id="dispatch:supplier:retry",
         execution_id="execution:supplier:retry",
+        dispatched_at=retry_time,
+        execution_started_at=retry_time,
+        execution_ended_at="2026-09-08T06:22:00Z",
     )
+    # Deliberately distinguish the outer ledger-time guard from no-repeat policy.
+    assert (
+        aware_datetime(retry_time, "retry time")
+        < aware_datetime(args["execution_ended_at"], "previous receipt time")
+    ) is backdated
 
     def forbidden(*args, **kwargs):
         pytest.fail("fresh output IDs bypassed the one-attempt action guard")
@@ -273,7 +287,14 @@ def test_fresh_output_ids_cannot_retry_the_same_action(execution_inputs, monkeyp
     )
     with pytest.raises(ValueError) as caught:
         api().dispatch_and_execute_supplier(**repeated)
-    authority.assert_native_refusal(caught.value, "DUPLICATE_DISPATCH_BY_ACTION")
+    if backdated:
+        assert type(caught.value) is core.KnowledgeChangeRefusal
+        assert (
+            caught.value.reason is core.KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+        )
+        assert "transaction_time decreased" in str(caught.value)
+    else:
+        authority.assert_native_refusal(caught.value, "DUPLICATE_DISPATCH_BY_ACTION")
     assert (
         owner.path.read_bytes(),
         args["source_path"].read_bytes(),
