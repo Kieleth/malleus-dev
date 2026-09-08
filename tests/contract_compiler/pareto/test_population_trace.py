@@ -39,7 +39,7 @@ EXAMPLES = (
     / "research/ontology_driven_kg_realization/fixtures"
     / "inspection_note_capture_v1"
 )
-CURRENT_DOCUMENT = EXAMPLES.with_name("inspection_note_execution_v2")
+CURRENT_DOCUMENT = EXAMPLES.with_name("inspection_note_execution_v3")
 SHOP_SOURCE = (
     ROOT
     / "research/ontology_driven_kg_realization/fixtures"

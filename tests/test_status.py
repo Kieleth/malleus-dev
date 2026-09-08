@@ -188,6 +188,12 @@ def test_status_document_names_current_version_and_boundary():
         assert f"`{capability}`" in document
     assert "`review-report-recording`" in document
     assert "one atomic report" in document
+
+
+def test_status_document_names_current_ontology_versions():
+    document = (ROOT / "docs" / "IMPLEMENTATION_STATUS.md").read_text(encoding="utf-8")
+    assert f"ontology is `{IMPLEMENTATION_STATUS.root_ontology_version}`" in document
+    assert f"assent ontology is `{IMPLEMENTATION_STATUS.assent_ontology_version}`" in document
     assert "`MigrationReceipt` records" in document
     assert "The receipt is not a protocol-ledger boundary event" in document
 

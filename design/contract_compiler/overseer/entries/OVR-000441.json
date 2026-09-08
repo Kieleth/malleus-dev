@@ -1,0 +1,112 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000441",
+  "ledger": "overseer",
+  "sequence": 441,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:207250c5db25ee37352dde4942cdda1e1a051ae055dd38907b18197e1a65a14a",
+  "recorded_at": "2026-09-08T21:04:04Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-release-preparation",
+    "type": "DOCUMENT"
+  },
+  "summary": "Document the selected release and repair current document evidence without rewriting prior executions.",
+  "why": "Luis requested documentation, push and release. Version 0.14.0 and a narrow native-Git transport exception are proposed, not yet recorded as approved. Current changelog and README explain bounded compiler/history/projection capabilities and compatibility. Correct stale Assent ontology wording with a status guard. At 815ed63b the clean document tests refuse the old compiler producer after compiled-view change 8d315fbd. A separate v3 execution preserves the entire historical fixture and v2 bytes; only its base ledger head changes. Real preparation/admission/reopen/trace succeeds. Document boundary: 22 passed; status: 13 passed; scoped Ruff and diff checks pass. Full clean baseline is still running. No runtime, dependency, package version, stage, tag, push or publication change is claimed.",
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "CHANGELOG.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:a8c69764ba2254a9b8017ece2c6d1b4fda53785b7bcdad4f0a9bc84622fac366",
+        "before_digest": "sha256:5808696d05ef8e77f19fd0f8625044958e9992b7514e4901b8cc29267683ffa5"
+      },
+      {
+        "path": "README.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:eed1ae0f08c050d7eb62baef1c51f962cbf5edc03e6acf659549f2161a08cbb2",
+        "before_digest": "sha256:9c4d7f71fdb708f9f1c982d8ba73f86b93c2b1e7c26dbd6455c52d5fc7883e32"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:be94fb00ccd49984be3131ee360dacd1e2d88e06023f2ae1e3f9eea5e1f9eecb",
+        "before_digest": "sha256:350526a3a18a0273e89fd0543f859e2078f3fbdfcd097eec503cf00d9b424068"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:421c36e3983e3996fc30016871191fe63df487c4d288cecb5997ecbd61f23e14",
+        "before_digest": "sha256:222d855ea683179195227d2a9ee78a5e0367c1e3ffb38128655da0a51d685a90"
+      },
+      {
+        "path": "handover/2026-09-08-core-release.md",
+        "change": "CREATED",
+        "after_digest": "sha256:6d968bcc8b509b429e2689a9aad275fd11ce20d03ba853533cc533a7e866c564"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_execution_v3/README.md",
+        "change": "CREATED",
+        "after_digest": "sha256:7e2cc3740af36bd1edf07daccd0404d40b2fbf19addf6d65348058e73a58d8cb"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_execution_v3/binding.json",
+        "change": "CREATED",
+        "after_digest": "sha256:c4703aaabdfe0fa2d9fafca4ac7581a6ba8cdf26a1e157625ea76a7a84ca5375"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_execution_v3/document-change.json",
+        "change": "CREATED",
+        "after_digest": "sha256:1e8908c58009d7790057939bb05fe5be2a667d59d9f55840ee060368217273d1"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_document_fixture_producer.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:1940c85af19b73d56f06ce8a6e9bd7fef2be9edf12133af4e70ffb823bd71f00",
+        "before_digest": "sha256:181ac4d244d589318805d1ae5dff93225084961ef5e537f7ba234dab239b7f28"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_population_trace.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:8d6d727ce5a401372668d2fa408758d3aa9a4379b670a96e9b7f2924b560d04a",
+        "before_digest": "sha256:88dbbd5f5a19773b559f33e4d54bf0f3ab8d9bf91c6685d59aa9d9307424cb49"
+      },
+      {
+        "path": "tests/test_status.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:53a9c84242ee9031c2d5b7543665368f4e59aca61e08e4df57ff8db953ce249a",
+        "before_digest": "sha256:2ae24612af995d24dad831a4db74486297e9f11a4f8bd46315fec6778285b2f3"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "815ed63b7be5ebc4e1bb1ebad96ac586e078ce93"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "8d315fbda192173a3d0314ccb06e8c8b5869bcf9"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-PKG02"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:64940b015d8987ba82896bc5d93637481b375f1b94bccc3503d4e35740885ce2"
+}

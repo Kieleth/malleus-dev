@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the public `malleus.compiler` source-to-history path and
+  `malleus-compiler` commands for exact-source contract compilation, source
+  retention, document capture, population, structural admission, replay,
+  query and provenance trace. The shipped structural bundle executes its own
+  structural checks; callers do not supply a successful check outcome to its
+  admission helper. Structural acceptance does not establish source truth.
+- Added explicit `state-version`, `source-assertion` and `object-event`
+  domain-history profiles; optional metrology, chronology and research packs;
+  pack grounding and edited-pack conformance checks; and installed adopter
+  guidance. Domain Events require the selected profile's Event role;
+  EventParticipation also requires the optional participation vocabulary.
+- Added additive contract revision in the same `KnowledgeChangeHistory`,
+  retaining earlier contract identities, source evidence and superseded records.
+  Added classes, slots and enum values are supported; arbitrary migration and
+  import-changing revisions are not.
+- Added `KnowledgeHistoryProjection`, a read-only, in-memory projection that
+  advances from verified ledger suffixes. Graph, indexes and cursor publish
+  together or remain unchanged. Full replay remains the recovery path.
+  Refresh still hashes the retained prefix and copies state; this is not
+  constant-time storage or multi-writer support.
+- Added experimental finite-program action history alongside knowledge changes.
+  Packaged Core can interpret, retain and replay selected programs. Profile
+  builders and action-producer helpers remain repository-local; this is not
+  an installed action SDK or a replacement for standalone Assent.
+- Added Small Shop conformance examples for source correction, additive schema
+  evolution, partial shipments, a Prolog rule refusing duplicate shipment
+  assignments, and full versus incremental replay. Domain rules and synthetic
+  fixture data remain outside Core protocol authority.
 - Added immutable `OntologyRegistry.source_closure()` construction evidence:
   exact parsed source bytes, canonical resolved locators, every authored import
   edge, including builtin and duplicate edges, and the retained owner of every
@@ -26,6 +54,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The bundled Assent ontology is now `0.11.0`, including exact scoped grants
+  and immutable review records. The root ontology remains `0.4.0`; the core
+  Assent stage remains `8c`. These ontology bytes differ from the previous
+  package, so existing ontology-bound ledgers must not be silently rebound.
+  `ProtocolLedger` has no general same-ledger ontology migration helper.
+  New grants require `scope_record_id` and `may_subdelegate`; the review path
+  binds reports to an exact request hash rather than a duplicated reviewer ID.
+- Compiler/history wire grammars marked `private-v0` remain experimental even
+  though their Python facade is public. Retain the exact executable and
+  artifact identities for old runs. No automatic cross-version replay or
+  cross-language compatibility is claimed.
+- Hardened OCR bundle parsing against duplicate keys, non-finite numbers and
+  invalid field shapes. OCR verification remains `AUDIT_ONLY`, not automatic
+  admission of a finished reading into knowledge history.
 - Changed Recon JSON-LD derivation to use the registry's actual source and
   definition-owner closure and to recheck every byte-bearing source before
   commit. Strict manifest v3 binds sources, imports, definition owners, the

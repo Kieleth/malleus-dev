@@ -59,6 +59,28 @@ and that replay shows only current non-superseded records. Malleus also ships a
 `object-event` profile. These are selectable contracts, not one mandatory
 history model for every domain.
 
+### Keep the graph current without losing the explanation
+
+The Shop now also orders two units and ships them separately. After the first
+shipment, the graph can show the unit still outstanding. After the second, it
+shows both assignments. An optional Shop rule rejects assigning the same unit
+to two shipments. The rule is declared by the Shop, not built into Malleus.
+See the [partial-shipment example](research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/README.md)
+and [executed rule check](research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/README.md).
+
+An application need not reconstruct that graph from the beginning on every
+read. `KnowledgeHistoryProjection.open(path)` loads the history once;
+`refresh` folds new committed events and publishes the graph and its indexes
+together. `current` reads that published view without ledger I/O. Both require
+the expected ledger head and event count, so an old view cannot pass for the
+requested current state. If an update fails, the previous view remains intact.
+Full replay still reconstructs the same result from the ledger alone.
+
+This is a read-side improvement, not a second database or a faster admission
+protocol. Prefix verification and graph copies still have costs. The
+[tests, measured result and limits](handover/2026-09-08-maintained-projection-results.md)
+separate what is proved from what remains to build.
+
 ## Why this exists
 
 I believe words have power. The closer we work with them, the more carefully we

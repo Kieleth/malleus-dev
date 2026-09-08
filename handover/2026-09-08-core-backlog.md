@@ -3,7 +3,9 @@
 This is a reading view of the existing program and append-only overseer ledger,
 not another plan authority or DAG. Status is bounded by the linked evidence.
 The sequence was approved by Luis: faster tests and this reconciliation first,
-then a partial-shipment Shop exercise. No release or remote push is selected.
+then a partial-shipment Shop exercise. Luis subsequently selected documentation,
+push and release; the [release preparation](2026-09-08-core-release.md) records
+that bounded publication work.
 
 ## Already delivered, do not reopen as missing prerequisites
 
@@ -106,8 +108,9 @@ ordering, Signal population, non-additive or import-changing contract migration,
 multi-writer serialization, stable wire formats and generic graph backends.
 
 Do not add more packaging or version-enforcement work to this sequence. Existing
-checks remain in force, but no dependency experiment, wheel project or release
-claim is part of the approved work. A concrete blocker gets an exact reproducer;
+checks remain in force. The later release request selects the existing
+publication gate, not a dependency experiment or wheel project.
+A concrete blocker gets an exact reproducer;
 an attractive generalization stays here until selected.
 
 ## Historical-list reconciliation

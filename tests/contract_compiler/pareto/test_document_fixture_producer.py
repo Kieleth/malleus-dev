@@ -10,7 +10,7 @@ import malleus.compiler as api
 from tests.contract_compiler.pareto import test_population_trace as trace
 
 
-CURRENT = trace.EXAMPLES.with_name("inspection_note_execution_v2")
+CURRENT = trace.CURRENT_DOCUMENT
 
 
 @pytest.fixture(scope="module")
@@ -39,6 +39,16 @@ def test_current_example_is_exact_and_preserves_historical_meaning(artifact_byte
     }
     assert historical["base_ledger_head"] == (
         "sha256:5f52eeecdc80479f6b3a0133fd0390d67f39733c12b88fe0c4946790b405c390"
+    )
+
+
+def test_previous_execution_remains_exact():
+    previous = trace.EXAMPLES.with_name("inspection_note_execution_v2")
+    assert trace._digest((previous / "binding.json").read_bytes()) == (
+        "sha256:6ff7301fb0e3862f136159751ba6bf0993e894c99da9b080a873d62b99baa14a"
+    )
+    assert trace._digest((previous / "document-change.json").read_bytes()) == (
+        "sha256:059fb6a1843a91ffd931e3b79264a9d9a47c505e32718e8d6b027cd035ca8656"
     )
 
 

@@ -632,7 +632,7 @@ The distribution build and installed-wheel smoke test must pass before that
 stage is published.
 
 Package versions and ontology versions are independent. The current root
-ontology is `0.4.0`; the assent ontology is `0.9.0`.
+ontology is `0.4.0`; the assent ontology is `0.11.0`.
 
 ## History
 
