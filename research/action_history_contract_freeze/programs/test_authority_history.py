@@ -74,11 +74,9 @@ def prepared(tmp_path_factory):
     return result
 
 
-def event(history, result, request):
+def context_data(history, request):
     replay = history.replay()
     values = {k: v["record"] for k, v in replay.protocol_replay.data["records"].items()}
-    output = result.execution.data["records"]
-    assessment = output[-1]["record"]
     roles = {entry["role"]: entry["value"] for entry in request["inputs"]}
     ids = {role: value["id"] for role, value in roles.items() if role != "executor_id"}
     monitor = values[request["monitor"]["id"]]
@@ -88,7 +86,7 @@ def event(history, result, request):
         static0=monitor["input_artifact_ids"][0],
         static1=monitor["input_artifact_ids"][1],
     )
-    data = {
+    return {
         "references": {
             name: {"id": identifier, "record_hash": values[identifier]["content_hash"]}
             for name, identifier in ids.items()
@@ -98,8 +96,16 @@ def event(history, result, request):
             for name in ("original_context", "current_context")
         },
         "executor_id": roles["executor_id"],
-        "assessment": {"value": [output[-1]]},
-        "assessment_dependencies": {"value": deepcopy(assessment["source_record_ids"])},
+    }
+
+
+def event(history, result, request):
+    output = result.execution.data["records"]
+    assessment = output[-1]["record"]
+    data = context_data(history, request)
+    data["assessment"] = {"value": [output[-1]]}
+    data["assessment_dependencies"] = {
+        "value": deepcopy(assessment["source_record_ids"])
     }
     if len(output) == 2:
         data["failure"] = {"value": [output[0]]}
