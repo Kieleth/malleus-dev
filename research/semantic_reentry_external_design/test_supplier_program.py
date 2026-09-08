@@ -88,7 +88,7 @@ def test_program_references_use_the_supplier_type_not_the_neutral_fixture(
     assert '"LocalAction"' not in json.dumps(bundle)
     assert '"LOCAL_ACTION"' not in json.dumps(bundle)
     assert all(
-        target["target"] in {"PROTOCOL_INDEX", "ACTION_HEAD"}
+        target["target"] in {"PROTOCOL_INDEX", "ACTION_ACCEPTANCE_HEAD"}
         for target in bundle["profile"]["targets"].values()
     )
 
@@ -141,3 +141,17 @@ def test_missing_selected_role_never_uses_a_fixture_default(
 def test_malformed_compiled_contract_refuses_before_program_authoring():
     with pytest.raises(ValueError):
         builder()(b"{}", source_ids=SOURCES, policy_ids=POLICIES)
+
+
+def test_field_projection_consumes_neutral_compiler_ranges_not_source_names(
+    action_compilation,
+):
+    view = action_compilation.view
+    expected = {}
+    for name, value in FIELDS.items():
+        kind = "Integer" if type(value) is int else "String"
+        assert view.get_slot_constraint("SupplierOrderAmendment", name).range_id == (
+            "https://malleus.dev/contract-facts/" + kind
+        )
+        expected[name] = {"type": kind.lower()}
+    assert import_module(MODULE)._payload_schemas(view) == expected
