@@ -48,7 +48,7 @@ def changed_rule(owner, original_bytes, value):
     return view, new_original, rule_id
 
 
-@pytest.mark.parametrize("fault", ["target", "prediction"])
+@pytest.mark.parametrize("fault", ["target", "prediction", "input-alias"])
 def test_strategy_output_cannot_escape_bound_goal(reentry_inputs, monkeypatch, fault):
     owner, view, _, contract = reentry_inputs
     ordinary = entry.api().SupplierActionStrategy.payload
@@ -66,6 +66,8 @@ def test_strategy_output_cannot_escape_bound_goal(reentry_inputs, monkeypatch, f
             return ordinary(self, **corrected)
         payload = json.loads(ordinary(self, **kwargs))
         payload["supplier_order_id"] = "different-supplier-order"
+        if fault == "input-alias":
+            kwargs["goal"]["supplier_order_id"] = payload["supplier_order_id"]
         return entry.entry.ingress.canonical(payload)
 
     if fault == "prediction":
