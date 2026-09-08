@@ -183,6 +183,28 @@ the bounded one-open-proposal, two-static-input conformance variant. Retaining
 check judgments does not authenticate the producer process or establish source
 truth. Epistemic decision and permission still follow as separate stages.
 
+The action-only epistemic decision now executes through that same history.
+It resolves the real applied assessments and monitor specifications, binds the
+selected policy/ruleset and original domain state, then invokes the existing
+pure control capability. Supplied output snapshots must match complete applied
+records. The decision's verdict, evaluation identity, ordered assessments and
+trigger list must equal recomputation. The complete decision and transition
+are introduced atomically. ACCEPT hashes the existing acceptance-result
+preimage with no revisions and advances only the action head. No decision
+variant can apply a KCS or grant permission.
+
+Twelve focused tests pass in 72.59 seconds: actual successful TYPE producers
+lead to ACCEPT; real engine unavailability leads to DEFER; nine binding/state
+refusals plus the exact transition-time guard preserve prior bytes. The latter
+first failed because instant equality admitted a differently written event
+time; exact string equality now preserves the existing TransitionRecord
+contract. The preceding broad gate passed 526 tests in 296.14 seconds before
+that final time guard; the final focused rerun includes its correction. Ruff,
+format and diff checks pass. REJECT and CONTEST effects are declared variants,
+not claims that an actual TYPE producer reached them in this owning-history
+fixture. The independent existing control tests retain their negative verdict
+coverage. Authorization, dispatch and observation still await integration.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix
