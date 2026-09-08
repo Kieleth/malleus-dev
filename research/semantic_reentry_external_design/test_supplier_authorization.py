@@ -3,13 +3,15 @@
 from importlib import import_module
 import inspect
 import json
+from pathlib import Path
 import shutil
 
 import pytest
 
 import malleus.compiler as core
 from malleus.assent import make_record
-from malleus.ledger import content_digest
+from malleus.control import ControlError
+from malleus.ledger import content_digest, record_hash
 from research.semantic_reentry_external_design import test_supplier_proposals as entry
 from research.semantic_reentry_external_design.test_supplier_proposals import (
     compile_supplier_action as compile_supplier_action,
@@ -327,3 +329,260 @@ def test_protocol_snapshot_never_uses_deepcopy():
     assert not any(
         isinstance(n, ast.Attribute) and n.attr == "deepcopy" for n in ast.walk(tree)
     )
+
+
+@pytest.fixture(scope="module")
+def assessed_prefix(tmp_path_factory, accepted_prefix):
+    args = preparation.__wrapped__(
+        tmp_path_factory.mktemp("supplier-authority-assessed"), accepted_prefix
+    )
+    api().prepare_supplier_authority(**args)
+    for ordinal in range(2):
+        api().record_supplier_authority_check(**check_arguments(args, ordinal))
+    return args["history"].path
+
+
+@pytest.fixture
+def assessed_inputs(tmp_path, assessed_prefix):
+    return preparation.__wrapped__(tmp_path, assessed_prefix)
+
+
+def assert_native_refusal(error, reason):
+    assert type(error).__module__ == "malleus._contract_pipeline.protocol_runtime"
+    assert type(error).__name__ == "ProtocolProgramRefusal"
+    assert error.reason == reason
+
+
+@pytest.mark.parametrize("moment", ["before-producer", "after-producer"])
+def test_moving_prefix_never_rebases_a_real_authority_check(
+    preparation, monkeypatch, moment
+):
+    owner = preparation["history"]
+    api().prepare_supplier_authority(**preparation)
+    args = check_arguments(preparation, 0)
+    producer = api().run_history_check
+    intervening = []
+    frame = domain_frame(owner.replay())
+
+    def advance():
+        owner.append_anchors(
+            anchors=(
+                core.structural_evidence_anchor(
+                    record_id="artifact:supplier:intervening-authority-note",
+                    content=entry.ingress.canonical(
+                        {"purpose": "stale authority conformance"}
+                    ),
+                    media_type="application/json",
+                ),
+            ),
+            transaction_time=TIME,
+            actor_id="actor:supplier:conformance",
+        )
+        intervening.append((owner.path.read_bytes(), owner.replay().receipt))
+
+    def moving(history, *, invocation):
+        if moment == "before-producer":
+            advance()
+        result = producer(history, invocation=invocation)
+        if moment == "after-producer":
+            advance()
+        return result
+
+    monkeypatch.setattr(api(), "run_history_check", moving)
+    with pytest.raises(ValueError) as caught:
+        api().record_supplier_authority_check(**args)
+    if moment == "before-producer":
+        assert type(caught.value) is api().SupplierAuthorityError
+        assert caught.value.reason == "STALE_BASE"
+    else:
+        assert_native_refusal(caught.value, "STALE_PROTOCOL_BASE")
+    assert len(intervening) == 1
+    after = owner.replay()
+    assert (owner.path.read_bytes(), after.receipt) == intervening[0]
+    assert domain_frame(after) == frame
+    assert args["assessment_id"] not in after.protocol_replay.data["records"]
+    assert args["failure_id"] not in after.protocol_replay.data["records"]
+
+
+@pytest.mark.parametrize("function", FUNCTIONS[1:])
+def test_stale_coordinator_refuses_before_any_producer(
+    preparation, monkeypatch, function
+):
+    args = (
+        check_arguments(preparation, 0)
+        if function == FUNCTIONS[1]
+        else decision_arguments(preparation)
+    )
+    args["expected_count"] -= 1
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("stale authority coordinator invoked a producer or policy")
+
+    monkeypatch.setattr(api(), "run_history_check", forbidden)
+    monkeypatch.setattr(api(), "evaluate_authorization_policy", forbidden)
+    owner = preparation["history"]
+    before = owner.path.read_bytes(), owner.replay().receipt
+    with pytest.raises(api().SupplierAuthorityError, match="STALE_BASE"):
+        getattr(api(), function)(**args)
+    assert (owner.path.read_bytes(), owner.replay().receipt) == before
+
+
+@pytest.mark.parametrize(
+    "fault,reason",
+    [
+        ("transition", "MISBOUND_AUTHORIZATION_TRANSITION"),
+        ("grant", "MISBOUND_AUTHORIZATION_DECISION"),
+        ("evaluation", "FORGED_AUTHORIZATION_EVALUATION"),
+    ],
+)
+def test_late_permission_fault_refuses_the_entire_pair(
+    assessed_inputs, monkeypatch, fault, reason
+):
+    owner = assessed_inputs["history"]
+    args = decision_arguments(assessed_inputs)
+    before = owner.path.read_bytes(), owner.replay().receipt
+    frame = domain_frame(owner.replay())
+
+    def corrupted(kind, **fields):
+        value = make_record(kind, **fields)
+        if kind == "TransitionRecord" and fault == "transition":
+            value["sequence"] += 1
+        elif kind == "AuthorizationDecision" and fault == "grant":
+            value["authority_grant_hash"] = content_digest("wrong grant")
+        elif kind == "AuthorizationDecision" and fault == "evaluation":
+            value["policy_evaluation_hash"] = content_digest("wrong evaluation")
+        value["content_hash"] = record_hash(kind, value)
+        return value
+
+    monkeypatch.setattr(api(), "make_record", corrupted)
+    with pytest.raises(ValueError) as caught:
+        api().decide_supplier_authorization(**args)
+    assert_native_refusal(caught.value, reason)
+    after = owner.replay()
+    assert (owner.path.read_bytes(), after.receipt) == before
+    assert domain_frame(after) == frame
+    assert args["decision_id"] not in after.protocol_replay.data["records"]
+    assert args["transition_id"] not in after.protocol_replay.data["records"]
+
+
+def test_missing_monitor_outcome_is_not_permission(assessed_inputs):
+    owner = assessed_inputs["history"]
+    args = decision_arguments(assessed_inputs)
+    args["assessment_ids"] = args["assessment_ids"][:1]
+    before = owner.path.read_bytes(), owner.replay().receipt
+    with pytest.raises(ControlError, match="has no assessment"):
+        api().decide_supplier_authorization(**args)
+    assert (owner.path.read_bytes(), owner.replay().receipt) == before
+
+
+def test_unselected_authority_monitor_never_runs(preparation, monkeypatch):
+    owner = preparation["history"]
+    api().prepare_supplier_authority(**preparation)
+    args = check_arguments(preparation, 0)
+    args["monitor_id"] = "monitor:supplier:unselected"
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("unselected authority monitor ran")
+
+    monkeypatch.setattr(api(), "run_history_check", forbidden)
+    before = owner.path.read_bytes(), owner.replay().receipt
+    with pytest.raises(api().SupplierAuthorityError, match="UNSUPPORTED"):
+        api().record_supplier_authority_check(**args)
+    assert (owner.path.read_bytes(), owner.replay().receipt) == before
+
+
+def test_plain_source_cannot_replace_applied_current_context(preparation, monkeypatch):
+    owner = preparation["history"]
+    after = api().prepare_supplier_authority(**preparation)
+    current = json.loads(after.retained_bytes(preparation["current_context_id"]))
+    current["id"] = "source:supplier:unverified-current"
+    current["prefix"] = {
+        "head": after.ledger_head,
+        "event_count": after.ledger_event_count,
+    }
+    event = api()._source_draft(
+        current["id"],
+        entry.ingress.canonical(current),
+        [current[role + "_policy"]["id"] for role in ("epistemic", "authorization")],
+        preparation["actor_id"],
+        TIME,
+        preparation["artifact_version"],
+        "BYTES",
+    )
+    owner.append_protocol_events(
+        transaction="source", events=(event,), **entry.position(owner)
+    )
+    args = check_arguments(preparation, 0)
+    args["current_context_id"] = current["id"]
+    producer = api().run_history_check
+    outcomes = []
+
+    def actual(history, *, invocation):
+        result = producer(history, invocation=invocation)
+        outcomes.append(
+            result.execution.data["records"][-1]["record"]["assessment_outcome"]
+        )
+        return result
+
+    monkeypatch.setattr(api(), "run_history_check", actual)
+    before = owner.path.read_bytes(), owner.replay().receipt
+    with pytest.raises(ValueError) as caught:
+        api().record_supplier_authority_check(**args)
+    assert outcomes == ["SATISFIED"]
+    assert_native_refusal(caught.value, "WRONG_AUTHORITY_STATE_KEY")
+    assert (owner.path.read_bytes(), owner.replay().receipt) == before
+
+
+@pytest.mark.parametrize("function", FUNCTIONS)
+def test_missing_required_inputs_are_typed_and_never_defaulted(function):
+    with pytest.raises(api().SupplierAuthorityError, match="MALFORMED_INPUT"):
+        getattr(api(), function)()
+
+
+@pytest.mark.parametrize("kind", ["knowledge", "check", "control", "local"])
+def test_declared_refusal_preserves_the_same_exception(kind):
+    from research.action_history_contract_freeze.programs.check_executor import (
+        CheckRefusal,
+    )
+
+    error = {
+        "knowledge": lambda: core.KnowledgeChangeRefusal(
+            core.KnowledgeChangeRefusalReason.STALE_BASE, "exact refusal"
+        ),
+        "check": lambda: CheckRefusal("exact refusal"),
+        "control": lambda: ControlError("exact refusal"),
+        "local": lambda: api().SupplierAuthorityError("CONFORMANCE", "exact refusal"),
+    }[kind]()
+
+    def refuse():
+        raise error
+
+    with pytest.raises(type(error)) as caught:
+        api()._guarded(refuse)()
+    assert caught.value is error
+
+
+def test_handler_and_import_boundaries_are_explicit():
+    import ast
+
+    tree = ast.parse(Path(api().__file__).read_text())
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ExceptHandler):
+            assert node.type is not None
+            assert not any(isinstance(n, ast.Attribute) for n in ast.walk(node.type))
+        elif isinstance(node, ast.ImportFrom):
+            assert node.module is not None
+            assert not node.module.startswith(("malleus._", "tests."))
+            assert not any(part.startswith("test_") for part in node.module.split("."))
+
+
+def test_authority_gate_and_runtime_belong_to_this_checkout():
+    root = Path(__file__).resolve().parents[2]
+    assert Path(core.__file__).resolve().is_relative_to(root / "src/malleus")
+    assert Path(api().__file__).resolve().parent == Path(__file__).resolve().parent
+    gate = json.loads(
+        (Path(__file__).parent / "supplier-authority-gate.json").read_bytes()
+    )
+    assert str(Path(__file__).resolve().relative_to(root)) in gate["tests"]
+    assert len(gate["tests"]) == len(set(gate["tests"]))
+    assert all((root / path).is_file() for path in gate["tests"])

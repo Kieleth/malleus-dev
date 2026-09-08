@@ -67,6 +67,14 @@ preserves graph, record history, accepted KCSs and domain heads. JSONL-only reop
 recovers permission and its exact inputs without running a producer. No dispatch,
 execution or observation may be inferred from permission.
 
+The boundary suite also tests ledger movement before and after actual check
+computation, stale entry before any producer, an ordinary source masquerading
+as applied current context, missing monitor coverage and unselected monitors.
+Late corrupted permission/transition pairs must preserve the native Core refusal
+and the complete pre-append history. Required-input and handler/import guards
+cover the coordinator itself. These are conformance obligations on existing
+semantics, not new Core behavior or fabricated implementation RED.
+
 Dependency edges: accepted supplier proposal and retained original context feed
 authority preparation; retained scope/grant/interval and current context feed the
 actual DIRECT_GRANT producer; recorded assessments feed public policy evaluation;
