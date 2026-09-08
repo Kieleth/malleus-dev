@@ -7,7 +7,11 @@ from hashlib import sha256
 from importlib import import_module
 import json
 from pathlib import Path
-import tomllib
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10 uses the declared dev dependency.
+    import tomli as tomllib
 
 import pytest
 

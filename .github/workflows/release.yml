@@ -54,7 +54,7 @@ jobs:
     name: Python tests (${{ matrix.python-version }})
     needs: validate-release
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:

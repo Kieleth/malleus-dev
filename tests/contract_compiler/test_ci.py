@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import runpy
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -17,6 +18,20 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from scripts import ci  # noqa: E402
+
+
+@pytest.mark.parametrize(
+    "module",
+    ["test_document_assertion_adapter", "test_domain_history_profile", "test_finite_protocol_history"],
+)
+def test_manifest_readers_work_without_stdlib_tomllib(module, monkeypatch):
+    # Exercise the Python 3.10 import path with the configured parser interface.
+    monkeypatch.setitem(sys.modules, "tomli", tomllib)
+    monkeypatch.setitem(sys.modules, "tomllib", None)
+    namespace = runpy.run_path(
+        str(ROOT / "tests" / "contract_compiler" / "pareto" / f"{module}.py")
+    )
+    assert namespace["tomllib"].loads('name = "manifest"') == {"name": "manifest"}
 
 
 def test_default_ci_plan_covers_every_boundary_once() -> None:

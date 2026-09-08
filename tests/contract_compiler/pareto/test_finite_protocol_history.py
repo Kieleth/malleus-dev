@@ -5,6 +5,11 @@ from copy import deepcopy
 from importlib import import_module
 import json
 
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10 uses the declared dev dependency.
+    import tomli as tomllib
+
 import pytest
 
 from malleus.compiler import KnowledgeChangeHistory
@@ -210,7 +215,6 @@ def test_private_kernel_imports_no_research_runtime():
 
 def test_declared_package_closure_contains_every_finite_history_dependency():
     from pathlib import Path
-    import tomllib
 
     root = Path(__file__).resolve().parents[3]
     includes = tomllib.loads((root / "pyproject.toml").read_text())["tool"]["hatch"][

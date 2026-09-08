@@ -3,12 +3,14 @@ import csv
 import errno
 import hashlib
 import importlib.util
+import io
 import json
 import multiprocessing
 import re
 import zipfile
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 from xml.etree import ElementTree as ET
 
 import networkx as nx
@@ -2454,15 +2456,14 @@ def test_manifest_inspection_runs_under_cross_process_destination_lock(
     assert "active builder" in observed[0]
 
 
-def test_build_lock_distinguishes_io_failure_and_closes_stream(tmp_path, monkeypatch):
-    class Stream:
-        closed = False
-
+@pytest.mark.parametrize("platform", ["posix", "nt"])
+def test_build_lock_distinguishes_io_failure_and_closes_stream(tmp_path, monkeypatch, platform):
+    monkeypatch.setattr(
+        analysis, "os", SimpleNamespace(**{**vars(analysis.os), "name": platform})
+    )
+    class Stream(io.BytesIO):
         def fileno(self):
             return 41
-
-        def close(self):
-            self.closed = True
 
     stream = Stream()
     closed = []
@@ -2505,6 +2506,9 @@ def test_build_lock_stream_close_failure_cannot_close_a_reused_descriptor(
         def fileno(self):
             return self.descriptor
 
+        def __getattr__(self, name):
+            return getattr(self.stream, name)
+
         def close(self):
             self.stream.close()
             opened["replacement"] = analysis.os.open(
@@ -2517,10 +2521,13 @@ def test_build_lock_stream_close_failure_cannot_close_a_reused_descriptor(
     def wrapping_fdopen(descriptor, mode, *, closefd):
         assert closefd is False
         opened["lock"] = descriptor
-        return FailingCloseLock(
+        stream = FailingCloseLock(
             original_fdopen(descriptor, mode, closefd=closefd),
             descriptor,
         )
+        for method in ("seek", "tell", "write", "flush"):
+            assert callable(getattr(stream, method))
+        return stream
 
     monkeypatch.setattr(analysis.os, "fdopen", wrapping_fdopen)
 

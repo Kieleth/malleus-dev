@@ -56,6 +56,19 @@ package metadata, README, status document, changelog and guards name 0.14.0;
 the standalone Assent stage remains 8c. No ontology byte changes are introduced
 by this release transaction.
 
+The last remote main CI run also exposed two test-harness defects still present
+in this tree: unguarded `tomllib` imports on Python 3.10, and file-object doubles
+missing methods used by Windows lock initialization. Three tests now use the
+already-declared `tomli` dependency when the stdlib module is absent. The lock
+doubles preserve the full stream interface. The new local compatibility guard
+reproduces five failures before correction and passes all six cases afterward;
+actual platform execution remains the remote matrix's responsibility.
+
+The measured 812-second baseline exceeds the old main-job timeout of ten
+minutes before installation and remaining gates. Main and release test jobs
+now allow thirty minutes. No test, supported Python version or failure gate is
+removed; build and publication timeouts remain unchanged.
+
 ## Publication gate
 
 Run the configured full test/documentation gate and package checks from a clean

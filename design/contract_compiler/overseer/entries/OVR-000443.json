@@ -1,0 +1,87 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000443",
+  "ledger": "overseer",
+  "sequence": 443,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:310d0b54b8e05e2c120808710ff464e66cd5b57c3a423c6ecc9aaf183369e331",
+  "recorded_at": "2026-09-08T21:20:05Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "release-matrix-test-compatibility",
+    "type": "DOCUMENT"
+  },
+  "summary": "Repair known Python 3.10 and Windows test-harness defects before publication.",
+  "why": "Read-only GitHub CI evidence at dfa367a, run 34067572238, exposes missing tomllib on Python 3.10 and incomplete stream doubles in Windows lock tests. The current tree retains both classes. Local RED reproduces five failures and one passing control; GREEN passes all six compatibility cases using the existing declared tomli dependency and full stream interfaces. No runtime behavior or dependency changes. Main/release test jobs allow 30 minutes because the observed clean baseline takes 812 seconds before other gates, exceeding the former 10-minute main allowance. No test, platform or gate is removed. Broader and remote verification follow; these simulated branches alone do not establish Windows or Python 3.10 conformance.",
+  "data": {
+    "affected_ids": [
+      "CC-PKG02"
+    ],
+    "documents": [
+      {
+        "path": ".github/workflows/release.yml",
+        "change": "MODIFIED",
+        "before_digest": "sha256:b529294b05fac8d637ba078053c99b5afb545e87acf3773f0370556c0bbf461c",
+        "after_digest": "sha256:5c869182919b6722bfff57e3afbfcfcea7bf7b0ea18df800ba8c688e52616b1e"
+      },
+      {
+        "path": ".github/workflows/tests.yml",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ecd5d25f86e573609b2ec4b7d93f81373756e68cd24cf8beb710b9ebe0ae8f1f",
+        "after_digest": "sha256:2f71506526280bbf012d88f9bf3d5271185a5fc8c016540ee7b8b3cb349c40bf"
+      },
+      {
+        "path": "handover/2026-09-08-core-release.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:1ce25e697b771adfe68eee68434750b7dd0229385c343278d13949d9c960c164",
+        "after_digest": "sha256:3b6f83dd1f45aa2941e01ff724b75e7fa6d7e3924cbdde5ee3e6fea84e9867de"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3acb2cd1059fc6b2e4d19b0af609713d716ed83ea7f0c5c66b79a392ef974df7",
+        "after_digest": "sha256:7421dd426a6bab3e81951330fceacf66319635946148840689b2c45aba2e9003"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_domain_history_profile.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3c4eac8b2aec0a9a4d8bd03951e7428d835e2ea4f57087e2a9c637137f62c620",
+        "after_digest": "sha256:d2c60c1049313a46be25db131f9aa7a0075b6f0f8592420b377f4729f9c4ffba"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_finite_protocol_history.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c35400be9021167b21912889f7e7726ddfb331adb7c9db70ecc5bc70dda8bf7e",
+        "after_digest": "sha256:6d0c9d791d5bb9a350ef28cf07c1424f8bf0b7382948102f8aff5dfef6bd6057"
+      },
+      {
+        "path": "tests/contract_compiler/test_ci.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:11e45cc9e452914527ec64a96e793ae6f67dae10ee0cb42e8e5b8444469a8c01",
+        "after_digest": "sha256:62ad87ab3550f719e3aef01c01847b6054690176bb6208e223a38cc4b65f9b57"
+      },
+      {
+        "path": "tests/test_recon.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:b66676b14298daed45c68d18bac20a48bc04eef2fec301dcce3cbc04efb3eea8",
+        "after_digest": "sha256:3dff0a50340480762a47ad32e8118bd9c45ac13d6ab0e0e96c8a6a79b9969861"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "dfa367aee7848a69cf6999b158ba1a1057c50b38"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-PKG02"
+    }
+  ],
+  "entry_hash": "sha256:a8625aaf22409e4a544c4c83dda8dc8c27634b15d5cf2f9e5336c5aa1aad0313"
+}
