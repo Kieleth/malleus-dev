@@ -1,0 +1,36 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000436",
+  "ledger": "overseer",
+  "sequence": 436,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:630fa904b7bb2b8b6765def6ad17eaa2f94bc11f731c6e84e8339adb2e2f0603",
+  "recorded_at": "2026-09-08T18:49:33Z",
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "subject": {"id": "semantic-reentry-local-main-landing", "type": "DOCUMENT"},
+  "summary": "Bind the locally integrated Re-entry research proof and bounded adopter guidance.",
+  "why": "The operator authorized local landing with Core owning main and governance. Main fast-forwarded f3bcb620 to 6f6453ee after verifying exact scope, content hashes and retained test evidence. Only the acolyte skill and Re-entry research directory change. Core runtime, ontology, package configuration, shipment fixture and historical proof remain unchanged. The independent gate at a857ef0 has 426 passed and one private-doctrine skip; post-synchronization has 27 passed and the same skip. These are exact prior-run receipts, not a new full-suite claim. The supplier implementation remains research-local under optional profiles; the exact-two goal is adopter input. No public promotion, general planner, source truth, physical delivery, constructor delegation, Robotics change, release or push. Current-main checks follow this rebind.",
+  "data": {
+    "affected_ids": ["CC-R11"],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:4c74a274c52e34feff3493f9ee935fea908c6914e83a0006ba0918f260f9c06d",
+        "after_digest": "sha256:e20f33af0159be22bbe16877fe4c28ce038aee93dad6c713447be3da641c65c6"
+      },
+      {
+        "path": "research/semantic_reentry_external_design/current-core-landing-result.json",
+        "change": "CREATED",
+        "after_digest": "sha256:a2907c4c8703fb764acf9ee95ac45ca03e3de70a699785b4451662c6fbe3922e"
+      }
+    ]
+  },
+  "references": [
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "6f6453ee20b27405b251ba29f830cc0a8ce51862"},
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "dfa40981f6d537c81f2397b5c40be54c6ff5ae57"},
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "a857ef01e96b4717b7aa764cc96b40c8456b2e54"},
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"}
+  ],
+  "entry_hash": "sha256:27bb362785c5fa4b15377cdc3ef56e60fbb969119fec2528e86c415c6cc8e484"
+}
