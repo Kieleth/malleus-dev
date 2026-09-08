@@ -30,6 +30,15 @@ configured environment; they remain single observations. The mechanical
 one-scan guard establishes the work reduction independently of elapsed time.
 Remaining integration work is not optimized speculatively.
 
+Final self-review found a compatibility detail introduced by the optimization:
+the old validator accepted an annotated tag object's exact hash when peeling it
+resolved to a durable commit. RED `b01eebb` reproduces its unintended refusal.
+The correction preserves that existing behavior, with one additional lookup
+only for references not already in the ancestry set. All six focused Git guards
+pass in 0.90 seconds, including the existing evidence-tag test. The ordinary
+commit fast path remains one scan. The 365-test receipt above predates this
+correction; the final complete governance run has one additional test.
+
 ```sh
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q -p no:cacheprovider tests/test_governance_git_scan.py tests/test_contract_compiler_ledger.py tests/test_contract_compiler_integration.py --tb=short --junitxml=/tmp/malleus-pareto-next.hRjTJM/governance.xml
 ```
