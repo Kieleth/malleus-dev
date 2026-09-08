@@ -1,0 +1,28 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "BOUNDED_SUPPLIER_SEMANTIC_REENTRY_AND_ALL_IMPLEMENTED_SUPPLIER_NEIGHBOR_BOUNDARIES",
+  "tests": [
+    "research/semantic_reentry_external_design/test_supplier_reentry.py",
+    "research/semantic_reentry_external_design/test_supplier_reentry_boundaries.py",
+    "research/semantic_reentry_external_design/test_accepted_read_view.py",
+    "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+    "research/semantic_reentry_external_design/test_supplier_program.py",
+    "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+    "research/semantic_reentry_external_design/test_supplier_components.py",
+    "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+    "research/semantic_reentry_external_design/test_supplier_initialization.py",
+    "research/semantic_reentry_external_design/test_supplier_proposals.py",
+    "research/semantic_reentry_external_design/test_supplier_authorization.py",
+    "research/semantic_reentry_external_design/test_supplier_execution.py",
+    "research/semantic_reentry_external_design/test_supplier_observation.py",
+    "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+    "research/semantic_reentry_external_design/test_replay_noninvertibility.py"
+  ],
+  "runtime": {
+    "pythonpath": "src:.",
+    "write_bytecode": false,
+    "pytest_cache": false,
+    "retained_basetemp": "A new isolated task-owned directory for each run. Do not use the shared default pytest temporary root for retained replay evidence."
+  },
+  "broader_gate": "This is the unified bounded Re-entry selection, not full repository CI. The Core-confirmed historical document-example failure recorded in supplier-initial-result.json remains unwaived and outside this selection. No Core runtime changed."
+}

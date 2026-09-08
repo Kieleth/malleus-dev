@@ -195,3 +195,41 @@ def test_implementation_capsule_contains_exact_selected_sources():
         == api.IMPLEMENTATION_IDENTITY
     )
     assert Path(core.__file__).resolve().is_relative_to(root.parents[1] / "src")
+
+
+def test_reentry_gate_and_pure_import_boundary_are_explicit():
+    import ast
+
+    root = Path(__file__).resolve().parents[2]
+    gate = json.loads(
+        Path(__file__).with_name("supplier-reentry-gate.json").read_bytes()
+    )
+    assert gate["classification"] == "CONFORMANCE_FIXTURE"
+    assert len(gate["tests"]) == len(set(gate["tests"]))
+    assert str(Path(__file__).relative_to(root)) in gate["tests"]
+    for filename in gate["tests"]:
+        path = (root / filename).resolve()
+        assert path.is_relative_to(root) and path.is_file()
+    tree = ast.parse(Path(entry.api().__file__).read_bytes())
+    imported = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            assert node.level == 0
+            imported.append(node.module)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            assert node.func.attr not in {
+                "admit",
+                "append_protocol_events",
+                "append_anchors",
+                "admit_structural_change",
+                "dispatch_and_execute_supplier",
+                "observe_supplier_execution",
+            }
+    assert not any(name.startswith(("malleus._", "tests")) for name in imported)
+    assert not any(
+        name.rsplit(".", 1)[-1]
+        in {"supplier_execution", "supplier_observation", "supplier_observed_source"}
+        for name in imported
+    )
