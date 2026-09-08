@@ -36,6 +36,11 @@ def add_context_proposal(bundle):
     program = deepcopy(packet["program"])
     source = bundle["transactions"]["source"]["program"]
     inputs = program["inputs"]
+    # This fixed literal already excludes blanks. Preserve that refinement
+    # when the later permission program compares it with nonblank grant items.
+    inputs["event"]["action"]["properties"]["value"]["items"]["properties"]["record"][
+        "properties"
+    ]["action_type"]["format"] = "nonblank"
     constants_schema = {
         k: deepcopy(v) for k, v in inputs["artifact"].items() if k != "retention"
     }
