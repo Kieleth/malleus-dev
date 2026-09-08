@@ -1,0 +1,97 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "ACTUAL_SUPPLIER_INITIALIZATION_NOT_FULL_REENTRY_E2E",
+  "status": "INITIALIZATION_GREEN_FULL_REENTRY_E2E_UNFINISHED",
+  "base_commit": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "implementation_commit": "23b67ba5b6a402331c42869cb1e889f33869123b",
+  "implementation_tree": "8fa5ba926d063a38e36a52d09ab4323b400a7722",
+  "contract_red_commit": "b97e99dc39cbabb04f5490f13fe65c89d5f672b1",
+  "role_order_red_commit": "ce0e00cfc1bb25d7d0a4d7843211541d613705b5",
+  "runs": {
+    "absent_initializer_red": {
+      "tests": 23, "failures": 23, "errors": 0, "skipped": 0,
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-init-red.xml",
+      "sha256": "41a276ff55d6a298b752dec913f8a7d3229d0441b495ac397c37e7c426c6b241"
+    },
+    "first_implementation": {
+      "tests": 23, "passes": 21, "failures": 2, "errors": 0, "skipped": 0,
+      "initializer_sha256": "af0c00cc89c918d61837d8273534929b358e718b753fdc0e3a7bb44394092183",
+      "failure": "Equivalent serialized role maps regenerated different program bytes. Both positive initialization attempts refused before retention.",
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-init-first.xml",
+      "sha256": "06444700a2557f257aee0f05adf2256f0c6003360ac01780fbbd659c9ea64b0e"
+    },
+    "role_order_regression_red": {
+      "tests": 1, "failures": 1, "deselected": 11,
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-program-role-order-red.xml",
+      "sha256": "06a1fbb9481f156e553c4ff4a6fddd6db51d3eeac2860d513daee5746e9c2390"
+    },
+    "targeted": {
+      "tests": 2, "passes": 2, "failures": 0, "errors": 0, "skipped": 0, "deselected": 34,
+      "selectors": [
+        "research/semantic_reentry_external_design/test_supplier_program.py::test_role_map_serialization_and_order_cannot_change_program_bytes",
+        "research/semantic_reentry_external_design/test_supplier_initialization.py::test_initialize_real_supplier_prefix_preserves_domain_at_every_append"
+      ],
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-init-targeted.xml",
+      "sha256": "d069e1b6f0a2dcb58e96936725a3c3aed7d86d2b7bb335caa454390d94ef78e8"
+    },
+    "unified": {
+      "status": "PASS",
+      "tests": 173, "passes": 173, "failures": 0, "errors": 0, "skipped": 0,
+      "manifest": "supplier-initialization-gate.json",
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-init-unified.xml",
+      "sha256": "e9d4bbd6996069d0baf4a7406a2bde11c3f2a4d51147dda12a7688af05dc7122",
+      "per_module": {
+        "test_supplier_initialization": 24,
+        "test_supplier_initial_source": 34,
+        "test_supplier_action_contract": 23,
+        "test_supplier_program": 12,
+        "test_accepted_read_view": 23,
+        "test_registration_history": 6,
+        "test_initialization_history": 9,
+        "test_check_executor": 22,
+        "test_finite_protocol_history": 20
+      }
+    }
+  },
+  "retained_initialization": {
+    "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-init-targeted-history.jsonl",
+    "sha256": "1df1c990e54bab9300414c3f8caa8db02c158d5fb9ae0a27a538351216b42d29",
+    "event_count": 39,
+    "ledger_head": "sha256:8263e74526e73b340e023c7cb24a9e4d5ce04ddd2dde7b604006718c5839a28d",
+    "receipt_identity": "sha256:1b5c81b742850f70be0e259b10afc6fb789225a819e58dd73bd01746eedf3836",
+    "graph_digest": "sha256:8e4bc9cbbbcd68463cd2bbb94db8a8aa8be2255fa09b4bce7a4828423dc7e93f",
+    "protocol_identity": "sha256:f82e64a9462a26bddeb9a8bbb02f16b3c84feaa6929ff23fa0f2dba1de940f13",
+    "bundle_identity": "sha256:86c44748ab4ce43c864b8130bfa01b27630aece3a90406f3ada6bf6039af9eb3",
+    "action_head": "sha256:b4771257e4060675e6a163fe40f7902a37cd44462d543d0ac09077cd4c42e1a6",
+    "protocol_records": 14,
+    "accepted_kcs": 2,
+    "supplier_quantity": 1,
+    "record_ids": ["O1", "X1", "contains:O1:X1", "supplier-order-state:B:e4"],
+    "fresh_process_reopen": true,
+    "independent_unified_history": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-init-unified-history.jsonl",
+    "targeted_and_unified_histories_byte_identical": true
+  },
+  "file_sha256": {
+    "SUPPLIER_INITIALIZATION.md": "699a003a8d69a9c0f3fe679e23db831a17b6047b0b7dee1b61a11f1f56c6a6eb",
+    "supplier_initialization.py": "0f6af693c5f0041050866ff29f37c65dee96a25fd774da0729fba4d76af32824",
+    "supplier_program.py": "d3ca777f5fd03904256aa4996a63807d734271857039c67278c02ceb12ad02c7",
+    "test_supplier_initialization.py": "9e69a5133d20c411afcfb8d459756553a898153d7a3e64a7b7c11f0d9f02b0e2",
+    "test_supplier_program.py": "a332e8bb277bd614120dfc1124bc3d43b025b437e6f4dec7b97436538e1f6895",
+    "supplier-initialization-gate.json": "1f0c93cd350aca324d680d2fc1b5f2a230179aeb425f15a8b3a1f0d1848f97e1"
+  },
+  "environment": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "PYTHONPATH": "src:.", "PYTHONDONTWRITEBYTECODE": "1",
+    "pytest_config": "pyproject.toml", "pytest_cache": "disabled"
+  },
+  "scope_audit": {
+    "base_to_implementation": "53 files, all under research/semantic_reentry_external_design, including the carried historical research packet",
+    "core_ontology_locked_fixture_paper_changes": false,
+    "ruff_and_diff_checks": "PASS",
+    "root_ontology_profile": "NOT_CLAIMED",
+    "mechanical_schema_rites": "NOT_RUN_PROFILE_NOT_CLAIMED"
+  },
+  "broader_gate": "The previous population gate has 512 passes and one unchanged Core-confirmed historical-example failure. It is not waived or replaced by this selection.",
+  "exclusions": ["full supplier E2E", "proposal synthesis", "check execution", "authorization", "dispatch", "external effect", "observation-derived correction", "final episode quiescence", "empirical replacement", "public API promotion", "full repository CI"]
+}

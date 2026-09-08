@@ -1,0 +1,85 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "ACTUAL_SUPPLIER_DIRECT_GRANT_CONTROL_AND_REPLAY_NOT_FULL_REENTRY_E2E",
+  "status": "AUTHORIZATION_GATE_GREEN",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "implementation_commit": "1ec94392ba2b8084761302c8949444b21c7e8f6f",
+  "implementation_tree": "23910ba63f4c6264661641e3a4082df5caae22c3",
+  "test_commit": "20f5a8cb82326e494dc676eed3d7ef092ade94d2",
+  "test_tree": "2decb03ee73945307ca336ed2d8813769ba0f0f3",
+  "earlier_red_and_focused_evidence": "supplier-authority-focused-result.json",
+  "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "unified_run": {
+    "manifest": "supplier-authority-gate.json",
+    "file": "supplier-authority-unified.xml",
+    "sha256": "4c7121d64d46746258b7f59c26716f3660e64a902a45c8609ed022915a245375",
+    "tests": 99,
+    "passes": 99,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "per_module": {
+      "test_supplier_authorization": 35,
+      "test_current_history": 8,
+      "test_authority_history": 12,
+      "test_authorization_history": 13,
+      "test_dispatch_history": 9,
+      "test_check_executor": 22
+    }
+  },
+  "retained_positive": {
+    "file": "supplier-authority-unified-history.jsonl",
+    "sha256": "6ec7cf508d406d8547bb6a1c4fc03c085dfc18d0c93a525236ab603d0316054f",
+    "fresh_process_reopen": true,
+    "event_count": 55,
+    "protocol_records": 33,
+    "accepted_kcs": 2,
+    "ledger_head": "sha256:665d55219ffd9967b62e0d79faa1ad3ff2a6476809499a235e390e83364bfc49",
+    "receipt": "sha256:724dc3451de4951b9120eb89b4c832642252194cf176964a1d3afdbbd81318fe",
+    "canonical_graph_export_digest": "sha256:0b859ff60459e34b1ed23fc4eaee767ebfe4453c80f8e76ae496ca53d6738301",
+    "action_acceptance_head": "sha256:d0715f65dd8bf332771571cf5e35538674c89de5cc94aa4ab2167de41f04ac54",
+    "authorization_state": "AUTHORIZED",
+    "supplier_quantity": 1,
+    "record_ids": ["O1", "X1", "contains:O1:X1", "supplier-order-state:B:e4"]
+  },
+  "observations": [
+    "Actual DIRECT_GRANT checks and the public policy produce AUTHORIZE, BLOCK and CLARIFY in their declared cases.",
+    "Stale entry and prefix movement before or after actual check execution refuse without rebasing or permission.",
+    "Late transition, grant-hash and evaluation-hash faults reject the complete permission pair atomically.",
+    "An ordinary SourceArtifact cannot masquerade as an applied current context, even when its bytes satisfy the real checker.",
+    "Missing or unselected monitor outcomes never become permission.",
+    "Native upstream refusal objects remain unchanged; no private Core exception is imported or aliased.",
+    "All protocol checkpoints and JSONL-only reopen preserve the complete domain frame and accepted B/Y/1."
+  ],
+  "file_sha256": {
+    "SUPPLIER_AUTHORIZATION.md": "b9ae887fb0a4b5c54c5df6bda8255047de7548f8a4b10b5fa1bd0a2de03acecf",
+    "supplier_authorization.py": "b54ed4706773816e8ddf25c6921ee2e10b746e104e072603e894f0d29aa53c1a",
+    "test_supplier_authorization.py": "1bf0eac6e20ece64559a173dcd415cb02eb8b7eadb1958712c9cfd9b3f226f02",
+    "supplier-authority-gate.json": "898f7aa5d091d471b27946ceed80f836fcd2a2c851c04a6177303f13468017ef"
+  },
+  "runtime": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "config": "pyproject.toml",
+    "PYTHONPATH": "src:.",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "pytest_cache": "disabled",
+    "origin_and_gate_binding": "PASS"
+  },
+  "audit": {
+    "scope": "research/semantic_reentry_external_design only",
+    "core_ontology_locked_fixture_paper_changes": false,
+    "expanded_tests_required_no_production_change": true,
+    "counts_overlap_not_added": true
+  },
+  "broader_gate": "The earlier population selection has 512 passes and one Core-confirmed historical document-example failure. This result neither fixes nor waives it.",
+  "exclusions": [
+    "pure synthesis and full Re-entry Contract closure",
+    "supplier execution or independent capture",
+    "observation-linked KCS and episode quiescence",
+    "full supplier E2E or full repository CI",
+    "authority legitimacy, source truth or causality",
+    "demonstrated implementation replacement",
+    "shared API promotion, merge or publication"
+  ]
+}

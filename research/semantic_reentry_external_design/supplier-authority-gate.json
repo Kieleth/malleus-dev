@@ -1,0 +1,13 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "SUPPLIER_DIRECT_GRANT_CONTROL_AND_CORE_DISPATCH_ELIGIBILITY_NOT_SUPPLIER_EFFECT_OR_FULL_E2E",
+  "tests": [
+    "research/semantic_reentry_external_design/test_supplier_authorization.py",
+    "research/action_history_contract_freeze/programs/test_current_history.py",
+    "research/action_history_contract_freeze/programs/test_authority_history.py",
+    "research/action_history_contract_freeze/programs/test_authorization_history.py",
+    "research/action_history_contract_freeze/programs/test_dispatch_history.py",
+    "research/action_history_contract_freeze/programs/test_check_executor.py"
+  ],
+  "unchanged_broader_population_gate": "supplier-initial-result.json records 512 passes and one Core-confirmed baseline failure. This authorization selection does not replace or waive that result."
+}

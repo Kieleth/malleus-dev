@@ -1,0 +1,10 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "ACTUAL_OBSERVATION_TO_POPULATION_KCS_ADMISSION_AND_REPLAY_NOT_SYNTHESIZER_OR_QUIESCENCE",
+  "tests": [
+    "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+    "research/semantic_reentry_external_design/test_supplier_components.py",
+    "research/semantic_reentry_external_design/test_supplier_population.py"
+  ],
+  "broader_gate": "The earlier population selection's Core-confirmed historical document-example failure remains recorded. This selection does not waive or replace it."
+}

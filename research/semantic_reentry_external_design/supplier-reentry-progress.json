@@ -1,0 +1,131 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "status": "BOUNDED_SYNTHESIZED_E2E_COMPLETE_FINAL_UNIFIED_GATE_AND_SCOPED_AUDIT_PASS",
+  "final_result": "supplier-reentry-final-result.json",
+  "claim": "BOUNDED_SYNTHESIZED_ACTION_OBSERVED_KCS_REPLAY_AND_FRESH_QUIESCENCE",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "initial_candidate": {
+    "contract_and_test_commit": "c16f88b",
+    "implementation_commit": "6767ebb",
+    "implementation_tree": "a875337d6e32f95ee9012b1585908d680d3b2078",
+    "api_red": {
+      "file": "supplier-reentry-api-red.xml",
+      "sha256": "91cf9aabc125fb89f8520bddb82122e9db6b54d653918fa77956a0df249477ac",
+      "tests": 1, "failures": 1, "deselected": 3,
+      "observation": "Required supplier_reentry module absent."
+    },
+    "focused_green": {
+      "file": "supplier-reentry-initial.xml",
+      "sha256": "bc89cb66e0e3fc7c4ddd59130c1177433ead57c667be641762660534412770e2",
+      "tests": 4, "passes": 4, "failures": 0, "errors": 0, "skipped": 0
+    },
+    "observations": [
+      "Canonical immutable contract round-trip and deterministic one-candidate output.",
+      "Actual generated SupplierOrderAmendment is submitted through the existing Core path without domain change.",
+      "No file, process, socket or graph-writer capability during synthesis; stale base refuses before model invocation."
+    ]
+  },
+  "laws": {
+    "test_commit": "72ef94a",
+    "implementation_commit": "6767ebb",
+    "file": "supplier-reentry-laws.xml",
+    "sha256": "bbf0e15144fe9310a7704dddfb87ec237f47632029dce53ecd39699aa06cdeaf",
+    "tests": 18, "passes": 18, "failures": 0, "errors": 0, "skipped": 0, "deselected": 6,
+    "observation": "Actual public source/population/admission establishes the independent initial-goal cases. Initially two is satisfied without invoking a model; three is unrealizable; two eligible accepted targets refuse ambiguity. These cases are conformance sources, not action observations."
+  },
+  "full_closure_red": {
+    "test_commit": "48c9df3",
+    "implementation_commit": "6767ebb",
+    "file": "supplier-reentry-closure-red-corrected.xml",
+    "sha256": "320a1dc3f47d0cfbd2657ed04134823ba433869e6ebab48c3c72f4b7bf5bab18",
+    "tests": 1, "failures": 1, "errors": 0,
+    "observation": "Actual synthesized proposal, TYPE/ACCEPT, direct-grant AUTHORIZE, controlled source write, independent capture, existing KCS preparation/admission, complement and JSONL-only replay ran. Final reevaluation remained PENDING instead of SATISFIED.",
+    "earlier_interrupted_draft": "supplier-reentry-closure-red.xml: no test completed. Interrupted after identifying that a draft assertion compared graph object identity, not replay semantics. The corrected test compares receipt, complete domain frame and protocol bytes."
+  },
+  "first_closure_implementation": {
+    "implementation_commit": "1cf32f1",
+    "implementation_tree": "b8d9c40396003808cd5fd4e020cd5d63364955df",
+    "file": "supplier-reentry-first-full.xml",
+    "sha256": "b99cc383a45f14812afa41575371e14e609e44ebfa9250305fc911fb5ba291ee",
+    "tests": 24, "passes": 21, "failures": 0, "errors": 3, "skipped": 0,
+    "observation": "All three lifecycle cases stopped in shared setup because post-proposal reevaluation returned REFUSED instead of PENDING. This is not an executed GREEN full lifecycle."
+  },
+  "strategy_output_red": {
+    "test_commit": "9c469df",
+    "implementation_commit": "1cf32f1",
+    "file": "supplier-reentry-boundaries-red.xml",
+    "sha256": "c0b18b27539e92e527ca47638e381867192c1e625c74d6a8180aeec6249479c1",
+    "tests": 5, "passes": 3, "failures": 2, "errors": 0, "skipped": 0,
+    "rca": "The synthesizer accepted schema-valid strategy output without independently checking its agreement with the bound goal/operator and supplied model prediction. A different target or a faulty prediction hidden by the strategy still produced CANDIDATES.",
+    "required_guard": "Validate exact permitted payload and modeled source/frame before returning any candidate, independently of a replaceable strategy's claimed success."
+  },
+  "corrected_focused_green": {
+    "implementation_commit": "a056077ea13955d9de3db7e98e54b973d0967bd4",
+    "implementation_tree": "3fce91549bd58027b0fa49d37a4a9418dba17b11",
+    "main_test_commit": "01c957e",
+    "boundary_test_commit": "f817373",
+    "file": "supplier-reentry-focused-corrected.xml",
+    "sha256": "859009ca9fc86a4bf55594fb1593240af55ac3a66aede65908e9be092b565149",
+    "tests": 35, "passes": 35, "failures": 0, "errors": 0, "skipped": 0,
+    "basetemp": "pytest-reentry-focused-corrected",
+    "observations": [
+      "Actual synthesized action traverses TYPE/ACCEPT, direct-grant authorization, dispatch, one controlled source attempt, independent capture and ordinary observed-source KCS preparation/admission.",
+      "All pre-admission checkpoints preserve accepted quantity one; linked observed admission yields quantity two with complete complement and supersession history.",
+      "JSONL-only reopen and fresh reevaluation yield SATISFIED without a candidate, retention or effect.",
+      "Failed-after-write retains FAILED while separately observed bytes support the accepted correction; success with unchanged bytes refuses episode closure.",
+      "Retained-only and unrelated quantity-two corrections cannot falsely close the episode.",
+      "Closed role grammar, declared optional lifecycle indexes, independent model/output checks and defensive input copies repair the recorded defect classes."
+    ],
+    "count_boundary": "This run collected 35 tests before the later fast manifest/import guard was added. Its separate one-test GREEN is not added to this count."
+  },
+  "unified_gate": {
+    "status": "GREEN_HISTORICAL_387_TEST_SELECTION_BEFORE_BINDING_REPAIR",
+    "manifest": "supplier-reentry-gate.json",
+    "manifest_commit": "0d0773e6af51d9cbd20a836cea22484365aa0547",
+    "manifest_sha256": "c55c0ef92a47204cb67e19593ca81a74a3397830d2f7afbda419afaaaf624585",
+    "file": "supplier-reentry-unified.xml",
+    "sha256": "a9af16eb2508ed7d08b4cb3bdb96ab5a44ff62c27ad862a2212e33110b2feb72",
+    "basetemp": "pytest-supplier-reentry-unified",
+    "collected_tests": 387,
+    "tests": 387, "passes": 387, "failures": 0, "errors": 0, "skipped": 0,
+    "junit_seconds": "2381.750",
+    "code_at_start": "0d0773e6af51d9cbd20a836cea22484365aa0547",
+    "count_boundary": "This completed run loaded the earlier a056077 production implementation before the later binding-type regression and repair. That fourth lifecycle case is absent from its JUnit. This result does not certify dc74a6d; the fresh 388-test run does.",
+    "finding": "Historical test_replay_noninvertibility.py requires Core commit 2af45e03ee7d7bf528cef8db42c0798e6d99685b and a distinct producer. It cannot run unchanged under the integration checkout.",
+    "repair": "The manifest selects a new current-bound replay witness and separately preserves the original historical witness and hash. The explicit CORE_COMMIT convention, runtime source tree/origin, historical bytes and disjoint selection are checked.",
+    "epoch_red": {"test_commit": "fed017a", "file": "supplier-gate-epoch-red.xml", "sha256": "8766621f691343f13573c5bcd2975604ec30f5cc4fe917c74209ae48e97851e2", "failures": 1, "passes": 1, "deselected": 1},
+    "epoch_green": {"commit": "0d0773e", "file": "supplier-gate-epoch-green.xml", "sha256": "3f8ff30baec64af4def54293e0b3d10383bf2e8bfdd02ad76c74ae151ac5b0ba", "tests": 3, "passes": 3, "failures": 0, "errors": 0, "skipped": 0},
+    "core_dependency": "PASS. This is Re-entry-owned verification work, not a missing Core contract."
+  },
+  "audit_binding_type_probe": {
+    "status": "CLOSED_FOCUSED_REPAIR_AND_FRESH_UNIFIED_GREEN",
+    "test_commit": "0bb35dca115ba00bfbce410a8b0ade69004195ad",
+    "implementation_commit": "a056077ea13955d9de3db7e98e54b973d0967bd4",
+    "file": "supplier-binding-type-red.xml",
+    "sha256": "79bc590916693233705bfa0cb0c65ca04268ba8dcf2b2de3ad4bcaa41a4992ac",
+    "tests": 1, "failures": 1, "errors": 0,
+    "basetemp": "pytest-binding-type-red",
+    "selector": "test_supplier_reentry.py::test_synthesized_action_observed_kcs_and_fresh_quiescence[binding-type]",
+    "obligation": "Actual observation-derived KCS with Boolean true substituted for integer one in its ordinary binding evidence must not close the goal episode. No fake accepted view or substitute KCS is used.",
+    "count_boundary": "This case was added after the unified run collected. It is not included in the 387-test selection.",
+    "observed_failure": "SATISFIED/LINKED_OBSERVED_KCS instead of REFUSED/EVIDENCE_DISAGREEMENT.",
+    "repair_commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71",
+    "repair_tree": "28f4b35c3109649e1cf82c8edd5109aa22957460",
+    "repair": "Compare canonical bytes for the entire expected observed binding, rather than Python object equality that conflates JSON Boolean and integer values.",
+    "focused_correction": {"status": "GREEN", "tests": 4, "passes": 4, "failures": 0, "errors": 0, "skipped": 0, "file": "supplier-binding-type-corrected.xml", "sha256": "1fd98559ce110cefa5adc55aecb4fc56335686193f14935964311e2a88a55054", "basetemp": "pytest-binding-type-corrected"},
+    "fresh_unified": {"status": "GREEN", "tests": 388, "passes": 388, "failures": 0, "errors": 0, "skipped": 0, "file": "supplier-reentry-final.xml", "sha256": "7d02ef74cf3feef4a096a1ae39f21ce51fdc47f07e4fa49de42ab427f75caf0c", "basetemp": "pytest-supplier-reentry-final", "code_and_test_commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71"}
+  },
+  "runtime": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "PYTHONPATH": "src:.", "PYTHONDONTWRITEBYTECODE": "1", "pytest_cache": "disabled",
+    "future_retained_runs": "Use distinct task-owned explicit pytest basetemp paths inside the artifact directory. The shared default pytest temporary root is subject to cleanup by other concurrent sessions; missing old temporary histories are not retained replay evidence."
+  },
+  "exclusions": [
+    "full repository CI, release conformance or transfer to an unverified later Core target",
+    "source truth, delivery, demand fulfilment or causality",
+    "empirical synthesizer/model/strategy replacement",
+    "Core expansion, public vocabulary promotion, merge, push or publication"
+  ]
+}

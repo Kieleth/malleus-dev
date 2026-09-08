@@ -1,0 +1,141 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "AUTHORED_SUPPLIER_ACTION_ENTRY_ACTUAL_TYPE_ACCEPT_AND_REPLAY_NOT_FULL_REENTRY_E2E",
+  "status": "ACTION_ENTRY_GREEN",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "contract_red": "8d110ab0613050caa7ed27f63530fce31a95ced3",
+  "first_implementation": "97b9ebca6dac0a69fdd45b10ae72424f3b689e99",
+  "refusal_class_red": "04cbfb44004ce563c77d210a23552f1638947e30",
+  "implementation_commit": "940ff15d4bc1ba2e0b8a6f380f0bdacc4b6bad77",
+  "implementation_tree": "d85714e15e3f8912c8666bb2d1a1cadbc144b9ca",
+  "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "runs": {
+    "absent_api_red": {
+      "tests": 1,
+      "failures": 1,
+      "deselected": 13,
+      "file": "supplier-proposal-api-red.xml",
+      "sha256": "c8d9fde67e551fdb2e4388d341b508b7d9c1a8559810769036efa647204817a3"
+    },
+    "first_positive": {
+      "tests": 3,
+      "passes": 3,
+      "deselected": 11,
+      "file": "supplier-proposal-first.xml",
+      "sha256": "7b32e58f97c612270733a6c783437d743f80dff58fdfbf28054a46a8a82d3706"
+    },
+    "expanded_focused_before_repair": {
+      "tests": 26,
+      "passes": 5,
+      "failures": 21,
+      "file": "supplier-proposal-focused.xml",
+      "sha256": "d88e8b8d01189737419ce78114a14323519a79a71f8a4f95807dd3b5ce5cba9b",
+      "adapter_sha256": "6b3f20a2a2b541a2e38c8a3147d34c17b3bdce30fdbdd229448dc06ef23e4946"
+    },
+    "initial_diagnostic_red": {
+      "tests": 4,
+      "failures": 4,
+      "deselected": 27,
+      "file": "supplier-proposal-refusal-red.xml",
+      "sha256": "be93c44f9a6c5e4787d7776ae1f3b0e40754991d07843c16b70acdfe180792b3",
+      "limitation": "One case incorrectly constructs the unrelated public ProtocolMachineProgramRefusal. This is not the final corrected class regression."
+    },
+    "refusal_class_red": {
+      "tests": 5,
+      "failures": 5,
+      "deselected": 27,
+      "file": "supplier-proposal-refusal-class-red.xml",
+      "sha256": "621be595b5835049db3d5469816b4d530279dfdd94459d666f19676564c7a3f9"
+    },
+    "fast_repair_green": {
+      "tests": 12,
+      "passes": 12,
+      "deselected": 20,
+      "file": "supplier-proposal-refusal-green.xml",
+      "sha256": "ed409e4ffda0c4e37c38626a39168185523c13da2f60099302e925bac8139a98"
+    },
+    "unified": {
+      "tests": 141,
+      "passes": 141,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "manifest": "supplier-proposal-gate.json",
+      "file": "supplier-proposal-unified.xml",
+      "sha256": "7c0d59bb46e694dd45c577f8dc3a1b1cccb1680c1a77234b53ed5cc566d90ad1",
+      "per_module": {
+        "test_supplier_proposals": 32,
+        "test_supplier_action_contract": 23,
+        "test_accepted_read_view": 23,
+        "test_proposal_history": 13,
+        "test_history_checks": 6,
+        "test_assessment_history": 10,
+        "test_decision_history": 12,
+        "test_check_executor": 22
+      }
+    }
+  },
+  "retained_positive": {
+    "first_file": "supplier-proposal-first-history.jsonl",
+    "unified_file": "supplier-proposal-unified-history.jsonl",
+    "independently_built_histories_byte_identical": true,
+    "sha256": "fee9b3304fa65f7e2d1c838023ae9aa181d83caa2dc706f1c1ecc029525e0fc4",
+    "fresh_process_reopen": true,
+    "event_count": 48,
+    "protocol_records": 25,
+    "accepted_kcs": 2,
+    "ledger_head": "sha256:b358d06c063a758a62f12cb4ae09a61261f236f6fbf7f83c1f36de53dffc8a78",
+    "receipt": "sha256:e73650226cf5dd369323332657eb07bc67e7851c2a157bf029d98f27c03c9769",
+    "graph_digest": "sha256:8e4bc9cbbbcd68463cd2bbb94db8a8aa8be2255fa09b4bce7a4828423dc7e93f",
+    "protocol_identity": "sha256:48fbb9bc0cfb6e31a57e53926a0da8e63475e2c98349f79a16367625d80b8dd3",
+    "action_acceptance_head": "sha256:d0715f65dd8bf332771571cf5e35538674c89de5cc94aa4ab2167de41f04ac54",
+    "proposal_state": "ACCEPTED",
+    "authorization_state": "PENDING",
+    "supplier_quantity": 1,
+    "record_ids": [
+      "O1",
+      "X1",
+      "contains:O1:X1",
+      "supplier-order-state:B:e4"
+    ]
+  },
+  "file_sha256": {
+    "SUPPLIER_PROPOSALS.md": "31c8f8f6c7c962e3a3be087df28843baefb6564bf373ac14113d3ad67f0c32b2",
+    "supplier_proposals.py": "083fd09110d5b09bc8ea89dac87d8080754ba6eef8a00ec9d29cab0e8349eb23",
+    "test_supplier_proposals.py": "24d8a18541bfa85281e50c6fda5b3d8904c06cbaf9d40c47798425bb33ba1e7d",
+    "supplier-proposal-gate.json": "c0b9eb7fcbc757651c005057cf27fa1ab729127b64f0d7565f132c5f54996ef1"
+  },
+  "SP_3": "Deferred lookup of a nonexistent facade exception masked refusals. The repair translates local parsing errors only, preserves upstream typed ValueErrors unchanged, and mechanically forbids dependency-attribute lookup in exception handlers. Native finite-runtime late refusals remain native, not substituted by the unrelated public machine exception.",
+  "runtime": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "config": "pyproject.toml",
+    "PYTHONPATH": "src:.",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "pytest_cache": "disabled",
+    "origin_and_gate_binding": "PASS"
+  },
+  "audit": {
+    "new_cut_files": 4,
+    "scope": "research/semantic_reentry_external_design only",
+    "core_ontology_locked_fixture_paper_changes": false,
+    "ruff_format_and_diff_checks": "PASS",
+    "counts_overlap_not_added": true
+  },
+  "broader_gate": "The earlier population selection has 512 passes and one Core-confirmed historical-example failure. This action-entry result does not waive or replace it.",
+  "exclusions": [
+    "pure synthesis",
+    "full Re-entry Contract closure",
+    "supplier authorization",
+    "dispatch",
+    "execution",
+    "independent source capture",
+    "observation-linked KCS",
+    "final quiescence",
+    "source truth or authority legitimacy",
+    "replacement demonstrated",
+    "full repository CI",
+    "shared public API promotion",
+    "merge or publication"
+  ]
+}

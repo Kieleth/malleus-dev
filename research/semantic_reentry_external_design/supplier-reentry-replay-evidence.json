@@ -1,0 +1,217 @@
+{
+  "cases": [
+    {
+      "accepted_kcs_count": 3,
+      "accepted_trace_source_sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "action_record_hash": "sha256:6e2d5682a158aa9b8a0a09e91fc4aa2a1ebec97cb14a5e08b8c6c1e270e71587",
+      "candidate_count": 0,
+      "captured_source_sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "case": "ordinary",
+      "complement_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1"
+      ],
+      "event_count": 74,
+      "execution_status": "SUCCEEDED",
+      "fresh_contract_identity": "sha256:1d87731d53ecf9eca514dad47beb9a9d818e849f4edd937682ebe908d2c56a65",
+      "fresh_reason": "LINKED_OBSERVED_KCS",
+      "fresh_status": "SATISFIED",
+      "graph_digest": "sha256:c24e6328ed8a61201dd3a525698e2b49c033bf06fdc5fc5d11e3082044683e42",
+      "history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ0/jsonl-only/history.jsonl",
+      "history_sha256": "533980368b98f97e444f7f717d2a2f09c8d4748a4f94cfb89fa2dce2281b5609",
+      "ledger_head": "sha256:9cb2f611e1d202c828bb3fb1ea6c682f72cc30df1c1d87182b416f8fac14ba8c",
+      "ledger_unchanged": true,
+      "observation": "CONFIRMED",
+      "one_action_dispatch_execution_observation": true,
+      "receipt_identity": "sha256:e9a053998be79c0c19c06054c9989fb539da7a4e7c98a65a434100909b44577f",
+      "record_history_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1",
+        "supplier-order-state:B:e4",
+        "supplier-order-state:B:reentry-amendment-1"
+      ],
+      "supplier_record": {
+        "id": "supplier-order-state:B:reentry-amendment-1",
+        "ordered_quantity": 2,
+        "product_code": "Y",
+        "source_occurrence_id": "reentry-amendment-1",
+        "supplier_order_id": "B",
+        "type": "SupplierOrderState"
+      }
+    },
+    {
+      "accepted_kcs_count": 3,
+      "accepted_trace_source_sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "action_record_hash": "sha256:6e2d5682a158aa9b8a0a09e91fc4aa2a1ebec97cb14a5e08b8c6c1e270e71587",
+      "candidate_count": 0,
+      "captured_source_sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "case": "failed_after_write",
+      "complement_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1"
+      ],
+      "event_count": 74,
+      "execution_status": "FAILED",
+      "fresh_contract_identity": "sha256:f09a45f140bf334a98de38a40a0347369538852e79f2eaeacfb7c81d0d6cbba3",
+      "fresh_reason": "LINKED_OBSERVED_KCS",
+      "fresh_status": "SATISFIED",
+      "graph_digest": "sha256:c24e6328ed8a61201dd3a525698e2b49c033bf06fdc5fc5d11e3082044683e42",
+      "history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ1/jsonl-only/history.jsonl",
+      "history_sha256": "e5ce9b688c3921794a76bcd200aaa4cb372d4f377db01e945953c75a54616db7",
+      "ledger_head": "sha256:eeab88028802bc1442fcce8c4251b8842ced48eb913baeae5bd8ffc37a87dad2",
+      "ledger_unchanged": true,
+      "observation": "CONFIRMED",
+      "one_action_dispatch_execution_observation": true,
+      "receipt_identity": "sha256:8ef203923d3e79c7c3d4bafd094e67ada05ed700160326df9e7900eb4d538c06",
+      "record_history_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1",
+        "supplier-order-state:B:e4",
+        "supplier-order-state:B:reentry-amendment-1"
+      ],
+      "supplier_record": {
+        "id": "supplier-order-state:B:reentry-amendment-1",
+        "ordered_quantity": 2,
+        "product_code": "Y",
+        "source_occurrence_id": "reentry-amendment-1",
+        "supplier_order_id": "B",
+        "type": "SupplierOrderState"
+      }
+    },
+    {
+      "accepted_kcs_count": 2,
+      "accepted_trace_source_sha256": "edc05a0c3b95e04a54cd83fb5075ec91795680497c925e04635562b35d057e85",
+      "action_record_hash": "sha256:6e2d5682a158aa9b8a0a09e91fc4aa2a1ebec97cb14a5e08b8c6c1e270e71587",
+      "candidate_count": 0,
+      "captured_source_sha256": "edc05a0c3b95e04a54cd83fb5075ec91795680497c925e04635562b35d057e85",
+      "case": "unchanged_success",
+      "complement_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1"
+      ],
+      "event_count": 66,
+      "execution_status": "SUCCEEDED",
+      "fresh_contract_identity": "sha256:fc51081352aa9d48395075afd8c1e573d8c46d6a2253deea16d027a36b20a398",
+      "fresh_reason": "EPISODE_TERMINAL",
+      "fresh_status": "REFUSED",
+      "graph_digest": "sha256:8e4bc9cbbbcd68463cd2bbb94db8a8aa8be2255fa09b4bce7a4828423dc7e93f",
+      "history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ2/history.jsonl",
+      "history_sha256": "a92af6c72d53183e0b9319134e6ef92fe7e3dc768cdb7c2f44517f44f7ecb994",
+      "ledger_head": "sha256:34f70cd3191f50d272c84dfafa92905e29c0edb10262a744e0acb447344b255a",
+      "ledger_unchanged": true,
+      "observation": "CONTRADICTED",
+      "one_action_dispatch_execution_observation": true,
+      "receipt_identity": "sha256:8866b92bec387d9e3ba88f3d30179c1cf1cb6d19dc1accec2d50251c14e212ac",
+      "record_history_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1",
+        "supplier-order-state:B:e4"
+      ],
+      "supplier_record": {
+        "id": "supplier-order-state:B:e4",
+        "ordered_quantity": 1,
+        "product_code": "Y",
+        "source_occurrence_id": "e4",
+        "supplier_order_id": "B",
+        "type": "SupplierOrderState"
+      }
+    },
+    {
+      "accepted_kcs_count": 3,
+      "accepted_trace_source_sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "action_record_hash": "sha256:6e2d5682a158aa9b8a0a09e91fc4aa2a1ebec97cb14a5e08b8c6c1e270e71587",
+      "candidate_count": 0,
+      "captured_source_sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "case": "binding_type",
+      "complement_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1"
+      ],
+      "event_count": 74,
+      "execution_status": "SUCCEEDED",
+      "fresh_contract_identity": "sha256:1054de41ab1777098fe05e827e422278720f5fa73e18ba8f654e457565fb8897",
+      "fresh_reason": "EVIDENCE_DISAGREEMENT",
+      "fresh_status": "REFUSED",
+      "graph_digest": "sha256:c24e6328ed8a61201dd3a525698e2b49c033bf06fdc5fc5d11e3082044683e42",
+      "history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ3/jsonl-only/history.jsonl",
+      "history_sha256": "ac918bd4507ef8cbeb09e60d182aa4fcf9f4cadcae13f6520f2cbd50d7caac6b",
+      "ledger_head": "sha256:7e11044fe04b44961209bdaf4d59a506c90691eacbeea3250b24396bb2d6bceb",
+      "ledger_unchanged": true,
+      "observation": "CONFIRMED",
+      "one_action_dispatch_execution_observation": true,
+      "receipt_identity": "sha256:7ae962b44c09be7f040c8eaee8256a0c71005495572019b7138e15421d825f71",
+      "record_history_ids": [
+        "O1",
+        "X1",
+        "contains:O1:X1",
+        "supplier-order-state:B:e4",
+        "supplier-order-state:B:reentry-amendment-1"
+      ],
+      "supplier_record": {
+        "id": "supplier-order-state:B:reentry-amendment-1",
+        "ordered_quantity": 2,
+        "product_code": "Y",
+        "source_occurrence_id": "reentry-amendment-1",
+        "supplier_order_id": "B",
+        "type": "SupplierOrderState"
+      }
+    }
+  ],
+  "claim": "FRESH_REPLAY_AND_PURE_EPISODE_CLOSURE_OF_CORRECTED_LIFECYCLE_HISTORIES",
+  "classification": "CONFORMANCE_FIXTURE",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "core_origin": "/private/tmp/malleus-reentry-integration.waW6z7/repo/src/malleus/compiler.py",
+  "dependencies": {
+    "PyYAML": "6.0.3",
+    "jsonschema": "4.26.0",
+    "linkml": "1.11.1",
+    "linkml-runtime": "1.11.1",
+    "networkx": "3.6.1",
+    "pytest": "9.1.1",
+    "ruff": "0.11.9",
+    "tzdata": "2026.3"
+  },
+  "evaluation_test_effect_imports_denied": true,
+  "file_io_and_model_forbidden_during_pure_binding_and_evaluation": true,
+  "implementation_commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71",
+  "limits": [
+    "Synthetic one-attempt source, not real supplier or delivery",
+    "Source identity is trusted-process evidence, not arbitrary-process attestation",
+    "Binding-type case has valid source-derived quantity two but refuses exact episode closure",
+    "Unchanged-source case has no separate JSONL-only subdirectory; replay still consumes only its named ledger"
+  ],
+  "python": "3.12.9 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 12:55:12) [Clang 14.0.6 ]",
+  "replay_research_test_imports_denied": true,
+  "independent_run_byte_agreement": {
+    "cases": [
+      {
+        "case": "ordinary",
+        "history_sha256": "533980368b98f97e444f7f717d2a2f09c8d4748a4f94cfb89fa2dce2281b5609",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ0/jsonl-only/history.jsonl"
+      },
+      {
+        "case": "failed_after_write",
+        "history_sha256": "e5ce9b688c3921794a76bcd200aaa4cb372d4f377db01e945953c75a54616db7",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ1/jsonl-only/history.jsonl"
+      },
+      {
+        "case": "unchanged_success",
+        "history_sha256": "a92af6c72d53183e0b9319134e6ef92fe7e3dc768cdb7c2f44517f44f7ecb994",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ2/history.jsonl"
+      },
+      {
+        "case": "binding_type",
+        "history_sha256": "ac918bd4507ef8cbeb09e60d182aa4fcf9f4cadcae13f6520f2cbd50d7caac6b",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ3/jsonl-only/history.jsonl"
+      }
+    ],
+    "claim": "FOCUSED_AND_FRESH_UNIFIED_LIFECYCLE_HISTORIES_ARE_BYTE_IDENTICAL"
+  }
+}

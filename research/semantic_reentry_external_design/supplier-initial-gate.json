@@ -1,0 +1,22 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "INITIAL_SUPPLIER_SOURCE_AND_RELEVANT_REENTRY_PUBLIC_POPULATION_REGRESSIONS",
+  "tests": [
+    "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+    "research/semantic_reentry_external_design/test_supplier_components.py",
+    "research/semantic_reentry_external_design/test_supplier_population.py",
+    "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+    "research/semantic_reentry_external_design/test_accepted_read_view.py",
+    "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+    "research/semantic_reentry_external_design/test_supplier_program.py",
+    "research/semantic_reentry_protocol/test_consumer.py",
+    "research/semantic_reentry_protocol/test_guardrails.py",
+    "tests/contract_compiler/pareto/test_population_plan.py",
+    "tests/contract_compiler/pareto/test_population_trace.py",
+    "tests/contract_compiler/pareto/test_governed_population.py",
+    "tests/contract_compiler/pareto/test_object_event_population.py",
+    "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+    "tests/contract_compiler/pareto/test_change_composition_context.py",
+    "tests/contract_compiler/pareto/test_public_compiler.py"
+  ]
+}

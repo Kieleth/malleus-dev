@@ -1,0 +1,50 @@
+{
+  "schema": "malleus.reentry.supplier-fixture/research-v1",
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "FROZEN_INPUTS_NOT_EXECUTED_ACTION",
+  "episode": {
+    "id": "reentry:supplier-B:commitment-two:episode-1",
+    "action_key": "reentry:supplier-B:commitment-two:episode-1"
+  },
+  "source": {
+    "path": "input/supplier-before.jsonl",
+    "sha256": "sha256:edc05a0c3b95e04a54cd83fb5075ec91795680497c925e04635562b35d057e85",
+    "role": "SYNTHETIC_INITIAL_SOURCE"
+  },
+  "expected_source": {
+    "path": "oracle/supplier-after.jsonl",
+    "sha256": "sha256:7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+    "role": "EXPECTED_OUTPUT_ONLY"
+  },
+  "goal": {
+    "kind": "GoalPredicate", "supplier_order_id": "B", "product_code": "Y",
+    "operator": "EQUALS", "quantity": 2
+  },
+  "operator": {
+    "kind": "AMEND_SUPPLIER_ORDER", "expected_quantity": 1,
+    "requested_quantity": 2, "new_source_occurrence_id": "reentry-amendment-1",
+    "precondition": "EXACT_CAPTURED_PRESTATE_BYTES",
+    "changed_fields": ["event_id", "quantity"]
+  },
+  "mapping": {
+    "type": "SupplierOrderState",
+    "initial_record_id": "supplier-order-state:B:e4",
+    "replacement_record_id": "supplier-order-state:B:reentry-amendment-1",
+    "supersedes_record_id": "supplier-order-state:B:e4",
+    "valid_time_kind": "ORDER_ONLY",
+    "fields": {
+      "source_occurrence_id": "event_id", "ordered_quantity": "quantity",
+      "product_code": "product_code", "supplier_order_id": "supplier_order_id"
+    }
+  },
+  "preservation": {
+    "mode": "ALL_OTHER_ACCEPTED_RECORDS_AND_HISTORY",
+    "required_ids": ["O1", "X1", "contains:O1:X1"]
+  },
+  "stopping": {
+    "candidate_budget": 1, "dispatch_attempt_budget": 1,
+    "automatic_retry": false, "ambiguity": "REFUSE_IF_NOT_UNIQUE",
+    "pending_is_satisfied": false
+  },
+  "protocol_dependency": "CORE_COMPILED_ASSENT_CLOSURE_REQUIRED"
+}

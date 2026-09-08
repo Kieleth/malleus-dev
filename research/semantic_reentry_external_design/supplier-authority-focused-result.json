@@ -1,0 +1,81 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "ACTUAL_SUPPLIER_DIRECT_GRANT_CONTROL_AND_REPLAY_NOT_FULL_REENTRY_E2E",
+  "status": "FOCUSED_GREEN_UNIFIED_GATE_PENDING",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "contract_red": "430dc3379b5f6d772cf7468b4b3bece282f93d2e",
+  "implementation_commit": "1ec94392ba2b8084761302c8949444b21c7e8f6f",
+  "implementation_tree": "23910ba63f4c6264661641e3a4082df5caae22c3",
+  "corrected_tests_commit": "8413a7bd50ed0fba525d022aa877d8df99c6c116",
+  "corrected_tests_tree": "32541a9fbbc095235f6bd12510906d8ed8081a1b",
+  "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "runs": {
+    "absent_api_red": {
+      "tests": 1,
+      "failures": 1,
+      "deselected": 13,
+      "file": "supplier-authority-bound-fixture-red.xml",
+      "sha256": "a2d66b55fc7199cf33c6ddcf643779fdb92e61bb2282adf1e26b64f26fc9bf7c"
+    },
+    "first_focused": {
+      "tests": 2,
+      "passes": 1,
+      "failures": 1,
+      "deselected": 12,
+      "file": "supplier-authority-first.xml",
+      "sha256": "7fe318154fccaccdc965d754adb5fd6fcf37f9791bc9e6475e1e39d21ad9a9fe",
+      "limitation": "The positive case failed in its test snapshot before authority preparation. Deepcopy cannot copy the immutable mappings inside Core values. No permission result was established."
+    },
+    "focused_green": {
+      "tests": 16,
+      "passes": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "selection": [
+        "research/semantic_reentry_external_design/test_supplier_authorization.py"
+      ],
+      "file": "supplier-authority-focused.xml",
+      "sha256": "00eeee18b56fa98fdc1a8a61b203f6b52d485851f5e31bc0faf4e78c25604102"
+    }
+  },
+  "observations": [
+    "Matching grant produces actual SATISFIED assessments and AUTHORIZE.",
+    "Wrong grantee produces actual VIOLATED assessments and BLOCK.",
+    "Controlled engine failure produces MonitorFailure, UnavailableAuthorityAssessment/UNKNOWN and CLARIFY.",
+    "Every permission checkpoint and JSONL-only reopen preserve the complete accepted domain frame and B/Y/1.",
+    "Policy decision and replay do not invoke a check producer.",
+    "Invalid preparation and absent proposal ACCEPT refuse before retention.",
+    "Substitute owners refuse without being consulted.",
+    "Permission introduces no dispatch, execution or observation."
+  ],
+  "test_snapshot_guard": "Snapshots use public canonical KCS/revision bytes, detached graph bytes and frozen history entries. A real-prefix regression checks those representations; a structural regression rejects deepcopy in the module. No production Core change was made.",
+  "file_sha256": {
+    "SUPPLIER_AUTHORIZATION.md": "0ff505e0b50c8e5cc0a21a14ee5b666f74e41a3766a7220491c3b66892bb37c7",
+    "supplier_authorization.py": "b54ed4706773816e8ddf25c6921ee2e10b746e104e072603e894f0d29aa53c1a",
+    "test_supplier_authorization.py": "de58eedd2f348bd8fbaf2ea38ac21bad10d012bdf224c817dd97cc8f41ed6a18"
+  },
+  "runtime": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "config": "pyproject.toml",
+    "PYTHONPATH": "src:.",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "pytest_cache": "disabled"
+  },
+  "remaining_verification": [
+    "Expanded authority stale-computation and late atomic-refusal boundaries.",
+    "Relevant unified authorization gate and its independent retained replay evidence."
+  ],
+  "broader_gate": "The earlier population selection has 512 passes and one Core-confirmed historical document-example failure. This result neither fixes nor waives it. The separate 141-pass action-entry gate excludes this authorization module; counts are not added.",
+  "exclusions": [
+    "pure synthesis and full Re-entry Contract closure",
+    "dispatch or execution",
+    "independent source capture and observation-linked KCS",
+    "final episode quiescence",
+    "full supplier E2E or full repository CI",
+    "authority legitimacy, source truth or causal proof",
+    "demonstrated implementation replacement",
+    "shared API promotion, merge or publication"
+  ]
+}
