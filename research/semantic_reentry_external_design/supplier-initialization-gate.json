@@ -1,0 +1,16 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "SUPPLIER_INITIALIZATION_AND_ITS_DECLARED_CORE_BOUNDARIES_NOT_FULL_E2E",
+  "tests": [
+    "research/semantic_reentry_external_design/test_supplier_initialization.py",
+    "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+    "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+    "research/semantic_reentry_external_design/test_supplier_program.py",
+    "research/semantic_reentry_external_design/test_accepted_read_view.py",
+    "research/action_history_contract_freeze/programs/test_registration_history.py",
+    "research/action_history_contract_freeze/programs/test_initialization_history.py",
+    "research/action_history_contract_freeze/programs/test_check_executor.py",
+    "tests/contract_compiler/pareto/test_finite_protocol_history.py"
+  ],
+  "unchanged_broader_population_gate": "supplier-initial-result.json records 512 passes and one Core-confirmed baseline failure. This initialization-specific selection does not replace or waive that result."
+}

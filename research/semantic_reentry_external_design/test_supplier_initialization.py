@@ -320,3 +320,18 @@ def test_every_initializer_input_is_explicit_and_no_test_helpers_are_imported():
     )
     source = inspect.getsource(import_module(MODULE))
     assert "test_" not in source and 'content_digest("pending")' not in source
+
+
+def test_initialization_gate_and_runtime_are_from_this_checkout():
+    root = Path(__file__).resolve().parents[2]
+    assert Path(api.__file__).resolve().is_relative_to(root / "src")
+    assert (
+        Path(inspect.getfile(initializer())).resolve().parent
+        == Path(__file__).resolve().parent
+    )
+    manifest = json.loads(
+        (Path(__file__).parent / "supplier-initialization-gate.json").read_bytes()
+    )
+    paths = manifest["tests"]
+    assert paths and len(paths) == len(set(paths))
+    assert all((root / path).is_file() for path in paths)

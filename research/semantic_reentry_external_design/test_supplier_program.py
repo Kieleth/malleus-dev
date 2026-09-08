@@ -106,6 +106,23 @@ def test_program_authoring_is_deterministic_and_preserves_inputs(
     assert sources == SOURCES and policies == POLICIES
 
 
+def test_role_map_serialization_and_order_cannot_change_program_bytes(
+    action_compilation, supplied_program
+):
+    # Maps have named roles, not an implicit instruction order. Canonical
+    # serialization must not change the program when those roles are reused.
+    bundle = load_bundle(supplied_program)
+    selected = bundle["constants"]["initialization"]
+    assert (
+        builder()(
+            action_compilation.artifact.artifact_bytes,
+            source_ids=selected["sources"],
+            policy_ids=selected["policies"],
+        )
+        == supplied_program
+    )
+
+
 def test_type_specialization_does_not_rewrite_ordinary_caller_identifiers(
     action_compilation,
 ):
