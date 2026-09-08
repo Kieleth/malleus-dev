@@ -1,0 +1,88 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000432",
+  "ledger": "overseer",
+  "sequence": 432,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:921c7b968f49a78d3a5b1efd00f5bf31e96c281186461ec50d8082c1284ed77a",
+  "recorded_at": "2026-09-08T17:29:27Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "adopter-owned-action-input-producer",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind reference action inputs on an existing history and the Shop/non-Shop proof.",
+  "why": "Luis approved the narrow extraction. RED 55f7a8d requires the missing producer. GREEN 4454199 exposes four repository-local constructors taking caller-owned history and explicit sources, policies, IDs, actors and clocks. Old checkpoint/context assembly is removed from fixture helpers. A fresh process prohibits test and Shop imports while initializing and proposing over three admitted non-Shop records. Missing inputs refuse; stale or malformed submission preserves exact bytes. Combined finite-action, Small Shop and fresh-import gate: 742 passed, zero skips/failures. The new 106-event sequential Shop log exactly matches its recorded predecessor SHA-256. Ruff/format/diff passed. The selected program and existing atomic owner remain authoritative. The report discloses fixture prerequisites, test-harness corrections and the remaining caller-authored lifecycle envelopes. No Robotics/Re-entry integration, new interpreter, public SDK, package change, full-repository rerun, release or push is claimed.",
+  "data": {
+    "affected_ids": [
+      "CC-R10",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-action-input-producer.md",
+        "after_digest": "sha256:0f17b34a39d34e8b697a09b036577369d585449652e5166d20ca58e96c342641",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/action_inputs.py",
+        "after_digest": "sha256:a0ef5ded20344129d4c3cef614341353a56b01517445396d19f18756b4cf9a8a",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_action_inputs.py",
+        "after_digest": "sha256:a46f11269d2a693ff25c672ad1fdf465d12e8b6c922a627964e37d48907016cc",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_initialization_history.py",
+        "after_digest": "sha256:72164890989b07cf4f0911c741075cd6ffd37e15418d51c3e9e8df754cd9caf4",
+        "change": "MODIFIED",
+        "before_digest": "sha256:f324f597fed7a32042cdc1a9b6b7ddb2cf74b348ba4e65b4a0e29c2770a0089c"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_proposal_history.py",
+        "after_digest": "sha256:68cd36f63790537db8d80b25694b50f2e049f0f4b17bf871e1d81fb365e213d2",
+        "change": "MODIFIED",
+        "before_digest": "sha256:fc23a62ed756f9c15702a0565d255844ed0d457ebe8a9f75ae41a04114588c94"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/sequential_fixture.py",
+        "after_digest": "sha256:7606cc5e8316fdac6bb84b257f0931b01dc0c35e4f7ea81488a1ab9e2325e67e",
+        "change": "MODIFIED",
+        "before_digest": "sha256:2848ad7fab14acfe5a9ef04c95ffa9e39573751ce3eadc10af127ccd0054108e"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "55f7a8d082d10e8980af6f1960577e67a7a78c7f"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "44541993f964674ac4cc994949e121f9de7387ba"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "89e8fbecb4e71a28bb9fbefa755e8cd832cbb83e"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R10"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:ba3372cb1ff99749bafc1d24049ad893c329028badfdf8eee662e0adcb998e75"
+}
