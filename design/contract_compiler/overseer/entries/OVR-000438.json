@@ -1,0 +1,116 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000438",
+  "ledger": "overseer",
+  "sequence": 438,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:552fd59ef75a148d2266faf2999eb7606eba53df46662207c03d7299a52f204f",
+  "recorded_at": "2026-09-08T20:01:52Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "shop-rule-check-producer-evidence",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the inspected Shop evidence successor without rewriting earlier runs.",
+  "why": "The full Shop regression after the compiled-view repair found 15 producer-bound evidence failures and 238 passing cases. Existing guards correctly refused prior compiler identities. Five real fresh histories at a342c72c produced a separate successor. Recursive comparison found only recorded SHA-256 fingerprint changes; both graph files and all domain values, sources, counts, operation fields and time semantics stayed exact. Twenty historical outputs remain unchanged. Fourteen evidence guards pass without discarded fields, fallback, regeneration in tests, or an altered compiler. Current producer is sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da. The combined rerun is recorded separately after completion. The Re-entry response records a proposed in-memory incremental-projection contract only; no new Core work is activated. No historical receipt, downstream pin, package, dependency or remote mutation.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-incremental-projection-core-response.md",
+        "change": "CREATED",
+        "after_digest": "sha256:411d45d8a1965144e0290178c76580bd70ec6fc455ff4024318e68f2c3593c25"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/README.md",
+        "change": "CREATED",
+        "after_digest": "sha256:fc314b210a0e83a0ea0f278cf9e2ba5b171db283ad6d3cf61fc990d070599339"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/binding.json",
+        "change": "CREATED",
+        "after_digest": "sha256:91e81eb04464b82c4c37159b2b487bd56819ea779de06d202ce8fa21e24e1f7d"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/correction/explanation.json",
+        "change": "CREATED",
+        "after_digest": "sha256:c7658f2c4d668a542b4c54de89ad99562fd9eb0d2b1a154881045aff0e4f12a1"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/correction/graph.json",
+        "change": "CREATED",
+        "after_digest": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/correction/receipt.json",
+        "change": "CREATED",
+        "after_digest": "sha256:41d0086fd9df4a999503a904d2080365c1868a0985de0ec63171066b789e4832"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/fresh_import/evidence.json",
+        "change": "CREATED",
+        "after_digest": "sha256:74201447870a845bb6f4bb7d7f948354003619d39adb37fd562a1e0d5aa4933f"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/object_event/evidence.json",
+        "change": "CREATED",
+        "after_digest": "sha256:ac91dfba52bfdb1b64a4b3d5d080a34b130e71a8d30fb58bf708defc20e678e7"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/public_population/evidence.json",
+        "change": "CREATED",
+        "after_digest": "sha256:abc3c4446d4bebe32d508f7a7fb2d46413708e477e678a35a3254d4fa1548987"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/showcase/explanation.json",
+        "change": "CREATED",
+        "after_digest": "sha256:55f53637aa39303d845f005b993b72a7c5c8f0668cdde2c92cc9583cf1c8a3f9"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/showcase/graph.json",
+        "change": "CREATED",
+        "after_digest": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/showcase/queries.json",
+        "change": "CREATED",
+        "after_digest": "sha256:033212a01dd6394ace876789cfd878f6eff80a1e00fb51e8e2d6676654951c27"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08_rule_check/showcase/receipt.json",
+        "change": "CREATED",
+        "after_digest": "sha256:d7bd9f9b444a924270f8f36b243f2e31aed1105160be8ac6e6a4c650d87a8f58"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_assertions.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:d60bdfb87f386e0a142ae29bef26ac3e28fd4763b5052043f025a524fd738fcd",
+        "before_digest": "sha256:18aa45c3f300386079aeb96ce1af6d2e6b324e00fbb287559a947c857453f88b"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/test_current_evidence.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:0f1edd1be8ab09c74cdcf9c95cabbb958e30801eaacad2b977ddc575ea02f397",
+        "before_digest": "sha256:354b8896716e091e652aa3db3502b5ce41f62b065a3198fabc9ceffdbc0c12e2"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "9ad9261a6b33c986b91f695392f66fd0e18018b2"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:d7d86faf3c56da4668247e1f71540c50e2ef3fae935a9f22bd5cfa0380e4fdf4"
+}
