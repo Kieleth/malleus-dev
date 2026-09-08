@@ -58,19 +58,10 @@ def selected_prefix(tmp_path_factory, action_compilation):
     identity = content_digest(json.loads(bundle))
     history.append_anchors(
         anchors=(
-            api.KnowledgeAnchorInput(
-                machine_event=canonical(
-                    {
-                        "event_type": "ARTIFACT_REGISTERED",
-                        "payload": {
-                            "artifact_id": "artifact:read:program",
-                            "artifact_identity": identity,
-                        },
-                    }
-                ),
-                retained_bytes=bundle,
+            api.structural_evidence_anchor(
+                record_id="artifact:read:program",
+                content=bundle,
                 media_type="application/json",
-                role="RETAINED_EVIDENCE",
             ),
         ),
         transaction_time=TIME,
@@ -243,24 +234,12 @@ def test_wrong_input_kinds_refuse_loudly(owner, which):
 def test_new_full_head_needs_a_fresh_context_even_when_graph_unchanged(owner):
     history, replay, context = owner
     content = b"explicit conformance note"
-    from hashlib import sha256
-
     history.append_anchors(
         anchors=(
-            api.KnowledgeAnchorInput(
-                machine_event=canonical(
-                    {
-                        "event_type": "ARTIFACT_REGISTERED",
-                        "payload": {
-                            "artifact_id": "artifact:read:next",
-                            "artifact_identity": "sha256:"
-                            + sha256(content).hexdigest(),
-                        },
-                    }
-                ),
-                retained_bytes=content,
+            api.structural_evidence_anchor(
+                record_id="artifact:read:next",
+                content=content,
                 media_type="text/plain",
-                role="RETAINED_EVIDENCE",
             ),
         ),
         transaction_time=TIME,
@@ -274,4 +253,52 @@ def test_new_full_head_needs_a_fresh_context_even_when_graph_unchanged(owner):
     assert (
         freeze(fresh, history.composition_context()).records
         == freeze(replay, context).records
+    )
+
+
+def test_freezing_needs_no_files_processes_or_network(owner, monkeypatch):
+    import builtins
+    import os
+    import socket
+    import subprocess
+
+    _, replay, context = owner
+    implementation = module()
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("read adapter crossed its no-I/O boundary")
+
+    for target, name in (
+        (builtins, "open"),
+        (os, "open"),
+        (Path, "open"),
+        (socket, "socket"),
+        (subprocess, "Popen"),
+    ):
+        monkeypatch.setattr(target, name, forbidden)
+    actual = implementation.freeze_accepted_replay(replay=replay, context=context)
+    assert actual.receipt_identity == context.receipt_identity
+
+
+def test_boolean_ledger_count_does_not_acquire_integer_semantics(owner):
+    _, replay, context = owner
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(replay, replace(context, base_ledger_event_count=True))
+    assert refused.value.reason == "MALFORMED_INPUT"
+
+
+def test_adapter_imports_no_private_core_or_research_helpers():
+    import ast
+
+    implementation = module()
+    tree = ast.parse(Path(implementation.__file__).read_bytes())
+    imported = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            assert node.level == 0
+            imported.append(node.module)
+    assert all(
+        not name.startswith(("malleus._", "research", "tests")) for name in imported
     )
