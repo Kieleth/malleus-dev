@@ -1,13 +1,14 @@
 # Supplier Re-entry integration
 
 Status: ACTIVE IMPLEMENTATION, not an executed supplier E2E.
-Latest verified boundary: actual independent capture, followed by a retained-prefix
-probe through ordinary observed-source KCS preparation, admission and JSONL replay.
-The probe reaches accepted B/Y/2 only after admission, including failed-after-write
-without rewriting the failed receipt. It is not a fresh complete supplier E2E.
+Latest verified boundary: fresh actual independent capture through ordinary observed-
+source KCS preparation, admission and JSONL replay. Accepted B/Y/2 appears only after
+admission, including failed-after-write without rewriting the failed receipt.
+This is not yet a synthesized complete supplier E2E.
 Separate completed runs: action entry 141 passes, authorization 99, corrected focused
-execution 22, first focused observation 11. Expanded observation and the fresh 98-test
-observed-population gate are running. Full pure synthesis, immutable Re-entry Contract
+execution 22, expanded observation 39, fresh observed-population gate 98, and corrected
+accepted-lineage read module 32. These are separate, overlapping runs, not one total.
+Full pure synthesis, immutable Re-entry Contract
 closure and fresh satisfied episode quiescence remain unfinished. No Core wait.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
@@ -490,3 +491,26 @@ KCS closure; a receipt, retained-but-unaccepted KCS or unrelated quantity-two fa
 cannot close that episode. Fresh reevaluation must preserve the immutable original
 proposal context while explicitly binding the new current head, not silently rebase
 an old contract. These are existing approved obligations, not new Core prerequisites.
+
+## Observed-source gates and accepted-lineage read, GREEN
+
+The expanded observer selection completed with 39 passes. The fresh observed-source
+selection completed with 98 passes, including successful and failed-after-write
+capture, real KCS preparation/admission, full complement and JSONL-only trace. Their
+frozen commits remain the ones recorded above; they do not certify later read changes.
+
+The read-only input now carries canonical immutable accepted KCS values and reciprocal
+temporal history, not a mutable graph or writer. The first expanded read run had 31
+passes and one fixture failure: an unaccepted candidate omitted Core's required
+evidence reference. The corrected fixture explicitly guards both nonempty source and
+evidence closures. No Core or read implementation guard was weakened. All 32 corrected
+read tests pass at f1eb5a89420d1778e5c56829d991f80e1aa5d451, production 828adc4.
+JUnit SHA-256: 32ee3268fcacc87137fe309c4f45acf26b24aaa467d7c3ad5e2dcd96fb84aca8,
+`accepted-read-lineage-corrected.xml` in the existing artifact directory.
+
+`SUPPLIER_REENTRY.md` and the initial four tests now freeze the pure synthesis seam.
+The API-only RED is one failure for the missing supplier_reentry module, with three
+tests deselected. JUnit SHA-256:
+91cf9aabc125fb89f8520bddb82122e9db6b54d653918fa77956a0df249477ac.
+The new tests are not passing evidence. Full synthesized lifecycle and fresh episode
+closure remain required; all production edits remain in the isolated Re-entry directory.

@@ -1,7 +1,7 @@
 {
   "classification": "CONFORMANCE_FIXTURE",
   "claim": "ACTUAL_CONTROLLED_EFFECT_CAPTURE_AND_RETAINED_PREFIX_KCS_INTEGRATION_NOT_FULL_REENTRY_E2E",
-  "status": "FOCUSED_BOUNDARIES_GREEN_EXPANDED_OBSERVATION_AND_FRESH_POPULATION_GATES_RUNNING",
+  "status": "EXPANDED_OBSERVATION_AND_FRESH_POPULATION_GATES_GREEN_NOT_FULL_REENTRY_E2E",
   "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
   "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
   "execution": {
@@ -44,7 +44,12 @@
     },
     "expanded_gate_commit": "d3ec9fb22ae4cc1c9bfd3f491c823a5688faf057",
     "expanded_gate_tree": "a01ad8ed4e1651e7c597cc35e73020d8177b0516",
-    "expanded_gate": "supplier-observation-gate.json, RUNNING, not yet GREEN",
+    "expanded_gate": {
+      "selection": "supplier-observation-gate.json",
+      "file": "supplier-observation-unified.xml",
+      "sha256": "128f4b3a0c75ae258ff73f95f224f21065765cdbe89f5360a4f8bc9f9f5833a7",
+      "tests": 39, "passes": 39, "failures": 0, "errors": 0, "skipped": 0
+    },
     "observations": [
       "Actual changed source is CONFIRMED; unchanged source after SUCCEEDED is CONTRADICTED.",
       "FAILED after write coexists with CONFIRMED capture without changing the receipt or inferring causality.",
@@ -92,7 +97,12 @@
     },
     "fresh_gate_commit": "3519d83fcf7be1e26195d36991d30bff449b41d2",
     "fresh_gate_tree": "5dc3419cafcb730a8c54a5dec369c7ea4a7fc72e",
-    "fresh_gate": "supplier-observed-source-gate.json: 98 tests collected, RUNNING, not yet GREEN"
+    "fresh_gate": {
+      "selection": "supplier-observed-source-gate.json",
+      "file": "supplier-observed-source-unified.xml",
+      "sha256": "da136d2d748097d7e870b22b3c498f42ee6f408706083e70c15989b3c787aa8b",
+      "tests": 98, "passes": 98, "failures": 0, "errors": 0, "skipped": 0
+    }
   },
   "runtime": {
     "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
