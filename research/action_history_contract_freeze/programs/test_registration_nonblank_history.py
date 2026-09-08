@@ -128,3 +128,32 @@ def test_census_has_exact_accepted_field_closure():
             "required_monitor_ids[]",
         ],
     }
+
+
+def test_registration_constraints_compose_with_the_complete_action_program():
+    from research.action_history_contract_freeze.programs.test_authorization_history import (
+        build_bundle,
+    )
+    from research.action_history_contract_freeze.programs.dispatch_bundle import (
+        add_dispatch,
+    )
+    from research.action_history_contract_freeze.programs.execution_bundle import (
+        add_execution,
+    )
+    from research.action_history_contract_freeze.programs.observation_bundle import (
+        add_observation,
+    )
+
+    bundle = add_observation(add_execution(add_dispatch(build_bundle())))
+    catalog = bundle["profile"]["record_schemas"]
+    assert catalog["LocalAction"]["properties"]["action_type"] == {
+        "type": "string",
+        "const": "LOCAL_ACTION",
+        "format": "nonblank",
+    }
+    assert (
+        catalog["AuthorityGrant"]["properties"]["permitted_action_types"]["items"][
+            "format"
+        ]
+        == "nonblank"
+    )
