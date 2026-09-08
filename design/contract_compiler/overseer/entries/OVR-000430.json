@@ -1,0 +1,154 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000430",
+  "ledger": "overseer",
+  "sequence": 430,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:6f30c2ddb92d8c309b4a761c5f0b7fdcb099dd47e8db8b8cd5141b58e42e0c94",
+  "recorded_at": "2026-09-08T15:57:10Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "shop-current-evidence-producer-repair",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind current Shop evidence to its compiler while preserving historical receipts.",
+  "why": "Luis approved the Pareto Shop evidence cleanup. Baseline: 216 passed, six stale receipt comparisons failed. RED f65a5ec: eleven failing guards. GREEN 8d88e49 binds complete compiler artifacts, including revision targets, and all output bytes to a separate evidence generation. Ten predecessor files and both graphs remain exact; no output field is ignored. Six historical Shop tests pass at the original producer in a clean local checkout. Expanded compiler/Shop/action/KG selection: 1054 passed, no skips. Final fourteen guards passed separately after one extra guard and a serialization refinement, not as a disjoint total. Final Shop plus fresh import: 236 passed, no skips. Ledger/current-byte guards: 2 passed. The fresh 106-event two-action log matches its prior proof exactly. No runtime, ontology, source, package, dependency, action-profile, paper, consumer or frozen-gate change. Effects remain synthetic; no full-repository, release or push claim.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-shop-current-evidence.md",
+        "after_digest": "sha256:eebb5ff6105be035f62e41654dd6ce01cc06ede2362ce138b904d84f2c5506ca",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py",
+        "after_digest": "sha256:63f6068125e89aff5a594f88cca6971f215c4b6635f428bbb4d073a75d31781f",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6a207b71ac8583d2f0e4f5834f50583479413125d4639790bb98ecc9a18121c0"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/README.md",
+        "after_digest": "sha256:245ed467022d3a52bbeb85e563037c3f023c7795708ad36c79e3531bd432cb0b",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/binding.json",
+        "after_digest": "sha256:db5f91a29b3ee384b45c4bc58d329332e0bf49b293448e5c68fa0de48cefe549",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/correction/explanation.json",
+        "after_digest": "sha256:70e0b7b8f642042ee12cc90b5a0410ca94f953e36580e86e2e5e74081e1a99f3",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/correction/graph.json",
+        "after_digest": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/correction/receipt.json",
+        "after_digest": "sha256:4ab3ae48f14c25553105fad6a32265c191dbd7a7dfc03a5988dc6b37bcaa3313",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/fresh_import/evidence.json",
+        "after_digest": "sha256:75585c2fe473c9ca67c04410b82e927efcf18ea4d90d38934623edb64d751541",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/object_event/evidence.json",
+        "after_digest": "sha256:bb7239d1b25ee4c1192ae24392a2dfff242e1e1c6e06c8e59de9261a41e5f120",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/public_population/evidence.json",
+        "after_digest": "sha256:e741dac87141868a96cee67acbdddcf2a98cb09ed3eaf01cd2f47ba821bc9f98",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/showcase/explanation.json",
+        "after_digest": "sha256:97f0e01f6a39f43194f4104c1e3a0800e3ed58549ce2e658485e05d01cbb4e14",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/showcase/graph.json",
+        "after_digest": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/showcase/queries.json",
+        "after_digest": "sha256:c1a738807494ccc0058adf9b1880fcc0194a39ac0c1d380772d126f0db609c23",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_2026_09_08/showcase/receipt.json",
+        "after_digest": "sha256:2b98f325ac89df0b11aa07e9a11cbf41ed4eeb1429c28c598d97798d80130715",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_assertions.py",
+        "after_digest": "sha256:18aa45c3f300386079aeb96ce1af6d2e6b324e00fbb287559a947c857453f88b",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py",
+        "after_digest": "sha256:08e7287631a2e718dd5923a385197d3b1cb82460a80bb4297b0dda8b3ec8f877",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e5a07f156b6b8843acbd18dc1cdb82417151ac2326ed5bd416b96cf2de035dfe"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py",
+        "after_digest": "sha256:290252361d56a4d22cacc1676664e75301f3d51998a40f41f56adc80b83d9da9",
+        "change": "MODIFIED",
+        "before_digest": "sha256:f5717245164522ccdf3455ef31752910c2ad52910d6530159d184cf02d2192b2"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py",
+        "after_digest": "sha256:1767f6e65c49faa3a4da3be504f992ab29a13e925b20a3915b9c0ce2d7a76f3e",
+        "change": "MODIFIED",
+        "before_digest": "sha256:2f06a1824382a5fd6c8f9bb03cca51e2629c07f0cb59e9d5ce7285b78390570c"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/test_current_evidence.py",
+        "after_digest": "sha256:354b8896716e091e652aa3db3502b5ce41f62b065a3198fabc9ceffdbc0c12e2",
+        "change": "CREATED"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_fresh_shop_import.py",
+        "after_digest": "sha256:27eb9997fc4934d5db47c28644f91fddc7378556644329b8ba5169644915c88e",
+        "change": "MODIFIED",
+        "before_digest": "sha256:11c91fbc5d63626a181377e9bbff632a749acf4b1bbb1ab4888ae8c8c7fd7483"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "f65a5ec60c5f1da18a00b4d141077349a81f01e8"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "8d88e49e97bea6c14b900b9861c70082d0ec608c"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "1a79950c5829adf31c60b45656f95df596e42f7f"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:faabc34ac5cb65ba6b88835beda2733e7c2015c86b62958b74b4aba82dc049c0"
+}
