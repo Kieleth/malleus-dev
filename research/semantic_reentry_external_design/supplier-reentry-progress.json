@@ -79,12 +79,28 @@
     "count_boundary": "This run collected 35 tests before the later fast manifest/import guard was added. Its separate one-test GREEN is not added to this count."
   },
   "unified_gate": {
-    "status": "NOT_RUN_RUNTIME_EPOCH_ASSEMBLY_ISSUE",
+    "status": "RUNNING_387_TEST_SELECTION",
     "manifest": "supplier-reentry-gate.json",
-    "manifest_commit": "fe89d626179af4130c31787c456a06032cfb3a22",
+    "manifest_commit": "0d0773e6af51d9cbd20a836cea22484365aa0547",
+    "manifest_sha256": "c55c0ef92a47204cb67e19593ca81a74a3397830d2f7afbda419afaaaf624585",
+    "file": "supplier-reentry-unified.xml",
+    "basetemp": "pytest-supplier-reentry-unified",
+    "collected_tests": 387,
     "finding": "Historical test_replay_noninvertibility.py requires Core commit 2af45e03ee7d7bf528cef8db42c0798e6d99685b and a distinct producer. It cannot run unchanged under the integration checkout.",
-    "required_guard": "Preserve historical evidence and strict identity checks; provide a current-bound witness and a hard test preventing incompatible runtime epochs in one gate.",
+    "repair": "The manifest selects a new current-bound replay witness and separately preserves the original historical witness and hash. The explicit CORE_COMMIT convention, runtime source tree/origin, historical bytes and disjoint selection are checked.",
+    "epoch_red": {"test_commit": "fed017a", "file": "supplier-gate-epoch-red.xml", "sha256": "8766621f691343f13573c5bcd2975604ec30f5cc4fe917c74209ae48e97851e2", "failures": 1, "passes": 1, "deselected": 1},
+    "epoch_green": {"commit": "0d0773e", "file": "supplier-gate-epoch-green.xml", "sha256": "3f8ff30baec64af4def54293e0b3d10383bf2e8bfdd02ad76c74ae151ac5b0ba", "tests": 3, "passes": 3, "failures": 0, "errors": 0, "skipped": 0},
     "core_dependency": "PASS. This is Re-entry-owned verification work, not a missing Core contract."
+  },
+  "audit_binding_type_probe": {
+    "status": "RUNNING_NOT_YET_RED_OR_GREEN",
+    "test_commit": "0bb35dca115ba00bfbce410a8b0ade69004195ad",
+    "implementation_commit": "a056077ea13955d9de3db7e98e54b973d0967bd4",
+    "file": "supplier-binding-type-red.xml",
+    "basetemp": "pytest-binding-type-red",
+    "selector": "test_supplier_reentry.py::test_synthesized_action_observed_kcs_and_fresh_quiescence[binding-type]",
+    "obligation": "Actual observation-derived KCS with Boolean true substituted for integer one in its ordinary binding evidence must not close the goal episode. No fake accepted view or substitute KCS is used.",
+    "count_boundary": "This case was added after the unified run collected. It is not included in the 387-test selection."
   },
   "runtime": {
     "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",

@@ -17,14 +17,18 @@ The five-minute continuation heartbeat remains ACTIVE. Core's latest thread upda
 explicitly permits this single-action consumer to continue while its separate
 two-sequential-action extension proceeds.
 
-Current verification issue: supplier-reentry-gate.json includes the historical
-test_replay_noninvertibility.py, whose runtime guard requires Core commit
-2af45e03ee7d7bf528cef8db42c0798e6d99685b, not this integration base. The manifest
-has not been executed as a unified gate. Preserve that historical witness and its
-strict identity guard; establish a current-bound witness and a regression against
-mixing incompatible runtime epochs before claiming a unified result. This is a
-Re-entry-owned gate assembly issue, not a missing Core contract. No identity check
-has been weakened and no historical test has been skipped or relabelled as GREEN.
+The gate epoch mismatch is corrected at 0d0773e: the historical witness is unchanged
+and separately identified; a current-bound witness and incompatible-epoch guard
+pass three tests. The unified 387-test selection from that commit is RUNNING,
+with production a056077. Do not count collection or partial progress as a result.
+
+An additional audit probe at 0bb35dc is RUNNING: the full lifecycle injects Boolean
+true into the observation binding's expected-quantity-one field. Python object
+equality considers those equal; the test requires exact binding semantics and
+episode refusal. This fourth lifecycle case was added after the 387-test run
+collected and is not included in that run. Do not claim final audit closure before
+its result and any required repair. The scoped audit and draft landing packet are
+MALLEUS_INQUISITION.md and SUPPLIER_E2E_HANDOFF.md. No Core wait.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
