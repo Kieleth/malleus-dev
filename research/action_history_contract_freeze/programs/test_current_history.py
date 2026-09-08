@@ -59,6 +59,10 @@ def accepted(tmp_path_factory):
         )
     )
     directory = tmp_path_factory.mktemp("accepted-action-prefix")
+    return accepted_prefix(directory, bundle)
+
+
+def accepted_prefix(directory, bundle):
     decisions.proposed_prefix(directory, bundle)
     history = KnowledgeChangeHistory.reopen(directory / "history.jsonl")
     decisions.assess(history)
