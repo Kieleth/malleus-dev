@@ -329,10 +329,11 @@ def test_model_prediction_must_meet_goal_and_frame(reentry_inputs, monkeypatch):
     assert (owner.path.read_bytes(), authority.domain_frame(owner.replay())) == before
 
 
-def alternate_accepted_source(owner, case, *, quantity, supersede):
+def alternate_accepted_source(
+    owner, case, *, quantity, supersede, occurrence, transaction_time
+):
     """Explicit conformance source through real population, never an observation."""
     source_id = "source:supplier:initial-law"
-    occurrence = "initial-law"
     record_id = "supplier-order-state:B:" + occurrence
     mapping = dict(
         case["mapping"],
@@ -368,7 +369,7 @@ def alternate_accepted_source(owner, case, *, quantity, supersede):
                 media_type="application/json",
             ),
         ),
-        transaction_time=entry.TIME,
+        transaction_time=transaction_time,
         actor_id=entry.ACTOR,
     )
     fragment = json.loads(
@@ -417,13 +418,13 @@ def alternate_accepted_source(owner, case, *, quantity, supersede):
         retention_events=core.population_retention_events(
             history=owner, compilation=compiled, profile=profile
         ),
-        transaction_time=entry.TIME,
+        transaction_time=transaction_time,
         actor_id=entry.ACTOR,
     )
     core.admit_structural_change(
         history=owner,
         preparation=prepared,
-        transaction_time=entry.TIME,
+        transaction_time=transaction_time,
         actor_id=entry.ACTOR,
     )
     return source_id, content, mapping
@@ -443,7 +444,12 @@ def test_initial_goal_and_ambiguity_use_real_accepted_source(
     owner = reentry_inputs[0]
     _, initialization_id, case = reentry_prefix
     source_id, content, mapping = alternate_accepted_source(
-        owner, case, quantity=quantity, supersede=supersede
+        owner,
+        case,
+        quantity=quantity,
+        supersede=supersede,
+        occurrence="initial-law",
+        transaction_time=entry.TIME,
     )
     rule_id, goal_id = RULE + ":initial-law", GOAL + ":initial-law"
     mapping_id, prestate_id = (
@@ -491,6 +497,25 @@ def test_initial_goal_and_ambiguity_use_real_accepted_source(
     assert (result.status, result.reason) == (status, reason)
     assert not result.candidates and result.model_prediction is None
     assert (owner.path.read_bytes(), authority.domain_frame(owner.replay())) == before
+
+    if status == "SATISFIED":
+        owner.append_anchors(
+            anchors=(
+                core.structural_evidence_anchor(
+                    record_id="evidence:supplier:after-initial-satisfaction",
+                    content=b"later evidence",
+                    media_type="text/plain",
+                ),
+            ),
+            transaction_time=entry.TIME,
+            actor_id=entry.ACTOR,
+        )
+        fresh = freeze_accepted_replay(
+            replay=owner.replay(), context=owner.composition_context()
+        )
+        stale = synthesize(contract, fresh)
+        assert (stale.status, stale.reason) == ("REFUSED", "STALE_BASE")
+        assert not stale.candidates
 
 
 @pytest.mark.parametrize("role", ["model", "update_strategy"])
@@ -702,6 +727,33 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert actual == source.read_bytes()
     assert fresh_evaluation(owner, original).status != "SATISFIED"
     case = json.loads((entry.ingress.FIXTURE / "case.json").read_bytes())
+    if fault == "none":
+        # The same current supplier value from an unrelated accepted source cannot
+        # close this acted episode, even with its actual CONFIRMED observation present.
+        unrelated_path = tmp_path / "unrelated-correction.jsonl"
+        shutil.copyfile(owner.path, unrelated_path)
+        unrelated = core.KnowledgeChangeHistory.reopen(unrelated_path)
+        alternate_accepted_source(
+            unrelated,
+            case,
+            quantity=2,
+            supersede=True,
+            occurrence="reentry-amendment-1",
+            transaction_time=population.TIME,
+        )
+        assert (
+            unrelated.replay().graph.get_node(population.REPLACEMENT)[
+                "ordered_quantity"
+            ]
+            == 2
+        )
+        unrelated_result = fresh_evaluation(unrelated, original)
+        assert (unrelated_result.status, unrelated_result.reason) == (
+            "REFUSED",
+            "EVIDENCE_DISAGREEMENT",
+        )
+        assert not unrelated_result.candidates
+        assert authority.domain_frame(owner.replay()) == frame
     prepared = supplier_observed_source.prepare_observed_supplier_change(
         history=owner,
         **entry.position(owner),
