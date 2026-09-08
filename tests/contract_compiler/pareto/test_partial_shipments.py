@@ -100,10 +100,13 @@ def test_shipment_type_requires_revision_and_bad_endpoint_is_atomic(tmp_path):
     history = example.start(tmp_path / "shop")
     example.admit_plan(history, "order", transaction_time=TIME, actor_id=ACTOR)
     before = history.path.read_bytes()
-    with pytest.raises(api.PopulationPlanRefusal):
+    with pytest.raises(api.PopulationPlanRefusal) as error:
         example.prepare_plan(
             history, "shipment-1", transaction_time=TIME, actor_id=ACTOR
         )
+    assert (
+        error.value.reason is api.PopulationPlanRefusalReason.RECORDS_NOT_REHYDRATABLE
+    )
     assert history.path.read_bytes() == before
 
     example.revise(history, transaction_time=TIME, actor_id=ACTOR)
@@ -111,8 +114,9 @@ def test_shipment_type_requires_revision_and_bad_endpoint_is_atomic(tmp_path):
     plan["records"]["relations"][1]["target_id"] = "missing-unit"
     before = history.path.read_bytes()
     before_graph = history.replay().graph.export_records()
-    with pytest.raises(api.PopulationPlanRefusal):
+    with pytest.raises(api.PopulationPlanRefusal) as error:
         example.prepare_plan(history, plan, transaction_time=TIME, actor_id=ACTOR)
+    assert error.value.reason is api.PopulationPlanRefusalReason.DANGLING_ENDPOINT
     assert history.path.read_bytes() == before
     assert history.replay().graph.export_records() == before_graph
 
@@ -168,3 +172,9 @@ def test_runner_reuses_public_core_and_never_reads_its_answer_key():
     assert "expected.json" not in source
     assert "CHECK_RECORDED" not in source
     assert "SATISFIED" not in source
+
+
+def test_mapping_evidence_does_not_impersonate_a_population_plan():
+    mapping = json.loads((HERE / "mapping.json").read_bytes())
+    assert "grammar" not in mapping
+    assert mapping["plan_grammar"] == "malleus.population-plan/private-v0"
