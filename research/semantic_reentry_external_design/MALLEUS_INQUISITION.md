@@ -69,14 +69,23 @@ Required entrypoints and the different executor/mapper role shapes are now
 checked before binding. Missing entrypoints, extra role fields and unknown
 ambiguity strategy refuse in the focused suite.
 
-## Claim-by-claim judgment
+## Open finding
 
-Open audit probe: `supplier_reentry.py:783` compares the complete observed-source
-binding with Python object equality. Integer one and Boolean true compare equal.
-The new `binding-type` full-lifecycle case injects faulty mapper serialization,
-then uses actual public preparation/admission/replay. It requires episode refusal
-for that non-exact binding. This is not yet an observed RED result; the targeted
-run is in progress. No source/KCS or Core boundary is substituted by the probe.
+### H5. Type-changing observed binding falsely closes the episode
+
+Rubric: `gate_integrity`, `encodable_at_the_gate`, `evidence_does_not_transfer`.
+Where: `supplier_reentry.py:784`.
+The complete observed-source binding uses Python object equality. Integer one
+and Boolean true compare equal. The `binding-type` full-lifecycle regression
+at `0bb35dc` injects faulty mapper serialization, then uses actual public
+preparation/admission/replay. RED: one failure, SATISFIED instead of the required
+REFUSED/EVIDENCE_DISAGREEMENT. No accepted view or KCS boundary was substituted.
+The source-derived quantity-two fact is not disputed; the exact episode-binding
+claim is false. Fix: compare canonical bytes of the whole binding, preserving
+JSON types recursively. Done when this actual lifecycle refuses closure, ordinary
+and failed-after-write closure still pass, and the fresh unified gate passes.
+
+## Claim-by-claim judgment
 
 | Claim | Role | Direct evidence | Unsupported transfer excluded | Verdict |
 | :--- | :--- | :--- | :--- | :--- |
