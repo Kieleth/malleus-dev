@@ -370,3 +370,15 @@ def test_execution_identity_imports_and_handlers_match_the_declared_boundary():
         elif isinstance(node, ast.ExceptHandler):
             assert node.type is not None
             assert not any(isinstance(n, ast.Attribute) for n in ast.walk(node.type))
+
+
+def test_execution_gate_and_runtime_are_bound_to_this_checkout():
+    root = Path(__file__).resolve().parents[2]
+    assert Path(core.__file__).resolve().is_relative_to(root / "src/malleus")
+    assert Path(api().__file__).resolve().parent == Path(__file__).resolve().parent
+    gate = json.loads(
+        (Path(__file__).parent / "supplier-execution-gate.json").read_bytes()
+    )
+    assert str(Path(__file__).resolve().relative_to(root)) in gate["tests"]
+    assert len(gate["tests"]) == len(set(gate["tests"]))
+    assert all((root / path).is_file() for path in gate["tests"])

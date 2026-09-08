@@ -1,0 +1,10 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "CONTROLLED_SUPPLIER_DISPATCH_EXECUTION_AND_CORE_RECEIPT_BOUNDARIES_NOT_OBSERVED_KCS_OR_FULL_E2E",
+  "tests": [
+    "research/semantic_reentry_external_design/test_supplier_execution.py",
+    "research/action_history_contract_freeze/programs/test_execution_history.py"
+  ],
+  "permission_gate": "supplier-authority-gate.json separately covers actual supplier authorization plus native current-context, authority, authorization and dispatch eligibility. Counts are not added.",
+  "unchanged_broader_population_gate": "supplier-initial-result.json records 512 passes and one Core-confirmed baseline failure. This execution selection does not replace or waive that result."
+}
