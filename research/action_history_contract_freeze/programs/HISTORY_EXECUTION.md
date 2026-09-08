@@ -274,6 +274,16 @@ fixture call to retained_bytes on the writer; the actual API is on replay.
 No production API was changed to accommodate that fixture mistake. Execution
 receipts and independent observations remain the next unimplemented stages.
 
+Terminal receipt admission is now GREEN: 11 tests pass in 129.78 seconds after
+11 missing-stage RED errors. SUCCEEDED, FAILED and ABORTED receipts reference
+the actual applied dispatch, match its executor, and bind a strictly positive
+execution interval after dispatch to the event time. Exact result bytes are
+retained with the receipt in the same append. Invalid references, executor,
+times, status, bytes, retention association or duplicate terminal receipt
+refuse without a write. Reopen reproduces the state and retained bytes; no
+observation index or graph change is implied. These are synthetic receipt
+conformance cases, not evidence that a supplier or robot effect happened.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix
