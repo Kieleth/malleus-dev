@@ -1,5 +1,11 @@
 # Semantic Re-entry overnight continuation
 
+Historical plan. The current workspace, Core gate and execution state are in
+[INTEGRATION_STATUS.md](INTEGRATION_STATUS.md). The existing continuation now
+runs every five minutes with no overnight cutoff and continues implementation
+after the verified Core gate. The old schedule and paths below are retained as
+history, not instructions for the active continuation.
+
 Operator instruction: sustained work during the night of 7 September 2026,
 toward an inspectable E2E slice. This thread owns vision, experiments and
 consumer conformance. Core owns Core implementation. Robotics is a related

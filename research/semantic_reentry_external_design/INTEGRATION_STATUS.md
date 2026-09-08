@@ -89,9 +89,9 @@ RED JUnit SHA-256: `6219b189dfef9d9bb09d080902121a871769d1cffe98bab37e9a607efd40
 GREEN JUnit SHA-256: `a6ad4128830686a8062dc73845e2e3ae6ca3325d4a274b87209ae92f959cc66c`.
 Both files are in `/private/tmp/malleus-reentry-integration.waW6z7`.
 
-Next: author a separately identified program variant against the compiled
-supplier contract, freeze the pure synthesis inputs/results, and implement
-the controlled source attempt and independent observation before full E2E.
+Next: freeze the pure synthesis inputs/results, then implement the controlled
+source attempt and independent observation before full E2E. The supplier
+program definition is now authored and checked as described below.
 No state effect is inferred from the completion of any earlier step.
 
 Pre-action checks: no server or endpoint, no new installation/dependency,
@@ -116,3 +116,68 @@ evidence. Explicit IDs remain caller data even if an ID happens to spell
 LocalAction or LOCAL_ACTION. Unsupported contract or role input refuses; absent
 inputs do not acquire neutral fixture defaults. The builder performs no history
 creation, check invocation, authorization, source write or observation.
+
+The program definition passed 11 focused tests, with no failure, error or skip.
+These establish executable bundle validation, exact compiled field projection,
+determinism, caller-ID preservation and refusal of missing roles. They do not
+establish that a supplier lifecycle event has been admitted or executed.
+
+SP-1, fixed: the first field projection looked for source-language LinkML range
+identities after compilation. The actual compiler emits neutral contract-facts
+String and Integer identities. The closed range guard now consumes those exact
+neutral identities, with no fallback. A dedicated regression checks all seven
+compiled payload fields before asserting their schema projection. Its RED
+failed at the wrong range boundary; all 11 program tests then passed.
+
+The JUnit files are under `/private/tmp/malleus-reentry-integration.waW6z7`:
+
+- `supplier-program-red.xml`, absent module, six failures and four errors:
+  `e79971a8cb424ecdc02422ed2f30bf2cc339627b4641095af32e09c31b98d8c0`.
+- `supplier-program-first.xml`, wrong range IDs, one failure, five passes and
+  four errors: `9b3e8334e413b2658cb12555053039c6fd46734e588d84231f8de15bc374968e`.
+- `supplier-program-neutral-range-red.xml`, dedicated failing regression:
+  `ff3fcf8080209f457f53b0f81b8a066358fc10e014c4584ee1ababf45aa3c511`.
+- `supplier-program-green.xml`, 11 passes:
+  `988797f3b19e5cf41536f3f759caf4c3b92bc377ee36f335bddc0595ddc4b4cc`.
+
+The subsequent combined action-schema/program run passed 34 tests, with no
+failure, error or skip. It also verifies that the explicitly named shared
+pytest fixture is discovered in both modules after correcting imported-name
+shadowing flagged by Ruff F811. Ruff check, formatting and diff checks pass.
+Combined JUnit SHA-256 (`supplier-contract-program-green.xml`):
+`683546388f880b0e4d2afa51299bf94b2748af9aaed41f142af9ed40fcbd1fff`.
+This is the relevant gate for these two definition modules, not the future
+unified supplier E2E gate or full repository CI. The earlier 11-test result is
+not added to it. Implementation GREEN:
+`2eaa1208555975e6615bc6db1b48f2c5dac4a1ba`, tree
+`4d02171c21b9af9b5c3f9ad928c6bf7a0500e823`.
+Exact GREEN file SHA-256 values:
+
+- `supplier_program.py`:
+  `5ba6751ac425929dc74c84742adbff54b082a0a38d2f87768537cbdb0ef3f15f`.
+- `test_supplier_program.py`:
+  `3281682d26be683cd09ae671f2240a359c0f7cfc6f3a44d447f2f6cc2baf09a6`.
+- `test_supplier_action_contract.py`:
+  `9ac86d5d0c35be6be70928829b833cbef0598f26300a0bce36f646ec71a46b61`.
+
+## Proof alignment check
+
+On 2026-09-08 UTC the Core handoff, both semantic contracts, frozen source
+case, pure-component report and replay non-invertibility witness were reread.
+The active five-minute heartbeat continues authorized integration. It is not
+waiting for another Core release or Robotics' separate repeated-action work.
+
+The claim remains an exact-two GoalPredicate, not a writable SupplyGap view,
+demand fulfilment or delivery. Re-entry is synthesis from pinned accepted state
+and an explicit preservation policy, not inverse replay or source decoding.
+Internal epistemic changes may propose an existing KCS; this external goal
+must propose an existing ActionProposal subtype first. Symbolic model agreement
+does not prove a world change. The old e7 correction and the expected-output
+oracle must never be used as this experiment's captured source.
+
+The full proof is unfinished. Synthesis and its immutable input closure, actual
+check producers and lifecycle submission, controlled execution, independent
+capture, observed-source KCS admission, JSONL-only replay and fresh episode
+closure must still run together. Every pre-admission checkpoint must retain
+B/Y/1. Only the admitted observed correction may make B/Y/2 current, and the
+final linked, satisfied evaluation must produce no candidate, append or effect.
