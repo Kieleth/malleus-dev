@@ -12,7 +12,7 @@ from malleus._contract_pipeline.finite_executor import (
     ExecutionRefusal,
     validate_program_definition,
 )
-from malleus._contract_pipeline.finite_program import PacketRefusal
+from malleus._contract_pipeline.finite_program import PacketRefusal, _local_references
 from malleus._contract_pipeline.protocol_runtime import (
     ProtocolProgramRefusal,
     load_bundle,
@@ -138,3 +138,24 @@ def test_reference_named_domain_properties_and_constant_values_remain_ordinary_d
 
 def test_neutral_control_still_executes():
     assert run(neutral()).data["runtime_executed"] is True
+
+
+def test_instruction_definition_rejects_dynamic_reference_before_validation():
+    args = neutral()
+    args["instruction_schema"]["$dynamicRef"] = "#/missing"
+    with pytest.raises(PacketRefusal, match="DEFINITION_SCHEMA"):
+        validate(args)
+
+
+@pytest.mark.parametrize("keyword", ["$dynamicRef", "$recursiveRef"])
+def test_instruction_reference_scan_never_admits_dynamic_resolution(keyword):
+    with pytest.raises(PacketRefusal, match="DEFINITION_SCHEMA"):
+        _local_references(
+            {"$defs": {"hidden": {keyword: "https://example.invalid/schema"}}}
+        )
+
+
+def test_instruction_reference_scan_distinguishes_schema_positions_from_data():
+    schema = obj(**{"$ref": {"type": "string"}, "$dynamicRef": {"type": "string"}})
+    schema["const"] = {"$ref": "ordinary text", "$dynamicRef": "ordinary text"}
+    _local_references(schema)
