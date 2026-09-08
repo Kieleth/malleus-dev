@@ -70,8 +70,13 @@ def test_suffix_only_fold_and_new_records_only_with_defensive_reads(
     history.path.write_bytes(prefixes[1])
     view = api.KnowledgeHistoryProjection.open(history.path)
     prior = history.replay()
-    folded, created = [], []
+    folded, created, decoded = [], [], []
     execute, create = knowledge.execute_event, KnowledgeGraph.create_entity
+    decode = JsonlLedger._decode_bytes
+
+    def spy_decode(raw):
+        decoded.append(raw)
+        return decode(raw)
 
     def spy_execute(contract, state, event):
         folded.append(json.loads(event))
@@ -88,11 +93,13 @@ def test_suffix_only_fold_and_new_records_only_with_defensive_reads(
     with monkeypatch.context() as patch:
         patch.setattr(knowledge, "execute_event", spy_execute)
         patch.setattr(KnowledgeGraph, "create_entity", spy_create)
+        patch.setattr(JsonlLedger, "_decode_bytes", staticmethod(spy_decode))
         patch.setattr(JsonlLedger, "read", forbidden)
         patch.setattr(api.KnowledgeChangeHistory, "replay", forbidden)
         actual = view.refresh(**coordinates(expected))
         assert created == ["left:1", "left:2"]
         assert len(folded) == 8  # two proposals, four checks, two decisions
+        assert decoded == [prefixes[-1][len(prefixes[1]) :]]
         actual.graph.create_entity("LeftObject", "caller-only", {"label": "local"})
         folded.clear()
         created.clear()
@@ -102,6 +109,55 @@ def test_suffix_only_fold_and_new_records_only_with_defensive_reads(
     with pytest.raises(api.KnowledgeChangeRefusal, match="STALE_BASE"):
         view.current(**coordinates(prior))
     assert history.path.read_bytes() == prefixes[-1]
+
+
+def test_publication_failure_keeps_graph_indexes_and_cursor(sequence, monkeypatch):
+    history, prefixes = sequence
+    expected = history.replay()
+    history.path.write_bytes(prefixes[1])
+    prior = history.replay()
+    view = api.KnowledgeHistoryProjection.open(history.path)
+    history.path.write_bytes(prefixes[-1])
+    original = KnowledgeGraph.state_projection
+
+    def interrupted(graph):
+        if graph.get_node("left:2") is not None:
+            raise OSError("injected copy interruption")
+        return original(graph)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(KnowledgeGraph, "state_projection", interrupted)
+        with pytest.raises(api.KnowledgeChangeRefusal, match="copy interruption"):
+            view.refresh(**coordinates(expected))
+    assert_parity(view.current(**coordinates(prior)), prior)
+    assert_parity(view.refresh(**coordinates(expected)), expected)
+
+
+def test_partial_action_transaction_never_publishes(tmp_path):
+    from tests.contract_compiler.pareto.test_finite_protocol_history import (
+        append,
+        drafts,
+        selected_history,
+    )
+
+    history, arguments = selected_history(tmp_path)
+    prior_bytes = history.path.read_bytes()
+    prior = history.replay()
+    view = api.KnowledgeHistoryProjection.open(history.path)
+    append(history, drafts(history, arguments))
+    complete = history.path.read_bytes()
+    expected = history.replay()
+    rows = complete.splitlines(keepends=True)
+    history.path.write_bytes(b"".join(rows[:-1]))
+    last = json.loads(rows[-2])
+    with pytest.raises(ValueError, match="incomplete logical transaction"):
+        view.refresh(
+            expected_head_hash=last["event_hash"], expected_event_count=last["sequence"]
+        )
+    assert_parity(view.current(**coordinates(prior)), prior)
+    history.path.write_bytes(complete)
+    assert complete.startswith(prior_bytes)
+    assert_parity(view.refresh(**coordinates(expected)), expected)
 
 
 def test_evidence_only_advance_does_not_materialize_domain_records(

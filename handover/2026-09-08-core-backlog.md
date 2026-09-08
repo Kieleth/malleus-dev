@@ -40,11 +40,11 @@ Robotics owns its application integration. Semantic Re-entry owns its consumer
 experiment and adapters. Their local successes are not Core results until
 reported and bound separately. Neither lane owns Core runtime or governance.
 
-## Accepted backlog: maintained ledger-fed graph
+## Activated: maintained ledger-fed graph
 
-Owner: **Core**. Status: **accepted for the backlog, not activated or scheduled**.
-Luis selected this ownership through the Re-entry task. It does not interrupt
-current work or authorize implementation. The earlier
+Owner: **Core**. Luis subsequently activated the bounded in-memory slice.
+The [implementation contract](2026-09-08-maintained-projection-plan.md) records
+the scope and TDD observations. The earlier
 [Core response](2026-09-08-incremental-projection-core-response.md) is design
 input, not a frozen implementation contract.
 
@@ -54,7 +54,7 @@ on every read or rebuilding every unaffected record on each KCS. The one
 append-only ledger remains authoritative. No direct accepted-graph writer or
 new public change identity is permitted.
 
-Acceptance requirements to refine when scheduled:
+Acceptance requirements for this slice:
 
 1. Reuse full replay's semantic transition interpretation. Publish graph,
    indexes and cursor atomically at complete transaction boundaries.

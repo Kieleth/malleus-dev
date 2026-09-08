@@ -214,6 +214,39 @@ Custom machines and bindings continue to construct `KnowledgeAnchorInput`
 directly; these helpers are conveniences for the shipped default, not a new
 protocol requirement or stable wire.
 
+## Maintained history reads
+
+`malleus.compiler.KnowledgeHistoryProjection.open(path)` reconstructs one
+verified history and keeps its continuation in memory. Its `refresh` method
+verifies that the retained prefix has not changed, reads only new event objects
+and advances the same fold used by full replay. `current` reads the published
+position without disk access. Both require `expected_head_hash` and
+`expected_event_count`, naming the full protocol ledger, not just the most
+recent accepted knowledge change.
+
+For example, after admission returns `admitted`, call
+`reader.refresh(expected_head_hash=admitted.ledger_head,
+expected_event_count=admitted.ledger_event_count)`. The returned value is the
+existing `KnowledgeHistoryReplay`: query `.graph`, inspect `.record_history`,
+or use `trace_population_record`. It is not a new change artifact. An older
+reader must refresh before it can satisfy a request for those newer coordinates.
+No background process watches the file.
+
+Failed suffix validation, incomplete action or knowledge transactions and
+wrong expected coordinates preserve the previous graph, indexes and cursor.
+Evidence-only or action-only events advance protocol state without inventing
+domain changes. Caller modifications to returned graphs do not alter the
+maintained view or ledger. Deleting the reader and reopening JSONL reconstructs
+the same result. This is an optional reference implementation, not a database
+or authenticated checkpoint.
+
+The optimization avoids replaying old events and reconstructing unaffected
+records. Prefix-byte verification, defensive copies and canonical receipts may
+still cost work proportional to history or graph size. Additive ontology
+revision intentionally validates the complete graph under the new contract.
+Ledger writes and admission retain their existing full verification path;
+projection timings must not be reported as persistence timings.
+
 ## Read-only change-set composition
 
 The Small Shop population and correction proofs repeated one mechanical step:

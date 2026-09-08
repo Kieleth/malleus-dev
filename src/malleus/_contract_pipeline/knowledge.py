@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from base64 import b64decode, b64encode
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from datetime import datetime
 from enum import Enum, auto
@@ -776,6 +777,17 @@ class KnowledgeHistoryReplay:
         except KeyError as error:
             raise KeyError(f"unknown accepted change: {change_set_id}") from error
         return graph.state_projection()
+
+
+@dataclass(frozen=True, slots=True)
+class _HistoryContinuation:
+    replay: KnowledgeHistoryReplay
+    changes: Mapping[str, KnowledgeChangeSet]
+    change_ids: frozenset[str]
+    applied_ids: frozenset[str]
+    proposal_changes: Mapping[str, str]
+    bootstrap_roles: frozenset[str]
+    protocol: ProtocolFold
 
 
 def _decode_b64(value: object, detail: str) -> bytes:
@@ -1647,6 +1659,14 @@ class KnowledgeChangeHistory:
     def _replay_envelopes(
         self, events: list[dict[str, object]]
     ) -> KnowledgeHistoryReplay:
+        return self._fold_envelopes(events).replay
+
+    def _fold_envelopes(
+        self,
+        events: list[dict[str, object]],
+        prior: _HistoryContinuation | None = None,
+    ) -> _HistoryContinuation:
+        """The single semantic fold for full replay and maintained readers."""
         active_contract = self.partial_contract
         active_view = self.contract_view
         machine_state = MachineState.empty(active_contract.identity)
@@ -1666,6 +1686,24 @@ class KnowledgeChangeHistory:
         graphs_by_change: dict[str, KnowledgeGraph] = {}
         bootstrap_roles: set[str] = set()
         protocol = ProtocolFold()
+        if prior is not None:
+            replay = prior.replay
+            active_contract, active_view = replay.partial_contract, replay.contract_view
+            machine_state, projection = replay.machine_state, replay.graph
+            acceptance_head = replay.acceptance_head
+            materialization_head = replay.materialization_head
+            retained = dict(replay._retained)
+            changes = dict(prior.changes)
+            change_ids, applied_ids = set(prior.change_ids), set(prior.applied_ids)
+            proposal_changes = dict(prior.proposal_changes)
+            machine_receipts = list(replay._machine_receipts)
+            accepted_changes = list(replay.change_sets)
+            revisions = list(replay.contract_revisions)
+            revision_ids = {item.revision_id for item in revisions}
+            record_history = dict(replay._record_history)
+            graphs_by_change = dict(replay._graphs_by_change)
+            bootstrap_roles = set(prior.bootstrap_roles)
+            protocol = deepcopy(prior.protocol)
 
         for event in events:
             event_type = event["event_type"]
@@ -2046,13 +2084,20 @@ class KnowledgeChangeHistory:
                     }
                 )
 
-        ledger_head = events[-1]["event_hash"] if events else GENESIS
+        ledger_head = (
+            events[-1]["event_hash"]
+            if events
+            else prior.replay.ledger_head
+            if prior is not None
+            else GENESIS
+        )
+        ledger_count = len(events) + (prior.replay.ledger_event_count if prior else 0)
         receipt = _history_receipt(
             contract=active_contract,
             binding=self.binding,
             machine_state=machine_state,
             ledger_head=ledger_head,
-            ledger_count=len(events),
+            ledger_count=ledger_count,
             graph=projection,
             retained=retained,
             accepted_changes=tuple(accepted_changes),
@@ -2066,11 +2111,11 @@ class KnowledgeChangeHistory:
                 }
             )
             receipt = KnowledgeHistoryReceipt(source, _digest(source))
-        return KnowledgeHistoryReplay(
+        replay = KnowledgeHistoryReplay(
             graph=projection,
             machine_state=machine_state,
             ledger_head=ledger_head,
-            ledger_event_count=len(events),
+            ledger_event_count=ledger_count,
             acceptance_head=acceptance_head,
             materialization_head=materialization_head,
             receipt=receipt,
@@ -2084,6 +2129,15 @@ class KnowledgeChangeHistory:
             _record_history=MappingProxyType(dict(record_history)),
             _graphs_by_change=MappingProxyType(dict(graphs_by_change)),
             protocol_replay=protocol_replay,
+        )
+        return _HistoryContinuation(
+            replay,
+            MappingProxyType(changes),
+            frozenset(change_ids),
+            frozenset(applied_ids),
+            MappingProxyType(proposal_changes),
+            frozenset(bootstrap_roles),
+            protocol,
         )
 
     def _validate_change_base(
@@ -2213,11 +2267,19 @@ class KnowledgeChangeHistory:
                 superseded_by=None,
             )
 
-        staged = KnowledgeGraph(before.registry)
-        for member in history.values():
-            if member.superseded_by is not None:
-                continue
-            operation = member.operation
+        try:
+            staged = before._without_records(
+                {
+                    operation.supersedes_record_id
+                    for operation in change.operations
+                    if operation.supersedes_record_id is not None
+                }
+            )
+        except ValueError as error:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL, str(error)
+            ) from error
+        for operation in change.operations:
             if operation.operation_type == "CREATE_ENTITY":
                 result = staged.create_entity(
                     operation.record_type,
@@ -2258,6 +2320,103 @@ class KnowledgeChangeHistory:
         return staged, history
 
 
+class KnowledgeHistoryProjection:
+    """Process-local maintained view of one append-only knowledge history.
+
+    Full replay initializes/rebuilds it. Refresh interprets verified suffixes,
+    never writes the ledger, and publishes only complete successful batches.
+    Returned replay graphs are defensive copies. Expected full head/count are
+    mandatory on reads: a lagging view never silently satisfies a newer request.
+    This is single-reader/single-writer, not a background service or disk cache.
+    """
+
+    @classmethod
+    def open(cls, path: str | Path) -> KnowledgeHistoryProjection:
+        history = KnowledgeChangeHistory.reopen(path)
+        result = cls()
+        result._history = history
+        result._published = None
+        try:
+            events, cursor = history._ledger._read_suffix()
+            continuation = history._fold_envelopes(events)
+            result._require_complete(continuation)
+        except (
+            ContractRevisionRefusal,
+            KnowledgeChangeRefusal,
+            ProtocolProgramRefusal,
+        ):
+            raise
+        except (OSError, KeyError, TypeError, ValueError, LedgerError) as error:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY, str(error)
+            ) from error
+        result._published = (continuation, cursor)
+        return result
+
+    @staticmethod
+    def _require_complete(continuation: _HistoryContinuation) -> None:
+        if continuation.change_ids != continuation.applied_ids:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.INCOMPLETE_ADMISSION,
+                "maintained projection requires complete knowledge admissions",
+            )
+        continuation.protocol.snapshot()  # refuses unfinished action transactions
+
+    @staticmethod
+    def _expected(replay, expected_head_hash, expected_event_count):
+        if (
+            type(expected_event_count) is not int
+            or expected_event_count != replay.ledger_event_count
+            or expected_head_hash != replay.ledger_head
+        ):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.STALE_BASE,
+                "maintained projection does not match the requested full ledger head/count",
+            )
+
+    def current(
+        self, *, expected_head_hash: str, expected_event_count: int
+    ) -> KnowledgeHistoryReplay:
+        """Read the published position without I/O; refuse a stale request."""
+        continuation, _ = self._published
+        replay = continuation.replay
+        self._expected(replay, expected_head_hash, expected_event_count)
+        return replace(replay, graph=replay.graph.state_projection())
+
+    def refresh(
+        self, *, expected_head_hash: str, expected_event_count: int
+    ) -> KnowledgeHistoryReplay:
+        """Advance to one exact committed position, or keep the prior view."""
+        prior, cursor = self._published
+        try:
+            events, next_cursor = self._history._ledger._read_suffix(cursor)
+            continuation = (
+                self._history._fold_envelopes(events, prior) if events else prior
+            )
+            self._require_complete(continuation)
+            self._expected(
+                continuation.replay, expected_head_hash, expected_event_count
+            )
+            # All allocations and validation precede the single publication.
+            result = replace(
+                continuation.replay,
+                graph=continuation.replay.graph.state_projection(),
+            )
+        except (
+            ContractRevisionRefusal,
+            KnowledgeChangeRefusal,
+            ProtocolProgramRefusal,
+        ):
+            raise
+        except (OSError, KeyError, TypeError, ValueError, LedgerError) as error:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                f"maintained refresh refused: {error}",
+            ) from error
+        self._published = (continuation, next_cursor)
+        return result
+
+
 __all__ = [
     "KnowledgeChangeContext",
     "compose_change_set",
@@ -2270,6 +2429,7 @@ __all__ = [
     "KnowledgeChangeSet",
     "KnowledgeHistoryReceipt",
     "KnowledgeHistoryReplay",
+    "KnowledgeHistoryProjection",
     "KnowledgeOperation",
     "KnowledgeRecordHistory",
     "KnowledgeRetainedInput",

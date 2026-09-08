@@ -166,6 +166,43 @@ class KnowledgeGraph:
         operations.sort(key=lambda item: item["record_id"])
         return tuple(operations)
 
+    def _without_records(self, retired: set[str]) -> "KnowledgeGraph":
+        """Private copy-on-write retirement for a verified history transition.
+
+        No dependent record may disappear as a side effect of node removal.
+        Its explicit replacement must retire it in the same change set.
+        Other records keep their already-validated payloads and graph indexes.
+        """
+        unknown = retired.difference(self._identifiers)
+        if unknown:
+            raise ValueError(f"Unknown retired record: {sorted(unknown)[0]}")
+        if not retired:
+            return self.state_projection()
+        for source, target, identifier in self._graph.edges(keys=True):
+            if identifier not in retired and (source in retired or target in retired):
+                role, endpoint = ("Source", source) if source in retired else ("Target", target)
+                raise ValueError(f"{role} entity '{endpoint}' does not exist")
+        for identifier, data in self._graph.nodes(data=True):
+            if identifier in retired:
+                continue
+            kind = self._identifiers[identifier][0]
+            fields = ()
+            if kind == "EVENT_PARTICIPATION":
+                fields = ("event_id", "entity_id")
+            elif kind == "SIGNAL":
+                fields = ("bearer_id",)
+            if any(data[name] in retired for name in fields):
+                raise ValueError(f"Retirement leaves record {identifier} without a referenced record")
+        result = self.state_projection()
+        for source, target, identifier in tuple(result._graph.edges(keys=True)):
+            if identifier in retired:
+                result._graph.remove_edge(source, target, identifier)
+        for identifier in retired:
+            if result._identifiers[identifier][0] != "RELATION":
+                result._graph.remove_node(identifier)
+            del result._identifiers[identifier]
+        return result
+
     def export_records(self) -> dict[str, list[dict[str, Any]]]:
         """Export materialized state as records that replay through from_records.
 

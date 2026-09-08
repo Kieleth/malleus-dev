@@ -90,6 +90,20 @@ step. This is a fresh, insert-only policy history, not policy migration,
 independently attested execution, source truth or physical delivery. See
 `research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/README.md`.
 
+`KnowledgeHistoryProjection.open(path)` now maintains an in-memory read view
+of that same history. `refresh` decodes and folds only the verified committed
+suffix, while `current` reads the published view without ledger I/O. Both
+require the caller's expected full ledger head and count and refuse a stale
+position. Graph, temporal/provenance indexes, contract and action-program state,
+and the envelope cursor publish together after the complete suffix validates.
+Returned graphs are defensive copies. Ordinary changes create only new records
+and explicitly retire superseded records; contract revision still revalidates
+the whole graph. The supplier and partial-shipment fixtures compare these views
+with full replay. Refresh still hashes retained prefix bytes because JSONL
+commits replace the file. Graph/index copies and canonical receipts still scale
+with state size. This is not constant-time admission, a disk checkpoint,
+multi-writer support or a second state authority.
+
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one

@@ -43,3 +43,19 @@ admission, a persistence benchmark, or a disk checkpoint implementation.
 Excluded: database, service loop, multi-writer support, authenticated witnesses,
 new persisted projection closure, external effects, new Re-entry scenario,
 Assent cutover, dependency/package experiments, release and remote push.
+
+Dependency view for the existing Core runtime workstream:
+
+| Subject | Relation | Object |
+|---|---|---|
+| Maintained reader | implements | Semantic-history read projection |
+| Maintained reader | consumes | Verified JSONL prefix and committed suffix |
+| Maintained reader | governedBy | Retained contract, machine, policy and history binding |
+| Maintained reader | produces | Existing KnowledgeHistoryReplay and receipt |
+| Replay output | derivedFrom | One authoritative knowledge history |
+| Reference implementation | conformsTo | Maintained-reader, supplier and shipment conformance tests |
+
+The source commit identifies this reader implementation. No separately
+versioned projector wire or CompleteProjectionClosure artifact is introduced.
+Replacing the implementation would require the same conformance observations;
+no second implementation or cross-language replacement is claimed here.

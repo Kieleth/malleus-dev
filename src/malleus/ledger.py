@@ -9,6 +9,7 @@ import os
 import re
 import tempfile
 from copy import deepcopy
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping
@@ -33,6 +34,22 @@ EVENT_FIELDS = {
 
 class LedgerError(ValueError):
     """The event ledger is malformed, inconsistent, or cannot be verified."""
+
+
+@dataclass(frozen=True)
+class _EnvelopeCursor:
+    count: int = 0
+    head: str = GENESIS
+    transaction_time: datetime | None = None
+    event_ids: frozenset[str] = frozenset()
+    ontology_hashes: frozenset[str] = frozenset()
+
+
+@dataclass(frozen=True)
+class _LedgerCursor:
+    envelopes: _EnvelopeCursor
+    byte_count: int
+    byte_digest: bytes
 
 
 def canonical_json(value: Any) -> str:
@@ -249,6 +266,10 @@ class JsonlLedger:
         if not self.path.exists():
             return []
         raw = self.path.read_bytes()
+        return self._decode_bytes(raw)
+
+    @staticmethod
+    def _decode_bytes(raw: bytes) -> list[dict[str, Any]]:
         if not raw:
             return []
         if not raw.endswith(b"\n"):
@@ -274,12 +295,46 @@ class JsonlLedger:
             events.append(event)
         return events
 
-    def _validate_envelopes(self, events: list[dict[str, Any]]) -> None:
-        prior_hash = GENESIS
-        prior_time = None
-        event_ids = set()
-        seen: set[str] = set()
-        for index, event in enumerate(events, start=1):
+    def _read_suffix(
+        self, prior: _LedgerCursor | None = None
+    ) -> tuple[list[dict[str, Any]], _LedgerCursor]:
+        """Verify retained bytes, then decode/validate only the appended suffix.
+
+        The cursor is process-local, not a persisted or authenticated checkpoint.
+        One open descriptor gives a coherent snapshot across atomic replacement.
+        Replaced JSONL files require a prefix hash pass, not prefix event replay.
+        """
+        hasher = hashlib.sha256()
+        with self.path.open("rb") as stream:
+            remaining = prior.byte_count if prior is not None else 0
+            while remaining:
+                chunk = stream.read(min(remaining, 1024 * 1024))
+                if not chunk:
+                    raise LedgerError("Maintained ledger prefix was truncated")
+                hasher.update(chunk)
+                remaining -= len(chunk)
+            if prior is not None and hasher.digest() != prior.byte_digest:
+                raise LedgerError("Maintained ledger prefix changed")
+            raw = stream.read()
+        events = self._decode_bytes(raw)
+        envelopes = self._validate_envelopes(
+            events, _prior=prior.envelopes if prior is not None else _EnvelopeCursor()
+        )
+        hasher.update(raw)
+        return events, _LedgerCursor(
+            envelopes,
+            (prior.byte_count if prior is not None else 0) + len(raw),
+            hasher.digest(),
+        )
+
+    def _validate_envelopes(
+        self, events: list[dict[str, Any]], *, _prior: _EnvelopeCursor = _EnvelopeCursor()
+    ) -> _EnvelopeCursor:
+        prior_hash = _prior.head
+        prior_time = _prior.transaction_time
+        event_ids = set(_prior.event_ids)
+        seen = set(_prior.ontology_hashes)
+        for index, event in enumerate(events, start=_prior.count + 1):
             context = f"event {index}"
             _string_keys(event, context)
             _exact_fields(event, EVENT_FIELDS, context)
@@ -321,6 +376,10 @@ class JsonlLedger:
             prior_hash = event["event_hash"]
             prior_time = transaction_time
         self._finish_ontology_verification(seen)
+        return _EnvelopeCursor(
+            _prior.count + len(events), prior_hash, prior_time,
+            frozenset(event_ids), frozenset(seen),
+        )
 
     def _verify_ontology_hash(self, value: Any, context: str) -> None:
         if value not in self.accepted_ontology_hashes:
