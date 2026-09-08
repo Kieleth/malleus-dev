@@ -1,9 +1,10 @@
 # Supplier Re-entry integration
 
 Status: ACTIVE IMPLEMENTATION, not an executed supplier E2E.
-Latest verified boundary: authored supplier action entry, real TYPE checks,
-epistemic ACCEPT/DEFER and JSONL-only replay. The action-entry gate has 141 passes.
-Supplier authorization is a separate implementation currently under test.
+Latest verified boundary: authored supplier action entry and direct-grant
+authorization with actual check producers and JSONL-only replay. The action-entry
+gate has 141 passes. A separate focused supplier authorization run has 16 passes;
+its expanded boundary suite and relevant unified gate remain to be completed.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
@@ -366,3 +367,31 @@ and no-deepcopy guards. No permission result is claimed before the rerun.
 The 141-test gate does not cover those new authorization files. Dispatch and
 identified executor/observer, full synthesis closure, observed correction and
 fresh quiescence remain unfinished. No Core or Robotics wait is required.
+
+## Supplier authorization, focused GREEN
+
+The corrected 16-test authorization module passed with no failure, error or skip.
+Actual DIRECT_GRANT execution yields AUTHORIZE for the matching grant and BLOCK
+for a mismatched grantee. Controlled engine unavailability records the native
+failure/UNKNOWN pair and yields CLARIFY. Decision and JSONL-only reopen do not
+invoke the producer. Each step preserves the complete accepted domain frame,
+including B/Y/1, both accepted KCSs, temporal history and the RET-010 complement.
+Permission introduces no dispatch, execution, observation or corrected fact.
+
+This result binds implementation `1ec94392ba2b8084761302c8949444b21c7e8f6f`
+and corrected tests `8413a7bd50ed0fba525d022aa877d8df99c6c116`.
+Exact selection, earlier RED, file hashes and exclusions are recorded in
+`supplier-authority-focused-result.json`. It is a focused result, not the
+authorization unified gate, full repository CI or full supplier Re-entry E2E.
+The 141-test action-entry count is separate and is not added to this count.
+
+The five-minute heartbeat remains active. The Core/adopter contracts, frozen
+supplier case and replay non-invertibility witness were checked against this
+implementation status. The exact-two goal, immutable original context, distinct
+ledger/domain/action coordinates, one attempt, actual observation requirement
+and unchanged complement remain the approved obligations. Core's passed gate
+is not reopened by its separate multi-action proposal or the known historical
+document-example failure. Next work remains local: complete authorization
+boundary coverage and its relevant gate, then identified dispatch/execution,
+independent observation, full synthesis input closure, observation-linked KCS
+and fresh satisfied/no-output/no-retention/no-effect closure.
