@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic supplier snapshot row, adopter-owned source grammar",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "supplier_order_id", "product_code", "quantity"],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "supplier_order_id": {"type": "string", "minLength": 1},
+    "product_code": {"type": "string", "minLength": 1},
+    "quantity": {"type": "integer"}
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "claim": "EXPECTED_OBSERVATIONS_NOT_EXECUTION_RESULTS",
+  "success_path": [
+    {"stage": "INITIAL_KCS_ACCEPTED", "accepted_quantity": 1},
+    {"stage": "ACTION_PROPOSED", "accepted_quantity": 1},
+    {"stage": "ACTION_ACCEPTED", "accepted_quantity": 1},
+    {"stage": "AUTHORIZED", "accepted_quantity": 1},
+    {"stage": "DISPATCHED", "accepted_quantity": 1},
+    {"stage": "EXECUTION_RECORDED", "accepted_quantity": 1},
+    {"stage": "OBSERVATION_RECORDED", "accepted_quantity": 1},
+    {"stage": "OBSERVED_KCS_PROPOSED", "accepted_quantity": 1},
+    {"stage": "OBSERVED_KCS_ACCEPTED", "accepted_quantity": 2},
+    {"stage": "FRESH_REASSESSMENT", "accepted_quantity": 2,
+     "result": "SATISFIED", "new_candidates": 0, "writes": 0}
+  ],
+  "negative_cases": {
+    "success_receipt_unchanged_source": {
+      "execution_status": "SUCCEEDED", "observation_result": "CONTRADICTED",
+      "accepted_quantity": 1, "new_kcs_candidates": 0
+    },
+    "failure_without_capture": {
+      "execution_status": "FAILED", "accepted_quantity": 1,
+      "new_kcs_candidates": 0, "new_dispatches": 0
+    },
+    "failure_after_write_with_supporting_capture": {
+      "execution_status": "FAILED", "accepted_quantity_before_kcs": 1,
+      "accepted_quantity_after_kcs": 2, "causality_claim": false,
+      "new_dispatches": 0
+    },
+    "pending_reassessment": {
+      "result": "PENDING", "new_candidates": 0, "new_dispatches": 0
+    },
+    "well_formed_quantity_three": {
+      "result": "UNREALIZABLE", "shortfall": 0, "goal_satisfied": false
+    },
+    "stale_satisfied_projection": {
+      "result": "STALE_BASE", "new_candidates": 0, "writes": 0
+    }
+  }
+}

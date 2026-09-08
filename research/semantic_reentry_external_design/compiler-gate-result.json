@@ -1,0 +1,236 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "lowest_profile": "compiler-enabled OPTIONAL_PROFILE",
+  "claim": "Independent verification of the operator-approved two-producer compiler compatibility gate",
+  "consumer_base": {
+    "commit": "67b7ec2f27cec25a5c28cee13911611220ad6721",
+    "tree": "218b51857eda523f296824f96e1ef3a7de150b64"
+  },
+  "core_gate_implementation": {
+    "commit": "2af45e03ee7d7bf528cef8db42c0798e6d99685b",
+    "tree": "11704829d941e126424ee0e7138a74c8d2195b5b"
+  },
+  "core_handoff": {
+    "commit": "ff0e1b31f3b44be56a63465b9180d7bbf4c17e54",
+    "tree": "b02650464120d2f43ba28c4613b9c01d7f8d6806",
+    "change_from_verified_gate": "GATE.md report and added gate-result.json only; code and binding unchanged",
+    "report_sha256": "sha256:96da0fc8c956230fd67d285b33d2f993b83096ebd30bad20790e9fd977143bc2",
+    "receipt_file_sha256": "sha256:e7095afdc3be62e55854692ea28b325bf09769b74d84ef4a17612d810a48fd98",
+    "receipt_value_equals_independent_run": true
+  },
+  "independent_run": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 /Users/luis/Projects/malleus-dev/.venv/bin/python scripts/check_compiler_compatibility.py --output /private/tmp/malleus-reentry-gate-final.QDtawH/evidence",
+    "cwd": "/private/tmp/malleus-reentry-gate-final.QDtawH/repo",
+    "exit_code": 0,
+    "receipt": {
+      "binding_sha256": "sha256:8ef2141dc76eeeb7663841ca0f819b0f3136d946729e7f66f8ef491480b653e0",
+      "dependencies": {
+        "PyYAML": "6.0.3",
+        "linkml": "1.11.1",
+        "linkml-runtime": "1.11.1",
+        "pytest": "9.1.1",
+        "tzdata": "2026.3"
+      },
+      "executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+      "gate_code": {
+        "files": {
+          "scripts/check_compiler_compatibility.py": "sha256:5c073b15f7f4b35cd7bbe4bb9c4963466e6bb2a2813c6f963b817b730240901a",
+          "scripts/compiler_compatibility_probe.py": "sha256:12d3ff514f082a96a37204b454a018cccf9d9497f01101e846c2359a25e4ac2f"
+        },
+        "identity": "sha256:7cf6b2dd8320043e7a6381b0b7460b68af04e0c4d88de06724ea35966488c935"
+      },
+      "non_claims": [
+        "Not full-repository CI",
+        "Not exact old receipts from a new producer",
+        "No action runtime, merge, push or release"
+      ],
+      "python": "3.12.9 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 12:55:12) [Clang 14.0.6 ]",
+      "raw_candidate_suite_is_green": false,
+      "results": {
+        "candidate": {
+          "commit": "1be958e88dce865c8e785638d1c15508c92bd1d2",
+          "probe_sha256": "sha256:e8bb0d77ad7738b18f2d0aa6744aeafaea6aa6dfbdd68cfb6e400e406de6b9d6",
+          "pytest_sha256": "sha256:bf256f8f1e051451a0ab74a23a9abae1cb1b1587a397a6b0b31fb7b50c9c6228",
+          "tree": "8334a558442eb64ec90973d6d0ab08eba3b85ce6"
+        },
+        "historical": {
+          "commit": "9ec32d40634c927f9c7c160e226152c3782f4c84",
+          "probe_sha256": "sha256:67562b8346f539f9ca23957708b92f30a7fd901b91f91aa0a96188d24964ffd3",
+          "pytest_sha256": "sha256:e6762b71f43299b64b6d7b36148ca1823ccd6b092b7009d9c4386b2c6495bc0f",
+          "tree": "be66144387617da1d1044401b8389ab1ae17b9fb"
+        }
+      },
+      "status": "BOUNDED_COMPATIBILITY_PASS"
+    },
+    "raw_reports": {
+      "historical": {
+        "collected_count": 9,
+        "collected_sha256": "sha256:a8c3a9c23bd17b3dc9e8dc83362146c65b5cf504641d49ece46b096fb33fb4d5",
+        "collection_errors": [],
+        "exit_code": 0,
+        "failures": {},
+        "phases": {
+          "call:passed": 9,
+          "setup:passed": 9,
+          "teardown:passed": 9
+        },
+        "producer": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+        "xfails": {}
+      },
+      "candidate": {
+        "collected_count": 1175,
+        "collected_sha256": "sha256:097a1d773a04f47a591afaa6dfb59185b25fe4e7c2e2b2178d219eaf68783071",
+        "collection_errors": [],
+        "exit_code": 1,
+        "failures": {
+          "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py::test_checked_in_evidence_is_exactly_regenerated:call": {
+            "comparison": "sha256:76c8d4c92b78547c4795093fa5e4b6bc0e8b31c398d04da6ec62ef1beaffc166",
+            "line": 296,
+            "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py",
+            "type": "builtins.AssertionError"
+          },
+          "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py::test_ret040_admits_reopens_replays_queries_and_traces:call": {
+            "comparison": "sha256:2c20351739b04207d69ee287772f1ccef0491f52924e749794b309a8f77335ae",
+            "line": 35,
+            "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py",
+            "type": "builtins.AssertionError"
+          },
+          "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_run_admits_reopens_queries_and_traces_every_record:call": {
+            "comparison": "sha256:0fc932062bfcd48ba6fbe3f03fd8d3f1ac7b9cc6347d375a4e4fe47c657a6c78",
+            "line": 144,
+            "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py",
+            "type": "builtins.AssertionError"
+          },
+          "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py::test_full_shop_crosses_snapshot_only_composition_without_changing_evidence:call": {
+            "comparison": "sha256:0fc932062bfcd48ba6fbe3f03fd8d3f1ac7b9cc6347d375a4e4fe47c657a6c78",
+            "line": 114,
+            "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py",
+            "type": "builtins.AssertionError"
+          },
+          "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py::test_regeneration_is_canonical_byte_identical_and_matches_runner:call": {
+            "comparison": "sha256:58154689fa021e65e0560e9f6b4253b6e27dff1ca43af2feffca4d6569ff4e98",
+            "line": 101,
+            "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py",
+            "type": "builtins.AssertionError"
+          },
+          "research/semantic_reentry_protocol/test_integration.py::test_observed_correction_admission_reopen_trace_complement_and_quiescence:call": {
+            "comparison": "sha256:972abc173fab4dc9adb87e73c8cad23b70935599000388734a168d29abcb1ccd",
+            "line": 153,
+            "path": "research/semantic_reentry_protocol/test_integration.py",
+            "type": "builtins.AssertionError"
+          },
+          "tests/contract_compiler/pareto/test_document_assertion_time.py::test_public_trace_reaches_each_assertions_own_time_or_absence:call": {
+            "comparison": "sha256:ae30dfc79afa2fe831ca524ef35e1acb01dd83d633204f4962d2a3dfde576202",
+            "line": 223,
+            "path": "tests/contract_compiler/pareto/test_population_trace.py",
+            "type": "builtins.AssertionError"
+          },
+          "tests/contract_compiler/pareto/test_fresh_shop_import.py::test_fresh_import_replays_and_traces_after_complete_shop:call": {
+            "comparison": "sha256:d44b6e1e5d590c26428e8ae772bbd1c17d15a65cc499559a4f10de45ac9db4a0",
+            "line": 139,
+            "path": "tests/contract_compiler/pareto/test_fresh_shop_import.py",
+            "type": "builtins.AssertionError"
+          },
+          "tests/contract_compiler/pareto/test_population_trace.py::test_document_trace_reaches_assertion_locator_and_retained_capture:call": {
+            "comparison": "sha256:ae30dfc79afa2fe831ca524ef35e1acb01dd83d633204f4962d2a3dfde576202",
+            "line": 223,
+            "path": "tests/contract_compiler/pareto/test_population_trace.py",
+            "type": "builtins.AssertionError"
+          }
+        },
+        "phases": {
+          "call:failed": 9,
+          "call:passed": 1165,
+          "call:skipped": 1,
+          "setup:passed": 1175,
+          "teardown:passed": 1175
+        },
+        "producer": "sha256:51c019d49c3cd7d75330e02c5d728a873254cc4b56ca122dda078b15c25bcb3f",
+        "xfails": {
+          "research/semantic_reentry_protocol/test_prerequisites.py::test_population_preparation_satisfies_pure_stage_requirement": "Open Core dependency: population preparation retains anchors; no agreed immutable-base KCS composer"
+        }
+      }
+    },
+    "exact_file_hashes": {
+      "result.json": "sha256:6ecf4c4f173aa6dac8133e4beb49037e598adde197c683c89e4f41c4914a87a0",
+      "historical-pytest.json": "sha256:3f4a1442687d49c28198e692b72801f21e180d43e5564c5135efbce3de5cb1b1",
+      "candidate-pytest.json": "sha256:2739fe49cc39c638fbd00f820b7af9d0ef67e35c46ec7f544dcff1f135eca4b7",
+      "historical-probe.json": "sha256:7ccddc234581857a1805acd468a9b2350c6d33f18a0c9ee083d1316fcac7b172",
+      "candidate-probe.json": "sha256:64ab2783e6721d44994dfb8b81921a5b5addf901c85ee0e73fc90d8969e50e7e"
+    },
+    "paired_scenarios": [
+      "fresh",
+      "document",
+      "object_event",
+      "public_population",
+      "showcase",
+      "correction"
+    ],
+    "exact_allowed_identity_difference_count": 32,
+    "receipt_code_raw_report_and_probe_hashes_rechecked": true,
+    "tracked_and_untracked_checkout_clean": true
+  },
+  "focused_tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -p no:cacheprovider -c pyproject.toml tests/test_compiler_compatibility_gate.py /private/tmp/malleus-reentry-action-design.drq44c/research/semantic_reentry_external_design/test_compiled_assent_input.py --tb=short",
+    "passed": 36,
+    "failed": 0,
+    "seconds": 7.53,
+    "gate_guards": 20,
+    "consumer_checks": 16,
+    "gate_test_sha256": "sha256:30535393ea6295d7d29ba3715def87ffdc8a3d35b347ccf24b1d7a94cfa93a7a",
+    "consumer_test_sha256": "sha256:11d7b7945b845780d6464f4543890002a98410e03d0503706b8b043dde975791"
+  },
+  "refused_first_run": {
+    "gate_commit": "88fd1db5ae12cd5f6f271aae674d95fd4fc1db60",
+    "gate_tree": "183e7619c486ab1e30fef898fe3cb32346cb5500",
+    "exit_code": 1,
+    "historical_passed": 9,
+    "candidate_passed": 1164,
+    "candidate_failed": 10,
+    "historical_xfail": 1,
+    "extra_failure": "research/ontology_driven_kg_realization/experiments/small_shop/test_journal.py::test_committed_seed_has_exact_records_and_cli_check",
+    "cause": "Archive setup omitted Git metadata required to verify retained historical commit 37cf69d57ee85f8a5f936661f1cf5fbdb975573b",
+    "evidence_directory": "/private/tmp/malleus-reentry-gate-verify.ml4Onm/evidence",
+    "candidate_report_sha256": "sha256:653b232619ed8fa232e629be27e2991f443391a53815fb504115d4e266703320",
+    "independent_probes_passed": true
+  },
+  "corrective_guard": {
+    "test": "tests/test_compiler_compatibility_gate.py::test_selected_snapshot_can_verify_the_real_committed_shop_journal",
+    "independently_executed_red": {
+      "commit": "e18eb368c52a9149e4d6c7a471cbe0e37582f9eb",
+      "tree": "bed358c280c63b323c4d2430913e93f844c088ec",
+      "failed": 1,
+      "passed": 0,
+      "seconds": 1.75
+    },
+    "green": "Included unchanged in the 36 passing checks",
+    "class_guard": "Exact detached local checkouts retain historical Git objects; selected tracked files must stay unchanged",
+    "failure_binding_expanded": false
+  },
+  "audit": {
+    "core_base": "1be958e88dce865c8e785638d1c15508c92bd1d2",
+    "gate_added_files": [
+      "research/action_history_contract_freeze/GATE.md",
+      "research/action_history_contract_freeze/gate.json",
+      "research/action_history_contract_freeze/gate-result.json",
+      "scripts/check_compiler_compatibility.py",
+      "scripts/compiler_compatibility_probe.py",
+      "tests/test_compiler_compatibility_gate.py"
+    ],
+    "runtime_changes_in_gate": false,
+    "historical_equality_or_receipt_changes": false,
+    "manifest_and_probe_helper_unchanged_by_setup_fix": true,
+    "both_gate_python_files_bound_by_execution_identity": true,
+    "changed_file_ruff_and_format": "PASS",
+    "base_to_head_diff_check": "PASS"
+  },
+  "next_boundary": "Already-approved action contract definition only; exact initialization/context grammar, capabilities and check-producer identities still require closure",
+  "exclusions": [
+    "Full repository CI GREEN",
+    "Full external-world Re-entry E2E",
+    "Action runtime implementation or authorization",
+    "New ontology or fixture semantics",
+    "Source truth or action causality",
+    "Merge, push, publication or shared-main edits"
+  ]
+}

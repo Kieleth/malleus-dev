@@ -1,0 +1,135 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "status": "PASS",
+  "profile": "compiler-enabled semantic-history/state-version",
+  "consumer_base": {
+    "commit": "9a5872939e33d718986b23223c71277c871aeefd",
+    "tree": "822aee8eafaa0f472d10733f43ba097bb5c27536"
+  },
+  "core": {
+    "commit": "2af45e03ee7d7bf528cef8db42c0798e6d99685b",
+    "tree": "11704829d941e126424ee0e7138a74c8d2195b5b",
+    "runtime_changes": false
+  },
+  "test_file": "research/semantic_reentry_external_design/test_replay_noninvertibility.py",
+  "test_file_sha256": "sha256:8cd5eea6de67ca085cf2848820660809e40e70fbf276e44a65784e5e9d882200",
+  "observed": {
+    "acceptance_head": "sha256:659314f89d2e8e6ece8bf98975b2e21efda6edcfce4d3d1fba00b04692ca69ea",
+    "accepted_change_identities": [
+      "sha256:84d242a348443ccc9f5bbc62e107ea6970615e2be91c224277ec53f34a99f801",
+      "sha256:b59a1568bfddd436712837dd0bea314693f11ab0ce2bde579e6115553b72b2ce",
+      "sha256:79b71a4fb7a9bb83b3eac1524007041a7a7240d83d1cd0ed0a62c6bf5e2ac563"
+    ],
+    "claim": "DISTINCT_VALID_HISTORIES_SAME_CURRENT_GRAPH",
+    "classification": "CONFORMANCE_FIXTURE",
+    "compiler_import": "/private/tmp/malleus-reentry-gate-final.QDtawH/repo/src/malleus/compiler.py",
+    "compiler_producer": "sha256:51c019d49c3cd7d75330e02c5d728a873254cc4b56ca122dda078b15c25bcb3f",
+    "contract_identity": "sha256:21d4629d5f7406e568e51bf0eb9020858673a1b4d6e42e4d6e2b289b9ebd91ae",
+    "external_action_executed": false,
+    "graph_export_sha256": "sha256:2d764ac4e45e0b5b001f5b5e44c2192cdcbf930e6418cdfd1f46d4564ee4986a",
+    "graph_state_digest": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "history_binding_identity": "sha256:87d653d38f56f771a91668b05f99ec80ffcc2e5e8bbe841c7e6b978db6b89e5e",
+    "jsonl_only_reopen": true,
+    "kcs_round_trip": true,
+    "long": {
+      "event_count": 29,
+      "ledger_head": "sha256:59e4853b4ada19ffd506166b7cca32e980e2348888812f4b2c820ecbe02fb5f0",
+      "ledger_sha256": "sha256:2b7a752ec5360f09775ccde733078f69f4a613fb4c41702f7ba45df13594f379",
+      "receipt_identity": "sha256:cad9546a028e04e8d4287e79bb6d278f77e54431838db2c452ea6c99552493b9"
+    },
+    "materialization_head": "sha256:e9c4ae8c101531e334f0dadf96b31bf8ade94a6c1a64301bd2af9a478d327730",
+    "method": "Existing accepted correction plus one authored evidence-only append",
+    "note_identity": "sha256:555bf931f11d812631d0ac8e08903b4429e440060030f2bc4ec9e47749085732",
+    "short": {
+      "event_count": 28,
+      "ledger_head": "sha256:659314f89d2e8e6ece8bf98975b2e21efda6edcfce4d3d1fba00b04692ca69ea",
+      "ledger_sha256": "sha256:4351970225ff5562d0a59d6eb2257acfbe70094e5a8bb5f6f7177da50264c928",
+      "receipt_identity": "sha256:aff8bfd601e7d5af255ff5693e6b2cc48856b5303463541ddb683d22115e44d8"
+    },
+    "source_sha256": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081"
+  },
+  "focused": {
+    "passed": 2,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 1,
+    "xml": "/private/tmp/malleus-reentry-replay-law.5vrGQQ/final-focused.xml"
+  },
+  "relevant_gate": {
+    "passed": 112,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 37.13,
+    "selection": [
+      "research/semantic_reentry_external_design/test_replay_noninvertibility.py",
+      "research/semantic_reentry_external_design/test_compiled_assent_input.py",
+      "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+      "research/semantic_reentry_protocol/test_consumer.py",
+      "research/semantic_reentry_protocol/test_guardrails.py",
+      "tests/test_compiler_compatibility_gate.py",
+      "research/semantic_reentry_protocol/test_integration.py::test_evidence_only_append_stales_candidate_at_ordinary_admission",
+      "research/semantic_reentry_protocol/test_integration.py::test_old_contract_refuses_before_new_state_satisfaction",
+      "research/semantic_reentry_protocol/test_integration.py::test_valid_context_from_different_head_cannot_match_old_read_model"
+    ],
+    "xml": "/private/tmp/malleus-reentry-replay-law.5vrGQQ/final-relevant-gate.xml",
+    "full_repository_ci": false
+  },
+  "invocation": {
+    "cwd": "/private/tmp/malleus-reentry-gate-final.QDtawH/repo",
+    "executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "environment": {
+      "MALLEUS_REENTRY_CORE_ROOT": "/private/tmp/malleus-reentry-gate-final.QDtawH/repo",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": "src:."
+    },
+    "pytest_options": [
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--import-mode=importlib",
+      "-c",
+      "pyproject.toml"
+    ],
+    "dependencies": "Existing project pyproject.toml and configured interpreter; no installation or external call"
+  },
+  "reproducibility": {
+    "bound_repeat_hashes_equal": true,
+    "canonical_kcs_round_trip": true,
+    "jsonl_only_reopen": true
+  },
+  "evidence_directory": "/private/tmp/malleus-reentry-replay-law.5vrGQQ/final-run/test_distinct_histories_share_0",
+  "runtime_origin_defect": {
+    "first_run": {
+      "passed": 1,
+      "qualified_for_selected_core_claim": false,
+      "compiler_import": "/private/tmp/malleus-reentry-action-design.drq44c/src/malleus/compiler.py",
+      "producer": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf"
+    },
+    "cause": "Pytest configuration discovery selected the consumer checkout rather than the intended Core checkout",
+    "guard": "Explicit required Core root, loaded Malleus module origin checks, exact Git commit/clean tracked tree and retained compiler producer identity",
+    "negative_test": "test_runtime_origin_guard_rejects_another_checkout",
+    "original_faulty_invocation_with_guard": {
+      "errors": 1,
+      "passed": 0,
+      "stage": "session setup before Shop fixture",
+      "message": "Core origin mismatch"
+    },
+    "correction": "Select the audited Core pyproject explicitly with -c pyproject.toml; keep the guard active"
+  },
+  "checks": {
+    "ruff": "PASS",
+    "format": "PASS",
+    "core_checkout_clean": true
+  },
+  "exclusions": [
+    "External action or supplier observation",
+    "Alternative genesis mapping policy",
+    "Graph-to-history decoder implementation",
+    "Full external Semantic Re-entry E2E",
+    "New Core semantics or public protocol artifact",
+    "Full repository CI GREEN",
+    "Merge, push, publication"
+  ]
+}

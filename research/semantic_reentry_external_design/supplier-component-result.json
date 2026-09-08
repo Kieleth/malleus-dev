@@ -1,0 +1,96 @@
+{
+  "file_sha256": {
+    "research/semantic_reentry_external_design/README.md": "sha256:cf1b60ace14007cc99dfbb22764fa17763a98714490976aa24d27d3ff8c2d018",
+    "research/semantic_reentry_external_design/SUPPLIER_COMPONENTS.md": "sha256:ba77fc29ddaddb9576b5d4fa5c0ee6354d6d5853e1708d7befa0b8b9c4926708",
+    "research/semantic_reentry_external_design/SUPPLIER_COMPONENT_REVIEW.md": "sha256:4cf20b42463c1a0293f2696d586a882a6838593a1c389687765916c93beb28ee",
+    "research/semantic_reentry_external_design/conftest.py": "sha256:624c1f0b77f01968fca7575782f3c676a265bcec8c29bb773c66e9b28e90c953",
+    "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/README.md": "sha256:c1991e13ca7aa219d09a7e922d83b455ee4b5e23526bed6f6cb116732aebbb1b",
+    "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/case.json": "sha256:3f4b70fd9881f09a89b2fa19be570a6605598e6a686f0809981d407eb3fd795a",
+    "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/input/supplier-before.jsonl": "sha256:edc05a0c3b95e04a54cd83fb5075ec91795680497c925e04635562b35d057e85",
+    "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/oracle/expected.json": "sha256:1e7af6f8748625f117541d63888c750febda269afa82dd8d0adc6e2c39aeb7c0",
+    "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/oracle/supplier-after.jsonl": "sha256:7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+    "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/source.schema.json": "sha256:b6849ba437e103e51023bf5f7b35416494aa3207c613baae1740c9ba36203de5",
+    "research/semantic_reentry_external_design/supplier-component-gate.json": "sha256:c30a198fc9685807425494f20f30de4ee69c515d01506b5c89fd19e5a3e87bd2",
+    "research/semantic_reentry_external_design/supplier_components.py": "sha256:8d3b17ea97be2676bf2454befaf1757e778b1717bdec26ee5ddb0f6c4abec7a1",
+    "research/semantic_reentry_external_design/test_supplier_components.py": "sha256:f5a26e446fb9b5edc70962fb80961c75c83d3c718f60e577ebffc862b31ebb1d",
+    "research/semantic_reentry_external_design/test_supplier_population.py": "sha256:af51b44385b0c2a640508203e8f7536af8b4b1f0ebf2b576cc29a76818b4c9c3"
+  },
+  "runs": {
+    "clean_unified": {
+      "errors": 0,
+      "failures": 0,
+      "path": "/private/tmp/malleus-supplier-component-review.3iYqsO/clean-unified.xml",
+      "sha256": "sha256:5e315608feb8988d1d0f390a725f1678e3a54b381f87f166b0f41fc21ecedc1c",
+      "skipped": 0,
+      "tests": 422
+    },
+    "focused": {
+      "errors": 0,
+      "failures": 0,
+      "path": "/private/tmp/malleus-supplier-components-final-focused.xml",
+      "sha256": "sha256:0fe4f3b0fd559467c0800c6dc43d8a24d2be23cf513d561c0e84a2addc4097f7",
+      "skipped": 0,
+      "tests": 84
+    },
+    "framing_red": {
+      "errors": 0,
+      "failures": 3,
+      "path": "/private/tmp/malleus-supplier-component-review.3iYqsO/clean-framing-red.xml",
+      "sha256": "sha256:c685943213f59e49da4da7af14e6d23d37dfdb4856e849fbc7ead1a9a840b19f",
+      "skipped": 0,
+      "tests": 83
+    },
+    "initial_red": {
+      "errors": 0,
+      "failures": 80,
+      "path": "/private/tmp/malleus-supplier-component-review.3iYqsO/clean-initial-red.xml",
+      "sha256": "sha256:8878b8494accaefcb68b75cd89017aa30a59f177cbe1db83d102d99026252922",
+      "skipped": 0,
+      "tests": 80
+    },
+    "unified": {
+      "errors": 0,
+      "failures": 0,
+      "path": "/private/tmp/malleus-supplier-components-unified.xml",
+      "sha256": "sha256:f836812277555f24dc5c8fda02b6d7b6c6d7d74b3ae8bc57491af51b24b06d4e",
+      "skipped": 0,
+      "tests": 422
+    }
+  },
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "PURE_SUPPLIER_COMPONENTS_NOT_EXTERNAL_ACTION_E2E",
+  "base": {
+    "commit": "49b78a27bd807b90e42973d14f710e2bde09707a",
+    "tree": "5eec6f5157181c714cbfa8152fdb8bb3203bf440"
+  },
+  "implementation_green": {
+    "commit": "e30fac8caacefe5272b6cbbd5764b24c45701b47",
+    "tree": "8de73e0765fbbd2ad62a9c4b63c37d9b5bface32"
+  },
+  "red_commits": {
+    "initial": "c3e93775263785e4f1b61306b9d015dd272dbef6",
+    "framing": "7b55f577e3e9c1a79872fbdb34908897d37832e3"
+  },
+  "outputs": {
+    "classification": "AUTHORED_COMPONENT_EVIDENCE_NOT_OBSERVATION",
+    "prediction_sha256": "sha256:7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+    "population_fragment_sha256": "sha256:04b49239da6221b91203fa2bd8cb8c844dc1eeb1337991e5d89cc307d8032fc8",
+    "population_source_id": "source:reentry:supplier:authored-component-input",
+    "compiled_operations": 1,
+    "accepted_supplier_quantity_after_compilation": 1,
+    "admission_called": false
+  },
+  "clean_checkout": "/private/tmp/malleus-supplier-component-review.3iYqsO/repo",
+  "interpreter": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+  "exclusions": [
+    "capture authentication",
+    "external effects",
+    "ActionProposal production",
+    "authorization",
+    "admission",
+    "full external E2E",
+    "fresh-head lifecycle quiescence",
+    "empirical replaceability",
+    "package/API promotion"
+  ]
+}

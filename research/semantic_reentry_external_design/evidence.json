@@ -1,0 +1,131 @@
+{
+  "schema": "malleus.semantic-reentry.external-design-evidence/research-v0",
+  "status": "PROPOSED_DESIGN_WITH_VERIFIED_SEAM_AUDIT",
+  "base": {
+    "commit": "63a05659a826317f5afee8cfc5544042fc302284",
+    "tree": "2b5f9cb7ed803a68f2536fcbc83c3959cf6257b4"
+  },
+  "classification": {
+    "design": "ADOPTER_CHOICE",
+    "probes": "CONFORMANCE_FIXTURE",
+    "proposed_action_history_guarantees": "OPTIONAL_PROFILE"
+  },
+  "scope": "Design the smallest synthetic supplier-commitment action loop; identify the public one-ledger composition prerequisite. No external-action runtime implemented.",
+  "observed_boundaries": [
+    "The existing Assent effect lifecycle and the landed internal KCS consumer pass their selected tests independently.",
+    "ACTION_DISPATCHED, ACTION_EXECUTED and OUTCOME_OBSERVED each produce UNKNOWN_EVENT in the current default structural machine without changing its state.",
+    "The same event names are not declared retention events and refuse through the current default append_anchor route before ledger writes.",
+    "The landed consumer explicitly refuses GoalPredicate/ActionProposal contracts.",
+    "Canonical correction attribution excludes demand/supply-gap and action/effect claims; e4 and e7 are already retained before the old consumer synthesizes."
+  ],
+  "verification": {
+    "new_probes": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "seconds": 4.5
+    },
+    "existing_selected": {
+      "passed": 28,
+      "failed": 0,
+      "seconds": 11.94
+    },
+    "combined": {
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "seconds": 15.7
+    },
+    "environment": {
+      "python": "3.12.9",
+      "executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+      "PYTHONPATH": "src:.",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "dependencies": "existing declared environment, no installation"
+    },
+    "combined_argv": [
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--tb=short",
+      "research/semantic_reentry_external_design",
+      "tests/test_protocol.py::TestGenericEffectLifecycle",
+      "research/semantic_reentry_protocol/test_integration.py",
+      "research/semantic_reentry_protocol/test_guardrails.py"
+    ],
+    "ruff_check": "PASS",
+    "ruff_format": "PASS",
+    "not_claimed": [
+      "external-loop E2E",
+      "new Core bridge",
+      "full repository gate",
+      "new production defect",
+      "empirical replaceability",
+      "world truth"
+    ]
+  },
+  "prerequisite": {
+    "owner": "Core",
+    "status": "ACKNOWLEDGED_FOR_SEPARATE_REVIEW_NOT_IMPLEMENTATION",
+    "task_id": "01a02f71-fec6-7382-9c68-c3efd3dba5d4",
+    "question": "Identify a supported one-KCS-history action/auth/execution/observation lifecycle route, or specify the smallest optional machine/profile and governed protocol-only append contract.",
+    "required_properties": [
+      "one authoritative protocol history",
+      "unchanged accepted graph until ordinary KCS acceptance",
+      "existing action identity",
+      "no dummy KCS per protocol-only event",
+      "no private writer access",
+      "declared per-transition state pins",
+      "atomic refusal",
+      "pending-action and duplicate-dispatch handling"
+    ],
+    "no_selected_api_name": true,
+    "distinct_from_source_registration_cleanup": true
+  },
+  "proposed_domain_cut": {
+    "goal": "Supplier snapshot records a commitment of two units of Y on B",
+    "demand_fulfilment_claim": false,
+    "initial_values": "Canonical B/Y/e4, quantity1",
+    "external_source": "Separately identified and attributed synthetic snapshot, not the existing source containing e4 and e7",
+    "later_observation": "Fresh synthetic occurrence and captured bytes, not pre-existing canonical e7",
+    "constraints": [
+      "one permitted amendment operator",
+      "one candidate",
+      "one dispatch attempt",
+      "no automatic retry",
+      "separate observer",
+      "explicit correction mapping",
+      "unchanged RET-010 complement"
+    ],
+    "needs_operator_approval": true
+  },
+  "frozen_source_sha256": {
+    "src/malleus/assent.py": "sha256:c2087b2eae8c067b86fa11761223d9539289d75059859396f52c12da27af6662",
+    "src/malleus/_contract_pipeline/knowledge.py": "sha256:29bd5fabb459f0eeff76c877f1ac07c3c4e0f7deae6983e82f849d1717f24dc9",
+    "src/malleus/profiles/structural-history-machine.json": "sha256:d35f3b34d4db439337fc0d70566401c0a4e4cc160e1e482ff2036e55df8f9394",
+    "src/malleus/profiles/structural-history-binding.json": "sha256:16ab95a679e61a005bf861eb1369dd635ef715bb59892a06d06047540f5e3fae",
+    "ontology/assent.yaml": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234",
+    "docs/EFFECT_PROTOCOL.md": "sha256:18dbf67d0069a166616dd5c5c4cb172393a1ad0fb0b7157e43bf22f0b15c62a0",
+    "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/attribution.json": "sha256:5c0bec7e8c3783903db211128b810c3b6dea262a95d7b7cd9cd4cf571775b942",
+    "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081",
+    "research/ontology_driven_kg_realization/experiments/small_shop/fresh_import/adapter.py": "sha256:ea01afb331e73b6a49ae774a11286d619d60e151cb69e971d5c443084531e54f"
+  },
+  "packet_sha256": {
+    "README.md": "sha256:a8103ad7c6e58b2aeb2522750c4a2a9de76336f1573b5dc106747614c22501f6",
+    "conftest.py": "sha256:b330fa114afb6097bb1e436451e66afd37313273496b584ce22286f0aa752470",
+    "test_seam_audit.py": "sha256:8ca1b246d56bea30de418a7909b1b763651ac6c123dbec77678e792158883e2f"
+  },
+  "preservation": {
+    "landed_reentry": "UNCHANGED",
+    "core_runtime": "UNCHANGED",
+    "canonical_fixtures": "UNCHANGED",
+    "paper": "UNCHANGED",
+    "shared_main": "NOT_UPDATED",
+    "push_or_publication": "NONE"
+  },
+  "note": "This report describes a pinned audit. Probe success establishes existing refusals, not the proposed composition. The containing commit/tree and this file's hash are reported separately to avoid self-reference."
+}

@@ -1,0 +1,96 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "Exact compiled Assent input preserves declared ValidTime forms after source-free reload",
+  "compiler_input_gate": "PASS",
+  "action_contract_freeze": "NOT_COMPLETE",
+  "action_execution": "NOT_IMPLEMENTED",
+  "core_handoff": {
+    "commit": "1be958e88dce865c8e785638d1c15508c92bd1d2",
+    "tree": "8334a558442eb64ec90973d6d0ab08eba3b85ce6",
+    "report": "research/action_history_contract_freeze/COMPATIBILITY.md",
+    "report_sha256": "sha256:9a7d81585e82666c074a1e8828f1174c3dbcec074c941c82978a7d56b55c926f",
+    "change_from_verified_runtime": "Report only; runtime bytes unchanged",
+    "reported_current_wide_gate": {
+      "passed": 1165,
+      "failed": 9,
+      "historical_xfail": 1,
+      "status": "FAIL"
+    },
+    "reported_same_nine_selectors_under_original_producer": {
+      "passed": 9,
+      "failed": 0,
+      "producer_commit": "9ec32d40634c927f9c7c160e226152c3782f4c84"
+    }
+  },
+  "red": {
+    "core_commit": "591cea9bf2682d52071197aa15ba31e531552ed5",
+    "core_tree": "21c011f65491dcc78894fd6be14ce0ada5134876",
+    "passed": 5,
+    "failed": 11,
+    "seconds": 1.56
+  },
+  "verified_successor": {
+    "core_commit": "5c559c2d141c03b26f5b60ab4e2707f42f47c248",
+    "core_tree": "76fba63bdd6bfd3664eb6e190125ec32604e0261",
+    "consumer_test_commit": "4d15e4af09cb4eec9c7669616db3f349619f186b",
+    "consumer_test_tree": "d4a2ec1ded7e72f446f007e06c4854b49cc9fd5a",
+    "consumer_test_sha256": "sha256:11d7b7945b845780d6464f4543890002a98410e03d0503706b8b043dde975791",
+    "selection": [
+      "research/semantic_reentry_external_design/test_compiled_assent_input.py",
+      "tests/contract_compiler/pareto/test_assent_contract_compatibility.py",
+      "tests/contract_compiler/pareto/test_contract_alternatives.py",
+      "tests/contract_compiler/pareto/test_public_compiler.py",
+      "tests/test_assent_ontology.py"
+    ],
+    "passed": 108,
+    "failed": 0,
+    "seconds": 10.68
+  },
+  "current_reentry_selection": {
+    "status": "FAIL",
+    "selection": [
+      "research/semantic_reentry_external_design",
+      "tests/test_protocol.py::TestGenericEffectLifecycle",
+      "research/semantic_reentry_protocol/test_integration.py",
+      "research/semantic_reentry_protocol/test_guardrails.py"
+    ],
+    "passed": 67,
+    "failed": 1,
+    "seconds": 17.61,
+    "failure": "test_observed_correction_admission_reopen_trace_complement_and_quiescence",
+    "failed_boundary": "Exact equality to the historical integration-result.json execution evidence",
+    "historical_evidence_modified": false,
+    "gate_disposition_approved": false
+  },
+  "independent_shop_artifact_comparison": {
+    "before_core_commit": "9ec32d40634c927f9c7c160e226152c3782f4c84",
+    "after_core_commit": "5c559c2d141c03b26f5b60ab4e2707f42f47c248",
+    "changed_leaves": ["/evidence/producer/sha256", "/evidence_sha256"],
+    "validated_semantic_identity": "sha256:0af9eb01495af3c7ed063cb8ca340b63b475eb72feeb2f81fe9be48720fd515e",
+    "facts_sha256": "sha256:b20ea4ce27f052fc00b9310ca30cf437b451949e0daf33d717a690fb895beb3a",
+    "before_artifact_sha256": "sha256:6db461526db4c1eb4e040cbf486505dcc630c7be5decc9a4df7f4ba0f2c4d7c8",
+    "after_artifact_sha256": "sha256:07052d78e8c6071df78f20e532a33512e2048563357250937b540807645ef3f0"
+  },
+  "verified_source_hashes": {
+    "ontology/assent.yaml": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234",
+    "ontology/malleus.yaml": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3",
+    "src/malleus/_contract_pipeline/model.py": "sha256:304787b128cbc1d0b3e547189ba7933187f5f0351bad54b341e6879f12bcda45",
+    "src/malleus/_contract_pipeline/elaborate.py": "sha256:96a4c41d0c5a99bde154e37a2a77552963cdd70a9f22645a9a5b0ac7deaf8c56",
+    "src/malleus/_contract_pipeline/view.py": "sha256:6f86928ffcb55786764d85c19cc605d5488d0a1b3177ddfb51c456a559fd5232"
+  },
+  "observed_environment": {
+    "python": "3.12.9",
+    "pytest": "9.1.1",
+    "linkml": "1.11.1",
+    "linkml-runtime": "1.11.1",
+    "PyYAML": "6.0.3"
+  },
+  "exclusions": [
+    "Action interpreter, writer, executor and observer",
+    "Ontology changes or fixture-policy changes",
+    "Source truth, temporal truth or action causality",
+    "Complete executable action contract",
+    "Full landing-gate GREEN",
+    "Merge, push or publication"
+  ]
+}
