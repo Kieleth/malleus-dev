@@ -66,6 +66,10 @@ def proposed(tmp_path_factory):
         )
     )
     directory = tmp_path_factory.mktemp("decision-prefix")
+    return proposed_prefix(directory, bundle)
+
+
+def proposed_prefix(directory, bundle):
     _, checkpoint, init_record, sources = proposal_prefix(directory, bundle)
     history = KnowledgeChangeHistory.reopen(directory / "history.jsonl")
     submit(history, pair(history, checkpoint, init_record, sources))
