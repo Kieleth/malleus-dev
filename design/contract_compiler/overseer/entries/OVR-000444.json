@@ -1,0 +1,63 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000444",
+  "ledger": "overseer",
+  "sequence": 444,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:a8625aaf22409e4a544c4c83dda8dc8c27634b15d5cf2f9e5336c5aa1aad0313",
+  "recorded_at": "2026-09-08T21:40:17Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "release-corpus-version-binding",
+    "type": "DOCUMENT"
+  },
+  "summary": "Refresh only generated OCR release metadata and include it in the fast version guard.",
+  "why": "The clean f717a3a8 full test run has 3353 passes, 2 failures, 3 skips. Both failures identify the OCR corpus generator runtime still naming 0.13.3 after the approved 0.14.0 bump. The existing declared generator changes only corpus.json and its checksum entry; all 67 case artifacts are byte-identical. Runtime and deterministic-generation guards remain strict. The package-version test also checks retained corpus metadata and names the generator command on failure. Status plus OCR tests pass 58. No runtime, ontology, dependency, case semantics or historical ledger entries change. The final full and package gates remain required before the release tag.",
+  "data": {
+    "affected_ids": [
+      "CC-PKG02"
+    ],
+    "documents": [
+      {
+        "path": "conformance/ocr/v0/corpus/checksums.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:9f7a330c2170372e871a997fb10978cf1f48593c648109ed7a7c6f35c8bcb70a",
+        "after_digest": "sha256:ec74d3bf8d07d0e4c2d79922290df94bbebbbc3b1e20fe4492525eab42ab9197"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/corpus.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d321ae747b3b8f8796cdd8d25335a199b94f50065030c7712c35f525b3242ba9",
+        "after_digest": "sha256:5a562d0ca12a43e3865039ab1a87938649bdef252335364e8fe3399977ca7dd3"
+      },
+      {
+        "path": "handover/2026-09-08-core-release.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3b6f83dd1f45aa2941e01ff724b75e7fa6d7e3924cbdde5ee3e6fea84e9867de",
+        "after_digest": "sha256:420216f7a43b245446898ac0ea29cc0f67028385654f96db3403615dbc5d2260"
+      },
+      {
+        "path": "tests/test_status.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:1936358f6ed2dea80c6be835bd45356c5de4cb993abb5f6e1b6a38eeed607149",
+        "after_digest": "sha256:fdeb34452ebe4d3bc39ef2e72d1980e15304a7e8091a25fe433d3eed17d48648"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "f717a3a8f92c943f30eee8a00e14d8541517cbc4"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-PKG02"
+    }
+  ],
+  "entry_hash": "sha256:1f648e485bf63dc30a204defc794ae2ce79d398cd54ceceaeec6668defb11ac0"
+}

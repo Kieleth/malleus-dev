@@ -69,6 +69,16 @@ minutes before installation and remaining gates. Main and release test jobs
 now allow thirty minutes. No test, supported Python version or failure gate is
 removed; build and publication timeouts remain unchanged.
 
+The clean candidate `f717a3a8` full test run reported **3,353 passed, 2 failed,
+3 skipped**, with one RDFLib warning. Both failures exposed the same omitted
+release step: the generated OCR corpus manifest still bound package 0.13.3.
+The declared corpus generator updates only `corpus.json` and `checksums.json`
+for 0.14.0. All 67 case artifacts remain unchanged, including source documents,
+readings, oracles and verification results. The existing full regeneration
+and runtime-binding tests remain strict; the fast package-version test now
+also checks the corpus version and names the regeneration command on failure.
+No OCR runtime, ontology, dependency or case semantics changed.
+
 ## Publication gate
 
 Run the configured full test/documentation gate and package checks from a clean

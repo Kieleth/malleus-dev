@@ -262,7 +262,7 @@
       "reportlab_version": "4.4.9",
       "zlib_contract": "RFC1950+RFC1951"
     },
-    "malleus_version": "0.13.3",
+    "malleus_version": "0.14.0",
     "ocr_ontology_path": "ontology/domains/ocr.yaml",
     "ocr_ontology_sha256": "sha256:90be951e63b3e8c21e732e11e92deffbbbd57e2cae00f1389f5acd14a264f9d3",
     "ocr_registry_content_hash": "41df47147dad536825983ec0bc002a3e137e02ea75c220c6434665698532df2f",

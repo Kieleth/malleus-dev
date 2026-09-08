@@ -1,5 +1,6 @@
 """Mechanical checks for the published implementation boundary."""
 
+import json
 import re
 from pathlib import Path
 
@@ -44,6 +45,13 @@ def test_package_runtime_and_project_versions_match():
     version = re.search(r'^version = "([^"]+)"$', project, re.MULTILINE)
     assert version is not None
     assert version.group(1) == malleus.__version__ == IMPLEMENTATION_STATUS.package_version
+    corpus = json.loads(
+        (ROOT / "conformance/ocr/v0/corpus/corpus.json").read_bytes()
+    )
+    assert corpus["runtime_binding"]["malleus_version"] == malleus.__version__, (
+        "Regenerate the declared OCR corpus after changing the package version: "
+        "python conformance/ocr/v0/corpus/generate.py write"
+    )
 
 
 def test_stage_eight_c_boundary_is_explicit():
