@@ -1,0 +1,335 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "EXISTING_REENTRY_CONSUMER_PARITY_ON_MAINTAINED_CORE_REPLAY",
+  "status": "VERIFIED_READY_FOR_CORE_LOCAL_LANDING",
+  "base": {
+    "commit": "6f37a75ec942100e973bb30763b2e73f281b74a0",
+    "tree": "dd73c9d1a4d7bae65468e3faf4effc58b858eced",
+    "core_source_tree": "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8"
+  },
+  "historical_experiment": {
+    "commit": "8dc2d607dd13deafdf06dd87bcf79d6d8857c8ec",
+    "receipt": "research/semantic_reentry_external_design/observed-mismatch-result.json",
+    "sha256": "92e16933cc574998d8255df76fbbd0bd851bde8c11f836fcc21c01865e4c0743"
+  },
+  "tested_integration": {
+    "commit": "ab631edac75513b317f69e33963b009e228a86b7",
+    "tree": "8fd500bb934e151025adf6c1ee07901646f8d290",
+    "python": "3.12.9",
+    "consumer_runtime_changed_from_original_experiment": false
+  },
+  "execution_binding": "All three landing groups began at clean ab631eda. Their source and test bytes remained unchanged throughout execution. Only documentation and this result receipt were finalized after the gate.",
+  "unified_gate": "research/semantic_reentry_external_design/maintained-integration-gate.json",
+  "partitions": {
+    "a": [
+      0,
+      1,
+      2,
+      7,
+      17,
+      21
+    ],
+    "b": [
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10
+    ],
+    "c": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      22
+    ]
+  },
+  "coverage": {
+    "collected": 453,
+    "reported": 453,
+    "unique": 453,
+    "missing": [],
+    "extra": [],
+    "failures": 0,
+    "skipped": 1
+  },
+  "validation": {
+    "landing-a": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a.xml",
+      "sha256": "14df6e2b3b031391723d63cf6a79567df2f7c4abc7a85f8ca43eac52e0d70943",
+      "count": 139,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "skip_details": []
+    },
+    "landing-b": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-b.xml",
+      "sha256": "254b4df4528024feb3d70ca4e86f52d0040931acf87aa253303d97d647580cae",
+      "count": 173,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "skip_details": []
+    },
+    "landing-c": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-c.xml",
+      "sha256": "2b89c6be6b7f367b5fc0c778be46b16cd59fb11fe8a691a88e10bb0dcf311450",
+      "count": 141,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 1,
+      "skip_details": [
+        {
+          "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+          "name": "test_public_and_private_doctrine_do_not_diverge",
+          "reason": "the paper-program doctrine is not present in this tree"
+        }
+      ]
+    },
+    "landing-epoch": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-epoch.xml",
+      "sha256": "3df104f6e2cbece98ed5d22844014dace73aba03cf97f28fc8dd5779e0a39166",
+      "count": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "skip_details": []
+    }
+  },
+  "earlier_epoch_checks": {
+    "scope": "0af43640 compatibility checks, not relabeled as release-candidate results.",
+    "core_source_tree": "156592a98156f51562eda5f8164cf02ed654a0f5",
+    "expected_historical_guard_refusal": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/epoch-red.xml",
+      "sha256": "d514edc64fd493b0356dd12812ed1a6ac40b01d43eee751690977b098d45503f",
+      "count": 1,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "focused_over_quantity": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/focused-over.xml",
+      "sha256": "2b35175d6cab694b3a7b001d01b01200bcea9322766539c29e0a8a1aba031317",
+      "count": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "epoch_checks": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/epoch-green.xml",
+      "sha256": "2573bf529ec2894cbd15c9bf97e8fa6e2eb77cd14146e621ea9c6840df49fe91",
+      "count": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "support_b": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/unified-b.xml",
+      "sha256": "8e30eeb512e549b81b57eafc6ee578c62e551b98f575cbd6a92691c0011404f0",
+      "count": 173,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "support_c": {
+      "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/unified-c.xml",
+      "sha256": "131f0d4a7728791228140df1f06d87feb482f265cc8065eaa3193d28dcc5e664",
+      "count": 141,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 1,
+      "skip_details": [
+        {
+          "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+          "name": "test_public_and_private_doctrine_do_not_diverge",
+          "reason": "the paper-program doctrine is not present in this tree"
+        }
+      ]
+    }
+  },
+  "independent_read_audit": {
+    "test_helper_imports": false,
+    "full_replay_disk_reads_and_model_forbidden_during_evaluation": true,
+    "all_seven_histories_byte_identical_to_original": true,
+    "outcomes": [
+      {
+        "case": "none",
+        "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a/test_synthesized_action_observ0/history.jsonl",
+        "sha256": "74ae74240e8c68d7392499fe557437b56137ec4db6ee5657b450fc6dee295156",
+        "same_bytes_as_original": true,
+        "ledger_head": "sha256:f397a516fd0ffde57395c0d8cf0258501220de327acdaa9e1236fb5a6538f739",
+        "event_count": 74,
+        "graph_digest": "sha256:c24e6328ed8a61201dd3a525698e2b49c033bf06fdc5fc5d11e3082044683e42",
+        "accepted_quantity": 2,
+        "source_quantity": 2,
+        "execution_status": "SUCCEEDED",
+        "observation_result": "CONFIRMED",
+        "status": "SATISFIED",
+        "reason": "LINKED_OBSERVED_KCS",
+        "candidate_count": 0
+      },
+      {
+        "case": "after-write",
+        "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a/test_synthesized_action_observ1/history.jsonl",
+        "sha256": "e758c4d37e4092f74709777db011750900b3e9071999bfbd163073bebd3270b4",
+        "same_bytes_as_original": true,
+        "ledger_head": "sha256:9507c22e5ca469f46da58c9a411de3b047ff4cf0823ce66418810006ee5d8302",
+        "event_count": 74,
+        "graph_digest": "sha256:c24e6328ed8a61201dd3a525698e2b49c033bf06fdc5fc5d11e3082044683e42",
+        "accepted_quantity": 2,
+        "source_quantity": 2,
+        "execution_status": "FAILED",
+        "observation_result": "CONFIRMED",
+        "status": "SATISFIED",
+        "reason": "LINKED_OBSERVED_KCS",
+        "candidate_count": 0
+      },
+      {
+        "case": "unchanged-success",
+        "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a/test_synthesized_action_observ2/history.jsonl",
+        "sha256": "533f125846117e1a897a17fe1439de05bc138bcabfdd4f8fcb2280ec92619358",
+        "same_bytes_as_original": true,
+        "ledger_head": "sha256:cca562425471b184c95d904849a1329d55b8b63e6c5b2b00ca36547f4ea8e7d7",
+        "event_count": 66,
+        "graph_digest": "sha256:8e4bc9cbbbcd68463cd2bbb94db8a8aa8be2255fa09b4bce7a4828423dc7e93f",
+        "accepted_quantity": 1,
+        "source_quantity": 1,
+        "execution_status": "SUCCEEDED",
+        "observation_result": "CONTRADICTED",
+        "status": "REFUSED",
+        "reason": "EPISODE_TERMINAL",
+        "candidate_count": 0
+      },
+      {
+        "case": "binding-type",
+        "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a/test_synthesized_action_observ3/history.jsonl",
+        "sha256": "1bdf08367b785a2e44296977bc25703197a7facb6eb97997129d7cf2f77c3b0d",
+        "same_bytes_as_original": true,
+        "ledger_head": "sha256:505a9bf95a2227467ff78b8b47d5283844ce06c7327885a692259c12a6797b3e",
+        "event_count": 74,
+        "graph_digest": "sha256:c24e6328ed8a61201dd3a525698e2b49c033bf06fdc5fc5d11e3082044683e42",
+        "accepted_quantity": 2,
+        "source_quantity": 2,
+        "execution_status": "SUCCEEDED",
+        "observation_result": "CONFIRMED",
+        "status": "REFUSED",
+        "reason": "EVIDENCE_DISAGREEMENT",
+        "candidate_count": 0
+      },
+      {
+        "case": "over-quantity",
+        "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a/test_synthesized_action_observ4/history.jsonl",
+        "sha256": "838766e2ff364655cc2c1bf192c228f21ebb93329a2c69d3fe1db7045f6af57a",
+        "same_bytes_as_original": true,
+        "ledger_head": "sha256:4a0e7c6d03bad5091ed9ade690daa610f1ae76809ea02df28a9d13662e66bd07",
+        "event_count": 74,
+        "graph_digest": "sha256:ef6ff9da21ec17d1b1a08c8c2d6d3966a987300c6a0ed414db508de347d3c80e",
+        "accepted_quantity": 3,
+        "source_quantity": 3,
+        "execution_status": "SUCCEEDED",
+        "observation_result": "CONTRADICTED",
+        "status": "REFUSED",
+        "reason": "GOAL_UNSATISFIED",
+        "candidate_count": 0
+      },
+      {
+        "case": "over-quantity-binding-type",
+        "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a/test_synthesized_action_observ5/history.jsonl",
+        "sha256": "ddd8dffae11a904b7869901e8aa41153a5ea963f658810b9c7eef4f810671157",
+        "same_bytes_as_original": true,
+        "ledger_head": "sha256:cbdbca256665b8022d3cb6c65f1857b46095aa21c3758739d36d75702a1e1748",
+        "event_count": 74,
+        "graph_digest": "sha256:ef6ff9da21ec17d1b1a08c8c2d6d3966a987300c6a0ed414db508de347d3c80e",
+        "accepted_quantity": 3,
+        "source_quantity": 3,
+        "execution_status": "SUCCEEDED",
+        "observation_result": "CONTRADICTED",
+        "status": "REFUSED",
+        "reason": "EVIDENCE_DISAGREEMENT",
+        "candidate_count": 0
+      },
+      {
+        "case": "over-quantity-observation-result",
+        "path": "/private/tmp/malleus-reentry-integration.MX2Kpp/landing-a/test_synthesized_action_observ6/history.jsonl",
+        "sha256": "ec4c9eefb3dd7cdcc3c73a650c34bffec69c937e11094af0624c64bee9558919",
+        "same_bytes_as_original": true,
+        "ledger_head": "sha256:82f152c1ea4979680c221d56e83d1c487c3e1ee014f757a9a2092cd9f2e81b86",
+        "event_count": 66,
+        "graph_digest": "sha256:8e4bc9cbbbcd68463cd2bbb94db8a8aa8be2255fa09b4bce7a4828423dc7e93f",
+        "accepted_quantity": 1,
+        "source_quantity": 3,
+        "execution_status": "SUCCEEDED",
+        "observation_result": "CONFIRMED",
+        "status": "PENDING",
+        "reason": "AWAITING_OBSERVED_KCS",
+        "candidate_count": 0
+      }
+    ]
+  },
+  "guardrails": [
+    "Exact current Core source epoch and actual imported-module paths, with unchanged earlier guards and receipts.",
+    "Maintained and full replay agree on receipt, graph snapshots, every accepted historical graph, record history, retained inputs, change sets, contract revisions, machine state, action state, acceptance and materialization heads.",
+    "Lagging published reader and mismatched replay/context refuse STALE_BASE without changing the published position.",
+    "Maintained read and synthesis cannot call full history replay, reopen a reader, admit knowledge, dispatch or observe an effect; repeated current reads also forbid disk reads.",
+    "Final traces preserve actual captured quantity, supersession and all unmentioned records. Action attempt count stays one; fresh candidates stay zero.",
+    "Core's existing corruption, incomplete-transaction, atomic publication, defensive-copy and suffix-only guards are included in the same selected gate."
+  ],
+  "scope_audit": {
+    "changed_path_prefix": "research/semantic_reentry_external_design/",
+    "content_files": 16,
+    "core_runtime_changed": false,
+    "ontology_changed": false,
+    "locked_fixture_changed": false,
+    "skill_changed": false,
+    "paper_changed": false,
+    "dependencies_changed": false,
+    "new_public_api": false,
+    "direct_accepted_graph_writer": false,
+    "retry_added": false,
+    "merged": false,
+    "pushed": false,
+    "published": false
+  },
+  "limits": [
+    "Controlled supplier file and explicit write perturbation, not production supplier behavior, delivery or source truth.",
+    "Goal is exactly two, not at-least-two supply sufficiency or accepted customer demand.",
+    "Only observed replacements two and three are supported; the action/model remains one to two.",
+    "The false-CONFIRMED case refuses mapping and stays PENDING/AWAITING_OBSERVED_KCS with accepted one. No observer repair or forced terminal result is claimed.",
+    "The public composition_context factory still performs full replay. AcceptedReadView still reconstructs exported records for validation. Incrementality is claimed for the maintained reader, not the whole application.",
+    "Core refresh still verifies prefix bytes and copies state. No end-to-end performance, durable checkpoint, second projector or cross-language replacement claim.",
+    "Configured Python environment and selected relevant gate, not full repository CI, new release or clean-install verification."
+  ],
+  "landing": "Core owns main. Merge only this verified research-local diff, preserving unrelated changes and the separate release cut. Check actual source tree and rerun affected reader/epoch checks at landing. No remote push or tag is requested by this receipt.",
+  "latest_core_review": {
+    "commit": "77d7b9b4203c8d8006a1f0d430233fdac9fe6909",
+    "core_source_tree": "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
+    "delta": "Core CI portability and OCR corpus metadata changes do not change runtime. The selected maintained-reader test's finite-history helper now imports tomllib at module scope, with a Python 3.10 fallback; this Python 3.12.9 run uses tomllib."
+  },
+  "content_hashes": {
+    "research/semantic_reentry_external_design/MAINTAINED_INTEGRATION.md": "dfddf63b96bae2f25e2ab30a26156f74b953af71caf855f89a3f3d637f0f8562",
+    "research/semantic_reentry_external_design/OBSERVED_MISMATCH.md": "1860a6186413c6fdbe70a733be3b45cbc1e28b341d0e0bf962dea0135d548301",
+    "research/semantic_reentry_external_design/README.md": "e283fd92ec5ae56515eac6e0ea2a2583f3385d123503f6d33e8f0a73408a2756",
+    "research/semantic_reentry_external_design/SUPPLIER_COMPONENTS.md": "d87a02f105a608c35986cf725cb0b250ef27c32807f28513ed5d00903024a21e",
+    "research/semantic_reentry_external_design/SUPPLIER_OBSERVED_SOURCE.md": "511ee7c40ccd90dbd958da9fc60c568dc00393f6f6dfc653c23f14d7c08983ae",
+    "research/semantic_reentry_external_design/SUPPLIER_REENTRY.md": "70937b2069dc5df301c9c2ed1e3740b522b1cb1e074749638caa9e80e0807108",
+    "research/semantic_reentry_external_design/maintained-integration-gate.json": "b9b76a9f30ecef5f7ca4f64701c860d23ab13a350853211a8f93cf8ddab7cf2a",
+    "research/semantic_reentry_external_design/observed-mismatch-gate.json": "3f717d64f07542157b3f7ebe1dfd0d35366ce71ce8a6d1b5704bdb061d4a939d",
+    "research/semantic_reentry_external_design/observed-mismatch-result.json": "92e16933cc574998d8255df76fbbd0bd851bde8c11f836fcc21c01865e4c0743",
+    "research/semantic_reentry_external_design/supplier_components.py": "2d7eedd9566fd9b5b062f09c194efdc4ba4b72d3589514cca4f98df6a5d3b172",
+    "research/semantic_reentry_external_design/supplier_observed_source.py": "6ebfe4758d9146cc073ff920cb09030db86f73d61c4b48a067a324ad9edb0ccc",
+    "research/semantic_reentry_external_design/supplier_reentry.py": "765791f62086b8d2fc29ba81370f2ef207b4994444e39954c2226dce4a5b030c",
+    "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py": "4859b70b47e7aaf0ae6590ebdb0f9011251f30c44c94c4df5fa45ba962b9681c",
+    "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py": "dc4a9bb164f67b878acf47dc2fca40a12807ea75d99f6dc8569c66c9b3d80e8f",
+    "research/semantic_reentry_external_design/test_supplier_components.py": "9187e798baf3af6fbfb0f755da3d0fe6c4f227f8d231ecd3b966c6f7d2ded7f1",
+    "research/semantic_reentry_external_design/test_supplier_reentry.py": "fb9e7cdc6137c3ed027898c1d1784a3ac94519840f01152c8dc17591b916499e"
+  },
+  "manifest_scope": "Hashes cover all changed content files other than this receipt. The final enclosing commit, tree and receipt hash are supplied separately in the handoff. A Core landing receipt must bind the actual main merge, not rewrite this pre-landing evidence."
+}

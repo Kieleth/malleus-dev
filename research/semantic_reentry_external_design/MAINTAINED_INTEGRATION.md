@@ -1,6 +1,7 @@
 # Re-entry on the maintained Core reader
 
-Status: integration in progress, not a new runtime or release claim.
+Status: IMPLEMENTED and verified, ready for Core-owned local landing. This is
+not a new runtime, public API or release claim.
 
 ## Bound slice
 
@@ -108,3 +109,73 @@ identified commits. Each integration refusal gets an executable assertion.
 The new gate must retain the old exact-epoch guards unchanged, exclude their
 historical actual-runtime assertions explicitly, and bind the reviewed Core
 source tree itself. Fresh runs cannot relabel earlier evidence.
+
+## Verified result
+
+The configured Python 3.12.9 run used clean integration commit
+`ab631edac75513b317f69e33963b009e228a86b7`, tree
+`8fd500bb934e151025adf6c1ee07901646f8d290`. The integration after the original
+experiment changes only conformance tests and documentation, not its three
+runtime modules or Core. Documentation and this evidence receipt were finalized
+after the gate, without changing the tested code.
+
+The focused Re-entry group passed 139 tests. The other two groups passed 173
+and 140 tests, with one existing optional private-doctrine skip. Their exact
+union accounts for all 453 collected cases: **452 passed, 1 skipped**, no
+omissions, extra cases, duplicate cases, failures or errors. These include
+Core's thirteen maintained-reader conformance cases. Five separate current
+epoch checks passed. Scoped Ruff and the base-to-head diff check passed.
+This is the relevant unified gate, not full repository CI or clean-install
+verification. Exact selectors and evidence hashes are in
+[the gate](maintained-integration-gate.json) and
+[the result receipt](maintained-integration-result.json).
+
+All seven fresh lifecycle histories are byte-identical to the original
+undesired-observation experiment. A separate process reopened each with the
+release-candidate Core and consumed the maintained reader using production
+modules, without importing the test helpers. During these independent evaluations,
+full replay, disk reads and model invocation were forbidden mechanically.
+
+| Controlled case | Accepted quantity | Fresh Re-entry result |
+| :--- | :--- | :--- |
+| Requested two, observed two | 2 | SATISFIED / LINKED_OBSERVED_KCS |
+| Write reached two, execution receipt failed | 2 | SATISFIED / LINKED_OBSERVED_KCS |
+| Receipt succeeded, source stayed at one | 1 | REFUSED / EPISODE_TERMINAL |
+| Observed two, corrupted episode binding | 2 | REFUSED / EVIDENCE_DISAGREEMENT |
+| Requested two, observed three | 3 | REFUSED / GOAL_UNSATISFIED |
+| Observed three, corrupted episode binding | 3 | REFUSED / EVIDENCE_DISAGREEMENT |
+| Observed three, falsely recorded CONFIRMED | 1 | PENDING / AWAITING_OBSERVED_KCS |
+
+Every case has one dispatch attempt and zero new candidates after observation.
+In the last case the observed-source mapper refuses EVIDENCE_DISAGREEMENT
+before new retention; Re-entry does not falsely close the episode. No repair
+path for a faulty observer, new retry policy or automatic intervention is added.
+In the main quantity-three case the accepted replacement, trace, supersession
+and terminal refusal survive JSONL-only reopen. The zero shortfall does not
+satisfy this adopter's exact-equality goal.
+
+The earlier actual-epoch guard correctly failed on the new Core source tree.
+It remains unchanged. The separate landing guard rejects older or unknown
+source trees and preserves the earlier gates and receipts byte-for-byte.
+No Core defect or missing seam was hidden by a fixture substitute.
+
+Self-inquisition: this is one research-local consumer exercising the existing
+public reader, not a second projector, generic Re-entry API, new authority,
+source-truth proof or end-to-end performance claim. The one ledger remains the
+only accepted-state authority. The role/profile selections and costs above
+remain unchanged.
+
+## Landing boundary
+
+Core owns the main checkout and the separate 0.14.0 release. This task neither
+pushes nor tags. The verified diff from 6f37a75e is confined to
+`research/semantic_reentry_external_design/`. Existing paper, Recon and release
+work must not be staged or changed by its landing.
+
+At the final read-only coordination check, Core's 77d7b9b4 retained the exact
+tested source tree. Its subsequent CI portability and OCR corpus metadata
+changes are not Re-entry changes. The only changed helper imported by the
+selected Core reader tests moved `tomllib` to a module-level import with a
+Python 3.10 fallback; Python 3.12.9 still selects `tomllib`. Core must check its
+actual landing state and rerun the affected reader/epoch checks. An unreviewed
+runtime source tree refuses rather than silently rebinding this receipt.
