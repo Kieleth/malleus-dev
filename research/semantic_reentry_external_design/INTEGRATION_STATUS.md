@@ -98,3 +98,21 @@ Pre-action checks: no server or endpoint, no new installation/dependency,
 no replacement of a production mechanism, no production incident, and no Core
 file edit. Required inputs have no inferred defaults. Tests precede each new
 implementation boundary; defects retain a class guard and hard regression.
+
+## Selected program variant contract
+
+The local builder consumes the exact compiled supplier record contract plus
+explicit source-role and policy-role IDs. It reuses Core's program authoring
+functions and returns canonical bytes of the existing finite protocol bundle.
+Only action type references, the fixed action literal and the action's added
+field shapes change. Field shapes are read from the compiled contract. A new
+bundle identity is computed after authoring and before any retention. No
+previously retained bundle is rewritten, and no interpreter is copied.
+
+The first variant preserves Core's two-static-input/two-monitor arity and all
+its stage, control, refusal and no-repeat semantics. Repeated TYPE or authority
+producer invocations are not independent implementations or stronger truth
+evidence. Explicit IDs remain caller data even if an ID happens to spell
+LocalAction or LOCAL_ACTION. Unsupported contract or role input refuses; absent
+inputs do not acquire neutral fixture defaults. The builder performs no history
+creation, check invocation, authorization, source write or observation.
