@@ -7,7 +7,7 @@
 A protocol for typed, fail-closed semantic change, with a Python reference
 implementation and the opinion that words have power.
 
-## Current research milestone
+## Compiler-to-history milestone
 
 A knowledge graph can say that order `O1` contains inventory unit `X1`. Those
 three records alone cannot say which source bytes, ontology, and mapping
@@ -24,7 +24,7 @@ testable, and replayable. The reusable path beneath the fixture is now exposed
 through `malleus.compiler`, with `malleus-compiler` as the installed command
 for that path, from `malleus-compiler contract` to admission, replay, and
 query. Public here means a supported import path and installed command in
-packages built from this source, not a stable wire format or release.
+Malleus 0.14.0, not a stable wire format.
 [Inspect the exact sources, ontology, contracts, receipt, ledger lifecycle, and
 graph result.](docs/index.md#inspect-the-evidence)
 
@@ -112,7 +112,7 @@ tools for keeping declared meaning honest. The bundled typed-graph stack is one
 way to adopt those invariants, not the definition of the protocol. See the
 [protocol boundary taxonomy](docs/PRINCIPLES.md#protocol-boundary-taxonomy).
 
-For maintainers, the current machine-checked package boundary is `0.13.3`,
+For maintainers, the current machine-checked package boundary is `0.14.0`,
 `stage-8c-executable-provenance-and-effect-closure`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
@@ -141,8 +141,8 @@ optional profiles they claim.
 pip install malleus-dev
 ```
 
-The released Python package contains the graph-to-Prolog fact compiler and
-verifier. Packages built from the current source also contain the deterministic
+Version 0.14.0 contains the graph-to-Prolog fact compiler and
+verifier, along with the deterministic
 ontology-to-contract compiler, population-plan compiler, governed history, and
 replay boundary. Import it with:
 
@@ -408,7 +408,7 @@ proposal's domain; those checks remain outside Stage 6.
 
 ## Accepted graph and bitemporal replay
 
-This section describes the released `0.13.3` path. It uses
+This section describes the `0.14.0` standalone Assent path. It uses
 `GraphBaseArtifact` and `CandidateSubgraphArtifact`. The research milestone
 uses a private `KnowledgeChangeSet` path and does not silently replace this
 public API.
@@ -443,7 +443,7 @@ an order-only transition, or an unresolved prior boundary. Calendar days
 require an IANA timezone and embed the timezone database version. Malleus loads
 the pinned `tzdata==2026.3` rules, IANA release `2026c`, directly instead of
 relying on the host operating system. The database release is a semantic input:
-version 0.13.3 replays only `2026c`, and provides no cross-version timezone
+version 0.14.0 replays only `2026c`, and provides no cross-version timezone
 migration. Every non-exact value requires the caller's extracted
 `indeterminacy_reason`; Malleus commits that reason but does not infer it from
 transaction, invoice, authorization, or payment time.
@@ -468,7 +468,7 @@ execution-local and are not ledger commitments.
 This is an accepted knowledge commitment, not a truth guarantee or action
 authorization. The caller must supply the exact graph committed by the graph
 base artifact. Remote graph-base resolution, typed retraction, and multi-writer
-serialization remain outside version 0.13.3.
+serialization remain outside version 0.14.0.
 
 ## Architecture
 

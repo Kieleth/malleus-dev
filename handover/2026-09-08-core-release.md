@@ -13,8 +13,9 @@ The changelog describes the public compiler/history path, profiles, packs,
 ontology revision, maintained projection, experimental action interpreter,
 and the independently bounded Recon/OCR changes since the previous package.
 
-Proposed version: **0.14.0**, a minor pre-1.0 release, pending the operator's
-version confirmation. The existing `v*` tag workflow requires the exact package
+Approved version: **0.14.0**, a minor pre-1.0 release. Luis confirmed the
+version and native-Git push/tag exception with "Go". The existing `v*` tag
+workflow requires the exact package
 version on main history, runs tests and distribution checks, then publishes to
 PyPI using its configured trusted publisher. No tag or publication is claimed
 by this preparation record.
@@ -33,7 +34,9 @@ runtime status name 0.11.0. The prose is corrected, with a hard test against
 the runtime's declared ontology versions. Existing ontology-bound ledgers must
 not be silently rebound to different source bytes.
 
-The full clean baseline exposed an old producer binding in the current
+The full clean baseline at `815ed63b` completed with **3,338 passed, 11 failed,
+3 skipped**, one RDFLib deprecation warning, in 812.47 seconds. All eleven
+failures shared an old producer binding in the current
 inspection-note trace tests. Compiler-view change `8d315fbd` altered retained
 producer evidence, but that current test still selected the preceding v2
 execution. Its producer mismatch is an intended refusal, not a failed
@@ -44,7 +47,14 @@ preparation result. All earlier evidence stays byte-identical. Only
 `base_ledger_head` differs from the historical change set; domain operations,
 source/evidence identities and valid time agree. Preparation, admission, reopen
 and per-record trace all execute. The document boundary passes 22 tests;
-status tests pass 13. Neither is a full release receipt.
+status tests pass 13. The preparation documentation/status/current-ledger
+selection passed 144 tests. Neither is a full release receipt.
+
+The release version and README claims had a separate two-test RED, then
+14 status/milestone tests passed after the version change. The runtime version,
+package metadata, README, status document, changelog and guards name 0.14.0;
+the standalone Assent stage remains 8c. No ontology byte changes are introduced
+by this release transaction.
 
 ## Publication gate
 
@@ -55,8 +65,12 @@ adding a new dependency-locking project. Push main first, then the matching
 immutable version tag. The remote release workflow owns publication to PyPI.
 
 The GitHub MCP connector can inspect refs but cannot transport the local Git
-history or create a release tag. A narrow native-Git exception was requested
-from the operator; no shell-based server access has been used.
+history or create a release tag. The operator authorized a narrow native-Git
+exception for this publication. Other server operations continue through MCP.
+
+The in-progress undesired-observation Re-entry integration is consumer-owned
+and excluded from this release. Its future main landing remains a separate
+Core-reviewed transaction after this frozen release boundary.
 
 The maintained projection still verifies retained prefix bytes and copies
 state. Actions still use repository-local producer/profile helpers. External

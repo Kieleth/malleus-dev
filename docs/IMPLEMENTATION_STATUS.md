@@ -1,6 +1,6 @@
 # Implementation Status
 
-Malleus package version `0.13.3` implements the
+Malleus package version `0.14.0` implements the
 `stage-8c-executable-provenance-and-effect-closure` boundary.
 
 This is a capability boundary, not a claim that the research program is
@@ -40,7 +40,7 @@ instead of repeating event assembly. They do not read files, write history,
 admit knowledge or interpret sources. Existing `append_anchors` still owns
 atomic validation and persistence. Custom bindings remain unchanged.
 
-Packages built from this source expose the reusable pieces through
+Version 0.14.0 exposes the reusable pieces through
 `malleus.compiler`: exact-source LinkML contract compilation, population-plan
 compilation, governed admission, reopen, replay, and the replayed graph's query
 methods. The installed `malleus-compiler contract` command covers contract
@@ -109,7 +109,7 @@ This facade does not replace the shipped Assent runtime, stabilize any
 It proves the reusable seam on one controlled initial-population case and one
 controlled record correction. General correction semantics, mapping syntax,
 stable change-set wire, Event-to-Event ordering, external effects, Semantic
-Re-entry, cross-language parity, and release work remain outside this cut.
+Re-entry, and cross-language parity remain outside this cut.
 
 Three full, content-addressed domain-history profile artifacts now ship through
 `malleus.compiler`: `state-version`, `source-assertion`, and `object-event`.
@@ -638,6 +638,7 @@ ontology is `0.4.0`; the assent ontology is `0.11.0`.
 
 | Package | Boundary | Included work |
 |---|---|---|
+| `0.14.0` | `stage-8c-executable-provenance-and-effect-closure` | Same Assent stage; public compiler/population/history facade, explicit profiles and packs, additive revision, maintained read projection, experimental finite-program attachment and Shop conformance evidence |
 | `0.1.0` | Initial typed graph | Root ontology, typed graph, compatibility hashing, optional domain verifier |
 | `0.2.0` | `stage-4-structural-staging` | Stages 2, 3, 7a, and 4 |
 | `0.3.0` | `stage-5-general-logic-monitoring` | Stage 5 generic compilation, isolated execution, and replay-validated records |

@@ -1,0 +1,93 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000442",
+  "ledger": "overseer",
+  "sequence": 442,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:64940b015d8987ba82896bc5d93637481b375f1b94bccc3503d4e35740885ce2",
+  "recorded_at": "2026-09-08T21:13:40Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-0.14.0-release-candidate",
+    "type": "DOCUMENT"
+  },
+  "summary": "Prepare the approved 0.14.0 release without changing the standalone Assent stage.",
+  "why": "Luis approved 0.14.0 and a one-time native-Git push/tag exception. Version metadata, runtime status, README, status documentation and changelog now agree; ontology bytes and stage 8c are unchanged. Two release-claim RED tests fail on 0.13.3; 14 status/milestone tests pass after the change. The clean 815ed63b baseline completed with 3338 passed, 11 failed, 3 skipped; all failures were the producer binding repaired at 0af43640. The 22-test corrected document path preserves both old executions. This transaction selects existing full/docs/package gates and the configured tag-triggered publisher, not new dependencies or a stable wire. Actual push, tag, remote tests and PyPI publication remain to be observed. Uncommitted paper/research work and the in-progress undesired-observation integration are excluded.",
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "CHANGELOG.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a8c69764ba2254a9b8017ece2c6d1b4fda53785b7bcdad4f0a9bc84622fac366",
+        "after_digest": "sha256:e52e4edf2dd7de4cd8584e0ba049dd2379963360e68d6a3fa96272950b6bf73e"
+      },
+      {
+        "path": "README.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:eed1ae0f08c050d7eb62baef1c51f962cbf5edc03e6acf659549f2161a08cbb2",
+        "after_digest": "sha256:56c227a60407eadf0675fe293b8dec6a658a28092bf9c6ba10f10203f7fb7225"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:be94fb00ccd49984be3131ee360dacd1e2d88e06023f2ae1e3f9eea5e1f9eecb",
+        "after_digest": "sha256:b3ec436694388a97caba71d50877ffaec70e2c20c77eede8a4e1b9c62f637523"
+      },
+      {
+        "path": "handover/2026-09-08-core-release.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6d968bcc8b509b429e2689a9aad275fd11ce20d03ba853533cc533a7e866c564",
+        "after_digest": "sha256:1ce25e697b771adfe68eee68434750b7dd0229385c343278d13949d9c960c164"
+      },
+      {
+        "path": "pyproject.toml",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ba880b47e74120b5c779a334ca90b71069c818302de9f24ce20fc9fa392a1e41",
+        "after_digest": "sha256:175fa4c40af92d22309f472f083f7ac5b5c39c2e0c1a114c51a646346f8dcf65"
+      },
+      {
+        "path": "src/malleus/status.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:478efa108c9330283e0e30537b1f6ac8a30d67153831ee61e3c4e33178ddf7f0",
+        "after_digest": "sha256:392e9a58615a44974c2e4b2327c4bd4f98bc014199c10baf5ccca60b658a27d7"
+      },
+      {
+        "path": "tests/test_docs.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:21be0313f8c1f89d39216afefab460e6c3a9569200f105db06b71d16013a6531",
+        "after_digest": "sha256:cdac0b4afe5ebe5402989cd69363400aeb7f337da26134e9af90ffba04bd2fb1"
+      },
+      {
+        "path": "tests/test_status.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:53a9c84242ee9031c2d5b7543665368f4e59aca61e08e4df57ff8db953ce249a",
+        "after_digest": "sha256:1936358f6ed2dea80c6be835bd45356c5de4cb993abb5f6e1b6a38eeed607149"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "0af4364025a6fdff2b032e028d30e4d12ebf4289"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-PKG02"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:310d0b54b8e05e2c120808710ff464e66cd5b57c3a423c6ecc9aaf183369e331"
+}

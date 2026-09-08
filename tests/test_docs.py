@@ -2713,8 +2713,8 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     milestone_link = "docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof"
     assert milestone_link in normalized_readme
     assert (
-        "Public here means a supported import path and installed command in packages "
-        "built from this source, not a stable wire format or release."
+        "Public here means a supported import path and installed command in "
+        "Malleus 0.14.0, not a stable wire format."
         in normalized_readme
     )
     for current_readme_claim in (

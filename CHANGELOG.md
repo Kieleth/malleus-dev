@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-09-08
+
+This release brings the compiler-to-history-to-graph path into the package.
+It keeps the standalone Assent stage unchanged and the experimental wire
+formats explicitly unstable. See the compatibility notes below before opening
+an older ontology-bound ledger with new schema bytes.
+
 ### Added
 
 - Added the public `malleus.compiler` source-to-history path and
