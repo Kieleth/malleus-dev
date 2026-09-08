@@ -302,3 +302,123 @@ def test_adapter_imports_no_private_core_or_research_helpers():
     assert all(
         not name.startswith(("malleus._", "research", "tests")) for name in imported
     )
+
+
+def test_accepted_lineage_fields_are_required_immutable_inputs():
+    from dataclasses import MISSING, fields
+
+    declared = {field.name: field for field in fields(module().AcceptedReadView)}
+    for name in ("accepted_change_sets", "record_history"):
+        assert name in declared
+        assert declared[name].default is MISSING
+        assert declared[name].default_factory is MISSING
+
+
+def test_actual_accepted_lineage_is_frozen_without_copying_private_state(owner):
+    history, replay, context = owner
+    before = history.path.read_bytes()
+    view = freeze(replay, context)
+    assert view.accepted_change_sets == replay.change_sets
+    assert view.record_history == tuple(sorted(replay.record_history.items()))
+    assert type(view.accepted_change_sets) is type(view.record_history) is tuple
+    assert all(
+        type(change) is api.KnowledgeChangeSet for change in view.accepted_change_sets
+    )
+    with pytest.raises((FrozenInstanceError, AttributeError)):
+        view.record_history = ()
+    with pytest.raises(TypeError):
+        view.accepted_change_sets[0].data["change_set_id"] = "forged"
+    assert history.path.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "missing-change",
+        "reordered-changes",
+        "duplicate-change",
+        "missing-history",
+        "wrong-operation",
+        "broken-supersession",
+    ],
+)
+def test_inconsistent_accepted_lineage_refuses_before_return(owner, fault):
+    history, replay, context = owner
+    altered = replay
+    if fault == "missing-change":
+        altered = replace(replay, change_sets=replay.change_sets[:-1])
+    elif fault == "reordered-changes":
+        altered = replace(replay, change_sets=tuple(reversed(replay.change_sets)))
+    elif fault == "duplicate-change":
+        altered = replace(
+            replay, change_sets=(replay.change_sets[0], *replay.change_sets)
+        )
+    else:
+        # Adversarial fake replay only; production reads the public history property.
+        entries = dict(replay.record_history)
+        identifier = next(iter(entries))
+        if fault == "missing-history":
+            del entries[identifier]
+        elif fault == "wrong-operation":
+            item = entries[identifier]
+            entries[identifier] = replace(
+                item, operation=replace(item.operation, record_id="forged")
+            )
+        else:
+            identifier = next(
+                key for key, value in entries.items() if value.superseded_by is not None
+            )
+            entries[identifier] = replace(
+                entries[identifier], superseded_by="absent-successor"
+            )
+        altered = replace(replay, _record_history=entries)
+    before = history.path.read_bytes()
+    with pytest.raises(module().AcceptedViewRefusal) as caught:
+        freeze(altered, context)
+    assert caught.value.reason == "STALE_BASE"
+    assert history.path.read_bytes() == before
+
+
+def test_retained_candidate_bytes_do_not_become_accepted_lineage(owner):
+    history, replay, _ = owner
+    candidate = history.compose_change_set(
+        change_set_id="change:read:unaccepted",
+        source_record_ids=tuple(
+            identifier for identifier, _ in replay.change_sets[-1].sources
+        ),
+        evidence_record_ids=(),
+        operations=(
+            api.KnowledgeOperation(
+                ordinal=0,
+                operation_id="operation:read:unaccepted",
+                operation_type="CREATE_ENTITY",
+                record_type="InventoryUnit",
+                record_id="unit:read:unaccepted",
+                properties={"product_code": "X"},
+                depends_on=(),
+            ),
+        ),
+        valid_time=api.KnowledgeValidTime("NONE_STATED", None),
+        supersedes=(),
+    )
+    history.append_anchors(
+        anchors=(
+            api.structural_evidence_anchor(
+                record_id="evidence:read:unaccepted-kcs",
+                content=candidate.canonical_bytes,
+                media_type="application/json",
+            ),
+        ),
+        transaction_time=TIME,
+        actor_id=ACTOR,
+    )
+    after = history.replay()
+    view = freeze(after, history.composition_context())
+    assert any(
+        item.content == candidate.canonical_bytes
+        for item in view.context.retained_inputs
+    )
+    assert view.accepted_change_sets == replay.change_sets
+    assert candidate not in view.accepted_change_sets
+    assert view.record_history == tuple(sorted(replay.record_history.items()))
+    assert view.records == replay.graph.export_records()

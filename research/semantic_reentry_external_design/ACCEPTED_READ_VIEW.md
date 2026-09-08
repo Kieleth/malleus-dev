@@ -61,3 +61,25 @@ and retained-input identities bind the derivation.
 
 Pre-action checks: no server, endpoint, dependency installation, production
 replacement, Core modification or external effect. Tests precede the adapter.
+
+## Accepted lineage for episode closure
+
+The pure consumer also needs to distinguish accepted changes from retained candidate
+bytes. Extend this same local view with two required immutable tuples:
+`accepted_change_sets`, containing Core's existing KnowledgeChangeSet values in replay
+order, and `record_history`, containing sorted record-ID/KnowledgeRecordHistory pairs.
+No new public type or change identity is introduced, and no graph/replay/writer is
+retained. These are trusted Core-factory reads, not independently authenticated proofs.
+
+Before returning, verify canonical KCS identity/value consistency and unique change
+IDs; bind the last accepted KCS to the receipt using the actual history binding;
+check every history entry against its accepted KCS operation and valid time; require
+reciprocal supersession links and intervals; and match active history IDs to graph
+exports. All required lineage must agree, or freezing refuses with STALE_BASE.
+The consumer cannot populate accepted changes by scanning retained input bytes.
+
+Tests cover immutable exact lineage, dropped/reordered/duplicated accepted changes,
+missing or altered history and broken supersession. A real newly composed KCS retained
+only as evidence must not enter the accepted tuple or active graph. Existing no-I/O,
+defensive-copy and complete-coordinate tests still apply. Goal satisfaction and the
+observation-to-accepted-KCS relationship remain separate consumer checks.
