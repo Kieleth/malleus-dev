@@ -243,6 +243,24 @@ the exact previous TYPE schema digest. No interpreter operation or domain
 ontology was added. Authorization/control and the remaining effect-record
 lifecycle are still pending; no consumer-unblock or main-integration claim.
 
+Authorization now recomputes the existing policy from two actual applied
+authority judgments. The accepted proposal, selected monitors, exact grant,
+executor, verified context and current A/D must agree. AUTHORIZE checks the
+grantee, permitted action type and validity interval inside the assessed
+grant. BLOCK and CLARIFY retain explicit null validity. The full decision and
+transition commit together and change only permission indexes, not A or D.
+
+The initial missing-stage RED produced 12 setup errors. Corrected GREEN passes
+13 focused tests in 146.84 seconds: actual grant outcomes reach all three
+verdicts, nine adversarial branches assert their exact typed refusal and byte
+preservation, and the shared authority read prefix is mechanically effect-free.
+The authoring constants preserve the policy and decision as distinct objects;
+the static checker caught their first accidental name collision. The last
+completed preceding broad gate passed 547 tests in 469.64 seconds and does not
+include authorization. Ruff, format and diff checks pass for this slice.
+Dispatch, execution and observation remain unfinished. This local finite
+conformance variant is still not a public consumer handoff or main integration.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix

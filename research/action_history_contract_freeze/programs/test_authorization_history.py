@@ -30,13 +30,12 @@ from research.action_history_contract_freeze.programs.test_registration_history 
 from tests.contract_compiler.pareto.test_finite_protocol_history import api
 
 
-@pytest.fixture(scope="module")
-def assessed(tmp_path_factory):
+def build_bundle():
     extend = import_module(
         "research.action_history_contract_freeze.programs.authorization_bundle"
     ).add_authorization
     d = authority.decisions
-    bundle = extend(
+    return extend(
         add_authority_assessment(
             authority.add_current_context(
                 authority.add_epistemic_decision(
@@ -55,42 +54,52 @@ def assessed(tmp_path_factory):
             )
         )
     )
-    content = authority.current.accepted_prefix(
-        tmp_path_factory.mktemp("authorization-base"), bundle
+
+
+def assessed_prefix(directory, content, verdict):
+    history = reopen(directory, content)
+    request = authority.current.grant_inputs(
+        history, grantee="actor:other" if verdict == "BLOCK" else "actor:executor"
     )
-    prefixes = {}
-    for verdict in ("AUTHORIZE", "BLOCK", "CLARIFY"):
-        history = reopen(tmp_path_factory.mktemp("authorization-inputs"), content)
-        request = authority.current.grant_inputs(
-            history, grantee="actor:other" if verdict == "BLOCK" else "actor:executor"
+    first_request = deepcopy(request)
+    for ordinal in range(2):
+        replay = history.replay()
+        records = replay.protocol_replay.data["records"]
+        monitor_id = records["policy:authorization"]["record"]["required_monitor_ids"][
+            ordinal
+        ]
+        request["monitor"] = {
+            "id": monitor_id,
+            "record_hash": records[monitor_id]["record"]["content_hash"],
+        }
+        request["event"]["id"] = "event:authority-assessment:" + str(ordinal)
+        request["output_ids"] = {
+            "assessment": "authority-assessment:" + str(ordinal),
+            "failure": "authority-failure:" + str(ordinal),
+        }
+        with pytest.MonkeyPatch.context() as patch:
+            if verdict == "CLARIFY" and ordinal == 0:
+
+                def unavailable(*args, **kwargs):
+                    raise RuntimeError("controlled authority engine failure")
+
+                patch.setattr(check_executor, "execute_program", unavailable)
+            result = run_history_check(history, invocation=request)
+        authority.admit(history, result, authority.event(history, result, request))
+    return history.path.read_bytes(), first_request
+
+
+@pytest.fixture(scope="module")
+def assessed(tmp_path_factory):
+    content = authority.current.accepted_prefix(
+        tmp_path_factory.mktemp("authorization-base"), build_bundle()
+    )
+    return {
+        verdict: assessed_prefix(
+            tmp_path_factory.mktemp("authorization-inputs"), content, verdict
         )
-        first_request = deepcopy(request)
-        for ordinal in range(2):
-            replay = history.replay()
-            records = replay.protocol_replay.data["records"]
-            monitor_id = records["policy:authorization"]["record"][
-                "required_monitor_ids"
-            ][ordinal]
-            request["monitor"] = {
-                "id": monitor_id,
-                "record_hash": records[monitor_id]["record"]["content_hash"],
-            }
-            request["event"]["id"] = "event:authority-assessment:" + str(ordinal)
-            request["output_ids"] = {
-                "assessment": "authority-assessment:" + str(ordinal),
-                "failure": "authority-failure:" + str(ordinal),
-            }
-            with pytest.MonkeyPatch.context() as patch:
-                if verdict == "CLARIFY" and ordinal == 0:
-
-                    def unavailable(*args, **kwargs):
-                        raise RuntimeError("controlled authority engine failure")
-
-                    patch.setattr(check_executor, "execute_program", unavailable)
-                result = run_history_check(history, invocation=request)
-            authority.admit(history, result, authority.event(history, result, request))
-        prefixes[verdict] = (history.path.read_bytes(), first_request)
-    return prefixes
+        for verdict in ("AUTHORIZE", "BLOCK", "CLARIFY")
+    }
 
 
 def event(history, request):
@@ -200,6 +209,17 @@ def event(history, request):
         decision_dependencies={"value": deepcopy(sources)},
         transition_dependencies={"value": [decision["id"]]},
     )
+    if evaluated.verdict == "AUTHORIZE":
+        data["intervals"] = {
+            "authorization": {
+                "start": decision["authorization_valid_from"],
+                "end": decision["authorization_valid_to"],
+            },
+            "grant": {
+                "start": values["grant:direct"]["grant_valid_from"],
+                "end": values["grant:direct"]["grant_valid_to"],
+            },
+        }
     return {
         "event_id": header["event_id"],
         "event_type": "AUTHORIZATION_DECIDED",
@@ -306,7 +326,63 @@ def test_forged_permission_and_invalid_transition_refuse_atomically(
         data["transition_dependencies"]["value"] = []
     decision["content_hash"] = record_hash("AuthorizationDecision", decision)
     transition["content_hash"] = record_hash("TransitionRecord", transition)
+    if variant == "AUTHORIZE":
+        grant = history.replay().protocol_replay.data["records"]["grant:direct"][
+            "record"
+        ]
+        data["intervals"] = {
+            "authorization": {
+                "start": decision["authorization_valid_from"],
+                "end": decision["authorization_valid_to"],
+            },
+            "grant": {
+                "start": grant["grant_valid_from"],
+                "end": grant["grant_valid_to"],
+            },
+        }
     before = history.path.read_bytes()
-    with pytest.raises(api().ProtocolProgramRefusal):
+    reasons = {
+        "verdict": "FORGED_AUTHORIZATION_VERDICT",
+        "output": "FORGED_AUTHORIZATION_OUTPUT",
+        "evaluation": "FORGED_AUTHORIZATION_EVALUATION",
+        "order": "WRONG_AUTHORIZATION_ASSESSMENT_ORDER",
+        "grant": "MISBOUND_AUTHORIZATION_DECISION",
+        "actor": "MISBOUND_AUTHORIZATION_DECISION",
+        "interval": "AUTHORIZATION_EXCEEDS_GRANT",
+        "transition": "MISBOUND_AUTHORIZATION_TRANSITION",
+        "dependencies": "INVALID_AUTHORIZATION_INTRODUCTION",
+    }
+    with pytest.raises(api().ProtocolProgramRefusal, match=reasons[fault]):
         authorize(history, draft, variant)
     assert history.path.read_bytes() == before
+
+
+def test_reused_authority_prefix_has_no_effects_or_control(assessed, tmp_path):
+    import json
+
+    history = reopen(tmp_path, assessed["AUTHORIZE"][0])
+    identity = history.replay().protocol_replay.data["bundle_identity"]
+    bundle = next(
+        json.loads(item.content)
+        for item in history.replay().retained_inputs
+        if item.identity == identity
+    )
+    steps = bundle["transactions"]["authority-completed"]["program"]["steps"]
+    boundary = next(
+        i for i, step in enumerate(steps) if step["opcode"] == "VALIDATE_RECORD"
+    )
+    assert boundary > 0
+    assert {step["opcode"] for step in steps[:boundary]} <= {
+        "RESOLVE_RECORD",
+        "HASH",
+        "REQUIRE_COMPARE",
+        "REQUIRE_MEMBER",
+    }
+    constants = bundle["constants"]
+    assert "authorization" in constants
+    assert "authorization_decision" in constants
+    for transaction in bundle["transactions"].values():
+        schema = transaction["program"]["inputs"]["artifact"]["constants"][
+            "properties"
+        ]["value"]
+        assert len(schema["required"]) == len(set(schema["required"]))
