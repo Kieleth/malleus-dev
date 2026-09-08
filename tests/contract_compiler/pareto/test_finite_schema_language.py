@@ -66,6 +66,17 @@ def test_unsupported_schema_applicator_cannot_hide_a_dynamic_reference():
         validate(args)
 
 
+@pytest.mark.parametrize("field", ["record_schemas", "control_result_schema"])
+def test_unused_profile_schemas_also_obey_the_finite_language(field):
+    args = neutral()
+    schema = {"type": "string", "$dynamicRef": "#/missing"}
+    args["profile"][field] = (
+        {"UnusedRecord": schema} if field == "record_schemas" else schema
+    )
+    with pytest.raises(PacketRefusal, match="DEFINITION_SCHEMA"):
+        validate(args)
+
+
 def test_missing_local_dynamic_reference_is_a_typed_pure_execution_refusal():
     args = neutral()
     args["program"]["inputs"]["artifact"]["context"]["$dynamicRef"] = "#/missing"
