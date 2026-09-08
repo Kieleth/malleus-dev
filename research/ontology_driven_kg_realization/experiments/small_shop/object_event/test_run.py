@@ -8,6 +8,9 @@ from pathlib import Path
 
 import malleus.compiler as compiler
 
+from research.ontology_driven_kg_realization.experiments.small_shop.evidence_assertions import (
+    assert_current_evidence,
+)
 from research.ontology_driven_kg_realization.experiments.small_shop.object_event.run import (
     ORACLE_PATH,
     PLAN_PATH,
@@ -19,11 +22,6 @@ from research.ontology_driven_kg_realization.experiments.small_shop.public_popul
 )
 
 
-EXPECTED_EVIDENCE_PATH = (
-    Path(__file__).parent.parent / "evidence_2026_09_06/object_event/evidence.json"
-)
-
-
 def test_ret040_admits_reopens_replays_queries_and_traces(tmp_path: Path) -> None:
     output = tmp_path / "object-event"
 
@@ -32,7 +30,9 @@ def test_ret040_admits_reopens_replays_queries_and_traces(tmp_path: Path) -> Non
     second = run_object_event(output)
 
     assert first.evidence_bytes == second.evidence_bytes
-    assert first.evidence_bytes == EXPECTED_EVIDENCE_PATH.read_bytes()
+    assert_current_evidence(
+        "object_event", first.replay, {"evidence.json": first.evidence_bytes}
+    )
     assert first.replay.receipt == second.replay.receipt
     assert (output / "history.jsonl").read_bytes() == history_bytes
     evidence = json.loads(first.evidence_bytes)

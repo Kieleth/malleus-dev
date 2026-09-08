@@ -8,6 +8,9 @@ from pathlib import Path
 
 import pytest
 
+from research.ontology_driven_kg_realization.experiments.small_shop.evidence_assertions import (
+    assert_current_evidence,
+)
 from research.ontology_driven_kg_realization.experiments.small_shop.showcase import (
     evidence as evidence_module,
 )
@@ -31,7 +34,6 @@ from research.ontology_driven_kg_realization.experiments.small_shop.showcase.run
 
 
 HERE = Path(__file__).parent
-EVIDENCE = HERE.parent / "evidence_2026_09_06/showcase"
 FILES = ("explanation.json", "graph.json", "queries.json", "receipt.json")
 E4_CHANGE = "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4"
 E4_RECORD = "supplier-order-state:B:e4"
@@ -98,7 +100,7 @@ def test_regeneration_is_canonical_byte_identical_and_matches_runner(
     assert generated == regenerated
     assert {name: (output / name).read_bytes() for name in FILES} == generated
     assert {name: (second / name).read_bytes() for name in FILES} == generated
-    assert {name: (EVIDENCE / name).read_bytes() for name in FILES} == generated
+    assert_current_evidence("showcase", replay, generated)
     assert generated["receipt.json"] == replay.receipt.canonical_bytes
     assert generated["graph.json"] == _canonical(replay.graph.snapshot())
     assert all(_value(source) for source in generated.values())

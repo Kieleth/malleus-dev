@@ -12,6 +12,9 @@ import sys
 import pytest
 
 import malleus.compiler as api
+from research.ontology_driven_kg_realization.experiments.small_shop.evidence_assertions import (
+    assert_current_evidence,
+)
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -136,7 +139,6 @@ def test_fresh_import_replays_and_traces_after_complete_shop(tmp_path):
     command[0], command[4] = sys.executable, str(tmp_path / "first")
     subprocess.run(command, cwd=ROOT, capture_output=True, check=True)
     report = json.loads((tmp_path / "first/evidence.json").read_bytes())
-    assert report == json.loads((HERE / "evidence.json").read_bytes())
     assert runner.run_import(tmp_path / "second") == report
     path = tmp_path / "first/shop/history.jsonl"
     assert path.read_bytes() == (tmp_path / "second/shop/history.jsonl").read_bytes()
@@ -146,6 +148,11 @@ def test_fresh_import_replays_and_traces_after_complete_shop(tmp_path):
     isolated = tmp_path / "only-ledger.jsonl"
     shutil.copyfile(path, isolated)
     replay = api.KnowledgeChangeHistory.reopen(isolated).replay()
+    assert_current_evidence(
+        "fresh_import",
+        replay,
+        {"evidence.json": (tmp_path / "first/evidence.json").read_bytes()},
+    )
     assert len(replay.change_sets) == 6
     assert len(replay.record_history) == 12
     assert report["rows_imported"] == 2

@@ -5,6 +5,7 @@ from dataclasses import replace
 from importlib import import_module
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -20,6 +21,19 @@ def helper():
     return import_module(
         "research.ontology_driven_kg_realization.experiments.small_shop"
         ".evidence_assertions"
+    )
+
+
+def evidence_bytes(value):
+    return (
+        json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False,
+        ).encode()
+        + b"\n"
     )
 
 
@@ -55,19 +69,20 @@ def test_wrong_compiler_refuses_before_output_comparison(occurrence, change):
 @pytest.mark.parametrize("change", ["history", "source", "record", "boolean"])
 def test_no_changed_output_field_is_discarded(occurrence, change):
     value = json.loads(occurrence.evidence_bytes)
+    assert evidence_bytes(value) == occurrence.evidence_bytes
     if change == "history":
         value["history"]["ledger_head"] = "sha256:" + "0" * 64
     elif change == "source":
         value["source_identity"] = "sha256:" + "0" * 64
     elif change == "record":
-        value["observed"]["entities"][0]["id"] = "invented"
+        value["observed"]["entities"][0][0] = "invented"
     else:
         value["observed"]["relation_count"] = False  # Not the integer zero.
     with pytest.raises(AssertionError, match="[Oo]utput"):
         helper().assert_current_evidence(
             "object_event",
             occurrence.replay,
-            {"evidence.json": json.dumps(value).encode()},
+            {"evidence.json": evidence_bytes(value)},
         )
 
 
@@ -91,7 +106,7 @@ def test_corrupted_expected_bytes_refuse_even_when_the_run_matches_them(
     (tmp_path / "object_event").mkdir()
     corrupt = deepcopy(json.loads(occurrence.evidence_bytes))
     corrupt["history"]["ledger_event_count"] = 0
-    content = json.dumps(corrupt).encode()
+    content = evidence_bytes(corrupt)
     (tmp_path / "object_event/evidence.json").write_bytes(content)
     monkeypatch.setattr(module, "CURRENT", tmp_path)
     with pytest.raises(AssertionError, match="[Ee]xpected bytes"):
@@ -106,3 +121,68 @@ def test_every_predecessor_receipt_remains_byte_identical():
     assert len(binding["historical_outputs"]) == 10
     for name, identity in binding["historical_outputs"].items():
         assert module.digest((HERE / name).read_bytes()) == identity
+
+
+def test_changed_historical_receipt_refuses_the_current_comparison(
+    occurrence, tmp_path, monkeypatch
+):
+    module = helper()
+    binding = json.loads((module.CURRENT / "binding.json").read_bytes())
+    for name in binding["historical_outputs"]:
+        destination = tmp_path / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes((HERE / name).read_bytes())
+    predecessor = tmp_path / "evidence_2026_09_06/object_event/evidence.json"
+    predecessor.write_bytes(predecessor.read_bytes() + b" ")
+    monkeypatch.setattr(module, "HERE", tmp_path)
+    with pytest.raises(AssertionError, match="Historical evidence changed"):
+        module.assert_current_evidence(
+            "object_event",
+            occurrence.replay,
+            {"evidence.json": occurrence.evidence_bytes},
+        )
+
+
+def test_a_revision_cannot_introduce_an_unbound_compiler_artifact(occurrence):
+    changed = replace(
+        occurrence.replay,
+        contract_revisions=(
+            SimpleNamespace(
+                target_validated_contract_bytes=b'{"evidence":{"producer":{"id":"other","sha256":"wrong"}}}'
+            ),
+        ),
+    )
+    with pytest.raises(AssertionError, match="[Cc]ompiler"):
+        helper().assert_current_evidence("object_event", changed, {})
+
+
+def test_successor_changes_only_recorded_history_and_artifact_fingerprints():
+    module = helper()
+    binding = json.loads((module.CURRENT / "binding.json").read_bytes())
+
+    def changes(old, new, path=""):
+        assert type(old) is type(new), path
+        if isinstance(old, dict):
+            assert old.keys() == new.keys(), path
+            return [
+                p for k in sorted(old) for p in changes(old[k], new[k], path + "/" + k)
+            ]
+        if isinstance(old, list):
+            assert len(old) == len(new), path
+            return [
+                p
+                for i, pair in enumerate(zip(old, new, strict=True))
+                for p in changes(*pair, path + "/" + str(i))
+            ]
+        if old == new:
+            return []
+        assert isinstance(old, str) and isinstance(new, str), path
+        assert old.startswith("sha256:") and new.startswith("sha256:"), path
+        assert len(old) == len(new) == 71, path
+        return [path]
+
+    for group, scenario in binding["scenarios"].items():
+        for name, output in scenario["outputs"].items():
+            old = json.loads((HERE / output["predecessor"]).read_bytes())
+            new = json.loads((module.CURRENT / group / name).read_bytes())
+            assert changes(old, new) == output["changed_paths"]

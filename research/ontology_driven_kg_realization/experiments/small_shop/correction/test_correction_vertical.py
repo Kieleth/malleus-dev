@@ -13,6 +13,9 @@ import pytest
 
 from malleus._contract_pipeline.knowledge import KnowledgeChangeHistory
 import research.ontology_driven_kg_realization.experiments.small_shop.correction.run as correction_module
+from research.ontology_driven_kg_realization.experiments.small_shop.evidence_assertions import (
+    assert_current_evidence,
+)
 from research.ontology_driven_kg_realization.experiments.small_shop.correction.run import (
     CorrectionRefusal,
     CorrectionRefusalReason,
@@ -35,7 +38,6 @@ POLICY = HERE / "policy.json"
 RUN_PROGRAM = HERE / "run.json"
 MAPPING = HERE / "mapping.json"
 CHECKS = HERE / "checks"
-EVIDENCE = HERE.parent / "evidence_2026_09_06/correction"
 ORACLE = FIXTURE / "oracle/shop-supplier-order-correction.json"
 
 
@@ -292,14 +294,15 @@ def test_reopen_is_read_only_and_regenerates_exact_outputs(tmp_path: Path) -> No
 
 def test_checked_in_evidence_is_exactly_regenerated(tmp_path: Path) -> None:
     output = tmp_path / "proof"
-    run_correction(output)
-    assert {
-        name: (output / name).read_bytes()
-        for name in ("receipt.json", "graph.json", "explanation.json")
-    } == {
-        name: (EVIDENCE / name).read_bytes()
-        for name in ("receipt.json", "graph.json", "explanation.json")
-    }
+    result = run_correction(output)
+    assert_current_evidence(
+        "correction",
+        result.replay,
+        {
+            name: (output / name).read_bytes()
+            for name in ("receipt.json", "graph.json", "explanation.json")
+        },
+    )
 
 
 def test_tampered_source_refuses_before_history_creation(tmp_path: Path) -> None:

@@ -11,11 +11,13 @@ from pathlib import Path
 import malleus.compiler as compiler
 import pytest
 
+from research.ontology_driven_kg_realization.experiments.small_shop.evidence_assertions import (
+    assert_current_evidence,
+)
 
 HERE = Path(__file__).resolve().parent
 ROOT = Path(__file__).resolve().parents[5]
 OLD_GRAPH = HERE.parent / "showcase/evidence/graph.json"
-EXPECTED_EVIDENCE = HERE / "evidence.json"
 DATA_SOURCES = {
     "source:small-shop:inventory": (
         ROOT
@@ -111,7 +113,9 @@ def test_full_shop_crosses_snapshot_only_composition_without_changing_evidence(
     output = tmp_path / "snapshot-shop"
     result = _module().run_full_shop(output)
     ledger = (output / "history.jsonl").read_bytes()
-    assert result.evidence_bytes == EXPECTED_EVIDENCE.read_bytes()
+    assert_current_evidence(
+        "public_population", result.replay, {"evidence.json": result.evidence_bytes}
+    )
     assert len(contexts) == 5
     assert len({context.contract_identity for context in contexts}) == 2
     for context, change in zip(contexts, result.replay.change_sets, strict=True):
@@ -141,7 +145,9 @@ def test_full_run_admits_reopens_queries_and_traces_every_record(
     second = module.run_full_shop(output)
 
     assert first.evidence_bytes == second.evidence_bytes
-    assert first.evidence_bytes == EXPECTED_EVIDENCE.read_bytes()
+    assert_current_evidence(
+        "public_population", first.replay, {"evidence.json": first.evidence_bytes}
+    )
     evidence = json.loads(first.evidence_bytes)
     assert evidence["history"]["ledger_sha256"] == (
         "sha256:" + sha256(ledger_before_trace).hexdigest()
