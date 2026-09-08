@@ -39,6 +39,7 @@ EXAMPLES = (
     / "research/ontology_driven_kg_realization/fixtures"
     / "inspection_note_capture_v1"
 )
+CURRENT_DOCUMENT = EXAMPLES.with_name("inspection_note_execution_v2")
 SHOP_SOURCE = (
     ROOT
     / "research/ontology_driven_kg_realization/fixtures"
@@ -63,6 +64,31 @@ def _canonical(value: object) -> bytes:
 
 def _digest(source: bytes) -> str:
     return "sha256:" + sha256(source).hexdigest()
+
+
+def _assert_current_document_change(artifact_bytes: bytes, change_bytes: bytes) -> None:
+    binding = json.loads((CURRENT_DOCUMENT / "binding.json").read_bytes())
+    producer = json.loads(artifact_bytes)["evidence"]["producer"]
+    assert producer == binding["producer"], (
+        "Producer differs from this document example"
+    )
+    assert _digest(artifact_bytes) == binding["validated_contract_artifact_sha256"], (
+        "Artifact differs from this document example"
+    )
+    manifest = (EXAMPLES / "manifest.json").read_bytes()
+    assert _digest(manifest) == binding["historical_input_manifest_sha256"], (
+        "Historical input manifest changed"
+    )
+    for member in json.loads(manifest)["members"]:
+        content = (EXAMPLES / member["path"]).read_bytes()
+        assert (
+            len(content) == member["bytes"] and _digest(content) == member["sha256"]
+        ), f"Historical input bytes changed: {member['path']}"
+    expected = (CURRENT_DOCUMENT / "document-change.json").read_bytes()
+    assert _digest(expected) == binding["document_change_sha256"], (
+        "Example bytes changed"
+    )
+    assert json.loads(change_bytes) == json.loads(expected), "Change set differs"
 
 
 def _small_shop_replay(tmp_path: Path):
@@ -218,9 +244,9 @@ def _document_replay(
     )
     assert prepared.change_set is not None
     if uses_committed_capture:
-        expected_change = json.loads((EXAMPLES / "document-change.json").read_bytes())
-        actual_change = json.loads(prepared.change_set.canonical_bytes)
-        assert actual_change == expected_change
+        _assert_current_document_change(
+            compiled.artifact.artifact_bytes, prepared.change_set.canonical_bytes
+        )
     history.admit(
         change_set=prepared.change_set,
         machine_events=_protocol_events(

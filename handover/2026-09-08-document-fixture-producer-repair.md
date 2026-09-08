@@ -39,4 +39,63 @@ failed at the same exact-output comparison. Their observed heads were
 and historical
 `sha256:5f52eeecdc80479f6b3a0133fd0390d67f39733c12b88fe0c4946790b405c390`.
 
-Corrective RED and GREEN evidence will be recorded after execution.
+RED `51e9bb20cfad221217588bc3ddeafa91c7be4715` adds ten tests. All ten
+failed before the correction: the current fixture and producer guard were
+absent, and the actual admission/replay path reached the original mismatch.
+
+GREEN adds `inspection_note_execution_v2` beside the unchanged fixture, and
+29 lines to the existing trace helper in place of its three-line historical
+comparison. There is no production change. The new change-set bytes were
+captured from the real preparation result at RED, not produced by replacing
+a hash in the old expected file. Their SHA-256 is
+`059fb6a1843a91ffd931e3b79264a9d9a47c505e32718e8d6b027cd035ca8656`.
+
+The binding checks the complete compiled artifact, its producer, the old input
+manifest and every retained fixture member before comparing the complete
+change set. Wrong producer/artifact, corrupted expected bytes and changed
+operation/source/evidence/time/history fields all have refusing tests.
+The live public path admits, reopens, compares all graph records against the
+unchanged plan, and recovers exact source, capture and plan bytes for every
+record. Existing tests additionally check modality and distinct or absent
+assertion/domain times.
+
+Current validation in the configured `.venv` environment:
+
+- Ten new guards plus existing document trace/time tests: **20 passed**.
+- Complete affected population/document/history/public-facade/KG seam:
+  **430 passed**, no skips, in 31.75 seconds.
+- Changed-file Ruff, formatting and scoped diff checks passed.
+
+Exact 430-test selector, with bytecode/cache writes disabled:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q -p no:cacheprovider tests/contract_compiler/pareto/test_document_fixture_producer.py tests/contract_compiler/pareto/test_document_assertion_adapter.py tests/contract_compiler/pareto/test_document_assertion_time.py tests/contract_compiler/pareto/test_population_trace.py tests/contract_compiler/pareto/test_population_plan.py tests/contract_compiler/pareto/test_governed_population.py tests/contract_compiler/pareto/test_knowledge_change_history.py tests/contract_compiler/pareto/test_public_compiler.py tests/contract_compiler/pareto/test_repository_guards.py tests/test_kg.py
+```
+
+Historical validation ran from a fresh local detached clone at
+`9ec32d40634c927f9c7c160e226152c3782f4c84`, tree
+`be66144387617da1d1044401b8389ab1ae17b9fb`. The two original trace/time
+tests passed unchanged, with imports verified inside that checkout and its
+compiler producer verified as
+`sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf`.
+The checkout remained clean. No dependency installation or network access was
+used. The exact selector was:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -p no:cacheprovider tests/contract_compiler/pareto/test_population_trace.py::test_document_trace_reaches_assertion_locator_and_retained_capture tests/contract_compiler/pareto/test_document_assertion_time.py::test_public_trace_reaches_each_assertions_own_time_or_absence
+```
+
+The old fixture manifest is still
+`sha256:229db892765e9005b1a3f5c767a102c13e28a9ba00c5fe989e7488c7f95774fc`;
+its original change set is still
+`sha256:d7ea99a463195fdaf20c7bfb5d1f63736ea48f2252a5651d7d3266a015048673`.
+All archived handover examples, fixed compatibility-gate files, `src`,
+ontology and package configuration are byte-identical to `816eb2a`.
+
+## Scope result
+
+This closes the document comparison shared by two current tests. It does not
+close the other historical Shop comparisons or claim full repository GREEN.
+Re-entry can consume this correction without sequential-action work. No paper
+or downstream file is included. The old compatibility audit remains a statement
+about its exact historical and repaired commits, not today's current suite.
