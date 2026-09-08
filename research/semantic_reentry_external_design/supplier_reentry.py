@@ -354,14 +354,14 @@ def _rule(view, identifier):
     _text(operator["new_source_occurrence_id"])
     _closed(value["implementations"], ("synthesizer", "model", "update_strategy"))
     dependencies = set()
-    for reference in (
-        *value["implementations"].values(),
-        value["executor"],
-        value["observed_mapper"],
+    for reference, extra in (
+        *(
+            (reference, ("entrypoint",))
+            for reference in value["implementations"].values()
+        ),
+        (value["executor"], ()),
+        (value["observed_mapper"], ("adapter_id",)),
     ):
-        extra = ("entrypoint",) if "entrypoint" in reference else ()
-        if reference is value["observed_mapper"]:
-            extra = ("adapter_id",)
         _closed(reference, ("source_id", "bytes_sha256", *extra))
         _text(reference["source_id"], *(reference[k] for k in extra))
         _, implementation = _source(view, reference["source_id"])
@@ -498,16 +498,20 @@ class SupplierActionStrategy:
             "model did not predict an amendment",
         )
         return _canonical(
-            dict(
-                logical_source_id=logical_source_id,
-                supplier_order_id=goal["supplier_order_id"],
-                product_code=goal["product_code"],
-                expected_quantity=operator["expected_quantity"],
-                requested_quantity=operator["requested_quantity"],
-                expected_source_digest=source_sha256,
-                new_source_occurrence_id=operator["new_source_occurrence_id"],
-            )
+            _permitted_payload(goal, operator, source_sha256, logical_source_id)
         )
+
+
+def _permitted_payload(goal, operator, source_sha256, logical_source_id):
+    return dict(
+        logical_source_id=logical_source_id,
+        supplier_order_id=goal["supplier_order_id"],
+        product_code=goal["product_code"],
+        expected_quantity=operator["expected_quantity"],
+        requested_quantity=operator["requested_quantity"],
+        expected_source_digest=source_sha256,
+        new_source_occurrence_id=operator["new_source_occurrence_id"],
+    )
 
 
 def _engines(rule, synthesizer, model, strategy):
@@ -617,11 +621,34 @@ def _inputs(view, original, rule):
 
 def _index(view, name, keys):
     """Read an optional lifecycle entry, never execute its transition program."""
-    matches = [
-        r["value"]
-        for r in view.protocol["state"]["protocol"][name]
-        if r["keys"] == keys
-    ]
+    protocol = view.protocol
+    contents = {
+        m.content
+        for m in view.context.retained_inputs
+        if m.role == "RETAINED_EVIDENCE" and m.identity == protocol["bundle_identity"]
+    }
+    _need(len(contents) == 1, "MALFORMED_INPUT", "selected program bytes must resolve")
+    content = next(iter(contents))
+    _need(
+        _digest(content) == protocol["bundle_identity"],
+        "SOURCE_DISAGREEMENT",
+        "selected program bytes differ",
+    )
+    targets = _object(content)["profile"]["targets"]
+    _need(name in targets, "UNSUPPORTED", "lifecycle index is not declared: " + name)
+    declaration = targets[name]
+    _need(
+        declaration["target"] == "PROTOCOL_INDEX"
+        and declaration["storage_path"] == ["protocol", name]
+        and len(declaration["key_schemas"]) == len(keys),
+        "UNSUPPORTED",
+        "incompatible lifecycle index declaration",
+    )
+    state = protocol["state"]["protocol"]
+    # The selected profile declares this index, but no transition has populated it.
+    if name not in state:
+        return None
+    matches = [r["value"] for r in state[name] if r["keys"] == keys]
     _need(len(matches) <= 1, "AMBIGUOUS", "competing lifecycle entries: " + name)
     return matches[0] if matches else None
 
@@ -959,19 +986,44 @@ class SupplierReentrySynthesizer:
         prediction = model.predict(
             before_bytes=before,
             source_sha256=original["pre_state_source"]["bytes_sha256"],
+            goal=_object(_canonical(goal)),
+            operator=_object(_canonical(rule["operator"])),
+        )
+        modeled = supplier_components.map_observation(
+            prediction,
+            before_bytes=before,
+            source_sha256=original["pre_state_source"]["bytes_sha256"],
             goal=goal,
             operator=rule["operator"],
+            mapping=mapping,
+            source_id=rule["logical_source_id"],
+        )
+        _need(
+            modeled is not None,
+            "MODEL_DISAGREEMENT",
+            "prediction must satisfy the goal and source frame",
         )
         payload = _object(
             update_strategy.payload(
                 before_bytes=before,
                 prediction=prediction,
                 source_sha256=original["pre_state_source"]["bytes_sha256"],
-                goal=goal,
-                operator=rule["operator"],
-                mapping=mapping,
+                goal=_object(_canonical(goal)),
+                operator=_object(_canonical(rule["operator"])),
+                mapping=_object(_canonical(mapping)),
                 logical_source_id=rule["logical_source_id"],
             )
+        )
+        _need(
+            payload
+            == _permitted_payload(
+                goal,
+                rule["operator"],
+                original["pre_state_source"]["bytes_sha256"],
+                rule["logical_source_id"],
+            ),
+            "MODEL_DISAGREEMENT",
+            "strategy output differs from the bound permitted action",
         )
         action = make_record(
             "SupplierOrderAmendment",
