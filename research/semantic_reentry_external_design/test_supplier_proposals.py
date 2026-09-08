@@ -317,7 +317,18 @@ def test_real_supplier_proposal_checks_and_acceptance_preserve_domain(
 
 @pytest.mark.parametrize(
     "fault",
-    ["stale", "original-head", "payload", "record", "source", "operator", "extra"],
+    [
+        "stale",
+        "original-head",
+        "payload",
+        "record",
+        "source",
+        "operator",
+        "extra",
+        "action-id",
+        "policy",
+        "provenance",
+    ],
 )
 def test_bad_supplier_proposal_refuses_whole_atomic_pair(inputs, fault):
     owner = inputs[0]
@@ -339,15 +350,175 @@ def test_bad_supplier_proposal_refuses_whole_atomic_pair(inputs, fault):
             action["content_hash"] = content_digest("wrong")
         elif fault == "operator":
             action["action_type"] = "UNSUPPORTED"
+        elif fault == "action-id":
+            action["id"] = "action:wrong-context-binding"
+        elif fault == "policy":
+            action["authorization_policy_hash"] = content_digest("wrong policy")
+        elif fault == "provenance":
+            action["source_record_ids"] = [CONTEXT]
         else:
             action["operations"] = []
         if fault != "record":
             action["content_hash"] = record_hash("SupplierOrderAmendment", action)
         args["action_bytes"] = ingress.canonical(action)
     before, receipt = owner.path.read_bytes(), owner.replay().receipt
-    with pytest.raises((api().SupplierProtocolError, core.ProtocolProgramRefusal)):
+    with pytest.raises(ValueError) as caught:
         api().submit_supplier_proposal(**args)
+    if fault in {"action-id", "policy", "provenance"}:
+        assert (
+            type(caught.value).__module__
+            == "malleus._contract_pipeline.protocol_runtime"
+        )
+        assert type(caught.value).__name__ == "ProtocolProgramRefusal"
+    else:
+        assert type(caught.value) is api().SupplierProtocolError
     assert owner.path.read_bytes() == before and owner.replay().receipt == receipt
+
+
+@pytest.mark.parametrize("moment", ["before-producer", "after-producer"])
+def test_moving_prefix_never_rebases_a_real_check(inputs, monkeypatch, moment):
+    owner = inputs[0]
+    api().submit_supplier_proposal(**submit_arguments(inputs))
+    args = check_arguments(owner, 0)
+    producer = api().run_history_check
+    intervening = []
+
+    def advance():
+        # Real evidence-only append, not a fake changed context or second writer.
+        owner.append_anchors(
+            anchors=(
+                core.structural_evidence_anchor(
+                    record_id="artifact:supplier:intervening-check-note",
+                    content=ingress.canonical({"purpose": "stale-check conformance"}),
+                    media_type="application/json",
+                ),
+            ),
+            transaction_time=TIME,
+            actor_id=ACTOR,
+        )
+        intervening.append((owner.path.read_bytes(), owner.replay().receipt))
+
+    def moving(history, *, invocation):
+        if moment == "before-producer":
+            advance()
+        result = producer(history, invocation=invocation)
+        if moment == "after-producer":
+            advance()
+        return result
+
+    monkeypatch.setattr(api(), "run_history_check", moving)
+    before = owner.replay()
+    with pytest.raises(ValueError) as caught:
+        api().record_supplier_type_check(**args)
+    if moment == "before-producer":
+        assert type(caught.value) is api().SupplierProtocolError
+        assert caught.value.reason == "STALE_BASE"
+    else:
+        assert (
+            type(caught.value).__module__
+            == "malleus._contract_pipeline.protocol_runtime"
+        )
+        assert type(caught.value).__name__ == "ProtocolProgramRefusal"
+        assert caught.value.reason == "STALE_PROTOCOL_BASE"
+    assert len(intervening) == 1
+    after = owner.replay()
+    assert (owner.path.read_bytes(), after.receipt) == intervening[0]
+    assert initial.domain(after) == initial.domain(before)
+    assert args["assessment_id"] not in after.protocol_replay.data["records"]
+    assert args["failure_id"] not in after.protocol_replay.data["records"]
+
+
+@pytest.mark.parametrize(
+    "function", ["record_supplier_type_check", "decide_supplier_proposal"]
+)
+def test_stale_coordinator_refuses_before_any_producer(inputs, monkeypatch, function):
+    owner = inputs[0]
+    args = (
+        check_arguments(owner, 0)
+        if function == "record_supplier_type_check"
+        else decision_arguments(owner)
+    )
+    args["expected_count"] -= 1
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("stale coordinator invoked a producer or policy evaluator")
+
+    monkeypatch.setattr(api(), "run_history_check", forbidden)
+    monkeypatch.setattr(api(), "evaluate_epistemic_policy", forbidden)
+    before = owner.path.read_bytes(), owner.replay().receipt
+    with pytest.raises(api().SupplierProtocolError, match="STALE_BASE"):
+        getattr(api(), function)(**args)
+    assert (owner.path.read_bytes(), owner.replay().receipt) == before
+
+
+@pytest.mark.parametrize(
+    "function",
+    [
+        "original_supplier_context",
+        "submit_supplier_proposal",
+        "record_supplier_type_check",
+        "decide_supplier_proposal",
+    ],
+)
+def test_missing_required_inputs_are_typed_and_never_defaulted(function):
+    with pytest.raises(api().SupplierProtocolError, match="MALFORMED_INPUT"):
+        getattr(api(), function)()
+
+
+@pytest.mark.parametrize("kind", ["upstream", "knowledge", "check", "local"])
+def test_declared_refusal_classes_propagate_the_same_exception(kind):
+    from research.action_history_contract_freeze.programs.check_executor import (
+        CheckRefusal,
+    )
+
+    class UpstreamRefusal(ValueError):
+        """An opaque upstream failure, not a simulated completed protocol result."""
+
+    error = {
+        "upstream": lambda: UpstreamRefusal("exact failure"),
+        "knowledge": lambda: core.KnowledgeChangeRefusal(
+            core.KnowledgeChangeRefusalReason.STALE_BASE, "exact failure"
+        ),
+        "check": lambda: CheckRefusal("exact failure"),
+        "local": lambda: api().SupplierProtocolError("CONFORMANCE", "exact failure"),
+    }[kind]()
+
+    def refuse():
+        raise error
+
+    with pytest.raises(type(error)) as caught:
+        api()._guarded(refuse)()
+    assert caught.value is error
+
+
+def test_exception_handlers_do_not_resolve_dependency_attributes_during_failure():
+    import ast
+
+    tree = ast.parse(Path(api().__file__).read_text())
+    for handler in (n for n in ast.walk(tree) if isinstance(n, ast.ExceptHandler)):
+        assert handler.type is not None
+        assert not any(isinstance(n, ast.Attribute) for n in ast.walk(handler.type))
+
+
+def test_gate_and_runtime_belong_to_this_checkout():
+    root = Path(__file__).resolve().parents[2]
+    assert Path(core.__file__).resolve().is_relative_to(root / "src/malleus")
+    assert Path(api().__file__).resolve().parent == Path(__file__).resolve().parent
+    gate = json.loads(
+        (Path(__file__).parent / "supplier-proposal-gate.json").read_bytes()
+    )
+    assert str(Path(__file__).resolve().relative_to(root)) in gate["tests"]
+    assert len(gate["tests"]) == len(set(gate["tests"]))
+    assert all((root / path).is_file() for path in gate["tests"])
+
+
+def test_adapter_imports_no_test_fixture_or_private_core_implementation():
+    import ast
+
+    tree = ast.parse(Path(api().__file__).read_text())
+    imports = [n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)]
+    assert not any("test_" in name or name.startswith("tests.") for name in imports)
+    assert not any(name.startswith("malleus._") for name in imports)
 
 
 def test_actual_checker_unavailability_records_unknown_and_defers(inputs, monkeypatch):
