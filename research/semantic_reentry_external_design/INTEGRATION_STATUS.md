@@ -1,6 +1,11 @@
 # Supplier Re-entry integration
 
-Status: FOCUSED SUPPLIER E2E GREEN, final unified gate and landing audit pending.
+Status: BOUNDED SUPPLIER E2E COMPLETE, final unified gate and scoped audit PASS.
+The fresh final run passed 388 tests across 15 modules, zero failures, errors or
+skips, on unchanged code/test commit dc74a6d. Final JUnit SHA-256:
+7d02ef74cf3feef4a096a1ae39f21ce51fdc47f07e4fa49de42ab427f75caf0c.
+Start with SUPPLIER_E2E_HANDOFF.md, supplier-reentry-final-result.json and the
+file-hash manifest. No Core prerequisite is open for this proved slice.
 The corrected two-module run passed 35 tests, including actual synthesized proposal,
 checks, authorization, controlled source attempt, independent capture, ordinary KCS
 admission, JSONL-only replay and fresh quiescence. Accepted B/Y/2 appears only after
@@ -13,24 +18,27 @@ accepted-lineage read module 32. These are separate, overlapping runs, not one t
 Earlier runs and failures remain recorded separately in supplier-reentry-progress.json.
 The corrected run verifies guards for declared-but-unpopulated lifecycle indexes,
 closed implementation roles and independent strategy/model agreement. No Core wait.
-The five-minute continuation heartbeat remains ACTIVE. Core's latest thread update
-explicitly permits this single-action consumer to continue while its separate
-two-sequential-action extension proceeds.
+The five-minute continuation covered implementation and verification. Delivery
+closes this approved single-action slice. Core's separate two-sequential-action
+extension is not required by this proof and is not silently incorporated.
 
 The gate epoch mismatch is corrected at 0d0773e: the historical witness is unchanged
 and separately identified; a current-bound witness and incompatible-epoch guard
-pass three tests. The unified 387-test selection from that commit is RUNNING,
-with production a056077. Do not count collection or partial progress as a result.
+pass three tests. The earlier unified 387-test selection passed all 387 tests,
+with production a056077 loaded before the later binding repair. Its JUnit SHA-256
+is a9af16eb2508ed7d08b4cb3bdb96ab5a44ff62c27ad862a2212e33110b2feb72.
 
 The additional audit probe at 0bb35dc is RED: the full lifecycle injected Boolean
 true into the observation binding's expected-quantity-one field and incorrectly
 returned SATISFIED. Core accepted the actual source-derived correction normally;
 the defect was the Re-entry episode's non-exact binding comparison. Repair dc74a6d
 compares canonical bytes of the whole binding, preserving JSON types recursively.
-The four-case focused correction and fresh 388-test unified gate are RUNNING.
+The four-case focused correction passed all four tests. The fresh 388-test
+unified gate also passed on unchanged code/test commit dc74a6d.
 The earlier 387-test run excludes this fourth case and cannot close the finding.
-Do not claim final audit closure until the repaired selections finish. The audit and draft landing packet are
-MALLEUS_INQUISITION.md and SUPPLIER_E2E_HANDOFF.md. No Core wait.
+The repaired selections close the exact-binding finding. The completed scoped
+audit and landing packet are MALLEUS_INQUISITION.md and SUPPLIER_E2E_HANDOFF.md.
+No merge, push, publication or full repository CI is claimed. No Core wait.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic

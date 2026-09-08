@@ -188,5 +188,30 @@
     "Unchanged-source case has no separate JSONL-only subdirectory; replay still consumes only its named ledger"
   ],
   "python": "3.12.9 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 12:55:12) [Clang 14.0.6 ]",
-  "replay_research_test_imports_denied": true
+  "replay_research_test_imports_denied": true,
+  "independent_run_byte_agreement": {
+    "cases": [
+      {
+        "case": "ordinary",
+        "history_sha256": "533980368b98f97e444f7f717d2a2f09c8d4748a4f94cfb89fa2dce2281b5609",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ0/jsonl-only/history.jsonl"
+      },
+      {
+        "case": "failed_after_write",
+        "history_sha256": "e5ce9b688c3921794a76bcd200aaa4cb372d4f377db01e945953c75a54616db7",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ1/jsonl-only/history.jsonl"
+      },
+      {
+        "case": "unchanged_success",
+        "history_sha256": "a92af6c72d53183e0b9319134e6ef92fe7e3dc768cdb7c2f44517f44f7ecb994",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ2/history.jsonl"
+      },
+      {
+        "case": "binding_type",
+        "history_sha256": "ac918bd4507ef8cbeb09e60d182aa4fcf9f4cadcae13f6520f2cbd50d7caac6b",
+        "unified_history_path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ3/jsonl-only/history.jsonl"
+      }
+    ],
+    "claim": "FOCUSED_AND_FRESH_UNIFIED_LIFECYCLE_HISTORIES_ARE_BYTE_IDENTICAL"
+  }
 }

@@ -21,9 +21,11 @@ Mechanical root-ontology rites: NOT RUN, profile not claimed by this audit.
 
 Earlier focused synthesized E2E: PASS, 35 tests. Current-bound replay/epoch
 correction: PASS, 3 tests. Repaired four-case lifecycle: PASS, 4 tests.
-Fresh unified gate: RUNNING, 388 tests collected across 15 modules.
-No final landing verdict is issued until that run and the retained evidence
-audit complete. These counts are separate observations and are not added.
+Fresh unified gate: PASS, 388 tests across 15 modules, zero failures, errors or skips.
+Scoped landing verdict: PASS for the bounded research-local single-action proof
+against the pinned Core base. These counts are separate observations and are not
+added. Exact final result: `supplier-reentry-final-result.json`; file scope and
+hashes: `supplier-reentry-file-hashes.json`. Full repository CI is not claimed.
 
 ## Closed findings
 
@@ -72,13 +74,11 @@ Required entrypoints and the different executor/mapper role shapes are now
 checked before binding. Missing entrypoints, extra role fields and unknown
 ambiguity strategy refuse in the focused suite.
 
-## Finding repaired, final unified verification pending
-
 ### H5. Type-changing observed binding falsely closes the episode
 
 Rubric: `gate_integrity`, `encodable_at_the_gate`, `evidence_does_not_transfer`.
 Where: `supplier_reentry.py:784`.
-The complete observed-source binding uses Python object equality. Integer one
+The earlier complete observed-source binding used Python object equality. Integer one
 and Boolean true compare equal. The `binding-type` full-lifecycle regression
 at `0bb35dc` injects faulty mapper serialization, then uses actual public
 preparation/admission/replay. RED: one failure, SATISFIED instead of the required
@@ -87,7 +87,8 @@ The source-derived quantity-two fact is not disputed; the exact episode-binding
 claim is false. Repair `dc74a6d` compares canonical bytes of the whole binding,
 preserving JSON types recursively. The corrected four-case lifecycle passes:
 this case refuses closure, and ordinary and failed-after-write closure still pass.
-Final closure still requires the fresh unified gate. Corrected JUnit SHA-256:
+The fresh unified 388-test gate also passes, including this regression. H5 is
+closed for the stated boundary. Corrected focused JUnit SHA-256:
 `1fd98559ce110cefa5adc55aecb4fc56335686193f14935964311e2a88a55054`.
 
 ## Claim-by-claim judgment
@@ -95,11 +96,11 @@ Final closure still requires the fresh unified gate. Corrected JUnit SHA-256:
 | Claim | Role | Direct evidence | Unsupported transfer excluded | Verdict |
 | :--- | :--- | :--- | :--- | :--- |
 | One log, KCS-only accepted knowledge | PROTOCOL_INVARIANT | Actual Core admission and replay; graph unchanged through every pre-admission checkpoint | No direct KG writer or substitute change identity | PASS for this consumer |
-| Single-action lifecycle | OPTIONAL_PROFILE | Exact retained supplier bundle, actual Core transition owner and native refusal tests | Not default Assent cutover or multiple-action support | Focused PASS; unified pending |
+| Single-action lifecycle | OPTIONAL_PROFILE | Exact retained supplier bundle, actual Core transition owner and native refusal tests | Not default Assent cutover or multiple-action support | PASS |
 | Exact-two goal and full complement | ADOPTER_CHOICE | Frozen case, quantity-three refusal, complete record/history comparison | Shortfall zero is not equality, delivery or demand fulfilment | PASS |
 | Pure pinned synthesis | REFERENCE_IMPLEMENTATION | Graph-free immutable view, canonical contract, source closure, stale-before-model and no-I/O tests | No effect, retention or admission capability | PASS |
-| Typed candidate and real checks | REFERENCE_IMPLEMENTATION | Existing SupplierOrderAmendment; actual TYPE and DIRECT_GRANT producers and policy decisions | TYPE does not prove usefulness; grant checks do not prove grantor legitimacy | Focused PASS; unified pending |
-| One controlled source attempt | REFERENCE_IMPLEMENTATION | Fresh dispatch before `_attempt`; no repeat path; exact pre-state bytes checked | Not crash recovery, concurrency, exactly-once delivery or real supplier integration | Focused PASS; unified pending |
+| Typed candidate and real checks | REFERENCE_IMPLEMENTATION | Existing SupplierOrderAmendment; actual TYPE and DIRECT_GRANT producers and policy decisions | TYPE does not prove usefulness; grant checks do not prove grantor legitimacy | PASS |
+| One controlled source attempt | REFERENCE_IMPLEMENTATION | Fresh dispatch before `_attempt`; no repeat path; exact pre-state bytes checked | Not crash recovery, concurrency, exactly-once delivery or real supplier integration | PASS |
 | Independent observed-source correction | REFERENCE_IMPLEMENTATION | Observer reads the file; adapter binds capture, execution, contract and population trace | Receipt/model/oracle bytes do not become observed state | PASS |
 | Fresh episode closure | REFERENCE_IMPLEMENTATION | Linked accepted KCS required; retained-only and unrelated corrections refuse closure | Quantity two alone cannot close an acted episode | PASS |
 | Non-invertible replay | CONFORMANCE_FIXTURE | Distinct valid histories, equal current graph, unequal history/receipt identities | Not decoding, ViewDelta PutGet or reconstruction of the past from the graph | PASS |
@@ -133,11 +134,12 @@ private accepted-state writer. A blanket claim that all adapters use only
 public stable APIs would be false.
 
 Syntax-aware inspection found no Core imports from research/tests, and root
-ontology imports only `linkml:types`. The base-to-head diff at the selected
-commit contains 88 new files, all under this Re-entry directory. It includes
-previously approved design/history and earlier stages, not 88 new runtime
-components. Core source, shared ontology, locked Shop bytes and papers are
-unchanged. Ruff check and formatting check pass for all 31 Python files.
+ontology imports only `linkml:types`. All base-to-head changes are under this
+Re-entry directory. The cumulative diff includes previously approved
+design/history and earlier stages, not just new runtime components. Final
+file counts and per-file identities belong in the landing hash manifest.
+Core source, shared ontology, locked Shop bytes and papers are unchanged.
+Ruff check and formatting check pass for all 31 Python files.
 
 ## Evidence and limits
 
@@ -158,6 +160,9 @@ CONFIRMED observation and valid quantity-two fact whose corrupted binding now
 refuses episode closure. Exact current identities and environment observations
 are in `supplier-reentry-replay-evidence.json`; the earlier three-case results
 above are distinct historical observations, not substituted current hashes.
+The four corrected histories are byte-identical to their separately executed
+fresh-unified-run counterparts. This agreement covers those four histories,
+not unexecuted workflows or an empirical alternative implementation.
 
 Source identities assume this identified Python/Core process. Hashes are not
 proof of actor legitimacy, source truth or protection against arbitrary

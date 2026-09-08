@@ -1,7 +1,24 @@
 # Supplier Semantic Re-entry: evidence and landing packet
 
-Status: corrected four-case proof GREEN; fresh unified 388-test gate in progress.
+Status: bounded supplier Semantic Re-entry E2E COMPLETE on the pinned Core base.
+The corrected four-case proof and the fresh unified 388-test gate both pass.
 This packet does not authorize a merge, push or publication.
+
+## Completed verification
+
+The final unified run passed 388 tests across 15 modules, with zero failures,
+errors or skips. It ran unchanged code/test commit `dc74a6d`, including the
+new binding-type regression. JUnit SHA-256:
+`7d02ef74cf3feef4a096a1ae39f21ce51fdc47f07e4fa49de42ab427f75caf0c`.
+The separate focused four-case run also passed. These counts are not added.
+The earlier 387-test GREEN excluded that regression and does not certify the repair.
+
+`supplier-reentry-final-result.json` binds the exact selection, executed results
+and code. `supplier-reentry-replay-evidence.json` identifies four independently
+reopened histories, also byte-identical to the final gate's corresponding histories.
+`supplier-reentry-file-hashes.json` binds the audited content commit/tree and
+every base-to-content-head changed file. It excludes itself to avoid a
+self-referential digest; its subsequent manifest-only commit is the landing tip.
 
 ## What this proves
 
@@ -84,14 +101,17 @@ For the complete action path alone, select
 `test_supplier_reentry.py::test_synthesized_action_observed_kcs_and_fresh_quiescence`.
 It executes ordinary success, failed-after-write, unchanged-success and
 corrupted-binding cases.
-Tests use real Core producers and admission; only controlled source-write faults
-are injected. Expected-output files are comparisons, never observation inputs.
+Tests use real Core producers and admission. Faults are injected only into the
+controlled source writer and the mapper's binding serializer. Expected-output
+files are comparisons, never observation inputs.
 
 Existing public `malleus.compiler_cli query` and `trace` commands can inspect
 the produced `history.jsonl` without running the synthesizer, executor or observer.
 For example, pass `query --ledger <history.jsonl> --type SupplierOrderState`
 or `trace --ledger <history.jsonl> --record-id supplier-order-state:B:reentry-amendment-1`.
-The replacement exists only in the two supporting-observation cases.
+The replacement exists in each observed quantity-two case, including the
+corrupted-binding case whose episode refuses closure. It is absent when the
+source stays unchanged.
 
 ## Exact scope and order
 
@@ -138,5 +158,6 @@ second independent implementation remains unproved. Multiple actions,
 concurrent source writers, retries, real suppliers and robotics are excluded.
 
 See `MALLEUS_INQUISITION.md` and `supplier-reentry-progress.json` for scoped
-judgments, preserved failures and exact completed results. The final unified
-result and file-hash manifest must be present before this packet claims delivery.
+judgments, preserved failures and exact completed results. This is ready for
+review against its pinned base, not permission to transfer evidence to a later
+Core target or a claim of full repository CI.

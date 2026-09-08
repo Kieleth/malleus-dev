@@ -1,0 +1,116 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "status": "PASS",
+  "claim": "BOUNDED_SINGLE_ACTION_SUPPLIER_SEMANTIC_REENTRY_E2E",
+  "verified_at_utc": "2026-09-08 16:00:26 UTC",
+  "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+  "branch": "codex/semantic-reentry-e2e",
+  "core_base": {
+    "commit": "90146c380994621a2f8df25876affd03fc9e57e3",
+    "tree": "609979f5d356ebb43c1288d80ea8f4f53d1f2613",
+    "source_tree": "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1"
+  },
+  "executed_code_and_tests": {
+    "commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71",
+    "tree": "28f4b35c3109649e1cf82c8edd5109aa22957460",
+    "unchanged_through_final_gate": true
+  },
+  "unified_gate": {
+    "manifest": "supplier-reentry-gate.json",
+    "manifest_sha256": "c55c0ef92a47204cb67e19593ca81a74a3397830d2f7afbda419afaaaf624585",
+    "junit": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-reentry-final.xml",
+    "junit_sha256": "7d02ef74cf3feef4a096a1ae39f21ce51fdc47f07e4fa49de42ab427f75caf0c",
+    "tests": 388,
+    "passes": 388,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "modules": {
+      "research.semantic_reentry_external_design.test_accepted_read_view": 32,
+      "research.semantic_reentry_external_design.test_frozen_supplier_inputs": 16,
+      "research.semantic_reentry_external_design.test_supplier_action_contract": 23,
+      "research.semantic_reentry_external_design.test_supplier_authorization": 35,
+      "research.semantic_reentry_external_design.test_supplier_components": 82,
+      "research.semantic_reentry_external_design.test_supplier_execution": 22,
+      "research.semantic_reentry_external_design.test_supplier_initial_source": 34,
+      "research.semantic_reentry_external_design.test_supplier_initialization": 24,
+      "research.semantic_reentry_external_design.test_supplier_observation": 22,
+      "research.semantic_reentry_external_design.test_supplier_observed_source": 14,
+      "research.semantic_reentry_external_design.test_supplier_program": 12,
+      "research.semantic_reentry_external_design.test_supplier_proposals": 32,
+      "research.semantic_reentry_external_design.test_supplier_reentry": 25,
+      "research.semantic_reentry_external_design.test_supplier_reentry_boundaries": 12,
+      "research.semantic_reentry_external_design.test_supplier_replay_laws": 3
+    },
+    "junit_seconds": "2441.414",
+    "basetemp": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final",
+    "binding_type_collected": true
+  },
+  "separate_focused_run": {
+    "tests": 4,
+    "passes": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "junit": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-binding-type-corrected.xml",
+    "junit_sha256": "1fd98559ce110cefa5adc55aecb4fc56335686193f14935964311e2a88a55054",
+    "count_boundary": "Separate overlapping run, not added to the unified count."
+  },
+  "replay_evidence": {
+    "file": "supplier-reentry-replay-evidence.json",
+    "sha256": "6662ace449c6ce968e753cfebfad4d9ee43a9d20119ca410f5c67865768d955b",
+    "cases": 4,
+    "independent_reopen": true,
+    "pure_reevaluation_without_io": true,
+    "focused_and_unified_histories_byte_identical": true
+  },
+  "selected_file_sha256": {
+    "supplier_reentry.py": "d3ad325020e6d6d5abdc189a878160b6f190876b859887875258f164c4602957",
+    "test_supplier_reentry.py": "e9a5eba47bb36cba34b2147729c76b02b29457cf538f0faeb2b1de1d7543162b",
+    "test_supplier_reentry_boundaries.py": "6a44beeb2ba86b024db2ef75b09992a5ff51b65b5b0d753e616d6c90f551ebb4",
+    "test_supplier_replay_laws.py": "80921300ae0d53bdd982c2cda13618fce7bd6000ba7fc86d11678e992525b643",
+    "supplier-reentry-gate.json": "c55c0ef92a47204cb67e19593ca81a74a3397830d2f7afbda419afaaaf624585",
+    "supplier-reentry-replay-evidence.json": "6662ace449c6ce968e753cfebfad4d9ee43a9d20119ca410f5c67865768d955b"
+  },
+  "audit": {
+    "report": "MALLEUS_INQUISITION.md",
+    "verdict": "PASS_FOR_PINNED_RESEARCH_LOCAL_SINGLE_ACTION_PROOF",
+    "closed_findings": [
+      "incompatible_historical_gate_epoch",
+      "untrusted_strategy_output_and_input_aliases",
+      "declared_but_unpopulated_lifecycle_index",
+      "open_implementation_role_grammar",
+      "observed_binding_boolean_integer_type_confusion"
+    ],
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS_31_PYTHON_FILES",
+    "whitespace_check": "PASS",
+    "change_scope": "research/semantic_reentry_external_design only",
+    "core_source_ontology_locked_shop_paper_changes": false
+  },
+  "scope": {
+    "initial_source": "e4/B/Y/1 only",
+    "goal": "B/Y quantity exactly 2, contract-local",
+    "new_occurrence": "reentry-amendment-1",
+    "preservation": [
+      "O1",
+      "X1",
+      "contains:O1:X1",
+      "all unmentioned accepted records and temporal history"
+    ],
+    "attempts_per_episode": 1,
+    "automatic_retry": false,
+    "graph_revision": "Only ordinary observed-source KnowledgeChangeSet admission and replay",
+    "observation": "Actual controlled-source bytes, never an oracle or execution receipt"
+  },
+  "evidence_storage": "JUnit and full JSONL histories remain in the named task-owned artifact directory outside Git. This committed report records their hashes; rerunning uses a distinct temporary directory. No remote archival or permanence claim is made.",
+  "exclusions": [
+    "full repository CI or packaged public SDK",
+    "delivery, demand fulfilment, source truth or causal proof",
+    "empirical replacement by a second independent implementation",
+    "multiple actions, concurrent writers, retry or real supplier/robot effects",
+    "merge, push, publication or evidence transfer to a different Core base"
+  ],
+  "landing_packet": "SUPPLIER_E2E_HANDOFF.md",
+  "final_file_manifest": "supplier-reentry-file-hashes.json"
+}

@@ -1,14 +1,14 @@
 # Semantic Re-entry: the external-action thought experiment
 
-Current integration status, 2026-09-08 UTC: Core's dependency gate has passed
-and the supplier E2E is in implementation. The five-minute continuation is
-active. Start with [INTEGRATION_STATUS.md](INTEGRATION_STATUS.md) for the exact
-workspace, verified dependency and remaining work. The historical scope and
-blocked/proposed labels below are not the current execution status.
+Current integration status, 2026-09-08 UTC: the bounded single-action supplier
+E2E is complete on its pinned Core base. The fresh unified gate passed 388 tests.
+Start with [SUPPLIER_E2E_HANDOFF.md](SUPPLIER_E2E_HANDOFF.md) for the proved loop,
+exact evidence, scope limits and landing order. No merge or push was performed.
+The historical scope and blocked/proposed labels below are not current status.
 
-Current component result: [pure supplier model and source mapper](SUPPLIER_COMPONENT_REVIEW.md)
-are implemented and tested. This does not complete or activate the external
-action loop. The design and historical baseline below retain their original scope.
+Earlier component result: [pure supplier model and source mapper](SUPPLIER_COMPONENT_REVIEW.md)
+were implemented and tested before the action loop. That result alone did not
+complete the loop. The design and historical baseline below retain their original scope.
 
 Status: PROPOSED design, with executable seam-audit evidence. This is not an
 external-action implementation, a new public contract, or a change to the frozen
