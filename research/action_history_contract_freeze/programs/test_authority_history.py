@@ -33,11 +33,13 @@ from tests.contract_compiler.pareto.test_finite_protocol_history import api
 
 
 def test_shared_census_generation_preserves_exact_type_output_shapes():
-    from research.action_history_contract_freeze.programs.assessment_bundle import output_schemas
-
-    assert content_digest(output_schemas(prefix="type", closure_length=6, role="type-monitor")) == (
-        "sha256:0af96d5d651bb3bf14f676d1ba27409ce97e0a8cd6f2f8ba6e4dda1699f545f7"
+    from research.action_history_contract_freeze.programs.assessment_bundle import (
+        output_schemas,
     )
+
+    assert content_digest(
+        output_schemas(prefix="type", closure_length=6, role="type-monitor")
+    ) == ("sha256:0af96d5d651bb3bf14f676d1ba27409ce97e0a8cd6f2f8ba6e4dda1699f545f7")
 
 
 @pytest.fixture(scope="module")
@@ -123,6 +125,35 @@ def admit(history, result, draft):
         expected_head=result.ledger_head,
         expected_count=result.ledger_event_count,
     )
+
+
+def test_ordinary_source_cannot_masquerade_as_verified_current_context(
+    tmp_path, prepared
+):
+    content, request = prepared["actor:executor"]
+    history = reopen(tmp_path, content)
+    request = deepcopy(request)
+    supplied = current.current_content(history, "source:unverified-current")
+    carrier = current.retain_source(
+        history, supplied["id"], supplied, list(POLICY_IDS.values())
+    )
+    reference = next(
+        item for item in request["inputs"] if item["role"] == "current_context"
+    )
+    reference["value"] = {
+        "id": carrier["id"],
+        "bytes_sha256": carrier["source_content_digest"],
+    }
+    result = run_history_check(history, invocation=request)
+    assert (
+        result.execution.data["records"][0]["record"]["assessment_outcome"]
+        == "SATISFIED"
+    )
+    draft = event(history, result, request)
+    before = history.path.read_bytes()
+    with pytest.raises(api().ProtocolProgramRefusal, match="WRONG_AUTHORITY_STATE_KEY"):
+        admit(history, result, draft)
+    assert history.path.read_bytes() == before
 
 
 @pytest.mark.parametrize("grantee", ["actor:executor", "actor:other"])

@@ -225,6 +225,24 @@ Its closed state-read schemas intentionally refuse additional proposal entries.
 General multi-action workflows remain outside this bounded first-lifecycle
 conformance cut; no general concurrency or scheduling claim is made.
 
+Authority assessment admission now resolves the applied ACCEPT, proposal,
+action, selected policy/monitor, exact grant and retained input closure. Both
+original and current contexts must match their retained SourceArtifact bytes;
+the current context must additionally exist in the verified capture index.
+Current A/D and pending authorization are rechecked at admission. Real
+SATISFIED and VIOLATED outputs enter as judgments, not permission. A real
+failure produces MonitorFailure plus UnavailableAuthorityAssessment together.
+
+All 12 focused authority tests pass in 103.22 seconds, including bad second
+record rollback, context/grant/actor/monitor/closure/duplicate refusals and an
+ordinary-source bypass control. In that control a pure checker can compute on
+retained context-shaped input, but admission refuses because it was not
+captured against the owning prefix. Replay invokes no producer and preserves
+KG, KCS heads and action head. The shared field-census authoring helper retains
+the exact previous TYPE schema digest. No interpreter operation or domain
+ontology was added. Authorization/control and the remaining effect-record
+lifecycle are still pending; no consumer-unblock or main-integration claim.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix

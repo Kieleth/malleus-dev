@@ -49,11 +49,11 @@ def array(items, length):
     }
 
 
-def output_schemas():
+def output_schemas(*, prefix, closure_length, role):
     """Select fields from the existing authoritative producer field census."""
     census = json.loads((HERE / "monitor-output-fields.json").read_bytes())
     result = {}
-    for name in ("type_result", "type_failure", "type_unavailable"):
+    for name in (prefix + "_result", prefix + "_failure", prefix + "_unavailable"):
         variant = census["variants"][name]
         names = {"content_hash", *variant["fields"], *variant["constants"]}
         for group in variant["groups"]:
@@ -66,22 +66,28 @@ def output_schemas():
                 fields[field] = {**TEXT, "format": "ledger-head"}
             elif field == "generated_at":
                 fields[field] = {**TEXT, "format": "aware-instant"}
-            elif field in ("source_record_ids", "input_record_ids", "reason_codes"):
+            elif field in (
+                "source_record_ids",
+                "input_record_ids",
+                "reason_codes",
+                "checked_policy_predicates",
+                "violated_policy_predicates",
+            ):
                 fields[field] = {
                     "type": "array",
                     "items": deepcopy(TEXT),
                     "uniqueItems": True,
                 }
         fields["source_record_ids"] = array(
-            TEXT, 7 if name == "type_unavailable" else 6
+            TEXT, closure_length + (name == prefix + "_unavailable")
         )
         if "input_record_ids" in fields:
-            fields["input_record_ids"] = array(TEXT, 6)
-        if name == "type_result":
+            fields["input_record_ids"] = array(TEXT, closure_length)
+        if name == prefix + "_result":
             fields["assessment_outcome"]["enum"] = ["SATISFIED", "VIOLATED"]
         for field, value in variant["constants"].items():
             fields[field]["const"] = value
-        fields["responsible_role"]["const"] = "type-monitor"
+        fields["responsible_role"]["const"] = role
         result[variant["record_type"]] = obj(**fields)
     return result
 
@@ -95,7 +101,7 @@ def add_type_assessment(bundle):
         bundle["profile"]["record_schemas"][kind] = deepcopy(
             records[name]["properties"]["value"]["items"]["properties"]["record"]
         )
-    schemas = output_schemas()
+    schemas = output_schemas(prefix="type", closure_length=6, role="type-monitor")
     for schema in schemas.values():
         schema["properties"]["base_acceptance_head"] = deepcopy(
             bundle["profile"]["record_schemas"]["ProposedSubgraph"]["properties"][
