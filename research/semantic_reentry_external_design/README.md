@@ -1,5 +1,9 @@
 # Semantic Re-entry: the external-action thought experiment
 
+For the implemented follow-on that observes and admits quantity 3 while its
+goal remains exactly 2, see [Supported observation, unsatisfied goal](OBSERVED_MISMATCH.md).
+That result and its current-Core gate are separate from the historical proof below.
+
 Current integration status, 2026-09-08 UTC: the bounded single-action supplier
 E2E is complete on its pinned Core base. The fresh unified gate passed 388 tests.
 Start with [SUPPLIER_E2E_HANDOFF.md](SUPPLIER_E2E_HANDOFF.md) for the proved loop,
