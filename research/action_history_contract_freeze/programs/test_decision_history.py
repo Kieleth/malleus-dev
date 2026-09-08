@@ -87,6 +87,16 @@ def assess(history, *, unavailable=False):
         admit_assessment(history, result, assessment_event(history, result))
 
 
+@pytest.fixture(scope="module")
+def assessed(tmp_path_factory, proposed):
+    prefixes = {}
+    for unavailable in (False, True):
+        history = reopen(tmp_path_factory.mktemp("checked-decision-prefix"), proposed)
+        assess(history, unavailable=unavailable)
+        prefixes[unavailable] = history.path.read_bytes()
+    return prefixes
+
+
 def decision_event(history):
     base = history.replay()
     records = base.protocol_replay.data["records"]
@@ -214,12 +224,11 @@ def decide(history, draft, verdict):
 @pytest.mark.parametrize("unavailable", [False, True])
 def test_real_policy_result_and_transition_replay_without_producer_or_graph_effect(
     tmp_path,
-    proposed,
+    assessed,
     unavailable,
     monkeypatch,
 ):
-    history = reopen(tmp_path, proposed)
-    assess(history, unavailable=unavailable)
+    history = reopen(tmp_path, assessed[unavailable])
     before = history.replay()
     draft, evaluation = decision_event(history)
     assert evaluation.verdict == ("DEFER" if unavailable else "ACCEPT")
@@ -269,20 +278,24 @@ def test_real_policy_result_and_transition_replay_without_producer_or_graph_effe
         "policy",
         "head",
         "transition",
+        "transition_time",
         "dependencies",
         "duplicate",
     ],
 )
 def test_decision_binding_and_late_transition_refuse_without_partial_append(
-    tmp_path, proposed, fault
+    tmp_path, assessed, fault
 ):
-    history = reopen(tmp_path, proposed)
-    assess(history)
+    history = reopen(tmp_path, assessed[False])
     draft, evaluation = decision_event(history)
     decision = draft["data"]["decision"]["value"][0]["record"]
     transition = draft["data"]["transition"]["value"][0]["record"]
+    selected_verdict = evaluation.verdict
     if fault == "verdict":
         decision["epistemic_verdict"] = "REJECT"
+        transition["to_state"] = "REJECTED"
+        selected_verdict = "REJECT"
+        del draft["data"]["acceptance_preimage"]
     elif fault == "evaluation":
         decision["policy_evaluation_hash"] = content_digest("forged")
     elif fault == "output":
@@ -297,16 +310,34 @@ def test_decision_binding_and_late_transition_refuse_without_partial_append(
         )
     elif fault == "transition":
         transition["sequence"] += 1
+    elif fault == "transition_time":
+        transition["transition_time"] = "2026-09-07T01:00:00+01:00"
     elif fault == "dependencies":
         draft["data"]["transition_dependencies"]["value"] = []
     elif fault == "duplicate":
         decide(history, draft, evaluation.verdict)
+        draft["event_id"] += ":again"
+        decision["generation_event_id"] = draft["event_id"]
+        transition["generation_event_id"] = draft["event_id"]
     decision["content_hash"] = record_hash("EpistemicDecision", decision)
     transition["content_hash"] = record_hash("TransitionRecord", transition)
-    draft["data"]["acceptance_preimage"]["decision_content_hash"] = decision[
-        "content_hash"
-    ]
+    if "acceptance_preimage" in draft["data"]:
+        draft["data"]["acceptance_preimage"]["decision_content_hash"] = decision[
+            "content_hash"
+        ]
     before = history.path.read_bytes()
-    with pytest.raises(api().ProtocolProgramRefusal):
-        decide(history, draft, evaluation.verdict)
+    reasons = {
+        "verdict": "FORGED_EPISTEMIC_VERDICT",
+        "evaluation": "FORGED_EVALUATION_IDENTITY",
+        "output": "FORGED_CONTROL_OUTPUT",
+        "order": "WRONG_POLICY_ASSESSMENT_ORDER",
+        "policy": "MISBOUND_DECISION",
+        "head": "WRONG_ACTION_ACCEPTANCE_PREIMAGE",
+        "transition": "MISBOUND_DECISION_TRANSITION",
+        "transition_time": "MISBOUND_DECISION_TRANSITION",
+        "dependencies": "INVALID_DECISION_INTRODUCTION",
+        "duplicate": "STALE_ACTION_HEAD",
+    }
+    with pytest.raises(api().ProtocolProgramRefusal, match=reasons[fault]):
+        decide(history, draft, selected_verdict)
     assert history.path.read_bytes() == before
