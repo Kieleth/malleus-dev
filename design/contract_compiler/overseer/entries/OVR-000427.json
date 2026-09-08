@@ -1,0 +1,127 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000427",
+  "ledger": "overseer",
+  "sequence": 427,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:28c30eab6d34a29bc207749b3f6921011a946665a5376ea83e13c6c98592a629",
+  "recorded_at": "2026-09-08T02:59:00Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "executable-action-main-integration",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the approved experimental action candidate for local main integration.",
+  "why": "Luis approved integrating 90146c3 into main. This binds the unchanged 73d1a52 runtime, compiler repairs and finite-program history attachment, with experimental status documented. Its report records 643 passing tests and packaged replay of the 86-event Shop history without research/test imports. Full repository GREEN is not claimed: nine historical exact-reproduction comparisons remain distinguished by the approved two-producer gate, with old evidence and assertions unchanged. Rules remain artifact data; atomic context/proposal, reference check producers, recomputed control, dispatch, receipt and observation remain separate. The action profile is optional. Standalone Assent and default structural history are unchanged. Domain effects, program variants, authentication, retries, a general SDK, stable wire, cross-language parity, release and remote push are excluded. Commit references bind the full candidate closure. No paper or downstream files change; broader compiler workstreams are not marked complete.",
+  "data": {
+    "affected_ids": [
+      "CC-R10",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "pyproject.toml",
+        "change": "MODIFIED",
+        "after_digest": "sha256:ba880b47e74120b5c779a334ca90b71069c818302de9f24ce20fc9fa392a1e41",
+        "before_digest": "sha256:9df7833078e7db1a4fa021088f50ae5fb0e8a7128509ac329a91d8ea89dc4850"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/elaborate.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:96a4c41d0c5a99bde154e37a2a77552963cdd70a9f22645a9a5b0ac7deaf8c56",
+        "before_digest": "sha256:714cf83f07b4f9552bb956cd6f2ceeee5bc90e7985ae7cc0bd6212c4a760a524"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/model.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:304787b128cbc1d0b3e547189ba7933187f5f0351bad54b341e6879f12bcda45",
+        "before_digest": "sha256:73cf65899e630c9153ec196cccbace48dde7b899e99105ab187d3298b49e6799"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/view.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:6f86928ffcb55786764d85c19cc605d5488d0a1b3177ddfb51c456a559fd5232",
+        "before_digest": "sha256:ddedd47c33b9dd6bb893cbfe2b3903392d47b3b3bfc867d7ad5ed2ad782b29b4"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:d73c83d693c2cb665c8bd07fb3b8c6d8bfd00ada4b05f0a2e6bef72ecd9de5af",
+        "before_digest": "sha256:29bd5fabb459f0eeff76c877f1ac07c3c4e0f7deae6983e82f849d1717f24dc9"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:2224a1d5a98f6eabcc862f01cca097d4783a8929e98f123a6d558000d739c541",
+        "before_digest": "sha256:04633cafa51fe1753285f8de2bc2a1d275b466fc2dd50ee71cbe4826d26272d1"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/finite-instructions.json",
+        "change": "CREATED",
+        "after_digest": "sha256:7f7bb23c4af8369eae7326873bb189d3546a5dcb9d31057dcae5cb9814dd54d1"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/finite_control.py",
+        "change": "CREATED",
+        "after_digest": "sha256:0ab69215a3af03fea77224f8bf26f3cf7abbda681f8c1460af796821bda7d941"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/finite_executor.py",
+        "change": "CREATED",
+        "after_digest": "sha256:0f215c2e270df268cf652826b286fd678b9a30e00ef07af804cd84dc7ba6316e"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/finite_program.py",
+        "change": "CREATED",
+        "after_digest": "sha256:60f9413d6412c0892f887cc845e1b9a510ce42ebce5d531e2d5be464185322d1"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/protocol_runtime.py",
+        "change": "CREATED",
+        "after_digest": "sha256:f7bf90dc7e61031859df630a2932b05df4a15a9479c6f246650783d5d85f9f4f"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:a77cfba7ba10b6713ac181266b8385579cb2433c24f8469ac6d98b8ee5c322bb",
+        "before_digest": "sha256:6b8a474cb51c440b96443694ef35b22b711fbf1784923e4bd748cce0d608b1ca"
+      },
+      {
+        "path": "research/action_history_contract_freeze/EXECUTABLE_HANDOFF.md",
+        "change": "CREATED",
+        "after_digest": "sha256:2d2e719d01cdd2a9fd2d032c2b825faaa06d74ecce1970f90cb58adbdb5c418d"
+      },
+      {
+        "path": "research/action_history_contract_freeze/execution-verification.json",
+        "change": "CREATED",
+        "after_digest": "sha256:8d7008f695f18845881fc5a30ec4c06571d9614802ccffae5b2cf7a6e5eaf57f"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "90146c380994621a2f8df25876affd03fc9e57e3"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "73d1a527dd237e5546d86d5c0470e9e056d41e16"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R10"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:618f995fe49d53e193213f0bea9893df6772bd6b557d4a7eebd21b8dfff75d50"
+}

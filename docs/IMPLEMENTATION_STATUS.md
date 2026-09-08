@@ -145,6 +145,33 @@ public registry and graph APIs. The playbook adds no compiler command, grammar,
 or runtime capability. It documents how a fresh adopter uses the public
 boundaries already listed above.
 
+## Experimental finite-program action history
+
+An explicitly selected finite-program attachment to `KnowledgeChangeHistory`
+now executes the bounded action lifecycle alongside ordinary knowledge change
+sets. The selected artifact declares record shapes, preconditions, transactions,
+control and refusal rules; the packaged Core interpreter executes generic
+instructions. `select_protocol_programs`, `append_protocol_events` and
+`replay().protocol_replay` expose selection, atomic persistence and reconstruction.
+The original context and proposal commit together or neither commits.
+
+Repository-local reference producers compute TYPE and direct-grant assessments
+outside append and replay. Control is recomputed from applied assessments.
+Dispatch, execution receipt and independent observation remain distinct. Action
+events do not change the domain graph; a domain change still requires KCS
+admission. The Small Shop conformance run composes these phases with its real
+supplier-state correction and reopens from JSONL using only packaged Core.
+
+This is a reference implementation of an optional, experimental action profile,
+not a replacement for standalone Assent or the default structural history.
+The current fixture has one first-revision action and one dispatch. The profile
+builders and check orchestration remain repository-local. There is no stable
+wire, all-in-one installed action SDK, cross-language parity, external effect,
+actor authentication or source-truth claim. No new released Assent stage is
+declared. Exact tests, packaged replay and consumer calls are recorded in
+`research/action_history_contract_freeze/EXECUTABLE_HANDOFF.md` and its adjacent
+`execution-verification.json`.
+
 ## Implemented
 
 - Stage 2: closed-world ontology and typed-graph validation
