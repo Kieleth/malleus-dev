@@ -39,9 +39,9 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
 
     assert [command.name for command in commands] == [
         "quality",
-        "tests",
         "ledger",
         "integration",
+        "tests",
         "graph-recipe",
         "small-shop",
         "docs-html",
@@ -125,7 +125,19 @@ def test_ci_stops_at_the_first_failed_fixed_command(monkeypatch) -> None:
     monkeypatch.setattr(ci, "run_command", fake_run)
 
     assert ci.run("test") == 9
-    assert calls == ["quality", "tests"]
+    assert calls == ["quality", "ledger", "integration", "tests"]
+
+
+def test_missing_retained_history_stops_before_the_expensive_suite(monkeypatch):
+    calls = []
+
+    def run(command, context):
+        calls.append(command.name)
+        return 1 if command.name == "ledger" else 0
+
+    monkeypatch.setattr(ci, "run_command", run)
+    assert ci.run("test") == 1
+    assert calls == ["quality", "ledger"]
 
 
 def test_repository_purity_uses_fixed_git_argv_without_a_shell() -> None:

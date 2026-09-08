@@ -10,7 +10,7 @@
         },
         "id": "fixture:multipage-control:attempt:page-1-body",
         "region_id": "fixture:multipage-control:region:page-1-body",
-        "request_digest": "sha256:c64bda9a58dae758d19ecf658e765b65612ed6331ed0806b61d0108ec8f77adf",
+        "request_digest": "sha256:4cfdd38e93b244243cc532777790770d9e5ac70ce3ee4b610fc57714115b7841",
         "response_digest": "sha256:aed5931d59e10f5f54eaad21e3d9849f31e1d2a12ea1f6ac786e3b66ca36d6da",
         "status": "COMPLETED",
         "unavailable_reason": null
@@ -24,7 +24,7 @@
         },
         "id": "fixture:multipage-control:attempt:page-2-blank",
         "region_id": "fixture:multipage-control:region:page-2-blank",
-        "request_digest": "sha256:08896436661553917092978d23c36e65efbf26f7e94de46efa68f16edf763e21",
+        "request_digest": "sha256:32f6ce4c342dd13634b095347ace5cc23ea424c30d1d28aeb6e187a603fe7ab1",
         "response_digest": "sha256:32507760307017acf9a87f769d00e9a6dd8cbe90cb9cd74a3d2c745594c593fc",
         "status": "COMPLETED",
         "unavailable_reason": null
@@ -92,16 +92,16 @@
     ],
     "rasters": [
       {
-        "digest": "sha256:5922a14e936bed3f4d5e27859e34c23a05dd929d1e95241c75831fa9d86b756c",
+        "digest": "sha256:2747120d45c9ca115531af1f0a5f3b399b2c284f852fa7277f7b257d32f60921",
         "id": "fixture:multipage-control:raster:page-1",
-        "render_contract": "fixture-pdf-image-xobject:v1;page=1;image=0;xobject=FormXob.ac1b85dd40b1d0af0da2e314cf000f45;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=1;image=0;xobject=FormXob.ac1b85dd40b1d0af0da2e314cf000f45;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=fixture-rgb8-stored-v1",
         "source_id": "fixture:multipage-control:source",
         "unit": "page:1"
       },
       {
-        "digest": "sha256:445fea0a79155489910ec726be6f41b84afe6123ea4c7a2a944e274a920cf92d",
+        "digest": "sha256:386894c50b5ccd255c2dd5f4326dca1fae29b8238da91df2096f29acbb4eb5a5",
         "id": "fixture:multipage-control:raster:page-2",
-        "render_contract": "fixture-pdf-image-xobject:v1;page=2;image=0;xobject=FormXob.7161e305db6dbc9273f868089764df2c;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=2;image=0;xobject=FormXob.7161e305db6dbc9273f868089764df2c;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=fixture-rgb8-stored-v1",
         "source_id": "fixture:multipage-control:source",
         "unit": "page:2"
       }

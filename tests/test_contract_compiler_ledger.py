@@ -1986,9 +1986,9 @@ def test_steady_state_workflows_do_not_revalidate_retained_overseer_evidence() -
     plan = ci_plan("test")
     assert [command.name for command in plan] == [
         "quality",
-        "tests",
         "ledger",
         "integration",
+        "tests",
         "graph-recipe",
     ]
     commands_by_name = {command.name: command.argv for command in plan}

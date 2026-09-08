@@ -8,6 +8,7 @@ import copy
 import hashlib
 import json
 import platform
+import struct
 import sys
 import zlib
 from dataclasses import asdict
@@ -48,8 +49,8 @@ REPORTLAB_VERSION = "4.4.9"
 PYPDF_VERSION = "6.16.2"
 PYTHON_CONTRACT = "CPython>=3.10"
 ZLIB_CONTRACT = "RFC1950+RFC1951"
-PNG_CONTRACT = "Pillow RGB PNG; optimize=false; compress_level=9; strict round-trip"
-GENERATOR_CONTRACT = "malleus.ocr.fixture_generator.v2"
+PNG_CONTRACT = "RGB8 PNG; filter=0; RFC1951 stored blocks of 65535 bytes; strict round-trip"
+GENERATOR_CONTRACT = "malleus.ocr.fixture_generator.v3"
 READER = {
     "id": "malleus.fixture.control_reader@1",
     "kind": "deterministic_control_reader",
@@ -188,9 +189,33 @@ def _centered_text(
 
 
 def _png_bytes(image: Image.Image) -> bytes:
-    output = BytesIO()
-    image.save(output, format="PNG", optimize=False, compress_level=9)
-    return output.getvalue()
+    """Encode fixture pixels without platform-dependent compression choices.
+
+    PNG filter 0 and RFC 1951 section 3.2.4 stored blocks specify every byte.
+    This is a small fixture encoder, not a general-purpose image writer.
+    """
+    if image.mode != "RGB" or min(image.size) < 1:
+        raise CorpusError("fixture PNG requires a nonempty RGB image")
+    width, height = image.size
+    pixels = image.tobytes()
+    stride = width * 3
+    raw = b"".join(b"\0" + pixels[i:i + stride] for i in range(0, len(pixels), stride))
+    stream = bytearray(b"\x78\x01")
+    for start in range(0, len(raw), 65535):
+        block = raw[start:start + 65535]
+        final = int(start + len(block) == len(raw))
+        stream.extend(struct.pack("<BHH", final, len(block), len(block) ^ 0xFFFF))
+        stream.extend(block)
+    stream.extend(struct.pack(">I", zlib.adler32(raw)))
+
+    def chunk(kind: bytes, content: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(content)) + kind + content
+            + struct.pack(">I", zlib.crc32(kind + content))
+        )
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", bytes(stream)) + chunk(b"IEND", b"")
 
 
 def _region_control_png() -> bytes:
@@ -353,7 +378,7 @@ def _pdf_rasters(title: str, payload: bytes) -> tuple[dict[str, Any], ...]:
             "render_contract": (
                 f"fixture-pdf-image-xobject:v1;page={page_number};image=0;"
                 f"xobject={xobject_name.removeprefix('/')};extractor=pypdf-{PYPDF_VERSION};"
-                f"source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-{PIL.__version__}"
+                "source_colorspace=DeviceRGB;output_mode=RGB;png=fixture-rgb8-stored-v1"
             ),
         })
     return tuple(rasters)

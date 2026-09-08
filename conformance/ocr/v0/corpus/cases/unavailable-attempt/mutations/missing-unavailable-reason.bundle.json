@@ -10,7 +10,7 @@
         },
         "id": "fixture:unavailable-attempt:attempt:main",
         "region_id": "fixture:unavailable-attempt:region:main",
-        "request_digest": "sha256:bc2c7be292195c227ed245fa29ef86fe5ee80981ac6520a500e1a7ffbc5aae45",
+        "request_digest": "sha256:c3f64d845be311d5c4d460685f85711b747615a3709129c42195773288d18b4b",
         "response_digest": null,
         "status": "UNAVAILABLE",
         "unavailable_reason": null
@@ -27,7 +27,7 @@
     ],
     "rasters": [
       {
-        "digest": "sha256:c0414363a293fd3080aca7970fe50d1d508ec45f479da72ededb1d506215ef42",
+        "digest": "sha256:e290a01b200b86f41f0d81e70aff681af70b581a181b5217067f9c731dcde697",
         "id": "fixture:unavailable-attempt:raster:image-1",
         "render_contract": "fixture-retained-raster:v1",
         "source_id": "fixture:unavailable-attempt:source",
@@ -63,8 +63,8 @@
     },
     "sources": [
       {
-        "byte_length": 30201,
-        "digest": "sha256:c0414363a293fd3080aca7970fe50d1d508ec45f479da72ededb1d506215ef42",
+        "byte_length": 2100928,
+        "digest": "sha256:e290a01b200b86f41f0d81e70aff681af70b581a181b5217067f9c731dcde697",
         "id": "fixture:unavailable-attempt:source",
         "locator": "conformance/ocr/v0/corpus/cases/unavailable-attempt/source/unavailable-attempt.png",
         "media_type": "image/png"

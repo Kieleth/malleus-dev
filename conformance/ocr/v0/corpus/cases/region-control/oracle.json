@@ -79,8 +79,8 @@
     }
   ],
   "source": {
-    "byte_length": 49810,
-    "digest": "sha256:cce2607988916d32d817a9159b877dfbf3fa844e930be4c9e3b0dc605bf252ea",
+    "byte_length": 2881083,
+    "digest": "sha256:7ec74fd19efb9608cea988134a58a7153f1cff3ec06c0f703079a21059670718",
     "license": "Apache-2.0",
     "media_type": "image/png",
     "origin": "generated from self-authored literals in conformance/ocr/v0/corpus/generate.py",

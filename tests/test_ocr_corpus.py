@@ -4,6 +4,7 @@ import hashlib
 import json
 import platform
 import re
+import runpy
 import struct
 import subprocess
 import sys
@@ -542,9 +543,9 @@ def test_manifest_binds_the_runtime_and_self_authored_source_policy() -> None:
     assert platform.python_implementation() == "CPython"
     assert sys.version_info >= (3, 10)
     assert runtime["generator"] == {
-        "contract": "malleus.ocr.fixture_generator.v2",
+        "contract": "malleus.ocr.fixture_generator.v3",
         "pillow_version": PIL.__version__,
-        "png_contract": "Pillow RGB PNG; optimize=false; compress_level=9; strict round-trip",
+        "png_contract": "RGB8 PNG; filter=0; RFC1951 stored blocks of 65535 bytes; strict round-trip",
         "python_contract": "CPython>=3.10",
         "pypdf_version": pypdf.__version__,
         "reportlab_version": reportlab.Version,
@@ -552,11 +553,10 @@ def test_manifest_binds_the_runtime_and_self_authored_source_policy() -> None:
     }
     probe = b"malleus fixture generator zlib contract"
     assert zlib.decompress(zlib.compress(probe)) == probe
-    png = BytesIO()
-    Image.new("RGB", (2, 1), (17, 34, 51)).save(
-        png, format="PNG", optimize=False, compress_level=9
+    png = runpy.run_path(str(GENERATOR))["_png_bytes"](
+        Image.new("RGB", (2, 1), (17, 34, 51))
     )
-    assert _image_pixels(png.getvalue()) == ((2, 1), bytes((17, 34, 51)) * 2)
+    assert _image_pixels(png) == ((2, 1), bytes((17, 34, 51)) * 2)
     assert runtime["malleus_version"] == malleus.__version__
     for path_key, digest_key in (
         ("ocr_ontology_path", "ocr_ontology_sha256"),
@@ -577,6 +577,55 @@ def test_deterministic_regeneration_matches_every_retained_byte() -> None:
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
     assert completed.stdout == "verified 69 deterministic corpus artifacts\n"
+
+
+@pytest.mark.parametrize("size", [(2, 1), (257, 85)])
+def test_fixture_png_encoding_is_independent_of_platform_compressors(size, monkeypatch):
+    namespace = runpy.run_path(str(GENERATOR))
+    image = Image.new("RGB", size, (17, 34, 51))
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("platform PNG/compression backend must not encode fixture bytes")
+
+    monkeypatch.setattr(Image.Image, "save", forbidden)
+    monkeypatch.setattr(zlib, "compress", forbidden)
+    monkeypatch.setattr(zlib, "compressobj", forbidden)
+    encoded = namespace["_png_bytes"](image)
+    assert encoded == namespace["_png_bytes"](image)
+    assert _image_pixels(encoded) == (size, image.tobytes())
+    offset = 8
+    chunks = []
+    while offset < len(encoded):
+        length = int.from_bytes(encoded[offset:offset + 4], "big")
+        kind = encoded[offset + 4:offset + 8]
+        content = encoded[offset + 8:offset + 8 + length]
+        assert int.from_bytes(encoded[offset + 8 + length:offset + 12 + length], "big") == zlib.crc32(kind + content)
+        chunks.append((kind, content))
+        offset += 12 + length
+    assert [kind for kind, _ in chunks] == [b"IHDR", b"IDAT", b"IEND"]
+    stream = chunks[1][1]
+    assert stream[:2] == b"\x78\x01"
+    raw = b"".join(b"\0" + bytes((17, 34, 51)) * size[0] for _ in range(size[1]))
+    assert zlib.decompress(stream) == raw
+    cursor = 2
+    blocks = []
+    while True:
+        final = stream[cursor]
+        length, complement = struct.unpack_from("<HH", stream, cursor + 1)
+        assert complement == length ^ 0xFFFF
+        blocks.append(stream[cursor + 5:cursor + 5 + length])
+        cursor += 5 + length
+        if final == 1:
+            break
+        assert final == 0 and length == 65535
+    assert b"".join(blocks) == raw
+    assert cursor + 4 == len(stream)
+
+
+def test_fixture_png_encoder_refuses_undeclared_pixel_modes():
+    namespace = runpy.run_path(str(GENERATOR))
+    with pytest.raises(namespace["CorpusError"], match="RGB"):
+        namespace["_png_bytes"](Image.new("L", (2, 1)))
 
 
 @pytest.mark.parametrize("case", _manifest()["cases"], ids=lambda case: case["id"])
@@ -698,7 +747,7 @@ def test_retained_rasters_have_bound_digests_and_dimensions(
                 f"fixture-pdf-image-xobject:v1;page={page_number};image=0;"
                 f"xobject={name.removeprefix('/')};extractor=pypdf-{runtime['pypdf_version']};"
                 "source_colorspace=DeviceRGB;output_mode=RGB;"
-                f"png=pillow-{runtime['pillow_version']}"
+                "png=fixture-rgb8-stored-v1"
             )
 
 

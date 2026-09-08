@@ -1,7 +1,7 @@
 {
   "contract": "malleus.fixture.control_request.v1",
   "production_ocr": false,
-  "raster_digest": "sha256:ef9664c4479047e5b87ceba18e2e67a75d693bddc75d4875148b617906661686",
+  "raster_digest": "sha256:3ff3375179b1b9f25869fcdb07a9f0433451388c1cceafb6fac17f6b2639df4f",
   "reader_id": "malleus.fixture.control_reader@1",
   "reader_kind": "deterministic_control_reader",
   "region_id": "fixture:failed-attempt:region:main",

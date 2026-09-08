@@ -10,7 +10,7 @@
         },
         "id": "fixture:incomplete-sequence:attempt:page-1-body",
         "region_id": "fixture:incomplete-sequence:region:page-1-body",
-        "request_digest": "sha256:809d8ee6c8f31108feb107f5b8fa68708df35a0ddbc79ba43fbba9be34ddc9e7",
+        "request_digest": "sha256:7343d84efdb774e591efbe482e76aebfb44be714535de1fdac5b64afc1a4b331",
         "response_digest": "sha256:11417cdd7d0ce7aadd43841d2515143a2542effdb0c66c6d1679215f5d88e9fe",
         "status": "COMPLETED",
         "unavailable_reason": null
@@ -24,7 +24,7 @@
         },
         "id": "fixture:incomplete-sequence:attempt:page-3-body",
         "region_id": "fixture:incomplete-sequence:region:page-3-body",
-        "request_digest": "sha256:a1a48e8029716ef1084b7d26ff7b28084d9babad4a0e5a705dc42f04603dd732",
+        "request_digest": "sha256:91e9961c05f083d4646a5a459847deee0a15db1bc9d52119d007ae586cbfad3b",
         "response_digest": "sha256:83cb9af8f47f0b4825c691e5a4125d5c473a84101b61c79aa189b9f45a41b3db",
         "status": "COMPLETED",
         "unavailable_reason": null
@@ -60,16 +60,16 @@
     ],
     "rasters": [
       {
-        "digest": "sha256:e7659f7d6484963b6ea6e515b2e4d127be7496633f6f24c0984f3612aa20f41a",
+        "digest": "sha256:91ce65a8705184eb682a24dc203333327b5fe203a9e11a701a0b5c71c95ea2a0",
         "id": "fixture:incomplete-sequence:raster:page-1",
-        "render_contract": "fixture-pdf-image-xobject:v1;page=1;image=0;xobject=FormXob.1bc9c9eebfde0b77d74860f9eb48eb66;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=1;image=0;xobject=FormXob.1bc9c9eebfde0b77d74860f9eb48eb66;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=fixture-rgb8-stored-v1",
         "source_id": "fixture:incomplete-sequence:source",
         "unit": "page:1"
       },
       {
-        "digest": "sha256:e37e8488b6b7e4f73e0baa5fd04aa945aaf99ba3a2e0cbc80df51a6dbab3e275",
+        "digest": "sha256:b329012e237fe888b6390b52f8e809cc0ed0084535efb8154237dfa080c68671",
         "id": "fixture:incomplete-sequence:raster:page-3",
-        "render_contract": "fixture-pdf-image-xobject:v1;page=2;image=0;xobject=FormXob.b656e514d6611c4348ca92ef9bab55ab;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=2;image=0;xobject=FormXob.b656e514d6611c4348ca92ef9bab55ab;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=fixture-rgb8-stored-v1",
         "source_id": "fixture:incomplete-sequence:source",
         "unit": "page:3"
       }

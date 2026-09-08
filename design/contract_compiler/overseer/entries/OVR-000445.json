@@ -1,0 +1,170 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000445",
+  "ledger": "overseer",
+  "sequence": 445,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:1f648e485bf63dc30a204defc794ae2ce79d398cd54ceceaeec6668defb11ac0",
+  "recorded_at": "2026-09-08T22:21:25Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "release-platform-and-publication-closure",
+    "type": "DOCUMENT"
+  },
+  "summary": "Release publication and portability correction, document group 1 of 3.",
+  "why": "GitHub run 34281992115 exposes unpublished capture-evidence commits, platform-dependent PNG compression and Python 3.10 UTC-Z parsing in the existing supplier helper. The existing evidence tag is now published; all 354 commit references resolve from inspected public refs. No historical ledger reference changes. CI preflights ledger/integration before pytest. Fixture generator v3 uses specified RGB8/filter-0/stored-block PNG bytes; all 10 changed images preserve pixels and source PDFs stay unchanged. Library dependencies, Core src and ontology bytes do not change. UTC parser normalization retains original ledger text. Six encoder/CI RED cases turn GREEN; 79 status/OCR/CI tests pass; the supplier replay parser RED turns GREEN. The observed remote Python 3.12 suite alone takes 27m44s, so main/release test jobs allow 45 minutes for existing setup and docs too. No test/platform is removed. Final clean full/package and remote checks remain required; new Re-entry integration stays excluded.",
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".github/workflows/release.yml",
+        "change": "MODIFIED",
+        "before_digest": "sha256:5c869182919b6722bfff57e3afbfcfcea7bf7b0ea18df800ba8c688e52616b1e",
+        "after_digest": "sha256:1cc541a43147946cde2f93807b99a6f21128cd909ac732276860959fd7ceb928"
+      },
+      {
+        "path": ".github/workflows/tests.yml",
+        "change": "MODIFIED",
+        "before_digest": "sha256:2f71506526280bbf012d88f9bf3d5271185a5fc8c016540ee7b8b3cb349c40bf",
+        "after_digest": "sha256:0c6b2081328881591a6c6433f53dd9e44f29be566d6838d21ea713c4c2794a04"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/README.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3ef15e3f78000e0a3f1d587b3f0f2188538ac574abe762cd3556b4d9d2118fa0",
+        "after_digest": "sha256:0b9218588950515c16d7a512a6755e5dafa9f7964e5583380bda08f4467722c3"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/failed-attempt/bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c02feec88e2c76796bd1887324742688827965505f66967767e5ed063d5280b3",
+        "after_digest": "sha256:3c8fb679190c4f67d38162bc607fc263b4534b00e8225b153cfd409296d0c4b0"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/failed-attempt/mutations/retry-succeeds.bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:35301576b60a99c3ef5e8300f6efe5e1f07ce789c081c39c144f166bc91ac6ff",
+        "after_digest": "sha256:c1c471d5d6517981949ae9b5a2adfb4072560d1a22baf774141ccc26088e27da"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/failed-attempt/oracle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a53c8431c05aafe0772d22272cd4ba2db17313a2f1f04b9afcd2b0bd37bdbbd1",
+        "after_digest": "sha256:3a1decbd6b88bfc8074c688c3f5ae01f7c79c964749662c435b89d5b59b8cc8e"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/failed-attempt/rasters/image-1.png",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ef9664c4479047e5b87ceba18e2e67a75d693bddc75d4875148b617906661686",
+        "after_digest": "sha256:3ff3375179b1b9f25869fcdb07a9f0433451388c1cceafb6fac17f6b2639df4f"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/failed-attempt/requests/main.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3f48f4d38906e1492747576a409d4a60ef6c180ece1c4dd8a9a49e0c9f8ab0e0",
+        "after_digest": "sha256:18cb10a098fcb6edcc61cfbcaa6699cea20593e924f576867744502a89f7a645"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/failed-attempt/requests/retry.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:39af753a4b540303a9eb9803aabeb2a14481011523d8ea33838ec902689fcfa3",
+        "after_digest": "sha256:8f38c406820197774cc6805792c28bcc403e84f93378ad3b8454e36eda847ad2"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/failed-attempt/source/failed-attempt.png",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ef9664c4479047e5b87ceba18e2e67a75d693bddc75d4875148b617906661686",
+        "after_digest": "sha256:3ff3375179b1b9f25869fcdb07a9f0433451388c1cceafb6fac17f6b2639df4f"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/incomplete-sequence/bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c0e844d6d53f8515ecca4e1f817459f9e9f409036253f67119d22c1cda206e00",
+        "after_digest": "sha256:44afb810d2018fc7746e7be6ec4df45fee1c0c28c48951937c7e2fc714e3ee4d"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/incomplete-sequence/mutations/observed-without-raster.bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:feea698c0be9247015534e69720ca2ebc059f659e92eb81dba58be2a3a6a3adf",
+        "after_digest": "sha256:22778a8f3dd37087b0efb8be1fe230618ccb8360a169293e187e9e7130ebcb91"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/incomplete-sequence/rasters/page-1.png",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e7659f7d6484963b6ea6e515b2e4d127be7496633f6f24c0984f3612aa20f41a",
+        "after_digest": "sha256:91ce65a8705184eb682a24dc203333327b5fe203a9e11a701a0b5c71c95ea2a0"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/incomplete-sequence/rasters/page-3.png",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e37e8488b6b7e4f73e0baa5fd04aa945aaf99ba3a2e0cbc80df51a6dbab3e275",
+        "after_digest": "sha256:b329012e237fe888b6390b52f8e809cc0ed0084535efb8154237dfa080c68671"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/incomplete-sequence/requests/page-1-body.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:809d8ee6c8f31108feb107f5b8fa68708df35a0ddbc79ba43fbba9be34ddc9e7",
+        "after_digest": "sha256:7343d84efdb774e591efbe482e76aebfb44be714535de1fdac5b64afc1a4b331"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/incomplete-sequence/requests/page-3-body.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a1a48e8029716ef1084b7d26ff7b28084d9babad4a0e5a705dc42f04603dd732",
+        "after_digest": "sha256:91e9961c05f083d4646a5a459847deee0a15db1bc9d52119d007ae586cbfad3b"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/multipage-control/bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:7dd0ccb38d149e8ce1847285018c12bd21e05d75a7aa4eb71c6491b77da7cd16",
+        "after_digest": "sha256:ea360caba43666e915736589b0197de5e425885d09216c6000a91a80777c0c2a"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/multipage-control/mutations/correction-text-digest-mismatch.bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e3ae1eddcbd8631ad8ba6ecea559cc4e1a084ea01005c776ba063c569c5dee48",
+        "after_digest": "sha256:337de2e572e2b754916e374f8d0e2463a13c500a517b07c0779e77e110afefc8"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/multipage-control/mutations/review-revision-cycle.bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e7547051f78095fb853a403faa55d9590a5d561b68ae3a4cdfee5e1295eb6b55",
+        "after_digest": "sha256:fc386efc4a5c03e9598cf64bc255be2b99bed645efdb5a5c46a82721a02a9ac0"
+      },
+      {
+        "path": "conformance/ocr/v0/corpus/cases/multipage-control/mutations/review-revision-without-predecessor.bundle.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3695e3ae759ff3d7717cc17ab445593c7b8efedecfa45a033432ad10e9f8fbd0",
+        "after_digest": "sha256:337dab40901078cb5ffb66e39029fb356cff1bbb7c02a3ab5704bab2c837c4d5"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "77d7b9b4203c8d8006a1f0d430233fdac9fe6909"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "ae71c8a16d1e648fb43d51603d2fbd31b435f11c"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-PKG02"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:04953d9460f5bf51f183b796dea006ede1c9f4333f16fe9d998bd468d90a1c6b"
+}

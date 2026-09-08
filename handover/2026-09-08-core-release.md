@@ -79,6 +79,46 @@ and runtime-binding tests remain strict; the fast package-version test now
 also checks the corpus version and names the regeneration command on failure.
 No OCR runtime, ontology, dependency or case semantics changed.
 
+The corrected `77d7b9b4` clean local gate passed 3,355 tests with 3 skips,
+40 GraphRecipe tests, 229 Shop tests, governance and strict HTML/doctest/link
+checks. Package build, archive-to-wheel member parity and clean install passed.
+GitHub then exposed two publication/portability gaps absent from a local clone:
+
+- The existing local `evidence/capture-coverage-2026-09-06` tag had not been
+  pushed. Its three reviewed commits are cited by entry 419 but are not main
+  ancestors. Publishing that existing evidence ref preserves the exact history;
+  no ledger entry or commit reference is rewritten. CI now validates the ledger
+  and integration before the expensive full suite, with a hard fail-fast test.
+- Pillow's PNG compression produces different bytes on Linux despite the same
+  declared library version. Generator v3 specifies a simple uncompressed PNG
+  encoding independently of platform compressors. Source pixels and document
+  meaning stay unchanged; the new compressed-byte-independent fixture encoding
+  and its dependent hashes replace v2 in this release. This supersedes the
+  preceding metadata-only correction, not its recorded observation. Six RED
+  cases cover backend independence, multiple DEFLATE blocks, unsupported pixel
+  mode and preflight ordering, then pass after the correction. No dependency,
+  OCR verifier, Core runtime or ontology changes are introduced.
+
+Python 3.10 also found the existing supplier initialization helper passing UTC
+`Z` directly to a stdlib parser that only gained that spelling in Python 3.11.
+The helper normalizes the parser input to `+00:00` while retaining the original
+transaction-time text in ledger records. The Core supplier replay test now
+exercises a Python-3.10-shaped parser on every platform. This is compatibility
+for an existing fixture, not the pending undesired-observation integration.
+
+The measured GitHub Python 3.12 suite took 27 minutes 44 seconds by itself.
+The final main/release test allowance is therefore 45 minutes, leaving room
+for declared installation and documentation steps. No test or platform is
+removed. The original 30-minute adjustment above records the earlier local
+measurement, not the final workflow setting.
+
+Corrective checks: 79 status/OCR/CI tests pass. The supplier replay test fails
+against the old UTC parser and passes after normalization. All 10 rewritten
+PNGs retain exact dimensions, mode and pixel bytes; neither source PDF changes.
+All 354 governance commit references resolve from the main commit and the two
+evidence tags verified on GitHub. The subsequent clean full/package gates and
+remote matrix still determine release readiness.
+
 ## Publication gate
 
 Run the configured full test/documentation gate and package checks from a clean

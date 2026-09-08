@@ -186,7 +186,10 @@ def initialize_supplier_protocol(
                 raise ValueError(
                     "nonblank identities, time, actor and version required"
                 )
-        instant = datetime.fromisoformat(transaction_time)
+        instant = datetime.fromisoformat(
+            transaction_time[:-1] + "+00:00"
+            if transaction_time.endswith("Z") else transaction_time
+        )
         if instant.tzinfo is None or instant.utcoffset() is None:
             raise ValueError("timezone-aware transaction time required")
         used = {item.record_id for item in before.retained_inputs} | set(

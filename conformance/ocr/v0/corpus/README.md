@@ -36,7 +36,13 @@ The five cases separate different questions:
 
 `generate.py` owns every file below `cases/`, plus `corpus.json` and
 `checksums.json`. It writes invariant PDF metadata, fixed timestamps, canonical
-JSON, and deterministic PNG bytes. It refuses undeclared files under its owned
+JSON, and deterministic PNG bytes. Generator v3 uses RGB8, filter 0 and fixed
+65535-byte uncompressed DEFLATE blocks for PNGs. This removes platform-specific
+compression choices without changing pixels. The larger PNG files are test
+fixtures, not a production image encoding policy. The encoder follows the
+[PNG specification](https://www.w3.org/TR/png-3/) and
+[RFC 1951 section 3.2.4](https://www.rfc-editor.org/rfc/rfc1951#section-3.2.4).
+It refuses undeclared files under its owned
 paths. The manifest pins the Malleus version, both ontology byte hashes, and the
 OCR registry content hash used for verification. `checksums.json` covers every
 generated file except itself, avoiding a self-referential digest.

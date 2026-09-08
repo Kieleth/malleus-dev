@@ -254,9 +254,9 @@
   },
   "runtime_binding": {
     "generator": {
-      "contract": "malleus.ocr.fixture_generator.v2",
+      "contract": "malleus.ocr.fixture_generator.v3",
       "pillow_version": "12.3.0",
-      "png_contract": "Pillow RGB PNG; optimize=false; compress_level=9; strict round-trip",
+      "png_contract": "RGB8 PNG; filter=0; RFC1951 stored blocks of 65535 bytes; strict round-trip",
       "pypdf_version": "6.16.2",
       "python_contract": "CPython>=3.10",
       "reportlab_version": "4.4.9",

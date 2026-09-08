@@ -242,10 +242,23 @@ def test_failed_refresh_preserves_entire_published_state(sequence, failure):
     assert_parity(view.refresh(**coordinates(complete)), complete)
 
 
-def test_supplier_episode_protocol_and_supersession_converge(tmp_path):
+def test_supplier_episode_protocol_and_supersession_converge(tmp_path, monkeypatch):
     assert "KnowledgeHistoryProjection" in api.__all__
+    from types import SimpleNamespace
+    from research.semantic_reentry_external_design import supplier_initialization
     from research.semantic_reentry_external_design.supplier_walkthrough import run
 
+    parser = supplier_initialization.datetime.fromisoformat
+
+    def python310_datetime(value):
+        if value.endswith("Z"):
+            raise ValueError("Python 3.10 requires an explicit UTC offset")
+        return parser(value)
+
+    monkeypatch.setattr(
+        supplier_initialization, "datetime",
+        SimpleNamespace(fromisoformat=python310_datetime),
+    )
     output = tmp_path / "supplier"
     run(output)
     report = json.loads((output / "walkthrough.json").read_bytes())

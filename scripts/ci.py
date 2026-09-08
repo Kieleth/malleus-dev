@@ -71,7 +71,6 @@ QUALITY = Command(
 )
 TEST = (
     QUALITY,
-    Command("tests", (sys.executable, "-m", "pytest")),
     Command(
         "ledger",
         (sys.executable, "scripts/contract_compiler_ledger.py", "check"),
@@ -80,6 +79,7 @@ TEST = (
         "integration",
         (sys.executable, "scripts/contract_compiler_integration.py", "check"),
     ),
+    Command("tests", (sys.executable, "-m", "pytest")),
     Command(
         "graph-recipe",
         (

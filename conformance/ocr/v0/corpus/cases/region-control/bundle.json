@@ -10,7 +10,7 @@
         },
         "id": "fixture:region-control:attempt:a",
         "region_id": "fixture:region-control:region:a",
-        "request_digest": "sha256:2494e4fb313205f441440e401ec5bd4ef42cfdbc3396c6bf72503f2644c49d01",
+        "request_digest": "sha256:69e27ec1a9ddb7784d5363cb527993f2026b06def4a101cb972f87da2b2306c1",
         "response_digest": "sha256:02b1bc6051028f3429f6bf7e26e342ca0c6e60ff525758a0810aa3dff30971ce",
         "status": "COMPLETED",
         "unavailable_reason": null
@@ -24,7 +24,7 @@
         },
         "id": "fixture:region-control:attempt:b",
         "region_id": "fixture:region-control:region:b",
-        "request_digest": "sha256:40dcbd06501f54604c640e49f50a21bf45042a37f15a9f0d229b1a6eedafcf78",
+        "request_digest": "sha256:3120a639e358235a1e2666105c4da7c749a4a738faaf3c442cac8b5bbfa334b2",
         "response_digest": "sha256:797c430a715c1da07fa4850856f4be1186513f013b74ded9662a24764f8b454a",
         "status": "COMPLETED",
         "unavailable_reason": null
@@ -58,7 +58,7 @@
     ],
     "rasters": [
       {
-        "digest": "sha256:cce2607988916d32d817a9159b877dfbf3fa844e930be4c9e3b0dc605bf252ea",
+        "digest": "sha256:7ec74fd19efb9608cea988134a58a7153f1cff3ec06c0f703079a21059670718",
         "id": "fixture:region-control:raster:image-1",
         "render_contract": "fixture-retained-raster:v1",
         "source_id": "fixture:region-control:source",
@@ -124,8 +124,8 @@
     },
     "sources": [
       {
-        "byte_length": 49810,
-        "digest": "sha256:cce2607988916d32d817a9159b877dfbf3fa844e930be4c9e3b0dc605bf252ea",
+        "byte_length": 2881083,
+        "digest": "sha256:7ec74fd19efb9608cea988134a58a7153f1cff3ec06c0f703079a21059670718",
         "id": "fixture:region-control:source",
         "locator": "conformance/ocr/v0/corpus/cases/region-control/source/region-control.png",
         "media_type": "image/png"
