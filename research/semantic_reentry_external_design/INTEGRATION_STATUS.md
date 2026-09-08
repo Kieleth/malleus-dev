@@ -207,9 +207,9 @@ It includes historical e7 and must not become the new effect experiment's
 initial state. Source agreement, initial e4-only population, goal-contract
 binding, synthesis and acted-on episode closure remain separate work.
 
-Next, establish the separately attributed one-row supplier source and RET-010
-complement through ordinary public source/population/KCS admission. Register
-the actual supplier program and prerequisites before taking its original
+The initial-source cut below now establishes the one-row supplier source and
+RET-010 complement through ordinary public source/population/KCS admission.
+Next, register the actual supplier program and prerequisites before taking its original
 context. Freeze the static goal/rule input before binding that context, so a
 later retention does not silently stale the proposed base. Use the existing
 Core original-context artifact as the immutable contract root, with its
@@ -221,3 +221,48 @@ Tests must establish that binding before candidate synthesis is claimed.
 Core's separately proposed one-active-action extension and Robotics' repeated
 action requirement do not gate this single-episode implementation. The current
 dependency stays pinned to the verified base above.
+
+## Initial source ingress, verified; broad gate has one baseline failure
+
+The synthetic e4-only source now produces an ordinary KCS candidate with its
+full source ID/digest pair. Preparation retains evidence but leaves only the
+RET-010 complement accepted. Separate public admission creates B/Y/1 at
+`supplier-order-state:B:e4`. JSONL-only reopen reproduces the complete graph,
+record history and exact one-row source trace. The test forbids reads of the
+historical supplier-order-history file or amendment oracle and confirms that
+no e7 source occurrence or accepted e7 state enters this prefix.
+
+The initial and observed-replacement mappers share the existing closed parser
+and field projection. Initial mapping does not evaluate the goal or rewrite
+quantities. The old model and replacement tests still pass. Each implementation
+has a new exact code identity after the shared helper change; older result
+files continue to identify their historical implementation, not this one.
+
+SI-1, fixed: preparation initially invoked `append_anchors` before validating
+the owning history object. A substitute-writer regression reproduced that call.
+An entry-point type guard now refuses before any such call. This closes that
+reference coordinator's callback boundary, not arbitrary Python execution.
+Required source, mapping, profile and metadata checks also refuse before
+retention. The earlier wrong `source_record_ids` test assertion was corrected
+to the actual KCS `sources` ID/digest pairs and canonical round-trip; no Core
+alias or runtime workaround was introduced.
+
+The final initial-source module has 34 passes in the broader run. That run has
+512 passes and one failure, so it is NOT fully green. The failure is the
+unchanged document-trace test's expected `base_ledger_head`; it reproduces
+identically in the clean pinned Core checkout, with 13 other KCS fields
+matching. Core has the exact reproduction and owns its diagnosis/correction.
+Re-entry has neither edited nor waived that fixture. This does not block
+continued supplier implementation or reopen the passed one-action gate.
+Do not rerun this unchanged baseline repeatedly or silently exclude it.
+
+Exact selections, RED/GREEN, baseline reproduction and file hashes are in
+[supplier-initial-result.json](supplier-initial-result.json). Implementation:
+`9e04851827a48c162fd3b76c0ee052f60db9afe3`, tree
+`ad737520b70a81f6e4e3eb88ef4dd3ca699086a2`. All code remains confined to this
+Re-entry directory. No Core, ontology, canonical fixture or paper file changed.
+
+Next is actual supplier-profile initialization and retained goal-contract
+binding, then pure candidate synthesis. The source-to-initial-KG leg is now
+proved; proposal, execution, observation-derived correction and final episode
+quiescence are still unfinished.

@@ -1,0 +1,108 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "E4_ONLY_INITIAL_SOURCE_TO_KCS_ADMISSION_AND_REPLAY",
+  "date_utc": "2026-09-08",
+  "core_base": {
+    "commit": "90146c380994621a2f8df25876affd03fc9e57e3",
+    "tree": "609979f5d356ebb43c1288d80ea8f4f53d1f2613"
+  },
+  "contract_red": "5fbebceb0eddcdd00d1c5945d4c3a6dd295156a9",
+  "owner_guard_red": "16c467099d89c6c0194665fcd8b545dabaa9ea05",
+  "implementation": {
+    "commit": "9e04851827a48c162fd3b76c0ee052f60db9afe3",
+    "tree": "ad737520b70a81f6e4e3eb88ef4dd3ca699086a2",
+    "adapter_identity": "sha256:d3a728d167e6d02597b952d9ff46e7cfaa23961fa2823ce8c813dc7f5780d02d"
+  },
+  "source": {
+    "id": "source:reentry:supplier:initial",
+    "sha256": "edc05a0c3b95e04a54cd83fb5075ec91795680497c925e04635562b35d057e85",
+    "occurrence": "e4",
+    "accepted_record_id": "supplier-order-state:B:e4",
+    "accepted_order": "B",
+    "accepted_product": "Y",
+    "accepted_quantity": 1,
+    "preserved_ids": ["O1", "X1", "contains:O1:X1"]
+  },
+  "runs": {
+    "initial_red": {
+      "failed": 14, "errors": 3,
+      "reason": "new mapper and coordinator absent",
+      "junit": "supplier-initial-red.xml",
+      "sha256": "b75957fbb5e935723dd87160775798c57a616f384e3c3621ca6e582e8caae9c1"
+    },
+    "first_implementation": {
+      "passed": 100, "failed": 1,
+      "reason": "test used compilation.source_record_ids instead of KCS.sources",
+      "junit": "supplier-initial-first.xml",
+      "sha256": "e45fa945d3d67597088b8dc8cfa56cfad862347036964afeba94960022622e8a"
+    },
+    "corrected_focused": {
+      "passed": 101,
+      "junit": "supplier-initial-focused.xml",
+      "sha256": "a38ac81a357cdee10301d1d0bc3c1bab8541169711fc2748466f570a8d5b71d5"
+    },
+    "owner_guard_red": {
+      "failed": 1, "deselected": 32,
+      "reason": "coordinator called an unvalidated substitute writer",
+      "junit": "supplier-initial-owner-red.xml",
+      "sha256": "80843c43f054884f9318ad97aec75a538723559e6a7743e7edbb2a5200ba446e"
+    },
+    "owner_guard_green": {
+      "passed": 33,
+      "junit": "supplier-initial-green.xml",
+      "sha256": "f567fbb8a1dac420a107b7a57e5c4d5280cb84ddc28b80fcbbb25de93b2ee0eb"
+    },
+    "unified_relevant": {
+      "selection": "supplier-initial-gate.json",
+      "passed": 512, "failed": 1, "errors": 0, "skipped": 0,
+      "initial_source_tests_passed": 34,
+      "status": "NOT_FULLY_GREEN_BASELINE_FAILURE",
+      "junit": "supplier-initial-unified.xml",
+      "sha256": "d54832ce9583c01fb212df8a43891dd3bd83d5bd7ba868370dfabdc8b921957a"
+    }
+  },
+  "junit_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "baseline_failure": {
+    "test": "tests/contract_compiler/pareto/test_population_trace.py::test_document_trace_reaches_assertion_locator_and_retained_capture",
+    "assertion_line": 223,
+    "differing_field": "base_ledger_head",
+    "actual": "sha256:9510c232e487d0b791b1984e7e75f2b0ab1cb38696600c7733096da795a1b105",
+    "expected": "sha256:5f52eeecdc80479f6b3a0133fd0390d67f39733c12b88fe0c4946790b405c390",
+    "other_matching_items": 13,
+    "clean_base_reproduction": "identical failure at exact clean Core base above",
+    "base_checkout": "/private/tmp/malleus-reentry-handoff-review.oF9XmR/repo",
+    "base_junit": "core-base-document-trace.xml",
+    "base_junit_sha256": "715cab099acd86ef4f74a82d6b436fdd58c4f55016ea72a7686578d48d5a2059",
+    "same_test_sha256_in_both_checkouts": "6b31dd321d114e6cebc654651ef47ebc93c57224ad67b2a41bec286bf6ec44d2",
+    "owner": "Malleus Core, 01a02f71-fec6-7382-9c68-c3efd3dba5d4",
+    "status": "sent for baseline diagnosis and evidence-backed correction, no waiver or fixture edit by Re-entry",
+    "impact": "broader gate is not fully green; does not reopen the verified one-action prerequisite or block supplier implementation"
+  },
+  "file_sha256": {
+    "SUPPLIER_INITIAL_SOURCE.md": "b0788f5028b46846932c54d3de8972c535fb67760b75ff6bf084638f38cc7002",
+    "supplier_components.py": "4ff166f2eab4645113b2c84120536bcf98eec43c171408c41952f32196b1bf07",
+    "supplier_initial_source.py": "5fb1e04b8bf154f9be5cd3d59b20b144b47ace4b21f1fd9f633be42fcebec4c3",
+    "test_supplier_initial_source.py": "1a65c0b925039145e96d575c0ba05c5135b50438b5457bac915ff89c2d77d0f0",
+    "supplier-initial-gate.json": "7eb7c2f5654cd4d59b048730be01cccace1f8db00cb32f14b47fc2073a236bdd"
+  },
+  "review": {
+    "lowest_profile": "compiler-enabled state-version population",
+    "role": "adopter reference mapper and preparation coordinator",
+    "root_ontology_profile": "not claimed; root schema rites not run",
+    "runtime_origin_guard": "passed",
+    "ruff_and_format": "passed",
+    "base_to_implementation_diff_check": "passed",
+    "changed_scope": "research/semantic_reentry_external_design only; no src, tests or ontology changes",
+    "SI_1": "Fixed missing owner validation with an entry-point class guard before any callback; hard substitute-writer test retained RED/GREEN. Not a Python sandbox claim.",
+    "source_and_goal_separation": "mapper preserves source integers, including three; no goal verdict produced",
+    "authority": "preparation retains evidence only; public Core admission creates the accepted supplier fact",
+    "replay": "JSONL-only reopen recovers exact one-row source lineage and complement",
+    "count_rule": "overlapping runs are not added"
+  },
+  "exclusions": [
+    "full external-action Semantic Re-entry E2E",
+    "candidate ActionProposal, authorization, supplier attempt, independent post-effect capture or quiescence",
+    "source truth, actor authentication, causal proof or replacement demonstrated",
+    "fully green broad gate, full repository CI, package publication or main integration"
+  ]
+}
