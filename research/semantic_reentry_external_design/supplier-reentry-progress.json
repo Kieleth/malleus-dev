@@ -93,14 +93,22 @@
     "core_dependency": "PASS. This is Re-entry-owned verification work, not a missing Core contract."
   },
   "audit_binding_type_probe": {
-    "status": "RUNNING_NOT_YET_RED_OR_GREEN",
+    "status": "RED_CONFIRMED_REPAIR_RUNNING",
     "test_commit": "0bb35dca115ba00bfbce410a8b0ade69004195ad",
     "implementation_commit": "a056077ea13955d9de3db7e98e54b973d0967bd4",
     "file": "supplier-binding-type-red.xml",
+    "sha256": "79bc590916693233705bfa0cb0c65ca04268ba8dcf2b2de3ad4bcaa41a4992ac",
+    "tests": 1, "failures": 1, "errors": 0,
     "basetemp": "pytest-binding-type-red",
     "selector": "test_supplier_reentry.py::test_synthesized_action_observed_kcs_and_fresh_quiescence[binding-type]",
     "obligation": "Actual observation-derived KCS with Boolean true substituted for integer one in its ordinary binding evidence must not close the goal episode. No fake accepted view or substitute KCS is used.",
-    "count_boundary": "This case was added after the unified run collected. It is not included in the 387-test selection."
+    "count_boundary": "This case was added after the unified run collected. It is not included in the 387-test selection.",
+    "observed_failure": "SATISFIED/LINKED_OBSERVED_KCS instead of REFUSED/EVIDENCE_DISAGREEMENT.",
+    "repair_commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71",
+    "repair_tree": "28f4b35c3109649e1cf82c8edd5109aa22957460",
+    "repair": "Compare canonical bytes for the entire expected observed binding, rather than Python object equality that conflates JSON Boolean and integer values.",
+    "focused_correction": {"status": "RUNNING", "collected_tests": 4, "file": "supplier-binding-type-corrected.xml", "basetemp": "pytest-binding-type-corrected"},
+    "fresh_unified": {"status": "RUNNING", "collected_tests": 388, "file": "supplier-reentry-final.xml", "basetemp": "pytest-supplier-reentry-final", "code_and_test_commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71"}
   },
   "runtime": {
     "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",

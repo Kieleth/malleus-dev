@@ -22,12 +22,14 @@ and separately identified; a current-bound witness and incompatible-epoch guard
 pass three tests. The unified 387-test selection from that commit is RUNNING,
 with production a056077. Do not count collection or partial progress as a result.
 
-An additional audit probe at 0bb35dc is RUNNING: the full lifecycle injects Boolean
-true into the observation binding's expected-quantity-one field. Python object
-equality considers those equal; the test requires exact binding semantics and
-episode refusal. This fourth lifecycle case was added after the 387-test run
-collected and is not included in that run. Do not claim final audit closure before
-its result and any required repair. The scoped audit and draft landing packet are
+The additional audit probe at 0bb35dc is RED: the full lifecycle injected Boolean
+true into the observation binding's expected-quantity-one field and incorrectly
+returned SATISFIED. Core accepted the actual source-derived correction normally;
+the defect was the Re-entry episode's non-exact binding comparison. Repair dc74a6d
+compares canonical bytes of the whole binding, preserving JSON types recursively.
+The four-case focused correction and fresh 388-test unified gate are RUNNING.
+The earlier 387-test run excludes this fourth case and cannot close the finding.
+Do not claim final audit closure until the repaired selections finish. The audit and draft landing packet are
 MALLEUS_INQUISITION.md and SUPPLIER_E2E_HANDOFF.md. No Core wait.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
