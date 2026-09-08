@@ -1,0 +1,96 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000440",
+  "ledger": "overseer",
+  "sequence": 440,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:8c2bdbdc7d6d694ef64923f29978450855c4d9e6b0eab6b38772501c8071085b",
+  "recorded_at": "2026-09-08T20:44:25Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "maintained-knowledge-history-projection",
+    "type": "DOCUMENT"
+  },
+  "summary": "Implement the operator-activated in-memory reader with atomic verified suffix advancement.",
+  "why": "Luis activated the maintained ledger-fed graph after accepting Core ownership. RED 7c29da51 records eleven absent-reader failures; GREEN 851913c0 introduces one public read-only projection using the existing semantic fold. Thirteen reader guards cover supplier action/correction, shipment revision, stale reads, corrupt suffixes, incomplete transactions and atomic publication. Core/history/KG/protocol: 469 passed. Complete Shop: 253 passed. Targeted Recon replay: 7 passed. Ordinary updates decode only appended event bytes and construct only new records; full replay remains recovery. Prefix hashing, copies and canonical receipts remain proportional costs. No database, service, storage format, new knowledge identity, authoritative graph writer, package/version change, release or push. Existing compiler-bound Shop evidence remains byte-identical. Consumer integration stays downstream.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "after_digest": "sha256:350526a3a18a0273e89fd0543f859e2078f3fbdfcd097eec503cf00d9b424068",
+        "change": "MODIFIED",
+        "before_digest": "sha256:cf1e5898f6982b0e8a1015e063388e0988391e14652ba858ed895df24f2fd640"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "after_digest": "sha256:23ca36c8b2f9c25d41494cc94b22790853f38eea6f912b4ba61e803d90136543",
+        "change": "MODIFIED",
+        "before_digest": "sha256:de2d426006c2b98fe13f0be9919680773f4566ba50d2c6d86b477d1460b69a40"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "after_digest": "sha256:222d855ea683179195227d2a9ee78a5e0367c1e3ffb38128655da0a51d685a90",
+        "change": "MODIFIED",
+        "before_digest": "sha256:b1fa69464e195715b4930484060a8896927292065a34c9a29248f7b7dfd95148"
+      },
+      {
+        "path": "handover/2026-09-08-maintained-projection-plan.md",
+        "after_digest": "sha256:e91b81ce2018c69cbc917fe591f8af6dd1656ef8d77f4fb25c24f07920f487e5",
+        "change": "CREATED"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "after_digest": "sha256:bbf6416adab228a2d3b1d52c7f29b79fcbefaae30bbcc906830b4176be664441",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d73c83d693c2cb665c8bd07fb3b8c6d8bfd00ada4b05f0a2e6bef72ecd9de5af"
+      },
+      {
+        "path": "src/malleus/compiler.py",
+        "after_digest": "sha256:42e27b2c8946e6e54f578fe4537a36856b822a568004e4e2cc57d8c03debe301",
+        "change": "MODIFIED",
+        "before_digest": "sha256:4c3d757297c8fe3f89e40f00ec3d69c21dbad11d805bc2a23471f7cdfd8028b4"
+      },
+      {
+        "path": "src/malleus/kg.py",
+        "after_digest": "sha256:b7736007be2f21b9915b1b0b3b692d07dd7932dbc2634e78fd5e18db58b22a1e",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3fa76bb88b091ee37c0b7a9002116a54706d01b2807b27ab5ffaaec30943ef3c"
+      },
+      {
+        "path": "src/malleus/ledger.py",
+        "after_digest": "sha256:a758d755989ea6828fc800db2a37d825b63bdf9895b362b6800d76160dcc045a",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6565c03473d5ec2aba6d76cee0cdab122ac1bff8f9b4190ab28fcb09a3c34b9f"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_maintained_projection.py",
+        "after_digest": "sha256:615c220be836e3ced9cfc55861030c95d2aa206a6e5146512c07d8b7e87adedf",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "851913c0ccecb1a3e5445a9abd89072d8f486c27"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "7c29da51506b6deca37ad908b9cd16810dea4b91"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:207250c5db25ee37352dde4942cdda1e1a051ae055dd38907b18197e1a65a14a"
+}

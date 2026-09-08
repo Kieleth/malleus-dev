@@ -40,13 +40,20 @@ Robotics owns its application integration. Semantic Re-entry owns its consumer
 experiment and adapters. Their local successes are not Core results until
 reported and bound separately. Neither lane owns Core runtime or governance.
 
-## Activated: maintained ledger-fed graph
+## Implemented: maintained ledger-fed graph
 
-Owner: **Core**. Luis subsequently activated the bounded in-memory slice.
+Owner: **Core**. Luis subsequently activated the bounded in-memory slice,
+implemented at `851913c0` after RED `7c29da51`.
 The [implementation contract](2026-09-08-maintained-projection-plan.md) records
 the scope and TDD observations. The earlier
 [Core response](2026-09-08-incremental-projection-core-response.md) is design
 input, not a frozen implementation contract.
+
+The reader, history, graph and protocol gate passed 469 tests. The complete
+Shop gate passed 253 tests; seven targeted Recon replay tests also passed.
+Existing compiler-bound Shop evidence remains unchanged. Detailed evidence and
+the projection-only timing observation are in the
+[result receipt](2026-09-08-maintained-projection-results.md).
 
 Keep a long-lived, replay-derived KG and its history/protocol indexes. Advance
 them from verified committed ledger suffixes, without folding the full prefix
