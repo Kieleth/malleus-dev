@@ -91,3 +91,18 @@ This integration selects neither and adds no robot-specific rule.
 
 External effects, authentication, source truth, general retries, a stable wire,
 an installed all-in-one action SDK and cross-language parity remain unclaimed.
+
+## Main-checkout confirmation
+
+Local main fast-forwarded to `053ff8b967fb0654c44a2787af3422f4054b9345`,
+tree `20b517ccc0948c4a6388f60f640d57b7a95d6997`. The two methods absent from
+prior main, `select_protocol_programs` and `append_protocol_events`, now resolve
+from its own `src/malleus/_contract_pipeline/knowledge.py`.
+
+The two `programs/test_shop_action_composition.py` tests then passed from the
+main checkout, including JSONL-only reopen. Its ledger check validates the same
+427-entry head. All 329 files in the immediately preceding preservation
+snapshot were unchanged after the fast-forward. Concurrent paper edits before
+that snapshot were preserved, not reverted. The runtime still matches the
+consumer-audited candidate. This final paragraph is report-only; no remote push
+was performed.
