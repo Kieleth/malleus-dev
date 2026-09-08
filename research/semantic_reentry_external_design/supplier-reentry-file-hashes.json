@@ -1,0 +1,716 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "CONTENT_ADDRESSED_BOUNDED_SUPPLIER_REENTRY_LANDING_AUDIT",
+  "base_commit": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "base_tree": "609979f5d356ebb43c1288d80ea8f4f53d1f2613",
+  "audited_content_commit": "46e84bd0c2fc72f337dd0b348dea52548fdd9bbc",
+  "audited_content_tree": "e1435d7d2bd8897dc9a8d96d84f762470c9ef1b7",
+  "core_source_tree": "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1",
+  "scope": "research/semantic_reentry_external_design/",
+  "changed_file_count": 92,
+  "added_lines": 17946,
+  "removed_lines": 0,
+  "all_changes_are_additions_inside_scope": true,
+  "files": [
+    {
+      "path": "research/semantic_reentry_external_design/ACCEPTED_READ_VIEW.md",
+      "bytes": 5311,
+      "sha256": "d313d19f06dba60a6f6ebccdf4555a6b8a0caeb2fa37fc5f0afd402384daaec0",
+      "added_lines": 85,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/ADOPTER_CONTRACT.md",
+      "bytes": 16972,
+      "sha256": "1fa219abe205aaf33d4b77184829827e6631bd86e9c392fad95a107e688b5067",
+      "added_lines": 261,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/COMPILER_GATE_CHECK.md",
+      "bytes": 4664,
+      "sha256": "a9a72dd2f474f48057fd2d4b077726a1af3901a7514a31217ff8cb169cf79aac",
+      "added_lines": 85,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/COMPILER_INPUT_CHECK.md",
+      "bytes": 4926,
+      "sha256": "f0c199a79dc6d91bd57d7063f7a577230a4d049abcde6344e7613655e0252721",
+      "added_lines": 91,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/CONTRACT_REVIEW.md",
+      "bytes": 4872,
+      "sha256": "6b462bead97bb58180a313a156884c171d8fd2b7af967e8234e153e645666706",
+      "added_lines": 83,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/CORE_CONTRACT.md",
+      "bytes": 16018,
+      "sha256": "605eaabcba2e7cb1e71ed0a21b13d29f610a761bd759774bf7e75eac6bfa770c",
+      "added_lines": 259,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/CORE_DEFINITION_REVIEW.md",
+      "bytes": 10541,
+      "sha256": "8f11fd3d295051d5cd67ca492702363bf3649cb2e47f993d6fb1aa1c4f004151",
+      "added_lines": 169,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/CORE_PROGRAM_REVIEW.md",
+      "bytes": 9414,
+      "sha256": "7ca9bc7ae76397e60d8464ae4182fb1f6d1b46293ccc82faee948bbc53ae8709",
+      "added_lines": 167,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/FREEZE_GATE.md",
+      "bytes": 4280,
+      "sha256": "d646d9c44f1104b13a1b22be25558bf6bc41d67a5c5be384ee7ae68950966bf2",
+      "added_lines": 80,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/INTEGRATION_STATUS.md",
+      "bytes": 36086,
+      "sha256": "52ee8c3cbe059aec88ff5cb1e59e8785d031fdd75a55cb04cc362ee994708099",
+      "added_lines": 567,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/MALLEUS_INQUISITION.md",
+      "bytes": 11768,
+      "sha256": "7969ad9aa82885485f1bd4905e102aa9599cdfbf5d1f5348cbbe33c2436fb01b",
+      "added_lines": 178,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/MORNING_HANDOVER.md",
+      "bytes": 9214,
+      "sha256": "942696a6ab7b30f91bc07b27c025189f517e68413b77851d6a4ecbba3871a24e",
+      "added_lines": 151,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/OVERNIGHT_PLAN.md",
+      "bytes": 16914,
+      "sha256": "19365dfecd7fe577c5796f57a3e315d9b3a77c9f55eca6a9227df1aa15a2223c",
+      "added_lines": 272,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/README.md",
+      "bytes": 16977,
+      "sha256": "84ecc644e369e020a0ffca562f695e9d07bf58796d683c54bdd86131b6eb0e3c",
+      "added_lines": 269,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/REPLAY_NONINVERTIBILITY.md",
+      "bytes": 4782,
+      "sha256": "12f2158525d78a067225b1155e39fcee9cc266711092dc119d473bf25712f887",
+      "added_lines": 85,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/ROBOTICS_REENTRY_MAP.md",
+      "bytes": 9701,
+      "sha256": "1b78a040a46b105740a018721cab36726ee49569e8012a0d4297be22b72484a9",
+      "added_lines": 155,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_AUTHORIZATION.md",
+      "bytes": 6209,
+      "sha256": "b9ae887fb0a4b5c54c5df6bda8255047de7548f8a4b10b5fa1bd0a2de03acecf",
+      "added_lines": 89,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_COMPONENTS.md",
+      "bytes": 4156,
+      "sha256": "ba77fc29ddaddb9576b5d4fa5c0ee6354d6d5853e1708d7befa0b8b9c4926708",
+      "added_lines": 72,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_COMPONENT_REVIEW.md",
+      "bytes": 7774,
+      "sha256": "4cf20b42463c1a0293f2696d586a882a6838593a1c389687765916c93beb28ee",
+      "added_lines": 119,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_E2E_HANDOFF.md",
+      "bytes": 8658,
+      "sha256": "91bc9b8084bb282b2e0bd5cb50869d3005f1d2cda6f9076b00b1c2136d7749ee",
+      "added_lines": 163,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_EXECUTION.md",
+      "bytes": 5977,
+      "sha256": "dca4361c53f26955ae4a4671e6006ef38898ecb091175498c12ae2276887be3b",
+      "added_lines": 88,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_INITIALIZATION.md",
+      "bytes": 4908,
+      "sha256": "699a003a8d69a9c0f3fe679e23db831a17b6047b0b7dee1b61a11f1f56c6a6eb",
+      "added_lines": 74,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_INITIALIZATION_REVIEW.md",
+      "bytes": 6156,
+      "sha256": "18c934832ab7fa8f3a6e0a35c266059713c627ed0e705a418da529aecce9f103",
+      "added_lines": 92,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_INITIAL_SOURCE.md",
+      "bytes": 3910,
+      "sha256": "b0788f5028b46846932c54d3de8972c535fb67760b75ff6bf084638f38cc7002",
+      "added_lines": 61,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_OBSERVATION.md",
+      "bytes": 5128,
+      "sha256": "90cb2274d6b03dcfb84f57685deeab928f12d7c5bd76eadefe72914d5300f4d0",
+      "added_lines": 76,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_OBSERVED_SOURCE.md",
+      "bytes": 5046,
+      "sha256": "791dc7bd219d5d243fb35848b6c003c4f4603cdda21fda7ca00fcecba39d9868",
+      "added_lines": 74,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_PROPOSALS.md",
+      "bytes": 5613,
+      "sha256": "31c8f8f6c7c962e3a3be087df28843baefb6564bf373ac14113d3ad67f0c32b2",
+      "added_lines": 79,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_PROPOSAL_REVIEW.md",
+      "bytes": 7012,
+      "sha256": "c0ea4a13157db97c78deb03c95932fcd06532362958b52d220c2a289bd9102fd",
+      "added_lines": 115,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_REENTRY.md",
+      "bytes": 8353,
+      "sha256": "fe8b3a11e4c90aadb2bc28df00cc35bb237f1d804545dd88ec4143c32c258a92",
+      "added_lines": 126,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/accepted-read-result.json",
+      "bytes": 3450,
+      "sha256": "b3f8c1bee9e78e9577d22ba653e33644f5a9737150cd378cbbbc603d74fbb754",
+      "added_lines": 74,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/accepted_read_view.py",
+      "bytes": 10456,
+      "sha256": "fbf16e6a47e7870d8e1c0a5f6aa8d496695f0b0d547cf49454c620e18762cb69",
+      "added_lines": 319,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/compiler-gate-result.json",
+      "bytes": 12667,
+      "sha256": "15e3745bcb87b5784cfe8baf8cc3c895ec20b4ae8b6c78632a709de5bda10485",
+      "added_lines": 236,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/compiler-input-result.json",
+      "bytes": 4361,
+      "sha256": "1ae7696c7027e115625128ab020851fb7a4a5b3d204ba7217ea4ed474a0ab843",
+      "added_lines": 96,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/conftest.py",
+      "bytes": 338,
+      "sha256": "624c1f0b77f01968fca7575782f3c676a265bcec8c29bb773c66e9b28e90c953",
+      "added_lines": 10,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/evidence.json",
+      "bytes": 6181,
+      "sha256": "ad563bf527744bd01bccf45c9a235411645a51110b87291c70dfee88ab032d0b",
+      "added_lines": 131,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/README.md",
+      "bytes": 3634,
+      "sha256": "c1991e13ca7aa219d09a7e922d83b455ee4b5e23526bed6f6cb116732aebbb1b",
+      "added_lines": 61,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/case.json",
+      "bytes": 1901,
+      "sha256": "3f4b70fd9881f09a89b2fa19be570a6605598e6a686f0809981d407eb3fd795a",
+      "added_lines": 50,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/input/supplier-before.jsonl",
+      "bytes": 74,
+      "sha256": "edc05a0c3b95e04a54cd83fb5075ec91795680497c925e04635562b35d057e85",
+      "added_lines": 1,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/oracle/expected.json",
+      "bytes": 1651,
+      "sha256": "1e7af6f8748625f117541d63888c750febda269afa82dd8d0adc6e2c39aeb7c0",
+      "added_lines": 40,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/oracle/supplier-after.jsonl",
+      "bytes": 91,
+      "sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "added_lines": 1,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_commitment_v1/source.schema.json",
+      "bytes": 498,
+      "sha256": "b6849ba437e103e51023bf5f7b35416494aa3207c613baae1740c9ba36203de5",
+      "added_lines": 13,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/replay-noninvertibility-result.json",
+      "bytes": 6386,
+      "sha256": "e30ae4e6fc4b194b9a2fb49bca01bd776a667254c28c5b0ccfd724b408da4d0f",
+      "added_lines": 135,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-action.yaml",
+      "bytes": 1394,
+      "sha256": "15bdd3144f853dd874d19b73d02f738cd8a972a8f7f276b497b79c635c56d477",
+      "added_lines": 51,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-authority-focused-result.json",
+      "bytes": 4148,
+      "sha256": "d321eb181cc6dd68196e77ee84dc1bc6d4edd60175c362ec4404a8cf69be2976",
+      "added_lines": 81,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-authority-gate.json",
+      "bytes": 856,
+      "sha256": "898f7aa5d091d471b27946ceed80f836fcd2a2c851c04a6177303f13468017ef",
+      "added_lines": 13,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-authority-result.json",
+      "bytes": 4325,
+      "sha256": "bcf2086c96c0bf84ebdd0d6ea012953280ed8cbb2a886cabff69cf0592fb8930",
+      "added_lines": 85,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-component-gate.json",
+      "bytes": 966,
+      "sha256": "c30a198fc9685807425494f20f30de4ee69c515d01506b5c89fd19e5a3e87bd2",
+      "added_lines": 18,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-component-result.json",
+      "bytes": 5111,
+      "sha256": "eefcd03ff68527a8e57b9c4bf152d3dace4e148a72140742db0b3b445115d83b",
+      "added_lines": 96,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-effect-observation-result.json",
+      "bytes": 7774,
+      "sha256": "8e42155d7589ad5d3267ff5c4bfe85f085102361e7c3585844e0a62344ab009c",
+      "added_lines": 121,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-execution-focused-result.json",
+      "bytes": 3585,
+      "sha256": "09a7a241ae61fc8fbef2ee66a46c9ab04b25efdfd8cb11900c45c883e55d4a5e",
+      "added_lines": 60,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-execution-gate.json",
+      "bytes": 729,
+      "sha256": "1082f0efbce0647582346f2708f8bd6cc003eca527d50d113dd2c04daca8d8aa",
+      "added_lines": 10,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-initial-gate.json",
+      "bytes": 1286,
+      "sha256": "7eb7c2f5654cd4d59b048730be01cccace1f8db00cb32f14b47fc2073a236bdd",
+      "added_lines": 22,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-initial-result.json",
+      "bytes": 5982,
+      "sha256": "f3aea16c45f4196f3196fbeba6bcec0bfef5a7f1ac0a8f6ba2b438667f7acb9b",
+      "added_lines": 110,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-initialization-gate.json",
+      "bytes": 1071,
+      "sha256": "1f0c93cd350aca324d680d2fc1b5f2a230179aeb425f15a8b3a1f0d1848f97e1",
+      "added_lines": 16,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-initialization-result.json",
+      "bytes": 5910,
+      "sha256": "a4269f8e914ef8a0e0da55691028696849784ed2cb1b6295ba2fcbc88754eff1",
+      "added_lines": 97,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-observation-gate.json",
+      "bytes": 526,
+      "sha256": "687243f3380d504aa2ebe82499ed8d5655edb0a383737ad4d5c3659c91dd5734",
+      "added_lines": 9,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-observed-source-gate.json",
+      "bytes": 571,
+      "sha256": "ef8767b483bfa4ef1f4d5fc8da14291f53c172d06d9821c579a1c805182e2937",
+      "added_lines": 10,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-proposal-gate.json",
+      "bytes": 992,
+      "sha256": "c0b9eb7fcbc757651c005057cf27fa1ab729127b64f0d7565f132c5f54996ef1",
+      "added_lines": 15,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-proposal-result.json",
+      "bytes": 5956,
+      "sha256": "5abb6d67f66abfe7d802588126a6f6c240eafe7566985e753e0ed74c75b1f0ac",
+      "added_lines": 141,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-reentry-final-result.json",
+      "bytes": 5795,
+      "sha256": "9717f8937908f1638abccae7f611af9a9f0f28c449d830dc59ed3015af779a40",
+      "added_lines": 116,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-reentry-gate.json",
+      "bytes": 2276,
+      "sha256": "c55c0ef92a47204cb67e19593ca81a74a3397830d2f7afbda419afaaaf624585",
+      "added_lines": 37,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-reentry-progress.json",
+      "bytes": 10465,
+      "sha256": "a29228073fcd616712be84daa8aaa170ab30f38e7ed2e35278027cd5048254e1",
+      "added_lines": 131,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-reentry-replay-evidence.json",
+      "bytes": 10078,
+      "sha256": "6662ace449c6ce968e753cfebfad4d9ee43a9d20119ca410f5c67865768d955b",
+      "added_lines": 217,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_authorization.py",
+      "bytes": 23483,
+      "sha256": "b54ed4706773816e8ddf25c6921ee2e10b746e104e072603e894f0d29aa53c1a",
+      "added_lines": 729,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_components.py",
+      "bytes": 10297,
+      "sha256": "4ff166f2eab4645113b2c84120536bcf98eec43c171408c41952f32196b1bf07",
+      "added_lines": 338,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_execution.py",
+      "bytes": 14341,
+      "sha256": "ee8acb11fd55f69a5160267ee8de1bd92f8380004683cc0b851a6bb25f33a4ea",
+      "added_lines": 432,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_initial_source.py",
+      "bytes": 4535,
+      "sha256": "5fb1e04b8bf154f9be5cd3d59b20b144b47ace4b21f1fd9f633be42fcebec4c3",
+      "added_lines": 144,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_initialization.py",
+      "bytes": 18393,
+      "sha256": "0f6af693c5f0041050866ff29f37c65dee96a25fd774da0729fba4d76af32824",
+      "added_lines": 468,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_observation.py",
+      "bytes": 14058,
+      "sha256": "3b6861e11e42f765eb7b4c96c09c9e05ca6fad6cc5fa0508330f3da8652d9ced",
+      "added_lines": 426,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_observed_source.py",
+      "bytes": 14325,
+      "sha256": "ddb2076943f9f28be1fc49a16ec7b54acce91f5c5ff723d0933008f03f7270d3",
+      "added_lines": 410,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_program.py",
+      "bytes": 6595,
+      "sha256": "d3ca777f5fd03904256aa4996a63807d734271857039c67278c02ceb12ad02c7",
+      "added_lines": 176,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_proposals.py",
+      "bytes": 24598,
+      "sha256": "083fd09110d5b09bc8ea89dac87d8080754ba6eef8a00ec9d29cab0e8349eb23",
+      "added_lines": 719,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_reentry.py",
+      "bytes": 37305,
+      "sha256": "d3ad325020e6d6d5abdc189a878160b6f190876b859887875258f164c4602957",
+      "added_lines": 1080,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_accepted_read_view.py",
+      "bytes": 15425,
+      "sha256": "42f9781d5af4afc4a79cda6970036b5d0f6caeebf2507fb05f0419a84d63d924",
+      "added_lines": 429,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_compiled_assent_input.py",
+      "bytes": 4337,
+      "sha256": "11d7b7945b845780d6464f4543890002a98410e03d0503706b8b043dde975791",
+      "added_lines": 119,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+      "bytes": 7895,
+      "sha256": "ef8c5b5e7863cb7fda1e5e97c2646da55d6af7c37e1383863813ec3aac29a940",
+      "added_lines": 222,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_replay_noninvertibility.py",
+      "bytes": 6946,
+      "sha256": "8cd5eea6de67ca085cf2848820660809e40e70fbf276e44a65784e5e9d882200",
+      "added_lines": 181,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_seam_audit.py",
+      "bytes": 3217,
+      "sha256": "8ca1b246d56bea30de418a7909b1b763651ac6c123dbec77678e792158883e2f",
+      "added_lines": 89,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+      "bytes": 4839,
+      "sha256": "9ac86d5d0c35be6be70928829b833cbef0598f26300a0bce36f646ec71a46b61",
+      "added_lines": 141,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_authorization.py",
+      "bytes": 22307,
+      "sha256": "1bf0eac6e20ece64559a173dcd415cb02eb8b7eadb1958712c9cfd9b3f226f02",
+      "added_lines": 588,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_components.py",
+      "bytes": 13517,
+      "sha256": "f5a26e446fb9b5edc70962fb80961c75c83d3c718f60e577ebffc862b31ebb1d",
+      "added_lines": 413,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_execution.py",
+      "bytes": 14749,
+      "sha256": "5fc903c1f619b5bbea6aa20416e91389aa5ae99c227424e93fe6b6a06b70ad1e",
+      "added_lines": 405,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+      "bytes": 16880,
+      "sha256": "1a65c0b925039145e96d575c0ba05c5135b50438b5457bac915ff89c2d77d0f0",
+      "added_lines": 454,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_initialization.py",
+      "bytes": 12127,
+      "sha256": "9e69a5133d20c411afcfb8d459756553a898153d7a3e64a7b7c11f0d9f02b0e2",
+      "added_lines": 337,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_observation.py",
+      "bytes": 12996,
+      "sha256": "d554dceae4bdc626b6b039b720b1d633344e8a009cfdc3040839ffe753a9256a",
+      "added_lines": 351,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+      "bytes": 11710,
+      "sha256": "1aaaf8176babc6c63d199f026bd7deaff0b5507d68f62b473db06f0af5cf47cf",
+      "added_lines": 305,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_population.py",
+      "bytes": 4980,
+      "sha256": "af51b44385b0c2a640508203e8f7536af8b4b1f0ebf2b576cc29a76818b4c9c3",
+      "added_lines": 130,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_program.py",
+      "bytes": 5743,
+      "sha256": "a332e8bb277bd614120dfc1124bc3d43b025b437e6f4dec7b97436538e1f6895",
+      "added_lines": 174,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_proposals.py",
+      "bytes": 21009,
+      "sha256": "24d8a18541bfa85281e50c6fda5b3d8904c06cbaf9d40c47798425bb33ba1e7d",
+      "added_lines": 578,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_reentry.py",
+      "bytes": 34625,
+      "sha256": "e9a5eba47bb36cba34b2147729c76b02b29457cf538f0faeb2b1de1d7543162b",
+      "added_lines": 904,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_reentry_boundaries.py",
+      "bytes": 9504,
+      "sha256": "6a44beeb2ba86b024db2ef75b09992a5ff51b65b5b0d753e616d6c90f551ebb4",
+      "added_lines": 235,
+      "removed_lines": 0
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_replay_laws.py",
+      "bytes": 6233,
+      "sha256": "80921300ae0d53bdd982c2cda13618fce7bd6000ba7fc86d11678e992525b643",
+      "added_lines": 161,
+      "removed_lines": 0
+    }
+  ],
+  "external_run_artifacts": [
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ0/jsonl-only/history.jsonl",
+      "bytes": 15884255,
+      "sha256": "533980368b98f97e444f7f717d2a2f09c8d4748a4f94cfb89fa2dce2281b5609"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ1/jsonl-only/history.jsonl",
+      "bytes": 15884204,
+      "sha256": "e5ce9b688c3921794a76bcd200aaa4cb372d4f377db01e945953c75a54616db7"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ2/history.jsonl",
+      "bytes": 15869410,
+      "sha256": "a92af6c72d53183e0b9319134e6ef92fe7e3dc768cdb7c2f44517f44f7ecb994"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-binding-type-corrected/test_synthesized_action_observ3/jsonl-only/history.jsonl",
+      "bytes": 15884259,
+      "sha256": "ac918bd4507ef8cbeb09e60d182aa4fcf9f4cadcae13f6520f2cbd50d7caac6b"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ0/jsonl-only/history.jsonl",
+      "bytes": 15884255,
+      "sha256": "533980368b98f97e444f7f717d2a2f09c8d4748a4f94cfb89fa2dce2281b5609"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ1/jsonl-only/history.jsonl",
+      "bytes": 15884204,
+      "sha256": "e5ce9b688c3921794a76bcd200aaa4cb372d4f377db01e945953c75a54616db7"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ2/history.jsonl",
+      "bytes": 15869410,
+      "sha256": "a92af6c72d53183e0b9319134e6ef92fe7e3dc768cdb7c2f44517f44f7ecb994"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-supplier-reentry-final/test_synthesized_action_observ3/jsonl-only/history.jsonl",
+      "bytes": 15884259,
+      "sha256": "ac918bd4507ef8cbeb09e60d182aa4fcf9f4cadcae13f6520f2cbd50d7caac6b"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-binding-type-corrected.xml",
+      "bytes": 982,
+      "sha256": "1fd98559ce110cefa5adc55aecb4fc56335686193f14935964311e2a88a55054"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/supplier-reentry-final.xml",
+      "bytes": 70459,
+      "sha256": "7d02ef74cf3feef4a096a1ae39f21ce51fdc47f07e4fa49de42ab427f75caf0c"
+    }
+  ],
+  "external_storage_limit": "Named task-owned local artifacts, not committed or remotely archived. No permanence claim.",
+  "self_reference_policy": "This file is absent from the audited content commit and excluded from its own hash list. The next commit must add only this manifest. Report that manifest-only commit/tree and the manifest SHA-256 separately.",
+  "landing_order": "Pinned Core base, then this branch in recorded dependency order. RED commits are not independently landing-ready. A different Core target requires a diff audit and fresh relevant gate.",
+  "no_merge_push_or_publication": true
+}
