@@ -139,3 +139,63 @@ The maintained projection still verifies retained prefix bytes and copies
 state. Actions still use repository-local producer/profile helpers. External
 effects, source truth, general ontology migration, a stable action SDK and
 multi-writer persistence are not release claims.
+
+## Verified release candidate
+
+The frozen release commit is
+`e2b9e77912f9b36fdbfe2fca310548a789bffb4d`, tree
+`162325eb0048816654d2df5b6b0f00270d06385d`. Its source tree is
+`3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8`. Governance validates 447 entries at
+`OVR-000447`, head
+`sha256:a4c495ab75674ac49f73581d2e5ae2586eaa72a057370a169333a6d5b1b64d84`.
+
+A clean detached checkout ran the configured `scripts/ci.py all --require-clean`:
+3,359 tests passed, 3 skipped, with one RDFLib deprecation warning; the separate
+GraphRecipe and Small Shop selections passed 40 and 229 tests respectively.
+Strict HTML and doctest passed. The invocation exited 1 only when sandbox DNS
+prevented external link checking. The unchanged `scripts/ci.py docs --require-clean`
+then passed with network access. This is a composed verification result, not a
+claim that the first `all` invocation exited successfully.
+
+The configured `scripts/ci.py package --require-clean` also passed with network
+access for declared build/install dependencies. It built the wheel and source
+archive, checked their metadata, verified direct-versus-source-archive wheel
+member parity, and passed clean-install CLI smoke checks. The verification
+checkout remained clean. Local distribution identities are:
+
+| Distribution | SHA-256 |
+| :--- | :--- |
+| `malleus_dev-0.14.0-py3-none-any.whl` | `e99ca688d07190aca7abb132909d3df22debef5db930924ba4e5fb3d0f307714` |
+| `malleus_dev-0.14.0.tar.gz` | `e6cc4e1a381d92727a21591dc607498e75a3dda67ac9be6eafda0725698686bf` |
+
+[Main CI run 34285960797](https://github.com/Kieleth/malleus-dev/actions/runs/34285960797)
+passed on that exact commit. Each Linux Python 3.10, 3.11, 3.12 and 3.13 job
+passed 3,359 tests with 3 skips, then 40 GraphRecipe tests. Python 3.12 also
+passed strict documentation. The narrower Windows Recon job passed 144 tests;
+it is not full Windows-suite evidence.
+
+The annotated `v0.14.0` tag was published at that commit. Its tag-object identity
+is `fcc969f9ade029db05890c88f591e2f84db04546`; it is not cryptographically signed.
+[Release run 34288358949](https://github.com/Kieleth/malleus-dev/actions/runs/34288358949)
+has passed immutable-ref validation and the package gate. Its distribution
+bundle is [artifact 10080386835](https://github.com/Kieleth/malleus-dev/actions/runs/34288358949/artifacts/10080386835),
+ZIP SHA-256 `ecf4f3ab7525ba6edf32c92da4c2aaa65b71d7f7d10d9d63606eb3a4dc79e464`.
+The release matrix passed on all four declared Python versions, each with
+3,359 tests passed and 3 skipped, followed by 40 GraphRecipe tests. Python 3.12
+also passed strict documentation. Publication job `102277414615` verified the
+downloaded distribution bundle digest and successfully uploaded both files
+through the configured PyPI trusted publisher on September 8 at 23:32 UTC.
+The publisher log records the same wheel and source-archive hashes listed above.
+[Malleus 0.14.0 on PyPI](https://pypi.org/project/malleus-dev/0.14.0/) is the
+published package coordinate. Release run `34288358949` finished with success.
+No GitHub Release page was created; the Git tag and PyPI publication are the
+release artifacts. The release tag remains fixed at the tested commit, not at
+this later documentation update.
+
+The separately approved Re-entry merge was checked only in an isolated clone:
+merge `6f739b8b828c2e74a0a06b78b89043744183e02c`, tree
+`446594e9e191cd6da07f5d7a4d19998977fce6d2`, combines this release candidate with
+the frozen consumer tip `3724f70190f7720f234c2c3290aee69975116c17`.
+All 18 maintained-reader and consumer-epoch tests passed. The combined ledger
+check also passed, and the checkout stayed clean. This is not a main landing,
+push, publication, or rebind of the earlier consumer receipts.

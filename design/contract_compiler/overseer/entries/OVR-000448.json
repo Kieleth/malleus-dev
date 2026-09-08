@@ -1,0 +1,45 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000448",
+  "ledger": "overseer",
+  "sequence": 448,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:a4c495ab75674ac49f73581d2e5ae2586eaa72a057370a169333a6d5b1b64d84",
+  "recorded_at": "2026-09-08T23:33:10Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-014-publication-receipt",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record the verified 0.14.0 tag, release matrix and successful PyPI publication.",
+  "why": "Luis approved the 0.14.0 release and native Git publication. Exact commit e2b9e779 passed main CI on Python 3.10-3.13 and Windows Recon. Clean local tests passed 3359 with 3 skips, plus 40 GraphRecipe and 229 Shop tests; strict docs passed after a network-enabled retry for sandbox DNS. Package build, member parity and clean install passed. Release run 34288358949 repeats the Python matrix and package gates, then publisher job 102277414615 uploads both distributions with hashes matching the local artifacts. Annotated v0.14.0 remains fixed at that tested commit. This entry changes documentation only and does not claim a GitHub Release page, stable experimental wire, source truth, or completion of unrelated workstreams. The separately approved Re-entry integration is excluded from this release and remains local-only.",
+  "data": {
+    "affected_ids": [
+      "CC-PKG02"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-core-release.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:8437d1d89529856e857f5ba0b6a02c492348a0151ff03359252139c4f4c2f65e",
+        "after_digest": "sha256:36e460c079677fe81ea7009f6914198ed8f15de332d90e201856753dc3acdc95"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-PKG02"
+    }
+  ],
+  "entry_hash": "sha256:4d0dc245a0b194b4d82fd596628a6ec52812ec4d381da3843ddfa76de77f3f6a"
+}
