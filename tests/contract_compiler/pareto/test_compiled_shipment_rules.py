@@ -135,3 +135,10 @@ def test_different_compiled_identity_is_a_typed_logic_refusal(view):
     with pytest.raises(LogicError, match="different ontologies"):
         PrologVerifier(wrong).verify_candidate_subgraph(staged)
     assert graph.export_records() == before
+
+
+def test_compiled_identity_check_accepts_only_its_exact_digest(view):
+    digest = view.content_hash()
+    assert view.verifies(digest, "sha256:" + digest)
+    for other in ("sha256:" + "0" * 64, "unknown:" + digest, " " + digest, ""):
+        assert not view.verifies(digest, other)
