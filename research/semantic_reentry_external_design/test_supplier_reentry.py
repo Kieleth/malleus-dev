@@ -674,7 +674,9 @@ def synthesized_authorized_prefix(tmp_path_factory, reentry_prefix):
     return owner.path, original, result.candidates[0]
 
 
-@pytest.mark.parametrize("fault", ["none", "after-write", "unchanged-success"])
+@pytest.mark.parametrize(
+    "fault", ["none", "after-write", "unchanged-success", "binding-type"]
+)
 def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     synthesized_authorized_prefix, tmp_path, monkeypatch, fault
 ):
@@ -754,6 +756,22 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         )
         assert not unrelated_result.candidates
         assert authority.domain_frame(owner.replay()) == frame
+    if fault == "binding-type":
+        # Faulty mapper serialization, not a forged accepted view or substitute KCS.
+        # Actual source, preparation, admission and replay still use real boundaries.
+        original_canonical = supplier_observed_source._canonical
+
+        def typed_binding_fault(value):
+            if (
+                type(value) is dict
+                and value.get("schema")
+                == "malleus.reentry.observed-source-binding/research-v1"
+            ):
+                value = json.loads(original_canonical(value))
+                value["operator"]["expected_quantity"] = True
+            return original_canonical(value)
+
+        monkeypatch.setattr(supplier_observed_source, "_canonical", typed_binding_fault)
     prepared = supplier_observed_source.prepare_observed_supplier_change(
         history=owner,
         **entry.position(owner),
@@ -872,6 +890,12 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert [p.name for p in reopen_directory.iterdir()] == ["history.jsonl"]
     bytes_before = reopened_path.read_bytes(), source.read_bytes()
     stopped = fresh_evaluation(reopened, original)
+    if fault == "binding-type":
+        assert (stopped.status, stopped.reason) == ("REFUSED", "EVIDENCE_DISAGREEMENT")
+        assert stopped.candidates == ()
+        assert (reopened_path.read_bytes(), source.read_bytes()) == bytes_before
+        assert len(attempts) == 1
+        return
     assert stopped.status == "SATISFIED" and stopped.reason == "LINKED_OBSERVED_KCS"
     assert stopped.finding.current_quantity == 2 and stopped.finding.shortfall == 0
     assert stopped.candidates == () and stopped.model_prediction is None
