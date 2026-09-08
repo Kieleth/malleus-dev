@@ -1,6 +1,5 @@
 """Actual direct-grant policy control, not execution or a synthesized action."""
 
-from copy import deepcopy
 from importlib import import_module
 import inspect
 import json
@@ -29,6 +28,19 @@ FUNCTIONS = (
 
 def api():
     return import_module(MODULE)
+
+
+def domain_frame(replay):
+    """Snapshot public bytes and immutable history values, never pickle Core."""
+    return (
+        replay.partial_contract.identity,
+        replay.acceptance_head,
+        replay.materialization_head,
+        entry.ingress.canonical(replay.graph.export_records()),
+        tuple(change.canonical_bytes for change in replay.change_sets),
+        tuple(sorted(replay.record_history.items())),
+        tuple(revision.canonical_bytes for revision in replay.contract_revisions),
+    )
 
 
 def test_contract_api_has_no_required_input_defaults():
@@ -160,11 +172,11 @@ def test_actual_supplier_permission_and_replay_preserve_domain(
     from research.action_history_contract_freeze.programs import check_executor
 
     owner = preparation["history"]
-    frame = deepcopy(entry.initial.domain(owner.replay()))
+    frame = domain_frame(owner.replay())
     if expected == "BLOCK":
         preparation["grant_bytes"] = grant_bytes("actor:supplier:other-grantee")
     after = api().prepare_supplier_authority(**preparation)
-    assert entry.initial.domain(after) == frame
+    assert domain_frame(after) == frame
     for ordinal in range(2):
         with monkeypatch.context() as patch:
             if expected == "CLARIFY" and ordinal == 0:
@@ -176,7 +188,7 @@ def test_actual_supplier_permission_and_replay_preserve_domain(
             after = api().record_supplier_authority_check(
                 **check_arguments(preparation, ordinal)
             )
-        assert entry.initial.domain(after) == frame
+        assert domain_frame(after) == frame
         record = after.protocol_replay.data["records"][
             "authority:supplier:" + str(ordinal)
         ]
@@ -200,7 +212,7 @@ def test_actual_supplier_permission_and_replay_preserve_domain(
 
     monkeypatch.setattr(check_executor.CheckExecutor, "execute", forbidden)
     after = api().decide_supplier_authorization(**decision_arguments(preparation))
-    assert entry.initial.domain(after) == frame
+    assert domain_frame(after) == frame
     records = after.protocol_replay.data["records"]
     decision = records["authorization:supplier:1"]["record"]
     assert decision["authorization_verdict"] == expected
@@ -229,7 +241,7 @@ def test_actual_supplier_permission_and_replay_preserve_domain(
     shutil.copyfile(owner.path, path)
     reopened = core.KnowledgeChangeHistory.reopen(path).replay()
     assert reopened.receipt == after.receipt
-    assert entry.initial.domain(reopened) == frame
+    assert domain_frame(reopened) == frame
     assert [p.name for p in isolated.iterdir()] == ["history.jsonl"]
 
 
@@ -288,3 +300,30 @@ def test_unaccepted_proposal_cannot_prepare_authority(
     with pytest.raises(api().SupplierAuthorityError):
         api().prepare_supplier_authority(**preparation)
     assert (owner.path.read_bytes(), owner.replay().receipt) == before
+
+
+def test_domain_frame_preserves_public_canonical_and_frozen_values(accepted_prefix):
+    replay = core.KnowledgeChangeHistory.reopen(accepted_prefix).replay()
+    frame = domain_frame(replay)
+    assert type(frame[3]) is bytes
+    assert len(frame[4]) == len(replay.change_sets) == 2
+    assert all(type(value) is bytes for value in frame[4])
+    assert frame[5] == tuple(sorted(replay.record_history.items()))
+    assert all(value.__dataclass_params__.frozen for _, value in frame[5])
+    assert all(type(value) is bytes for value in frame[6])
+    assert frame == domain_frame(
+        core.KnowledgeChangeHistory.reopen(accepted_prefix).replay()
+    )
+
+
+def test_protocol_snapshot_never_uses_deepcopy():
+    import ast
+    from pathlib import Path
+
+    tree = ast.parse(Path(__file__).read_text())
+    assert not any(
+        isinstance(n, ast.alias) and n.name == "deepcopy" for n in ast.walk(tree)
+    )
+    assert not any(
+        isinstance(n, ast.Attribute) and n.attr == "deepcopy" for n in ast.walk(tree)
+    )
