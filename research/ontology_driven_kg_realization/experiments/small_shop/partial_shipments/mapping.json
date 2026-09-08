@@ -1,7 +1,7 @@
 {
   "description": "Synthetic fixture mapping, not a public mapping language or fulfilment policy.",
   "adapter": {"adapter_id": "synthetic-partial-shipments", "version": "1"},
-  "grammar": "malleus.population-plan/private-v0",
+  "plan_grammar": "malleus.population-plan/private-v0",
   "valid_time": {"kind": "NONE_STATED", "value": null},
   "order_type": "SalesOrder",
   "unit_type": "InventoryUnit",

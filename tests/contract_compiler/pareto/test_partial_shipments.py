@@ -5,7 +5,10 @@ from hashlib import sha256
 from importlib import import_module
 import json
 from pathlib import Path
+import shlex
 import shutil
+import subprocess
+import sys
 
 import pytest
 
@@ -27,7 +30,14 @@ def _example():
 
 def test_partial_shipments_preserve_prior_shop_then_reopen_and_trace(tmp_path):
     example = _example()
-    report = example.run_shipments(tmp_path / "first")
+    guide = (HERE / "README.md").read_text()
+    command = shlex.split(guide.split("```sh\n", 1)[1].split("```", 1)[0])
+    assert command[:4] == ["python", "-m", MODULE, "--output"]
+    assert len(command) == 5
+    command[0], command[4] = sys.executable, str(tmp_path / "first")
+    completed = subprocess.run(command, check=True, capture_output=True, text=True)
+    report = json.loads((tmp_path / "first/evidence.json").read_bytes())
+    assert json.loads(completed.stdout) == report["checkpoints"]
     history_path = tmp_path / "first/shop/history.jsonl"
     source = history_path.read_bytes()
     assert example.run_shipments(tmp_path / "second") == report
@@ -56,6 +66,9 @@ def test_partial_shipments_preserve_prior_shop_then_reopen_and_trace(tmp_path):
         {"id": "SYN-S1", "type": "Shipment", "tracking_id": "SYN-TRACK-1"},
         {"id": "SYN-S2", "type": "Shipment", "tracking_id": "SYN-TRACK-2"},
     ]
+    assert {
+        row["target_id"] for row in replay.graph.query_relations("ShipmentContainsUnit")
+    } == {"SYN-PS-X1", "SYN-PS-X2"}
     previous = replay.graph_at_change("change:plan:partial-shipments:order")
     assert previous.get_node("SYN-PS-ORDER")["order_number"] == "SYN-PS-ORDER"
     assert previous.get_node("SYN-S1") is None
