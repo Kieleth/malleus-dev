@@ -166,6 +166,23 @@ history and invocation, not a record map, compiled bytes or outcome. It returns
 the prefix coordinates alongside the existing pure computation result and
 writes nothing. These outputs are not yet admitted assessments or permission.
 
+The next transaction now admits those actual TYPE outputs. Separate declared
+programs handle completed assessments and an atomic MonitorFailure plus
+UnavailableAssessment pair. They resolve the applied proposal, action, selected
+policy and monitor, record-contract source, original context and exact static
+input closure. They check full records, hashes, metadata, provenance, monitor
+version, original domain coordinates and action head. One assessment per
+proposal/monitor is enforced. No checker runs inside append or replay.
+
+The ten assessment tests pass, including real producer success and controlled
+unavailability, misbinding refusals, a bad second record that discards the
+staged failure, and an intervening ledger event that makes the computed append
+stale. The combined program/history gate passes 515 tests in 223.96 seconds.
+The graph, record lineage, KCS list and action head remain unchanged. This is
+the bounded one-open-proposal, two-static-input conformance variant. Retaining
+check judgments does not authenticate the producer process or establish source
+truth. Epistemic decision and permission still follow as separate stages.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix

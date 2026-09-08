@@ -1,6 +1,5 @@
 """Actual TYPE outputs enter the same history, including real failure pairs."""
 
-from copy import deepcopy
 from importlib import import_module
 import json
 
@@ -36,6 +35,12 @@ from research.action_history_contract_freeze.programs.test_registration_history 
     compiled,
 )
 from tests.contract_compiler.pareto.test_finite_protocol_history import api
+from tests.contract_compiler.pareto.test_knowledge_change_history import (
+    _evidence_anchor,
+)
+from research.action_history_contract_freeze.programs.test_registration_history import (
+    TIME,
+)
 
 
 @pytest.fixture(scope="module")
@@ -172,6 +177,51 @@ def test_actual_unavailability_pair_is_atomic_and_replays_after_recovery(
     assert records["assessment:0"]["record"]["assessment_outcome"] == "UNKNOWN"
     assert records["assessment:0"]["record"]["monitor_failure_id"] == "failure:0"
     assert KnowledgeChangeHistory.reopen(history.path).replay().receipt == after.receipt
+
+
+def test_bad_second_failure_record_discards_the_staged_failure(
+    tmp_path, proposed, monkeypatch
+):
+    history = reopen(tmp_path, proposed)
+    with monkeypatch.context() as patch:
+
+        def unavailable(*args, **kwargs):
+            raise RuntimeError("controlled engine failure")
+
+        patch.setattr(check_executor, "execute_program", unavailable)
+        result = run_history_check(history, invocation=invocation(history.replay(), 0))
+    draft = event(history, result)
+    assert draft["data"]["assessment_dependencies"]["value"][-1] == "failure:0"
+    draft["data"]["assessment_dependencies"]["value"] = draft["data"][
+        "assessment_dependencies"
+    ]["value"][:-1]
+    assert (
+        draft["data"]["assessment"]["value"][0]["record"]["source_record_ids"][-1]
+        == "failure:0"
+    )
+    before = history.path.read_bytes()
+    with pytest.raises(
+        api().ProtocolProgramRefusal, match="INVALID_CHECK_OUTPUT_INTRODUCTION"
+    ):
+        admit(history, result, draft)
+    assert history.path.read_bytes() == before
+
+
+def test_intervening_history_event_refuses_a_precomputed_check_append(
+    tmp_path, proposed
+):
+    history = reopen(tmp_path, proposed)
+    result = run_history_check(history, invocation=invocation(history.replay(), 0))
+    draft = event(history, result)
+    history.append_anchors(
+        anchors=(_evidence_anchor("unrelated:evidence", b"retained test evidence"),),
+        transaction_time=TIME,
+        actor_id="actor:registrar",
+    )
+    before = history.path.read_bytes()
+    with pytest.raises(api().ProtocolProgramRefusal, match="STALE_PROTOCOL_BASE"):
+        admit(history, result, draft)
+    assert history.path.read_bytes() == before
 
 
 @pytest.mark.parametrize(
