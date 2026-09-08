@@ -781,7 +781,7 @@ def _linked_update(
         operator=rule["operator"],
     )
     _need(
-        binding == expected_binding,
+        _canonical(binding) == _canonical(expected_binding),
         "EVIDENCE_DISAGREEMENT",
         "accepted KCS belongs to different observation closure",
     )
