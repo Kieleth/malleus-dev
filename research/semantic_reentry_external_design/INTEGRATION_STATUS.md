@@ -3,10 +3,13 @@
 Status: ACTIVE IMPLEMENTATION, not an executed supplier E2E.
 Latest verified boundary: actual controlled supplier dispatch, source attempt and
 terminal receipt, with accepted B/Y/1 unchanged. Its first focused run has 15 passes.
-The action-entry gate has 141 passes; the earlier focused authorization run has
-16 passes. Expanded authorization and execution gates are running separately.
-The independent observer is implemented but has only fast API/identity checks so
-far. No full supplier E2E, observed correction or quiescence is claimed.
+The action-entry gate has 141 passes; the expanded authorization gate has 99 passes.
+The expanded execution gate finished with 31 passes and one test-fixture failure:
+a backdated retry reached the ledger-time guard before the no-repeat guard.
+The corrected tests distinguish both refusals; their rerun is pending.
+The independent observer's actual lifecycle tests are running; only its fast
+API/identity checks are verified so far.
+No full supplier E2E, observed correction or quiescence is claimed.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
@@ -428,3 +431,27 @@ checks pass. Actual lifecycle capture, expanded negative coverage and its releva
 gate have not yet run. `SUPPLIER_OBSERVATION.md` also records the ordinary
 SOURCE_ARTIFACT-to-RETAINED_SOURCE bridge needed by the later population adapter.
 The exact captured bytes and observation linkage must survive that bridge.
+
+## Supplier authorization, unified GREEN
+
+All 99 tests in the six-file authorization selection passed, including 35 supplier
+tests. This binds test commit `20f5a8cb82326e494dc676eed3d7ef092ade94d2` and unchanged
+implementation `1ec94392ba2b8084761302c8949444b21c7e8f6f`. Expanded stale-computation,
+late atomic-refusal, current-context authenticity, monitor and exception-surface
+checks required no production repair. No Core ownership expansion was needed.
+
+An independently reopened saved 55-event positive history recovers 33 protocol
+records, AUTHORIZE, both accepted KCSs and B/Y/1 with the complete RET-010 complement.
+Exact counts, file/commit/tree identities, replay coordinates and exclusions are in
+`supplier-authority-result.json`. Counts overlap earlier runs and are not added.
+
+The separate expanded execution/receipt selection completed with 31 passes and one
+failure. The fresh-output-ID retry test expected a finite-runtime duplicate refusal
+but received a native KnowledgeChangeRefusal. A copied-history probe established
+the cause: the retry reused 06:10 after its receipt at 06:20, correctly triggering
+MALFORMED_HISTORY for decreasing transaction time. A fresh 06:21 retry reaches the
+native DUPLICATE_DISPATCH_BY_ACTION refusal. Both preserve the file and ledger.
+The class regression now explicitly checks valid versus backdated retry timestamps,
+exact refusal types and no effect in both cases. Production remains unchanged.
+Receipt-retention failure and its no-retry test passed. This is not a GREEN execution
+gate and does not yet establish a Core blocker.
