@@ -26,8 +26,8 @@ FIELDS = {
 }
 
 
-@pytest.fixture(scope="module")
-def action_compilation():
+@pytest.fixture(scope="module", name="action_compilation")
+def compile_supplier_action():
     return api.compile_linkml_contract(
         root_locator="supplier-amendment",
         sources={

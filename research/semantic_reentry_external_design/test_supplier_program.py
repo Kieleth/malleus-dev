@@ -9,7 +9,7 @@ import pytest
 from malleus._contract_pipeline.protocol_runtime import load_bundle, raw
 from research.semantic_reentry_external_design.test_supplier_action_contract import (
     FIELDS,
-    action_compilation as action_compilation,
+    compile_supplier_action as compile_supplier_action,
 )
 
 

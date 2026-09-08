@@ -75,8 +75,8 @@ def _payload_schemas(contract):
     if action_type.equals_string != ACTION_TYPE:
         raise ValueError("supplier action must fix AMEND_SUPPLIER_ORDER")
     ranges = {
-        "https://w3id.org/linkml/types/string": "string",
-        "https://w3id.org/linkml/types/integer": "integer",
+        "https://malleus.dev/contract-facts/String": "string",
+        "https://malleus.dev/contract-facts/Integer": "integer",
     }
     result = {}
     for name in sorted(added):
