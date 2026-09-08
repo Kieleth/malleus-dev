@@ -1,0 +1,156 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000429",
+  "ledger": "overseer",
+  "sequence": 429,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:da3a7efecb1d61927f022d6a2ad8e5bfec6bdf321d16835ac2728a487e323d7d",
+  "recorded_at": "2026-09-08T15:20:16Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "sequential-action-reference-profile",
+    "type": "DOCUMENT"
+  },
+  "summary": "Prove two sequential action lifecycles in one Shop history.",
+  "why": "Luis approved an optional one-active-action profile using the existing interpreter, with a separate Shop correction between lifecycles. The profile preserves cumulative indexes and records, adds current pointers, binds payload hashes to retained bytes and requires observation of the current action before a successor. A negative probe found an old-execution/new-contract gate bypass, now closed by binding observation through execution and dispatch to the current action. Two RED commits preceded integration. Final sequential tests: 13 passed; original Shop-action, owning-history and keyed-effect regression: 45 passed. The run has 106 events, five KCS, one revision and two complete recorded lifecycles. Fresh-process replay denies research/test imports. Source registration precedes atomic context/proposal. Effect and observation inputs are synthetic. No runtime, ontology, package, original profile, historical receipt, paper or downstream change; no migration, new instruction, concurrency, SDK, full-repository GREEN, release or push claim.",
+  "data": {
+    "affected_ids": [
+      "CC-R10",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-sequential-action-plan.md",
+        "after_digest": "sha256:88509eed7a77b22fdab952fabe5847f2ac62f764186a601c6f0343f3163fd3b8",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/sequential-verification.json",
+        "after_digest": "sha256:2a53880790c9248c0d0892a4e981bae8a463124d184b21eb7cd66ef5d07de80c",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/sequential_bundle.py",
+        "after_digest": "sha256:ac9d8af35236561814a40d5451ecf92993239b67a39d49d198bb0975a16d97cc",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/sequential_fixture.py",
+        "after_digest": "sha256:2848ad7fab14acfe5a9ef04c95ffa9e39573751ce3eadc10af127ccd0054108e",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/fixture_episode.py",
+        "after_digest": "sha256:24a6830750f19db5dacf8538ed4c931b8b0301520c06b523a54b57d24c89344d",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_sequential_profile.py",
+        "after_digest": "sha256:89198b49f273f3d5a02807a943811d8ea5fe41a04e98384ea79b31df33778f0e",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_sequential_history.py",
+        "after_digest": "sha256:28002226d3ac5336a796f39835d03699d12d72c632be1090dfbb028082b2100d",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_registration_history.py",
+        "after_digest": "sha256:8c79e939c5bb7e99e4a2675c93e7ef97f132e2dc1ed2022915949d6351eb6626",
+        "change": "MODIFIED",
+        "before_digest": "sha256:aca9ba6c131336c62063c8ae73e3a7a5d96962a5128105ac5457e4cd1571cafd"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_proposal_history.py",
+        "after_digest": "sha256:fc23a62ed756f9c15702a0565d255844ed0d457ebe8a9f75ae41a04114588c94",
+        "change": "MODIFIED",
+        "before_digest": "sha256:f80bf6860391c0ba9f07b965697f4508d36729069bb3122bd247bcd559b5e004"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_history_checks.py",
+        "after_digest": "sha256:18257711a1951d9f21393ab9b57258a11f080ba7be0daba559c933f79ed52b36",
+        "change": "MODIFIED",
+        "before_digest": "sha256:19698762730a56b3c89c29048ed0b1382fe37611dfaed38fbcb98b5637d85345"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_assessment_history.py",
+        "after_digest": "sha256:232f552d757f9f101bffa52829f34516908a007963e8c71008921996e7ad7eeb",
+        "change": "MODIFIED",
+        "before_digest": "sha256:34f7cb8ca5651b358b93b37ba5f882aa8cf2f7f79e3c58b85e01d663a9aff456"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_decision_history.py",
+        "after_digest": "sha256:90ddb26f617bf59aa26ffa6228547acfe0b4bce4c9be49d5bffad4f4072b3e93",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d30ff538b576653b3b61c3c4c949989414a14c346a58418a9ea81e8b0b735869"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_current_history.py",
+        "after_digest": "sha256:fd72bfcb413b9dfd4e2e10b49c176a919b989719e5302610b1ef84d9aa60337f",
+        "change": "MODIFIED",
+        "before_digest": "sha256:b98c6ccc005cd8022619a505b6aabee28c9e24b43ef04e43f37355c19ed65a68"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_authority_history.py",
+        "after_digest": "sha256:1607de14526d87f5730bfe44576acbab88247d0fc356cb38b3839ee5563f4bac",
+        "change": "MODIFIED",
+        "before_digest": "sha256:8457581ba33325ceb326fbe89be78d2e8b574a5db1b3ed7a42f218f4d6d1bfbb"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_authorization_history.py",
+        "after_digest": "sha256:0edb4243ba11132e2dc33f5c9181dac7ef0d0382a9771ee0396909d6c9f69484",
+        "change": "MODIFIED",
+        "before_digest": "sha256:f75af06c3257f56475ee6e84280b3c6170fda68d83563e3ef385874685a2dfb7"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_dispatch_history.py",
+        "after_digest": "sha256:a8799296125531415e81f2da96fce9331a68b309236e9f93375097434253344c",
+        "change": "MODIFIED",
+        "before_digest": "sha256:4c3b28a9be73fc3e3cdb6fb3376176f6da4b118c1022b60cbe472071d23b316a"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_execution_history.py",
+        "after_digest": "sha256:14b7c5afd77cf3511210d453d665664691c5ad48e152c6eb88feabf6c311b7d6",
+        "change": "MODIFIED",
+        "before_digest": "sha256:f1ea1f65092e58fb07ba89a06b5d00332a5c4c0ff7f43a3a701b0e30964f6b84"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_observation_history.py",
+        "after_digest": "sha256:6b191af704d59c9ffaffe2bf63c25c7c0ab37cdd82417cc2c63f334215a0d7ad",
+        "change": "MODIFIED",
+        "before_digest": "sha256:0c7cf82e0222c0bb4fc518c92ab51284fdb0c792046d6f68d59e93a122d8ed6c"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "f85b7edac51ca84ecc88ce32c9db4e7ce75ef9c8"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "49953bdb7a2bc905d65e4dc6c5d60ab96a780d5b"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "0545d82a1cd55970273a4734646c3142503d49e0"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R10"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:6f30c2ddb92d8c309b4a761c5f0b7fdcb099dd47e8db8b8cd5141b58e42e0c94"
+}
