@@ -15,7 +15,6 @@ from malleus.control import evaluate_epistemic_policy
 from malleus.ledger import canonical_json, content_digest, record_hash
 from malleus.source import source_artifact_fields
 from research.action_history_contract_freeze.programs.check_executor import (
-    CheckRefusal,
     load_check_executor,
 )
 from research.action_history_contract_freeze.programs.decision_bundle import TARGETS
@@ -54,15 +53,9 @@ def _guarded(function):
     def invoke(*args, **kwargs):
         try:
             return function(*args, **kwargs)
+        # Upstream typed ValueErrors pass through unchanged. Translate only
+        # local shape/access errors here and local parsing errors at their call.
         except (
-            SupplierProtocolError,
-            core.ProtocolProgramRefusal,
-            core.KnowledgeChangeRefusal,
-            CheckRefusal,
-        ):
-            raise
-        except (
-            ValueError,
             TypeError,
             KeyError,
             AttributeError,
@@ -87,7 +80,10 @@ def _text(*values):
 
 
 def _canonical(value):
-    return canonical_json(value).encode()
+    try:
+        return canonical_json(value).encode()
+    except ValueError as error:
+        raise SupplierProtocolError("MALFORMED_INPUT", str(error)) from error
 
 
 def _digest(content):
@@ -97,7 +93,10 @@ def _digest(content):
 
 def _object(content):
     _digest(content)
-    value = json.loads(content)
+    try:
+        value = json.loads(content)
+    except ValueError as error:
+        raise SupplierProtocolError("MALFORMED_INPUT", str(error)) from error
     _require(
         type(value) is dict and _canonical(value) == content,
         "MALFORMED_INPUT",
@@ -108,8 +107,12 @@ def _object(content):
 
 def _time(value):
     _text(value)
+    try:
+        offset = datetime.fromisoformat(value.replace("Z", "+00:00")).utcoffset()
+    except ValueError as error:
+        raise SupplierProtocolError("MALFORMED_INPUT", str(error)) from error
     _require(
-        datetime.fromisoformat(value.replace("Z", "+00:00")).utcoffset() is not None,
+        offset is not None,
         "MALFORMED_INPUT",
         "timezone-aware time required",
     )
