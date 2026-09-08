@@ -1,0 +1,50 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000431",
+  "ledger": "overseer",
+  "sequence": 431,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:faabc34ac5cb65ba6b88835beda2733e7c2015c86b62958b74b4aba82dc049c0",
+  "recorded_at": "2026-09-08T16:29:07Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-default-suite-and-action-constructor-requirement",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record clean Core regression gate and the adopter-owned action setup gap.",
+  "why": "Continue from the completed Shop repair. Clean detached 386bb42 default pytest: 3327 passed, 3 existing skips, zero failures/errors, one RDFLib warning. Imports resolved inside the tested clone, which remained clean. No runtime or test repair was needed. JUnit timings attribute about 69 percent to integration-manifest and ledger suites; record performance debt without weakening checks. Robotics supplied a concrete request for action initialization/context construction on its own history. Read-only inspection confirms the owner APIs exist but current producer helpers create Shop data and fixture context. Record a narrow extraction proposal, not an implemented helper, new profile or SDK. Re-entry reports its separately pinned single-action proof complete; its 388 tests were not rerun here or added to this total. No package/dependency change, release, merge, rebind or push.",
+  "data": {
+    "affected_ids": [
+      "CC-R10",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-core-default-suite.md",
+        "after_digest": "sha256:c1a7599d9409a3399bca98d1e7358972f794a63b870823db79f8e797a747f287",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "386bb427b72daa04793a2aa3b2198bcdfd810fe9"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R10"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:921c7b968f49a78d3a5b1efd00f5bf31e96c281186461ec50d8082c1284ed77a"
+}
