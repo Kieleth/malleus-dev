@@ -16,9 +16,18 @@
     "research/semantic_reentry_external_design/test_supplier_execution.py",
     "research/semantic_reentry_external_design/test_supplier_observation.py",
     "research/semantic_reentry_external_design/test_supplier_observed_source.py",
-    "research/semantic_reentry_external_design/test_replay_noninvertibility.py"
+    "research/semantic_reentry_external_design/test_supplier_replay_laws.py"
+  ],
+  "historical_witnesses": [
+    {
+      "path": "research/semantic_reentry_external_design/test_replay_noninvertibility.py",
+      "core_commit": "2af45e03ee7d7bf528cef8db42c0798e6d99685b",
+      "sha256": "8cd5eea6de67ca085cf2848820660809e40e70fbf276e44a65784e5e9d882200"
+    }
   ],
   "runtime": {
+    "core_commit": "90146c380994621a2f8df25876affd03fc9e57e3",
+    "core_source_tree": "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1",
     "pythonpath": "src:.",
     "write_bytecode": false,
     "pytest_cache": false,
