@@ -1033,6 +1033,29 @@ base_state=..., history_profile=...)`, or to `malleus-compiler populate`, and
 from there through step 7 unchanged: retain the source and evidence bytes
 first, then prepare, then admit.
 
+## Semantic Re-entry in a repository checkout
+
+Semantic Re-entry lets a finding or goal derived against accepted state produce
+a constrained proposal, not acquire graph-writing or execution authority.
+Internal epistemic change may propose an existing `KnowledgeChangeSet`.
+An external-world change first proposes an existing `ActionProposal`; model
+prediction, authorization and execution receipts are not observed knowledge.
+Only the separately observed source, ordinary KCS admission and replay can
+revise the accepted KG. Keep the accepted head, effective contract, evidence,
+preservation policy, exact implementations, budgets and refusal behavior bound.
+
+When explaining or reproducing the implemented Shop example in a Malleus
+research checkout, read
+`research/semantic_reentry_external_design/SUPPLIER_WALKTHROUGH.md` there.
+It documents the runnable B/Y/1 to B/Y/2 single-action episode and its six
+checkpoints. Run it only when local execution is requested, in a new output
+directory. Its exact-two goal is explicit input, not accepted customer demand;
+its local supplier file is not delivery or a production supplier integration.
+Do not generalize its one-action strategy into an implemented general planner.
+If that repository guide or its adapters are absent, say this research-local
+capability is unavailable in the supplied checkout. Do not reconstruct it from
+the skill or treat it as a shipped package API.
+
 ## Standing orders (the playbook, condensed)
 
 1. Schema first, code second. When the human names a new domain concept,
