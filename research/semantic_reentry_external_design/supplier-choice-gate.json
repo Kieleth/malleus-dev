@@ -1,0 +1,38 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "TWO_ALTERNATIVES_EXPLICIT_SELECTION_AND_EXISTING_SUPPLIER_BOUNDARIES",
+  "base_commit": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d",
+  "core_source_tree": "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
+  "groups": {
+    "choice": [
+      "research/semantic_reentry_external_design/test_supplier_choice.py"
+    ],
+    "supplier_a": [
+      "research/semantic_reentry_external_design/test_supplier_reentry.py",
+      "research/semantic_reentry_external_design/test_supplier_reentry_boundaries.py",
+      "research/semantic_reentry_external_design/test_accepted_read_view.py",
+      "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+      "research/semantic_reentry_external_design/test_supplier_walkthrough.py"
+    ],
+    "supplier_b": [
+      "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+      "research/semantic_reentry_external_design/test_supplier_program.py",
+      "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+      "research/semantic_reentry_external_design/test_supplier_components.py",
+      "research/semantic_reentry_external_design/test_supplier_initialization.py",
+      "research/semantic_reentry_external_design/test_supplier_proposals.py"
+    ],
+    "supplier_c": [
+      "research/semantic_reentry_external_design/test_supplier_authorization.py",
+      "research/semantic_reentry_external_design/test_supplier_execution.py",
+      "research/semantic_reentry_external_design/test_supplier_observation.py",
+      "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+      "research/semantic_reentry_external_design/test_supplier_replay_laws.py",
+      "research/action_history_contract_freeze/programs/test_action_inputs.py",
+      "tests/contract_compiler/pareto/test_maintained_projection.py",
+      "tests/test_inquisition.py::TestSkillsAreInstallable",
+      "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
+    ]
+  },
+  "scope": "Union of these disjoint selectors, not full repository CI. Existing evidence and historical runtime pins are unchanged."
+}
