@@ -181,3 +181,43 @@ capture, observed-source KCS admission, JSONL-only replay and fresh episode
 closure must still run together. Every pre-admission checkpoint must retain
 B/Y/1. Only the admitted observed correction may make B/Y/2 current, and the
 final linked, satisfied evaluation must produce no candidate, append or effect.
+
+## Accepted read input, GREEN
+
+`freeze_accepted_replay` now consumes actual public Core replay/context values
+outside the synthesizer and returns immutable, graph-free inputs. It compares
+all seven context coordinates, validates the receipt and protocol identity
+chain, reconstructs a disposable graph for complete digest comparison, and
+checks exact retained bytes/metadata. The returned value keeps no graph,
+writer, replay object, path or callback. It is not a new public context or
+checkpoint and does not authenticate arbitrary forged Python objects.
+
+The first 20 tests passed after a 20-error absent-module RED. Three additional
+tests cover no file/process/network I/O, Boolean count refusal and no imports
+from private Core or research helpers. The combined read/schema/program gate
+passed 57 tests with zero failures, errors or skips. Counts overlap with prior
+runs and are not added. This is not full repository CI or the supplier E2E.
+Exact implementation, test selections and hashes are in
+[accepted-read-result.json](accepted-read-result.json). Implementation GREEN:
+`9b8128cca2f11672e3487b53c614c23b88160479`, tree
+`014267899c20e75b2029787b218b6883559e6729`.
+
+The read test uses the real historical Shop only to exercise read consistency.
+It includes historical e7 and must not become the new effect experiment's
+initial state. Source agreement, initial e4-only population, goal-contract
+binding, synthesis and acted-on episode closure remain separate work.
+
+Next, establish the separately attributed one-row supplier source and RET-010
+complement through ordinary public source/population/KCS admission. Register
+the actual supplier program and prerequisites before taking its original
+context. Freeze the static goal/rule input before binding that context, so a
+later retention does not silently stale the proposed base. Use the existing
+Core original-context artifact as the immutable contract root, with its
+already-defined references to retained goal, preservation, mapping, pre-state
+source, initialization and policies. Exact implementation identities belong
+in that retained input closure; no placeholder or extra Core object is needed.
+Tests must establish that binding before candidate synthesis is claimed.
+
+Core's separately proposed one-active-action extension and Robotics' repeated
+action requirement do not gate this single-episode implementation. The current
+dependency stays pinned to the verified base above.

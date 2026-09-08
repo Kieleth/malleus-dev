@@ -1,0 +1,74 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "ACCEPTED_READ_BOUNDARY_ONLY",
+  "date_utc": "2026-09-08",
+  "workspace": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+  "core_base": {
+    "commit": "90146c380994621a2f8df25876affd03fc9e57e3",
+    "tree": "609979f5d356ebb43c1288d80ea8f4f53d1f2613"
+  },
+  "red_commit": "76418ba",
+  "implementation_green": {
+    "commit": "9b8128cca2f11672e3487b53c614c23b88160479",
+    "tree": "014267899c20e75b2029787b218b6883559e6729"
+  },
+  "profiles": ["compiler-enabled history", "experimental finite action attachment"],
+  "runtime": {
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "pythonpath": "src:.",
+    "pytest_config": "pyproject.toml",
+    "bytecode_and_pytest_cache": "disabled",
+    "public_compiler_origin_guard": "passed"
+  },
+  "executed_tests": {
+    "initial_red": {
+      "errors": 20,
+      "reason": "missing accepted_read_view module before implementation",
+      "junit": "/private/tmp/malleus-reentry-integration.waW6z7/accepted-read-red.xml",
+      "sha256": "fbbcb4593a09eac7051b3dff0616a048560918edab7c415824e4190e231e6f3b"
+    },
+    "first_green": {
+      "passed": 20,
+      "junit": "/private/tmp/malleus-reentry-integration.waW6z7/accepted-read-first.xml",
+      "sha256": "db875e9e65112cb1f0699f1d50acfe2510ad59fe39d5122d4fcc6192922cd001"
+    },
+    "combined_relevant_gate": {
+      "tests": [
+        "research/semantic_reentry_external_design/test_accepted_read_view.py",
+        "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+        "research/semantic_reentry_external_design/test_supplier_program.py"
+      ],
+      "passed": 57,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": "/private/tmp/malleus-reentry-integration.waW6z7/accepted-read-definition-gate.xml",
+      "sha256": "3575470eb599265d16be88fcd142c36141483d4b662e32e286a4704a3a023bd2"
+    }
+  },
+  "file_sha256": {
+    "ACCEPTED_READ_VIEW.md": "b7f619a1ccb206d05b6a7cd0abb1b9cf5b6f2ed059774dc3c8bf5a8f365a107f",
+    "accepted_read_view.py": "6d742450953c1ff38adb249bb44054cbdc6646bfc9ecb3bdd1059f49defc29e3",
+    "test_accepted_read_view.py": "a4a718946accc8efa08175a2aa2197673a731ae05b0c06396c4ef28287bc6223"
+  },
+  "review": {
+    "role": "REFERENCE_IMPLEMENTATION of an adopter read adapter",
+    "pure_boundary": "passed file/process/network guards and unchanged-ledger assertions",
+    "dependency_boundary": "passed no private Core or research imports guard",
+    "consistency": "all seven context coordinates, graph, receipt, protocol and retained inputs checked",
+    "ruff_check_and_format": "passed",
+    "base_to_green_diff_check": "passed",
+    "base_to_green_scope": "only research/semantic_reentry_external_design",
+    "root_ontology_profile": "not claimed, schema rites not run",
+    "unresolved_in_scope_defect": "none observed"
+  },
+  "exclusions": [
+    "full repository CI or full supplier E2E",
+    "authentication of arbitrary Python context/replay objects",
+    "goal interpretation, source agreement, candidate synthesis or authorization",
+    "supplier effect, independent source capture, observation-derived KCS or episode closure",
+    "replacement demonstrated by a second implementation"
+  ],
+  "fixture_limit": "Historical Shop with e7 exercises read binding only; never use it as the e4-only supplier E2E initial source.",
+  "count_rule": "These runs overlap and are not added."
+}
