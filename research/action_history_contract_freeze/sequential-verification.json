@@ -1,0 +1,33 @@
+{
+  "report_kind": "recorded sequential-action conformance run, not a live golden or protocol artifact",
+  "ledger_sha256": "sha256:cb66165b694d7939a88621a7c275f3a964c15d192abe223a7045bfd32d508477",
+  "ledger_head": "sha256:7fe480566a1b778c6bc349095c8f74054f1b67bae1c4bfb132a4551f8f59b6b8",
+  "event_count": 106,
+  "graph_digest": "sha256:b7ee85186b24453b276c4f33b29b49e6100bb8dc225766932f496c88f499a058",
+  "protocol_identity": "sha256:28453f0cb48d7880fd89b833856f1429975c5531d6c564a137b7af91b5b4264d",
+  "bundle_identity": "sha256:f793b3b3e18b58dffbacc13741df8ff1565733bf00bff1b045d342a5db43479a",
+  "action_acceptance_head": "sha256:92f337a0059d83e0ec51a6a37f43a4eec04f860d143a7564fba5c9bcdc4c2c8f",
+  "knowledge_change_sets": 5,
+  "contract_revisions": 1,
+  "records": {
+    "LocalAction": 2,
+    "TypeAssessment": 4,
+    "AuthorityAssessment": 4,
+    "AuthorityGrant": 2,
+    "EpistemicDecision": 2,
+    "AuthorizationDecision": 2,
+    "ActionDispatch": 2,
+    "ActionExecution": 2,
+    "OutcomeObservation": 2
+  },
+  "final_phase": [{"keys": ["CURRENT"], "value": "READY"}],
+  "supplier_quantity": 2,
+  "superseded_by": "supplier-order-state:B:e7",
+  "non_claims": [
+    "Synthetic execution and observation inputs, no external effect or source-truth claim.",
+    "The Shop correction is independent of both actions.",
+    "Select this optional profile before the first action; no existing-profile migration.",
+    "No stable wire, all-in-one action SDK, concurrent actions or retry policy.",
+    "No full-repository GREEN or release claim."
+  ]
+}

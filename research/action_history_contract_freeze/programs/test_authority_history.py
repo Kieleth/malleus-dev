@@ -1,5 +1,7 @@
 """Actual direct-grant outputs, bound to ACCEPT and retained contexts."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 import json
@@ -74,7 +76,7 @@ def prepared(tmp_path_factory):
     return result
 
 
-def context_data(history, request):
+def context_data(history, request, episode=FIRST):
     replay = history.replay()
     values = {k: v["record"] for k, v in replay.protocol_replay.data["records"].items()}
     roles = {entry["role"]: entry["value"] for entry in request["inputs"]}
@@ -82,7 +84,7 @@ def context_data(history, request):
     monitor = values[request["monitor"]["id"]]
     ids.update(
         monitor=monitor["id"],
-        epistemic="decision:1",
+        epistemic=episode.id("decision:1"),
         static0=monitor["input_artifact_ids"][0],
         static1=monitor["input_artifact_ids"][1],
     )
@@ -99,10 +101,10 @@ def context_data(history, request):
     }
 
 
-def event(history, result, request):
+def event(history, result, request, episode=FIRST):
     output = result.execution.data["records"]
     assessment = output[-1]["record"]
-    data = context_data(history, request)
+    data = context_data(history, request, episode=episode)
     data["assessment"] = {"value": [output[-1]]}
     data["assessment_dependencies"] = {
         "value": deepcopy(assessment["source_record_ids"])

@@ -1,5 +1,7 @@
 """A terminal receipt follows dispatch, retains bytes, and proves no observation."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 
@@ -44,32 +46,34 @@ def dispatched(tmp_path_factory):
     )
 
 
-def event(history, status="SUCCEEDED"):
-    dispatch = history.replay().protocol_replay.data["records"]["dispatch:1"]["record"]
+def event(history, status="SUCCEEDED", episode=FIRST):
+    dispatch = history.replay().protocol_replay.data["records"][
+        episode.id("dispatch:1")
+    ]["record"]
     content = canonical(
         {"status": status, "scope": "synthetic terminal-receipt conformance"}
     )
     value = make_record(
         "ActionExecution",
-        id="execution:1",
-        event_id="event:execution",
-        generated_at=TIME,
+        id=episode.id("execution:1"),
+        event_id=episode.id("event:execution"),
+        generated_at=episode.time(TIME),
         actor_id="actor:executor",
         role="executor",
         source_record_ids=[dispatch["id"]],
         dispatch_id=dispatch["id"],
         dispatch_hash=dispatch["content_hash"],
         executor_id="actor:executor",
-        execution_started_at=dispatching.TIME,
-        execution_ended_at=TIME,
+        execution_started_at=episode.time(dispatching.TIME),
+        execution_ended_at=episode.time(TIME),
         execution_status=status,
         execution_result_hash=api().digest(content),
     )
     return {
-        "event_id": "event:execution",
+        "event_id": episode.id("event:execution"),
         "event_type": "ACTION_EXECUTED",
         "actor_id": value["responsible_actor_id"],
-        "transaction_time": TIME,
+        "transaction_time": episode.time(TIME),
         "data": {
             "records": {"value": [{"record_type": "ActionExecution", "record": value}]},
             "dependencies": {"value": deepcopy(value["source_record_ids"])},

@@ -1,5 +1,7 @@
 """Actual TYPE outputs enter the same history, including real failure pairs."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from importlib import import_module
 import json
 
@@ -64,7 +66,7 @@ def proposed(tmp_path_factory):
     return history.path.read_bytes()
 
 
-def event(history, result):
+def event(history, result, episode=FIRST):
     replay = history.replay()
     records = replay.protocol_replay.data["records"]
     output = result.execution.data["records"]
@@ -73,11 +75,11 @@ def event(history, result):
     monitor = records[assessment["monitor_id"]]["record"]
     ids = {
         "proposal": assessment["proposal_id"],
-        "action": "action:1",
+        "action": episode.id("action:1"),
         "monitor": monitor["id"],
         "policy": policy["id"],
         "contract": "source:selected:record_contract",
-        "context": "context:1",
+        "context": episode.id("context:1"),
         "static0": monitor["input_artifact_ids"][0],
         "static1": monitor["input_artifact_ids"][1],
     }

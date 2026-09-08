@@ -1,5 +1,7 @@
 """Actual permission precedes dispatch eligibility in the same Shop history."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 import json
@@ -47,21 +49,21 @@ def authorized(tmp_path_factory):
     )
 
 
-def event(history):
+def event(history, episode=FIRST):
     replay = history.replay()
     records = {
         k: v["record"] for k, v in replay.protocol_replay.data["records"].items()
     }
     action, permission, context = (
-        records["action:1"],
-        records["authorization:1"],
-        records["source:current-context"],
+        records[episode.id("action:1")],
+        records[episode.id("authorization:1")],
+        records[episode.id("source:current-context")],
     )
     value = make_record(
         "ActionDispatch",
-        id="dispatch:1",
-        event_id="event:dispatch",
-        generated_at=TIME,
+        id=episode.id("dispatch:1"),
+        event_id=episode.id("event:dispatch"),
+        generated_at=episode.time(TIME),
         actor_id="actor:dispatcher",
         role="dispatcher",
         source_record_ids=[action["id"], permission["id"]],
@@ -74,13 +76,13 @@ def event(history):
         base_acceptance_head=replay.protocol_replay.data["state"][
             "action_acceptance_head"
         ],
-        dispatched_at=TIME,
+        dispatched_at=episode.time(TIME),
     )
     return {
-        "event_id": "event:dispatch",
+        "event_id": episode.id("event:dispatch"),
         "event_type": "ACTION_DISPATCHED",
         "actor_id": value["responsible_actor_id"],
-        "transaction_time": TIME,
+        "transaction_time": episode.time(TIME),
         "data": {
             "records": {"value": [{"record_type": "ActionDispatch", "record": value}]},
             "dependencies": {"value": deepcopy(value["source_record_ids"])},

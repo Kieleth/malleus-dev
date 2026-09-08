@@ -1,5 +1,7 @@
 """Policy recomputation and atomic action-only decision in the real Shop log."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 import json
@@ -101,13 +103,13 @@ def assessed(tmp_path_factory, proposed):
     return prefixes
 
 
-def decision_event(history):
+def decision_event(history, episode=FIRST):
     base = history.replay()
     records = base.protocol_replay.data["records"]
     values = {key: value["record"] for key, value in records.items()}
-    proposal, policy = values["proposal:1"], values["policy:epistemic"]
+    proposal, policy = values[episode.id("proposal:1")], values["policy:epistemic"]
     monitors = [values[i] for i in policy["required_monitor_ids"]]
-    outputs = [values["assessment:" + str(i)] for i in range(2)]
+    outputs = [values[episode.id("assessment:" + str(i))] for i in range(2)]
     evaluation = evaluate_epistemic_policy(
         policy,
         {m["id"]: m for m in monitors},
@@ -117,12 +119,14 @@ def decision_event(history):
         base_acceptance_head=proposal["base_acceptance_head"],
     )
     header = dict(
-        event_id="event:decision:1", generated_at=TIME, actor_id="actor:controller"
+        event_id=episode.id("event:decision:1"),
+        generated_at=episode.time(TIME),
+        actor_id="actor:controller",
     )
     decision = make_record(
         "EpistemicDecision",
         **header,
-        id="decision:1",
+        id=episode.id("decision:1"),
         role="epistemic-controller",
         source_record_ids=[
             proposal["id"],
@@ -156,7 +160,7 @@ def decision_event(history):
     transition = make_record(
         "TransitionRecord",
         **header,
-        id="transition:1",
+        id=episode.id("transition:1"),
         role="state-controller",
         source_record_ids=[decision["id"]],
         transition_subject_id=proposal["id"],
@@ -165,12 +169,12 @@ def decision_event(history):
         triggering_record_id=decision["id"],
         ledger_event_id=header["event_id"],
         sequence=base.ledger_event_count + 1,
-        transition_time=TIME,
+        transition_time=episode.time(TIME),
     )
     ids = {
         "proposal": proposal["id"],
         "policy": policy["id"],
-        "context": "context:1",
+        "context": episode.id("context:1"),
         "rules": policy["ruleset_id"],
     }
     data = {
@@ -178,7 +182,7 @@ def decision_event(history):
             role: {"id": i, "record_hash": values[i]["content_hash"]}
             for role, i in ids.items()
         },
-        "original": {"value": json.loads(base.retained_bytes("context:1"))},
+        "original": {"value": json.loads(base.retained_bytes(episode.id("context:1")))},
         "control": {
             "recipe": "ASSENT_EPISTEMIC_CONTROL_V1",
             "monitors": monitors,
@@ -208,7 +212,7 @@ def decision_event(history):
     return {
         "event_id": header["event_id"],
         "event_type": "EPISTEMIC_DECIDED",
-        "transaction_time": TIME,
+        "transaction_time": episode.time(TIME),
         "actor_id": header["actor_id"],
         "data": data,
         "retained": {},

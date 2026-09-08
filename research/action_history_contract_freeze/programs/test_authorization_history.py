@@ -1,5 +1,7 @@
 """Authorization is recomputed from real retained judgments, never KG presence."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 
@@ -102,7 +104,7 @@ def assessed(tmp_path_factory):
     }
 
 
-def event(history, request):
+def event(history, request, episode=FIRST):
     replay = history.replay()
     values = {
         key: item["record"]
@@ -110,10 +112,10 @@ def event(history, request):
     }
     policy, action, proposal = (
         values["policy:authorization"],
-        values["action:1"],
-        values["proposal:1"],
+        values[episode.id("action:1")],
+        values[episode.id("proposal:1")],
     )
-    outputs = [values["authority-assessment:" + str(i)] for i in range(2)]
+    outputs = [values[episode.id("authority-assessment:" + str(i))] for i in range(2)]
     monitors = [values[i] for i in policy["required_monitor_ids"]]
     head = replay.protocol_replay.data["state"]["action_acceptance_head"]
     evaluated = evaluate_authorization_policy(
@@ -130,17 +132,19 @@ def event(history, request):
     sources = [
         action["id"],
         policy["id"],
-        "decision:1",
+        episode.id("decision:1"),
         *evaluated.assessment_ids,
-        "grant:direct",
+        episode.id("grant:direct"),
     ]
     header = dict(
-        event_id="event:authorization", generated_at=TIME, actor_id="actor:authorizer"
+        event_id=episode.id("event:authorization"),
+        generated_at=episode.time(TIME),
+        actor_id="actor:authorizer",
     )
     decision = make_record(
         "AuthorizationDecision",
         **header,
-        id="authorization:1",
+        id=episode.id("authorization:1"),
         role="authorizer",
         source_record_ids=sources,
         base_acceptance_head=head,
@@ -151,23 +155,25 @@ def event(history, request):
         action_proposal_id=action["id"],
         action_content_hash=action["content_hash"],
         authorization_verdict=evaluated.verdict,
-        epistemic_decision_ids=["decision:1"],
+        epistemic_decision_ids=[episode.id("decision:1")],
         relied_on_claim_version_ids=[],
         authority_assessment_ids=list(evaluated.assessment_ids),
         triggered_assessment_ids=list(evaluated.triggered_assessment_ids),
         policy_evaluation_hash=evaluated.evaluation_hash,
-        authority_grant_id="grant:direct",
-        authority_grant_hash=values["grant:direct"]["content_hash"],
+        authority_grant_id=episode.id("grant:direct"),
+        authority_grant_hash=values[episode.id("grant:direct")]["content_hash"],
         authorized_actor_id="actor:executor",
-        authorization_valid_from=TIME if evaluated.verdict == "AUTHORIZE" else None,
-        authorization_valid_to="2026-09-07T01:00:00Z"
+        authorization_valid_from=episode.time(TIME)
+        if evaluated.verdict == "AUTHORIZE"
+        else None,
+        authorization_valid_to=episode.time("2026-09-07T01:00:00Z")
         if evaluated.verdict == "AUTHORIZE"
         else None,
     )
     transition = make_record(
         "TransitionRecord",
         **header,
-        id="authorization-transition:1",
+        id=episode.id("authorization-transition:1"),
         role="state-controller",
         source_record_ids=[decision["id"]],
         transition_subject_id=action["id"],
@@ -180,10 +186,10 @@ def event(history, request):
         triggering_record_id=decision["id"],
         ledger_event_id=header["event_id"],
         sequence=replay.ledger_event_count + 1,
-        transition_time=TIME,
+        transition_time=episode.time(TIME),
     )
 
-    data = authority.context_data(history, request)
+    data = authority.context_data(history, request, episode=episode)
     data.update(
         outputs=outputs,
         control={
@@ -216,14 +222,14 @@ def event(history, request):
                 "end": decision["authorization_valid_to"],
             },
             "grant": {
-                "start": values["grant:direct"]["grant_valid_from"],
-                "end": values["grant:direct"]["grant_valid_to"],
+                "start": values[episode.id("grant:direct")]["grant_valid_from"],
+                "end": values[episode.id("grant:direct")]["grant_valid_to"],
             },
         }
     return {
         "event_id": header["event_id"],
         "event_type": "AUTHORIZATION_DECIDED",
-        "transaction_time": TIME,
+        "transaction_time": episode.time(TIME),
         "actor_id": header["actor_id"],
         "data": data,
         "retained": {},

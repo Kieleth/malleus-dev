@@ -1,5 +1,7 @@
 """Register real identified prerequisites through the owning finite history."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from importlib import import_module
 
 import pytest
@@ -32,12 +34,12 @@ def builder():
     )
 
 
-def record(kind, identifier, sources, **fields):
+def record(kind, identifier, sources, episode=FIRST, **fields):
     return make_record(
         kind,
         id=identifier,
         event_id="event:" + identifier,
-        generated_at=TIME,
+        generated_at=episode.time(TIME),
         actor_id="actor:registrar",
         role="registrar",
         source_record_ids=sorted(sources),

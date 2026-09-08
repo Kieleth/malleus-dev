@@ -1,5 +1,7 @@
 """Independent retained observation, never an execution-status shortcut."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 
@@ -41,9 +43,9 @@ OBSERVER_BYTES = (
 )
 
 
-def register_source(history, identifier, content):
-    value = source(identifier, content, [])
-    value["generated_at"] = TIME
+def register_source(history, identifier, content, episode=FIRST):
+    value = source(identifier, content, [], episode=episode)
+    value["generated_at"] = episode.time(TIME)
     value["content_hash"] = record_hash("SourceArtifact", value)
     append(
         history,
@@ -53,15 +55,15 @@ def register_source(history, identifier, content):
     return value
 
 
-def contract_event(history):
+def contract_event(history, episode=FIRST):
     implementation = history.replay().protocol_replay.data["records"][
-        "source:observer"
+        episode.id("source:observer")
     ]["record"]
     value = make_record(
         "OutcomeContractArtifact",
-        id="outcome-contract:1",
-        event_id="event:outcome-contract",
-        generated_at=TIME,
+        id=episode.id("outcome-contract:1"),
+        event_id=episode.id("event:outcome-contract"),
+        generated_at=episode.time(TIME),
         actor_id="actor:registrar",
         role="registrar",
         source_record_ids=[implementation["id"]],
@@ -69,7 +71,7 @@ def contract_event(history):
         artifact_version="v1",
         artifact_hash=outcome_contract_digest(
             schema_version="1",
-            contract_id="outcome-contract:1",
+            contract_id=episode.id("outcome-contract:1"),
             contract_version="v1",
             observation_type="OBSERVED_SOURCE",
             observer_implementation_hash=api().digest(OBSERVER_BYTES),
@@ -93,10 +95,14 @@ def contract_event(history):
     return result
 
 
-def observer_inputs(history):
-    register_source(history, "source:observer", OBSERVER_BYTES)
-    append(history, "outcome-contract", contract_event(history))
-    register_source(history, "source:observed", SOURCE_BYTES)
+def observer_inputs(history, episode=FIRST):
+    register_source(
+        history, episode.id("source:observer"), OBSERVER_BYTES, episode=episode
+    )
+    append(history, "outcome-contract", contract_event(history, episode=episode))
+    register_source(
+        history, episode.id("source:observed"), SOURCE_BYTES, episode=episode
+    )
     return history.path.read_bytes()
 
 
@@ -119,21 +125,21 @@ def executed(tmp_path_factory):
     return prefixes, content
 
 
-def event(history):
+def event(history, episode=FIRST):
     values = {
         k: v["record"]
         for k, v in history.replay().protocol_replay.data["records"].items()
     }
     execution, contract, observed = (
-        values["execution:1"],
-        values["outcome-contract:1"],
-        values["source:observed"],
+        values[episode.id("execution:1")],
+        values[episode.id("outcome-contract:1")],
+        values[episode.id("source:observed")],
     )
     value = make_record(
         "OutcomeObservation",
-        id="observation:1",
-        event_id="event:observation",
-        generated_at=TIME,
+        id=episode.id("observation:1"),
+        event_id=episode.id("event:observation"),
+        generated_at=episode.time(TIME),
         actor_id="actor:observer",
         role="outcome-observer",
         source_record_ids=[execution["id"], contract["id"], observed["id"]],
@@ -144,7 +150,7 @@ def event(history):
         observer_id="actor:observer",
         observation_type=contract["observation_type"],
         observation_result="CONFIRMED",
-        observed_at=TIME,
+        observed_at=episode.time(TIME),
         observed_source_artifact_id=observed["id"],
         observed_source_artifact_hash=observed["content_hash"],
     )

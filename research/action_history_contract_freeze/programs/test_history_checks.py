@@ -1,5 +1,7 @@
 """Actual checker inputs from a replayed Shop proposal, no assessment append."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 import inspect
@@ -38,7 +40,7 @@ def proposed(tmp_path_factory, inputs):
     return history.path.read_bytes(), runner
 
 
-def invocation(replay, ordinal):
+def invocation(replay, ordinal, episode=FIRST):
     data = replay.protocol_replay.data
     records = data["records"]
     policy = records["policy:epistemic"]["record"]
@@ -47,14 +49,14 @@ def invocation(replay, ordinal):
     return {
         "kind": "TYPE",
         "event": {
-            "id": "event:assessment:" + str(ordinal),
-            "generated_at": TIME,
+            "id": episode.id("event:assessment:" + str(ordinal)),
+            "generated_at": episode.time(TIME),
             "responsible_actor_id": "actor:checker",
             "responsible_role": "type-monitor",
         },
         "output_ids": {
-            "assessment": "assessment:" + str(ordinal),
-            "failure": "failure:" + str(ordinal),
+            "assessment": episode.id("assessment:" + str(ordinal)),
+            "failure": episode.id("failure:" + str(ordinal)),
         },
         "monitor": {"id": monitor["id"], "record_hash": monitor["content_hash"]},
         "implementation": load_check_executor().implementation_reference,
@@ -63,8 +65,10 @@ def invocation(replay, ordinal):
                 {
                     "role": role,
                     "value": {
-                        "id": role + ":1",
-                        "record_hash": records[role + ":1"]["record"]["content_hash"],
+                        "id": episode.id(role + ":1"),
+                        "record_hash": records[episode.id(role + ":1")]["record"][
+                            "content_hash"
+                        ],
                     },
                 }
                 for role in ("proposal", "action")

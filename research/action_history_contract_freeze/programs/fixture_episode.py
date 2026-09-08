@@ -20,8 +20,10 @@ class FixtureEpisode:
         if self.offset_minutes == 0:
             return original
         value = datetime.fromisoformat(original.replace("Z", "+00:00"))
-        return (value + timedelta(minutes=self.offset_minutes)).isoformat().replace(
-            "+00:00", "Z"
+        return (
+            (value + timedelta(minutes=self.offset_minutes))
+            .isoformat()
+            .replace("+00:00", "Z")
         )
 
 

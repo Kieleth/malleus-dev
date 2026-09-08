@@ -3,6 +3,8 @@
 LocalAction is a protocol conformance specimen, not supplier action semantics.
 """
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 
@@ -80,7 +82,7 @@ def preimage(value):
     return {k: value[v] for k, v in builder().SOURCE_PROJECTION.items()}
 
 
-def source(identifier, content, sources):
+def source(identifier, content, sources, episode=FIRST):
     return record(
         "SourceArtifact",
         identifier,
@@ -94,10 +96,11 @@ def source(identifier, content, sources):
             media_type="application/json",
             locator="urn:retained:" + identifier,
         ),
+        episode=episode,
     )
 
 
-def pair(history, checkpoint, init_record, sources, *, suffix="1"):
+def pair(history, checkpoint, init_record, sources, *, suffix="1", episode=FIRST):
     base = history.replay()
     context = {
         "schema": "malleus.action-history.original-context/research-v1",
@@ -124,12 +127,12 @@ def pair(history, checkpoint, init_record, sources, *, suffix="1"):
     }
     content = canonical(context)
     dependencies = [v["id"] for v in sources.values()] + [init_record["id"]]
-    context_record = source(context["id"], content, dependencies)
+    context_record = source(context["id"], content, dependencies, episode=episode)
     action = make_record(
         "LocalAction",
         id=context["action_id"],
         event_id="event:" + context["proposal_id"],
-        generated_at=TIME,
+        generated_at=episode.time(TIME),
         actor_id="actor:proposer",
         role="proposer",
         source_record_ids=[context["id"], POLICY_IDS["authorization"]],
@@ -144,7 +147,7 @@ def pair(history, checkpoint, init_record, sources, *, suffix="1"):
         "ProposedSubgraph",
         id=context["proposal_id"],
         event_id=action["generation_event_id"],
-        generated_at=TIME,
+        generated_at=episode.time(TIME),
         actor_id="actor:proposer",
         role="proposer",
         source_record_ids=[context["id"], action["id"], POLICY_IDS["epistemic"]],
@@ -181,7 +184,7 @@ def pair(history, checkpoint, init_record, sources, *, suffix="1"):
         "event_id": action["generation_event_id"],
         "event_type": "PROPOSAL_RECORDED",
         "actor_id": "actor:proposer",
-        "transaction_time": TIME,
+        "transaction_time": episode.time(TIME),
         "retained": {},
         "data": {
             "action": {"value": [{"record_type": "LocalAction", "record": action}]},

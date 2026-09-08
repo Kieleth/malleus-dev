@@ -1,5 +1,7 @@
 """Current-context capture and real grant checks from the owning Shop history."""
 
+from research.action_history_contract_freeze.programs.fixture_episode import FIRST
+
 from copy import deepcopy
 from importlib import import_module
 import json
@@ -100,9 +102,9 @@ def current_content(history, identifier):
     }
 
 
-def current_event(value):
+def current_event(value, episode=FIRST):
     content = canonical(value)
-    carrier = source(value["id"], content, list(POLICY_IDS.values()))
+    carrier = source(value["id"], content, list(POLICY_IDS.values()), episode=episode)
     event = draft(
         "SourceArtifact", carrier, preimage=preimage(carrier), content=content
     )
@@ -110,9 +112,9 @@ def current_event(value):
     return event
 
 
-def retain_source(history, identifier, value, sources):
+def retain_source(history, identifier, value, sources, episode=FIRST):
     content = canonical(value)
-    carrier = source(identifier, content, sources)
+    carrier = source(identifier, content, sources, episode=episode)
     append(
         history,
         "source",
@@ -121,25 +123,27 @@ def retain_source(history, identifier, value, sources):
     return carrier
 
 
-def grant_inputs(history, *, grantee):
+def grant_inputs(history, *, grantee, episode=FIRST):
     values = history.replay().protocol_replay.data["records"]
     scope = values["source:goal"]["record"]
     association = retain_source(
         history,
-        "source:scope-association",
+        episode.id("source:scope-association"),
         {
-            "id": "source:scope-association",
+            "id": episode.id("source:scope-association"),
             "comparison": "EXACT_RECORD_ID_AND_HASH",
             "grant_scope": {"id": scope["id"], "record_hash": scope["content_hash"]},
             "action_scope": {"id": scope["id"], "record_hash": scope["content_hash"]},
         },
         [scope["id"]],
+        episode=episode,
     )
     interval = retain_source(
         history,
-        "source:requested-interval",
-        {"start": TIME, "end": "2026-09-07T01:00:00Z"},
+        episode.id("source:requested-interval"),
+        {"start": episode.time(TIME), "end": episode.time("2026-09-07T01:00:00Z")},
         [],
+        episode=episode,
     )
     grant_fields = dict(
         grantor_actor_id="actor:registrar",
@@ -147,31 +151,35 @@ def grant_inputs(history, *, grantee):
         permitted_action_types=["LOCAL_ACTION"],
         scope_record_id=scope["id"],
         may_subdelegate=False,
-        grant_valid_from=TIME,
-        grant_valid_to="2026-09-07T02:00:00Z",
+        grant_valid_from=episode.time(TIME),
+        grant_valid_to=episode.time("2026-09-07T02:00:00Z"),
     )
     grant = record(
         "AuthorityGrant",
-        "grant:direct",
+        episode.id("grant:direct"),
         [scope["id"]],
         artifact_kind="AUTHORITY_GRANT",
         artifact_version="v1",
         artifact_hash=content_digest(grant_fields),
         **grant_fields,
+        episode=episode,
     )
     append(history, "grant", draft("AuthorityGrant", grant))
-    current = current_content(history, "source:current-context")
-    append(history, "capture-current", current_event(current))
+    current = current_content(history, episode.id("source:current-context"))
+    append(history, "capture-current", current_event(current, episode=episode))
     replay = history.replay()
     values = {k: v["record"] for k, v in replay.protocol_replay.data["records"].items()}
     policy = values[POLICY_IDS["authorization"]]
     monitor = values[policy["required_monitor_ids"][0]]
     roles = {
         "proposal": {
-            "id": "proposal:1",
-            "record_hash": values["proposal:1"]["content_hash"],
+            "id": episode.id("proposal:1"),
+            "record_hash": values[episode.id("proposal:1")]["content_hash"],
         },
-        "action": {"id": "action:1", "record_hash": values["action:1"]["content_hash"]},
+        "action": {
+            "id": episode.id("action:1"),
+            "record_hash": values[episode.id("action:1")]["content_hash"],
+        },
         "executor_id": "actor:executor",
         "grant": {"id": grant["id"], "record_hash": grant["content_hash"]},
         "scope_association": {
@@ -187,8 +195,8 @@ def grant_inputs(history, *, grantee):
             "record_hash": policy["content_hash"],
         },
         "original_context": {
-            "id": "context:1",
-            "bytes_sha256": values["context:1"]["source_content_digest"],
+            "id": episode.id("context:1"),
+            "bytes_sha256": values[episode.id("context:1")]["source_content_digest"],
         },
         "current_context": {
             "id": current["id"],
@@ -198,14 +206,14 @@ def grant_inputs(history, *, grantee):
     return {
         "kind": "DIRECT_GRANT",
         "event": {
-            "id": "event:authority-assessment:0",
-            "generated_at": TIME,
+            "id": episode.id("event:authority-assessment:0"),
+            "generated_at": episode.time(TIME),
             "responsible_actor_id": "actor:authority-checker",
             "responsible_role": "authority-monitor",
         },
         "output_ids": {
-            "assessment": "authority-assessment:0",
-            "failure": "authority-failure:0",
+            "assessment": episode.id("authority-assessment:0"),
+            "failure": episode.id("authority-failure:0"),
         },
         "monitor": {"id": monitor["id"], "record_hash": monitor["content_hash"]},
         "implementation": load_check_executor().implementation_reference,
