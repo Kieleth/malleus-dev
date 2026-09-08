@@ -6,7 +6,7 @@ from importlib import import_module
 import pytest
 
 from malleus.assent import make_record
-from malleus.compiler import KnowledgeChangeHistory
+from malleus.compiler import KnowledgeChangeHistory, KnowledgeChangeRefusal
 from malleus.execution import outcome_contract_digest
 from malleus.ledger import content_digest, record_hash
 from research.action_history_contract_freeze.programs import (
@@ -177,12 +177,14 @@ def test_independent_observation_after_either_receipt_preserves_domain(
     "fault",
     [
         "executor-observer",
+        "blank-observer",
         "execution",
         "contract",
         "source",
         "type",
         "result",
         "time",
+        "observation-time",
         "provenance",
         "duplicate",
     ],
@@ -197,6 +199,8 @@ def test_observation_refuses_receipt_or_misbinding_as_independent_evidence(
         value["observer_id"] = value["responsible_actor_id"] = candidate["actor_id"] = (
             "actor:executor"
         )
+    elif fault == "blank-observer":
+        value["observer_id"] = " "
     elif fault in ("execution", "contract"):
         key = "execution_hash" if fault == "execution" else "outcome_contract_hash"
         value[key] = content_digest("wrong")
@@ -216,6 +220,8 @@ def test_observation_refuses_receipt_or_misbinding_as_independent_evidence(
         value["observed_at"] = value["generated_at"] = candidate["transaction_time"] = (
             "2026-09-07T00:19:00Z"
         )
+    elif fault == "observation-time":
+        value["observed_at"] = "2026-09-07T00:19:00Z"
     elif fault == "provenance":
         candidate["data"]["dependencies"]["value"] = []
     else:
@@ -226,12 +232,15 @@ def test_observation_refuses_receipt_or_misbinding_as_independent_evidence(
         )
     value["content_hash"] = record_hash("OutcomeObservation", value)
     before = history.path.read_bytes()
-    with pytest.raises(api().ProtocolProgramRefusal):
+    # The owning ledger rejects backward event time before the finite program.
+    error = KnowledgeChangeRefusal if fault == "time" else api().ProtocolProgramRefusal
+    reason = "transaction_time decreased" if fault == "time" else None
+    with pytest.raises(error, match=reason):
         append(history, "observation", candidate)
     assert history.path.read_bytes() == before
 
 
-@pytest.mark.parametrize("fault", ["preimage", "implementation"])
+@pytest.mark.parametrize("fault", ["preimage", "implementation", "blank-type", "blank-version"])
 def test_outcome_contract_requires_its_actual_semantic_and_implementation_identity(
     tmp_path, executed, fault
 ):
@@ -241,11 +250,16 @@ def test_outcome_contract_requires_its_actual_semantic_and_implementation_identi
     value = candidate["data"]["records"]["value"][0]["record"]
     if fault == "preimage":
         candidate["data"]["preimage"]["value"]["observation_type"] = "OTHER"
-    else:
+    elif fault == "implementation":
         value["observer_implementation_hash"] = content_digest("other implementation")
         candidate["data"]["preimage"]["value"]["observer_implementation_hash"] = value[
             "observer_implementation_hash"
         ]
+        value["artifact_hash"] = content_digest(candidate["data"]["preimage"]["value"])
+    else:
+        field = "observation_type" if fault == "blank-type" else "artifact_version"
+        pre = "observation_type" if fault == "blank-type" else "contract_version"
+        value[field] = candidate["data"]["preimage"]["value"][pre] = " "
         value["artifact_hash"] = content_digest(candidate["data"]["preimage"]["value"])
     value["content_hash"] = record_hash("OutcomeContractArtifact", value)
     before = history.path.read_bytes()
