@@ -159,7 +159,17 @@ def test_actual_capture_is_separate_from_execution_and_accepted_knowledge(
 
 
 @pytest.mark.parametrize(
-    "fault", ["stale", "observer", "source", "time", "missing-source"]
+    "fault",
+    [
+        "stale",
+        "observer",
+        "source",
+        "time",
+        "missing-source",
+        "implementation",
+        "relative-path",
+        "symlink",
+    ],
 )
 def test_ineligible_capture_refuses_without_retention(
     observation_inputs, monkeypatch, fault
@@ -174,6 +184,14 @@ def test_ineligible_capture_refuses_without_retention(
         args["logical_source_id"] = "source:other"
     elif fault == "time":
         args["observed_at"] = execution.DISPATCH_TIME
+    elif fault == "implementation":
+        monkeypatch.setattr(api(), "IMPLEMENTATION_IDENTITY", "sha256:" + "0" * 64)
+    elif fault == "relative-path":
+        args["source_path"] = Path("supplier.jsonl")
+    elif fault == "symlink":
+        link = source.with_name("supplier-link.jsonl")
+        link.symlink_to(source)
+        args["source_path"] = link
     else:
         args["source_path"] = source.with_name("absent.jsonl")
 
@@ -210,3 +228,124 @@ def test_observer_identity_is_actual_and_does_not_import_executor_or_model():
                 name in node.module
                 for name in ("supplier_components", "supplier_execution")
             )
+        elif isinstance(node, ast.ExceptHandler):
+            assert node.type is not None
+            assert not any(isinstance(n, ast.Attribute) for n in ast.walk(node.type))
+
+
+def test_capture_io_failure_retains_no_empty_source_or_observation(
+    observation_inputs, monkeypatch
+):
+    owner, source = observation_inputs("none")
+    args = observation_arguments(owner, source)
+    original_open = api().os.open
+
+    def unavailable(path, *values, **kwargs):
+        if path == source:
+            raise OSError("controlled source-read failure")
+        return original_open(path, *values, **kwargs)
+
+    monkeypatch.setattr(api().os, "open", unavailable)
+    before = owner.path.read_bytes(), source.read_bytes(), owner.replay().receipt
+    with pytest.raises(api().SupplierObservationError, match="CAPTURE_UNAVAILABLE"):
+        api().observe_supplier_execution(**args)
+    assert (
+        owner.path.read_bytes(),
+        source.read_bytes(),
+        owner.replay().receipt,
+    ) == before
+
+
+def test_history_movement_after_capture_refuses_before_source_retention(
+    observation_inputs, monkeypatch
+):
+    owner, source = observation_inputs("none")
+    args = observation_arguments(owner, source)
+    capture = api()._capture
+    intervening = []
+
+    def captured_then_moved(path):
+        content = capture(path)
+        owner.append_anchors(
+            anchors=(
+                core.structural_evidence_anchor(
+                    record_id="evidence:supplier:during-capture",
+                    content=b"explicit intervening evidence",
+                    media_type="text/plain",
+                ),
+            ),
+            transaction_time=TIME,
+            actor_id="actor:supplier:intervening",
+        )
+        intervening.append(owner.path.read_bytes())
+        return content
+
+    monkeypatch.setattr(api(), "_capture", captured_then_moved)
+    frame = execution.authority.domain_frame(owner.replay())
+    with pytest.raises(ValueError) as caught:
+        api().observe_supplier_execution(**args)
+    execution.authority.assert_native_refusal(caught.value, "STALE_PROTOCOL_BASE")
+    assert len(intervening) == 1 and owner.path.read_bytes() == intervening[0]
+    after = owner.replay()
+    assert execution.authority.domain_frame(after) == frame
+    assert args["observed_source_id"] not in after.protocol_replay.data["records"]
+    assert args["observation_id"] not in after.protocol_replay.data["records"]
+
+
+def test_late_observation_refusal_preserves_capture_but_no_observation(
+    observation_inputs, monkeypatch
+):
+    owner, source = observation_inputs("none")
+    args = observation_arguments(owner, source)
+    record = api().make_record
+
+    def wrong_execution_hash(kind, **values):
+        if kind == "OutcomeObservation":
+            values["execution_hash"] = "sha256:" + "0" * 64
+        return record(kind, **values)
+
+    monkeypatch.setattr(api(), "make_record", wrong_execution_hash)
+    frame = execution.authority.domain_frame(owner.replay())
+    with pytest.raises(ValueError) as caught:
+        api().observe_supplier_execution(**args)
+    execution.authority.assert_native_refusal(caught.value, "UNAPPLIED_EXECUTION")
+    after = core.KnowledgeChangeHistory.reopen(owner.path).replay()
+    assert execution.authority.domain_frame(after) == frame
+    assert after.retained_bytes(args["observed_source_id"]) == source.read_bytes()
+    assert args["observation_id"] not in after.protocol_replay.data["records"]
+
+
+@pytest.mark.parametrize("function", FUNCTIONS)
+def test_missing_observer_inputs_have_no_defaults(function):
+    with pytest.raises(api().SupplierObservationError, match="MALFORMED_INPUT"):
+        getattr(api(), function)()
+
+
+@pytest.mark.parametrize("function", FUNCTIONS)
+def test_substitute_observer_owner_is_not_consulted(function):
+    class Substitute:
+        def __getattr__(self, name):
+            pytest.fail("substitute observer owner consulted: " + name)
+
+    args = {
+        name: None for name in inspect.signature(getattr(api(), function)).parameters
+    }
+    args["history"] = Substitute()
+    with pytest.raises(
+        api().SupplierObservationError, match="actual owning Core history"
+    ):
+        getattr(api(), function)(**args)
+
+
+def test_observation_gate_and_runtime_belong_to_this_checkout():
+    import json
+
+    root = Path(__file__).resolve().parents[2]
+    assert Path(core.__file__).resolve().is_relative_to(root / "src/malleus")
+    assert Path(api().__file__).resolve().parent == Path(__file__).resolve().parent
+    gate = json.loads(
+        (Path(__file__).parent / "supplier-observation-gate.json").read_bytes()
+    )
+    assert str(Path(__file__).resolve().relative_to(root)) in gate["tests"]
+    assert len(gate["tests"]) == len(set(gate["tests"]))
+    assert all((root / path).is_file() for path in gate["tests"])

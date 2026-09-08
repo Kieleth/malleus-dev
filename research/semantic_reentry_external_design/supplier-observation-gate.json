@@ -1,0 +1,9 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "ACTUAL_SUPPLIER_CAPTURE_AND_CORE_OBSERVATION_CONFORMANCE_NOT_ACCEPTED_CORRECTION_OR_FULL_E2E",
+  "tests": [
+    "research/semantic_reentry_external_design/test_supplier_observation.py",
+    "research/action_history_contract_freeze/programs/test_observation_history.py"
+  ],
+  "earlier_gates": "Authorization's 99 passes and execution's 31-pass/one-fixture-failure run remain separate. This selection does not waive the broader population historical-example failure."
+}
