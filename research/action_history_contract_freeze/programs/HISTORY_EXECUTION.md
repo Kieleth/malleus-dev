@@ -261,6 +261,19 @@ include authorization. Ruff, format and diff checks pass for this slice.
 Dispatch, execution and observation remain unfinished. This local finite
 conformance variant is still not a public consumer handoff or main integration.
 
+Dispatch eligibility is now executable. It requires the actual applied
+authorization index and full decision/action records, the authorized executor,
+current A/D through verified retained context, and an unexpired interval. A
+nonblank adopter-declared adapter ID is retained, not invoked or authenticated.
+The one dispatch per action index is enforced before introduction. Nine
+focused tests pass in 108.04 seconds after the nine missing-stage RED errors.
+They cover actual permission, no domain/head change, JSONL-only reopen, absent
+permission, wrong executor/head/context, exclusive expiry, blank adapter,
+incomplete provenance and a second dispatch. The first test run caught a
+fixture call to retained_bytes on the writer; the actual API is on replay.
+No production API was changed to accommodate that fixture mistake. Execution
+receipts and independent observations remain the next unimplemented stages.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix

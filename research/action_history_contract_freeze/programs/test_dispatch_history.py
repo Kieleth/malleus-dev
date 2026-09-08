@@ -87,7 +87,7 @@ def event(history):
             "context": {
                 "id": context["id"],
                 "record_hash": context["content_hash"],
-                "value": json.loads(history.retained_bytes(context["id"])),
+                "value": json.loads(replay.retained_bytes(context["id"])),
             },
         },
         "retained": {},
