@@ -240,7 +240,9 @@ def test_observation_refuses_receipt_or_misbinding_as_independent_evidence(
     assert history.path.read_bytes() == before
 
 
-@pytest.mark.parametrize("fault", ["preimage", "implementation", "blank-type", "blank-version"])
+@pytest.mark.parametrize(
+    "fault", ["preimage", "implementation", "blank-type", "blank-version"]
+)
 def test_outcome_contract_requires_its_actual_semantic_and_implementation_identity(
     tmp_path, executed, fault
 ):

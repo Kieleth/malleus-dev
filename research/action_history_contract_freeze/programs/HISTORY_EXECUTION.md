@@ -284,6 +284,39 @@ refuse without a write. Reopen reproduces the state and retained bytes; no
 observation index or graph change is implied. These are synthetic receipt
 conformance cases, not evidence that a supplier or robot effect happened.
 
+Independent observation and outcome-contract registration now pass 17 focused
+tests. Contracts bind the exact observer implementation source and the existing
+outcome-contract semantic hash. Two corrective REDs showed that blank contract
+version/type strings bypassed the existing digest contract's nonblank rule;
+the selected input schemas now enforce that rule without regex. Observation
+requires an applied execution, exact contract and actual SourceArtifact,
+matching observation type/time, a distinct nonblank observer, closed outcome
+and a unique execution/contract pair. Receipt bytes cannot substitute for the
+observed source. Backward enclosing time is refused by the owning ledger;
+misbound observation time is separately refused by the finite program.
+
+The two additional real-Shop composition tests pass. Starting with RET-010,
+the existing contract revision, settlement facts and B/e4, the actual historic
+e7 KCS invalidates earlier permission before dispatch. Conversely, after a
+valid dispatch the same real domain correction does not prevent recording a
+FAILED receipt and independent CONFIRMED observation. The failure stays
+failed; neither status changes knowledge. All five KCSs, the revision and the
+RET-010 complement survive. A fresh process reopens a directory containing
+only JSONL, refuses research/test imports, and reproduces ledger, graph and
+protocol identities. The correction is independent of the synthetic action,
+not a claim that it caused e7 or performed a supplier effect.
+
+The exact final observation-plus-Shop selector passes 19 tests in 316.16
+seconds. The preceding regression selector passes 580 tests in 861.19 seconds,
+through terminal receipts, excluding the then-unimplemented observation file
+and before the new Shop composition file existed. These are separate runs,
+not a claimed single combined 599-test gate. The selected declarations and
+tests have Ruff/format/diff checks. The reference programs remain bounded to
+one first-revision LocalAction, two TYPE/direct-grant monitors, one dispatch
+and finite intervals. The provisional consumer surface and remaining limits
+are described in `../EXECUTABLE_HANDOFF.md`. Nothing was merged into main,
+pushed, released or changed in either consumer's checkout.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix

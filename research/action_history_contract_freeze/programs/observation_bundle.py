@@ -47,10 +47,10 @@ def _add_contract(bundle):
     schema = obj(
         **_metadata(bundle, 1),
         artifact_kind={**TEXT, "const": "OUTCOME_CONTRACT"},
-        artifact_version=TEXT,
+        artifact_version={**TEXT, "format": "nonblank"},
         artifact_hash=DIGEST,
         outcome_contract_schema_version={**TEXT, "const": "1"},
-        observation_type=TEXT,
+        observation_type={**TEXT, "format": "nonblank"},
         observer_implementation_hash=DIGEST,
     )
     inputs, steps, setting = add_record_stage(
@@ -144,7 +144,7 @@ def add_observation(bundle):
         outcome_contract_id=TEXT,
         outcome_contract_hash=DIGEST,
         observer_id={**TEXT, "format": "nonblank"},
-        observation_type=TEXT,
+        observation_type={**TEXT, "format": "nonblank"},
         observation_result={
             **TEXT,
             "enum": ["CONFIRMED", "CONTRADICTED", "INDETERMINATE"],
