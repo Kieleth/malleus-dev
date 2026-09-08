@@ -107,7 +107,7 @@
     "repair_commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71",
     "repair_tree": "28f4b35c3109649e1cf82c8edd5109aa22957460",
     "repair": "Compare canonical bytes for the entire expected observed binding, rather than Python object equality that conflates JSON Boolean and integer values.",
-    "focused_correction": {"status": "RUNNING", "collected_tests": 4, "file": "supplier-binding-type-corrected.xml", "basetemp": "pytest-binding-type-corrected"},
+    "focused_correction": {"status": "GREEN", "tests": 4, "passes": 4, "failures": 0, "errors": 0, "skipped": 0, "file": "supplier-binding-type-corrected.xml", "sha256": "1fd98559ce110cefa5adc55aecb4fc56335686193f14935964311e2a88a55054", "basetemp": "pytest-binding-type-corrected"},
     "fresh_unified": {"status": "RUNNING", "collected_tests": 388, "file": "supplier-reentry-final.xml", "basetemp": "pytest-supplier-reentry-final", "code_and_test_commit": "dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71"}
   },
   "runtime": {

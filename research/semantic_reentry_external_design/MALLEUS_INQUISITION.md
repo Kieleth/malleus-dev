@@ -4,9 +4,11 @@ Date: 2026-09-08. Instrument: malleus-inquisitor skill, rubric v12 resolved from
 this checkout's `src/malleus/inquisition/rubric.yaml`. Scope is this research
 slice, not a repository-wide conformance or root-ontology purity claim.
 
-Audited implementation: `a056077ea13955d9de3db7e98e54b973d0967bd4`.
-Unified selection: `0d0773e6af51d9cbd20a836cea22484365aa0547`, tree
-`aa435079fbd38b7d7c57de94a0feb9c04cadcac8`.
+Audited implementation and fresh unified runtime:
+`dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71`, tree
+`28f4b35c3109649e1cf82c8edd5109aa22957460`.
+The unchanged manifest was selected at `0d0773e`; the later runtime includes
+the additional type-binding lifecycle regression and its canonical repair.
 Core base: `90146c380994621a2f8df25876affd03fc9e57e3`.
 
 Claimed profiles: compiler-enabled state-version population and experimental
@@ -17,8 +19,9 @@ Mechanical root-ontology rites: NOT RUN, profile not claimed by this audit.
 
 ## Current verdict
 
-Focused synthesized E2E: PASS, 35 tests. Current-bound replay/epoch correction:
-PASS, 3 tests. Unified gate: RUNNING, 387 tests collected across 15 modules.
+Earlier focused synthesized E2E: PASS, 35 tests. Current-bound replay/epoch
+correction: PASS, 3 tests. Repaired four-case lifecycle: PASS, 4 tests.
+Fresh unified gate: RUNNING, 388 tests collected across 15 modules.
 No final landing verdict is issued until that run and the retained evidence
 audit complete. These counts are separate observations and are not added.
 
@@ -69,7 +72,7 @@ Required entrypoints and the different executor/mapper role shapes are now
 checked before binding. Missing entrypoints, extra role fields and unknown
 ambiguity strategy refuse in the focused suite.
 
-## Open finding
+## Finding repaired, final unified verification pending
 
 ### H5. Type-changing observed binding falsely closes the episode
 
@@ -81,9 +84,11 @@ at `0bb35dc` injects faulty mapper serialization, then uses actual public
 preparation/admission/replay. RED: one failure, SATISFIED instead of the required
 REFUSED/EVIDENCE_DISAGREEMENT. No accepted view or KCS boundary was substituted.
 The source-derived quantity-two fact is not disputed; the exact episode-binding
-claim is false. Fix: compare canonical bytes of the whole binding, preserving
-JSON types recursively. Done when this actual lifecycle refuses closure, ordinary
-and failed-after-write closure still pass, and the fresh unified gate passes.
+claim is false. Repair `dc74a6d` compares canonical bytes of the whole binding,
+preserving JSON types recursively. The corrected four-case lifecycle passes:
+this case refuses closure, and ordinary and failed-after-write closure still pass.
+Final closure still requires the fresh unified gate. Corrected JUnit SHA-256:
+`1fd98559ce110cefa5adc55aecb4fc56335686193f14935964311e2a88a55054`.
 
 ## Claim-by-claim judgment
 
@@ -146,6 +151,13 @@ A second fresh process refused test/effect-module imports and evaluated only
 the retained goal/rule/context through the pure API. File opens and model
 invocation were forbidden during binding/evaluation. Results were SATISFIED,
 SATISFIED and REFUSED, all with zero candidates and unchanged ledger bytes.
+
+The repaired four-case run was also independently replayed and evaluated in
+fresh processes with the same import/I/O restrictions. It adds a fourth
+CONFIRMED observation and valid quantity-two fact whose corrupted binding now
+refuses episode closure. Exact current identities and environment observations
+are in `supplier-reentry-replay-evidence.json`; the earlier three-case results
+above are distinct historical observations, not substituted current hashes.
 
 Source identities assume this identified Python/Core process. Hashes are not
 proof of actor legitimacy, source truth or protection against arbitrary

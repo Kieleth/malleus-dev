@@ -1,6 +1,6 @@
 # Supplier Semantic Re-entry: evidence and landing packet
 
-Status: focused proof GREEN; unified 387-test gate and final delivery audit in progress.
+Status: corrected four-case proof GREEN; fresh unified 388-test gate in progress.
 This packet does not authorize a merge, push or publication.
 
 ## What this proves
@@ -33,6 +33,19 @@ accepted correction. The receipt remains FAILED; no causal inference follows.
 A success receipt with unchanged source leaves accepted quantity one and the
 episode refuses further work. One episode permits one candidate and one
 attempt, with no automatic retry.
+
+| Case | Receipt | Observed source | Accepted quantity | Fresh episode result |
+| :--- | :--- | :--- | :--- | :--- |
+| Ordinary amendment | SUCCEEDED | 2 | 2 | SATISFIED |
+| Failure after actual write | FAILED | 2 | 2 | SATISFIED, receipt stays FAILED |
+| Success without source change | SUCCEEDED | 1 | 1 | REFUSED |
+| Corrupted binding metadata | SUCCEEDED | 2 | 2 | REFUSED, exact binding disagrees |
+
+The fourth case changes an integer-one metadata field to Boolean true. The
+observed source still justifies its quantity-two fact, but that malformed
+binding cannot close the specific Re-entry episode. The canonical comparison
+guard was added after a real full-lifecycle RED exposed Python equality's
+Boolean/integer conflation.
 
 ## Reproduce in the pinned research checkout
 
@@ -69,7 +82,8 @@ PY
 
 For the complete action path alone, select
 `test_supplier_reentry.py::test_synthesized_action_observed_kcs_and_fresh_quiescence`.
-It executes ordinary success, failed-after-write and unchanged-success cases.
+It executes ordinary success, failed-after-write, unchanged-success and
+corrupted-binding cases.
 Tests use real Core producers and admission; only controlled source-write faults
 are injected. Expected-output files are comparisons, never observation inputs.
 
@@ -84,10 +98,9 @@ The replacement exists only in the two supporting-observation cases.
 The integration branch is `codex/semantic-reentry-e2e`, based on Core
 `90146c380994621a2f8df25876affd03fc9e57e3`, tree
 `609979f5d356ebb43c1288d80ea8f4f53d1f2613`. Current production is
-`a056077ea13955d9de3db7e98e54b973d0967bd4`, tree
-`3fce91549bd58027b0fa49d37a4a9418dba17b11`. The selected gate is
-`0d0773e6af51d9cbd20a836cea22484365aa0547`, tree
-`aa435079fbd38b7d7c57de94a0feb9c04cadcac8`.
+`dc74a6ded9bc1928cacd50eb53b4d9f1becc2b71`, tree
+`28f4b35c3109649e1cf82c8edd5109aa22957460`. The fresh unified run binds
+that same code/test commit and the unchanged manifest from `0d0773e`.
 
 The dependency order is:
 
