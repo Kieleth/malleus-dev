@@ -43,7 +43,8 @@ RED `51e9bb20cfad221217588bc3ddeafa91c7be4715` adds ten tests. All ten
 failed before the correction: the current fixture and producer guard were
 absent, and the actual admission/replay path reached the original mismatch.
 
-GREEN adds `inspection_note_execution_v2` beside the unchanged fixture, and
+Initial GREEN `4601f6c1175f740d0b440475fe1becce05da2714` adds
+`inspection_note_execution_v2` beside the unchanged fixture, and
 29 lines to the existing trace helper in place of its three-line historical
 comparison. There is no production change. The new change-set bytes were
 captured from the real preparation result at RED, not produced by replacing
@@ -59,14 +60,28 @@ unchanged plan, and recovers exact source, capture and plan bytes for every
 record. Existing tests additionally check modality and distinct or absent
 assertion/domain times.
 
-Current validation in the configured `.venv` environment:
+Initial validation in the configured `.venv` environment:
 
 - Ten new guards plus existing document trace/time tests: **20 passed**.
 - Complete affected population/document/history/public-facade/KG seam:
   **430 passed**, no skips, in 31.75 seconds.
 - Changed-file Ruff, formatting and scoped diff checks passed.
 
-Exact 430-test selector, with bytecode/cache writes disabled:
+Final self-review found that decoded Python JSON equality treats boolean
+`false` and integer `0` as equal. Corrective RED
+`529f2667d44ed3bf95af2da63fdf65a7daad2021` changes an operation ordinal to
+`false`: **1 failed, 10 passed**. The comparison now uses canonical JSON bytes,
+preserving JSON types while ignoring presentation whitespace. No expected
+artifact changed. Final affected-suite rerun: **431 passed**, no skips, in
+32.04 seconds. The final guard and existing trace/time subset contains 21 tests.
+
+The existing governance mechanisms also passed at initial GREEN: **162 ledger
+tests** and **199 integration tests**. Those broader runs preceded the final
+type-comparison follow-up; they are not reported as full-suite execution at
+the final tip. Final ledger/current-projection and integration checks run again
+after binding the final file bytes.
+
+Exact affected-suite selector, with bytecode/cache writes disabled:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q -p no:cacheprovider tests/contract_compiler/pareto/test_document_fixture_producer.py tests/contract_compiler/pareto/test_document_assertion_adapter.py tests/contract_compiler/pareto/test_document_assertion_time.py tests/contract_compiler/pareto/test_population_trace.py tests/contract_compiler/pareto/test_population_plan.py tests/contract_compiler/pareto/test_governed_population.py tests/contract_compiler/pareto/test_knowledge_change_history.py tests/contract_compiler/pareto/test_public_compiler.py tests/contract_compiler/pareto/test_repository_guards.py tests/test_kg.py

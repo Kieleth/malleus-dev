@@ -88,7 +88,9 @@ def _assert_current_document_change(artifact_bytes: bytes, change_bytes: bytes) 
     assert _digest(expected) == binding["document_change_sha256"], (
         "Example bytes changed"
     )
-    assert json.loads(change_bytes) == json.loads(expected), "Change set differs"
+    assert _canonical(json.loads(change_bytes)) == _canonical(json.loads(expected)), (
+        "Change set differs"
+    )
 
 
 def _small_shop_replay(tmp_path: Path):
