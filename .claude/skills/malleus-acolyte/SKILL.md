@@ -1035,13 +1035,13 @@ first, then prepare, then admit.
 
 ## Semantic Re-entry in a repository checkout
 
-Semantic Re-entry lets a finding or goal derived against accepted state produce
+Semantic Re-entry lets a finding or goal evaluated against accepted state produce
 a constrained proposal, not acquire graph-writing or execution authority.
 Internal epistemic change may propose an existing `KnowledgeChangeSet`.
 An external-world change first proposes an existing `ActionProposal`; model
 prediction, authorization and execution receipts are not observed knowledge.
-Only the separately observed source, ordinary KCS admission and replay can
-revise the accepted KG. Keep the accepted head, effective contract, evidence,
+For that external change, only the separately observed source, ordinary KCS
+admission and replay can revise the accepted KG. Keep the accepted head, effective contract, evidence,
 preservation policy, exact implementations, budgets and refusal behavior bound.
 
 When explaining or reproducing the implemented Shop example in a Malleus
