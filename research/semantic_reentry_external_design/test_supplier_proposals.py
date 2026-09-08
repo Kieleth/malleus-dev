@@ -199,15 +199,14 @@ def submit_arguments(inputs):
 
 
 def check_arguments(owner, ordinal):
+    policy = owner.replay().protocol_replay.data["records"][
+        initial.POLICIES["epistemic"]
+    ]["record"]
     return dict(
         history=owner,
         proposal_id=PROPOSAL,
         context_id=CONTEXT,
-        monitor_id=initial.POLICIES["epistemic"]
-        .replace("policy", "monitor")
-        .replace("epistemic", "type")
-        + ":"
-        + str(ordinal),
+        monitor_id=policy["required_monitor_ids"][ordinal],
         assessment_id="assessment:supplier:" + str(ordinal),
         failure_id="failure:supplier:" + str(ordinal),
         actor_id="actor:supplier:type-checker",
@@ -358,12 +357,14 @@ def test_actual_checker_unavailability_records_unknown_and_defers(inputs, monkey
     before = owner.replay()
     api().submit_supplier_proposal(**submit_arguments(inputs))
     with monkeypatch.context() as patch:
+
+        def unavailable(*args, **kwargs):
+            raise RuntimeError("controlled producer failure")
+
         patch.setattr(
             check_executor,
             "execute_program",
-            lambda *a, **k: (_ for _ in ()).throw(
-                RuntimeError("controlled producer failure")
-            ),
+            unavailable,
         )
         first = api().record_supplier_type_check(**check_arguments(owner, 0))
     records = first.protocol_replay.data["records"]
