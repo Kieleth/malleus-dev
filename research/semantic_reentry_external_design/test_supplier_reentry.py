@@ -632,7 +632,11 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     monkeypatch.setattr(supplier_execution, "_attempt", forbidden)
     monkeypatch.setattr(api().SupplierSourceModel, "predict", forbidden)
     reopened = core.KnowledgeChangeHistory.reopen(reopened_path)
-    assert reopened.replay() == final
+    reopened_replay = reopened.replay()
+    assert reopened_replay.receipt == final.receipt
+    assert authority.domain_frame(reopened_replay) == authority.domain_frame(final)
+    assert reopened_replay.protocol_replay == final.protocol_replay
+    assert [p.name for p in reopen_directory.iterdir()] == ["history.jsonl"]
     bytes_before = reopened_path.read_bytes(), source.read_bytes()
     stopped = fresh_evaluation(reopened, original)
     assert stopped.status == "SATISFIED" and stopped.reason == "LINKED_OBSERVED_KCS"
