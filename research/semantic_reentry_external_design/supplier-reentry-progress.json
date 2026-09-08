@@ -1,0 +1,74 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "status": "ACTIVE_IMPLEMENTATION_WITH_OPEN_REENTRY_GUARDS",
+  "claim": "PURE_CANDIDATE_AND_LAWS_PARTLY_GREEN_FULL_SYNTHESIZED_CLOSURE_NOT_GREEN",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "initial_candidate": {
+    "contract_and_test_commit": "c16f88b",
+    "implementation_commit": "6767ebb",
+    "implementation_tree": "a875337d6e32f95ee9012b1585908d680d3b2078",
+    "api_red": {
+      "file": "supplier-reentry-api-red.xml",
+      "sha256": "91cf9aabc125fb89f8520bddb82122e9db6b54d653918fa77956a0df249477ac",
+      "tests": 1, "failures": 1, "deselected": 3,
+      "observation": "Required supplier_reentry module absent."
+    },
+    "focused_green": {
+      "file": "supplier-reentry-initial.xml",
+      "sha256": "bc89cb66e0e3fc7c4ddd59130c1177433ead57c667be641762660534412770e2",
+      "tests": 4, "passes": 4, "failures": 0, "errors": 0, "skipped": 0
+    },
+    "observations": [
+      "Canonical immutable contract round-trip and deterministic one-candidate output.",
+      "Actual generated SupplierOrderAmendment is submitted through the existing Core path without domain change.",
+      "No file, process, socket or graph-writer capability during synthesis; stale base refuses before model invocation."
+    ]
+  },
+  "laws": {
+    "test_commit": "72ef94a",
+    "implementation_commit": "6767ebb",
+    "file": "supplier-reentry-laws.xml",
+    "sha256": "bbf0e15144fe9310a7704dddfb87ec237f47632029dce53ecd39699aa06cdeaf",
+    "tests": 18, "passes": 18, "failures": 0, "errors": 0, "skipped": 0, "deselected": 6,
+    "observation": "Actual public source/population/admission establishes the independent initial-goal cases. Initially two is satisfied without invoking a model; three is unrealizable; two eligible accepted targets refuse ambiguity. These cases are conformance sources, not action observations."
+  },
+  "full_closure_red": {
+    "test_commit": "48c9df3",
+    "implementation_commit": "6767ebb",
+    "file": "supplier-reentry-closure-red-corrected.xml",
+    "sha256": "320a1dc3f47d0cfbd2657ed04134823ba433869e6ebab48c3c72f4b7bf5bab18",
+    "tests": 1, "failures": 1, "errors": 0,
+    "observation": "Actual synthesized proposal, TYPE/ACCEPT, direct-grant AUTHORIZE, controlled source write, independent capture, existing KCS preparation/admission, complement and JSONL-only replay ran. Final reevaluation remained PENDING instead of SATISFIED.",
+    "earlier_interrupted_draft": "supplier-reentry-closure-red.xml: no test completed. Interrupted after identifying that a draft assertion compared graph object identity, not replay semantics. The corrected test compares receipt, complete domain frame and protocol bytes."
+  },
+  "first_closure_implementation": {
+    "implementation_commit": "1cf32f1",
+    "implementation_tree": "b8d9c40396003808cd5fd4e020cd5d63364955df",
+    "file": "supplier-reentry-first-full.xml",
+    "sha256": "b99cc383a45f14812afa41575371e14e609e44ebfa9250305fc911fb5ba291ee",
+    "tests": 24, "passes": 21, "failures": 0, "errors": 3, "skipped": 0,
+    "observation": "All three lifecycle cases stopped in shared setup because post-proposal reevaluation returned REFUSED instead of PENDING. This is not an executed GREEN full lifecycle."
+  },
+  "strategy_output_red": {
+    "test_commit": "9c469df",
+    "implementation_commit": "1cf32f1",
+    "file": "supplier-reentry-boundaries-red.xml",
+    "sha256": "c0b18b27539e92e527ca47638e381867192c1e625c74d6a8180aeec6249479c1",
+    "tests": 5, "passes": 3, "failures": 2, "errors": 0, "skipped": 0,
+    "rca": "The synthesizer accepted schema-valid strategy output without independently checking its agreement with the bound goal/operator and supplied model prediction. A different target or a faulty prediction hidden by the strategy still produced CANDIDATES.",
+    "required_guard": "Validate exact permitted payload and modeled source/frame before returning any candidate, independently of a replaceable strategy's claimed success."
+  },
+  "runtime": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "PYTHONPATH": "src:.", "PYTHONDONTWRITEBYTECODE": "1", "pytest_cache": "disabled",
+    "future_retained_runs": "Use distinct task-owned explicit pytest basetemp paths inside the artifact directory. The shared default pytest temporary root is subject to cleanup by other concurrent sessions; missing old temporary histories are not retained replay evidence."
+  },
+  "exclusions": [
+    "complete GREEN supplier E2E, final unified gate or landing delivery",
+    "source truth, delivery, demand fulfilment or causality",
+    "empirical synthesizer/model/strategy replacement",
+    "Core expansion, public vocabulary promotion, merge, push or publication"
+  ]
+}

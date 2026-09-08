@@ -8,8 +8,10 @@ This is not yet a synthesized complete supplier E2E.
 Separate completed runs: action entry 141 passes, authorization 99, corrected focused
 execution 22, expanded observation 39, fresh observed-population gate 98, and corrected
 accepted-lineage read module 32. These are separate, overlapping runs, not one total.
-Full pure synthesis, immutable Re-entry Contract
-closure and fresh satisfied episode quiescence remain unfinished. No Core wait.
+Pure pinned candidate synthesis passed its first four tests and a separate 18-test
+law selection. Full acted-episode closure is not GREEN: the first expanded run passed
+21 tests and had three setup errors in the lifecycle reader. Two adversarial strategy-
+output tests also exposed missing contract-level output guards. No Core wait.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
@@ -514,3 +516,25 @@ tests deselected. JUnit SHA-256:
 91cf9aabc125fb89f8520bddb82122e9db6b54d653918fa77956a0df249477ac.
 The new tests are not passing evidence. Full synthesized lifecycle and fresh episode
 closure remain required; all production edits remain in the isolated Re-entry directory.
+
+## Pure candidate and initial laws, partial GREEN, closure guards open
+
+The first pure synthesizer at 6767ebb passed four candidate/contract/purity/stale tests.
+A separate 18-test selection at test commit 72ef94a passed initial satisfaction,
+quantity-three refusal, ambiguity from real accepted population and input/engine
+refusals. The first full-loop RED at 48c9df3 reached B/Y/2 through actual synthesis,
+checks, authorization, controlled write, independent capture, KCS admission and replay,
+but final reevaluation remained PENDING. No complete E2E was claimed.
+
+The first linked-closure implementation 1cf32f1 instead refused during the shared
+post-proposal fixture, causing three setup errors after 21 passes. Its lifecycle read
+must respect the profile's optional not-yet-populated indexes without treating an
+undeclared index as empty. A separate five-test boundary run found two strategy-output
+defects: schema-valid bytes alone did not establish agreement with the bound goal or
+the supplied model prediction. Closed-role/index regressions are frozen before repairs.
+Exact separate results and limitations are in `supplier-reentry-progress.json`.
+
+Future test runs use isolated explicit basetemp directories within this task's artifact
+directory. Other sessions can clean the shared default pytest temporary root. Saved
+JUnit remains evidence of executed assertions, but a removed temporary history is not
+a retained replay artifact and will not be listed as one in the final delivery.
