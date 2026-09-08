@@ -1,0 +1,111 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "ACTUAL_CONTROLLED_EFFECT_CAPTURE_AND_RETAINED_PREFIX_KCS_INTEGRATION_NOT_FULL_REENTRY_E2E",
+  "status": "FOCUSED_BOUNDARIES_GREEN_EXPANDED_OBSERVATION_AND_FRESH_POPULATION_GATES_RUNNING",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "execution": {
+    "earlier_red_and_first_focused": "supplier-execution-focused-result.json",
+    "implementation_commit": "f621afd79a1d9c9e402a2e9d35a47e6365a2508d",
+    "implementation_tree": "7def7eb853dfc38db6efcb95afe9c0e860834d13",
+    "implementation_sha256": "ee8acb11fd55f69a5160267ee8de1bd92f8380004683cc0b851a6bb25f33a4ea",
+    "first_expanded": {
+      "file": "supplier-execution-unified.xml",
+      "sha256": "64ea52eb85a0ff951dfe855c572cd177c5c37c0faad09ab108a201cdccca0195",
+      "tests": 32, "passes": 31, "failures": 1, "errors": 0, "skipped": 0,
+      "supplier_tests": 21, "unchanged_core_execution_tests": 11
+    },
+    "fixture_rca": "The fresh-ID retry reused dispatch time 06:10 after its receipt at 06:20. Core correctly refused decreasing ledger time with KnowledgeChangeRefusal/MALFORMED_HISTORY. A fresh 06:21 probe reaches ProtocolProgramRefusal/DUPLICATE_DISPATCH_BY_ACTION. The corrected regression explicitly checks ordering, both exact refusal types and byte-identical source/history. No production repair or exception weakening occurred.",
+    "corrected_test_commit": "043ea37873973fad86d6ea5f71f82240e611072b",
+    "corrected_test_tree": "ce47eb10e6fb4686ed475b0bbe24b4b2e6133965",
+    "corrected_test_sha256": "5fc903c1f619b5bbea6aa20416e91389aa5ae99c227424e93fe6b6a06b70ad1e",
+    "corrected_focused": {
+      "file": "supplier-execution-corrected.xml",
+      "sha256": "434ecd599e62e97821b6db7a939b1e94b313d90a820d233b92e9372c779c13cf",
+      "tests": 22, "passes": 22, "failures": 0, "errors": 0, "skipped": 0
+    },
+    "observation": "A real source write, unchanged successful attempt, stale source and failures before/after write preserve accepted B/Y/1. Fresh IDs cannot bypass no-repeat, including after a write whose receipt retention failed."
+  },
+  "observer": {
+    "api_red_commit": "63e06e226a74d50b7c7db2de001c636e8ec3afd8",
+    "implementation_commit": "b2caa982f161ca57e17f84237aac43af4e955cd6",
+    "implementation_tree": "f8d10d57b99253b80c53d648a59400850e357e3a",
+    "implementation_sha256": "3b6861e11e42f765eb7b4c96c09c9e05ca6fad6cc5fa0508330f3da8652d9ced",
+    "first_test_sha256": "13931d4f9a8c5605e343d68f63649dabf8c81902d48c6e32a257baca2bc3a534",
+    "first_focused": {
+      "file": "supplier-observation-first.xml",
+      "sha256": "1bbca32620d6104a69159395240bfad2ea8f799bba8c838a8a9100c8daf5cb03",
+      "tests": 11, "passes": 11, "failures": 0, "errors": 0, "skipped": 0
+    },
+    "expanded_fast": {
+      "file": "supplier-observation-expanded-fast.xml",
+      "sha256": "97ecb626321dfdac9fa7329918571f2273fbc62f8ce109a055c01bd8d13a63cd",
+      "tests": 7, "passes": 7, "deselected": 15
+    },
+    "expanded_gate_commit": "d3ec9fb22ae4cc1c9bfd3f491c823a5688faf057",
+    "expanded_gate_tree": "a01ad8ed4e1651e7c597cc35e73020d8177b0516",
+    "expanded_gate": "supplier-observation-gate.json, RUNNING, not yet GREEN",
+    "observations": [
+      "Actual changed source is CONFIRMED; unchanged source after SUCCEEDED is CONTRADICTED.",
+      "FAILED after write coexists with CONFIRMED capture without changing the receipt or inferring causality.",
+      "Malformed actual bytes are retained with INDETERMINATE, not replaced by an oracle.",
+      "Wrong actor/source/time, stale context and missing file refuse before retention; duplicate observations cannot capture again.",
+      "Each capture and JSONL-only reopen preserve the complete domain frame and accepted B/Y/1."
+    ]
+  },
+  "observed_population": {
+    "contract_and_test_commit": "e94bedc0e3dfb977d07c5037192aa6e76a6931d6",
+    "api_red": {
+      "file": "supplier-observed-source-api-red.xml",
+      "sha256": "2ccc97d96aa61e8e5c26b3532aa3546713bd7a775f1ad777b168e6682c498871",
+      "tests": 1, "failures": 1, "deselected": 10,
+      "note": "Missing module. The API assertion is unchanged in the frozen commit, which also adds three fast boundary tests."
+    },
+    "implementation_commit": "4d4f29fed69cb7e862ab237acd9e2bf1f0b88bcc",
+    "implementation_tree": "5ef341cafa007beff26e43f569b6accecb670b94",
+    "implementation_sha256": "ddb2076943f9f28be1fc49a16ec7b54acce91f5c5ff723d0933008f03f7270d3",
+    "fast_checks": {
+      "file": "supplier-observed-source-fast.xml",
+      "sha256": "86a30b0977c6f9978f34dba4afaabda472b5d338032a3ca90957aa88076f6417",
+      "tests": 4, "passes": 4, "deselected": 10
+    },
+    "retained_prefix_probe": {
+      "kind": "DIRECT_EXECUTION_OF_THREE_FROZEN_TEST_FUNCTION_CASES_FROM_ACTUAL_CAPTURED_LOGS_NOT_A_FRESH_PYTEST_SUITE",
+      "passes": 3,
+      "directory": "supplier-observed-population-probe-htaxd7ik",
+      "input_histories": {
+        "supplier-observation-success-history.jsonl": "3236d312661ff278981c5387df93eef7d1e134ab5fc9429ad2c32e23d34e17c0",
+        "supplier-observation-unchanged-history.jsonl": "8329fff10dc041f24f7981de19ebca34998636780319cb3e28862e5811aa74de",
+        "supplier-observation-failed-history.jsonl": "f39a5a8096da832af4164893a998229d534bea0e888b1c641856c9e2f80ff7a4"
+      },
+      "output_histories": {
+        "none/history.jsonl": "9a0fadeb92c0989e6b2c94f89b893bce751441d639d1d199d7390e54a2534324",
+        "after-write/history.jsonl": "55ccf63227da8ad65a8a8aebda7f7a3a44c1279851a323bd81b51b83aa5fff47",
+        "unchanged/history.jsonl": "8329fff10dc041f24f7981de19ebca34998636780319cb3e28862e5811aa74de"
+      },
+      "observations": [
+        "Both changed-source cases retain exact capture bytes as a distinct population source and bind them to the applied observation.",
+        "Preparation keeps B/Y/1 and the complete domain frame unchanged; only normal admission introduces reentry-amendment-1 at quantity two.",
+        "Both admitted histories have 70 events, preserve the full complement and supersession history, and reopen from JSONL with exact population-to-observation source trace.",
+        "The failed receipt stays FAILED. The unchanged capture returns None with no candidate or retention."
+      ]
+    },
+    "fresh_gate_commit": "3519d83fcf7be1e26195d36991d30bff449b41d2",
+    "fresh_gate_tree": "5dc3419cafcb730a8c54a5dec369c7ea4a7fc72e",
+    "fresh_gate": "supplier-observed-source-gate.json: 98 tests collected, RUNNING, not yet GREEN"
+  },
+  "runtime": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "PYTHONPATH": "src:.", "PYTHONDONTWRITEBYTECODE": "1", "pytest_cache": "disabled"
+  },
+  "exclusions": [
+    "synthesized ActionProposal and complete Re-entry Contract closure",
+    "fresh satisfied episode reevaluation and final quiescence",
+    "full supplier E2E or full repository CI",
+    "source truth, delivery, demand fulfilment or causality",
+    "demonstrated implementation replacement",
+    "new Core authority, shared API promotion, merge or publication"
+  ],
+  "broader_gate": "The known 512-pass/one-failure historical document-example run remains recorded and unwaived. Separate and overlapping counts in this report are not added."
+}

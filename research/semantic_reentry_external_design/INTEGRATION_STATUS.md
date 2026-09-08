@@ -1,15 +1,14 @@
 # Supplier Re-entry integration
 
 Status: ACTIVE IMPLEMENTATION, not an executed supplier E2E.
-Latest verified boundary: actual controlled supplier dispatch, source attempt and
-terminal receipt, with accepted B/Y/1 unchanged. Its first focused run has 15 passes.
-The action-entry gate has 141 passes; the expanded authorization gate has 99 passes.
-The expanded execution gate finished with 31 passes and one test-fixture failure:
-a backdated retry reached the ledger-time guard before the no-repeat guard.
-The corrected tests distinguish both refusals; their rerun is pending.
-The independent observer's actual lifecycle tests are running; only its fast
-API/identity checks are verified so far.
-No full supplier E2E, observed correction or quiescence is claimed.
+Latest verified boundary: actual independent capture, followed by a retained-prefix
+probe through ordinary observed-source KCS preparation, admission and JSONL replay.
+The probe reaches accepted B/Y/2 only after admission, including failed-after-write
+without rewriting the failed receipt. It is not a fresh complete supplier E2E.
+Separate completed runs: action entry 141 passes, authorization 99, corrected focused
+execution 22, first focused observation 11. Expanded observation and the fresh 98-test
+observed-population gate are running. Full pure synthesis, immutable Re-entry Contract
+closure and fresh satisfied episode quiescence remain unfinished. No Core wait.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
@@ -455,3 +454,39 @@ The class regression now explicitly checks valid versus backdated retry timestam
 exact refusal types and no effect in both cases. Production remains unchanged.
 Receipt-retention failure and its no-retry test passed. This is not a GREEN execution
 gate and does not yet establish a Core blocker.
+
+## Controlled observation and retained-prefix observed correction
+
+The corrected 22-test execution module passed at `043ea37873973fad86d6ea5f71f82240e611072b`.
+The earlier failed expanded run remains evidence of a fixture timestamp defect, not
+a runtime repair. Both backdated and otherwise-valid retry cases now test the exact
+intended guard, including unchanged ledger/source and no second attempt.
+
+The initial 11-test independent-observer module passed with production
+`b2caa982f161ca57e17f84237aac43af4e955cd6`. Actual capture distinguishes changed,
+unchanged and malformed bytes, preserves failure after write and leaves accepted
+knowledge unchanged. The expanded two-file observation gate runs at
+`d3ec9fb22ae4cc1c9bfd3f491c823a5688faf057`, covering 22 supplier observer cases and
+the native Core observation neighbors. No expanded GREEN is inferred yet.
+
+The new observed-source coordinator has contract/API RED `e94bedc0e3dfb977d07c5037192aa6e76a6931d6`
+and implementation `4d4f29fed69cb7e862ab237acd9e2bf1f0b88bcc`. It consumes applied
+observation closure, never a caller's file or receipt payload; retains the exact
+SOURCE_ARTIFACT-to-RETAINED_SOURCE bridge and binding evidence; and prepares only the
+existing KCS. Four fast API/identity/no-admission checks pass.
+
+A separate consumer probe ran the actual positive test-function assertions on
+JSONL histories from the completed observer cases. Both successful and failed writes
+reach B/Y/2 only through normal admission, preserve complement/supersession history
+and replay to exact observed-source lineage. An unchanged capture emits no candidate
+or retention. Those three cases are not a newly built pytest suite or synthesized
+action loop. The fresh three-file 98-test population/mapper gate runs at
+`3519d83fcf7be1e26195d36991d30bff449b41d2` and is not yet GREEN.
+
+Exact separate counts, RED, commits/trees, implementation/JUnit/retained-history
+hashes and limitations are in `supplier-effect-observation-result.json`. The remaining
+contract must bind the real synthesizer/model/update policy and acted-episode observed
+KCS closure; a receipt, retained-but-unaccepted KCS or unrelated quantity-two fact
+cannot close that episode. Fresh reevaluation must preserve the immutable original
+proposal context while explicitly binding the new current head, not silently rebase
+an old contract. These are existing approved obligations, not new Core prerequisites.
