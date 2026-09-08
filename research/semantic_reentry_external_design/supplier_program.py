@@ -140,6 +140,18 @@ def _specialize(value, payload):
 
 def build_supplier_program(record_contract_bytes, *, source_ids, policy_ids):
     """Return new canonical program bytes; all supplied role IDs are required."""
+
+    # Role maps are unordered data. Core's authoring functions use traversal
+    # order in generated arrays, so choose it here before lowering any map.
+    def roles(values, names):
+        if type(values) is not dict or set(values) != set(names):
+            raise ValueError("every source/policy role must be explicit")
+        return {name: values[name] for name in sorted(names)}
+
+    source_ids = roles(
+        source_ids, ("profile", "record_contract", "machine", "history_binding")
+    )
+    policy_ids = roles(policy_ids, ("epistemic", "authorization"))
     contract = load_validated_contract_artifact(record_contract_bytes)
     payload = _payload_schemas(contract)
     bundle = add_initialization(

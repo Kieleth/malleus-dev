@@ -19,7 +19,7 @@ from malleus.control import (
 )
 from malleus.ledger import canonical_json, content_digest
 from malleus.source import source_artifact_fields
-from malleus._contract_pipeline.protocol_runtime import load_bundle, raw
+from malleus._contract_pipeline.protocol_runtime import raw
 from research.action_history_contract_freeze.programs.check_executor import (
     CheckExecutor,
 )
@@ -137,19 +137,18 @@ def initialize_supplier_protocol(
                 or ids != sorted(set(ids))
             ):
                 raise ValueError("two unique canonical monitor IDs per policy required")
-        bundle = load_bundle(program_bytes)
+        if type(program_bytes) is not bytes:
+            raise ValueError("exact canonical supplier program bytes required")
+        bundle = json.loads(program_bytes)
+        if _canonical(bundle) != program_bytes:
+            raise ValueError("canonical supplier program bytes required")
         selected = bundle["constants"]["initialization"]
         source_ids, policy_ids = selected["sources"], selected["policies"]
+        _closed(
+            source_ids, ("profile", "record_contract", "machine", "history_binding")
+        )
+        _closed(policy_ids, ("epistemic", "authorization"))
         contract_bytes = raw(bundle["record_contract_base64"])
-        if (
-            build_supplier_program(
-                contract_bytes, source_ids=source_ids, policy_ids=policy_ids
-            )
-            != program_bytes
-        ):
-            raise SupplierInitializationError(
-                "UNSUPPORTED", "exact reviewed supplier program variant required"
-            )
         view = api.load_validated_contract_artifact(contract_bytes)
         if type(epistemic_control_bytes) is not bytes:
             raise ValueError("exact canonical epistemic control bytes required")
@@ -391,6 +390,17 @@ def initialize_supplier_protocol(
             content=program_bytes,
             media_type="application/json",
         )
+        # Full finite-program validation happens inside the builder. Defer this
+        # expensive check until malformed static inputs have already refused.
+        if (
+            build_supplier_program(
+                contract_bytes, source_ids=source_ids, policy_ids=policy_ids
+            )
+            != program_bytes
+        ):
+            raise SupplierInitializationError(
+                "UNSUPPORTED", "exact reviewed supplier program variant required"
+            )
     except SupplierInitializationError:
         raise
     except (ValueError, KeyError, TypeError, RecursionError) as error:
