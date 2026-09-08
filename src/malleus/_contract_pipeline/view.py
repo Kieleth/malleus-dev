@@ -321,6 +321,13 @@ class ContractView:
     def content_hash(self) -> str:
         return self._content_hash
 
+    def verifies(self, *recorded_hashes: str) -> bool:
+        """Verify this exact compiled identity, with no legacy grammar aliases."""
+        return all(
+            value in (self._content_hash, "sha256:" + self._content_hash)
+            for value in recorded_hashes
+        )
+
     def _resolve(self, value: str, candidates: Mapping[str, object], label: str) -> str:
         if not isinstance(value, str) or not value:
             raise KeyError(f"{label} must be a nonempty string")
