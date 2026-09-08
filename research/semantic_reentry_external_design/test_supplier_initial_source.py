@@ -438,3 +438,17 @@ def test_initial_boundary_has_no_optional_required_inputs():
         p.kind is Parameter.KEYWORD_ONLY and p.default is Parameter.empty
         for p in parameters
     )
+
+
+def test_initial_gate_and_runtime_belong_to_the_selected_checkout():
+    gate = json.loads((HERE / "supplier-initial-gate.json").read_bytes())
+    assert set(gate) == {"classification", "claim", "tests"}
+    assert gate["classification"] == "CONFORMANCE_FIXTURE"
+    assert len(gate["tests"]) == len(set(gate["tests"]))
+    assert str(Path(__file__).resolve().relative_to(ROOT)) in gate["tests"]
+    for name in gate["tests"]:
+        path = (ROOT / name).resolve()
+        assert path.is_relative_to(ROOT) and path.is_file()
+    assert Path(api.__file__).resolve().is_relative_to(ROOT / "src")
+    for name in (PRODUCER, COMPONENT):
+        assert Path(import_module(name).__file__).resolve().is_relative_to(HERE)

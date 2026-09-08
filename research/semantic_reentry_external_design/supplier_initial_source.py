@@ -50,6 +50,10 @@ def prepare_initial_supplier_change(
     actor_id,
 ):
     """Retain exact source/mapping and return Core's still-unaccepted preparation."""
+    if type(history) is not api.KnowledgeChangeHistory:
+        raise supplier_components.SupplierInputError(
+            "MALFORMED_INPUT", "the owning public Core history is required"
+        )
     try:
         if type(mapping_bytes) is not bytes:
             raise ValueError("exact mapping bytes required")
