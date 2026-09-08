@@ -324,7 +324,7 @@ def test_model_prediction_must_meet_goal_and_frame(reentry_inputs, monkeypatch):
     monkeypatch.setattr(api().SupplierSourceModel, "predict", wrong_prediction)
     before = owner.path.read_bytes(), authority.domain_frame(owner.replay())
     result = synthesize(contract, view)
-    assert result.status == "REFUSED" and result.reason == "UNSUPPORTED_CHANGE"
+    assert result.status == "REFUSED" and result.reason == "MODEL_DISAGREEMENT"
     assert not result.candidates
     assert (owner.path.read_bytes(), authority.domain_frame(owner.replay())) == before
 
@@ -675,7 +675,15 @@ def synthesized_authorized_prefix(tmp_path_factory, reentry_prefix):
 
 
 @pytest.mark.parametrize(
-    "fault", ["none", "after-write", "unchanged-success", "binding-type"]
+    "fault",
+    [
+        "none",
+        "after-write",
+        "unchanged-success",
+        "binding-type",
+        "over-quantity",
+        "over-quantity-binding-type",
+    ],
 )
 def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     synthesized_authorized_prefix, tmp_path, monkeypatch, fault
@@ -690,9 +698,17 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     source.write_bytes(before.retained_bytes(entry.ingress.SOURCE_ID))
     attempts = []
     actual_write = supplier_execution._write_source
+    expected_quantity = 3 if fault.startswith("over-quantity") else 2
 
     def controlled(stream, content):
         attempts.append(content)
+        if fault.startswith("over-quantity"):
+            # Bounded conformance perturbation of the actual write, not another
+            # action model or a fabricated observation/admission boundary.
+            assert json.loads(content)["quantity"] == 2
+            content = (
+                entry.ingress.canonical(dict(json.loads(content), quantity=3)) + b"\n"
+            )
         if fault != "unchanged-success":
             actual_write(stream, content)
         if fault == "after-write":
@@ -727,6 +743,14 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert authority.domain_frame(captured) == frame
     actual = captured.retained_bytes("source:supplier:captured:1")
     assert actual == source.read_bytes()
+    if fault.startswith("over-quantity"):
+        assert json.loads(actual)["quantity"] == 3
+        assert (
+            captured.protocol_replay.data["records"]["observation:supplier:1"][
+                "record"
+            ]["observation_result"]
+            == "CONTRADICTED"
+        )
     assert fresh_evaluation(owner, original).status != "SATISFIED"
     case = json.loads((entry.ingress.FIXTURE / "case.json").read_bytes())
     if fault == "none":
@@ -756,7 +780,7 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         )
         assert not unrelated_result.candidates
         assert authority.domain_frame(owner.replay()) == frame
-    if fault == "binding-type":
+    if fault in ("binding-type", "over-quantity-binding-type"):
         # Faulty mapper serialization, not a forged accepted view or substitute KCS.
         # Actual source, preparation, admission and replay still use real boundaries.
         original_canonical = supplier_observed_source._canonical
@@ -829,7 +853,10 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
         transaction_time=population.TIME,
         actor_id=population.ACTOR,
     )
-    assert final.graph.get_node(population.REPLACEMENT)["ordered_quantity"] == 2
+    assert (
+        final.graph.get_node(population.REPLACEMENT)["ordered_quantity"]
+        == expected_quantity
+    )
     assert len(final.change_sets) == len(before.change_sets) + 1
     for family, members in before.graph.export_records().items():
         assert [
@@ -878,7 +905,7 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     shutil.copyfile(owner.path, reopened_path)
 
     def forbidden(*args, **kwargs):
-        pytest.fail("reopen or satisfied evaluation invoked an effect/model")
+        pytest.fail("reopen or terminal evaluation invoked an effect/model")
 
     monkeypatch.setattr(supplier_execution, "_attempt", forbidden)
     monkeypatch.setattr(api().SupplierSourceModel, "predict", forbidden)
@@ -890,14 +917,19 @@ def test_synthesized_action_observed_kcs_and_fresh_quiescence(
     assert [p.name for p in reopen_directory.iterdir()] == ["history.jsonl"]
     bytes_before = reopened_path.read_bytes(), source.read_bytes()
     stopped = fresh_evaluation(reopened, original)
-    if fault == "binding-type":
+    if fault in ("binding-type", "over-quantity-binding-type"):
         assert (stopped.status, stopped.reason) == ("REFUSED", "EVIDENCE_DISAGREEMENT")
         assert stopped.candidates == ()
         assert (reopened_path.read_bytes(), source.read_bytes()) == bytes_before
         assert len(attempts) == 1
         return
-    assert stopped.status == "SATISFIED" and stopped.reason == "LINKED_OBSERVED_KCS"
-    assert stopped.finding.current_quantity == 2 and stopped.finding.shortfall == 0
+    assert (stopped.status, stopped.reason) == (
+        ("REFUSED", "GOAL_UNSATISFIED")
+        if fault == "over-quantity"
+        else ("SATISFIED", "LINKED_OBSERVED_KCS")
+    )
+    assert stopped.finding.current_quantity == expected_quantity
+    assert stopped.finding.required_quantity == 2 and stopped.finding.shortfall == 0
     assert stopped.candidates == () and stopped.model_prediction is None
     assert fresh_evaluation(reopened, original) == stopped
     assert (reopened_path.read_bytes(), source.read_bytes()) == bytes_before

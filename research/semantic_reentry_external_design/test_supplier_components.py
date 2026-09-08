@@ -144,6 +144,22 @@ def test_unchanged_row_does_not_emit_replacement(inputs):
     assert mapper(inputs, reformatted) is None
 
 
+def test_supported_undesired_observation_preserves_actual_quantity(
+    inputs, supplied_after
+):
+    observed = canonical(dict(json.loads(supplied_after), quantity=3)) + b"\n"
+    output = json.loads(mapper(inputs, observed))
+    record = output["records"]["entities"][0]
+    assert record["properties"]["ordered_quantity"] == 3
+    assert inputs["goal"]["quantity"] == inputs["operator"]["requested_quantity"] == 2
+    assert output["sources"][0]["sha256"] == digest(observed)
+    assert (
+        output["supersessions"][0]["supersedes_record_id"]
+        == "supplier-order-state:B:e4"
+    )
+    assert model(inputs) == supplied_after
+
+
 def test_source_level_satisfaction_is_noop_but_checks_pin_first(inputs, supplied_after):
     inputs["before_bytes"] = supplied_after
     refuses("STALE_SOURCE", model, inputs)
@@ -231,7 +247,9 @@ def test_multiple_eligible_rows_refuse_without_implicit_selection(
 @pytest.mark.parametrize(
     "update",
     [
-        {"quantity": 3},
+        {"quantity": 4},
+        {"quantity": 0},
+        {"quantity": -1},
         {"quantity": 1},
         {"event_id": "e7"},
         {"event_id": "e4"},

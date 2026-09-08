@@ -1,0 +1,40 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "SUPPORTED_UNDESIRED_OBSERVATION_WITH_STRICT_ACTION_GOAL_AND_NO_RETRY",
+  "runtime": {
+    "core_commit": "f99c886f939db95a003f6d30d2e73d3f2a341020",
+    "core_source_tree": "31e11514b1f999dd145724c3a0f9b7e95c126595",
+    "pythonpath": "src:.",
+    "write_bytecode": false,
+    "pytest_cache": false
+  },
+  "tests": [
+    "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py",
+    "research/semantic_reentry_external_design/test_supplier_reentry.py",
+    "research/semantic_reentry_external_design/test_supplier_reentry_boundaries.py",
+    "research/semantic_reentry_external_design/test_accepted_read_view.py",
+    "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+    "research/semantic_reentry_external_design/test_supplier_program.py",
+    "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+    "research/semantic_reentry_external_design/test_supplier_components.py",
+    "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+    "research/semantic_reentry_external_design/test_supplier_initialization.py",
+    "research/semantic_reentry_external_design/test_supplier_proposals.py",
+    "research/semantic_reentry_external_design/test_supplier_authorization.py",
+    "research/semantic_reentry_external_design/test_supplier_execution.py",
+    "research/semantic_reentry_external_design/test_supplier_observation.py",
+    "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+    "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_current_supplier_distinct_histories_same_graph",
+    "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_epoch_guard_rejects_historical_and_unknown_pins",
+    "research/semantic_reentry_external_design/test_supplier_walkthrough.py",
+    "research/action_history_contract_freeze/programs/test_action_inputs.py",
+    "tests/test_inquisition.py::TestSkillsAreInstallable",
+    "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
+  ],
+  "historical_epoch_guard": {
+    "selector": "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_unified_gate_has_one_compatible_runtime_epoch",
+    "source_sha256": "80921300ae0d53bdd982c2cda13618fce7bd6000ba7fc86d11678e992525b643",
+    "reason": "That unchanged guard verifies the earlier frozen Core epoch. This gate checks its current exact epoch independently, without weakening or relabeling the historical guard."
+  },
+  "scope": "Unified relevant bounded slice, not full repository CI. Fresh results are separate from frozen historical receipts. No Core runtime changes."
+}
