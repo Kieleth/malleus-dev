@@ -140,8 +140,7 @@ def _policy(goal, operator):
         )
 
 
-def _before(before_bytes, source_sha256, goal, operator):
-    _policy(goal, operator)
+def _verified_row(before_bytes, source_sha256):
     if not (
         type(before_bytes) is bytes
         and type(source_sha256) is str
@@ -158,7 +157,12 @@ def _before(before_bytes, source_sha256, goal, operator):
             "STALE_SOURCE",
             "Pre-state bytes do not match the declared exact source identity",
         )
-    row = _row(before_bytes)
+    return _row(before_bytes)
+
+
+def _before(before_bytes, source_sha256, goal, operator):
+    _policy(goal, operator)
+    row = _verified_row(before_bytes, source_sha256)
     if any(
         row[field] != goal[field] for field in ("supplier_order_id", "product_code")
     ):
@@ -264,7 +268,42 @@ def map_observation(
             "UNSUPPORTED_CHANGE",
             "Supplied row disagrees with the declared replacement or source frame",
         )
-    record_id = mapping["replacement_record_id"]
+    return _population_fields(
+        observed,
+        observed_bytes,
+        mapping,
+        source_id,
+        record_id=mapping["replacement_record_id"],
+        supersessions=[
+            {
+                "record_id": mapping["replacement_record_id"],
+                "supersedes_record_id": mapping["supersedes_record_id"],
+            }
+        ],
+    )
+
+
+def map_initial_source(
+    source_bytes: bytes, *, source_sha256: str, mapping: dict, source_id: str
+) -> bytes:
+    """Represent the initial row, without goal evaluation, retention or admission."""
+    row = _verified_row(source_bytes, source_sha256)
+    _mapping(mapping)
+    if not _text(source_id):
+        _refuse("MALFORMED_INPUT", "An explicit source ID is required")
+    return _population_fields(
+        row,
+        source_bytes,
+        mapping,
+        source_id,
+        record_id=mapping["initial_record_id"],
+        supersessions=[],
+    )
+
+
+def _population_fields(
+    row, source_bytes, mapping, source_id, *, record_id, supersessions
+):
     fields = sorted(mapping["fields"].items())
     return _canonical(
         {
@@ -274,13 +313,13 @@ def map_observation(
                         "id": record_id,
                         "type": mapping["type"],
                         "properties": {
-                            target: observed[source] for target, source in fields
+                            target: row[source] for target, source in fields
                         },
                     }
                 ],
                 "relations": [],
             },
-            "sources": [{"source_id": source_id, "sha256": _digest(observed_bytes)}],
+            "sources": [{"source_id": source_id, "sha256": _digest(source_bytes)}],
             "derivations": [
                 {
                     "record_id": record_id,
@@ -290,15 +329,10 @@ def map_observation(
                 }
                 for target, source in fields
             ],
-            "supersessions": [
-                {
-                    "record_id": record_id,
-                    "supersedes_record_id": mapping["supersedes_record_id"],
-                }
-            ],
+            "supersessions": supersessions,
             "valid_time": {
                 "kind": mapping["valid_time_kind"],
-                "value": observed["event_id"],
+                "value": row["event_id"],
             },
         }
     )

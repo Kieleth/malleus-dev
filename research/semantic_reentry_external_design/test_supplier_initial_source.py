@@ -228,8 +228,8 @@ def complement_owner(tmp_path, compilation):
     return history
 
 
-def prepare_initial(history, values):
-    return import_module(PRODUCER).prepare_initial_supplier_change(
+def initial_arguments(history, values):
+    return dict(
         history=history,
         source_bytes=values["source_bytes"],
         source_sha256=values["source_sha256"],
@@ -241,6 +241,12 @@ def prepare_initial(history, values):
         history_profile=api.STATE_VERSION_PROFILE,
         transaction_time=TIME,
         actor_id=ACTOR,
+    )
+
+
+def prepare_initial(history, values):
+    return import_module(PRODUCER).prepare_initial_supplier_change(
+        **initial_arguments(history, values)
     )
 
 
@@ -263,7 +269,10 @@ def test_real_e4_only_source_candidate_admission_reopen_and_lineage(
     assert type(prepared.change_set) is api.KnowledgeChangeSet
     assert history.replay().graph.export_records() == before.graph.export_records()
     assert history.replay().change_sets == before.change_sets
-    assert prepared.change_set.source_record_ids == (SOURCE_ID,)
+    assert prepared.change_set.sources == ((SOURCE_ID, digest(source)),)
+    restored = api.KnowledgeChangeSet.from_bytes(prepared.change_set.canonical_bytes)
+    assert restored == prepared.change_set
+    assert restored.sources == ((SOURCE_ID, digest(source)),)
     assert prepared.change_set.valid_time == api.KnowledgeValidTime("ORDER_ONLY", "e4")
     plan = json.loads(prepared.compilation.canonical_plan_bytes)
     assert plan["adapter"]["version"] == import_module(PRODUCER).ADAPTER_IDENTITY
@@ -343,4 +352,89 @@ def test_initial_candidate_does_not_rebase_after_an_evidence_append(
     assert history.path.read_bytes() == before
     assert (
         history.replay().graph.query("SupplierOrderState", supplier_order_id="B") == []
+    )
+
+
+def test_coordinator_rejects_a_substitute_writer_before_calling_it(initial_inputs):
+    calls = []
+
+    class ForeignWriter:
+        def append_anchors(self, **kwargs):
+            calls.append(kwargs)
+            raise AssertionError("foreign writer invoked")
+
+    with pytest.raises(import_module(COMPONENT).SupplierInputError) as refused:
+        prepare_initial(ForeignWriter(), initial_inputs)
+    assert refused.value.reason == "MALFORMED_INPUT"
+    assert calls == []
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "source_id",
+        "source_artifact_id",
+        "mapping_id",
+        "plan_id",
+        "transaction_time",
+        "actor_id",
+    ],
+)
+def test_required_metadata_never_gets_a_default(
+    complement_owner, initial_inputs, field
+):
+    before = complement_owner.path.read_bytes()
+    values = initial_arguments(complement_owner, initial_inputs)
+    values[field] = None
+    with pytest.raises(import_module(COMPONENT).SupplierInputError) as refused:
+        import_module(PRODUCER).prepare_initial_supplier_change(**values)
+    assert refused.value.reason == "MALFORMED_INPUT"
+    assert complement_owner.path.read_bytes() == before
+
+
+@pytest.mark.parametrize("mapping_bytes", [b"{}", b"{", b"[]", b"null"])
+def test_malformed_mapping_refuses_before_retention(
+    complement_owner, initial_inputs, mapping_bytes
+):
+    before = complement_owner.path.read_bytes()
+    values = initial_arguments(complement_owner, initial_inputs)
+    values["mapping_bytes"] = mapping_bytes
+    with pytest.raises(import_module(COMPONENT).SupplierInputError):
+        import_module(PRODUCER).prepare_initial_supplier_change(**values)
+    assert complement_owner.path.read_bytes() == before
+
+
+def test_missing_profile_refuses_before_retention(complement_owner, initial_inputs):
+    before = complement_owner.path.read_bytes()
+    values = initial_arguments(complement_owner, initial_inputs)
+    values["history_profile"] = None
+    with pytest.raises(import_module(COMPONENT).SupplierInputError) as refused:
+        import_module(PRODUCER).prepare_initial_supplier_change(**values)
+    assert refused.value.reason == "UNSUPPORTED_RULE"
+    assert complement_owner.path.read_bytes() == before
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
+def test_initial_parser_preserves_json_string_separators(initial_inputs, separator):
+    row = json.loads(initial_inputs["source_bytes"])
+    row["product_code"] = "Y" + separator + "Z"
+    initial_inputs["source_bytes"] = canonical(row) + b"\n"
+    initial_inputs["source_sha256"] = digest(initial_inputs["source_bytes"])
+    assert (
+        json.loads(initial_map(initial_inputs))["records"]["entities"][0]["properties"][
+            "product_code"
+        ]
+        == row["product_code"]
+    )
+
+
+def test_initial_boundary_has_no_optional_required_inputs():
+    from inspect import Parameter, signature
+
+    parameters = signature(
+        import_module(PRODUCER).prepare_initial_supplier_change
+    ).parameters.values()
+    assert all(
+        p.kind is Parameter.KEYWORD_ONLY and p.default is Parameter.empty
+        for p in parameters
     )
