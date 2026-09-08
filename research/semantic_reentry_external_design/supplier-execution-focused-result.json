@@ -1,0 +1,60 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "CONTROLLED_SUPPLIER_FILE_ATTEMPT_AND_RECEIPT_NOT_OBSERVATION_OR_KCS_CORRECTION",
+  "status": "FIRST_FOCUSED_GREEN_EXPANDED_GATE_RUNNING",
+  "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "contract_red": "22ada0ebd81c737c52240323de3787d6bd55c147",
+  "implementation_commit": "f621afd79a1d9c9e402a2e9d35a47e6365a2508d",
+  "implementation_tree": "7def7eb853dfc38db6efcb95afe9c0e860834d13",
+  "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
+  "runs": {
+    "absent_api_red": {
+      "tests": 1, "failures": 1, "deselected": 14,
+      "file": "supplier-execution-api-red.xml",
+      "sha256": "6d7fa3ab1b57779aed4bd09d371bfbb1de5599fffb084689ab584728103adafd"
+    },
+    "initial_focused": {
+      "tests": 15, "passes": 15, "failures": 0, "errors": 0, "skipped": 0,
+      "test_commit": "22ada0ebd81c737c52240323de3787d6bd55c147",
+      "selection": ["research/semantic_reentry_external_design/test_supplier_execution.py"],
+      "file": "supplier-execution-first.xml",
+      "sha256": "1a15e166189e6fdf5e0f4e9ec8bb5924503e72887f595dcbe5495a0d066492c4"
+    },
+    "expanded_fast": {
+      "tests": 4, "passes": 4, "deselected": 16,
+      "test_commit": "5c42878a4a572ee8bb2e680f79eb2b477971e458",
+      "expression": "contract_api or missing_execution_inputs or substitute_execution or execution_identity",
+      "file": "supplier-execution-fast.xml",
+      "sha256": "afacdb1f08fd6103e34c3b9726e3b2beba1a63f70e5f919447811bfa5a24a896"
+    }
+  },
+  "observations": [
+    "Real AUTHORIZE precedes fresh dispatch and a controlled file attempt.",
+    "A completed write yields source B/Y/2 at reentry-amendment-1 while accepted knowledge remains B/Y/1.",
+    "Injected failure before write leaves the file unchanged and records FAILED.",
+    "Injected failure after write leaves the changed file and records FAILED, not observed success.",
+    "Injected unchanged write can record SUCCEEDED while both source and accepted quantity remain one.",
+    "Stale actual source aborts without a write and records ABORTED.",
+    "Wrong actor, expired permission, stale head, wrong implementation/source binding and malformed static inputs refuse before any attempt.",
+    "Repeated output IDs invoke no further attempt; fresh-ID and crash-gap guards remain in the expanded gate.",
+    "The complete domain frame is preserved; JSONL-only receipt replay performs no effect."
+  ],
+  "initial_file_sha256": {
+    "SUPPLIER_EXECUTION.md": "c306360fdef45e71772d30aac74fd3bba1b486ba414f9f603f1bfa979eff2281",
+    "supplier_execution.py": "ee8acb11fd55f69a5160267ee8de1bd92f8380004683cc0b851a6bb25f33a4ea",
+    "test_supplier_execution.py": "7d77e0cbc946f69ab0b73857011ec6dae5d39917d984fd2850cd3156a7850f79"
+  },
+  "runtime": {
+    "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
+    "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "config": "pyproject.toml", "PYTHONPATH": "src:.",
+    "PYTHONDONTWRITEBYTECODE": "1", "pytest_cache": "disabled"
+  },
+  "limits": [
+    "Fault injection tests boundary behavior, not OS-enforced implementation attestation.",
+    "Dispatch, file write and receipt are not one atomic transaction.",
+    "No independent observation, KCS correction, full synthesis contract, final quiescence or full supplier E2E is established.",
+    "No full repository CI, empirical replacement, public promotion, merge or publication is claimed.",
+    "Counts overlap and are not added. The known broader Core historical-example failure remains unwaived."
+  ]
+}

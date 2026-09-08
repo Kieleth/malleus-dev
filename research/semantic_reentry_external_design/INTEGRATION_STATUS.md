@@ -1,10 +1,12 @@
 # Supplier Re-entry integration
 
 Status: ACTIVE IMPLEMENTATION, not an executed supplier E2E.
-Latest verified boundary: authored supplier action entry and direct-grant
-authorization with actual check producers and JSONL-only replay. The action-entry
-gate has 141 passes. A separate focused supplier authorization run has 16 passes;
-its expanded boundary suite and relevant unified gate remain to be completed.
+Latest verified boundary: actual controlled supplier dispatch, source attempt and
+terminal receipt, with accepted B/Y/1 unchanged. Its first focused run has 15 passes.
+The action-entry gate has 141 passes; the earlier focused authorization run has
+16 passes. Expanded authorization and execution gates are running separately.
+The independent observer is implemented but has only fast API/identity checks so
+far. No full supplier E2E, observed correction or quiescence is claimed.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
@@ -395,3 +397,34 @@ document-example failure. Next work remains local: complete authorization
 boundary coverage and its relevant gate, then identified dispatch/execution,
 independent observation, full synthesis input closure, observation-linked KCS
 and fresh satisfied/no-output/no-retention/no-effect closure.
+
+## Controlled supplier execution, first focused GREEN
+
+The existing action now crosses real dispatch into one controlled synthetic file
+attempt and an existing ActionExecution receipt. All 15 initial execution tests
+passed. A successful write changes the file to B/Y/2 at reentry-amendment-1, while
+the accepted KG stays B/Y/1. Injected failures before/after write remain FAILED;
+success with unchanged source stays distinct from observation. Stale source yields
+ABORTED. Static ineligibility and repeated output IDs invoke no further attempt.
+All cases preserve the complete domain frame and JSONL-only receipt replay.
+
+The implementation is `f621afd79a1d9c9e402a2e9d35a47e6365a2508d`, tree
+`7def7eb853dfc38db6efcb95afe9c0e860834d13`. The initial 15-test file is bound to
+`22ada0ebd81c737c52240323de3787d6bd55c147`. Exact results and exclusions are in
+`supplier-execution-focused-result.json`. This source effect is not an accepted
+correction, independent capture, synthesis result or satisfied goal episode.
+
+Additional tests cover fresh output IDs attempting to retry the same action and
+receipt-retention failure after a real write, followed by JSONL-only reopen. The
+expanded execution/receipt gate is running at `de1a69c3202023accb92251e014f7fa5bff464c4`.
+The expanded six-file authorization gate is separately running at
+`20f5a8cb82326e494dc676eed3d7ef092ade94d2`. Do not duplicate these unchanged runs.
+No final result is inferred from progress output.
+
+Independent observation has its own contract/API RED at
+`63e06e226a74d50b7c7db2de001c636e8ec3afd8` and first implementation at
+`b2caa982f161ca57e17f84237aac43af4e955cd6`. Its two fast API/actual-source-identity
+checks pass. Actual lifecycle capture, expanded negative coverage and its relevant
+gate have not yet run. `SUPPLIER_OBSERVATION.md` also records the ordinary
+SOURCE_ARTIFACT-to-RETAINED_SOURCE bridge needed by the later population adapter.
+The exact captured bytes and observation linkage must survive that bridge.
