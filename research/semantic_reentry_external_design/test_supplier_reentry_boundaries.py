@@ -11,9 +11,10 @@ import malleus.compiler as core
 from research.semantic_reentry_external_design import test_supplier_reentry as entry
 from research.semantic_reentry_external_design.test_supplier_reentry import (
     compile_supplier_action as compile_supplier_action,
-    reentry_prefix as reentry_prefix,
-    reentry_inputs as reentry_inputs,
 )
+
+reentry_prefix = entry.reentry_prefix
+reentry_inputs = entry.reentry_inputs
 
 
 def changed_rule(owner, original_bytes, value):
@@ -107,6 +108,32 @@ def test_zero_candidate_budget_refuses_without_model(
     result = entry.synthesize(contract, view)
     assert (result.status, result.reason) == ("REFUSED", "BUDGET_EXHAUSTED")
     assert result.candidates == () and owner.path.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "fault", ["missing-entrypoint", "executor-extra", "unknown-strategy"]
+)
+def test_closed_implementation_roles_refuse_at_binding(
+    reentry_inputs, reentry_prefix, fault
+):
+    owner, _, original, _ = reentry_inputs
+    value = entry.rule_value(reentry_prefix[1], reentry_prefix[2])
+    if fault == "missing-entrypoint":
+        del value["implementations"]["model"]["entrypoint"]
+    elif fault == "executor-extra":
+        value["executor"]["entrypoint"] = "undeclared-executor-extension"
+    else:
+        value["ambiguity"] = "PICK_FIRST"
+    view, original, rule_id = changed_rule(owner, original, value)
+    before = owner.path.read_bytes()
+    with pytest.raises(entry.api().ReentryRefusal) as error:
+        entry.api().bind_supplier_reentry(
+            view=view, original_context_bytes=original, rule_source_id=rule_id
+        )
+    assert error.value.reason == (
+        "UNSUPPORTED" if fault == "unknown-strategy" else "MALFORMED_INPUT"
+    )
+    assert owner.path.read_bytes() == before
 
 
 def test_contract_and_view_cannot_receive_direct_graph_mutation(reentry_inputs):
