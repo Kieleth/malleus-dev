@@ -75,7 +75,9 @@
     "base_junit_sha256": "715cab099acd86ef4f74a82d6b436fdd58c4f55016ea72a7686578d48d5a2059",
     "same_test_sha256_in_both_checkouts": "6b31dd321d114e6cebc654651ef47ebc93c57224ad67b2a41bec286bf6ec44d2",
     "owner": "Malleus Core, 01a02f71-fec6-7382-9c68-c3efd3dba5d4",
-    "status": "sent for baseline diagnosis and evidence-backed correction, no waiver or fixture edit by Re-entry",
+    "status": "Core confirmed known baseline failure; separately versioned current-example correction requires operator approval; no fixture changed or assertion waived",
+    "owner_diagnosis": "Compiler repair changed its recorded implementation identity and retained-history hash; the frozen example still identifies the older history.",
+    "owner_reference": "research/action_history_contract_freeze/GATE.md",
     "impact": "broader gate is not fully green; does not reopen the verified one-action prerequisite or block supplier implementation"
   },
   "file_sha256": {

@@ -266,3 +266,12 @@ Next is actual supplier-profile initialization and retained goal-contract
 binding, then pure candidate synthesis. The source-to-initial-KG leg is now
 proved; proposal, execution, observation-derived correction and final episode
 quiescence are still unfinished.
+
+Core subsequently confirmed this exact failure is already recorded in
+`research/action_history_contract_freeze/GATE.md`. The compiler repair changed
+its recorded implementation identity and therefore the retained-history hash;
+the frozen example identifies the older history. Core's proposed narrow fix is
+a separately versioned current-compiler example and current test binding,
+preserving the original and its historical reproduction check. That fixture
+change requires operator approval. No assertion is skipped or hash field
+ignored, and no runtime/fixture correction has been adopted here.
