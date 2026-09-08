@@ -13,7 +13,10 @@ import pytest
 from malleus.assent import make_record
 from malleus.compiler import KnowledgeChangeHistory
 from malleus.ledger import content_digest, record_hash
-from malleus.source import source_artifact_fields
+from research.action_history_contract_freeze.programs.action_inputs import (
+    context_proposal,
+    source_event,
+)
 from research.action_history_contract_freeze.programs.initialization_bundle import (
     add_initialization,
 )
@@ -30,7 +33,6 @@ from research.action_history_contract_freeze.programs.test_registration_history 
     builder,
     compiled,
     draft,
-    record,
 )
 from tests.contract_compiler.pareto.test_finite_protocol_history import api, canonical
 
@@ -83,59 +85,31 @@ def preimage(value):
 
 
 def source(identifier, content, sources, episode=FIRST):
-    return record(
-        "SourceArtifact",
+    event = source_event(
         identifier,
-        sources,
-        artifact_kind="SOURCE",
+        content,
+        source_record_ids=sources,
+        event_id="event:" + identifier,
+        transaction_time=episode.time(TIME),
+        actor_id="actor:registrar",
+        role="registrar",
         artifact_version="v1",
-        **source_artifact_fields(
-            artifact_id=identifier,
-            artifact_version="v1",
-            source_bytes=content,
-            media_type="application/json",
-            locator="urn:retained:" + identifier,
-        ),
-        episode=episode,
+        media_type="application/json",
+        locator="urn:retained:" + identifier,
     )
+    return event["data"]["records"]["value"][0]["record"]
 
 
 def pair(history, checkpoint, init_record, sources, *, suffix="1", episode=FIRST):
-    base = history.replay()
-    context = {
-        "schema": "malleus.action-history.original-context/research-v1",
-        "id": "context:" + suffix,
-        "prefix": {"head": base.ledger_head, "event_count": base.ledger_event_count},
-        "domain": {
-            "effective_contract_identity": base.partial_contract.identity,
-            "kcs_acceptance_head": base.acceptance_head,
-            "materialization_head": base.materialization_head,
-            "accepted_graph_digest": base.graph.state_digest(),
-        },
-        "action_acceptance_head": base.protocol_replay.data["state"][
-            "action_acceptance_head"
-        ],
-        "initialization_identity": content_digest(checkpoint),
-        **{k + "_policy": checkpoint[k + "_policy"] for k in POLICY_IDS},
-        "proposal_id": "proposal:" + suffix,
-        "action_id": "action:" + suffix,
-        "episode_key": "episode:independent",
-        **{
-            k: {"id": v["id"], "bytes_sha256": v["source_content_digest"]}
-            for k, v in sources.items()
-        },
-    }
-    content = canonical(context)
-    dependencies = [v["id"] for v in sources.values()] + [init_record["id"]]
-    context_record = source(context["id"], content, dependencies, episode=episode)
+    context_id, proposal_id = "context:" + suffix, "proposal:" + suffix
     action = make_record(
         "LocalAction",
-        id=context["action_id"],
-        event_id="event:" + context["proposal_id"],
+        id="action:" + suffix,
+        event_id="event:" + proposal_id,
         generated_at=episode.time(TIME),
         actor_id="actor:proposer",
         role="proposer",
-        source_record_ids=[context["id"], POLICY_IDS["authorization"]],
+        source_record_ids=[context_id, POLICY_IDS["authorization"]],
         action_type="LOCAL_ACTION",
         action_payload_hash=content_digest("shape only"),
         action_key="independent-action-key:" + suffix,
@@ -143,59 +117,26 @@ def pair(history, checkpoint, init_record, sources, *, suffix="1", episode=FIRST
         authorization_policy_id=POLICY_IDS["authorization"],
         authorization_policy_hash=checkpoint["authorization_policy"]["record_hash"],
     )
-    proposal = make_record(
-        "ProposedSubgraph",
-        id=context["proposal_id"],
-        event_id=action["generation_event_id"],
-        generated_at=episode.time(TIME),
-        actor_id="actor:proposer",
-        role="proposer",
-        source_record_ids=[context["id"], action["id"], POLICY_IDS["epistemic"]],
+    return context_proposal(
+        history,
+        initialization_id=init_record["id"],
+        source_ids={k: v["id"] for k, v in sources.items()},
+        context_id=context_id,
+        context_metadata={
+            "event_id": "event:" + context_id,
+            "transaction_time": episode.time(TIME),
+            "actor_id": "actor:registrar",
+            "role": "registrar",
+            "artifact_version": "v1",
+            "media_type": "application/json",
+            "locator": "urn:retained:" + context_id,
+        },
+        action={"record_type": "LocalAction", "record": action},
+        proposal_id=proposal_id,
         proposal_key="independent-proposal-key:" + suffix,
-        revision=1,
-        base_acceptance_head=context["action_acceptance_head"],
-        epistemic_policy_id=POLICY_IDS["epistemic"],
-        epistemic_policy_hash=checkpoint["epistemic_policy"]["record_hash"],
-        member_content_hashes=[action["content_hash"]],
-        claim_version_ids=[],
-        evidence_ids=[],
-        evidence_assertion_ids=[],
-        action_proposal_ids=[action["id"]],
+        episode_key="episode:independent",
+        payload_source_id=None,
     )
-    first = draft(
-        "SourceArtifact",
-        context_record,
-        preimage=preimage(context_record),
-        content=content,
-    )
-    first["event_type"] = "ARTIFACT_RECORDED"
-    first["retained"]["source"]["encoding"] = "CANONICAL_JSON"
-    first["data"].update(
-        initialization={
-            "value": checkpoint,
-            "record_hash": init_record["content_hash"],
-        },
-        references={
-            k: {"id": v["id"], "record_hash": v["content_hash"]}
-            for k, v in sources.items()
-        },
-    )
-    second = {
-        "event_id": action["generation_event_id"],
-        "event_type": "PROPOSAL_RECORDED",
-        "actor_id": "actor:proposer",
-        "transaction_time": episode.time(TIME),
-        "retained": {},
-        "data": {
-            "action": {"value": [{"record_type": "LocalAction", "record": action}]},
-            "proposal": {
-                "value": [{"record_type": "ProposedSubgraph", "record": proposal}]
-            },
-            "action_dependencies": {"value": action["source_record_ids"]},
-            "proposal_dependencies": {"value": proposal["source_record_ids"]},
-        },
-    }
-    return first, second
 
 
 def submit(history, events):

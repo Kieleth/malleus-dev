@@ -11,7 +11,11 @@ import sys
 import pytest
 
 from malleus.compiler import KnowledgeChangeHistory, PolicyProgram
-from malleus.ledger import content_digest, record_hash
+from malleus.assent import make_record
+from malleus.ledger import content_digest
+from research.action_history_contract_freeze.programs.action_inputs import (
+    context_proposal,
+)
 from research.action_history_contract_freeze.programs import (
     test_assessment_history as assessments,
     test_authorization_history as authorization,
@@ -72,30 +76,45 @@ def proposal(history, metadata, episode, *, bad_payload=False):
             content=content,
         ),
     )
-    first, second = proposals.pair(
-        history,
-        metadata["checkpoint"],
-        metadata["initialization"],
-        metadata["sources"],
-        suffix=episode.id("1"),
-        episode=episode,
-    )
-    action = second["data"]["action"]["value"][0]["record"]
-    action["action_payload_hash"] = (
-        content_digest("wrong payload")
+    context_id, proposal_id = episode.id("context:1"), episode.id("proposal:1")
+    policy = metadata["checkpoint"]["authorization_policy"]
+    action = make_record(
+        "LocalAction",
+        id=episode.id("action:1"),
+        event_id="event:" + proposal_id,
+        generated_at=episode.time(proposals.TIME),
+        actor_id="actor:proposer",
+        role="proposer",
+        source_record_ids=[context_id, policy["id"], payload["id"]],
+        action_type="LOCAL_ACTION",
+        action_payload_hash=content_digest("wrong payload")
         if bad_payload
-        else payload["source_content_digest"]
+        else payload["source_content_digest"],
+        action_key=episode.id("independent-action-key:1"),
+        revision=1,
+        authorization_policy_id=policy["id"],
+        authorization_policy_hash=policy["record_hash"],
     )
-    action["source_record_ids"].append(payload["id"])
-    action["content_hash"] = record_hash("LocalAction", action)
-    value = second["data"]["proposal"]["value"][0]["record"]
-    value["member_content_hashes"] = [action["content_hash"]]
-    value["content_hash"] = record_hash("ProposedSubgraph", value)
-    second["data"]["payload"] = {
-        "id": payload["id"],
-        "record_hash": payload["content_hash"],
-    }
-    return first, second
+    return context_proposal(
+        history,
+        initialization_id=metadata["initialization"]["id"],
+        source_ids={k: v["id"] for k, v in metadata["sources"].items()},
+        context_id=context_id,
+        context_metadata={
+            "event_id": "event:" + context_id,
+            "transaction_time": episode.time(proposals.TIME),
+            "actor_id": "actor:registrar",
+            "role": "registrar",
+            "artifact_version": "v1",
+            "media_type": "application/json",
+            "locator": "urn:retained:" + context_id,
+        },
+        action={"record_type": "LocalAction", "record": action},
+        proposal_id=proposal_id,
+        proposal_key=episode.id("independent-proposal-key:1"),
+        episode_key="episode:independent",
+        payload_source_id=payload["id"],
+    )
 
 
 def authorize_episode(history, episode, checkpoints):

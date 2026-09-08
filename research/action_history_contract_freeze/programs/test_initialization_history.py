@@ -7,15 +7,17 @@ import pytest
 
 from malleus.compiler import KnowledgeChangeHistory
 from malleus.ledger import content_digest
-from malleus.source import source_artifact_fields
+from research.action_history_contract_freeze.programs.action_inputs import (
+    initialization_checkpoint,
+    initialization_event,
+    source_event,
+)
 from research.action_history_contract_freeze.programs.test_registration_history import (
     TIME,
     append,
     builder,
     compiled,
-    draft,
     prerequisites,
-    record,
 )
 from tests.contract_compiler.pareto.test_finite_protocol_history import api, canonical
 from tests.contract_compiler.pareto.test_knowledge_change_history import (
@@ -67,8 +69,7 @@ def initialization_prefix(directory, bundle):
         transaction_time=TIME,
         actor_id="actor:registrar",
     )
-    policies = prerequisites(history)
-    sources = {}
+    prerequisites(history)
     for name, content in {
         "profile": canonical(bundle["profile"]),
         "record_contract": compiled().artifact_bytes,
@@ -76,86 +77,43 @@ def initialization_prefix(directory, bundle):
         "history_binding": history.binding.canonical_bytes,
     }.items():
         identifier = SOURCE_IDS[name]
-        value = record(
-            "SourceArtifact",
-            identifier,
-            [],
-            artifact_kind="SOURCE",
-            artifact_version="v1",
-            **source_artifact_fields(
-                artifact_id=identifier,
+        append(
+            history,
+            "source",
+            source_event(
+                identifier,
+                content,
+                source_record_ids=(),
+                event_id="event:" + identifier,
+                transaction_time=TIME,
+                actor_id="actor:registrar",
+                role="registrar",
                 artifact_version="v1",
-                source_bytes=content,
                 media_type="application/json",
                 locator="urn:retained:" + identifier,
             ),
         )
-        append(
-            history,
-            "source",
-            draft(
-                "SourceArtifact",
-                value,
-                preimage={k: value[v] for k, v in builder().SOURCE_PROJECTION.items()},
-                content=content,
-            ),
-        )
-        sources[name] = value
-    base = history.replay()
-    checkpoint = {
-        "schema": "malleus.action-history.initialization/research-v1",
-        "id": "action:initialization",
-        "prefix": {"head": base.ledger_head, "event_count": base.ledger_event_count},
-        "domain": {
-            "effective_contract_identity": base.partial_contract.identity,
-            "kcs_acceptance_head": base.acceptance_head,
-            "materialization_head": base.materialization_head,
-            "accepted_graph_digest": base.graph.state_digest(),
-        },
-        **{
-            name: {"id": value["id"], "bytes_sha256": value["source_content_digest"]}
-            for name, value in sources.items()
-        },
-        **{
-            name + "_policy": {"id": value["id"], "record_hash": value["content_hash"]}
-            for name, value in policies.items()
-        },
-    }
-    references = {
-        name: {"id": value["id"], "record_hash": value["content_hash"]}
-        for name, value in sources.items()
-    }
+    checkpoint, references = initialization_checkpoint(
+        history,
+        record_id="action:initialization",
+        source_ids=SOURCE_IDS,
+        policy_ids=POLICY_IDS,
+    )
     return history.path.read_bytes(), checkpoint, references
 
 
 def event(checkpoint, references):
-    content = canonical(checkpoint)
-    sources = [v["id"] for v in references.values()] + [
-        checkpoint[k + "_policy"]["id"] for k in POLICY_IDS
-    ]
-    value = record(
-        "SourceArtifact",
-        checkpoint["id"],
-        sources,
-        artifact_kind="SOURCE",
+    return initialization_event(
+        checkpoint,
+        references,
+        event_id="event:" + checkpoint["id"],
+        transaction_time=TIME,
+        actor_id="actor:registrar",
+        role="registrar",
         artifact_version="v1",
-        **source_artifact_fields(
-            artifact_id=checkpoint["id"],
-            artifact_version="v1",
-            source_bytes=content,
-            media_type="application/json",
-            locator="urn:retained:" + checkpoint["id"],
-        ),
+        media_type="application/json",
+        locator="urn:retained:" + checkpoint["id"],
     )
-    result = draft(
-        "SourceArtifact",
-        value,
-        preimage={k: value[v] for k, v in builder().SOURCE_PROJECTION.items()},
-        content=content,
-    )
-    result["retained"]["source"]["encoding"] = "CANONICAL_JSON"
-    result["data"]["references"] = references
-    return result
 
 
 def reopen(tmp_path, content):

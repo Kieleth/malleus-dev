@@ -2,6 +2,7 @@
 
 import ast
 from copy import deepcopy
+from hashlib import sha256
 from importlib import import_module
 import json
 import os
@@ -189,7 +190,7 @@ def arguments(history):
         role="proposer",
         source_record_ids=["bench:context", POLICY_IDS["authorization"]],
         action_type="LOCAL_ACTION",
-        action_payload_hash=content_digest(INPUT_BYTES["mapping"]),
+        action_payload_hash="sha256:" + sha256(INPUT_BYTES["mapping"]).hexdigest(),
         action_key="bench:inspection",
         revision=1,
         authorization_policy_id=POLICY_IDS["authorization"],
@@ -210,6 +211,12 @@ def arguments(history):
 
 def test_module_has_no_fixture_or_test_imports():
     producer = api()
+    assert set(producer.__all__) == {
+        "source_event",
+        "initialization_checkpoint",
+        "initialization_event",
+        "context_proposal",
+    }
     tree = ast.parse(Path(producer.__file__).read_text())
     imports = [n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)]
     imports += [
@@ -244,6 +251,7 @@ sys.meta_path.insert(0, NoFixture())
 from malleus.compiler import KnowledgeChangeHistory
 from malleus.assent import make_record
 from malleus.ledger import content_digest
+from hashlib import sha256
 from research.action_history_contract_freeze.programs import action_inputs as p
 h = KnowledgeChangeHistory.reopen(sys.argv[1])
 inputs = json.loads(sys.argv[2])
@@ -257,7 +265,7 @@ append('initialize', (p.initialization_event(c, refs, **origin(c['id'])),))
 for role, text in inputs['input_bytes'].items():
     i=inputs['input_ids'][role]
     append('source', (p.source_event(i, text.encode(), source_record_ids=(), **origin(i)),))
-a=make_record('LocalAction', id='bench:action', event_id='bench:proposal-event', generated_at='2026-09-07T00:02:00Z', actor_id='actor:isolated-proposer', role='proposer', source_record_ids=['bench:context', inputs['policy_ids']['authorization']], action_type='LOCAL_ACTION', action_payload_hash=content_digest(inputs['input_bytes']['mapping'].encode()), action_key='bench:inspection', revision=1, authorization_policy_id=inputs['policy_ids']['authorization'], authorization_policy_hash=c['authorization_policy']['record_hash'])
+a=make_record('LocalAction', id='bench:action', event_id='bench:proposal-event', generated_at='2026-09-07T00:02:00Z', actor_id='actor:isolated-proposer', role='proposer', source_record_ids=['bench:context', inputs['policy_ids']['authorization']], action_type='LOCAL_ACTION', action_payload_hash='sha256:'+sha256(inputs['input_bytes']['mapping'].encode()).hexdigest(), action_key='bench:inspection', revision=1, authorization_policy_id=inputs['policy_ids']['authorization'], authorization_policy_hash=c['authorization_policy']['record_hash'])
 events=p.context_proposal(h, initialization_id=c['id'], source_ids=inputs['input_ids'], context_id='bench:context', context_metadata=origin('bench:context'), action={'record_type':'LocalAction','record':a}, proposal_id='bench:proposal', proposal_key='bench:proposal-key', episode_key='bench:episode', payload_source_id=None)
 append('context-proposal', events)
 r=KnowledgeChangeHistory.reopen(sys.argv[1]).replay()
@@ -272,10 +280,11 @@ print(json.dumps([r.ledger_head,r.ledger_event_count,r.graph.state_digest()]))
             "PYTHONPATH": str(root) + os.pathsep + str(root / "src"),
             "PYTHONDONTWRITEBYTECODE": "1",
         },
-        check=True,
+        check=False,
         capture_output=True,
         text=True,
     )
+    assert result.returncode == 0, result.stderr
     after = core.KnowledgeChangeHistory.reopen(history.path).replay()
     assert json.loads(result.stdout) == [
         after.ledger_head,
@@ -319,10 +328,15 @@ def test_checkpoint_requires_explicit_applied_inputs(tmp_path, prefix, fault):
     else:
         policies["epistemic"] = SOURCE_IDS["profile"]
     before = history.path.read_bytes()
-    with pytest.raises(ProtocolProgramRefusal):
+    with pytest.raises(ProtocolProgramRefusal) as caught:
         api().initialization_checkpoint(
             history, record_id="bench:init", source_ids=sources, policy_ids=policies
         )
+    assert caught.value.reason == (
+        "WRONG_ACTION_INPUT_TYPE"
+        if fault == "wrong-policy-type"
+        else "MISSING_ACTION_INPUT"
+    )
     assert history.path.read_bytes() == before
 
 
@@ -360,7 +374,8 @@ def test_proposal_refusal_is_atomic(tmp_path, prefix, fault):
     assert "bench:context" not in history.replay().protocol_replay.data["records"]
 
 
-def test_source_event_binds_actual_media_bytes_and_origin():
+def test_source_event_binds_actual_media_bytes_and_origin(tmp_path, prefix):
+    history = open_prefix(tmp_path, prefix)
     origin = metadata("binary")
     origin["media_type"] = "application/octet-stream"
     content = bytes([0, 255, 17])
@@ -368,5 +383,8 @@ def test_source_event_binds_actual_media_bytes_and_origin():
     record = event["data"]["records"]["value"][0]["record"]
     assert event["retained"]["source"]["content"] == content
     assert event["retained"]["source"]["media_type"] == origin["media_type"]
-    assert record["source_content_digest"] == content_digest(content)
+    assert record["source_content_digest"] == "sha256:" + sha256(content).hexdigest()
     assert record["generated_at"] == origin["transaction_time"]
+    append(history, "source", (event,))
+    reopened = core.KnowledgeChangeHistory.reopen(history.path).replay()
+    assert reopened.retained_bytes("binary") == content
