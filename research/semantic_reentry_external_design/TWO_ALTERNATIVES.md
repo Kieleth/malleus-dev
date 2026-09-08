@@ -1,7 +1,8 @@
 # Two valid amendments, explicit selection
 
-Status: accepted bounded experiment, implementation not yet verified.
+Status: 28 focused cases verified on the starting base; current-main integration verification in progress.
 Base: local main `e2b9e77912f9b36fdbfe2fca310548a789bffb4d`.
+Landing base: local main `55c038438ed67197b7e3345b9c80a885a7b6cf17`.
 
 ## Bound slice
 
@@ -30,7 +31,9 @@ actions, delivery or inventory claims, production supplier integration,
 empirical synthesizer replacement, policy legitimacy, paper changes and
 publication. Preference governs this producer, not every arbitrary caller of
 the generic action-submission API. The ordinary authority policy remains a
-separate boundary. The earlier maintained-reader follow-on remains separate.
+separate boundary. Core integrated the earlier maintained-reader follow-on
+during this experiment. The final landing candidate consumes that exact
+integration without changing its source or historical evidence.
 
 ## Roles and contracts
 
@@ -141,8 +144,8 @@ order ID and predicted total. Only the selected candidate leaves the selector.
 A controlled model RuntimeError escaped the new composition. A behavioral RED
 test confirmed it. The selected-engine boundary now returns ENGINE_FAILURE
 with no candidate and does not silently try the other order. Ordinary typed
-child refusals keep their reasons. The focused 23-case selection passes;
-the complete relevant regression union remains in progress.
+child refusals keep their reasons. The focused 28-case selection passes on the
+starting base; the complete relevant regression union remains in progress.
 
 The first broad regression selection included the original frozen epoch guard.
 It correctly refused current Core source tree 3b4fd1c9 rather than silently

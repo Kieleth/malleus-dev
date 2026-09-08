@@ -2,6 +2,7 @@
   "classification": "CONFORMANCE_FIXTURE",
   "claim": "TWO_ALTERNATIVES_EXPLICIT_SELECTION_AND_EXISTING_SUPPLIER_BOUNDARIES",
   "base_commit": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d",
+  "landing_base_commit": "55c038438ed67197b7e3345b9c80a885a7b6cf17",
   "core_source_tree": "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
   "groups": {
     "choice": [
@@ -33,6 +34,10 @@
       "tests/contract_compiler/pareto/test_maintained_projection.py",
       "tests/test_inquisition.py::TestSkillsAreInstallable",
       "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
+    ],
+    "maintained_integration": [
+      "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py",
+      "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py::test_new_epoch_guard_rejects_older_and_unknown_source"
     ]
   },
   "historical_epoch_guard": {
