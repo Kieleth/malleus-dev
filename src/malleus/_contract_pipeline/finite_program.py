@@ -23,6 +23,28 @@ SCALAR_TYPES = {
     "INSTANT": "string",
 }
 FORMATS = FormatChecker()
+VALUE_SCHEMA_COMMON = {"type", "const", "enum", "format", "x-coordinate"}
+VALUE_SCHEMA_FIELDS = {
+    "object": {"properties", "required", "additionalProperties"},
+    "array": {"items", "minItems", "maxItems", "uniqueItems"},
+    "string": {"minLength", "maxLength"},
+    "integer": {
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf",
+    },
+    "number": {
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf",
+    },
+    "boolean": set(),
+    "null": set(),
+}
 
 
 class PacketRefusal(ValueError):
@@ -67,40 +89,67 @@ def _names(value):
 
 
 def _local_references(schema):
-    if isinstance(schema, dict):
-        if "$ref" in schema and (
-            not isinstance(schema["$ref"], str) or not schema["$ref"].startswith("#")
-        ):
-            _refuse("DEFINITION_SCHEMA", "schema references must be local")
-        for child in schema.values():
-            _local_references(child)
-    elif isinstance(schema, list):
-        for child in schema:
-            _local_references(child)
+    """Inspect instruction-schema positions, never property names or literals."""
+    if not isinstance(schema, dict):
+        return
+    if "$dynamicRef" in schema or "$recursiveRef" in schema:
+        _refuse("DEFINITION_SCHEMA", "dynamic schema references are unsupported")
+    if "$ref" in schema and (
+        not isinstance(schema["$ref"], str) or not schema["$ref"].startswith("#")
+    ):
+        _refuse("DEFINITION_SCHEMA", "schema references must be local")
+    for name in (
+        "properties",
+        "patternProperties",
+        "$defs",
+        "definitions",
+        "dependentSchemas",
+    ):
+        if isinstance(schema.get(name), dict):
+            for child in schema[name].values():
+                _local_references(child)
+    for name in ("allOf", "anyOf", "oneOf", "prefixItems"):
+        if isinstance(schema.get(name), list):
+            for child in schema[name]:
+                _local_references(child)
+    for name in (
+        "items",
+        "additionalItems",
+        "additionalProperties",
+        "unevaluatedItems",
+        "unevaluatedProperties",
+        "contains",
+        "propertyNames",
+        "not",
+        "if",
+        "then",
+        "else",
+    ):
+        if name in schema:
+            _local_references(schema[name])
 
 
 def _schema(schema):
-    _local_references(schema)
+    # Only properties/items contain child value schemas. Const/enum values and
+    # property names are data, never directives. A closed keyword set excludes
+    # references, alternate dialects and hidden schema applicators before any
+    # validator can resolve or execute them.
+    if not isinstance(schema, dict) or not isinstance(schema.get("type"), str):
+        _refuse("DEFINITION_SCHEMA", "a single explicit type is required")
+    if schema["type"] not in VALUE_SCHEMA_FIELDS:
+        _refuse("DEFINITION_SCHEMA", "a single explicit type is required")
+    unsupported = (
+        schema.keys() - VALUE_SCHEMA_COMMON - VALUE_SCHEMA_FIELDS[schema["type"]]
+    )
+    if unsupported:
+        _refuse(
+            "DEFINITION_SCHEMA",
+            f"unsupported finite schema keywords: {sorted(unsupported)}",
+        )
     try:
         Draft202012Validator.check_schema(schema)
     except SchemaError as error:
         raise PacketRefusal("DEFINITION_SCHEMA", error.message) from error
-    if not isinstance(schema, dict) or not isinstance(schema.get("type"), str):
-        _refuse("DEFINITION_SCHEMA", "a single explicit type is required")
-    if schema["type"] not in {
-        "object",
-        "array",
-        "string",
-        "integer",
-        "boolean",
-        "number",
-        "null",
-    }:
-        _refuse("DEFINITION_SCHEMA", "a single explicit type is required")
-    if "$ref" in schema or any(k in schema for k in ("oneOf", "anyOf", "allOf", "if")):
-        _refuse("DEFINITION_SCHEMA", "expand variants before static path checking")
-    if "prefixItems" in schema:
-        _refuse("DEFINITION_SCHEMA", "positional arrays are outside this static subset")
     if schema["type"] == "object":
         if (
             schema.get("additionalProperties") is not False
@@ -251,6 +300,13 @@ def validate_program(program, *, instruction_schema, profile):
         else:
             _closed(declaration, fields)
         _schema(declaration["value_schema"])
+    if "record_schemas" in profile:
+        if not isinstance(profile["record_schemas"], dict):
+            _refuse("DEFINITION_SCHEMA", "record schemas must be named")
+        for schema in profile["record_schemas"].values():
+            _schema(schema)
+    if "control_result_schema" in profile:
+        _schema(profile["control_result_schema"])
     _dependencies(program["introductions"])
     if not isinstance(program["steps"], list) or not program["steps"]:
         _refuse("DEFINITION_SHAPE", "program requires finite nonempty steps")
