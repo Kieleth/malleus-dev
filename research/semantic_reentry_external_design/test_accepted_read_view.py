@@ -381,12 +381,15 @@ def test_inconsistent_accepted_lineage_refuses_before_return(owner, fault):
 
 def test_retained_candidate_bytes_do_not_become_accepted_lineage(owner):
     history, replay, _ = owner
+    # Explicit retained conformance references, not a claim of source faithfulness.
+    # The candidate is deliberately never admitted or represented as accepted fact.
+    sources = tuple(identifier for identifier, _ in replay.change_sets[-1].sources)
+    evidence = tuple(identifier for identifier, _ in replay.change_sets[-1].evidence)
+    assert sources and evidence, "candidate fixture requires both retained closures"
     candidate = history.compose_change_set(
         change_set_id="change:read:unaccepted",
-        source_record_ids=tuple(
-            identifier for identifier, _ in replay.change_sets[-1].sources
-        ),
-        evidence_record_ids=(),
+        source_record_ids=sources,
+        evidence_record_ids=evidence,
         operations=(
             api.KnowledgeOperation(
                 ordinal=0,
@@ -401,6 +404,8 @@ def test_retained_candidate_bytes_do_not_become_accepted_lineage(owner):
         valid_time=api.KnowledgeValidTime("NONE_STATED", None),
         supersedes=(),
     )
+    assert tuple(identifier for identifier, _ in candidate.sources) == sources
+    assert tuple(identifier for identifier, _ in candidate.evidence) == evidence
     history.append_anchors(
         anchors=(
             api.structural_evidence_anchor(
