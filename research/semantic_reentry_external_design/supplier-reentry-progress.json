@@ -1,7 +1,7 @@
 {
   "classification": "CONFORMANCE_FIXTURE",
-  "status": "ACTIVE_IMPLEMENTATION_WITH_OPEN_REENTRY_GUARDS",
-  "claim": "PURE_CANDIDATE_AND_LAWS_PARTLY_GREEN_FULL_SYNTHESIZED_CLOSURE_NOT_GREEN",
+  "status": "FOCUSED_SYNTHESIZED_E2E_GREEN_UNIFIED_GATE_AND_AUDIT_PENDING",
+  "claim": "BOUNDED_SYNTHESIZED_ACTION_OBSERVED_KCS_REPLAY_AND_FRESH_QUIESCENCE",
   "core_base": "90146c380994621a2f8df25876affd03fc9e57e3",
   "artifact_directory": "/private/tmp/malleus-reentry-integration.waW6z7",
   "initial_candidate": {
@@ -59,6 +59,33 @@
     "rca": "The synthesizer accepted schema-valid strategy output without independently checking its agreement with the bound goal/operator and supplied model prediction. A different target or a faulty prediction hidden by the strategy still produced CANDIDATES.",
     "required_guard": "Validate exact permitted payload and modeled source/frame before returning any candidate, independently of a replaceable strategy's claimed success."
   },
+  "corrected_focused_green": {
+    "implementation_commit": "a056077ea13955d9de3db7e98e54b973d0967bd4",
+    "implementation_tree": "3fce91549bd58027b0fa49d37a4a9418dba17b11",
+    "main_test_commit": "01c957e",
+    "boundary_test_commit": "f817373",
+    "file": "supplier-reentry-focused-corrected.xml",
+    "sha256": "859009ca9fc86a4bf55594fb1593240af55ac3a66aede65908e9be092b565149",
+    "tests": 35, "passes": 35, "failures": 0, "errors": 0, "skipped": 0,
+    "basetemp": "pytest-reentry-focused-corrected",
+    "observations": [
+      "Actual synthesized action traverses TYPE/ACCEPT, direct-grant authorization, dispatch, one controlled source attempt, independent capture and ordinary observed-source KCS preparation/admission.",
+      "All pre-admission checkpoints preserve accepted quantity one; linked observed admission yields quantity two with complete complement and supersession history.",
+      "JSONL-only reopen and fresh reevaluation yield SATISFIED without a candidate, retention or effect.",
+      "Failed-after-write retains FAILED while separately observed bytes support the accepted correction; success with unchanged bytes refuses episode closure.",
+      "Retained-only and unrelated quantity-two corrections cannot falsely close the episode.",
+      "Closed role grammar, declared optional lifecycle indexes, independent model/output checks and defensive input copies repair the recorded defect classes."
+    ],
+    "count_boundary": "This run collected 35 tests before the later fast manifest/import guard was added. Its separate one-test GREEN is not added to this count."
+  },
+  "unified_gate": {
+    "status": "NOT_RUN_RUNTIME_EPOCH_ASSEMBLY_ISSUE",
+    "manifest": "supplier-reentry-gate.json",
+    "manifest_commit": "fe89d626179af4130c31787c456a06032cfb3a22",
+    "finding": "Historical test_replay_noninvertibility.py requires Core commit 2af45e03ee7d7bf528cef8db42c0798e6d99685b and a distinct producer. It cannot run unchanged under the integration checkout.",
+    "required_guard": "Preserve historical evidence and strict identity checks; provide a current-bound witness and a hard test preventing incompatible runtime epochs in one gate.",
+    "core_dependency": "PASS. This is Re-entry-owned verification work, not a missing Core contract."
+  },
   "runtime": {
     "checkout": "/private/tmp/malleus-reentry-integration.waW6z7/repo",
     "python": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
@@ -66,7 +93,7 @@
     "future_retained_runs": "Use distinct task-owned explicit pytest basetemp paths inside the artifact directory. The shared default pytest temporary root is subject to cleanup by other concurrent sessions; missing old temporary histories are not retained replay evidence."
   },
   "exclusions": [
-    "complete GREEN supplier E2E, final unified gate or landing delivery",
+    "final unified gate, full repository CI or landing delivery",
     "source truth, delivery, demand fulfilment or causality",
     "empirical synthesizer/model/strategy replacement",
     "Core expansion, public vocabulary promotion, merge, push or publication"

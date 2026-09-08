@@ -1,17 +1,30 @@
 # Supplier Re-entry integration
 
-Status: ACTIVE IMPLEMENTATION, not an executed supplier E2E.
-Latest verified boundary: fresh actual independent capture through ordinary observed-
-source KCS preparation, admission and JSONL replay. Accepted B/Y/2 appears only after
+Status: FOCUSED SUPPLIER E2E GREEN, final unified gate and landing audit pending.
+The corrected two-module run passed 35 tests, including actual synthesized proposal,
+checks, authorization, controlled source attempt, independent capture, ordinary KCS
+admission, JSONL-only replay and fresh quiescence. Accepted B/Y/2 appears only after
 admission, including failed-after-write without rewriting the failed receipt.
-This is not yet a synthesized complete supplier E2E.
+An unchanged source after a success receipt does not close the goal. This remains a
+bounded synthetic single-action proof, not delivery, demand fulfilment or full CI.
 Separate completed runs: action entry 141 passes, authorization 99, corrected focused
 execution 22, expanded observation 39, fresh observed-population gate 98, and corrected
 accepted-lineage read module 32. These are separate, overlapping runs, not one total.
-Pure pinned candidate synthesis passed its first four tests and a separate 18-test
-law selection. Full acted-episode closure is not GREEN: the first expanded run passed
-21 tests and had three setup errors in the lifecycle reader. Two adversarial strategy-
-output tests also exposed missing contract-level output guards. No Core wait.
+Earlier runs and failures remain recorded separately in supplier-reentry-progress.json.
+The corrected run verifies guards for declared-but-unpopulated lifecycle indexes,
+closed implementation roles and independent strategy/model agreement. No Core wait.
+The five-minute continuation heartbeat remains ACTIVE. Core's latest thread update
+explicitly permits this single-action consumer to continue while its separate
+two-sequential-action extension proceeds.
+
+Current verification issue: supplier-reentry-gate.json includes the historical
+test_replay_noninvertibility.py, whose runtime guard requires Core commit
+2af45e03ee7d7bf528cef8db42c0798e6d99685b, not this integration base. The manifest
+has not been executed as a unified gate. Preserve that historical witness and its
+strict identity guard; establish a current-bound witness and a regression against
+mixing incompatible runtime epochs before claiming a unified result. This is a
+Re-entry-owned gate assembly issue, not a missing Core contract. No identity check
+has been weakened and no historical test has been skipped or relabelled as GREEN.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
@@ -186,12 +199,12 @@ must propose an existing ActionProposal subtype first. Symbolic model agreement
 does not prove a world change. The old e7 correction and the expected-output
 oracle must never be used as this experiment's captured source.
 
-The full proof is unfinished. Synthesis and its immutable input closure, actual
-check producers and lifecycle submission, controlled execution, independent
-capture, observed-source KCS admission, JSONL-only replay and fresh episode
-closure must still run together. Every pre-admission checkpoint must retain
-B/Y/1. Only the admitted observed correction may make B/Y/2 current, and the
-final linked, satisfied evaluation must produce no candidate, append or effect.
+The corrected focused run now executes those stages together. Every pre-admission
+checkpoint retains B/Y/1. Only the admitted observed correction makes B/Y/2 current,
+and final linked satisfaction produces no candidate, append or effect. Final
+delivery still requires the compatible unified selection, retained evidence audit,
+base-to-head scope review and landing coordinates. Earlier dated stage sections
+below preserve the evidence and outstanding work at their respective checkpoints.
 
 ## Accepted read input, GREEN
 
