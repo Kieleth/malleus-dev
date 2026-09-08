@@ -275,3 +275,50 @@ a separately versioned current-compiler example and current test binding,
 preserving the original and its historical reproduction check. That fixture
 change requires operator approval. No assertion is skipped or hash field
 ignored, and no runtime/fixture correction has been adopted here.
+
+## Supplier initialization, verified
+
+The initializer contract and 23 initial tests were frozen at `b97e99d`. The RED
+run had 23 missing-module failures. The first implementation run had 21 passes
+and two failures, both refusing the supposedly identical supplier program before
+any retention. No initialized supplier lifecycle or full E2E is claimed yet.
+
+SP-2, reproduced: supplier program authoring inherited dictionary traversal order
+when Core's builders generated ordered schema arrays. Reusing the named role maps
+after canonical JSON serialization therefore produced different program bytes.
+The earlier determinism test used the same map insertion order and missed this
+class. The dedicated serialization regression failed before the repair. The
+initializer and regression RED are retained at `ce0e00c`.
+
+The supplier builder now chooses canonical role order before lowering either map.
+This authors a new program identity; it never renames an already retained program.
+The initializer still compares the complete generated program bytes before
+retention. Cheap static checks now precede that expensive validation. The targeted
+run passed the serialization regression and actual supplier initialization, two
+tests with 34 deselected. Implementation: `23b67ba5b6a402331c42869cb1e889f33869123b`,
+tree `8fa5ba926d063a38e36a52d09ab4323b400a7722`. The nine-file gate subsequently
+passed all 173 tests with zero failures, errors or skips. Counts overlap with the
+focused and earlier runs and are not added. This is not the full supplier E2E.
+
+The verified initialization appends 14 protocol records and preserves all domain
+coordinates and accepted history at each step. Its 39-event JSONL file independently
+reopens in a fresh process with only B/Y/1 and the O1/X1/relation complement accepted.
+The selected supplier bundle has the new identity
+`sha256:86c44748ab4ce43c864b8130bfa01b27630aece3a90406f3ada6bf6039af9eb3`.
+No assessments, proposal, grant, authorization, dispatch, execution, observation or
+supplier correction are inferred from registration. Exact evidence is in
+`supplier-initialization-result.json`. The targeted and unified runs independently
+produced byte-identical 39-event histories with SHA-256
+`1df1c990e54bab9300414c3f8caa8db02c158d5fb9ae0a27a538351216b42d29`.
+
+The initialization-specific gate is `supplier-initialization-gate.json`. It covers
+the new coordinator and the existing supplier source/schema/program/read and Core
+registration/initialization/check/finite-history boundaries. It does not replace
+or waive the broader population gate's known historical-example failure.
+
+The scoped self-review is `SUPPLIER_INITIALIZATION_REVIEW.md`. No new Core blocker
+was found. Next is the retained goal/implementation/source closure, existing
+original-context binding and pure synthesizer, then the real authorized supplier
+attempt, independent capture and observation-linked KCS/episode closure. Core's
+unchanged sequential-action proposal and Robotics' separate work do not gate this
+one-episode implementation. The recurring loop remains active.
