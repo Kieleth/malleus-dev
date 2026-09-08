@@ -1,0 +1,51 @@
+id: https://malleus.dev/research/semantic-reentry/supplier-action
+name: semantic_reentry_supplier_action
+version: 0.1.0
+description: >-
+  Research-local supplier amendment proposal. This declaration performs no
+  effect and supplies no grant, observed state or accepted knowledge.
+prefixes:
+  reentry: https://malleus.dev/research/semantic-reentry/
+imports:
+  - linkml:types
+  - assent
+classes:
+  SupplierOrderAmendment:
+    is_a: ActionProposal
+    description: >-
+      Propose changing the recorded quantity of one product in one supplier
+      order, conditional on exact pre-state bytes. The selected Re-entry
+      Contract supplies the permitted operator and goal, not this ontology.
+    slots:
+      - logical_source_id
+      - supplier_order_id
+      - product_code
+      - expected_quantity
+      - requested_quantity
+      - expected_source_digest
+      - new_source_occurrence_id
+    slot_usage:
+      action_type:
+        equals_string: AMEND_SUPPLIER_ORDER
+slots:
+  logical_source_id:
+    range: string
+    required: true
+  supplier_order_id:
+    range: string
+    required: true
+  product_code:
+    range: string
+    required: true
+  expected_quantity:
+    range: integer
+    required: true
+  requested_quantity:
+    range: integer
+    required: true
+  expected_source_digest:
+    range: string
+    required: true
+  new_source_occurrence_id:
+    range: string
+    required: true

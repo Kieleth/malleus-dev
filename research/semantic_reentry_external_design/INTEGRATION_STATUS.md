@@ -81,8 +81,16 @@ the public compiler. No LocalAction import, weakened Assent declaration,
 date-to-string workaround or hand-built compiled contract is permitted.
 The resulting contract identity must come from that actual compilation.
 
-Next: freeze and test this schema, then author a separately identified program
-variant against it, freeze the pure synthesis inputs/results, and implement
+The schema cut passed 23 focused tests after an initial 23 setup-error RED
+named the absent YAML. This is actual exact-source compilation and record
+validation, not proposal admission, authority or an effect. Its SHA-256 is
+`15bdd3144f853dd874d19b73d02f738cd8a972a8f7f276b497b79c635c56d477`.
+RED JUnit SHA-256: `6219b189dfef9d9bb09d080902121a871769d1cffe98bab37e9a607efd408b12`.
+GREEN JUnit SHA-256: `a6ad4128830686a8062dc73845e2e3ae6ca3325d4a274b87209ae92f959cc66c`.
+Both files are in `/private/tmp/malleus-reentry-integration.waW6z7`.
+
+Next: author a separately identified program variant against the compiled
+supplier contract, freeze the pure synthesis inputs/results, and implement
 the controlled source attempt and independent observation before full E2E.
 No state effect is inferred from the completion of any earlier step.
 
