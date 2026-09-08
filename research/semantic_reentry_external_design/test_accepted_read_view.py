@@ -1,0 +1,277 @@
+"""Actual Core read closure, not the supplier source/effect E2E."""
+
+from dataclasses import FrozenInstanceError, replace
+from importlib import import_module
+import json
+from pathlib import Path
+
+import pytest
+
+import malleus.compiler as api
+from malleus.ledger import content_digest
+from research.ontology_driven_kg_realization.experiments.small_shop.public_population.run import (
+    run_full_shop,
+)
+from research.semantic_reentry_external_design.supplier_program import (
+    build_supplier_program,
+)
+from research.semantic_reentry_external_design.test_supplier_action_contract import (
+    compile_supplier_action as compile_supplier_action,
+)
+
+
+MODULE = "research.semantic_reentry_external_design.accepted_read_view"
+TIME = "2026-09-08T03:00:00Z"
+ACTOR = "actor:reentry-read-conformance"
+
+
+def module():
+    return import_module(MODULE)
+
+
+def canonical(value):
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=False,
+    ).encode()
+
+
+@pytest.fixture(scope="module")
+def selected_prefix(tmp_path_factory, action_compilation):
+    module()  # RED names the absent adapter before expensive Core setup.
+    directory = tmp_path_factory.mktemp("accepted-read-core")
+    run_full_shop(directory)
+    history = api.KnowledgeChangeHistory.reopen(directory / "history.jsonl")
+    # Historical e7 is legitimate here: this is only a read-boundary test.
+    unattached = history.path.read_bytes()
+    bundle = build_supplier_program(
+        action_compilation.artifact.artifact_bytes,
+        source_ids={
+            k: "source:read:" + k
+            for k in ("profile", "record_contract", "machine", "history_binding")
+        },
+        policy_ids={k: "policy:read:" + k for k in ("epistemic", "authorization")},
+    )
+    identity = content_digest(json.loads(bundle))
+    history.append_anchors(
+        anchors=(
+            api.KnowledgeAnchorInput(
+                machine_event=canonical(
+                    {
+                        "event_type": "ARTIFACT_REGISTERED",
+                        "payload": {
+                            "artifact_id": "artifact:read:program",
+                            "artifact_identity": identity,
+                        },
+                    }
+                ),
+                retained_bytes=bundle,
+                media_type="application/json",
+                role="RETAINED_EVIDENCE",
+            ),
+        ),
+        transaction_time=TIME,
+        actor_id=ACTOR,
+    )
+    replay = history.replay()
+    history.select_protocol_programs(
+        record_id="artifact:read:program",
+        identity=identity,
+        expected_head=replay.ledger_head,
+        expected_count=replay.ledger_event_count,
+        event_id="event:read:selection",
+        transaction_time=TIME,
+        actor_id=ACTOR,
+    )
+    return history.path.read_bytes(), unattached
+
+
+@pytest.fixture
+def owner(tmp_path, selected_prefix):
+    path = tmp_path / "history.jsonl"
+    path.write_bytes(selected_prefix[0])
+    history = api.KnowledgeChangeHistory.reopen(path)
+    return history, history.replay(), history.composition_context()
+
+
+def freeze(replay, context):
+    return module().freeze_accepted_replay(replay=replay, context=context)
+
+
+def test_real_replay_freezes_without_a_writer_or_graph(owner):
+    history, replay, context = owner
+    before = history.path.read_bytes()
+    view = freeze(replay, context)
+    assert view.context == context
+    assert view.receipt_identity == replay.receipt.identity
+    assert view.records == replay.graph.export_records()
+    assert view.protocol == replay.protocol_replay.data
+    assert view.receipt == json.loads(replay.receipt.canonical_bytes)
+    assert view.contract_view is replay.contract_view
+    for name in ("graph", "replay", "history", "path", "admit", "append_anchors"):
+        assert not hasattr(view, name)
+    assert history.path.read_bytes() == before
+    assert freeze(replay, context) == view
+    assert (
+        Path(api.__file__)
+        .resolve()
+        .is_relative_to(Path(__file__).resolve().parents[2] / "src")
+    )
+
+
+def test_outputs_are_frozen_and_defensive(owner):
+    _, replay, context = owner
+    view = freeze(replay, context)
+    with pytest.raises((FrozenInstanceError, AttributeError)):
+        view.receipt_bytes = b"changed"
+    view.records["entities"][0]["properties"].clear()
+    view.protocol["state"].clear()
+    view.receipt.clear()
+    assert view.records == replay.graph.export_records()
+    assert view.protocol == replay.protocol_replay.data
+    assert view.receipt == json.loads(replay.receipt.canonical_bytes)
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "base_ledger_head",
+        "base_ledger_event_count",
+        "base_acceptance_head",
+        "base_materialization_head",
+        "base_accepted_state_digest",
+        "contract_identity",
+        "receipt_identity",
+    ],
+)
+def test_every_context_coordinate_is_bound_to_the_actual_replay(owner, field):
+    history, replay, context = owner
+    before = history.path.read_bytes()
+    value = (
+        context.base_ledger_event_count + 1
+        if field == "base_ledger_event_count"
+        else content_digest("wrong")
+    )
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(replay, replace(context, **{field: value}))
+    assert refused.value.reason == "STALE_BASE"
+    assert history.path.read_bytes() == before
+
+
+def test_mutated_projection_cannot_copy_the_accepted_header(owner):
+    history, replay, context = owner
+    before = history.path.read_bytes()
+    replay.graph.create_entity("InventoryUnit", "forged", {"product_code": "X"})
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(replay, context)
+    assert refused.value.reason == "STALE_BASE"
+    assert history.path.read_bytes() == before
+    assert not history.replay().graph.has_node("forged")
+
+
+def test_protocol_bytes_cannot_borrow_a_receipt_identity(owner):
+    _, replay, context = owner
+    data = replay.protocol_replay.data
+    data["state"]["action_acceptance_head"] = content_digest("forged")
+    altered = replace(
+        replay,
+        protocol_replay=replace(
+            replay.protocol_replay, canonical_bytes=canonical(data)
+        ),
+    )
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(altered, context)
+    assert refused.value.reason == "STALE_BASE"
+
+
+def test_receipt_bytes_cannot_borrow_a_receipt_identity(owner):
+    _, replay, context = owner
+    altered = replace(replay, receipt=replace(replay.receipt, canonical_bytes=b"{}"))
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(altered, context)
+    assert refused.value.reason == "STALE_BASE"
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("content", b"tampered"),
+        ("role", "RETAINED_SOURCE"),
+        ("media_type", "application/tampered"),
+        ("record_id", "forged:input"),
+    ],
+)
+def test_retained_bytes_roles_and_ids_must_match(owner, field, value):
+    _, replay, context = owner
+    member = next(
+        item for item in context.retained_inputs if item.role == "RETAINED_EVIDENCE"
+    )
+    altered = replace(
+        context,
+        retained_inputs=tuple(
+            replace(item, **{field: value}) if item == member else item
+            for item in context.retained_inputs
+        ),
+    )
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(replay, altered)
+    assert refused.value.reason in {"STALE_BASE", "MALFORMED_INPUT"}
+
+
+def test_missing_protocol_is_not_an_empty_satisfied_episode(owner, selected_prefix):
+    history, _, _ = owner
+    history.path.write_bytes(selected_prefix[1])
+    history = api.KnowledgeChangeHistory.reopen(history.path)
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(history.replay(), history.composition_context())
+    assert refused.value.reason == "MALFORMED_INPUT"
+
+
+@pytest.mark.parametrize("which", ["replay", "context"])
+def test_wrong_input_kinds_refuse_loudly(owner, which):
+    _, replay, context = owner
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(
+            {} if which == "replay" else replay, {} if which == "context" else context
+        )
+    assert refused.value.reason == "MALFORMED_INPUT"
+
+
+def test_new_full_head_needs_a_fresh_context_even_when_graph_unchanged(owner):
+    history, replay, context = owner
+    content = b"explicit conformance note"
+    from hashlib import sha256
+
+    history.append_anchors(
+        anchors=(
+            api.KnowledgeAnchorInput(
+                machine_event=canonical(
+                    {
+                        "event_type": "ARTIFACT_REGISTERED",
+                        "payload": {
+                            "artifact_id": "artifact:read:next",
+                            "artifact_identity": "sha256:"
+                            + sha256(content).hexdigest(),
+                        },
+                    }
+                ),
+                retained_bytes=content,
+                media_type="text/plain",
+                role="RETAINED_EVIDENCE",
+            ),
+        ),
+        transaction_time=TIME,
+        actor_id=ACTOR,
+    )
+    fresh = history.replay()
+    assert fresh.graph.state_digest() == replay.graph.state_digest()
+    with pytest.raises(module().AcceptedViewRefusal) as refused:
+        freeze(fresh, context)
+    assert refused.value.reason == "STALE_BASE"
+    assert (
+        freeze(fresh, history.composition_context()).records
+        == freeze(replay, context).records
+    )
