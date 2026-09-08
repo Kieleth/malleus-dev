@@ -5,6 +5,10 @@ It is not a main-branch publication, stable wire or finished Robotics or
 Semantic Re-entry experiment. The final execution report and exact commit
 determine readiness; this document alone does not.
 
+The current verification receipt is `execution-verification.json`, alongside
+this document. It identifies the implementation, exact test partitions and
+packaged replay. Later report-only commits do not change that implementation.
+
 ## What the mechanism does
 
 The same `KnowledgeChangeHistory` now has a finite-program attachment for
@@ -17,6 +21,12 @@ Program data declares the record types, references, field comparisons,
 uniqueness, time rules, transitions and refusals. The private Core interpreter
 executes the twelve identified instructions. It does not import the research
 builders, checker or effect code during append or replay.
+
+Value schemas use the finite keyword sets in Core's `finite_program.py`, not
+arbitrary JSON Schema. References, alternate dialects and hidden applicators
+refuse before selection/execution. Ordinary property names and constant values
+are data. The selected registration schemas enforce the retained nonblank field
+census, including list elements, without trimming or normalizing their values.
 
 | Stage | Executable definition | What is committed |
 | :--- | :--- | :--- |

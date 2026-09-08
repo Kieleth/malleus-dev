@@ -1,5 +1,10 @@
 # Owning-history execution cut
 
+This is a chronological execution journal. Statements about unfinished stages
+below describe their recorded boundary, not the latest implementation. Read
+[`../EXECUTABLE_HANDOFF.md`](../EXECUTABLE_HANDOFF.md) for current scope and the
+final verification section for the latest tested coordinate.
+
 This private implementation step serves the approved executable action
 milestone. It is not the complete action profile or a consumer handoff.
 
@@ -341,3 +346,121 @@ object-event, public population, showcase and correction. No new excluded
 field, golden rewrite or skipped failure was introduced. The raw current Shop
 selector is not claimed green. Frozen evidence remains evidence of its exact
 historical producer, while current behavioral parity remains separately tested.
+
+## Consumer-found schema boundary correction
+
+A read-only Semantic Re-entry audit of `1ed23e002b81229b97997f08f5157c23a55112ec`
+found that `$dynamicRef` escaped the finite schema check. A missing local
+reference then raised a JSON Schema implementation exception instead of a typed
+refusal. Nonlocal spellings also passed definition and bundle checks; neither
+the consumer nor Core executed a nonlocal reference or made a retrieval call.
+
+The corrective RED sequence is `0882806`, `5bec065`, `d4719d0`. The first run
+had 12 failures and 8 passes; the second had 14 failures and 8 passes. Four
+additional instruction-schema controls failed against the intermediate working
+correction. The final test file has 26 cases. It covers schema-position versus
+ordinary-data distinctions, nested value schemas, unused profile schemas,
+owning bundle refusal and selection refusal with exact ledger-byte preservation.
+
+GREEN is `5d0addafc3155cd795ab4bc99da0791489bc492c`, tree
+`1a1d3b7a4b52d05790d59e6ba1fa4c11ac2bbdda`. Its focused schema, static-definition,
+executor, owning-history and exact-definition-reuse selector passes 139 tests
+in 11.67 seconds. The production change is confined to `finite_program.py`.
+Value schemas now have an explicit keyword set per primitive type. Only
+`properties` and `items` contain nested value schemas; names and `const`/`enum`
+values remain ordinary data. References, dialect changes and hidden applicators
+are outside this subset. The instruction-schema scan separately allows local
+ordinary references, rejects dynamic references, and visits schema positions
+only. The owning interpreter still requires its exact installed instruction
+grammar. No new operation, capability, callback or policy was added.
+
+The initial final-regression run at `1ed23e0` was interrupted after 145 passes
+when this defect arrived. It is not a completed gate. The earlier 86-event
+packaged-replay check also belongs to `1ed23e0`, not this corrected successor.
+Neither superseded result is used as final verification of the correction.
+
+## Consumer-found registration constraint correction
+
+The same consumer audit found that grant scope/permission strings and monitor
+version strings could be whitespace-only after real registration. Core expanded
+the reproducer across the 12 fields already listed in
+`lifecycle/registration-nonblank-gap.json`. It did not invent a new census or
+tighten unrelated fields. RED `c6a375d` produced 12 failures and 5 passes: five
+malformed records were admitted, while seven fields refused later or under a
+different guard rather than the declared input constraint.
+
+GREEN `28fe109faee16f3756387077846d2c7fb5dc0da9`, tree
+`b9f48dc3e3c0c37bbad3f1ef58d1d1264843dae9`, adds 17 authoring lines that bind the
+existing census to actual record input schemas, including list item schemas.
+The selected artifact retains those constraints and the existing interpreter
+enforces them. No interpreter operation or policy vocabulary changed. The old
+gap document remains historical evidence; its field census now has executable
+coverage. All 45 registration, nonblank and prerequisite tests pass in 24.46
+seconds. Every malformed case preserves exact prior ledger bytes and the
+reopened receipt. Four positive cases preserve nonblank values with surrounding
+whitespace, including `" AMEND "`, without normalization.
+
+At the preceding schema-fix coordinate the mechanism partition passed 497
+tests. Its three concurrent lifecycle partitions were interrupted after 34, 9
+and 8 passes when the registration finding arrived. They are not completed
+gates. Final verification starts afresh from `28fe109` below.
+
+The complete bundle exposed a composition error in that intermediate candidate:
+grant permission items now declared `nonblank`, while the action's fixed
+`LOCAL_ACTION` literal still declared only STRING. The existing static checker
+correctly refused their membership comparison. The completion partition had 30
+setup errors, not 30 runtime failures; the other lifecycle partitions were
+interrupted. This candidate is superseded and is not an integration handoff.
+
+Corrective RED `45c08df` reproduces that complete-bundle failure directly.
+GREEN `73d1a527dd237e5546d86d5c0470e9e056d41e16`, tree
+`2717844476020b97002752f83d02e2091ebf1c00`, adds five authoring lines making the
+existing fixed literal's nonblank refinement explicit. It changes no accepted
+action value and does not relax the checker or tighten an unrelated free-text
+field. The full-bundle guard plus registration/prerequisite selector passes 46
+tests in 74.60 seconds. Final lifecycle verification restarts from this exact
+implementation.
+
+## Final verification at the corrected implementation
+
+Implementation `73d1a527dd237e5546d86d5c0470e9e056d41e16`, tree
+`2717844476020b97002752f83d02e2091ebf1c00`, passes all four disjoint final
+partitions: mechanism 497, prerequisites/proposal/decision 74, permission 42,
+and receipt/observation/real Shop composition 30. Total: 643 passed, zero
+failures, errors or skips. The 37 test files cover every test file in the
+action-program directory plus seven owning-kernel/history/schema files. This
+is the selected action gate, not a full repository CI claim. Exact selectors,
+observed environment and results are in `../execution-verification.json`.
+
+A clean source archive of that exact implementation built a wheel with no
+isolation, installation or network access. A fresh process imported Core from
+the extracted wheel, refused research/test imports, and reopened the final
+86-event Shop log. It reproduced five KCSs, one contract revision, B/e7 quantity
+2 superseding B/e4, the unchanged domain complement, the FAILED receipt and the
+independent CONFIRMED observation. It also verified the packaged schema guard
+and the corrected retained nonblank declarations. This uses existing declared
+dependencies; it is not a new clean-install or sdist-parity claim.
+
+Wheel SHA-256 is
+`6830bf19e033f6eeaed1b5e6dbdb1fdc282d5c288934dc46d6d21455fa8c73a7`.
+Final history SHA-256 is
+`d56a92c543930680849de70116cd3dee5865c48d40a677cfae317ab39ce22a2c`.
+The final bundle is
+`sha256:410660217793de1d5ce405888915693b65fc08b7c03e2ca7a5834e3a554ca477`.
+Full ledger, graph and protocol identities are in the verification receipt.
+
+The consumer independently passed 175 correction tests at the earlier
+`28fe109` boundary. That establishes the two reported fixes, not its review of
+the later literal refinement or this final lifecycle. The corrected exact
+handoff is ready for independent consumer verification. Their domain action
+variants, effects, observations and synthesis remain their work, not additional
+Core prerequisites. Neither consumer's experiment gates the other.
+
+Self-inquisition: `protocol_role_is_explicit` and
+`optional_profile_stays_optional` hold at this bounded action profile. Without
+selection, a structural-only history acquires no action obligations or action
+state. The Python kernel executes declared operations; action-specific rules
+and the nonblank field census remain identified data. No root ontology, graph
+write port, effect callback, second ledger or fallback was added. Main and both
+consumer checkouts remain untouched. Review and main integration are separate
+from this isolated implementation approval.

@@ -1,0 +1,170 @@
+{
+  "report_kind": "local executable-action verification, not a protocol artifact",
+  "implementation": {
+    "commit": "73d1a527dd237e5546d86d5c0470e9e056d41e16",
+    "tree": "2717844476020b97002752f83d02e2091ebf1c00",
+    "checkout": "/private/tmp/malleus-action-contract.X6QNEw/repo",
+    "publication": "isolated local candidate, not merged or pushed"
+  },
+  "test_invocation": {
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": "src:."
+    },
+    "executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+    "arguments_before_selectors": [
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "arguments_after_selectors": [
+      "--tb=short"
+    ]
+  },
+  "test_partitions": [
+    {
+      "name": "initial",
+      "selectors": [
+        "research/action_history_contract_freeze/programs/test_registration_history.py",
+        "research/action_history_contract_freeze/programs/test_initialization_history.py",
+        "research/action_history_contract_freeze/programs/test_proposal_history.py",
+        "research/action_history_contract_freeze/programs/test_history_checks.py",
+        "research/action_history_contract_freeze/programs/test_assessment_history.py",
+        "research/action_history_contract_freeze/programs/test_decision_history.py",
+        "research/action_history_contract_freeze/programs/test_registration_nonblank_history.py"
+      ],
+      "passed": 74,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 318.8
+    },
+    {
+      "name": "permission",
+      "selectors": [
+        "research/action_history_contract_freeze/programs/test_current_history.py",
+        "research/action_history_contract_freeze/programs/test_authority_history.py",
+        "research/action_history_contract_freeze/programs/test_authorization_history.py",
+        "research/action_history_contract_freeze/programs/test_dispatch_history.py"
+      ],
+      "passed": 42,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 462.21
+    },
+    {
+      "name": "completion",
+      "selectors": [
+        "research/action_history_contract_freeze/programs/test_execution_history.py",
+        "research/action_history_contract_freeze/programs/test_observation_history.py",
+        "research/action_history_contract_freeze/programs/test_shop_action_composition.py"
+      ],
+      "passed": 30,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 494.14
+    },
+    {
+      "name": "mechanism",
+      "selectors": [
+        "research/action_history_contract_freeze/programs/lifecycle/test_context_proposal.py",
+        "research/action_history_contract_freeze/programs/lifecycle/test_execution_program.py",
+        "research/action_history_contract_freeze/programs/lifecycle/test_initialization.py",
+        "research/action_history_contract_freeze/programs/lifecycle/test_prerequisites.py",
+        "research/action_history_contract_freeze/programs/test_check_executor.py",
+        "research/action_history_contract_freeze/programs/test_control_executor.py",
+        "research/action_history_contract_freeze/programs/test_executor.py",
+        "research/action_history_contract_freeze/programs/test_input_carrier.py",
+        "research/action_history_contract_freeze/programs/test_input_preflight.py",
+        "research/action_history_contract_freeze/programs/test_invocation_definition.py",
+        "research/action_history_contract_freeze/programs/test_keyed_effect.py",
+        "research/action_history_contract_freeze/programs/test_membership_definition.py",
+        "research/action_history_contract_freeze/programs/test_monitor_output_fields.py",
+        "research/action_history_contract_freeze/programs/test_packet_validator.py",
+        "research/action_history_contract_freeze/programs/test_sorted_list_definition.py",
+        "research/action_history_contract_freeze/programs/test_static_arrays.py",
+        "tests/contract_compiler/pareto/test_finite_protocol_history.py",
+        "tests/contract_compiler/pareto/test_finite_protocol_sources.py",
+        "tests/contract_compiler/pareto/test_finite_protocol_selection.py",
+        "tests/contract_compiler/pareto/test_finite_protocol_state.py",
+        "tests/contract_compiler/pareto/test_finite_definition_reuse.py",
+        "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+        "tests/contract_compiler/pareto/test_finite_schema_language.py"
+      ],
+      "passed": 497,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 53.92
+    }
+  ],
+  "combined": {
+    "passed": 643,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "test_files": 37,
+    "method": "four disjoint invocations on the same unchanged implementation; not a full repository gate"
+  },
+  "environment_observed": {
+    "python": "3.12.9",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "dependencies": {
+      "pytest": "9.1.1",
+      "jsonschema": "4.26.0",
+      "PyYAML": "6.0.3",
+      "linkml": "1.11.1",
+      "linkml-runtime": "1.11.1",
+      "hatchling": "1.31.0"
+    },
+    "new_dependency_installations": 0
+  },
+  "packaged_replay": {
+    "build_source": "git archive 73d1a527dd237e5546d86d5c0470e9e056d41e16",
+    "build_command": "python -m build --wheel --no-isolation",
+    "wheel": "malleus_dev-0.13.3-py3-none-any.whl",
+    "wheel_sha256": "6830bf19e033f6eeaed1b5e6dbdb1fdc282d5c288934dc46d6d21455fa8c73a7",
+    "method": "extracted-wheel Core, existing declared dependency environment, fresh process with research and tests imports refused",
+    "history_generator": "research/action_history_contract_freeze/programs/test_shop_action_composition.py::test_inflight_receipt_and_observation_survive_real_domain_change_and_clean_reopen",
+    "history_sha256": "d56a92c543930680849de70116cd3dee5865c48d40a677cfae317ab39ce22a2c",
+    "ledger_event_count": 86,
+    "ledger_head": "sha256:be6e0057e0fc79be38a83ce55f8cf2550e872050608e7ad44f34bd88558128ea",
+    "graph_digest": "sha256:b7ee85186b24453b276c4f33b29b49e6100bb8dc225766932f496c88f499a058",
+    "protocol_identity": "sha256:24e13e2748dd98ef56e324803338430448a0f6d71e37380ad287478464b74ed3",
+    "bundle_identity": "sha256:410660217793de1d5ce405888915693b65fc08b7c03e2ca7a5834e3a554ca477",
+    "knowledge_change_sets": 5,
+    "contract_revisions": 1,
+    "execution_status": "FAILED",
+    "observation_result": "CONFIRMED",
+    "additional_checks": [
+      "packaged finite schema guard refuses dynamic references",
+      "retained grant schemas require nonblank scope and permission items",
+      "fixed action literal retains its nonblank refinement",
+      "B/e7 quantity 2 supersedes B/e4",
+      "protocol phases do not add knowledge changes"
+    ],
+    "clean_install_claim": false,
+    "sdist_parity_claim": false
+  },
+  "independent_correction_audit": {
+    "commit": "28fe109faee16f3756387077846d2c7fb5dc0da9",
+    "passed": 175,
+    "report_sha256": "d51885077670d83a0a35eee331fcb6e461e4007ac2c87f27ff0199e4548e8694",
+    "scope": "closes the two reported defects only; not the later literal refinement or final lifecycle verification"
+  },
+  "historical_evidence": "Earlier raw Shop comparisons and interrupted gates are reported separately in programs/HISTORY_EXECUTION.md, not counted here.",
+  "nonclaims": [
+    "real supplier or robot effect",
+    "source truth or grant legitimacy",
+    "actor authentication or OS enforcement",
+    "general multi-action lifecycle or retry semantics",
+    "cross-language interpreter replacement",
+    "stable public wire or installed all-in-one action SDK",
+    "main integration or release",
+    "full repository CI"
+  ]
+}
