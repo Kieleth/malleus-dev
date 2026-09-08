@@ -1,0 +1,23 @@
+{
+  "after_order": {
+    "order_id": "SYN-PS-ORDER",
+    "ordered_units": ["SYN-PS-X1", "SYN-PS-X2"],
+    "shipments": [],
+    "remaining_units": ["SYN-PS-X1", "SYN-PS-X2"]
+  },
+  "after_first_shipment": {
+    "order_id": "SYN-PS-ORDER",
+    "ordered_units": ["SYN-PS-X1", "SYN-PS-X2"],
+    "shipments": [{"shipment_id": "SYN-S1", "tracking_id": "SYN-TRACK-1", "units": ["SYN-PS-X1"]}],
+    "remaining_units": ["SYN-PS-X2"]
+  },
+  "after_second_shipment": {
+    "order_id": "SYN-PS-ORDER",
+    "ordered_units": ["SYN-PS-X1", "SYN-PS-X2"],
+    "shipments": [
+      {"shipment_id": "SYN-S1", "tracking_id": "SYN-TRACK-1", "units": ["SYN-PS-X1"]},
+      {"shipment_id": "SYN-S2", "tracking_id": "SYN-TRACK-2", "units": ["SYN-PS-X2"]}
+    ],
+    "remaining_units": []
+  }
+}
