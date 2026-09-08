@@ -1,0 +1,286 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "STANDALONE_BOUNDED_SUPPLIER_REENTRY_WALKTHROUGH",
+  "status": "COMPLETE",
+  "base_commit": "4ad362e6737432296bc0fc249213b7551a344251",
+  "base_tree": "6c965fe08cd6c2fd29af33a1d35384f0922c445b",
+  "core_commit": "90146c380994621a2f8df25876affd03fc9e57e3",
+  "core_src_tree": "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1",
+  "runtime_commit": "6f039161911b7505ef8b48f08b388c9e152dcde9",
+  "runtime_tree": "51e970c133fc43436bae9fc30df8d6ec4f5d6eb5",
+  "audited_content_commit": "6bd347369da5ed124a77726df3cce64c73fbff4f",
+  "audited_content_tree": "6deecdb28431322209c5e85d5fe721eed1fb94d6",
+  "original_proof_files_checked": 92,
+  "original_proof_file_mismatches": [],
+  "scope": {
+    "changed_content_files": 4,
+    "added_lines": 1040,
+    "removed_lines": 0,
+    "core_ontology_fixture_paper_changes": false,
+    "manifest_excludes_itself": true
+  },
+  "preflight": {
+    "server_calls": false,
+    "new_endpoint": false,
+    "new_dependencies": false,
+    "replaced_mechanism": false,
+    "new_ontology_terms": false,
+    "new_public_protocol_identity": false,
+    "required_data_defaults": false
+  },
+  "focused": {
+    "passed": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "skip": "Existing paper-doctrine comparison: the paper-program doctrine is not present in this tree.",
+    "junit": {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-final-focused.xml",
+      "bytes": 5274,
+      "sha256": "f5ee85cec2ccaeaa39d44bc4b4f0db6507832dc29a8b7b138d26af876970056f"
+    },
+    "tests": [
+      "research/semantic_reentry_external_design/test_supplier_walkthrough.py",
+      "tests/test_inquisition.py::TestSkillsAreInstallable",
+      "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
+    ]
+  },
+  "red": {
+    "expected_missing_entrypoint_failures": 6,
+    "junit": [
+      {
+        "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-red.xml",
+        "bytes": 5376,
+        "sha256": "8030936ebe386dd08641c841c1b5dbb1d18c196024808278c1e153ee9cb424bd"
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-e2e-red.xml",
+        "bytes": 1972,
+        "sha256": "4e201b646a151284f1ea5742f10436e2c36d5437bf38b7468eed85dad474aa20"
+      }
+    ]
+  },
+  "unified": {
+    "status": "PASS",
+    "passed": 394,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "selection": "All tests in unchanged supplier-reentry-gate.json plus test_supplier_walkthrough.py",
+    "junit": {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-unified.xml",
+      "bytes": 71462,
+      "sha256": "9320488869072d2cf3ebdd32fb37210d36ad010fb5a2b8f689bc2be76b1f0ab2"
+    },
+    "seconds": 2616.676,
+    "modules": {
+      "research.semantic_reentry_external_design.test_supplier_reentry": 25,
+      "research.semantic_reentry_external_design.test_supplier_reentry_boundaries": 12,
+      "research.semantic_reentry_external_design.test_accepted_read_view": 32,
+      "research.semantic_reentry_external_design.test_supplier_action_contract": 23,
+      "research.semantic_reentry_external_design.test_supplier_program": 12,
+      "research.semantic_reentry_external_design.test_frozen_supplier_inputs": 16,
+      "research.semantic_reentry_external_design.test_supplier_components": 82,
+      "research.semantic_reentry_external_design.test_supplier_initial_source": 34,
+      "research.semantic_reentry_external_design.test_supplier_initialization": 24,
+      "research.semantic_reentry_external_design.test_supplier_proposals": 32,
+      "research.semantic_reentry_external_design.test_supplier_authorization": 35,
+      "research.semantic_reentry_external_design.test_supplier_execution": 22,
+      "research.semantic_reentry_external_design.test_supplier_observation": 22,
+      "research.semantic_reentry_external_design.test_supplier_observed_source": 14,
+      "research.semantic_reentry_external_design.test_supplier_replay_laws": 3,
+      "research.semantic_reentry_external_design.test_supplier_walkthrough": 6
+    }
+  },
+  "command": {
+    "exit_code": 0,
+    "module": "research.semantic_reentry_external_design.supplier_walkthrough",
+    "output": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo",
+    "accepted_quantities": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2
+    ],
+    "source_quantities": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+    ],
+    "last_status": "SATISFIED",
+    "last_reason": "LINKED_OBSERVED_KCS",
+    "last_candidate_count": 0,
+    "ledger_event_count": 73,
+    "second_invocation_same_output": {
+      "exit_code": 1,
+      "reason": "OUTPUT_EXISTS"
+    }
+  },
+  "determinism": {
+    "independent_focused_output": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-walkthrough-final-focused/test_walkthrough_without_test_0/run",
+    "all_14_files_byte_identical_to_command": true,
+    "unified_output": "/private/tmp/malleus-reentry-integration.waW6z7/pytest-walkthrough-unified/test_walkthrough_without_test_0/run",
+    "all_14_unified_files_byte_identical_to_command": true
+  },
+  "checks": {
+    "ruff": "PASS, 33 Python files",
+    "format": "PASS, 33 Python files",
+    "skill_validation": "PASS",
+    "diff_check": "PASS",
+    "syntax_audit": "No test imports, direct private Core imports, or disableable asserts in the new wrapper."
+  },
+  "audit": {
+    "instrument": "Scoped malleus-dev self-inquisition, checkout rubric v12",
+    "lowest_profiles": [
+      "compiler-enabled state-version population",
+      "experimental single-action history attachment"
+    ],
+    "omitted_below_profiles": "No composed source/action/observation/KCS claim.",
+    "root_ontology_rites": "NOT RUN: no root ontology profile change or purity claim.",
+    "judgments": [
+      {
+        "claim": "Runnable composition",
+        "role": "REFERENCE_IMPLEMENTATION",
+        "evidence": "Actual module invocation and independent no-test-import/no-oracle subprocess",
+        "unsupported_transfer": "No planner, packaged API or production supplier claim",
+        "verdict": "PASS"
+      },
+      {
+        "claim": "Stage-boundary evidence",
+        "role": "CONFORMANCE_FIXTURE",
+        "evidence": "Measured graph, source and ledger prefixes; pre-admission and final ledger-only replay",
+        "unsupported_transfer": "Diagnostic report is not protocol authority",
+        "verdict": "PASS"
+      },
+      {
+        "claim": "Reusable adopter instructions",
+        "role": "REFERENCE_IMPLEMENTATION",
+        "evidence": "Skill validation and actual install/guidance tests",
+        "unsupported_transfer": "Repository-only availability and explicit local execution requirement",
+        "verdict": "PASS"
+      }
+    ],
+    "notes": [
+      "Existing adapters and check producers remain research-local. The wrapper creates no replacement interpreter or accepted-state writer.",
+      "Complete walkthrough uses 73 events; it omits the original test setup's unused unbound goal artifact. The actually bound goal, action, observation and KCS identities use the normal gates.",
+      "No empirical second synthesizer, strategy, action-model or projector replacement is claimed.",
+      "Whole-workflow atomicity, multi-writer protection, delivery, demand fulfilment, source truth and policy legitimacy remain excluded."
+    ],
+    "guardrails": [
+      "Existing output targets, including dangling symlinks, refuse before compiler work.",
+      "Checkpoint disagreement raises WalkthroughError, not a disableable assertion.",
+      "Completion report is written only after admission, replay and pure quiescence checks.",
+      "Original 92 hashed proof files remain unchanged."
+    ],
+    "verdict": "PASS_FOR_DECLARED_RESEARCH_LOCAL_PROFILES"
+  },
+  "landing_order": [
+    "Completed proof tip 4ad362e on pinned Core 90146c3",
+    "Walkthrough runtime/tests 6f03916",
+    "Guide/skill e09ec1a and clarification 6bd3473",
+    "This separate completion evidence manifest, excluding its own hash"
+  ],
+  "merged": false,
+  "pushed": false,
+  "published": false,
+  "files": [
+    {
+      "path": ".claude/skills/malleus-acolyte/SKILL.md",
+      "bytes": 60317,
+      "sha256": "e20f33af0159be22bbe16877fe4c28ce038aee93dad6c713447be3da641c65c6"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_walkthrough.py",
+      "bytes": 27477,
+      "sha256": "7d2a5f18acfeec0148322036e5a42536e4b2c2b2236a8b7d03aaf6413a39b764"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_walkthrough.py",
+      "bytes": 6035,
+      "sha256": "2b85044cb542afde85940e1ff265b7906ea929c89fd2233a47469b61b9c0e7a8"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/SUPPLIER_WALKTHROUGH.md",
+      "bytes": 5289,
+      "sha256": "dd836a627a9ecf6253a8135000520b1ff0208dd4031eaf31c22b833472670e59"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/accepted_start.json",
+      "bytes": 620,
+      "sha256": "5033bf86fb28921365521677a3baaa63411496db3bbd68fbc81814647036d756"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/action-proposal.json",
+      "bytes": 1054,
+      "sha256": "220336ee81f1d26a16f1ee3e375c0d6acb1ea0907df37c4b411f4711df8c5597"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/admitted_and_replayed.json",
+      "bytes": 644,
+      "sha256": "7724745039aa0e28b1a1709a100d9fb5c076a1d7341b6751dbe2520c99d510a5"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/executed_not_observed.json",
+      "bytes": 658,
+      "sha256": "de1cdfb1e6e866db99b3c357592e11bc2835bdb1774eeb1402b1cec52f1b79c6"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/history.jsonl",
+      "bytes": 15881950,
+      "sha256": "9ffc32cc6e59965317d0d2c96f16de0396268a269a064910a63a627defbd71c7"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/observed-change-set.json",
+      "bytes": 1780,
+      "sha256": "8fc626540d8a2aaaf3d6191f20bb05c2db90988a20dda104643ab2eee20bb7e8"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/observed-source.jsonl",
+      "bytes": 91,
+      "sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/observed_kcs_not_admitted.json",
+      "bytes": 664,
+      "sha256": "38990e735733797bfda602a6c69ec43ca7e331ffd1ea00c840052cd0a4aac8af"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/original-context.json",
+      "bytes": 1822,
+      "sha256": "fe7503dcfe2e49abc9b22ad4bae850e733525cf6dee67b30ae7c07e16caee38b"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/proposal_only.json",
+      "bytes": 653,
+      "sha256": "174d739f6ffcc29ce9ec485ff8d8a6d1cefba3cef397b350c2c2397a8f05aa3f"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/quiescent.json",
+      "bytes": 720,
+      "sha256": "8465753e3052c2ce455b5144457a6ae05e054d6cd268462c03cd4c43f43f4502"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/reentry-contract.json",
+      "bytes": 2657,
+      "sha256": "a38146c6d2992d6d4668d0dbd69971c1d25bc282a312c8b81b2af9339b3c2d66"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/supplier.jsonl",
+      "bytes": 91,
+      "sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0"
+    },
+    {
+      "path": "/private/tmp/malleus-reentry-integration.waW6z7/walkthrough-demo/walkthrough.json",
+      "bytes": 4251,
+      "sha256": "d32dcce10740700bfd60754d9f720288c4ed5ce9ed8ad9af44ed1b1b60116894"
+    }
+  ],
+  "counts_are_separate_runs_not_summed": true
+}
