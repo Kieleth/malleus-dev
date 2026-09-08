@@ -45,7 +45,10 @@ def inputs(tmp_path_factory):
             policy_ids=POLICY_IDS,
         )
     )
-    directory = tmp_path_factory.mktemp("proposal-prefix")
+    return proposal_prefix(tmp_path_factory.mktemp("proposal-prefix"), bundle)
+
+
+def proposal_prefix(directory, bundle):
     content, checkpoint, references = initialization_prefix(directory, bundle)
     history = KnowledgeChangeHistory.reopen(directory / "history.jsonl")
     init = initialization_event(checkpoint, references)
