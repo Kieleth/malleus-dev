@@ -205,6 +205,26 @@ not claims that an actual TYPE producer reached them in this owning-history
 fixture. The independent existing control tests retain their negative verdict
 coverage. Authorization, dispatch and observation still await integration.
 
+Current-context capture now verifies the actual pre-event full prefix, domain
+coordinates, action head, initialization and both applied policies before
+retaining the canonical content. Its verified index preserves the content
+identity for later authority admission. It reuses source-registration checks;
+ordinary source registration alone does not populate that verified index.
+Eight tests pass in 75.61 seconds. Two execute the real DIRECT_GRANT producer
+on applied grant/action/policy records and retained scope, interval and original
+and current contexts. The exact executor computes SATISFIED; another grantee
+computes VIOLATED with GRANTEE_MATCH. Computation changes no ledger bytes and
+leaves permission PENDING. Five forged context variants refuse before retention.
+The positive capture reopens with unchanged domain and action heads. These
+checks establish shape/identity and the specified grant comparisons, not grant
+legitimacy, authenticated actors, an effect, or an admitted authority judgment.
+
+Arity clarification: the current finite program bundle is exercised with one
+proposal in the history, not multiple closed proposals plus one open proposal.
+Its closed state-read schemas intentionally refuse additional proposal entries.
+General multi-action workflows remain outside this bounded first-lifecycle
+conformance cut; no general concurrency or scheduling claim is made.
+
 FiniteProtocolBundle governs ProtocolTransaction
 KnowledgeChangeHistory consumes FiniteProtocolBundle
 ProtocolTransaction consumes VerifiedPrefix
