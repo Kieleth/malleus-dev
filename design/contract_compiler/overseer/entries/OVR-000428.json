@@ -1,0 +1,90 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000428",
+  "ledger": "overseer",
+  "sequence": 428,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:618f995fe49d53e193213f0bea9893df6772bd6b557d4a7eebd21b8dfff75d50",
+  "recorded_at": "2026-09-08T14:35:11Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "document-fixture-producer-repair",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind current document reproduction while preserving the historical fixture.",
+  "why": "Luis approved this fixture/test correction. The newer compiler changes retained producer evidence and the document base ledger head; the other thirteen fields agree. A separate current example binds its producer, compiled artifact, historical input manifest and output bytes. Tests reject wrong producers, corrupted examples and changed semantic or identity fields. Self-review also found Python equality conflating false with zero: a corrective RED now guards type-strict canonical JSON comparison. Initial RED: ten failures. Corrective RED: one failure, ten passes. Final affected seam: 431 passed, including real admission, reopen, all graph records and exact source/capture tracing. The two original document tests pass at their historical producer. Original fixtures and the fixed two-producer audit remain unchanged. No runtime, ontology, package, paper, downstream or sequential-action change. This closes two document tests, not the other historical Shop failures or full repository GREEN.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "tests/contract_compiler/pareto/test_population_trace.py",
+        "after_digest": "sha256:88dbbd5f5a19773b559f33e4d54bf0f3ab8d9bf91c6685d59aa9d9307424cb49",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6b31dd321d114e6cebc654651ef47ebc93c57224ad67b2a41bec286bf6ec44d2"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_document_fixture_producer.py",
+        "after_digest": "sha256:181ac4d244d589318805d1ae5dff93225084961ef5e537f7ba234dab239b7f28",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_execution_v2/binding.json",
+        "after_digest": "sha256:6ff7301fb0e3862f136159751ba6bf0993e894c99da9b080a873d62b99baa14a",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_execution_v2/document-change.json",
+        "after_digest": "sha256:059fb6a1843a91ffd931e3b79264a9d9a47c505e32718e8d6b027cd035ca8656",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/fixtures/inspection_note_execution_v2/README.md",
+        "after_digest": "sha256:a2ddeb357d910f2770e2c48ffd2f0e021d7f11dfead522ee3fc4340b1c509499",
+        "change": "CREATED"
+      },
+      {
+        "path": "handover/2026-09-08-document-fixture-producer-repair.md",
+        "after_digest": "sha256:3524421476ba1730cd3cfb180ddd40b3e699941b299b0f067946afc67b313246",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "51e9bb20cfad221217588bc3ddeafa91c7be4715"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "4601f6c1175f740d0b440475fe1becce05da2714"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "529f2667d44ed3bf95af2da63fdf65a7daad2021"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "0116492dedcc40310b61a232eaedce999de4e94d"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "9ec32d40634c927f9c7c160e226152c3782f4c84"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:da3a7efecb1d61927f022d6a2ad8e5bfec6bdf321d16835ac2728a487e323d7d"
+}
