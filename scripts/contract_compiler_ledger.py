@@ -230,27 +230,24 @@ def _repository_path(repository: Path, relative: str, context: str) -> Path:
     return path
 
 
-def _commit_has_durable_reference(repository: Path, commit: str) -> bool:
-    if (
-        subprocess.run(
-            ["git", "merge-base", "--is-ancestor", commit, "HEAD"],
-            cwd=repository,
-            capture_output=True,
-            check=False,
-        ).returncode
-        == 0
-    ):
-        return True
-    tags = subprocess.run(
-        ["git", "tag", "--contains", commit, "--format=%(refname:short)"],
+def _durable_commits(repository: Path) -> set[str]:
+    """Read current HEAD/evidence ancestry once, never cache between validations."""
+    result = subprocess.run(
+        ["git", "rev-list", "HEAD", "--glob=refs/tags/evidence/*"],
         cwd=repository,
         capture_output=True,
         check=False,
         text=True,
     )
-    return tags.returncode == 0 and any(
-        tag.startswith("evidence/") for tag in tags.stdout.splitlines()
-    )
+    if result.returncode:
+        raise LedgerValidationError(
+            f"cannot read durable Git ancestry: {result.stderr.strip()}"
+        )
+    return set(result.stdout.splitlines())
+
+
+def _commit_has_durable_reference(repository: Path, commit: str) -> bool:
+    return commit in _durable_commits(repository)
 
 
 def _validate_references(
@@ -275,6 +272,7 @@ def _validate_references(
     evidence_root = (
         repository / "design" / "contract_compiler" / "overseer" / "evidence"
     ).resolve()
+    durable_commits: set[str] | None = None
 
     for position, entry in enumerate(entries):
         for reference in entry["references"]:
@@ -336,6 +334,12 @@ def _validate_references(
                     raise LedgerValidationError(
                         f"{context}: commit must be a full Git object ID"
                     )
+                if durable_commits is None:
+                    durable_commits = _durable_commits(repository)
+                if target in durable_commits:
+                    continue
+                # Preserve the unresolved versus unretained diagnostic. Successful
+                # references need no separate cat-file or per-commit graph walk.
                 result = subprocess.run(
                     ["git", "cat-file", "-e", f"{target}^{{commit}}"],
                     cwd=repository,
@@ -344,11 +348,10 @@ def _validate_references(
                 )
                 if result.returncode:
                     raise LedgerValidationError(f"{context}: commit does not resolve")
-                if not _commit_has_durable_reference(repository, target):
-                    raise LedgerValidationError(
-                        f"{context}: commit must be reachable from HEAD or an "
-                        "evidence/* tag"
-                    )
+                raise LedgerValidationError(
+                    f"{context}: commit must be reachable from HEAD or an "
+                    "evidence/* tag"
+                )
     return workstream_ids, decision_ids, canonical
 
 

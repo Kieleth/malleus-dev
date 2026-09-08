@@ -57,3 +57,18 @@ reference. There are 416 references to 331 distinct commits. The bounded fix
 is a per-call HEAD/evidence-tag ancestry snapshot, not a cache of validation
 results across calls. Current bytes, schema, chronology, references and hashes
 remain checked each time.
+
+## Performance implementation boundary
+
+RED `b079a65` failed on 80 Git commands for 40 references, with three
+fresh-state/refusal controls passing. The implementation reads reachable
+commits once per validation call. An unresolved or non-durable reference still
+receives its existing diagnostic. Changed HEAD, added/removed evidence tags,
+ordinary non-evidence tags and changed document anchors are exercised. These
+five focused tests pass, including the existing durable-reference test.
+
+Before the change, unprofiled current calls took 15.110 seconds for
+`load_ledger` and 26.970 seconds for `validate_integration`. The successor full
+measurement follows the document rebind, since the validator correctly refuses
+the changed validator source until its new bytes are governed. No bypass of
+that current-byte check is introduced to obtain a timing.

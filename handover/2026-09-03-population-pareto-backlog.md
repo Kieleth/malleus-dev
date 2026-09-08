@@ -2,6 +2,11 @@
 
 This note records the cut selected by Luis on 2026-09-03. It is not another implementation gate.
 
+For the current completed/pending split, read the
+[September 8 Core backlog projection](2026-09-08-core-backlog.md). The original
+cut below is historical: full profiles and additive same-history revision have
+since shipped, without closing general migration or the other deferred items.
+
 ## Ship now
 
 Finish the neutral population path from retained source evidence to a `KnowledgeChangeSet`, one append-only history, and a replay-derived graph. Retention bindings declare which ledger roles each event type may carry. The current Small Shop fixture uses that binding. Previously published evidence remains immutable; current evidence gets a new version when an identity changes.
