@@ -199,3 +199,7 @@ the frozen consumer tip `3724f70190f7720f234c2c3290aee69975116c17`.
 All 18 maintained-reader and consumer-epoch tests passed. The combined ledger
 check also passed, and the checkout stayed clean. This is not a main landing,
 push, publication, or rebind of the earlier consumer receipts.
+
+After publication, the separate [local Re-entry landing](2026-09-08-reentry-local-landing.md)
+records its actual merge and fresh verification. It remains outside the
+published release and has not been pushed.

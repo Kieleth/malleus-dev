@@ -1,0 +1,55 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000449",
+  "ledger": "overseer",
+  "sequence": 449,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:4d0dc245a0b194b4d82fd596628a6ec52812ec4d381da3843ddfa76de77f3f6a",
+  "recorded_at": "2026-09-08T23:40:13Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "reentry-maintained-local-landing",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record the reviewed Re-entry consumer merge and its local-only maintained-reader verification.",
+  "why": "After successful 0.14.0 publication and the release-record push, the approved consumer tip 3724f701 was merged locally as 5f1ebb4d. Exactly 17 research paths change; the Core source tree stays 3b4fd1c9. A clean detached checkout of the actual merge passes 18 maintained-reader/consumer-epoch tests, scoped Ruff, diff and the 448-entry ledger check. Selected boundary hashes, the whole Core and consumer trees, UTC parser compatibility change and preserved historical receipts are recorded explicitly. This is not a fresh full consumer or repository gate, new Core API, ontology expansion, generic planner, or rebind of old results. The merge and this follow-on record must remain local: neither belongs to v0.14.0 or to the separate newly proposed aggregate-goal experiment. Unrelated paper and research edits are untouched.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-core-release.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:36e460c079677fe81ea7009f6914198ed8f15de332d90e201856753dc3acdc95",
+        "after_digest": "sha256:6ad7949aa019c14156fe4e47be6d535023037995700dd0ca0315bb454a6a4179"
+      },
+      {
+        "path": "handover/2026-09-08-reentry-local-landing.md",
+        "change": "CREATED",
+        "after_digest": "sha256:edb01f45182eca84f8703be3f2d6d0365e8a1cef119b70f14823a5c5a8098a79"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "5f1ebb4d21ce99d7c37259b76dff17bf453a9c2a"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "3724f70190f7720f234c2c3290aee69975116c17"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:98fe1469b806f78d5545578d7654d95252cb940f9cc16087e3531002c851a47b"
+}
