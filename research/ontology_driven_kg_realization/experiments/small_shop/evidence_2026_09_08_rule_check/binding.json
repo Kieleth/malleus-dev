@@ -1,0 +1,236 @@
+{
+  "producer_commit": "a342c72c50a9df22baf5ca1d48ee8eedca2120e5",
+  "historical_outputs": {
+    "evidence_2026_09_06/correction/receipt.json": "sha256:e412711612c235d565c8cc74db8b34d13effe7de4323bdf22a6dd146d5faaf5a",
+    "evidence_2026_09_06/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "evidence_2026_09_06/correction/explanation.json": "sha256:075608296bc7f6bcc5336487e99bf12ac321b8a92793ee591bdd38602007e9e3",
+    "evidence_2026_09_06/object_event/evidence.json": "sha256:1a5f2c71ef0631b90cc9d44b6c2c4f816ed6e5b05266a4585d693710cb492131",
+    "public_population/evidence.json": "sha256:634b2ff3ba7faa33d8574ebb5265ec21bdf1de07e8f96c8e1a64e04cbeeff8d5",
+    "evidence_2026_09_06/showcase/receipt.json": "sha256:22370f49cc952a90fe944732be0d959fd221c0fa82a836ef97ebb1eb26ee94f1",
+    "evidence_2026_09_06/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+    "evidence_2026_09_06/showcase/queries.json": "sha256:5e4d3855a027340cd0ed3859c30b02134d9d1ce1020ac3d9204eba221014e6ef",
+    "evidence_2026_09_06/showcase/explanation.json": "sha256:39dcb763af622d11998c795f0ffa3624061e0dc34f39878e13bb711a1a35a748",
+    "fresh_import/evidence.json": "sha256:60b510ad59a0e86951bea809152c577a1fade06e34aaf7e8485290f56b40931f",
+    "evidence_2026_09_08/correction/receipt.json": "sha256:4ab3ae48f14c25553105fad6a32265c191dbd7a7dfc03a5988dc6b37bcaa3313",
+    "evidence_2026_09_08/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "evidence_2026_09_08/correction/explanation.json": "sha256:70e0b7b8f642042ee12cc90b5a0410ca94f953e36580e86e2e5e74081e1a99f3",
+    "evidence_2026_09_08/object_event/evidence.json": "sha256:bb7239d1b25ee4c1192ae24392a2dfff242e1e1c6e06c8e59de9261a41e5f120",
+    "evidence_2026_09_08/public_population/evidence.json": "sha256:e741dac87141868a96cee67acbdddcf2a98cb09ed3eaf01cd2f47ba821bc9f98",
+    "evidence_2026_09_08/showcase/explanation.json": "sha256:97f0e01f6a39f43194f4104c1e3a0800e3ed58549ce2e658485e05d01cbb4e14",
+    "evidence_2026_09_08/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+    "evidence_2026_09_08/showcase/queries.json": "sha256:c1a738807494ccc0058adf9b1880fcc0194a39ac0c1d380772d126f0db609c23",
+    "evidence_2026_09_08/showcase/receipt.json": "sha256:2b98f325ac89df0b11aa07e9a11cbf41ed4eeb1429c28c598d97798d80130715",
+    "evidence_2026_09_08/fresh_import/evidence.json": "sha256:75585c2fe473c9ca67c04410b82e927efcf18ea4d90d38934623edb64d751541"
+  },
+  "scenarios": {
+    "correction": {
+      "compiler_artifacts": {
+        "sha256:ec918b612c034d1b35aeaa98d9ca69496bcad98dae48a505c7d40c08c1411051": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "receipt.json": {
+          "sha256": "sha256:41d0086fd9df4a999503a904d2080365c1868a0985de0ec63171066b789e4832",
+          "predecessor": "evidence_2026_09_08/correction/receipt.json",
+          "changed_paths": [
+            "/knowledge_change_set_identity",
+            "/ledger_head",
+            "/machine_state_identity"
+          ]
+        },
+        "graph.json": {
+          "sha256": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+          "predecessor": "evidence_2026_09_08/correction/graph.json",
+          "changed_paths": []
+        },
+        "explanation.json": {
+          "sha256": "sha256:c7658f2c4d668a542b4c54de89ad99562fd9eb0d2b1a154881045aff0e4f12a1",
+          "predecessor": "evidence_2026_09_08/correction/explanation.json",
+          "changed_paths": [
+            "/changes/0/identity",
+            "/changes/1/identity",
+            "/changes/2/identity",
+            "/checks/2/receipt_identity",
+            "/checks/3/receipt_identity",
+            "/checks/4/receipt_identity",
+            "/checks/5/receipt_identity",
+            "/history/acceptance_head",
+            "/history/ledger_head",
+            "/history/materialization_head"
+          ]
+        }
+      }
+    },
+    "object_event": {
+      "compiler_artifacts": {
+        "sha256:0f1d146d4187e89727ac955ea6a293d79445814918c873da96d6d3e375d4ecdb": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "evidence.json": {
+          "sha256": "sha256:ac91dfba52bfdb1b64a4b3d5d080a34b130e71a8d30fb58bf708defc20e678e7",
+          "predecessor": "evidence_2026_09_08/object_event/evidence.json",
+          "changed_paths": [
+            "/history/ledger_head",
+            "/history/ledger_sha256",
+            "/history/receipt_identity"
+          ]
+        }
+      }
+    },
+    "public_population": {
+      "compiler_artifacts": {
+        "sha256:e244c782747e3ae60649d768b636e5ce679478a5e8d6f3392bdd91a0501b6062": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        },
+        "sha256:636f4e751687b80f803ebb6cf960eed9da2cca7f466464ec6ad668b77ba50447": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "evidence.json": {
+          "sha256": "sha256:abc3c4446d4bebe32d508f7a7fb2d46413708e477e678a35a3254d4fa1548987",
+          "predecessor": "evidence_2026_09_08/public_population/evidence.json",
+          "changed_paths": [
+            "/contract_revision/revision_identity",
+            "/history/acceptance_head",
+            "/history/ledger_head",
+            "/history/ledger_sha256",
+            "/history/materialization_head",
+            "/history/receipt_identity"
+          ]
+        }
+      }
+    },
+    "showcase": {
+      "compiler_artifacts": {
+        "sha256:3a72e20671dad61fd3d1087447a8ac25dabdb006aa1abecfa46d605f84c0dc12": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "explanation.json": {
+          "sha256": "sha256:55f53637aa39303d845f005b993b72a7c5c8f0668cdde2c92cc9583cf1c8a3f9",
+          "predecessor": "evidence_2026_09_08/showcase/explanation.json",
+          "changed_paths": [
+            "/accepted_changes/0/base_coordinates/ledger_head",
+            "/accepted_changes/0/identity",
+            "/accepted_changes/1/base_coordinates/acceptance_head",
+            "/accepted_changes/1/base_coordinates/ledger_head",
+            "/accepted_changes/1/base_coordinates/materialization_head",
+            "/accepted_changes/1/identity",
+            "/accepted_changes/2/base_coordinates/acceptance_head",
+            "/accepted_changes/2/base_coordinates/ledger_head",
+            "/accepted_changes/2/base_coordinates/materialization_head",
+            "/accepted_changes/2/identity",
+            "/accepted_changes/3/base_coordinates/acceptance_head",
+            "/accepted_changes/3/base_coordinates/ledger_head",
+            "/accepted_changes/3/base_coordinates/materialization_head",
+            "/accepted_changes/3/identity",
+            "/accepted_changes/4/base_coordinates/acceptance_head",
+            "/accepted_changes/4/base_coordinates/ledger_head",
+            "/accepted_changes/4/base_coordinates/materialization_head",
+            "/accepted_changes/4/identity",
+            "/coordinates/contract/validated_contract_artifact_identity",
+            "/coordinates/history/acceptance_head",
+            "/coordinates/history/ledger_head",
+            "/coordinates/history/materialization_head",
+            "/coordinates/history/receipt_identity",
+            "/source_mapping_receipts/0/receipt_identity",
+            "/source_mapping_receipts/1/receipt_identity",
+            "/source_mapping_receipts/2/receipt_identity",
+            "/source_mapping_receipts/3/receipt_identity",
+            "/source_mapping_receipts/4/receipt_identity"
+          ]
+        },
+        "graph.json": {
+          "sha256": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+          "predecessor": "evidence_2026_09_08/showcase/graph.json",
+          "changed_paths": []
+        },
+        "queries.json": {
+          "sha256": "sha256:033212a01dd6394ace876789cfd878f6eff80a1e00fb51e8e2d6676654951c27",
+          "predecessor": "evidence_2026_09_08/showcase/queries.json",
+          "changed_paths": [
+            "/answers/0/coordinates/acceptance_head",
+            "/answers/0/coordinates/ledger_head",
+            "/answers/0/coordinates/materialization_head",
+            "/answers/1/coordinates/acceptance_head",
+            "/answers/1/coordinates/ledger_head",
+            "/answers/1/coordinates/materialization_head",
+            "/answers/2/coordinates/acceptance_head",
+            "/answers/2/coordinates/ledger_head",
+            "/answers/2/coordinates/materialization_head",
+            "/answers/3/coordinates/acceptance_head",
+            "/answers/3/coordinates/ledger_head",
+            "/answers/3/coordinates/materialization_head",
+            "/answers/4/coordinates/acceptance_head",
+            "/answers/4/coordinates/ledger_head",
+            "/answers/4/coordinates/materialization_head",
+            "/answers/5/coordinates/acceptance_head",
+            "/answers/5/coordinates/ledger_head",
+            "/answers/5/coordinates/materialization_head",
+            "/answers/5/result/change/identity",
+            "/answers/5/result/change/value/base_acceptance_head",
+            "/answers/5/result/change/value/base_ledger_head",
+            "/answers/5/result/change/value/base_materialization_head",
+            "/answers/5/result/change/value/evidence/1/sha256",
+            "/answers/5/result/change_evidence_closure/6/sha256",
+            "/answers/6/coordinates/acceptance_head",
+            "/answers/6/coordinates/ledger_head",
+            "/answers/6/coordinates/materialization_head",
+            "/answers/6/result/change/identity",
+            "/answers/6/result/change/value/base_acceptance_head",
+            "/answers/6/result/change/value/base_ledger_head",
+            "/answers/6/result/change/value/base_materialization_head",
+            "/answers/6/result/change/value/evidence/1/sha256",
+            "/answers/6/result/change_evidence_closure/6/sha256",
+            "/answers/7/coordinates/acceptance_head",
+            "/answers/7/coordinates/ledger_head",
+            "/answers/7/coordinates/materialization_head",
+            "/answers/7/result/history_receipt_identity"
+          ]
+        },
+        "receipt.json": {
+          "sha256": "sha256:d7bd9f9b444a924270f8f36b243f2e31aed1105160be8ac6e6a4c650d87a8f58",
+          "predecessor": "evidence_2026_09_08/showcase/receipt.json",
+          "changed_paths": [
+            "/knowledge_change_set_identity",
+            "/ledger_head",
+            "/machine_state_identity"
+          ]
+        }
+      }
+    },
+    "fresh_import": {
+      "compiler_artifacts": {
+        "sha256:e244c782747e3ae60649d768b636e5ce679478a5e8d6f3392bdd91a0501b6062": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        },
+        "sha256:636f4e751687b80f803ebb6cf960eed9da2cca7f466464ec6ad668b77ba50447": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "evidence.json": {
+          "sha256": "sha256:74201447870a845bb6f4bb7d7f948354003619d39adb37fd562a1e0d5aa4933f",
+          "predecessor": "evidence_2026_09_08/fresh_import/evidence.json",
+          "changed_paths": [
+            "/ledger_head",
+            "/ledger_sha256",
+            "/receipt_identity"
+          ]
+        }
+      }
+    }
+  }
+}

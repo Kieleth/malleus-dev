@@ -118,7 +118,7 @@ def test_corrupted_expected_bytes_refuse_even_when_the_run_matches_them(
 def test_every_predecessor_receipt_remains_byte_identical():
     module = helper()
     binding = json.loads((module.CURRENT / "binding.json").read_bytes())
-    assert len(binding["historical_outputs"]) == 10
+    assert len(binding["historical_outputs"]) == 20
     for name, identity in binding["historical_outputs"].items():
         assert module.digest((HERE / name).read_bytes()) == identity
 
