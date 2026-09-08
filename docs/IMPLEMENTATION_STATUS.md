@@ -80,6 +80,16 @@ rows. This is structural evidence over synthetic associations, not a fulfilment
 policy or physical-delivery claim. The runnable fixture is
 `research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/README.md`.
 
+A separate Shop policy conformance episode now runs the existing Prolog checker
+against that compiled contract. The generic view verifies only its exact
+compiled identity. A retained Shop rule forbids one unit in two distinct
+shipments; an explicitly selected policy rejects the actual violated check
+without appending the admission batch. A legitimate second unit admits and
+reopens with the retained rule/check evidence. Preparation is a prior retention
+step. This is a fresh, insert-only policy history, not policy migration,
+independently attested execution, source truth or physical delivery. See
+`research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/README.md`.
+
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one

@@ -1,0 +1,10 @@
+schema_version: '1'
+contract_id: shop-one-shipment-per-unit
+contract_version: '1'
+ontology_hash: sha256:8fe86057b8f3d8d103eb1db7db48c8843e79db7c270c24aa171a57fa5d7e3b77
+fact_contract_version: '2'
+ruleset_id: shop-shipment-rules
+ruleset_version: '1'
+rules_file: rules.pl
+rule_ids: [ONE_SHIPMENT_PER_UNIT]
+timeout_seconds: 5

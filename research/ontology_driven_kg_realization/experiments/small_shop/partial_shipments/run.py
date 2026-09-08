@@ -62,16 +62,17 @@ def start(output: Path):
     return history
 
 
-def plan_for(history, name: str):
+def plan_for(history, name: str, *, source_id: str | None = None):
     """Build three fixed fixture plans from retained rows, not accepted answers."""
     if name not in {"order", "shipment-1", "shipment-2"}:
         raise ValueError(f"unknown partial-shipment step: {name}")
     replay = history.replay()
     mapping_bytes = replay.retained_bytes(MAPPING_ID)
     mapping = json.loads(mapping_bytes)
-    source_id = "source:partial-shipments:" + (
-        "order" if name == "order" else "shipments"
-    )
+    if source_id is None:
+        source_id = "source:partial-shipments:" + (
+            "order" if name == "order" else "shipments"
+        )
     content = replay.retained_bytes(source_id)
     index = 0 if name in {"order", "shipment-1"} else 1
     row = json.loads(content.splitlines()[index])

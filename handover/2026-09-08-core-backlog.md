@@ -29,6 +29,12 @@ then a partial-shipment Shop exercise. No release or remote push is selected.
    now run after the existing complete default Shop. The synthetic sibling uses
    existing additive revision, population, structural admission, query and replay.
    Its five tests and the complete 248-test Shop selection pass.
+4. The selected [shipment policy episode](../research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/README.md)
+   adds the next proof: the existing rule executor consumes a compiled contract;
+   duplicate unit assignments refuse atomically, while distinct units admit and
+   replay. The rule stays in Shop artifacts. This uses a fresh selected-policy
+   history, not migration of the earlier structural-only example. Its separate
+   validation receipt does not replace the historical 248-test result above.
 
 Robotics owns its application integration. Semantic Re-entry owns its consumer
 experiment and adapters. Their local successes are not Core results until
@@ -47,6 +53,9 @@ reported and bound separately. Neither lane owns Core runtime or governance.
 
 Action recovery after a non-executing decision, retries, concurrent actions,
 selected-profile migration and a high-level consumer SDK remain deferred.
+The Shop rule likewise does not yet cover reassignment, cancellation, shipment
+subclasses, stock availability or delivery. Executed check receipts are retained
+attestations, not protection against forged low-level caller events.
 So do typed retraction, richer dependent temporal projection, Event-to-Event
 ordering, Signal population, non-additive or import-changing contract migration,
 multi-writer serialization, stable wire formats and generic graph backends.

@@ -1,0 +1,1 @@
+{"grammar":"malleus.policy-program/private-v0","outcome_verdicts":{"SATISFIED":"ACCEPT","UNKNOWN":"DEFER","VIOLATED":"REJECT"},"policy_id":"shop-one-shipment-per-unit","precedence":["REJECT","DEFER","ACCEPT"],"required_checks":[{"check_contract_id":"shop-one-shipment-per-unit","check_contract_identity":"sha256:6b389b70621923937927db66f6eb58b82eb41967fb0259f76483430cdcc6ec3a"}]}

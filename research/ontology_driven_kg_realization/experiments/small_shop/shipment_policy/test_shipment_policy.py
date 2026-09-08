@@ -4,6 +4,8 @@ from dataclasses import replace
 from hashlib import sha256
 from importlib import import_module
 import json
+import subprocess
+import sys
 
 import pytest
 
@@ -36,13 +38,13 @@ def test_duplicate_refuses_atomically_then_distinct_unit_admits_and_replays(
     with pytest.raises(shop.ShipmentPolicyRefusal) as refused:
         shop.admit(history, prepared)
     error = refused.value
-    assert error.refusal.reason is api.KnowledgeChangeRefusalReason.INCOMPLETE_ADMISSION
+    assert error.refusal.reason is api.KnowledgeChangeRefusalReason.REJECTED_CHANGE
     assert error.check.outcome == "VIOLATED"
     assert error.check.violations[0].violation_code == "UNIT_ASSIGNED_TWICE"
     assert error.check.violations[0].witness_record_ids == (
+        "SYN-PS-X1",
         "ships_unit:SYN-S1:SYN-PS-X1",
         "ships_unit:SYN-S2:SYN-PS-X1",
-        "SYN-PS-X1",
     )
     assert path.read_bytes() == before
     assert history.replay().graph.export_records() == before_graph
@@ -82,6 +84,13 @@ def test_duplicate_refuses_atomically_then_distinct_unit_admits_and_replays(
         ("SYN-S2", "SYN-PS-X2"),
     }
     assert path.read_bytes().startswith(before)
+    trace = api.trace_population_record(replay, "SYN-S2")
+    assert {item.record_id for item in trace.sources} == {
+        "source:partial-shipments:shipments"
+    }
+    evidence = {item.record_id: item.content for item in trace.evidence}
+    assert evidence["shop:rules"] == (shop.HERE / "rules.pl").read_bytes()
+    assert evidence["shop:logic"] == (shop.HERE / "logic.yaml").read_bytes()
 
 
 def test_stale_preparation_refuses_before_engine_or_write(tmp_path, monkeypatch):
@@ -133,3 +142,19 @@ def test_check_uses_actual_change_not_mutable_preparation_metadata(tmp_path):
         shop.admit(history, altered)
     assert refused.value.check.outcome == "VIOLATED"
     assert path.read_bytes() == before
+
+
+def test_cli_and_second_run_produce_exact_history_and_report(tmp_path):
+    shop = import_module(MODULE)
+    first, second = tmp_path / "first.jsonl", tmp_path / "second.jsonl"
+    command = [sys.executable, "-m", MODULE, "--history", str(first)]
+    completed = subprocess.run(command, check=True, capture_output=True, text=True)
+    report = json.loads(completed.stdout)
+    assert shop.canonical(shop.run(second)) == shop.canonical(report)
+    assert first.read_bytes() == second.read_bytes()
+    assert report["accepted_changes"] == 3
+    assert report["duplicate_unit"]["ledger_unchanged"] is True
+    before = first.read_bytes()
+    with pytest.raises(ValueError, match="fresh history path"):
+        shop.run(first)
+    assert first.read_bytes() == before

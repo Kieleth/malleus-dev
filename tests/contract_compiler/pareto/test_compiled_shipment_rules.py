@@ -1,7 +1,6 @@
 """The existing rule checker must consume the compiled Shop contract directly."""
 
 from dataclasses import replace
-from hashlib import sha256
 from importlib.resources import files
 from pathlib import Path
 
@@ -19,12 +18,6 @@ SHOP = (
     ROOT
     / "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments"
 )
-RULE = """malleus_rule('ONE_SHIPMENT_PER_UNIT').
-malleus_violation('ONE_SHIPMENT_PER_UNIT', 'UNIT_ASSIGNED_TWICE', [A, B, Unit]) :-
-    m_relation(A, 'ShipmentContainsUnit', First, Unit),
-    m_relation(B, 'ShipmentContainsUnit', Second, Unit),
-    First @< Second.
-"""
 
 
 @pytest.fixture(scope="module")
@@ -42,24 +35,9 @@ def view():
 
 
 def contract(view):
-    fields = {
-        "schema_version": "1",
-        "contract_id": "shop-one-shipment-per-unit",
-        "contract_version": "1",
-        "ontology_hash": "sha256:" + view.content_hash(),
-        "fact_contract_version": "2",
-        "ruleset_id": "shop-shipment-rules",
-        "ruleset_version": "1",
-        "rule_ids": ("ONE_SHIPMENT_PER_UNIT",),
-        "timeout_seconds": 5,
-        "ruleset_hash": "sha256:" + sha256(RULE.encode()).hexdigest(),
-    }
-    return LogicContract(
-        **fields,
-        rules_path=Path(__file__),
-        rules_source=RULE,
-        contract_hash=logic_contract_digest(**fields),
-    )
+    selected = LogicContract.load(SHOP.parent / "shipment_policy/logic.yaml")
+    assert selected.ontology_hash == "sha256:" + view.content_hash()
+    return selected
 
 
 def candidate(view, second_unit):
