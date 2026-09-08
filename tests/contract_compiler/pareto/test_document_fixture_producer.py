@@ -55,11 +55,22 @@ def test_wrong_compiler_is_refused_before_output_comparison(artifact_bytes, fiel
 
 
 @pytest.mark.parametrize(
-    "field", ["operations", "sources", "evidence", "valid_time", "base_ledger_head"]
+    "field",
+    [
+        "operations",
+        "sources",
+        "evidence",
+        "valid_time",
+        "base_ledger_head",
+        "ordinal_type",
+    ],
 )
 def test_current_comparison_never_discards_changed_fields(artifact_bytes, field):
     changed = json.loads((CURRENT / "document-change.json").read_bytes())
-    changed[field] = None
+    if field == "ordinal_type":
+        changed["operations"][0]["ordinal"] = False
+    else:
+        changed[field] = None
 
     with pytest.raises(AssertionError, match="[Cc]hange set"):
         trace._assert_current_document_change(artifact_bytes, trace._canonical(changed))
