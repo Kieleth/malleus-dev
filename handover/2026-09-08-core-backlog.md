@@ -19,13 +19,16 @@ then a partial-shipment Shop exercise. No release or remote push is selected.
 | Action setup on an adopter's existing history | [Four reference constructors](2026-09-08-action-input-producer.md), verified at `0cdf8ed`. No all-stage installed SDK or consumer integration is claimed. |
 | Core baseline verification | [3,327 passed and 3 skipped](2026-09-08-core-default-suite.md) at its exact older coordinate, followed by the action producer's separate 742-test gate. Neither count means the full suite ran at every later commit. |
 
-## Current approved work
+## Approved work completed in this slice
 
-1. Remove repeated Git ancestry work without weakening validation. The measured
-   cause and TDD boundary are in the [slice plan](2026-09-08-core-pareto-next.md).
-2. Reconcile these old pending lists without rewriting historical receipts.
-3. Prove partial shipments as a synthetic Shop sibling fixture using existing
-   additive revision, population, structural admission, query and replay.
+1. Repeated Git ancestry work is removed without weakening validation. Both
+   complete governance suites pass. The [results](2026-09-08-core-pareto-results.md)
+   give measured timings and exact selectors.
+2. This view reconciles the old pending lists without rewriting their receipts.
+3. [Partial shipments](../research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/README.md)
+   now run after the existing complete default Shop. The synthetic sibling uses
+   existing additive revision, population, structural admission, query and replay.
+   Its five tests and the complete 248-test Shop selection pass.
 
 Robotics owns its application integration. Semantic Re-entry owns its consumer
 experiment and adapters. Their local successes are not Core results until

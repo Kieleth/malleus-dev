@@ -1,0 +1,77 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000433",
+  "ledger": "overseer",
+  "sequence": 433,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:ba3372cb1ff99749bafc1d24049ad893c329028badfdf8eee662e0adcb998e75",
+  "recorded_at": "2026-09-08T17:54:56Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-pareto-test-performance-and-backlog",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind one-call Git ancestry validation and the reconciled Core backlog.",
+  "why": "Luis approved test-performance debt and backlog reconciliation before a partial-shipment Shop exercise. Profiling found 839 Git subprocesses in one 432-entry load. RED b079a65 requires one ancestry scan for repeated references; three refusal/freshness controls already pass. GREEN 39f9566 uses one invocation-local reachable-commit set, preserving unresolved and non-durable diagnostics, fresh HEAD/evidence-tag state and current document validation. Five focused tests, Ruff, format and diff pass. Full governance/integration regression and post-change measurements follow this exact-byte rebind. The backlog distinguishes completed public Pareto capabilities from pending formal compiler, Assent cutover, governance migration and projection closure. No cache across validations, check removal, dependency, package, runtime protocol, consumer integration or push change.",
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "scripts/contract_compiler_ledger.py",
+        "after_digest": "sha256:80985d2e42ed69e180ce0046d4bdf370f090df2ac07e1ed9d665907a79bd3edd",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e83c51b3ce3ceb3a137f6463446d2de53ad50e9d98fdded4a0668580fc074622"
+      },
+      {
+        "path": "tests/test_governance_git_scan.py",
+        "after_digest": "sha256:19d4097dd1b4c9121daa0dd556049949d91fd49fa1e1496732310fd8b8cebd24",
+        "change": "CREATED"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "after_digest": "sha256:af351e494798c529c0b110bd96660a826fde034b0a2750e831504b32c3636037",
+        "change": "CREATED"
+      },
+      {
+        "path": "handover/2026-09-03-population-pareto-backlog.md",
+        "after_digest": "sha256:5d990cbf1bab1eade4711648eb0b802807d8bc1d66f507701bb723086748b36f",
+        "change": "MODIFIED",
+        "before_digest": "sha256:dda161e2772fc12d20e301c2c2a83300cf4afba412447889da48ebe361c91041"
+      },
+      {
+        "path": "handover/2026-09-08-core-pareto-next.md",
+        "after_digest": "sha256:79aef01e8d01ff93a3926dba64f9f1ecedbd644af68497295e43eb8af1a018c9",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "b079a65f5c290edf87a12d3852b5edcb7f92298d"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "39f9566e2f612175c016680349a00cde80dc8afc"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-000"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:7c5e5f027830a6d2dcfa4fdf91e1c7f8f0df38d7de1e449b2f68e92d7424832c"
+}

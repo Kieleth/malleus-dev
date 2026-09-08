@@ -1,0 +1,51 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000435",
+  "ledger": "overseer",
+  "sequence": 435,
+  "entry_type": "OBSERVATION",
+  "previous_entry_hash": "sha256:a97bf139ce2843047d9341d2b34ceeb600ae8a3f9e9eeb96fd06c70a3ba480e2",
+  "recorded_at": "2026-09-08T18:22:02Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-pareto-final-validation",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record the final 507-test governance, integration, docs and status gate.",
+  "why": "The approved performance/backlog/partial-shipment sequence is complete at exact source and governance commit 55fae4b. This observation preserves the post-rebind validation without editing the earlier measured receipts or promoting a formal workstream. No runtime, fixture or documentation bytes change in this entry.",
+  "data": {
+    "as_of": "2026-09-08T18:22:02Z",
+    "basis": [
+      "At commit 55fae4b2c5beaf4eedc511bda9b29498a9a24968, tree b0e4500847052beddfe1400d793fac5e95f84b60: 507 passed, zero skipped, failures or errors in 261.68 seconds.",
+      "Exact pytest selection: tests/test_governance_git_scan.py, tests/test_contract_compiler_ledger.py, tests/test_contract_compiler_integration.py, tests/test_docs.py and tests/test_status.py. Ran with PYTHONDONTWRITEBYTECODE=1, PYTHONPATH=src:., .venv/bin/python, -q, -p no:cacheprovider, --tb=short.",
+      "JUnit retained locally at /tmp/malleus-pareto-next.hRjTJM/final.xml; sha256:37ddb35a2d6d202bb22cbe2a1bd5c6d0aaac497cbea7ada6d3e46b6b25c258ca.",
+      "The separate 248-test Shop gate and 71-event partial-shipment run retain the exact identities and non-claims in handover/2026-09-08-core-pareto-results.md."
+    ],
+    "limitations": [
+      "This is a local configured-environment test receipt, not a full default repository suite, package build, linkcheck, release or remote push.",
+      "Unrelated paper and research worktree changes are preserved and excluded from commits. No Robotics or Semantic Re-entry consumer integration or rebind is claimed.",
+      "Temporary JUnit files are not a permanent archive. The exact selectors and digests remain recorded here; this observation is not workstream-completion authority."
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "55fae4b2c5beaf4eedc511bda9b29498a9a24968"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "ENTRY",
+      "target": "OVR-000434"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "DOCUMENT",
+      "target": "handover/2026-09-08-core-pareto-results.md"
+    }
+  ],
+  "entry_hash": "sha256:630fa904b7bb2b8b6765def6ad17eaa2f94bc11f731c6e84e8339adb2e2f0603"
+}

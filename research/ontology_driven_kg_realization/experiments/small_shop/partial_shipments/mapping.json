@@ -1,0 +1,18 @@
+{
+  "description": "Synthetic fixture mapping, not a public mapping language or fulfilment policy.",
+  "adapter": {"adapter_id": "synthetic-partial-shipments", "version": "1"},
+  "plan_grammar": "malleus.population-plan/private-v0",
+  "valid_time": {"kind": "NONE_STATED", "value": null},
+  "order_type": "SalesOrder",
+  "unit_type": "InventoryUnit",
+  "shipment_type": "Shipment",
+  "relations": {
+    "contains": {"type": "OrderContainsUnit", "value": "ORDER_CONTAINS_UNIT"},
+    "has_shipment": {"type": "OrderHasShipment", "value": "ORDER_HAS_SHIPMENT"},
+    "ships_unit": {"type": "ShipmentContainsUnit", "value": "SHIPMENT_CONTAINS_UNIT"}
+  },
+  "identity_rule": "Entity IDs copy source order/unit/shipment identifiers. Relation IDs join the fixed relation role and those identifiers with colons.",
+  "transformation": "Copy values without normalization. Relation kinds come from this mapping; their derivations cite the source association, not a claim that the enum text occurs verbatim.",
+  "locator_convention": "row:N:field, zero-based JSONL row; unit_ids[i] selects the indexed physical unit.",
+  "query_scope": "Remaining units are the order-unit set minus units linked through this order's retained shipments. This is not a delivery, stock, over-allocation or source-truth check."
+}

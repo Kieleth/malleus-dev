@@ -81,6 +81,12 @@ def test_unknown_commit_still_refuses_as_unresolved(repository):
         _validate(repository, "1" * 40)
 
 
+def test_annotated_tag_object_keeps_existing_commit_peeling_semantics(repository):
+    _git(repository, "tag", "-a", "snapshot", "HEAD", "-m", "snapshot")
+    tag_object = _git(repository, "rev-parse", "refs/tags/snapshot")
+    _validate(repository, tag_object)
+
+
 def test_current_document_is_rechecked_after_a_successful_call(repository):
     document = repository / "current.md"
     document.write_text("# Current\n")

@@ -1,0 +1,144 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000434",
+  "ledger": "overseer",
+  "sequence": 434,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:7c5e5f027830a6d2dcfa4fdf91e1c7f8f0df38d7de1e449b2f68e92d7424832c",
+  "recorded_at": "2026-09-08T18:16:21Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-partial-shipment-conformance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind synthetic partial shipments, measured validation gains and corrected Core status.",
+  "why": "Luis approved Pareto test performance, backlog reconciliation and the Shop TDD exercise. RED 5d564fa requires the fixture runner; 4aac817 guards a mislabeled mapping. GREEN 9078870 runs the existing Shop then one synthetic two-unit order and two independently tracked shipments through public revision/population/admission/replay. The original prefix and all prior records survive; unknown type, dangling endpoint and stale preparation refuse without the forbidden writes. Five focused tests and the full 248-test Shop selection pass. The report records 71 events, eight changes, two revisions, exact source/report/history identities and no runtime change. Earlier complete governance selection: 365 passed. Final Git compatibility RED b01eebb and GREEN 9925ed3 preserve annotated-object peeling; six focused guards pass. Scoped Ruff/format/diff and local links pass. Backlog and status distinguish current bounded results from formal pending work. No fixture truth, fulfilment policy, activity migration, external effect, Re-entry integration, dependency/package change or push is claimed. Final governance/docs validation follows this rebind.",
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "scripts/contract_compiler_ledger.py",
+        "after_digest": "sha256:83ae4082106bbfe5a43ab25380bdcd5bde3d1878d89d44e33526a34991e4540b",
+        "change": "MODIFIED",
+        "before_digest": "sha256:80985d2e42ed69e180ce0046d4bdf370f090df2ac07e1ed9d665907a79bd3edd"
+      },
+      {
+        "path": "tests/test_governance_git_scan.py",
+        "after_digest": "sha256:b34763635261cf923355977cf6790036e55f21c96a324186a0e41e044111e0e2",
+        "change": "MODIFIED",
+        "before_digest": "sha256:19d4097dd1b4c9121daa0dd556049949d91fd49fa1e1496732310fd8b8cebd24"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "after_digest": "sha256:39f45fca1bbe218d64e3b334231c58e08299fbc41c64efb6a6ec868c06d45fe9",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a77cfba7ba10b6713ac181266b8385579cb2433c24f8469ac6d98b8ee5c322bb"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "after_digest": "sha256:41d231e3fe1138a356cc475f3c27709fe546762885745bee56cebfc45f35196d",
+        "change": "MODIFIED",
+        "before_digest": "sha256:af351e494798c529c0b110bd96660a826fde034b0a2750e831504b32c3636037"
+      },
+      {
+        "path": "handover/2026-09-08-core-pareto-results.md",
+        "after_digest": "sha256:acf2499262ff3c2b11b121858abc86c0ab449ad40bc5b1a4b110bf11e123a1f9",
+        "change": "CREATED"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_partial_shipments.py",
+        "after_digest": "sha256:353f238d52036623464725bdf805b74d24237d38238578eef847a6c40883aca1",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/README.md",
+        "after_digest": "sha256:be5cce7554040c3f106fcb38232e36f323f99452c4e3a19e2f6edcecb2cac9b7",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/expected.json",
+        "after_digest": "sha256:cd2377fd28d3358be51fd8466d1d22a8e7b0116f93427041adb999caf72cfddf",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/mapping.json",
+        "after_digest": "sha256:4a17529fc2b9a2649efa8445795d338e24ddc3ff5990d7161135c91c91237b9f",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/order.jsonl",
+        "after_digest": "sha256:37ec83df6379abf49afd3e9e35bc90973a4f0337313fd24c02184be3b2baf9b2",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/run.py",
+        "after_digest": "sha256:1e5cf3baf92651d9478fc46a550ee3dab821fa2ff3c02a91824b9e80eeb46502",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/shipments.jsonl",
+        "after_digest": "sha256:450d88fea9b7ab5ded02cdd3e39a2f315dee1495d9711680e0c0f8250cb7ef01",
+        "change": "CREATED"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/small-shop-with-shipments.yaml",
+        "after_digest": "sha256:66f715472aad729d843852d02bf07fbbe7de012404ea1c40f7118e702b6c2f21",
+        "change": "CREATED"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "5d564faa55a4869471a9779991edd00eee425a8e"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "4aac817d5d6be349b44e3ae8539a3ed4b56821fc"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "907887046713a5135148be30a54636a28481ba97"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "61e2095b802d1d6ff5ed4078b08815045bbe80a4"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "b01eebb7fd7974b6dc34d87885ccda0bbdba302e"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "9925ed37b804a9180833269c27c65148d19f050c"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "0ab3165f2715224731f86b60493cf991b41977ca"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-000"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:a97bf139ce2843047d9341d2b34ceeb600ae8a3f9e9eeb96fd06c70a3ba480e2"
+}

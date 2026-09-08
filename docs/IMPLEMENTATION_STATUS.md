@@ -71,6 +71,15 @@ classes, slots, and enum values. It refuses an added import while retaining
 new contract and later change sets bind the new contract identity; earlier
 records and change sets remain in the same ledger.
 
+A synthetic partial-shipment Shop conformance extension reuses this path. It
+admits a two-unit order, adds Shipment and its order/unit relations through an
+additive contract revision, then admits two independently tracked shipments.
+Reopen preserves the original Shop prefix and records, and queries expose the
+remaining unit after the first shipment. Source traces reach the exact retained
+rows. This is structural evidence over synthetic associations, not a fulfilment
+policy or physical-delivery claim. The runnable fixture is
+`research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/README.md`.
+
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one
@@ -164,8 +173,15 @@ supplier-state correction and reopens from JSONL using only packaged Core.
 
 This is a reference implementation of an optional, experimental action profile,
 not a replacement for standalone Assent or the default structural history.
-The current fixture has one first-revision action and one dispatch. The profile
-builders and check orchestration remain repository-local. There is no stable
+The original fixture has one first-revision action and one dispatch. A separately
+selected sequential profile now proves two actions in one history, with an
+ordinary Shop knowledge correction between them. This does not migrate a
+previously selected single-action profile. Four repository-local constructors
+also build source, checkpoint and context/proposal inputs on an adopter-owned
+history without Shop initialization. See
+`handover/2026-09-08-sequential-action-plan.md` and
+`handover/2026-09-08-action-input-producer.md`.
+The profile builders and check orchestration remain repository-local. There is no stable
 wire, all-in-one installed action SDK, cross-language parity, external effect,
 actor authentication or source-truth claim. No new released Assent stage is
 declared. Exact tests, packaged replay and consumer calls are recorded in
