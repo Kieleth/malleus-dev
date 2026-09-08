@@ -1,6 +1,9 @@
 # Supplier Re-entry integration
 
 Status: ACTIVE IMPLEMENTATION, not an executed supplier E2E.
+Latest verified boundary: authored supplier action entry, real TYPE checks,
+epistemic ACCEPT/DEFER and JSONL-only replay. The action-entry gate has 141 passes.
+Supplier authorization is a separate implementation currently under test.
 Core's resume gate passed on 2026-09-08 UTC. The historical PROPOSED and blocked
 labels in older documents preserve their original dates; later approvals and
 the exact verification below supersede those status labels, not their semantic
@@ -322,3 +325,44 @@ original-context binding and pure synthesizer, then the real authorized supplier
 attempt, independent capture and observation-linked KCS/episode closure. Core's
 unchanged sequential-action proposal and Robotics' separate work do not gate this
 one-episode implementation. The recurring loop remains active.
+
+## Supplier action entry, verified
+
+The actual supplier path now constructs Core's immutable original context from
+the graph-free accepted read, admits an explicitly authored SupplierOrderAmendment
+and its existing proposal atomically, runs actual TYPE producers and records the
+public epistemic policy result. ACCEPT advances the action head, never the domain
+head or KG. Real checker unavailability records failure/UNKNOWN and causes DEFER.
+The authored action is not a fake synthesizer and is not attributed to one.
+
+The eight-file selection passed 141 tests with no failure, error or skip, including
+all 32 supplier proposal tests. Two independently built positive runs produced the
+same 48-event JSONL bytes. Independent fresh-process reopen recovered 25 protocol
+records, an ACCEPTED proposal, PENDING authorization, two accepted KCSs and B/Y/1.
+O1, X1, their relation, all domain heads and record history remain unchanged. No
+dispatch, execution, observation, correction or satisfied episode is inferred.
+
+SP-3 was an adopter exception-surface defect. Deferred lookup of an unexported
+Core exception name masked actual refusals. The public machine exception is a
+different type and was not substituted. Local parsing failures are now translated
+at their own boundary; native upstream typed ValueErrors propagate unchanged.
+A failed class regression and structural handler guard precede the repair. Actual
+late atomic refusals and prefix movement before/after check computation also pass.
+No Core error contract or runtime was changed.
+
+The implementation is `940ff15d4bc1ba2e0b8a6f380f0bdacc4b6bad77`, tree
+`d85714e15e3f8912c8666bb2d1a1cadbc144b9ca`. Exact selections, counts, hashes and
+limitations are in `supplier-proposal-result.json` and `SUPPLIER_PROPOSAL_REVIEW.md`.
+The prior broader population gate's known failure remains recorded, not waived.
+
+The next independent cut freezes real supplier direct-grant AUTHORIZE/BLOCK/CLARIFY
+tests in `SUPPLIER_AUTHORIZATION.md` and `test_supplier_authorization.py`, RED
+`430dc3379b5f6d772cf7468b4b3bece282f93d2e`. First implementation:
+`1ec94392ba2b8084761302c8949444b21c7e8f6f`. The first focused run passed its API
+check but failed in test setup before invoking authority preparation: deepcopy
+cannot copy immutable mappings inside Core KCS values. The test snapshot now uses
+public canonical bytes and frozen history entries, with dedicated representation
+and no-deepcopy guards. No permission result is claimed before the rerun.
+The 141-test gate does not cover those new authorization files. Dispatch and
+identified executor/observer, full synthesis closure, observed correction and
+fresh quiescence remain unfinished. No Core or Robotics wait is required.
