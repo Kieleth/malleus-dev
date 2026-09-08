@@ -5,9 +5,11 @@ import builtins
 from contextlib import contextmanager
 from importlib import import_module
 import json
+from hashlib import sha256
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 
 import pytest
 
@@ -18,6 +20,23 @@ from research.semantic_reentry_external_design import supplier_walkthrough as si
 from research.semantic_reentry_external_design.accepted_read_view import (
     freeze_accepted_replay,
 )
+
+
+CORE_SOURCE_TREE = "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8"
+HISTORICAL_GUARD = (
+    "research/semantic_reentry_external_design/test_supplier_replay_laws.py"
+    "::test_unified_gate_has_one_compatible_runtime_epoch"
+)
+
+
+def require_current_gate(source_tree, selectors):
+    if source_tree != CORE_SOURCE_TREE:
+        raise ValueError("Unreviewed Core source epoch: " + source_tree)
+    if any(
+        HISTORICAL_GUARD == s or HISTORICAL_GUARD.startswith(s + "::")
+        for s in selectors
+    ):
+        raise ValueError("Historical epoch guard included in current gate")
 
 
 def api():
@@ -412,7 +431,20 @@ def test_gate_uses_inspected_core_without_modifying_it():
     source_tree = subprocess.check_output(
         ["git", "rev-parse", "HEAD:src"], text=True
     ).strip()
+    selectors = [s for group in gate["groups"].values() for s in group]
+    require_current_gate(source_tree, selectors)
     assert source_tree == gate["core_source_tree"]
+    assert gate["base_commit"] == "e2b9e77912f9b36fdbfe2fca310548a789bffb4d"
+    assert len(selectors) == len(set(selectors))
+    assert gate["historical_epoch_guard"]["selector"] == HISTORICAL_GUARD
+    root = Path(__file__).resolve().parents[2]
+    for entry in gate["historical_evidence"]:
+        assert (
+            sha256((root / entry["path"]).read_bytes()).hexdigest() == entry["sha256"]
+        )
+    for name, module in tuple(sys.modules.items()):
+        if name.split(".")[0] == "malleus" and getattr(module, "__file__", None):
+            assert Path(module.__file__).resolve().is_relative_to(root / "src/malleus")
     assert (
         subprocess.check_output(
             [
@@ -428,6 +460,27 @@ def test_gate_uses_inspected_core_without_modifying_it():
         )
         == ""
     )
+
+
+@pytest.mark.parametrize(
+    "epoch",
+    [
+        "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1",
+        "31e11514b1f999dd145724c3a0f9b7e95c126595",
+        "unknown",
+    ],
+)
+def test_gate_rejects_older_or_unknown_core(epoch):
+    with pytest.raises(ValueError, match="Unreviewed Core source epoch"):
+        require_current_gate(epoch, [])
+
+
+@pytest.mark.parametrize(
+    "selector", [HISTORICAL_GUARD, HISTORICAL_GUARD.split("::")[0]]
+)
+def test_gate_rejects_direct_or_implicit_historical_guard(selector):
+    with pytest.raises(ValueError, match="Historical epoch guard"):
+        require_current_gate(CORE_SOURCE_TREE, [selector])
 
 
 @pytest.mark.parametrize("fault", ["after-write", "unchanged-success"])

@@ -94,3 +94,86 @@ pending without reissue, initially satisfied no-op, observed-only acted
 satisfaction, preserved complement and JSONL-only rebuild. Run focused tests
 and the union of relevant existing supplier/public-reader gates. Audit the
 base-to-head diff, immutable prior evidence and exact commit/tree/file hashes.
+
+## Exact Shop mapping
+
+The original supplier fixture and RET-010 source/mapping path are unchanged.
+B/Y/1 is the accepted `supplier-order-state:B:e4` from the existing retained
+initial source. The extension adds C/Y/1 at
+`supplier-order-state:C:choice-C-initial-1`, from the new explicit source row
+in `fixtures/supplier_choice_v1/input/supplier-C.jsonl`. It uses the existing
+SupplierOrderState type and ordinary initial-source population/admission.
+
+The aggregate predicate scopes exactly B and C, product Y, and requires their
+committed quantities to sum to at least three. It is contract-local input,
+not a customer-demand fact and not a statement about delivered inventory.
+Each child proposal still uses the existing exact 1-to-2 amendment contract.
+B predicts occurrence `reentry-amendment-1`; C predicts
+`choice-C-amendment-1`. The runnable effect path selects B. Its independently
+captured replacement supersedes e4 through the ordinary observed-source KCS.
+C's alternative is also tested through real proposal submission, not through
+a second effect execution.
+
+Candidate summaries expose only order IDs and modeled totals. They contain no
+ActionProposal bytes. REFUSE_IF_NOT_UNIQUE emits no candidate; ORDER_PREFERENCE
+emits exactly the selected existing candidate. The evaluation budget counts
+both modeled alternatives, while the output budget permits only one result.
+Both rules are retained before evaluating either, with different immutable
+identities and preservation-source dependencies. This is not a policy change
+after proposal or authorization.
+
+The full episode reuses one public KnowledgeHistoryProjection reader across
+its ledger appends. The context factory still performs full replay and the
+accepted-read freezer validates a reconstructed graph. This is a maintained
+reader consumer, not an end-to-end incremental-performance claim.
+
+Supported acted closure remains the existing child action's linked observed
+two-unit replacement. General observed quantities and translating a child's
+exact-amendment failure into aggregate goal satisfaction are outside this
+experiment. Those must not be inferred from the at-least predicate.
+
+## Defects found during implementation
+
+The first result carrier exposed unselected proposal bytes inside ambiguity
+diagnostics. A RED test detected that field; the carrier now permits only
+order ID and predicted total. Only the selected candidate leaves the selector.
+
+A controlled model RuntimeError escaped the new composition. A behavioral RED
+test confirmed it. The selected-engine boundary now returns ENGINE_FAILURE
+with no candidate and does not silently try the other order. Ordinary typed
+child refusals keep their reasons. The focused 23-case selection passes;
+the complete relevant regression union remains in progress.
+
+The first broad regression selection included the original frozen epoch guard.
+It correctly refused current Core source tree 3b4fd1c9 rather than silently
+accepting it as the older 763d3b72 epoch. The new gate selection was wrong.
+The historical test and evidence remain unchanged. A behavioral RED test now
+catches either direct inclusion of that old guard or implicit inclusion via
+its whole module. The current gate selects the other two replay laws by name,
+verifies actual Core source and import location, rejects older/unknown epochs,
+and hashes the frozen prior evidence. The historical refusal remains recorded
+separately. All six current epoch/selection guard tests pass.
+
+## Run the bounded demonstration
+
+From this checkout in its configured Python environment:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. python -m research.semantic_reentry_external_design.supplier_choice_walkthrough /tmp/malleus-two-order-example
+```
+
+The output directory must not exist. Only that new directory is written.
+An interrupted or refused run preserves its partial files and does not retry.
+Dependencies and the dev test environment are the existing root pyproject
+configuration; no additional installation or service is required.
+
+`choice-result.json` reports measured outcomes only after the whole episode
+passes. `choice-contract.json` and `action-proposal.json` expose the exact
+selected inputs and proposal. `history.jsonl` is the sole accepted-state
+authority and retains the sources, both selection rules, actual protocol
+events, observation and KCS. The other files are inspection copies.
+
+The protocol uses the original fixed September 8 fixture timestamps. They are
+reproducible coordinates, not measurements of when this command ran.
+The result is a controlled supplier-record amendment, not physical delivery,
+customer-order fulfilment or production supplier integration.
