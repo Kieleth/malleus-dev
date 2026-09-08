@@ -615,6 +615,279 @@ def _inputs(view, original, rule):
     return goal, mapping, sources["pre_state_source"], target
 
 
+def _index(view, name, keys):
+    """Read an optional lifecycle entry, never execute its transition program."""
+    matches = [
+        r["value"]
+        for r in view.protocol["state"]["protocol"][name]
+        if r["keys"] == keys
+    ]
+    _need(len(matches) <= 1, "AMBIGUOUS", "competing lifecycle entries: " + name)
+    return matches[0] if matches else None
+
+
+def _record_ref(record):
+    return dict(id=record["id"], record_hash=record["content_hash"])
+
+
+def _accepted_plan(view, target):
+    member = dict(view.record_history)[target["id"]]
+    changes = [
+        c for c in view.accepted_change_sets if c.change_set_id == member.change_set_id
+    ]
+    _need(
+        len(changes) == 1, "EVIDENCE_DISAGREEMENT", "target has no unique accepted KCS"
+    )
+    change = changes[0]
+    evidence = []
+    plans = []
+    for identifier, identity in change.evidence:
+        retained = _retained(view, identifier)
+        _need(
+            retained.identity == identity,
+            "EVIDENCE_DISAGREEMENT",
+            "accepted evidence identity differs",
+        )
+        evidence.append(retained)
+        try:
+            value = json.loads(retained.content)
+        except (ValueError, UnicodeError):
+            continue  # Ordinary evidence may be non-JSON; it cannot be the required plan.
+        if (
+            type(value) is dict
+            and "grammar" in value
+            and value["grammar"] == "malleus.population-plan/private-v0"
+        ):
+            _need(
+                _canonical(value) == retained.content
+                and value["plan_id"] == identifier,
+                "EVIDENCE_DISAGREEMENT",
+                "population plan bytes or identity differ",
+            )
+            plans.append(value)
+    _need(
+        len(plans) == 1,
+        "EVIDENCE_DISAGREEMENT",
+        "one accepted population plan required",
+    )
+    return change, plans[0], evidence
+
+
+def _linked_update(
+    view, original, rule, goal, mapping, before, target, observation, outcome
+):
+    """Check accepted evidence links. Admission and temporal replay remain Core's."""
+    captured, actual = _source(view, observation["observed_source_artifact_id"])
+    _need(
+        captured["content_hash"] == observation["observed_source_artifact_hash"]
+        and captured["source_record_ids"]
+        == [observation["execution_id"], outcome["id"]]
+        and captured["source_locator"] == "urn:controlled:" + rule["logical_source_id"],
+        "EVIDENCE_DISAGREEMENT",
+        "capture is not bound to this execution and source",
+    )
+    change, plan, evidence = _accepted_plan(view, target)
+    _need(
+        plan["adapter"]
+        == dict(
+            adapter_id=rule["observed_mapper"]["adapter_id"],
+            version=rule["observed_mapper"]["bytes_sha256"],
+        ),
+        "EVIDENCE_DISAGREEMENT",
+        "accepted correction was not mapped by the selected adapter",
+    )
+    _need(
+        len(plan["sources"]) == 1 and len(plan["evidence"]) == 1,
+        "EVIDENCE_DISAGREEMENT",
+        "one observed source and binding required",
+    )
+    source_ref = plan["sources"][0]
+    mapped_source = _retained(view, source_ref["source_id"])
+    _need(
+        mapped_source.role == "RETAINED_SOURCE"
+        and mapped_source.content == actual
+        and source_ref["sha256"] == mapped_source.identity
+        and change.sources == ((mapped_source.record_id, mapped_source.identity),),
+        "EVIDENCE_DISAGREEMENT",
+        "accepted population source is not the actual capture",
+    )
+    evidence_ref = plan["evidence"][0]
+    bindings = [e for e in evidence if e.record_id == evidence_ref["evidence_id"]]
+    _need(
+        len(bindings) == 1 and bindings[0].identity == evidence_ref["sha256"],
+        "EVIDENCE_DISAGREEMENT",
+        "accepted observation binding is missing",
+    )
+    binding = _object(bindings[0].content)
+    original_record, original_bytes = _source(view, original["id"])
+    population_source = binding["population_source"]
+    _closed(population_source, ("source_id", "artifact_id", "bytes_sha256"))
+    population_artifact = _retained(view, population_source["artifact_id"])
+    _need(
+        population_artifact.role == "SOURCE_ARTIFACT"
+        and population_artifact.content == actual,
+        "EVIDENCE_DISAGREEMENT",
+        "ordinary source artifact differs from capture",
+    )
+    expected_binding = dict(
+        schema="malleus.reentry.observed-source-binding/research-v1",
+        original_context={
+            **_record_ref(original_record),
+            "bytes_sha256": _digest(original_bytes),
+        },
+        observation=_record_ref(observation),
+        outcome_contract={
+            **_record_ref(outcome),
+            "observer_implementation_hash": rule["observer"][
+                "observer_implementation_hash"
+            ],
+        },
+        observed_source={**_record_ref(captured), "bytes_sha256": _digest(actual)},
+        population_source=dict(
+            source_id=mapped_source.record_id,
+            artifact_id=population_artifact.record_id,
+            bytes_sha256=_digest(actual),
+        ),
+        goal=original["goal"],
+        mapping=original["mapping"],
+        preservation=original["preservation"],
+        operator=rule["operator"],
+    )
+    _need(
+        binding == expected_binding,
+        "EVIDENCE_DISAGREEMENT",
+        "accepted KCS belongs to different observation closure",
+    )
+    fragment_bytes = supplier_components.map_observation(
+        actual,
+        before_bytes=before,
+        source_sha256=original["pre_state_source"]["bytes_sha256"],
+        goal=goal,
+        operator=rule["operator"],
+        mapping=mapping,
+        source_id=mapped_source.record_id,
+    )
+    _need(
+        fragment_bytes is not None,
+        "EVIDENCE_DISAGREEMENT",
+        "capture contains no correction",
+    )
+    fragment = _object(fragment_bytes)
+    _need(
+        all(plan[k] == v for k, v in fragment.items())
+        and fragment["records"]["entities"] == [target]
+        and len(change.operations) == 1
+        and change.operations[0].record_id == target["id"]
+        and change.operations[0].supersedes_record_id == mapping["initial_record_id"],
+        "EVIDENCE_DISAGREEMENT",
+        "accepted correction differs from the exact observed mapping",
+    )
+    domain = original["domain"]
+    _need(
+        change.base_acceptance_head == domain["kcs_acceptance_head"]
+        and change.base_materialization_head == domain["materialization_head"]
+        and change.base_accepted_state_digest == domain["accepted_graph_digest"]
+        and change.contract_identity == domain["effective_contract_identity"]
+        and view.context.contract_identity == change.contract_identity
+        and view.accepted_change_sets[-1].identity == change.identity,
+        "PRESERVATION_VIOLATION",
+        "only the declared single correction may change the original domain frame",
+    )
+
+
+def _episode(view, original, rule, goal, mapping, before, target):
+    associated = _index(view, "context_by_proposal", [original["proposal_id"]])
+    if associated is None:
+        return "PENDING", "ORIGINAL_CONTEXT_RETAINED"
+    _need(
+        associated == original["id"], "EVIDENCE_DISAGREEMENT", "episode context differs"
+    )
+    action = _record(view, original["action_id"], "SupplierOrderAmendment")
+    _need(
+        action["action_key"] == original["episode_key"]
+        and original["id"] in action["source_record_ids"]
+        and action["logical_source_id"] == rule["logical_source_id"]
+        and action["expected_source_digest"] == _digest(before)
+        and action["action_type"] == rule["operator"]["kind"]
+        and all(action[k] == goal[k] for k in ("supplier_order_id", "product_code"))
+        and all(
+            action[k] == rule["operator"][k]
+            for k in (
+                "expected_quantity",
+                "requested_quantity",
+                "new_source_occurrence_id",
+            )
+        ),
+        "EVIDENCE_DISAGREEMENT",
+        "episode action differs from the bound goal and operator",
+    )
+    proposed = _index(view, "proposal_states", [original["proposal_id"]])
+    if proposed in ("REJECTED", "DEFERRED"):
+        return "REFUSED", "EPISODE_TERMINAL"
+    _need(
+        proposed in ("PROPOSED", "ACCEPTED"),
+        "EVIDENCE_DISAGREEMENT",
+        "unknown episode state",
+    )
+    authorization = _index(view, "authorization_states", [action["id"]])
+    if authorization in ("BLOCKED", "CLARIFICATION_REQUIRED"):
+        return "REFUSED", "EPISODE_TERMINAL"
+    dispatch_id = _index(view, "dispatch_by_action", [action["id"]])
+    if dispatch_id is None:
+        return "PENDING", "AWAITING_DISPATCH"
+    dispatch = _record(view, dispatch_id, "ActionDispatch")
+    _need(
+        dispatch["action_proposal_id"] == action["id"]
+        and dispatch["action_content_hash"] == action["content_hash"]
+        and dispatch["dispatch_adapter_id"] == rule["executor"]["source_id"],
+        "EVIDENCE_DISAGREEMENT",
+        "dispatch action or executor binding differs",
+    )
+    execution_id = _index(view, "execution_by_dispatch", [dispatch_id])
+    if execution_id is None:
+        return "PENDING", "AWAITING_RECEIPT"
+    execution = _record(view, execution_id, "ActionExecution")
+    _need(
+        execution["dispatch_id"] == dispatch_id
+        and execution["dispatch_hash"] == dispatch["content_hash"],
+        "EVIDENCE_DISAGREEMENT",
+        "execution dispatch binding differs",
+    )
+    observation_id = _index(
+        view,
+        "observation_by_execution_contract",
+        [execution_id, rule["observer"]["outcome_contract_id"]],
+    )
+    if observation_id is None:
+        return "PENDING", "AWAITING_OBSERVATION"
+    observation = _record(view, observation_id, "OutcomeObservation")
+    outcome = _record(
+        view, rule["observer"]["outcome_contract_id"], "OutcomeContractArtifact"
+    )
+    _need(
+        observation["execution_id"] == execution_id
+        and observation["execution_hash"] == execution["content_hash"]
+        and observation["outcome_contract_id"] == outcome["id"]
+        and observation["outcome_contract_hash"] == outcome["content_hash"],
+        "EVIDENCE_DISAGREEMENT",
+        "observation execution or contract binding differs",
+    )
+    if observation["observation_result"] != "CONFIRMED":
+        return "REFUSED", "EPISODE_TERMINAL"
+    if target["id"] == mapping["initial_record_id"]:
+        return "PENDING", "AWAITING_OBSERVED_KCS"
+    _need(
+        target["id"] == mapping["replacement_record_id"]
+        and target["properties"]["ordered_quantity"] == goal["quantity"],
+        "EVIDENCE_DISAGREEMENT",
+        "current target is not this episode's observed correction",
+    )
+    _linked_update(
+        view, original, rule, goal, mapping, before, target, observation, outcome
+    )
+    return "SATISFIED", "LINKED_OBSERVED_KCS"
+
+
 class SupplierReentrySynthesizer:
     entrypoint = "SupplierReentrySynthesizer.synthesize"
 
@@ -657,11 +930,12 @@ class SupplierReentrySynthesizer:
         finding = SupplyGapFinding(
             quantity, goal["quantity"], max(goal["quantity"] - quantity, 0)
         )
-        # An applied original context consumes this episode's proposal opportunity.
-        # Detailed acted-episode closure is a separate observation-linked check.
         if original["id"] in view.protocol["records"]:
+            status, reason = _episode(
+                view, original, rule, goal, mapping, before, target
+            )
             return SupplierReentryResult(
-                "PENDING", "EPISODE_OPEN", contract.identity, finding, (), None
+                status, reason, contract.identity, finding, (), None
             )
         _need(
             target["id"] == mapping["initial_record_id"],
