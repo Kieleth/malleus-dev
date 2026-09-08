@@ -312,6 +312,187 @@ def test_rule_variants_do_not_mutate_frozen_case():
     assert entry.ingress.canonical(case) == before
 
 
+def test_model_prediction_must_meet_goal_and_frame(reentry_inputs, monkeypatch):
+    owner, view, _, contract = reentry_inputs
+
+    def wrong_prediction(self, **kwargs):
+        row = json.loads(kwargs["before_bytes"])
+        row["quantity"] = 3
+        row["event_id"] = "reentry-amendment-1"
+        return entry.ingress.canonical(row) + b"\n"
+
+    monkeypatch.setattr(api().SupplierSourceModel, "predict", wrong_prediction)
+    before = owner.path.read_bytes(), authority.domain_frame(owner.replay())
+    result = synthesize(contract, view)
+    assert result.status == "REFUSED" and result.reason == "UNSUPPORTED_CHANGE"
+    assert not result.candidates
+    assert (owner.path.read_bytes(), authority.domain_frame(owner.replay())) == before
+
+
+def alternate_accepted_source(owner, case, *, quantity, supersede):
+    """Explicit conformance source through real population, never an observation."""
+    source_id = "source:supplier:initial-law"
+    occurrence = "initial-law"
+    record_id = "supplier-order-state:B:" + occurrence
+    mapping = dict(
+        case["mapping"],
+        initial_record_id=record_id,
+        supersedes_record_id=record_id,
+        replacement_record_id="supplier-order-state:B:unused-law-replacement",
+    )
+    content = (
+        entry.ingress.canonical(
+            dict(
+                event_id=occurrence,
+                supplier_order_id="B",
+                product_code="Y",
+                quantity=quantity,
+            )
+        )
+        + b"\n"
+    )
+    evidence = entry.ingress.canonical(
+        dict(kind="CONFORMANCE_SOURCE_NOT_ACTION_OBSERVATION", mapping=mapping)
+    )
+    owner.append_anchors(
+        anchors=(
+            *core.structural_source_anchors(
+                source_id=source_id,
+                artifact_id="artifact:supplier:initial-law",
+                content=content,
+                media_type="application/x-ndjson",
+            ),
+            core.structural_evidence_anchor(
+                record_id="evidence:supplier:initial-law",
+                content=evidence,
+                media_type="application/json",
+            ),
+        ),
+        transaction_time=entry.TIME,
+        actor_id=entry.ACTOR,
+    )
+    fragment = json.loads(
+        supplier_components.map_initial_source(
+            content,
+            source_sha256=entry.ingress.digest(content),
+            mapping=mapping,
+            source_id=source_id,
+        )
+    )
+    if supersede:
+        fragment["supersessions"] = [
+            dict(
+                record_id=record_id,
+                supersedes_record_id=case["mapping"]["initial_record_id"],
+            )
+        ]
+    profile = core.STATE_VERSION_PROFILE
+    replay = owner.replay()
+    plan = dict(
+        grammar="malleus.population-plan/private-v0",
+        plan_id="plan:supplier:initial-law",
+        contract_identity=replay.partial_contract.identity,
+        history_profile=dict(profile_id=profile.profile_id, sha256=profile.identity),
+        adapter=dict(adapter_id="conformance:initial-goal-law", version="research-v1"),
+        evidence=[
+            dict(
+                evidence_id="evidence:supplier:initial-law",
+                sha256=entry.ingress.digest(evidence),
+            )
+        ],
+        gaps=[],
+        **fragment,
+    )
+    compiled = core.compile_population_plan(
+        plan,
+        partial_contract=replay.partial_contract,
+        contract_view=replay.contract_view,
+        base_state=core.PopulationBaseState.from_replay(replay),
+        history_profile=profile,
+    )
+    prepared = core.prepare_population_change(
+        history=owner,
+        plan=plan,
+        profile=json.loads(profile.canonical_bytes),
+        retention_events=core.population_retention_events(
+            history=owner, compilation=compiled, profile=profile
+        ),
+        transaction_time=entry.TIME,
+        actor_id=entry.ACTOR,
+    )
+    core.admit_structural_change(
+        history=owner,
+        preparation=prepared,
+        transaction_time=entry.TIME,
+        actor_id=entry.ACTOR,
+    )
+    return source_id, content, mapping
+
+
+@pytest.mark.parametrize(
+    "quantity,supersede,status,reason",
+    [
+        (2, True, "SATISFIED", "INITIAL_SATISFIED"),
+        (3, True, "REFUSED", "UNREALIZABLE"),
+        (2, False, "REFUSED", "AMBIGUOUS"),
+    ],
+)
+def test_initial_goal_and_ambiguity_use_real_accepted_source(
+    reentry_inputs, reentry_prefix, monkeypatch, quantity, supersede, status, reason
+):
+    owner = reentry_inputs[0]
+    _, initialization_id, case = reentry_prefix
+    source_id, content, mapping = alternate_accepted_source(
+        owner, case, quantity=quantity, supersede=supersede
+    )
+    rule_id, goal_id = RULE + ":initial-law", GOAL + ":initial-law"
+    mapping_id, prestate_id = (
+        "source:supplier:law-mapping",
+        "source:supplier:law-prestate",
+    )
+    rule = rule_value(initialization_id, case)
+    rule["logical_source_id"] = source_id
+    retain_source(owner, mapping_id, entry.ingress.canonical(mapping), [])
+    retain_source(owner, prestate_id, content, [])
+    retain_source(
+        owner,
+        rule_id,
+        entry.ingress.canonical(rule),
+        [IMPLEMENTATION, EXECUTOR, MAPPER, OBSERVER],
+    )
+    retain_source(owner, goal_id, entry.ingress.canonical(case["goal"]), [rule_id])
+    view = freeze_accepted_replay(
+        replay=owner.replay(), context=owner.composition_context()
+    )
+    original = entry.api().original_supplier_context(
+        view=view,
+        initialization_id=initialization_id,
+        source_ids=dict(
+            goal=goal_id,
+            mapping=mapping_id,
+            preservation=entry.ROLE_IDS["preservation"],
+            pre_state_source=prestate_id,
+        ),
+        context_id=entry.CONTEXT,
+        action_id=entry.ACTION,
+        proposal_id=entry.PROPOSAL,
+        episode_key=case["episode"]["id"],
+    )
+    contract = api().bind_supplier_reentry(
+        view=view, original_context_bytes=original, rule_source_id=rule_id
+    )
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("satisfied, unsupported or ambiguous state invoked the model")
+
+    monkeypatch.setattr(api().SupplierSourceModel, "predict", forbidden)
+    before = owner.path.read_bytes(), authority.domain_frame(owner.replay())
+    result = synthesize(contract, view)
+    assert (result.status, result.reason) == (status, reason)
+    assert not result.candidates and result.model_prediction is None
+    assert (owner.path.read_bytes(), authority.domain_frame(owner.replay())) == before
+
+
 @pytest.mark.parametrize("role", ["model", "update_strategy"])
 def test_unselected_engine_refuses_before_invocation(reentry_inputs, role):
     owner, view, _, contract = reentry_inputs
