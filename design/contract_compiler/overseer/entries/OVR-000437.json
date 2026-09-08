@@ -1,0 +1,108 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000437",
+  "ledger": "overseer",
+  "sequence": 437,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:27bb362785c5fa4b15377cdc3ef56e60fbb969119fec2528e86c415c6cc8e484",
+  "recorded_at": "2026-09-08T19:52:16Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "shop-shipment-policy-proof",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind compiled-view identity verification and the selected transactional Shop shipment rule.",
+  "why": "Luis selected the one-unit-one-shipment proof with TDD. RED dc505e96 exposes the missing compiled-view identity method; GREEN 8d315fbd adds only exact digest verification. RED 8436ec9c specifies the policy integration; GREEN 9a0e8b66 keeps the rule, selected policy and consumer in Shop fixtures. Actual Prolog results drive generic policy verdicts and atomic KCS admission. A violated assignment refuses without changing the admission prefix; preparation remains a prior retention step. Distinct units admit and replay. The focused gate has 72 passed with no skips. The larger Shop regression and final governance checks are separate, not claimed here. This is a fresh selected-policy episode, not migration, a new Core rule language, delivery, source truth or independent execution attestation. Trusted low-level check events, cancellation, reassignment and broader profiles remain outside the cut. No Paper, Robotics, Re-entry, dependency, package or remote mutation.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:cf1e5898f6982b0e8a1015e063388e0988391e14652ba858ed895df24f2fd640",
+        "before_digest": "sha256:39f45fca1bbe218d64e3b334231c58e08299fbc41c64efb6a6ec868c06d45fe9"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "change": "MODIFIED",
+        "after_digest": "sha256:9281aab326bfa8d8104364543ee2ec3009f33e4c1964a0bfa207e88d05c40fcb",
+        "before_digest": "sha256:41d231e3fe1138a356cc475f3c27709fe546762885745bee56cebfc45f35196d"
+      },
+      {
+        "path": "handover/2026-09-08-shop-shipment-policy-plan.md",
+        "change": "CREATED",
+        "after_digest": "sha256:cd469e4786fb58c6c9efdea2723291920df8c50188ac11a6835ab19b7bc1a4f4"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/partial_shipments/run.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:06bfb4bb6641cf39d543eb0da613b1c9853556f608bb2f4b50e11304317c1a2d",
+        "before_digest": "sha256:1e5cf3baf92651d9478fc46a550ee3dab821fa2ff3c02a91824b9e80eeb46502"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/README.md",
+        "change": "CREATED",
+        "after_digest": "sha256:5768694ad8e086afeb66026f16130cbc8bc7c6b58bc01e77e9aa03942f8c23d2"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/duplicate-unit.jsonl",
+        "change": "CREATED",
+        "after_digest": "sha256:a86c927c69eda2daab4def72981025867df51b09ca9a891f9b1986c0d318b2c4"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/logic.yaml",
+        "change": "CREATED",
+        "after_digest": "sha256:2b33791501c83cb1af4121fc2ac042f38590c3177fe2db6ab153a3fe441fc5e1"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/policy.json",
+        "change": "CREATED",
+        "after_digest": "sha256:4ffd310c30fd36d21e05b2c51bced9c6a0fb066a20c880db3e5b43a7e72cdb78"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/rules.pl",
+        "change": "CREATED",
+        "after_digest": "sha256:7b86988f34bec53fdfbe9c086e55014a133e0508e96b16aa4679d4223046470b"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/run.py",
+        "change": "CREATED",
+        "after_digest": "sha256:bbcba6b52ffc4df1094612b5400ad0db2e1ab169c5ceb2a69f2230a25527f44d"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/test_shipment_policy.py",
+        "change": "CREATED",
+        "after_digest": "sha256:e4e2ff056a5972ee5e0ee2653ed2565df499de8c52c507b26aed92e43b251fac"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/view.py",
+        "change": "MODIFIED",
+        "after_digest": "sha256:9da0aa643d472d761f861858a15c621b0ad861dd323cb75288011f0dcd1352a8",
+        "before_digest": "sha256:6f86928ffcb55786764d85c19cc605d5488d0a1b3177ddfb51c456a559fd5232"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_compiled_shipment_rules.py",
+        "change": "CREATED",
+        "after_digest": "sha256:15f20b9e5af8714513f9d836e93745614096c3f4b0311a58b836e5c8d16666c7"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "9a0e8b66967235564b980b9fc812e1812c361f06"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:552fd59ef75a148d2266faf2999eb7606eba53df46662207c03d7299a52f204f"
+}
