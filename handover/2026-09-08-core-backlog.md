@@ -40,6 +40,44 @@ Robotics owns its application integration. Semantic Re-entry owns its consumer
 experiment and adapters. Their local successes are not Core results until
 reported and bound separately. Neither lane owns Core runtime or governance.
 
+## Accepted backlog: maintained ledger-fed graph
+
+Owner: **Core**. Status: **accepted for the backlog, not activated or scheduled**.
+Luis selected this ownership through the Re-entry task. It does not interrupt
+current work or authorize implementation. The earlier
+[Core response](2026-09-08-incremental-projection-core-response.md) is design
+input, not a frozen implementation contract.
+
+Keep a long-lived, replay-derived KG and its history/protocol indexes. Advance
+them from verified committed ledger suffixes, without folding the full prefix
+on every read or rebuilding every unaffected record on each KCS. The one
+append-only ledger remains authoritative. No direct accepted-graph writer or
+new public change identity is permitted.
+
+Acceptance requirements to refine when scheduled:
+
+1. Reuse full replay's semantic transition interpretation. Publish graph,
+   indexes and cursor atomically at complete transaction boundaries.
+2. Keep full ledger head/count separate from acceptance and materialization
+   heads. Protocol-only events advance their state without changing domain
+   facts. Re-entry reads must expose lag or refuse a stale requested state.
+3. Bind the effective contract, profile, interpreter and required retained
+   inputs, including all history/protocol continuation state. A graph-only
+   checkpoint is insufficient.
+4. Prove full/incremental convergence for graph, provenance, supersession and
+   protocol state, and rebuild/recover from retained JSONL alone.
+5. Test gaps, duplicate suffixes, mismatched cursors, interrupted publication
+   and supported contract changes. Guard mechanically against repeated
+   full-prefix folding and unrelated-record reconstruction during ordinary
+   advancement.
+6. Measure projection separately from ledger persistence and admission costs.
+
+First reuse the merged supplier Re-entry episode at landing
+`4a5cc7658c6147d77fad9224f523bf0be84d5050` as conformance input. Core owns the
+eventual contract and implementation. No database, asynchronous service or new
+storage profile is selected. The Re-entry task's undesired-observation case
+remains consumer-owned work against existing Core seams, not part of this item.
+
 ## Larger Core work still pending, not prerequisites for this Shop exercise
 
 | Work | Dependency and bounded next observation |

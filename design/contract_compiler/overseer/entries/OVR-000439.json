@@ -1,0 +1,45 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000439",
+  "ledger": "overseer",
+  "sequence": 439,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:d7d86faf3c56da4668247e1f71540c50e2ef3fae935a9f22bd5cfa0380e4fdf4",
+  "recorded_at": "2026-09-08T20:15:08Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "maintained-ledger-fed-graph-backlog",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record operator-selected Core ownership of the maintained ledger-fed graph as backlog only.",
+  "why": "The operator selected option B through Re-entry task 01a05f67-22dc-7043-8174-c24ee9ccb09f: Core owns a long-lived replay-derived KG advanced from verified committed suffixes. This records the outcome and minimum acceptance requirements in the existing backlog; it does not activate or schedule implementation. One ledger remains authoritative, with atomic graph/index/cursor publication, separate heads, complete continuation closure, explicit lag/refusal, convergence and JSONL rebuild. Fault and performance guards must distinguish projection from persistence/admission costs. Reuse the supplier episode at 4a5cc765 as the first input. No database, asynchronous service, storage profile, public identity or direct graph writer is selected. Re-entry's undesired-observation case stays consumer-owned. Runtime, tests, consumers and previous decisions are unchanged.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:9281aab326bfa8d8104364543ee2ec3009f33e4c1964a0bfa207e88d05c40fcb",
+        "after_digest": "sha256:b1fa69464e195715b4930484060a8896927292065a34c9a29248f7b7dfd95148"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "4a5cc7658c6147d77fad9224f523bf0be84d5050"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:8c2bdbdc7d6d694ef64923f29978450855c4d9e6b0eab6b38772501c8071085b"
+}
