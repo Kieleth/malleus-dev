@@ -11,8 +11,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
-CORE_COMMIT = "0af4364025a6fdff2b032e028d30e4d12ebf4289"
-CORE_SOURCE_TREE = "156592a98156f51562eda5f8164cf02ed654a0f5"
+CORE_COMMIT = "6f37a75ec942100e973bb30763b2e73f281b74a0"
+CORE_SOURCE_TREE = "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8"
 
 
 def require_epoch(identity):
@@ -58,6 +58,7 @@ def test_maintained_gate_pins_actual_core_and_preserves_prior_evidence():
     "identity",
     [
         "31e11514b1f999dd145724c3a0f9b7e95c126595",
+        "156592a98156f51562eda5f8164cf02ed654a0f5",
         "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1",
         "unknown",
     ],

@@ -5,11 +5,19 @@ Status: integration in progress, not a new runtime or release claim.
 ## Bound slice
 
 Luis requested completion of integration after the supported undesired-result
-experiment. The committed Core base is
-`0af4364025a6fdff2b032e028d30e4d12ebf4289`, with source tree
-`156592a98156f51562eda5f8164cf02ed654a0f5`. The three consumer commits from
+experiment. The committed landing base is Core release candidate
+`6f37a75ec942100e973bb30763b2e73f281b74a0`, with source tree
+`3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8`. The three consumer commits from
 `8dc2d607dd13deafdf06dd87bcf79d6d8857c8ec` apply without conflict. Their original
 receipts remain historical evidence, not results for this new runtime.
+
+The first integration check used `0af43640` and source tree
+`156592a98156f51562eda5f8164cf02ed654a0f5`. Its maintained quantity-three E2E
+passed and produced byte-identical history to the earlier full-replay run.
+While that check ran, Core committed version 0.14.0. The only source change
+between these Core commits is `status.py`'s package-version string. The landing
+gate explicitly pins and reruns against 6f37a75e; the earlier runs are not
+relabeled as release-candidate results.
 
 Claim: the existing Re-entry consumer accepts Core's maintained
 `KnowledgeHistoryReplay` at exact requested ledger coordinates, and agrees with
@@ -57,6 +65,37 @@ the maintained read/synthesis region. No private context constructor or
 fingerprint bypass is added. Core refresh also verifies prefix bytes and copies
 state as documented in its own result. These costs are not hidden or benchmarked
 as constant-time work.
+
+## Existing consumer seam
+
+The adopter keeps a reader open and supplies the requested full coordinates.
+For already retained inputs and an existing original context, the composition
+is:
+
+```python
+reader = core.KnowledgeHistoryProjection.open(history.path)
+# At each evaluation boundary, acquire the existing public context explicitly.
+context = history.composition_context()
+replay = reader.refresh(
+    expected_head_hash=context.base_ledger_head,
+    expected_event_count=context.base_ledger_event_count,
+)
+view = freeze_accepted_replay(replay=replay, context=context)
+contract = reentry.bind_supplier_reentry(
+    view=view, original_context_bytes=original, rule_source_id=rule_source_id,
+)
+result = reentry.SupplierReentrySynthesizer().synthesize(
+    contract, view,
+    model=reentry.SupplierSourceModel(),
+    update_strategy=reentry.SupplierActionStrategy(),
+)
+```
+
+`core` is `malleus.compiler`; `reentry` is the existing research-local
+`supplier_reentry` module. The existing `accepted_read_view` supplies
+`freeze_accepted_replay`. This is composition of existing calls, not a new
+convenience API. Ledger movement between context acquisition and refresh
+refuses; the consumer does not silently rebase a proposal.
 
 ## Pre-action checks
 

@@ -2,8 +2,8 @@
   "classification": "CONFORMANCE_FIXTURE",
   "claim": "MAINTAINED_REENTRY_PARITY_WITH_SUPPORTED_UNDESIRED_OBSERVATION",
   "runtime": {
-    "core_commit": "0af4364025a6fdff2b032e028d30e4d12ebf4289",
-    "core_source_tree": "156592a98156f51562eda5f8164cf02ed654a0f5",
+    "core_commit": "6f37a75ec942100e973bb30763b2e73f281b74a0",
+    "core_source_tree": "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
     "pythonpath": "src:.",
     "write_bytecode": false,
     "pytest_cache": false
