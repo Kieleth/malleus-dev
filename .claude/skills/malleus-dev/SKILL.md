@@ -57,6 +57,12 @@ Stop if any item is missing. A new abstraction found during implementation is
 not automatically part of the slice. Record it and ask the human when it would
 change the claim, boundary, or public contract.
 
+Before dispatching bounded capture, reconciliation or repair, read the shared
+[outcome and permission check](../malleus-acolyte/SKILL.md#outcome-and-permission-check).
+Check the promised outcome against permitted changes and feedback before
+launching, not only when reviewing the result. A finished attempt need not mean
+the wider objective is complete.
+
 ## Research-to-core promotion gate
 
 Relevant literature can constrain a design, supply a test, or suggest an

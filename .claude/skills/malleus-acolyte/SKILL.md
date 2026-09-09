@@ -81,6 +81,36 @@ the human immediately: not closed silently, not deferred silently. The human
 decides whether it enters this slice. That is the same tiebreaker as always,
 present the black and the white and let them cut.
 
+## Outcome and permission check
+
+Before launching a bounded capture, reconciliation or repair, state its intended
+outcome and check that the permitted edits, inputs, feedback and revision budget
+can achieve it. If a protected field, missing type or relationship, or exhausted
+budget prevents correction, name that exact obstacle and the missing evidence,
+capability or permission. Report the outcome as partial or blocked; do not
+promise the full objective or silently widen scope.
+
+For every acknowledged in-scope gap, preserve one of these in the existing
+project record:
+
+- A source-backed resolution.
+- An already-represented finding naming the actual fields or relationships and
+  supporting evidence.
+- A specific unresolved reason and the evidence, capability or permission still
+  needed.
+
+An item count, field inventory, locator or generic `NO_CHANGE` explanation is
+not evidence of semantic reconciliation. Source faithfulness, source coverage
+and mechanical acceptance are separate checks. Inspect meaning against the
+retained source; the census and compiler do not establish substantive completion.
+
+An attempt can finish while the wider objective remains incomplete. Report both
+without unlimited retries. Keep the existing revision bound and unaffected
+accepted knowledge; preserve uncertainty. Never remove information merely to
+pass a gate, impose a relation quota or invent facts. A permitted partial import
+can satisfy its bounded objective without establishing complete reconciliation;
+partial import is not universally a failure.
+
 ## Where the knowledge lives (probe capability, never assume presence)
 
 An installed `malleus` may be current, stale (old malleus-dev releases
@@ -429,7 +459,9 @@ fallback.
    Do not call a structurally valid record true merely because it was admitted.
 9. **Grow only from recorded gaps.** Keep propose, populate, refuse or record
    gaps, revise, and repopulate in one working session by default. Set the limit
-   before the loop starts: at most two additive revision rounds. If typed gaps
+   before the loop starts: at most two additive revision rounds. Apply the
+   [outcome and permission check](#outcome-and-permission-check) before this loop
+   and when reporting its result. If typed gaps
    cluster around a missing class, optional slot, or enum value, propose an
    additive ontology revision, pass the prior and proposed contracts to
    `compile_contract_revision`, record the migration receipt, and repeat from
