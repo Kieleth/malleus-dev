@@ -91,7 +91,7 @@ remains consumer-owned work against existing Core seams, not part of this item.
 
 | Work | Dependency and bounded next observation |
 |---|---|
-| Replace handwritten Assent with declarative execution | Existing finite-program evidence is a starting point, not the hard cutover. Freeze the full claimed transition contract and prove old-path removal before promotion. |
+| Replace handwritten Assent with declarative execution | [Authorization comparison](2026-09-08-authorization-conformance.md) establishes neutral verdict expectations. The [identified rule artifact](2026-09-08-authorization-rule-artifact.md) now replaces handwritten outcome mapping and precedence while preserving old hashes. Full transition parity, evaluation-hash projection, broader profile coverage and old-path removal remain open. This is not the Assent hard cutover. |
 | Formal compiler and independent conformance | The [compiler program](../design/contract_compiler/program.md) still distinguishes the Pareto implementation from formal elaboration, artifact, cross-language and replacement gates. Do not mark those workstreams complete from Shop success. |
 | Ontology-bound Core governance ledger | The [registered migration workstream](../design/contract_compiler/workstreams/CC-003/manifest.json) remains blocked on the formal artifact gate. Its intended cut is a retained legacy checkpoint, current-state seed, and one replacement writer, not historical translation or dual writes. |
 | Complete projection closure | [Accepted design](../design/SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md), not a shipped generic artifact. It needs exact projection inputs, replay/rebuild convergence and a genuinely different projector before replaceability is claimed. |

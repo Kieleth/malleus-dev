@@ -1,0 +1,21 @@
+{"event_id":"e1","activity":"Create Order","time_text":"01-05 09:05","actor_ids":["R1"],"order_ids":["O1"],"order_details_text":"2·X, 1·Y"}
+{"event_id":"e2","activity":"Create Order","time_text":"01-05 09:30","actor_ids":["R1"],"order_ids":["O2"],"order_details_text":"1·X, 1·Y"}
+{"event_id":"e3","activity":"Place SO","time_text":"01-05 11:25","actor_ids":["R1"],"supplier_order_ids":["A"],"order_details_text":"3·X"}
+{"event_id":"e4","activity":"Place SO","time_text":"02-05 11:55","actor_ids":["R3"],"supplier_order_ids":["B"],"order_details_text":"1·Y"}
+{"event_id":"e5","activity":"Create Invoice","time_text":"03-05 16:15","actor_ids":["R3"],"order_ids":["O2"],"invoice_ids":["I2"]}
+{"event_id":"e6","activity":"Receive SO","time_text":"00-01 10:00","actor_ids":["R2"],"supplier_order_ids":["A"],"item_ids":["X1","X2","X3"]}
+{"event_id":"e7","activity":"Update SO","time_text":"04-05 10:25","actor_ids":["R1"],"order_ids":["O2"],"supplier_order_ids":["B"],"order_details_text":"2·Y"}
+{"event_id":"e8","activity":"Unpack","time_text":"00-01 10:30","actor_ids":["R2"],"supplier_order_ids":["A"],"item_ids":["X3"]}
+{"event_id":"e9","activity":"Update Invoice","time_text":"04-05 10:50","actor_ids":["R2"],"invoice_ids":["I2"]}
+{"event_id":"e10","activity":"Unpack","time_text":"04-05 11:00","actor_ids":["R2"],"supplier_order_ids":["A"],"item_ids":["X1"]}
+{"event_id":"e11","activity":"Unpack","time_text":"04-05 11:15","actor_ids":["R2"],"supplier_order_ids":["A"],"item_ids":["X2"]}
+{"event_id":"e18","activity":"Create Invoice","time_text":"06-05 14:35","actor_ids":["R3"],"order_ids":["O1"],"invoice_ids":["I1"]}
+{"event_id":"e19","activity":"Receive SO","time_text":"07-05 10:10","actor_ids":["R2"],"supplier_order_ids":["B"],"item_ids":["Y1","Y2"]}
+{"event_id":"e20","activity":"Unpack","time_text":"07-05 10:45","actor_ids":["R2"],"supplier_order_ids":["B"],"item_ids":["Y1"]}
+{"event_id":"e21","activity":"Unpack","time_text":"07-05 11:00","actor_ids":["R2"],"supplier_order_ids":["B"],"item_ids":["Y2"]}
+{"event_id":"e27","activity":"Pack Shipment","time_text":"07-05 17:00","actor_ids":["R4"],"order_ids":["O1"],"item_ids":["X1","X2","Y1"]}
+{"event_id":"e28","activity":"Ship","time_text":"08-05 15:00","actor_ids":["R4"],"order_ids":["O1"]}
+{"event_id":"e29","activity":"Receive Payment","time_text":"09-05 08:30","actor_ids":["R5"],"payment_ids":["P1"]}
+{"event_id":"e30","activity":"Clear Invoice","time_text":"09-05 08:45","actor_ids":["R5"],"invoice_ids":["I1","I2"],"payment_ids":["P1"]}
+{"event_id":"e33","activity":"Pack Shipment","time_text":"09-05 11:45","actor_ids":["R4"],"order_ids":["O2"],"item_ids":["X3","Y2"]}
+{"event_id":"e34","activity":"Ship","time_text":"09-05 15:00","actor_ids":["R4"],"order_ids":["O2"]}

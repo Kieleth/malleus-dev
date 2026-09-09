@@ -1,5 +1,10 @@
 """Deterministic Stage 6 monitoring-policy guardrails."""
 
+from dataclasses import FrozenInstanceError
+from hashlib import sha256
+from importlib import import_module, resources
+import json
+
 import pytest
 
 from malleus.control import (
@@ -26,6 +31,189 @@ DIGEST_C = "sha256:" + "c" * 64
 PROPOSAL_HASH = "sha256:" + "d" * 64
 BASE_HEAD = "sha256:" + "e" * 64
 ACTION_HASH = "sha256:" + "f" * 64
+
+
+AUTHORIZATION_RULES = {
+    "schema": "malleus.outcome-controls/private-v0",
+    "outcome_controls": {
+        "SATISFIED": "AUTHORIZE", "VIOLATED": "BLOCK", "UNKNOWN": "CLARIFY",
+    },
+    "control_precedence": ["BLOCK", "CLARIFY", "AUTHORIZE"],
+    "triggering_controls": ["BLOCK", "CLARIFY"],
+}
+
+
+def rules_from(value):
+    module = import_module("malleus._control_rules")
+    data = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+    return module.OutcomeControlRules.from_bytes(
+        data, expected_identity="sha256:" + sha256(data).hexdigest(),
+    )
+
+
+def test_authorization_rule_artifact_is_installed_identified_and_immutable():
+    from malleus import control
+
+    data = resources.files("malleus").joinpath("authorization-control-v1.json").read_bytes()
+    assert json.loads(data) == AUTHORIZATION_RULES
+    rules = control._authorization_rules()
+    assert rules.identity == "sha256:" + sha256(data).hexdigest()
+    assert rules.identity == control.AUTHORIZATION_CONTROL_IDENTITY
+    assert rules.control("UNKNOWN") == "CLARIFY"
+    assert rules.select(["AUTHORIZE", "BLOCK", "CLARIFY"]) == "BLOCK"
+    assert rules.is_trigger("BLOCK") and rules.is_trigger("CLARIFY")
+    assert not rules.is_trigger("AUTHORIZE")
+    with pytest.raises(FrozenInstanceError):
+        rules.precedence = ()
+
+
+def test_outcome_executor_uses_declared_labels_order_and_trigger_membership():
+    rules = rules_from({
+        "schema": AUTHORIZATION_RULES["schema"],
+        "outcome_controls": {"first": "left", "second": "right"},
+        "control_precedence": ["right", "left"],
+        "triggering_controls": ["left"],
+    })
+    assert rules.control("first") == "left"
+    assert rules.select([rules.control("first"), rules.control("second")]) == "right"
+    assert rules.is_trigger("left") and not rules.is_trigger("right")
+
+
+@pytest.mark.parametrize("fault", [
+    "missing", "extra", "schema", "empty_mapping", "empty_precedence",
+    "duplicate_precedence", "uncovered_control", "duplicate_trigger", "unknown_trigger",
+])
+def test_rule_artifact_refuses_incomplete_or_ambiguous_data(fault):
+    module = import_module("malleus._control_rules")
+    value = json.loads(json.dumps(AUTHORIZATION_RULES))
+    if fault == "missing":
+        del value["triggering_controls"]
+    elif fault == "extra":
+        value["fallback"] = "AUTHORIZE"
+    elif fault == "schema":
+        value["schema"] = "unknown"
+    elif fault == "empty_mapping":
+        value["outcome_controls"] = {}
+    elif fault == "empty_precedence":
+        value["control_precedence"] = []
+    elif fault == "duplicate_precedence":
+        value["control_precedence"].append("BLOCK")
+    elif fault == "uncovered_control":
+        value["control_precedence"].remove("BLOCK")
+    elif fault == "duplicate_trigger":
+        value["triggering_controls"].append("BLOCK")
+    else:
+        value["triggering_controls"].append("UNKNOWN_CONTROL")
+    with pytest.raises(module.OutcomeRuleError):
+        rules_from(value)
+
+
+@pytest.mark.parametrize("data", [b"not json", b"\xff", b'{"schema":1,"schema":2}', b"[]"])
+def test_rule_artifact_refuses_invalid_json_even_with_matching_identity(data):
+    module = import_module("malleus._control_rules")
+    with pytest.raises(module.OutcomeRuleError):
+        module.OutcomeControlRules.from_bytes(
+            data, expected_identity="sha256:" + sha256(data).hexdigest(),
+        )
+
+
+def test_rule_artifact_refuses_changed_bytes_under_the_selected_identity():
+    module = import_module("malleus._control_rules")
+    data = json.dumps(AUTHORIZATION_RULES).encode()
+    with pytest.raises(module.OutcomeRuleError, match="identity"):
+        module.OutcomeControlRules.from_bytes(data, expected_identity="sha256:" + "0" * 64)
+
+
+@pytest.mark.parametrize("outcome", [None, [], {}, "UNDECLARED"])
+def test_rule_executor_refuses_unknown_outcomes(outcome):
+    module = import_module("malleus._control_rules")
+    with pytest.raises(module.OutcomeRuleError):
+        rules_from(AUTHORIZATION_RULES).control(outcome)
+
+
+@pytest.mark.parametrize("fault", ["missing", "changed"])
+def test_default_rule_loader_has_no_missing_or_changed_resource_fallback(monkeypatch, tmp_path, fault):
+    from malleus import control
+
+    control._authorization_rules.cache_clear()
+    if fault == "changed":
+        # Test-local corrupt installation, not a modified package resource.
+        (tmp_path / "authorization-control-v1.json").write_bytes(b"{}")
+    monkeypatch.setattr(control.resources, "files", lambda package: tmp_path)
+    try:
+        with pytest.raises(ControlError, match="authorization control artifact"):
+            control._authorization_rules()
+    finally:
+        control._authorization_rules.cache_clear()
+
+
+def test_handwritten_authorization_mapping_is_removed():
+    from malleus import control
+
+    assert not hasattr(control, "_authorization_control")
+
+
+@pytest.mark.parametrize("controls", [[], ["UNDECLARED"], None])
+def test_rule_selection_has_no_empty_or_unknown_control_fallback(controls):
+    module = import_module("malleus._control_rules")
+    with pytest.raises(module.OutcomeRuleError):
+        rules_from(AUTHORIZATION_RULES).select(controls)
+
+
+def test_authorization_uses_loaded_rules_without_resource_io(monkeypatch):
+    from malleus import control
+
+    control._authorization_rules()
+    def forbidden_read(package):
+        raise AssertionError("pure authorization must not read resources")
+    monkeypatch.setattr(control.resources, "files", forbidden_read)
+    monitors = [authority_monitor("monitor:0")]
+    policy_record = authorization_policy(monitors)
+    output = authority_assessment(monitors[0], policy_record, "SATISFIED")
+    assert evaluate_authority(policy_record, monitors, [output]).verdict == "AUTHORIZE"
+
+
+def test_evaluation_consumes_rule_precedence_and_triggers_not_python_branches(monkeypatch):
+    from malleus import control
+
+    # Test-local alternate data proves execution, not a supported runtime override.
+    data = json.loads(json.dumps(AUTHORIZATION_RULES))
+    data["control_precedence"] = ["CLARIFY", "BLOCK", "AUTHORIZE"]
+    data["triggering_controls"] = []
+    rules = rules_from(data)
+    monkeypatch.setattr(control, "_authorization_rules", lambda: rules)
+    monitors = [authority_monitor(f"monitor:{i}") for i in range(2)]
+    policy_record = authorization_policy(monitors)
+    outputs = [
+        authority_assessment(m, policy_record, outcome, suffix=str(i))
+        for i, (m, outcome) in enumerate(zip(monitors, ["VIOLATED", "UNKNOWN"], strict=True))
+    ]
+    result = evaluate_authority(policy_record, monitors, outputs)
+    assert result.verdict == "CLARIFY"
+    assert result.triggered_assessment_ids == ()
+    assert policy_record["artifact_hash"] != "sha256:b5e411ff921cab7c61998a8197de0a04aed49f52483340ad55ba4d763a3b8f2a"
+
+
+@pytest.mark.parametrize("outcomes,expected_hash", [
+    (("SATISFIED", "SATISFIED"), "761de10570bae6bc17d1bab8d1d74bc1e1e466b6fe9a14a7f686d8bedc4d5dd7"),
+    (("SATISFIED", "VIOLATED"), "d6c440ac78c553ae4988575de1f63441ae1e67b27d6f46449affb7e614d24393"),
+    (("SATISFIED", "UNKNOWN"), "41eade4d4d1ff2edbcd7f111e877a194de3e3a64e1f7b15a79001f0f1fb8be66"),
+    (("VIOLATED", "SATISFIED"), "c46755e90079f34dd3066797549609cf346c3751c758b607d4a817ff4307b717"),
+    (("VIOLATED", "VIOLATED"), "edb44bae998aa89d856e6523683bfdfb8497849c2f84bb08deb590d7de81fa0d"),
+    (("VIOLATED", "UNKNOWN"), "63737eb3bfc5798ad73ce653d279c20694a8f64fa24fee605455fcd9d8b658bb"),
+    (("UNKNOWN", "SATISFIED"), "bb0220b384074ad05136b4a779ac27b1f337576d53084f6bec309d8b5452521b"),
+    (("UNKNOWN", "VIOLATED"), "82c12b7e84864014d3d513e76f7b5924f3fa25fa791bdc91c3b777fe36c04605"),
+    (("UNKNOWN", "UNKNOWN"), "2a21b6f09132c5a3d665dd943aa780a61846714884f78815134bf8c2ed49ee5b"),
+])
+def test_authorization_hashes_preserve_the_f867e23b_baseline(outcomes, expected_hash):
+    monitors = [authority_monitor(f"monitor:{i}") for i in range(2)]
+    policy_record = authorization_policy(monitors)
+    assert policy_record["artifact_hash"] == "sha256:b5e411ff921cab7c61998a8197de0a04aed49f52483340ad55ba4d763a3b8f2a"
+    outputs = [
+        authority_assessment(m, policy_record, outcome, suffix=str(i))
+        for i, (m, outcome) in enumerate(zip(monitors, outcomes, strict=True))
+    ]
+    assert evaluate_authority(policy_record, monitors, outputs).evaluation_hash == "sha256:" + expected_hash
 
 
 def monitor(monitor_id: str, kind: str) -> dict:

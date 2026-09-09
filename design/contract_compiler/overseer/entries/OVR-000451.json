@@ -1,0 +1,35 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000451",
+  "ledger": "overseer",
+  "sequence": 451,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:9aa32289507699301e6141763a389f677e1015e7ebb36c658d996a5d13f16c02",
+  "recorded_at": "2026-09-09T00:42:59Z",
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "subject": {"id": "core-authorization-rule-artifact", "type": "DOCUMENT"},
+  "summary": "Extract version-1 authorization outcome semantics into exact pinned data without changing existing hashes.",
+  "why": "Luis approved extracting fixed authorization rules into identified data. RED 77eaf346: 23 expected failures, 71 passes. GREEN a7c54fa8: seven scoped files. Pinned data replaces handwritten mapping, precedence and trigger selection without changing old policy/evaluation hashes or public signatures. Gates: 160 control/conformance tests, 273 protocol/history/check tests, and 99 installed-wheel control tests using existing dependencies. Local wheel and sdist build and pass twine. The report binds the exact tests, artifact hashes and non-claims. This revision closes pending manifest/document drift without weakening validation. No release, fresh dependency installation, full repository gate, caller override, stable grammar, new epoch, independent interpreter or Assent cutover. Interleaved Shop commits are excluded.",
+  "data": {
+    "affected_ids": ["CC-R11", "CC-PKG02"],
+    "documents": [
+      {"path": "handover/2026-09-08-authorization-rule-artifact.md", "change": "CREATED", "after_digest": "sha256:1ec75ec5000b33912625062e5024f2a69d8b0c554d78e4524610b5781dfa4704"},
+      {"path": "handover/2026-09-08-core-backlog.md", "change": "MODIFIED", "before_digest": "sha256:15af720793dcf7bb74fcf189974e5a5beff2c8663d0a4269f37830c4d3400b67", "after_digest": "sha256:75cc8ad3a8084413a75a751de7ccd53b58ca08b57ab45650234170d673c301d8"},
+      {"path": "research/action_history_contract_freeze/programs/CONTROL_EXECUTION.md", "change": "MODIFIED", "before_digest": "sha256:4660ddfd662ec8d4274cbf86d2363268cd547a3408a2b342100569c0dc04d58b", "after_digest": "sha256:37d663fcd4ead12114da86716d012deaf6d77078bf8b34f3d4a1dc5f014a4b59"},
+      {"path": "src/malleus/control.py", "change": "MODIFIED", "before_digest": "sha256:7e2fba25b9cf8435fc57e14b131ee5fa0834e608ef5291d35e41b6e95833c481", "after_digest": "sha256:254359e09a43270d212b0483a994e769ea57dbc92e220772fba01da18d57d40d"},
+      {"path": "src/malleus/_control_rules.py", "change": "CREATED", "after_digest": "sha256:e7d39a1761bda40f87e3b2cc772633897fbe1d0399d4021654d4a5f69a177942"},
+      {"path": "src/malleus/authorization-control-v1.json", "change": "CREATED", "after_digest": "sha256:2164015909de89d798c80432b9239016b439cf56da54e33a56dd6a8b92d6817a"},
+      {"path": "tests/test_control.py", "change": "MODIFIED", "before_digest": "sha256:67fee3306c2a5f5640b9968b5cf877bc803d32b2ad76b1c1575969899a97eddc", "after_digest": "sha256:10d7047b65267f859bb57a766c5ce007520381799f47559f25f61d0f7ab19141"},
+      {"path": "pyproject.toml", "change": "MODIFIED", "before_digest": "sha256:175fa4c40af92d22309f472f083f7ac5b5c39c2e0c1a114c51a646346f8dcf65", "after_digest": "sha256:d81efef650a96de7dce0a5ea3c58296754f695f8d1720e4ac6ba95a6b62c54e6"},
+      {"path": "docs/ASSENT_PROTOCOL.md", "change": "MODIFIED", "before_digest": "sha256:4ef61cc285ea77d4c273fc46c406e2b4fd6f582c42d239cac9119c3608735327", "after_digest": "sha256:e7f6041426f454d15dabe10c4ed0168476885cab7c18d02162baf3c8e066f770"},
+      {"path": "research/action_history_contract_freeze/programs/test_authorization_conformance.py", "change": "MODIFIED", "before_digest": "sha256:bdba4ce223034bfb1c33fdced3b82399c23f392e2963279f022951a6c2c21bad", "after_digest": "sha256:5b01f1919ba28952a51680bf84b462e2fc124e55397ea00226ff2dbce8f43c41"}
+    ]
+  },
+  "references": [
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "77eaf3469f6e705e164b0ec43f94e3dab9ba9754"},
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "a7c54fa8453b28616c37942a1411e464dd0622e2"},
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"},
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-PKG02"}
+  ],
+  "entry_hash": "sha256:9ae5ebf731793b814a8d168259fe72f2353fd05b09607c7d61ce2dd9c47c32e1"
+}

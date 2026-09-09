@@ -1,0 +1,56 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000450",
+  "ledger": "overseer",
+  "sequence": 450,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:98fe1469b806f78d5545578d7654d95252cb940f9cc16087e3531002c851a47b",
+  "recorded_at": "2026-09-09T00:17:34Z",
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "subject": {"id": "core-authorization-conformance", "type": "DOCUMENT"},
+  "summary": "Record independent authorization verdict expectations and the remaining shared Python control boundary.",
+  "why": "Luis moved Shop work to another task and approved the bounded Core authorization comparison. Inspection found no production defect, but both paths share the same verdict calculator. Add a literal nine-case neutral answer table and 30 tests for order, typed refusal, immutability and deliberately wrong shared rules. Correct the earlier independent-recipe wording and record the finite profile's deliberate restrictions. The focused selection passes 123 tests; the separate existing protocol and authorization-history suites pass 251 tests. Ruff and formatting pass. This is test strengthening, not production RED/GREEN, a full repository gate, a second interpreter, a public policy artifact or an Assent cutover. No runtime, ontology, package, Shop, paper or downstream consumer changes. The existing replacement backlog remains open; extracting identified control semantics is a next design cut, not silently activated by this entry.",
+  "data": {
+    "affected_ids": ["CC-R11"],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-authorization-conformance.md",
+        "change": "CREATED",
+        "after_digest": "sha256:6a579d9637c214fa51a2501d456eb2b810ce33a4e993f75dbd8ee160a3f0e8d7"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:421c36e3983e3996fc30016871191fe63df487c4d288cecb5997ecbd61f23e14",
+        "after_digest": "sha256:15af720793dcf7bb74fcf189974e5a5beff2c8663d0a4269f37830c4d3400b67"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/CONTROL_EXECUTION.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:1f20dc5bb3d849834fe2bbcaafc60e8b2a203554e90d8d683aa76ae33a147456",
+        "after_digest": "sha256:4660ddfd662ec8d4274cbf86d2363268cd547a3408a2b342100569c0dc04d58b"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_control_executor.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:240c349aa547994b6593c826857725c81921edb45275ab018ce8abe84c727111",
+        "after_digest": "sha256:d6dd3b29d354d816865b021353c9fa3e4ffb79cd41858efcbd304a86f48bc6c2"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/authorization_conformance_cases.json",
+        "change": "CREATED",
+        "after_digest": "sha256:f72d6a3a7f4ea348fe9f13e280650a77980bec5fd7fb1a555667bbea48c4e350"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_authorization_conformance.py",
+        "change": "CREATED",
+        "after_digest": "sha256:bdba4ce223034bfb1c33fdced3b82399c23f392e2963279f022951a6c2c21bad"
+      }
+    ]
+  },
+  "references": [
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "55c038438ed67197b7e3345b9c80a885a7b6cf17"},
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"}
+  ],
+  "entry_hash": "sha256:9aa32289507699301e6141763a389f677e1015e7ebb36c658d996a5d13f16c02"
+}

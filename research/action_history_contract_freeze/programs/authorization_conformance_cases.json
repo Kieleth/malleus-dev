@@ -1,0 +1,11 @@
+[
+  {"outcomes": ["SATISFIED", "SATISFIED"], "verdict": "AUTHORIZE", "triggers": []},
+  {"outcomes": ["SATISFIED", "VIOLATED"], "verdict": "BLOCK", "triggers": [1]},
+  {"outcomes": ["SATISFIED", "UNKNOWN"], "verdict": "CLARIFY", "triggers": [1]},
+  {"outcomes": ["VIOLATED", "SATISFIED"], "verdict": "BLOCK", "triggers": [0]},
+  {"outcomes": ["VIOLATED", "VIOLATED"], "verdict": "BLOCK", "triggers": [0, 1]},
+  {"outcomes": ["VIOLATED", "UNKNOWN"], "verdict": "BLOCK", "triggers": [0, 1]},
+  {"outcomes": ["UNKNOWN", "SATISFIED"], "verdict": "CLARIFY", "triggers": [0]},
+  {"outcomes": ["UNKNOWN", "VIOLATED"], "verdict": "BLOCK", "triggers": [0, 1]},
+  {"outcomes": ["UNKNOWN", "UNKNOWN"], "verdict": "CLARIFY", "triggers": [0, 1]}
+]

@@ -227,6 +227,17 @@ All `SATISFIED` outputs select `AUTHORIZE`; any `VIOLATED` output selects
 `CLARIFY`. The decision must reproduce the policy-ordered assessment IDs,
 triggered IDs, evaluation hash, and verdict exactly.
 
+The Python reference implementation reads the outcome mapping, precedence and
+trigger membership from the packaged `authorization-control-v1.json` artifact.
+Its exact byte identity is exposed as
+`malleus.control.AUTHORIZATION_CONTROL_IDENTITY`. The private interpreter uses
+lookup, membership and ordered selection, without authorization-specific verdict
+branches. Missing or changed installed bytes refuse at load; pure evaluations
+reuse immutable loaded rules. Version-1 policy and evaluation hashes remain
+unchanged. The artifact is fixed for version 1, not a caller-selectable policy
+override or stable public grammar. Full record validation, grant checks and
+transition admission remain separate from this bounded rule extraction.
+
 Grant sufficiency is checked only for `AUTHORIZE`. A `BLOCK` may cite the exact
 grant evaluated by a triggered `VIOLATED` assessment, even when that grant is
 insufficient, but it receives no authorization interval. `CLARIFY` likewise

@@ -1,0 +1,57 @@
+{
+  "boundary_id": "shop-connected-table1-v1",
+  "baseline": {"release": "v0.14.0", "commit": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d", "tree": "162325eb0048816654d2df5b6b0f00270d06385d"},
+  "source": {
+    "author": "Dirk Fahland",
+    "title": "Process Mining over Multiple Behavioral Dimensions with Event Knowledge Graphs",
+    "year": 2022,
+    "doi": "10.1007/978-3-031-08848-3_9",
+    "url": "https://link.springer.com/chapter/10.1007/978-3-031-08848-3_9",
+    "table_url": "https://link.springer.com/chapter/10.1007/978-3-031-08848-3_9/tables/1",
+    "image_url": "https://media.springernature.com/lw567/springer-static/image/chp%3A10.1007%2F978-3-031-08848-3_9/MediaObjects/509987_1_En_9_Tab1_HTML.png",
+    "license": "CC-BY-4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "inspected_on": "2026-09-08",
+    "changes": "Table transcribed to sparse JSONL: headers renamed, identifier cells split into arrays, blank cells omitted, whitespace normalized. Context excerpts omit math typography. No correction of source dates or event identifiers."
+  },
+  "artifacts": {
+    "sources/table-1.png": "sha256:d553b5bd5f9ecf3d0051a685c0bbe30cf99055f8dd09f712a6cf3ca302ed58e8",
+    "sources/table-1.jsonl": "sha256:37fab6c52bcc05e5fca08be67ef779fa27bfa8c960ccdee0f341e70166c8907c",
+    "sources/context.jsonl": "sha256:eab62357c1f41b049bd5a4f6c1589abaaed1559cb6f572912af986c2f9538525"
+  },
+  "selected_event_ids": ["e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "e10", "e11", "e18", "e19", "e20", "e21", "e27", "e28", "e29", "e30", "e33", "e34"],
+  "required_fields": ["event_id", "activity", "time_text", "actor_ids"],
+  "field_dispositions": {
+    "event_id": {"source_field": "event_id", "column": "EventID", "disposition": "PLANNED_EVENT_ID"},
+    "activity": {"source_field": "activity", "column": "Activity", "disposition": "PLANNED_EVENT_TYPE"},
+    "time_text": {"source_field": "time_text", "column": "Time", "disposition": "RETAINED_TIME_TEXT"},
+    "actor_ids": {"source_field": "actor_ids", "column": "Actor", "disposition": "PLANNED_ENTITY_AND_PARTICIPATION"},
+    "order_ids": {"source_field": "order_ids", "column": "Order", "disposition": "PLANNED_ENTITY_AND_PARTICIPATION"},
+    "supplier_order_ids": {"source_field": "supplier_order_ids", "column": "Supplier Order", "disposition": "PLANNED_ENTITY_AND_PARTICIPATION"},
+    "order_details_text": {"source_field": "order_details_text", "column": "Order Details", "disposition": "PLANNED_TYPED_QUANTITY"},
+    "item_ids": {"source_field": "item_ids", "column": "Item", "disposition": "PLANNED_ENTITY_AND_PARTICIPATION"},
+    "invoice_ids": {"source_field": "invoice_ids", "column": "Invoice", "disposition": "PLANNED_ENTITY_AND_PARTICIPATION"},
+    "payment_ids": {"source_field": "payment_ids", "column": "Payment", "disposition": "PLANNED_ENTITY_AND_PARTICIPATION"}
+  },
+  "temporal_policy": {
+    "calendar_instants": "NOT_DERIVED",
+    "year": "UNSTATED",
+    "timezone": "UNSTATED",
+    "invalid_date_event_ids": ["e6", "e8"],
+    "row_order": "TRANSCRIPTION_ORDER_NOT_DOMAIN_ORDER",
+    "first_population": "PENDING_HISTORY_SELECTION"
+  },
+  "known_gaps": [
+    {"event_id": "e9", "kind": "REQUIRED_FIELD_ABSENT_IN_SOURCE", "detail": "Invoice update occurrence is present; changed field and new value are absent."},
+    {"event_id": "e6", "kind": "INTERVAL_NOT_EXPRESSIBLE", "detail": "Printed 00-01 date cannot identify a calendar day; retain unchanged."},
+    {"event_id": "e8", "kind": "INTERVAL_NOT_EXPRESSIBLE", "detail": "Printed 00-01 date cannot identify a calendar day; retain unchanged."}
+  ],
+  "exclusions": [
+    "Additional warehouse queue events outside Table 1: later milestone.",
+    "Synthetic partial shipments: existing separate fixture, not chapter observations.",
+    "Invoice amounts, customer identifier, year and timezone: not supplied here.",
+    "Later figure event ordinals: not silently aliased to Table 1 identifiers.",
+    "Six-day promise and daily collection performance: later time-model decision, not first population."
+  ],
+  "review": {"transcription": "VISUALLY_CHECKED_AGAINST_RETAINED_TABLE", "independent_human_ratification": "PENDING", "semantic_coverage": "NOT_ASSESSED", "graph_population": "NOT_STARTED"}
+}

@@ -6,6 +6,23 @@ The two typed capabilities select the existing `malleus.control` epistemic
 and authorization evaluators, including their existing evaluation-hash recipes.
 They are reference implementations, not a portability claim.
 
+Authorization outcome mapping, precedence and trigger membership now come from
+the fixed packaged `authorization-control-v1.json` resource. The shared evaluator
+uses a generic lookup/selection interpreter for these rules. Policy and
+evaluation hashes remain unchanged; the default resource is pinned, not a
+caller-selectable rule override. Record and history validation remain separate.
+The [implementation record](../../../handover/2026-09-08-authorization-rule-artifact.md)
+states the exact identity, compatibility proof and remaining Python boundary.
+
+The [authorization answer table](authorization_conformance_cases.json) records
+independently written verdict and trigger expectations for all nine pairs of
+two authority outcomes. Its test runs both control entry points, checks input
+order independence and typed refusals, and injects wrong shared rules to prove
+that agreement alone cannot satisfy the table. The table is test evidence, not
+an executable policy or a public wire. The
+[bounded comparison](../../../handover/2026-09-08-authorization-conformance.md)
+separates this control check from full history admission and Assent replacement.
+
 Context is exactly `{recipe, monitors, bindings}`. `recipe` is
 `ASSENT_EPISTEMIC_CONTROL_V1` or `ASSENT_AUTHORIZATION_CONTROL_V1`, explicitly
 required by the program. `monitors` is the complete finite list of resolved
