@@ -62,3 +62,21 @@ full-repository or release gate was run for this test-data addition. The frozen
 Core has acknowledged that custom correction text is descriptive, not a
 state-type admission restriction, and is investigating the execution contract.
 Shop has not selected that profile or implemented an upstream workaround.
+
+## Restricted-history successor
+
+Core later delivered the optional transition rule at
+`2ef5442efec6e43f2b2623a288933f7c62d46d4e`. Shop consumer RED `0f793c54` and
+GREEN `04794b4d6a14ebd9237311d77dc1a26ca8dd9a4e` verify the narrow replacement
+restriction in a fresh history. Eight consumer cases pass. An isolated
+detached Core checkout with only the Shop successor files passes **283 tests,
+zero skips**, covering the whole Shop directory and Core's transition suite.
+This is not a full repository or release test. The initial archive-only setup
+failed the existing historical-Git journal check; the final checkout retains
+those objects and passes without changing the guard.
+
+[The consumer report](RESTRICTED_HISTORY.md) records exact rules, source/history
+identities, replay parity, matching controls, refusal atomicity and limitations.
+The earlier structural-only evidence stays frozen. The missing Core capability
+is closed; final Shop history semantics and the full connected population are
+still pending selection and implementation respectively.

@@ -323,3 +323,15 @@ population, not chosen opportunistically to make a test pass.
   the finished connected run. No new modeling decision was taken. Core confirms
   custom correction labels alone are descriptive; the enforcement response and
   final Shop history choice remain pending.
+- 2026-09-08: Core delivered selected transition-rule enforcement at
+  `2ef5442efec6e43f2b2623a288933f7c62d46d4e`. New consumer RED `0f793c54` and
+  GREEN `04794b4d6a14ebd9237311d77dc1a26ca8dd9a4e` close the original
+  occurrence-replacement counterexample in a fresh restricted history, while
+  preserving the original structural-only result. Eight consumer tests and
+  the isolated 283-test Shop/transition gate pass. Both matching modes are
+  demonstrated, not selected as final policy. This is an explicit successor
+  compatibility baseline, not a rebind of released `v0.14.0` receipts.
+  [Evidence and remaining choice](connected_story/RESTRICTED_HISTORY.md).
+  Core's missing executor dependency is resolved. The recommended first Shop
+  rule allows only explicitly named state types; Luis's selection remains
+  pending before the final connected ontology/profile and full population.

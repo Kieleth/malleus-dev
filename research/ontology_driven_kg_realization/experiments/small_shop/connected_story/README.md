@@ -87,3 +87,12 @@ part of the pending Shop history decision. It also reuses the predecessor's
 `SupplierOrderState.source_occurrence_id` field rather than silently changing
 that established vocabulary in the probe. The final model must state whether
 it preserves that domain-occurrence reference or relies solely on public trace.
+
+## Core restriction delivered, new witness
+
+The [restricted-history witness](RESTRICTED_HISTORY.md) consumes Core's explicit
+transition rule in a new history. State correction succeeds, occurrence
+replacement refuses, and full replay, incremental replay and reopen agree.
+Both exact and subtype matching are tested. The earlier structural-only probe
+above retains its original behavior; no old receipt is rebound. The remaining
+choice is the Shop policy, not an unresolved Core implementation.

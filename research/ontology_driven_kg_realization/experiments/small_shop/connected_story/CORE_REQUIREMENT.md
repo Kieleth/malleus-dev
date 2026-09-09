@@ -1,7 +1,8 @@
 # Shop history selection: enforceable declarations versus retained labels
 
-Status: request for Core contract classification. No Core implementation is
-authorized by this file. Shop has not selected or frozen its candidate profile.
+Status: historical request, answered by Core's separately approved transition
+rule and the [new Shop witness](RESTRICTED_HISTORY.md). The original evidence
+below remains unchanged. Shop has not selected its final connected profile.
 
 ## Consumer requirement
 
@@ -65,3 +66,12 @@ owns the executor contract, not retail semantics. No new DSL, general planner,
 profile migration, Event-to-Event relation, evaluation or Re-entry is requested.
 Continue independent source-accounting work, but hold final history-model
 selection and the connected population until this boundary is explicit.
+
+## Successor delivery
+
+Core confirmed the original behavior was not a violated executable guarantee,
+then delivered the optional rule at `2ef5442efec6e43f2b2623a288933f7c62d46d4e`.
+Shop consumed it at `04794b4d6a14ebd9237311d77dc1a26ca8dd9a4e` in a new history:
+state replacement admits, synthetic occurrence replacement refuses, and
+full/incremental replay agree. This closes the missing consumer capability,
+not the final Shop policy selection. Old profile labels gain no new meaning.
