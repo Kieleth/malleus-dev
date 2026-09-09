@@ -1,0 +1,66 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000455",
+  "ledger": "overseer",
+  "sequence": 455,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:741da8fbef93a94e31e827c4d0a2320b86a1a95206d3d5057e5c1ced1c84fbfb",
+  "recorded_at": "2026-09-09T02:59:52Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "adopter-completion-permission-guidance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind shared pre-dispatch and adopter completion guidance without promoting accounting into semantic evaluation.",
+  "why": "Luis requested a generic skill correction through the coordinator. Before bounded capture, reconciliation or repair, compare the outcome with permitted changes, inputs, feedback and budget; preserve source-backed resolutions, exact already-represented findings or specific unresolved obstacles. A finished attempt or complete inventory is not substantive completion. Test-first 4d7511fb has one absent installed-reference failure and one already-passing no-change counterexample; d1125f6a changes only two skills. The public adapter/compiler test preserves a specific permission-blocked relationship gap with no operations. It does not validate task permissions or semantic reconciliation. Installed Codex project copies match source bytes and their shared guidance link resolves. Focused 8 tests pass; a clean detached combined run passes 115 with one optional private-doctrine skip. No wording check is claimed as semantic behavior. No runtime, ontology, evaluator, report grammar, permission widening, consumer run/rebind, push or release.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e20f33af0159be22bbe16877fe4c28ce038aee93dad6c713447be3da641c65c6",
+        "after_digest": "sha256:a7508dee74b0b1e9e1dde8ce021e6a509408e13165081093e6497b8d9f127deb"
+      },
+      {
+        "path": ".claude/skills/malleus-dev/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c813f19fa53ae4ae4e9aa0440203bc0877a3f15be60638c59cd5f7a72139fccf",
+        "after_digest": "sha256:30ee132553f4eb42943161f858457bf6f6050d93793cd1255b1cc5006eecc96f"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_adopter_completion_boundary.py",
+        "change": "CREATED",
+        "after_digest": "sha256:482f2e787f8ec2dba8ffc49d75ba7271c1f053476f13dda53a4b316ac515a5ef"
+      },
+      {
+        "path": "handover/2026-09-08-adopter-completion-guidance.md",
+        "change": "CREATED",
+        "after_digest": "sha256:5292cfa134e71d57c2821073b2c72e63d5da1332ba3e687149cb8c8a8b28aa68"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "4d7511fb4335dcade5189e3e420dff030d53aaa9"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "d1125f6a196bd7892feae4320ec22d5f2171d474"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:06a44c3196180c360e085118f7eed33e8c7be04237f6657f51d5e35fda626dbd"
+}
