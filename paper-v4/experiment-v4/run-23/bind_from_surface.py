@@ -37,6 +37,20 @@ still correct it. v4.11 shipped that check as a step the procedure ran by hand;
 a step run by hand is a step that can be skipped, and the artefact it guards is
 the one this script writes (E-0196, E-0198).
 
+What v4.13 adds is a fifth case kind. ``SUBJECT_ANY`` pairs every
+subject-bearing type in a question's set with every entity type the surface
+declares, and not with the entity types the set happens to list, so a record of
+a listed type that names a subject is returned whatever that subject's type is.
+Run-22's CQ-T4-01 listed the claim type alone: the export carried 124 claims, 63
+of them with a subject, and the question returned the 61 subject-less ones and
+none of the claims that state the preferred explanation (E-0342, and the run-22
+RCA's cause 1, which took the same items out of CQ-T4-02, CQ-T4-03 and
+CQ-T5-01). A listed subject-bearing type now reaches its subject-less records
+once, through ``ENTITY_NO_SUBJECT``, and its subject-carrying records once,
+through ``SUBJECT_ANY``, whatever the subject's type. The typed ``SUBJECT`` case
+does not move and is a subset of the new one; a record both reach is one row
+with two ordinals, because rows already dedupe by witness.
+
 The expansion stays mechanical and the evaluator's one judgement stays the type
 set per question. ``cases_sha256`` still digests the queries alone, so the
 binding that executes after the replay is provably the binding whose digest the
@@ -56,19 +70,27 @@ from pathlib import Path
 import sys
 
 
-BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v5"
+BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v6"
 SURFACE_SCHEMA = "malleus.paper-v4.population-surface/v2"
 BOUND_AT_STAGE = "ONTOLOGY_ACCEPTANCE"
 PENDING = "PENDING"
 CLOSURE_CHECK = "TYPE_SET_CLOSED_UNDER_THE_SURFACES_SUBTYPES_AT_BIND_TIME"
 
-# The four case kinds, sorted, which is also the order the expansion emits
-# them. All four are type-only: a case names record types and projected field
+# The five case kinds, sorted, which is also the order the expansion emits
+# them. All five are type-only: a case names record types and projected field
 # names and nothing else. ``ENTITY_NO_SUBJECT`` is v4.12's addition and is
 # emitted directly after ``ENTITY``, so a question's ordinals keep the two
-# entity kinds first and the rows keep their order.
-CASE_KINDS = ("ENTITY", "ENTITY_NO_SUBJECT", "RELATION", "SUBJECT")
+# entity kinds first and the rows keep their order. ``SUBJECT_ANY`` is v4.13's
+# and is emitted last, after the typed SUBJECT cases whose pairing it widens.
+CASE_KINDS = (
+    "ENTITY",
+    "ENTITY_NO_SUBJECT",
+    "RELATION",
+    "SUBJECT",
+    "SUBJECT_ANY",
+)
 ENTITY_NO_SUBJECT = "ENTITY_NO_SUBJECT"
+SUBJECT_ANY = "SUBJECT_ANY"
 
 # The reference a source-asserted record carries to the entity it is about
 # (Core-13, the research pack's SourceAsserted mixin). A surface type that
@@ -77,7 +99,10 @@ ENTITY_NO_SUBJECT = "ENTITY_NO_SUBJECT"
 # From v4.12 the second half of that sentence has one exception. A record of a
 # bearing type whose ``subject`` is absent is reached by an ENTITY_NO_SUBJECT
 # case, which is the only case whose selection reads a record at all, and reads
-# exactly one thing: whether the slot is there.
+# exactly one thing: whether the slot is there. From v4.13 a record of a bearing
+# type that does carry a subject is reached by a SUBJECT_ANY case whatever the
+# subject's own type is, so a type set decides what a question is about and
+# never which of that type's records survive.
 SUBJECT_SLOT = "subject"
 ENTITY_FAMILY = "ENTITY"
 
@@ -104,7 +129,9 @@ BOUND_BY = (
     " the set that does carry it, returning the records of that type whose"
     " subject slot is absent, one RELATION case per ordered pair of"
     " those types under every relation type on the surface, and one SUBJECT"
-    " case per ordered pair of a subject-bearing type with an entity type. Each"
+    " case per ordered pair of a subject-bearing type with an entity type in the"
+    " set, and one SUBJECT_ANY case per ordered pair of a subject-bearing type"
+    " in the set with an entity type the surface declares. Each"
     " type projects its non-housekeeping slots. No population, admission,"
     " replay, row or row count existed when the type sets were written, so no"
     " binding here was selected against a result. Run-04's binding was revised"
@@ -186,16 +213,23 @@ def _cases(
     relations: list[str],
     by_name: dict[str, dict[str, object]],
 ) -> list[dict[str, object]]:
-    """Every case of the four kinds a question's type set expands to.
+    """Every case of the five kinds a question's type set expands to.
 
     The v4.4 restriction is the first loop: a type that carries ``subject`` is
     reached through its subject or not at all, and gets no ENTITY case. The
     v4.12 addition is the second: the same type gets one ENTITY_NO_SUBJECT
     case, which returns the records of it that carry no subject and nothing
-    else.
+    else. The v4.13 addition is the last loop: the same type is paired with
+    every entity type the surface declares, so a record of it that does carry a
+    subject is returned whatever that subject's type is and the evaluator
+    cannot lose it by leaving the subject's type out of the set.
     """
 
-    projections = {name: _projection(by_name[name]) for name in types}
+    entities_on_surface = entity_types(by_name)
+    projections = {
+        name: _projection(by_name[name])
+        for name in [*types, *entities_on_surface]
+    }
     relation_projections = {name: _projection(by_name[name]) for name in relations}
     bearing = [name for name in types if SUBJECT_SLOT in _slot_names(by_name[name])]
     unattached = [name for name in types if name not in set(bearing)]
@@ -252,11 +286,27 @@ def _cases(
                 }
             )
 
+    for record_type in bearing:
+        for subject_type in entities_on_surface:
+            cases.append(
+                {
+                    "kind": SUBJECT_ANY,
+                    "ordinal": len(cases) + 1,
+                    "output_fields": {
+                        "record": projections[record_type],
+                        "subject": projections[subject_type],
+                    },
+                    "record_type": record_type,
+                    "subject_record_type": subject_type,
+                }
+            )
+
     expected = (
         len(unattached)
         + len(bearing)
         + len(types) * len(types) * len(relations)
         + len(bearing) * len(entities)
+        + len(bearing) * len(entities_on_surface)
     )
     if len(cases) != expected:
         raise BindingRefusal(
@@ -374,8 +424,14 @@ def build(
                 " the set's types"
                 " under every relation type on the surface as a RELATION case;"
                 " every ordered pair of a subject-bearing type in the set with"
-                " an entity type in the set as a SUBJECT case; each type"
+                " an entity type in the set as a SUBJECT case; every ordered"
+                " pair of a subject-bearing type in the set with an entity type"
+                " the surface declares as a SUBJECT_ANY case; each type"
                 " projecting its non-housekeeping slots"
+            ),
+            "subject_any_case_scope": (
+                "TYPES_IN_THE_SET_THAT_CARRY_SUBJECT_PAIRED_WITH_EVERY_ENTITY"
+                "_TYPE_THE_SURFACE_DECLARES_AND_NOT_ONLY_THE_SETS"
             ),
             "subject_bearing_record_types": subject_bearing_types(by_name),
             "subject_slot": SUBJECT_SLOT,

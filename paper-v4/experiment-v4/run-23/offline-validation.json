@@ -1,5 +1,5 @@
 {
-  "schema": "malleus.paper-v4.run-23-offline-validation/v2",
+  "schema": "malleus.paper-v4.run-23-offline-validation/v3",
   "run_id": "run-23",
   "status": "COMPUTED",
   "change_id": "ENTITY_KIND_RESTRICTED",
@@ -7,14 +7,16 @@
   "and_change_id": "ONE_ROW_PER_WITNESS_OWN_TYPE_PROJECTION",
   "third_change_id": "ENTITY_NO_SUBJECT_REACHABILITY",
   "third_rule": "one ENTITY_NO_SUBJECT case per subject-bearing type in a question's set, returning the records of that type whose subject slot is absent as ENTITY rows; measured here as the rows of run-09's v3 ENTITY case of the same type whose record carries no subject",
+  "fourth_change_id": "SUBJECT_ANY_REACHABILITY",
+  "fourth_rule": "one SUBJECT_ANY case per subject-bearing type in a question's set and every entity type the surface declares, returning the records of that type whose subject resolves whatever the subject's type is; measured here as the rows of run-09's v3 ENTITY case of the same type whose record does carry a subject, and beside them the ones no typed SUBJECT case of the same question returned",
   "and_rule": "within one question, rows with the same witness are one row, the row projecting the fields of the witness record's own type; a collapsed row's label here is the first producing row's",
   "executes": "NOTHING",
   "measured_on": "run-09",
   "inputs": {
     "binder": {
       "path": "paper-v4/experiment-v4/run-23/bind_from_surface.py",
-      "sha256": "sha256:c159933ee991df868f110be2a866ad33e4ff926306b5d9f7901d05966460966d",
-      "binding_schema": "malleus.paper-v4.native-query-binding/v5"
+      "sha256": "sha256:389856e069dacdf02748eaec0b04d2ff63ad7dee04afcda831c70e848fec9c96",
+      "binding_schema": "malleus.paper-v4.native-query-binding/v6"
     },
     "type_sets": {
       "path": "paper-v4/experiment-v4/run-09/results/query-type-sets.json",
@@ -75,6 +77,13 @@
       "rows_restored_new_witnesses": 64,
       "rows_restored_by_label": {
         "SUPPORTED": 78
+      },
+      "rows_reached_by_subject_any": 74,
+      "rows_reached_by_subject_any_witnesses": 69,
+      "rows_reached_by_subject_any_beyond_typed_subject": 64,
+      "rows_reached_by_subject_any_beyond_typed_subject_witnesses": 63,
+      "rows_reached_by_subject_any_by_label": {
+        "SUPPORTED": 74
       }
     },
     {
@@ -114,6 +123,14 @@
       "rows_restored_by_label": {
         "PARTIAL": 1,
         "SUPPORTED": 116
+      },
+      "rows_reached_by_subject_any": 111,
+      "rows_reached_by_subject_any_witnesses": 106,
+      "rows_reached_by_subject_any_beyond_typed_subject": 13,
+      "rows_reached_by_subject_any_beyond_typed_subject_witnesses": 9,
+      "rows_reached_by_subject_any_by_label": {
+        "PARTIAL": 1,
+        "SUPPORTED": 110
       }
     },
     {
@@ -153,6 +170,13 @@
       "rows_restored_by_label": {
         "PARTIAL": 1,
         "SUPPORTED": 116
+      },
+      "rows_reached_by_subject_any": 111,
+      "rows_reached_by_subject_any_witnesses": 106,
+      "rows_reached_by_subject_any_beyond_typed_subject": 39,
+      "rows_reached_by_subject_any_beyond_typed_subject_witnesses": 36,
+      "rows_reached_by_subject_any_by_label": {
+        "SUPPORTED": 111
       }
     },
     {
@@ -191,6 +215,14 @@
       "rows_restored_new_witnesses": 103,
       "rows_restored_by_label": {
         "SUPPORTED": 117
+      },
+      "rows_reached_by_subject_any": 111,
+      "rows_reached_by_subject_any_witnesses": 106,
+      "rows_reached_by_subject_any_beyond_typed_subject": 40,
+      "rows_reached_by_subject_any_beyond_typed_subject_witnesses": 35,
+      "rows_reached_by_subject_any_by_label": {
+        "PARTIAL": 1,
+        "SUPPORTED": 110
       }
     }
   ],
@@ -207,6 +239,10 @@
     "rows_restored_by_entity_no_subject": 429,
     "rows_restored_witnesses": 373,
     "rows_restored_new_witnesses": 373,
+    "rows_reached_by_subject_any": 407,
+    "rows_reached_by_subject_any_witnesses": 387,
+    "rows_reached_by_subject_any_beyond_typed_subject": 156,
+    "rows_reached_by_subject_any_beyond_typed_subject_witnesses": 143,
     "rows_kept_by_kind": {
       "ENTITY": 225,
       "RELATION": 79,
@@ -229,6 +265,10 @@
     "rows_restored_by_label": {
       "PARTIAL": 2,
       "SUPPORTED": 427
+    },
+    "rows_reached_by_subject_any_by_label": {
+      "PARTIAL": 2,
+      "SUPPORTED": 405
     }
   },
   "non_claim": "These are run-09's rows under run-23's rule, not run-23's rows. No producer has run at this cell's coordinate and no graph of its own exists. The labels are run-09's preliminary reviewers' and are not ratified. What the numbers bound is the review, not the result."

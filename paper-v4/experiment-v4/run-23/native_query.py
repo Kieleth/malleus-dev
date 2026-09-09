@@ -25,6 +25,17 @@ SUBJECT case and by no case of this kind, so the addition reaches nothing twice;
 a record reached both here and through an ancestor's ENTITY case builds the same
 row and adds an ordinal to it (E-0197).
 
+v4.13 adds a fifth case kind and no row kind either. A SUBJECT_ANY case names a
+subject-bearing record type and an entity type exactly as a SUBJECT case does
+and resolves the reference exactly as one, so it is built by the same builder
+and writes the same SUBJECT row. What moved is which pairs the binder emits: a
+listed bearing type against every entity type the surface declares rather than
+against the entity types the question's set happens to list. A record whose
+subject's type the set leaves out is therefore returned instead of lost,
+projected by its own type and its subject by the subject's own. The typed
+SUBJECT case is a subset of it: a record both reach is one row with two
+ordinals (E-0342, run-22's CQ-T4-01).
+
 Query execution runs inside a guard that counts and refuses file reads, socket
 use and embedding-library imports, so the reported source-free observation is
 mechanical rather than asserted. Provenance for every witness comes from
@@ -68,7 +79,7 @@ import malleus.compiler as api
 
 RESULT_SCHEMA = "malleus.paper-v4.query-result/v3"
 TRACE_SCHEMA = "malleus.paper-v4.query-trace-summary/v1"
-BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v5"
+BINDING_SCHEMA = "malleus.paper-v4.native-query-binding/v6"
 FORBIDDEN_ATTEMPTS = ("embedding_import", "file_read", "network")
 _EMBEDDING_PACKAGES = frozenset(
     {
@@ -93,12 +104,22 @@ SUBJECT_SLOT = "subject"
 # type declares, wherever the subject record carries it. v4.7's only
 # harness delta.
 SUBJECT_TAGS_SLOT = "tags"
-CASE_KINDS = ("ENTITY", "ENTITY_NO_SUBJECT", "RELATION", "SUBJECT")
+CASE_KINDS = (
+    "ENTITY",
+    "ENTITY_NO_SUBJECT",
+    "RELATION",
+    "SUBJECT",
+    "SUBJECT_ANY",
+)
 # The case kind v4.12 adds, and the row kind it writes. The case kind is new;
 # the row kind is not, because the row is one admitted record witnessed by
 # itself, which is what an ENTITY row already was.
 ENTITY_NO_SUBJECT = "ENTITY_NO_SUBJECT"
 ENTITY_ROW_KIND = "ENTITY"
+# The case kind v4.13 adds. Its row is the SUBJECT row the typed case already
+# wrote, built by the same builder out of the same resolution; what the binder
+# widened is which pairs of types it emits, not what a pair means.
+SUBJECT_ANY = "SUBJECT_ANY"
 # The closed field set of a case and the closed output-field set that goes with
 # it, per kind. Every kind names record types and projected field names only.
 _CASE_FIELDS = {
@@ -119,12 +140,20 @@ _CASE_FIELDS = {
         "record_type",
         "subject_record_type",
     },
+    SUBJECT_ANY: {
+        "kind",
+        "ordinal",
+        "output_fields",
+        "record_type",
+        "subject_record_type",
+    },
 }
 _OUTPUT_FIELDS = {
     "ENTITY": {"record"},
     ENTITY_NO_SUBJECT: {"record"},
     "RELATION": {"relation", "source", "target"},
     "SUBJECT": {"record", "subject"},
+    SUBJECT_ANY: {"record", "subject"},
 }
 _TYPE_FIELDS = {
     "ENTITY": ("record_type",),
@@ -135,6 +164,7 @@ _TYPE_FIELDS = {
         "target_record_type",
     ),
     "SUBJECT": ("record_type", "subject_record_type"),
+    SUBJECT_ANY: ("record_type", "subject_record_type"),
 }
 # Which declared type each projected field of a case belongs to. The binder
 # writes one projection per record type, that type's non-housekeeping slots
@@ -149,6 +179,10 @@ _PROJECTED_TYPES = {
         ("target_record_type", "target"),
     ),
     "SUBJECT": (("record_type", "record"), ("subject_record_type", "subject")),
+    SUBJECT_ANY: (
+        ("record_type", "record"),
+        ("subject_record_type", "subject"),
+    ),
 }
 # The key the graph carries a record's own type under, on a node and on a
 # relation alike. A row projects through this and never through its case.
@@ -427,9 +461,13 @@ def _subject_rows(
 ) -> list[dict]:
     """Records whose ``subject`` resolves to a record of the subject type.
 
-    The reference is followed by identifier and nothing else. A record whose
+    Both subject kinds are built here, because both build the same row. The
+    reference is followed by identifier and nothing else. A record whose
     subject is absent, is not a string, or names a record of another type is not
-    a row: the case is type-only and resolution is the whole test.
+    a row: the case is type-only and resolution is the whole test. What v4.13
+    moved is which pairs the binder emits and not what a pair means: a
+    SUBJECT_ANY case arrives here with the same two type names a SUBJECT case
+    would, and is answered the same way.
 
     The subject side projects ``tags`` beside the fields its own record
     type declares, wherever the subject record carries them. The binder drops
@@ -469,6 +507,7 @@ _ROWS_BY_KIND = {
     ENTITY_NO_SUBJECT: _entity_no_subject_rows,
     "RELATION": _relation_rows,
     "SUBJECT": _subject_rows,
+    SUBJECT_ANY: _subject_rows,
 }
 
 

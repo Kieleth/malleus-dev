@@ -1,7 +1,7 @@
-"""Validate the v4.4 restriction, the v4.9 removal and the v4.12 restoration.
+"""Validate the v4.4 restriction, the v4.9 removal and the two restorations.
 
-The first two changes in the query surface are removals and the third is an
-addition, and all three can be measured on one frozen record: expand run-09's frozen type sets against run-09's frozen surface
+The first two changes in the query surface are removals and the last two are
+additions, and all four can be measured on one frozen record: expand run-09's frozen type sets against run-09's frozen surface
 with this cell's rule, keep the cases the rule keeps, select the rows of run-09's
 frozen query result that came from those cases, collapse the rows that repeat a
 witness inside one question the way this cell's executor now does, and read the
@@ -16,6 +16,13 @@ case returns are already in run-09's result: they are the rows of the ENTITY
 case of a subject-bearing type whose projected record carries no subject. They
 are counted here with the labels run-09's reviewers gave them, which is what the
 addition brings back into reach and nothing more.
+
+The fourth stage is v4.13's. A SUBJECT_ANY case returns the records of a listed
+subject-bearing type whose subject resolves, whatever the subject's type, so its
+counterpart in run-09's v3 record is the same ENTITY case read the other way:
+its rows whose projected record does carry a subject. Beside that count is how
+many of those records no typed SUBJECT case of the same question returned, which
+is what widening the pairing reaches and nothing more.
 
 Run-09 is frozen, so every one of its files is read and none is written. The
 rows themselves stay where they are: this script writes counts, per question and
@@ -46,12 +53,16 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 RUN_09 = HERE.parent / "run-09"
 
-RECORD_SCHEMA = "malleus.paper-v4.run-23-offline-validation/v2"
+RECORD_SCHEMA = "malleus.paper-v4.run-23-offline-validation/v3"
 QUESTION_IDS = ("CQ-01", "CQ-02", "CQ-03", "CQ-04")
 # v4.12's case kind. A v3 binding knows nothing of it, so its counterpart there
 # is the ENTITY case of the same type and the rows it would return are that
 # case's rows whose record carries no subject.
 ENTITY_NO_SUBJECT = "ENTITY_NO_SUBJECT"
+# v4.13's. A v3 binding knows nothing of it either, and its counterpart there is
+# the same ENTITY case read the other way: the rows whose record does carry a
+# subject, which a SUBJECT_ANY case returns whatever that subject's type is.
+SUBJECT_ANY = "SUBJECT_ANY"
 
 # Run-09's frozen inputs. The first three are public and digest-pinned by
 # run-09's own contract test; the fourth is the withheld query result; the fifth
@@ -100,6 +111,8 @@ def case_identity(case: dict[str, object]) -> tuple[str, ...]:
         return (kind, str(case["record_type"]), str(case["subject_record_type"]))
     if kind == ENTITY_NO_SUBJECT:
         return (kind, str(case["record_type"]))
+    if kind == SUBJECT_ANY:
+        return (kind, str(case["record_type"]), str(case["subject_record_type"]))
     raise OfflineValidationRefusal(f"unknown case kind: {kind}")
 
 
@@ -175,8 +188,13 @@ def validate() -> dict[str, object]:
         "rows_restored_by_entity_no_subject": 0,
         "rows_restored_witnesses": 0,
         "rows_restored_new_witnesses": 0,
+        "rows_reached_by_subject_any": 0,
+        "rows_reached_by_subject_any_witnesses": 0,
+        "rows_reached_by_subject_any_beyond_typed_subject": 0,
+        "rows_reached_by_subject_any_beyond_typed_subject_witnesses": 0,
     }
     restored_by_label_total: dict[str, int] = {}
+    reached_by_label_total: dict[str, int] = {}
     kept_by_kind: dict[str, int] = {}
     kept_by_label: dict[str, int] = {}
     one_by_kind: dict[str, int] = {}
@@ -193,12 +211,19 @@ def validate() -> dict[str, object]:
             types=types, relations=relations, by_name=by_name
         )
         restricted = [
-            case for case in expanded if str(case["kind"]) != ENTITY_NO_SUBJECT
+            case
+            for case in expanded
+            if str(case["kind"]) not in {ENTITY_NO_SUBJECT, SUBJECT_ANY}
         ]
         restored_types = {
             str(case["record_type"])
             for case in expanded
             if str(case["kind"]) == ENTITY_NO_SUBJECT
+        }
+        reached_types = {
+            str(case["record_type"])
+            for case in expanded
+            if str(case["kind"]) == SUBJECT_ANY
         }
         kept_identities = {case_identity(case) for case in restricted}
         frozen_cases = frozen[question_id]
@@ -212,13 +237,19 @@ def validate() -> dict[str, object]:
                 f"the ENTITY_NO_SUBJECT cases of {question_id} do not cover its"
                 " subject-bearing types"
             )
+        if reached_types != set(bearing):
+            raise OfflineValidationRefusal(
+                f"the SUBJECT_ANY cases of {question_id} do not cover its"
+                " subject-bearing types"
+            )
         kept_ordinals = {
             int(case["ordinal"])
             for case in frozen_cases
             if case_identity(case) in kept_identities
         }
         # The v3 ENTITY case of each subject-bearing type. Its subject-less rows
-        # are the ones v4.4 took out of reach and v4.12 gives back.
+        # are the ones v4.4 took out of reach and v4.12 gives back; its
+        # subject-carrying rows are the ones a v4.13 SUBJECT_ANY case returns.
         restored_ordinals = {
             int(case["ordinal"])
             for case in frozen_cases
@@ -227,6 +258,14 @@ def validate() -> dict[str, object]:
         }
 
         rows = rows_by_question[question_id]
+        # The records the v3 SUBJECT cases of this question already returned. A
+        # subject-carrying record of a listed bearing type that is not among
+        # them is one the typed pairing lost and a SUBJECT_ANY case reaches.
+        typed_subject_records = {
+            str(row["witness"]["record_id"])
+            for row in rows
+            if str(row["kind"]) == "SUBJECT"
+        }
         judged = labels[question_id]
         if sorted(judged) != list(range(len(rows))):
             raise OfflineValidationRefusal(
@@ -242,6 +281,11 @@ def validate() -> dict[str, object]:
         restored = 0
         restored_by_label: dict[str, int] = {}
         restored_witnesses: set[str] = set()
+        reached = 0
+        reached_by_label: dict[str, int] = {}
+        reached_witnesses: set[str] = set()
+        reached_beyond = 0
+        reached_beyond_witnesses: set[str] = set()
         for index, row in enumerate(rows):
             ordinal = int(row["case_ordinal"])
             if (
@@ -253,6 +297,19 @@ def validate() -> dict[str, object]:
                     restored_by_label.get(judged[index], 0) + 1
                 )
                 restored_witnesses.add(witness_identity(row))
+            if (
+                ordinal in restored_ordinals
+                and row["record"].get(binder.SUBJECT_SLOT) is not None
+            ):
+                record_id = str(row["witness"]["record_id"])
+                reached += 1
+                reached_by_label[judged[index]] = (
+                    reached_by_label.get(judged[index], 0) + 1
+                )
+                reached_witnesses.add(record_id)
+                if record_id not in typed_subject_records:
+                    reached_beyond += 1
+                    reached_beyond_witnesses.add(record_id)
             if ordinal not in kept_ordinals:
                 continue
             kept += 1
@@ -299,6 +356,17 @@ def validate() -> dict[str, object]:
                     restored_witnesses - set(survivor_label)
                 ),
                 "rows_restored_by_label": dict(sorted(restored_by_label.items())),
+                "rows_reached_by_subject_any": reached,
+                "rows_reached_by_subject_any_witnesses": len(reached_witnesses),
+                "rows_reached_by_subject_any_beyond_typed_subject": (
+                    reached_beyond
+                ),
+                "rows_reached_by_subject_any_beyond_typed_subject_witnesses": (
+                    len(reached_beyond_witnesses)
+                ),
+                "rows_reached_by_subject_any_by_label": dict(
+                    sorted(reached_by_label.items())
+                ),
             }
         )
         totals["cases_v3"] += len(frozen_cases)
@@ -315,8 +383,18 @@ def validate() -> dict[str, object]:
         totals["rows_restored_new_witnesses"] += len(
             restored_witnesses - set(survivor_label)
         )
+        totals["rows_reached_by_subject_any"] += reached
+        totals["rows_reached_by_subject_any_witnesses"] += len(reached_witnesses)
+        totals["rows_reached_by_subject_any_beyond_typed_subject"] += (
+            reached_beyond
+        )
+        totals[
+            "rows_reached_by_subject_any_beyond_typed_subject_witnesses"
+        ] += len(reached_beyond_witnesses)
         for name, count in restored_by_label.items():
             restored_by_label_total[name] = restored_by_label_total.get(name, 0) + count
+        for name, count in reached_by_label.items():
+            reached_by_label_total[name] = reached_by_label_total.get(name, 0) + count
 
     totals["rows_kept_by_kind"] = dict(sorted(kept_by_kind.items()))
     totals["rows_kept_by_label"] = dict(sorted(kept_by_label.items()))
@@ -324,6 +402,9 @@ def validate() -> dict[str, object]:
     totals["rows_one_per_witness_by_kind"] = dict(sorted(one_by_kind.items()))
     totals["rows_one_per_witness_by_label"] = dict(sorted(one_by_label.items()))
     totals["rows_restored_by_label"] = dict(sorted(restored_by_label_total.items()))
+    totals["rows_reached_by_subject_any_by_label"] = dict(
+        sorted(reached_by_label_total.items())
+    )
 
     return {
         "schema": RECORD_SCHEMA,
@@ -341,6 +422,15 @@ def validate() -> dict[str, object]:
             " set, returning the records of that type whose subject slot is"
             " absent as ENTITY rows; measured here as the rows of run-09's v3"
             " ENTITY case of the same type whose record carries no subject"
+        ),
+        "fourth_change_id": "SUBJECT_ANY_REACHABILITY",
+        "fourth_rule": (
+            "one SUBJECT_ANY case per subject-bearing type in a question's set"
+            " and every entity type the surface declares, returning the records"
+            " of that type whose subject resolves whatever the subject's type"
+            " is; measured here as the rows of run-09's v3 ENTITY case of the"
+            " same type whose record does carry a subject, and beside them the"
+            " ones no typed SUBJECT case of the same question returned"
         ),
         "and_rule": (
             "within one question, rows with the same witness are one row, the row"
