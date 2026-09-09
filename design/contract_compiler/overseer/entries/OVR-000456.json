@@ -1,0 +1,57 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000456",
+  "ledger": "overseer",
+  "sequence": 456,
+  "entry_type": "OBSERVATION",
+  "previous_entry_hash": "sha256:06a44c3196180c360e085118f7eed33e8c7be04237f6657f51d5e35fda626dbd",
+  "recorded_at": "2026-09-09T17:02:59Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "overseer-takeover-2026-09-09",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record that the Claude overseer session takes over Core and paper execution while the Codex threads are stopped on the account usage limit; open Core decisions are stored, not ruled.",
+  "why": "Luis ruled in chat on 2026-09-09: take over decisions 1 to 3 (this session is the engine; push the 62 local commits after one full default-suite run at HEAD; checkpoint-commit the Codex paper working tree by pathspec after the paper gate) and store decisions 4 to 9 until that work is finished. The stored Core items are the empty relied-on-claim-list contract choice (standalone admission rejects an empty list, compiled validation accepts it, the finite authorization program requires it empty; handover/2026-09-08-authorization-lifecycle-comparison.md) and whether evidence applicability becomes a Core requirement (malleus-code RCA of 2026-09-04). Neither is decided here. No runtime, ontology, fixture, skill or release bytes change in this entry.",
+  "data": {
+    "as_of": "2026-09-09T17:02:59Z",
+    "basis": [
+      "Codex rollouts on disk: the last task_complete in the Core thread (01a02f71) at 2026-09-09T03:27:48Z, its Shop fork (01a08375) at 03:32:29Z and the paper thread (01a063a6) at 04:17:09Z end with codex_error_info usage_limit_exceeded and the text 'try again at Sep 14th, 2026 6:26 PM'; the Robotics thread (01a079a5) retried every five minutes from 14:38Z to 16:01Z with the same error.",
+      "Full default suite at HEAD 82b33967d78d57400cc56e3fbd007b614b2aacb2: 3428 passed, 2 skipped, 1 warning in 888.76s (.venv/bin/python -m pytest -q -p no:cacheprovider, default testpaths). Paper gate from paper-v4/active-test-manifest.json: 31 failed, 2334 passed, 2 subtests passed in 249.21s under the manifest's declared environment at HEAD 82b33967 (2 answer-demonstration self-import path failures, 29 pinned-runtime refusals of HEAD src).",
+      "Checkpoint of the Codex paper thread's working tree on the local branch paper-checkpoint-2026-09-09 at 774f40507e68ee0f386ab5e00d6209bcfcdf673d, not on main and not pushed: its gate is red under the manifest's declared environment because its answer-demonstration tests pin Core to 160878cf14c0d27b11a440e26688708e9b7a7e2b and refuse HEAD src, and its manuscript and submission appendix carry four verbatim 60-to-67-character runs of the withheld reading.",
+      "The 62 local commits were then pushed to origin main (74c715b4..82b33967).",
+      "The review that grounds the takeover is handover/2026-09-09-five-front-review.md at sha256:53f60117c2c843a3a6d9d44e7723469a5110a4574f3c322e71289daffbe46aa6; decisions 4 to 9 are listed in its last section."
+    ],
+    "limitations": [
+      "This is a coordination observation, not a workstream state change, decision, release, or verification of any Codex claim beyond the receipts named in the review.",
+      "Core's own program, backlog and decision workbook are unchanged; Codex Core resumes on the recorded backlog when its account limit lifts, and one writer at a time holds this ledger until then.",
+      "The paper checkpoint preserves another actor's uncommitted state verbatim on a local branch; it does not ratify its ledger entries E-0212 to E-0337, and its landing on main waits on Luis (Core pin strategy for the gate, and the four verbatim runs)."
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "82b33967d78d57400cc56e3fbd007b614b2aacb2"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "ENTRY",
+      "target": "OVR-000455"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "DOCUMENT",
+      "target": "handover/2026-09-09-five-front-review.md"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "DOCUMENT",
+      "target": "handover/2026-09-08-core-backlog.md"
+    }
+  ],
+  "entry_hash": "sha256:3c84e38443b832c92ad0bbfba9f0a083c21018e99f79374f0dec6ffeb10f8a14"
+}

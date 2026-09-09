@@ -653,3 +653,13 @@ Luis: proceed to handover once the two running tasks finish, no more loop. The d
 ### Core-22 landed, recovered (23:40Z); the session closes
 
 Core-22's three commits are on main; the agent was stopped by accident before its report and could not be resumed, so E-0211 is written from the artifacts: the convention in the skill, the aggregating refusal in the compiler, OVR-000418 with matching digests, the touched tests (334) and Core's full suite at HEAD (3,134 passed, 3 skipped) run by the overseer in a throwaway worktree. Core-23 not dispatched. The handover file, the journal, the ledger and the memory carry everything a fresh session needs; the run-22 producer session ends with this one. This session stops here at Luis's instruction.
+
+## Takeover (2026-09-09): the Codex threads are stopped on their usage limit; this session is the engine
+
+Luis asked for a review of all five fronts (Core, paper, semantic re-entry, robotics, malleus-code). Read from the Codex rollouts on disk and the repo; five Opus readers, every count spot-checked. Record: handover/2026-09-09-five-front-review.md. The single blocking fact: every Codex thread ends on usage_limit_exceeded with "try again at Sep 14th, 2026 6:26 PM"; the paper thread's last "Go" never ran; Robotics has been retrying into the wall every five minutes.
+
+Luis's ruling, verbatim: "Lets take over 1-2-3, store 4 through 9 for after we've finished. Make sure is in the ledger/journal/documented we're taking over from now."
+
+Done: full default suite at 82b33967 (3428 passed, 2 skipped), 62 commits pushed (74c715b4..82b33967). The Codex paper tree checkpointed verbatim on the local branch paper-checkpoint-2026-09-09 (774f4050), built from a temporary index; not on main, not pushed. Two reasons, both found by running the gates rather than trusting them: the manifest gate at HEAD is red (31 failed) because answer-demonstration pins Core to 160878cf and refuses HEAD src, while Codex gated with an out-of-repo Core snapshot on PYTHONPATH (reproduced: 696 passed); and the rewritten manuscript and submission appendix carry four verbatim 60-to-67-character runs of the withheld reading, which the committed manuscript does not. E-0338 on the branch records all of it; OVR-000456 records the takeover in Core's ledger. Decisions 4 to 9 stored.
+
+Lesson for the record: a gate that only passes with a path outside the repository on PYTHONPATH is a gate with a hidden input. The manifest declares [".", "src"]; the tests need a third entry that is not in git. Whatever Luis rules, the pin belongs inside the repository.
