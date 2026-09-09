@@ -1,0 +1,71 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-23",
+  "core": {
+    "commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
+  },
+  "producer_input_manifest_sha256": "sha256:62cee3e6bf262afb59c53192454b2aa780d4916685948a30847534271a3ca326",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "workspace_launches": 1,
+    "producing_launch_ordinal": 1,
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:d0f9d9d300d7f2e0b30a96c7989f6da9a586ec0a99e9f2cc38b877feb8fe456a",
+    "final_status_sha256": "sha256:69f7b831244c6e15cf5daf59693fae50f29f54604cbb772a4707a596fdac8bb4"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+      "ontology_path": "paper-v4/experiment-v4/run-23/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-23/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:9b8cdaf417c1f17862e9fb3d2f0eb20d07d3ed78ce005dcd6502d51d10efa02e",
+      "accepted_at": "2026-09-09T21:25:09Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+    "validated_contract_sha256": "sha256:13f261b4f319bd6ff959bea3e974a8925baa3832fbf2249986dbabbf1ca02034",
+    "validated_fact_set_sha256": "sha256:67e164bcc578fb4714eb4c59eb7559c3f10f412b599a2306ef6d8433ba7a73cd",
+    "fact_count": 4152,
+    "grounding_receipt_sha256": "sha256:7b3487566fc803e4d3c5123fa1cbb750377bdb7d0e02d9e3dd5cbf3b79e937e1",
+    "population_surface_sha256": "sha256:cc982f6460b3e06ecefc90466edab351a07a9c94b3d9dc0fa5cd688fd4cd2a2b",
+    "population_surface_families": {
+      "ENTITY": 25,
+      "EVENT": 2,
+      "RELATION": 4
+    }
+  },
+  "accepted_ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-09T21:26:22Z",
+    "checked_at_end": "2026-09-09T21:28:14Z",
+    "checked_at_source": "the harness transcript's timestamps of the WebFetch calls",
+    "urls": 9,
+    "borrowed_terms": 27,
+    "fabricated": 0,
+    "unverified": 0,
+    "vocabulary_claims_unsupported": 0,
+    "result": "vocab-ssn: feature of interest present; QuakeML: the cited landing page and the BED wiki page carry none of the four terms in text, all four present as complex types in the BED 1.2 schema at quake.ethz.ch (Event, Origin, Magnitude, FocalMechanism); schema.org/SoftwareApplication: SoftwareApplication, softwareVersion, downloadUrl present, SoftwareSourceCode present at its own schema.org page; BIPM JCGM 200:2012 PDF: entry 2.48 measurement model read from the fetched PDF locally with pypdf; PROV-O: Agent, Person, Organization, wasAttributedTo, used, actedOnBehalfOf present; schema.org/Grant: Grant, MonetaryGrant, funder, identifier present; GeoSPARQL (303 to defs.opengis.net): sfWithin, sfContains, sfTouches present; CiTO (purl.org via purl.archive.org and w3id.org to sparontologies.github.io): cites present"
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-23 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

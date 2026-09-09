@@ -701,3 +701,9 @@ Two mechanical slips of mine today, same shape: a file written inside an if-bran
 ## CI green (2026-09-09, 21:4xZ)
 
 Run 34405385689 at dde26d28: all five jobs green, the Windows recon job among them. The fix of OVR-000457 holds on the runner; recorded as OVR-000458. The first fix push's run had shown Windows and 3.11 green before the next push cancelled it.
+
+## Run-23 (2026-09-09, 21:10Z to 22:0xZ): the third replicate, frozen at E-0344
+
+One launch, one session, two phases; ONTOLOGY_READY at attempt 01, gate ACCEPTED (4,152 facts, 31 types, six subject-bearing), nine citations verified (QuakeML's terms at its schema, the VIM's entry read from the PDF), thirty type sets with the run-22 lesson, 10,063 cases under v4.13 of which 2,975 SUBJECT_ANY, phase two in the same session, ADMITTED_AND_REPLAYED at runner attempt 1 (417 entities, 1 event, 22 relations, 440 traced, 333 assertions over 184 blocks with 2 declared nothing assertable), 6,573 rows over 428 witnesses. CQ-T4-01 returns 143 rows where run-22's returned 61: the kind reaches the subject-carrying claims. Freeze clean; the placeholder tests inverted by script this time; 100 cell tests. Three cells of one condition now admitted at runner attempt 1 with no return.
+
+The producer's three decisions worth a reader's eye: contribution roles left unset because the source states contributions in its own words and the pack forbids inferring CRediT terms; contact emails unset because no sentence pairs them with authors; affiliations a gap. The same discipline run-22's producer showed on the licence.

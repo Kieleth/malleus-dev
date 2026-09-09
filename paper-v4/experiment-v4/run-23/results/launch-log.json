@@ -1,0 +1,291 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-23",
+  "protocol": "v4.13",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-09T21:10:44Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-23/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path (run-22's message with the run id moved, verified by diff)",
+      "outcome": "POPULATION_READY",
+      "execution": {
+        "pinned_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "paper_commit": "dde26d28",
+        "staged_at": "2026-09-09T20:51:03Z",
+        "staged_at_source": "mtime of producer-input-receipt.json",
+        "interpreter": "VERIFIED by prepare_producer.py preflight",
+        "workspace_note": "staged by run-23/prepare_producer.py after E-0343's gate; the eight staged inputs are byte-identical to run-22's workspace (8 of 8 compared)",
+        "core_runtime": "every parent-side cell command (gate, closure, bind, runner, native query) runs with src/malleus exported from the pinned commit c95dba7 (git archive) first on PYTHONPATH, as run-22 did (E-0341); the repository's src at HEAD dde26d28 differs from the pin"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-09T21:30:04Z",
+        "dispatched_at_source": "the harness transcript's timestamp of the SendMessage call",
+        "after_binding_frozen_at": "2026-09-09T21:29:13Z",
+        "message": "run-22's phase-two message with run-23's coordinates and fact count (4,152)",
+        "capture_id": "capture:paper-v4:yu-2025:v4:23",
+        "plan_id": "plan:paper-v4:yu-2025:v4:23",
+        "source_id": "source:yu-2025-mid-atlantic-ridge",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ],
+        "same_session": true
+      },
+      "usage_cumulative": {
+        "tokens": 182544,
+        "tool_uses": 16,
+        "duration_ms": 846048
+      },
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 382781,
+          "tool_uses": 34,
+          "duration_ms": 1797677
+        }
+      ],
+      "usage_note": "usage_cumulative is the harness's figure at the end of phase one; usage_by_resume carries the cumulative figure at the end of phase two in the same session (one resume by SendMessage)"
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:67e164bcc578fb4714eb4c59eb7559c3f10f412b599a2306ef6d8433ba7a73cd",
+      "fact_count": 4152,
+      "accepted_at": "2026-09-09T21:25:09Z",
+      "accepted_at_source": "mtime of gate/attempt-01/diagnostic.json",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 25,
+        "EVENT": 2,
+        "RELATION": 4
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "ResearchRelation",
+        "GeologicRelation",
+        "ScholarlyRelation"
+      ],
+      "subject_bearing_types": [],
+      "compiler": "paper-v4/experiment-v4/run-23/compile_ontology_candidate.py with src/malleus exported from the pinned commit c95dba7 first on PYTHONPATH (launches[0].execution.core_runtime)",
+      "note": "accepted at attempt 01; 15 project classes, 21 slots, 7 enums; eight root extensions each with a grounding block (GeologicFeature, SeismicEvent, SoftwarePackage, NumericalModel, ResearchAgent, FundingAward, GeologicRelation, ScholarlyRelation), seven pack-derived classes (GeophysicalObservation, GeochemicalObservation, CountObservation, ElementRatio, RockSampleSet, ResearchCruise, ReferencedWork), five pack classes reused; 31 surface types (ENTITY 25, EVENT 2, RELATION 4); subject-bearing Claim, Observation and its three kinds, ElementRatio",
+      "producer_observations": [
+        "phase one report: profile source-assertion with the Event role nonempty; no EventParticipation (object-event not a declared input); relation endpoints Entity-to-Entity so no relation can point at a SeismicEvent",
+        "its self-check (shape and reference only, against the four declared pack documents) found nothing; it states this is not the compiler",
+        "two citations vouched for by the declared inputs (VIM via BIPM, SOSA/SSN); five cited from certain knowledge (QuakeML, Schema.org, PROV-O, CiTO, OGC GeoSPARQL) and flagged for the reviewer; one deliberate refusal to cite geoscience vocabularies (GeoSciML, IUGS/CGI) without a vouched locator, GeologicFeature recorded as considered-and-not-cited"
+      ],
+      "overseer_observations": [
+        "the compiler at the pinned commit accepted at attempt 01",
+        "the repository's src at HEAD differs from the pin; every parent-side command runs against the export"
+      ],
+      "phase_two_inputs_staged": [
+        "producer/accepted/population-surface.json",
+        "producer/accepted/diagnostic.json"
+      ],
+      "phase_two_inputs_digests": {
+        "population-surface.json": "sha256:cc982f6460b3e06ecefc90466edab351a07a9c94b3d9dc0fa5cd688fd4cd2a2b",
+        "diagnostic.json": "sha256:9b8cdaf417c1f17862e9fb3d2f0eb20d07d3ed78ce005dcd6502d51d10efa02e"
+      },
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "overseer, before phase two",
+        "checked_at": "2026-09-09T21:26:22Z",
+        "checked_at_end": "2026-09-09T21:28:14Z",
+        "checked_at_source": "the harness transcript's timestamps of the WebFetch calls",
+        "urls": 9,
+        "borrowed_terms": 27,
+        "fabricated": 0,
+        "unverified": 0,
+        "vocabulary_claims_unsupported": 0,
+        "result": "vocab-ssn: feature of interest present; QuakeML: the cited landing page and the BED wiki page carry none of the four terms in text, all four present as complex types in the BED 1.2 schema at quake.ethz.ch (Event, Origin, Magnitude, FocalMechanism); schema.org/SoftwareApplication: SoftwareApplication, softwareVersion, downloadUrl present, SoftwareSourceCode present at its own schema.org page; BIPM JCGM 200:2012 PDF: entry 2.48 measurement model read from the fetched PDF locally with pypdf; PROV-O: Agent, Person, Organization, wasAttributedTo, used, actedOnBehalfOf present; schema.org/Grant: Grant, MonetaryGrant, funder, identifier present; GeoSPARQL (303 to defs.opengis.net): sfWithin, sfContains, sfTouches present; CiTO (purl.org via purl.archive.org and w3id.org to sparontologies.github.io): cites present"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-09T22:00:20Z",
+      "execution_commit": "39e91ae2",
+      "core_executed_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+      "core_note": "src/malleus exported from the pinned commit c95dba7 (git archive) first on PYTHONPATH for the runner, the binder and the native query; the repository HEAD at execution was 39e91ae2; the runner script is run-23's with that one PYTHONPATH prefix",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 417,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 22,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 440,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 313,
+          "PARTLY_FORMALIZED": 16,
+          "UNFORMALIZED": 4
+        },
+        "blocks_asserted": 184,
+        "blocks_declared_nothing_assertable": 2,
+        "blocks_untouched": 0,
+        "blocks_reviewed": 186,
+        "blocks_total": 186
+      },
+      "derivation_census": {
+        "non_local_relations": 2,
+        "top_hubs": [
+          {
+            "assertion": "assertion:315",
+            "block": "page:10:block:045",
+            "records": 14
+          },
+          {
+            "assertion": "assertion:313",
+            "block": "page:10:block:044",
+            "records": 11
+          },
+          {
+            "assertion": "assertion:003",
+            "block": "page:1:block:001",
+            "records": 8
+          }
+        ]
+      },
+      "subject_coverage": {
+        "ambiguous": 29,
+        "attachable": 27,
+        "proposed": 96,
+        "total": 236,
+        "unnamed": 84,
+        "with_subject": 96,
+        "without_subject": 140
+      },
+      "provenance_coverage": {
+        "total": 236,
+        "with_digest": 236,
+        "with_locator": 236
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 5,
+        "INTERVAL_NOT_EXPRESSIBLE": 3,
+        "RELATION_ABSENT": 6,
+        "TYPE_ABSENT": 6
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-09T22:00:52Z",
+      "admitted_at_source": "mtime of results/run-result.json",
+      "note": "admitted at the first runner attempt with no return; 186 of 186 blocks reviewed, 184 asserted and 2 declared nothing assertable (page:4:block:004 and page:4:block:005, figure furniture by the producer's log)",
+      "producer_observations": [
+        "phase two report: 333 assertions across 184 of 186 blocks; 440 records (417 entities, 1 event, 22 relations), 0 supersessions; 20 typed gaps (RELATION_ABSENT 6, TYPE_ABSENT 6, AGGREGATE_ONLY 5, INTERVAL_NOT_EXPRESSIBLE 3); modalities STATED 246, HYPOTHESISED 32, MEASURED 30, CALCULATED 15, NEGATED 10; largest families Claim 105, GeophysicalObservation 88, ReferencedWork 84, GeologicFeature 32 (producer's own counts, the runner's census governs)",
+        "statements never retyped: an extractor folds each block's raw text into a whitespace-free ligature-folded key and returns the exact byte span, damage included; capture.reading_sha256 is the digest of the input file as supplied",
+        "the four hypotheses for the deep earthquakes are Claim records disposed by the disposing sentence: three NOT_SUPPORTED, CO2 degassing PREFERRED",
+        "three decisions logged: contribution_role unset on all eight ContributionRelation records (the source states contributions in its own words, not CRediT terms; TYPE_ABSENT gap); contact_email unset (no statement pairs the two addresses with the two corresponding authors; RELATION_ABSENT gap); affiliations a gap, not relations (AFFILIATED_WITH declared and unused)",
+        "its preflight against 23 checkable rules found 0 after fixing 16 on a first pass (a slot on a type that does not declare it, two subjects the formalizing sentence never named, a disposition formalized only by the raising sentence); subject coverage deliberately partial by its own count (Claim 41 of 105, GeophysicalObservation 31 of 88)",
+        "reference fields destroyed by the text layer left unset rather than reconstructed"
+      ],
+      "overseer_observations": [
+        "the runner's census governs; the producer's counts are quoted as its report",
+        "one launch, one session, two phases; no environment probe reported by this producer"
+      ]
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-09T21:29:13Z",
+    "bound_at_source": "mtime of query-binding.acceptance.json",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:fba42bdad9294909f7a5e851336ef594e85760ef6aeecd72cc25eb87c15534e8",
+    "type_sets_note": "query-type-sets.note.json",
+    "type_sets_written_at": "2026-09-09T21:29:13Z",
+    "closure": "paper-v4/experiment-v4/type_set_closure.py: ACCEPTED, no omissions (and the binder ran the closure again)",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:7fa617b967763d05083250d29493b02754f75bc68d002ade506d38e1a9db1527",
+    "binding_schema": "malleus.paper-v4.native-query-binding/v6",
+    "cases_sha256": "sha256:9ae5140dd3cadd7aae5e4641c2cf2664f2a967283fda288fc549eb288786d222",
+    "questions": 30,
+    "cases": 10063,
+    "cases_by_kind": {
+      "ENTITY": 81,
+      "ENTITY_NO_SUBJECT": 119,
+      "RELATION": 6024,
+      "SUBJECT": 864,
+      "SUBJECT_ANY": 2975
+    },
+    "phase_two_dispatched_after": "2026-09-09T21:29:13Z",
+    "executed_at": "2026-09-09T22:02:15Z",
+    "executed_at_source": "mtime of query/query-result.json",
+    "binding_executed": "results/native-query-binding.json",
+    "binding_executed_sha256": "sha256:400f203005385022818e1347b751e9d2f2c8fc2e3ecd69c30e660ee2a16f4ec2",
+    "bound_after_replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "result_schema": "malleus.paper-v4.query-result/v3",
+    "rows_by_question": {
+      "NQ-CQ-C-01": 241,
+      "NQ-CQ-C-02": 234,
+      "NQ-CQ-C-03": 355,
+      "NQ-CQ-C-04": 130,
+      "NQ-CQ-C-05": 278,
+      "NQ-CQ-T1-01": 130,
+      "NQ-CQ-T1-02": 130,
+      "NQ-CQ-T1-03": 190,
+      "NQ-CQ-T1-04": 190,
+      "NQ-CQ-T1-05": 130,
+      "NQ-CQ-T2-01": 142,
+      "NQ-CQ-T2-02": 342,
+      "NQ-CQ-T2-03": 270,
+      "NQ-CQ-T2-04": 355,
+      "NQ-CQ-T2-05": 30,
+      "NQ-CQ-T3-01": 271,
+      "NQ-CQ-T3-02": 278,
+      "NQ-CQ-T3-03": 278,
+      "NQ-CQ-T3-04": 258,
+      "NQ-CQ-T3-05": 254,
+      "NQ-CQ-T4-01": 143,
+      "NQ-CQ-T4-02": 143,
+      "NQ-CQ-T4-03": 126,
+      "NQ-CQ-T4-04": 270,
+      "NQ-CQ-T4-05": 106,
+      "NQ-CQ-T5-01": 233,
+      "NQ-CQ-T5-02": 278,
+      "NQ-CQ-T5-03": 271,
+      "NQ-CQ-T5-04": 246,
+      "NQ-CQ-T5-05": 271
+    },
+    "rows_total": 6573,
+    "rows_by_kind": {
+      "ENTITY": 4253,
+      "SUBJECT": 2235,
+      "RELATION": 85
+    },
+    "rows_from_more_than_one_case": null,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:9309b9bcf98613bc194756e13fd06c9c2436469adb3c2c12d56be88e8bb7af5f",
+    "witnesses_traced": 428
+  },
+  "review": {}
+}
