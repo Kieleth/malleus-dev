@@ -139,3 +139,11 @@ no implementation. Test counts for overlapping selectors must not be summed.
 No source authenticity, human semantic ratification, universal identity policy,
 business-rule eligibility, domain event ordering, authorization, action,
 incremental performance, installed-package or release result is claimed.
+
+Final detached gate at `7bdef4105518f8960bf417782e5e35104a02b20e`, tree
+`5c7df14a87403e628a080257c0e93fc2065a13e3`: the same Shop/transition selector
+returns **297 passed, zero skips**, 123.44 seconds. This includes 14 connected
+tests and the read-only CLI/committed-receipt guard. Ruff lint, format and diff
+checks pass; the detached checkout remains clean. The final commit after this
+coordinate only appends this validation result, with no implementation or
+receipt-byte change.
