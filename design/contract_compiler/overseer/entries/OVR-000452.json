@@ -1,0 +1,28 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000452",
+  "ledger": "overseer",
+  "sequence": 452,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:9ae5ebf731793b814a8d168259fe72f2353fd05b09607c7d61ce2dd9c47c32e1",
+  "recorded_at": "2026-09-09T01:16:35Z",
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "subject": {"id": "core-transition-admission-preparation", "type": "DOCUMENT"},
+  "summary": "Journal the accepted transition-admission direction and prepare its bounded TDD sequence.",
+  "why": "Luis said: Correct, this is better, add to journal and prepare to implement. The revised direction completes the existing normative admission role with verified KCS transition inputs and identified pure rule execution. It supersedes the audit's replacement-specific artifact suggestion, not a historical accepted protocol decision. Domain role/type choices remain adopter data; the owning fold must enforce the selected guard at admission and replay. Missing required interpretation refuses; old profile labels do not gain new meaning. The plan separates contract freeze, RED, GREEN, replay integration and Shop consumption. Exact instruction/capability encoding, matching mode, version and refusal names remain to be settled before RED. This is documentation and preparation only, with no runtime, test, public API, ontology, package, consumer or workstream-state change. The earlier 33-test result remains audit evidence, not a new implementation gate.",
+  "data": {
+    "affected_ids": ["CC-R11"],
+    "documents": [
+      {"path": "handover/2026-09-08-history-profile-enforcement.md", "change": "CREATED", "after_digest": "sha256:6ab7578c63335eeb8306647034b75c6d871c1b395a238657b2ee9556f950042c"},
+      {"path": "handover/2026-09-08-transition-admission-plan.md", "change": "CREATED", "after_digest": "sha256:913f195aa0d43cb6a8d3fea2df2e8f136c20f3b08248a20a911aa6a8e8a0f6d1"},
+      {"path": "handover/2026-09-08-core-backlog.md", "change": "MODIFIED", "before_digest": "sha256:75cc8ad3a8084413a75a751de7ccd53b58ca08b57ab45650234170d673c301d8", "after_digest": "sha256:a65ef44907f70e4ac0c7ce58cbaf10bc7700f96128222a41c9f110d7a4c37c5e"}
+    ]
+  },
+  "references": [
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"},
+    {"relation": "DEFINES", "type": "DOCUMENT", "target": "design/PROTOCOL_FOUNDATION_GRAPH.md"},
+    {"relation": "DEFINES", "type": "DOCUMENT", "target": "design/KNOWLEDGE_PACKS.md"},
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "a0026cbd25a90b5c2b6c9eb7b31df4e42df16804"}
+  ],
+  "entry_hash": "sha256:9662ae01008701955e25cd3600ac724aac95a994895b1c04609d54ea4025b0e8"
+}

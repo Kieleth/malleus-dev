@@ -89,6 +89,21 @@ remains consumer-owned work against existing Core seams, not part of this item.
 
 ## Larger Core work still pending, not prerequisites for this Shop exercise
 
+### Next Core preparation: executable transition restrictions
+
+Luis accepted completing the existing normative admission role, following the
+[profile-enforcement audit](2026-09-08-history-profile-enforcement.md).
+The [bounded TDD plan](2026-09-08-transition-admission-plan.md) is prepared:
+freeze verified transition inputs and exact rule binding, commit RED through
+the owning history, implement the pure guard, prove replay parity, then send
+Shop the public consumer coordinate. No runtime change is claimed yet.
+
+This is not a replacement-specific policy subsystem. Adopter role/type choices
+stay in identified data; the owning gate enforces the selected interpretation.
+Unresolved required rules refuse. Existing structural-only histories retain
+their explicit weaker selection, with no silent fallback or reinterpretation.
+The precise instruction/capability encoding remains to be settled before RED.
+
 | Work | Dependency and bounded next observation |
 |---|---|
 | Replace handwritten Assent with declarative execution | [Authorization comparison](2026-09-08-authorization-conformance.md) establishes neutral verdict expectations. The [identified rule artifact](2026-09-08-authorization-rule-artifact.md) now replaces handwritten outcome mapping and precedence while preserving old hashes. Full transition parity, evaluation-hash projection, broader profile coverage and old-path removal remain open. This is not the Assent hard cutover. |
