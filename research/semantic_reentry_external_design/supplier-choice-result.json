@@ -1,0 +1,696 @@
+{
+  "schema": "malleus.reentry.two-alternative-completion/research-v1",
+  "status": "VERIFIED_BOUNDED_SLICE_READY_FOR_LOCAL_REVIEW",
+  "classification": "CONFORMANCE_FIXTURE",
+  "recorded_at_utc": "2026-09-09 00:26:24 UTC",
+  "claim": "Two valid existing single-order amendments require explicit selection; only the selected proposal enters normal authorization, effect, observation and KCS admission, followed by quiescence.",
+  "lowest_affected_profile": "Compiler-enabled state-version profile composed with the experimental single-action supplier profile",
+  "scope": {
+    "initial": {
+      "B": 1,
+      "C": 1
+    },
+    "product": "Y",
+    "goal": "At least three committed units across exactly B and C",
+    "allowed_child_action": "One existing SupplierOrderAmendment, expected 1 and requested 2",
+    "undeclared_selection": {
+      "status": "REFUSED",
+      "reason": "AMBIGUOUS",
+      "candidates": 0
+    },
+    "declared_selection": [
+      "B",
+      "C"
+    ],
+    "selected_order": "B",
+    "accepted_after_observed_admission": {
+      "B": 2,
+      "C": 1
+    },
+    "final": {
+      "status": "SATISFIED",
+      "reason": "LINKED_OBSERVED_KCS",
+      "candidates": 0
+    }
+  },
+  "exclusions": [
+    "No Core runtime, public API, ontology or prior fixture modifications",
+    "No production supplier integration, physical delivery or inventory/fulfilment claim",
+    "No general planner, automatic retry, simultaneous actions or second effect execution for C",
+    "No empirical synthesizer replacement or hostile-code sandbox claim",
+    "No global authority restriction inferred from producer preference",
+    "No aggregate satisfaction claim for arbitrary observed quantities or a child's exact-amendment failure",
+    "No whole-application incremental-performance claim",
+    "No paper changes, merge to main, push or publication"
+  ],
+  "coordinates": {
+    "starting_base_commit": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d",
+    "starting_base_tree": "162325eb0048816654d2df5b6b0f00270d06385d",
+    "landing_base_commit": "55c038438ed67197b7e3345b9c80a885a7b6cf17",
+    "landing_base_tree": "3894723f88494acd8a5f6dd022d6906a6715f9ad",
+    "core_source_tree": "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
+    "ontology_tree": "4613b5004eff5713deeeafa6dff9874de5383f67",
+    "starting_base_verified_commit": "da63b3929c0ed3d5288a2f2ead68c6f2b14387b6",
+    "starting_base_verified_tree": "72cd16604e4935b8facb77fa8b88c066f76bc86e",
+    "first_integrated_test_commit": "7c1accc7442e2f8b763c12aa025bae5061c7326c",
+    "first_integrated_test_tree": "616fd013b60b7b131517ceed455cf31b2aad7585",
+    "child_output_red_commit": "c9535026f6fb74b565131263b7a01cee4fa11b0f",
+    "child_output_red_tree": "86577f09ddb8261f351a2c359934df3a28aa201d",
+    "final_tested_commit": "e733438aeff3e3f0e1f69df65566248a28f96d9a",
+    "final_tested_tree": "857a9d631e265afdab3e1aedcd835f408ca1b891",
+    "completion_commit_note": "The subsequent completion commit changes only TWO_ALTERNATIVES.md and this receipt. Its commit/tree and this receipt's own hash are reported in the landing handoff, avoiding a self-referential hash."
+  },
+  "verification": {
+    "runtime": {
+      "python": "3.12.9",
+      "python_executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+      "cwd": "/private/tmp/malleus-reentry-choice.9qmXqA/combined",
+      "pythonpath": "src:.",
+      "write_bytecode": false,
+      "pytest_cache": false,
+      "dependency_configuration": "root pyproject.toml, unchanged",
+      "new_dependencies": []
+    },
+    "test_manifest": "supplier-choice-gate.json",
+    "final_union": {
+      "reports": [
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-final-choice.xml",
+          "sha256": "a751dc6e8c142fe153ba385f608efee3913e235fd53dc477879e6df1bd6ef251",
+          "cases": 40,
+          "passed": 40,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-a.xml",
+          "sha256": "796994e2a813d5faa7095470fe2b079f4cef90645674de70c7b2474ac5a2cc7b",
+          "cases": 112,
+          "passed": 112,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-b.xml",
+          "sha256": "b6537c838b64b4f5ae7538513a7b661df8bdb10c4d080cb03e7c9a25c4dd10aa",
+          "cases": 193,
+          "passed": 193,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-c.xml",
+          "sha256": "74864a212c44b122474ccd6a034de3d4d5e20a634a163109643ce4cb6bd5a4d3",
+          "cases": 141,
+          "passed": 140,
+          "failure": 0,
+          "error": 0,
+          "skipped": 1,
+          "skips": [
+            {
+              "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+              "name": "test_public_and_private_doctrine_do_not_diverge",
+              "message": "the paper-program doctrine is not present in this tree"
+            }
+          ]
+        }
+      ],
+      "unique_cases": 486,
+      "passed": 485,
+      "skipped": 1,
+      "missing": 0,
+      "extra": 0,
+      "duplicates": 0,
+      "collected_node_ids_sha256": "45033d96c983269e8c8631c75d6c187533653a046fbc526a7c1dde8ed9f934b8",
+      "identity_normalization": "Split structural node identifiers before the first parameter bracket. Preserve parameter text, including nested brackets, slashes and ::, verbatim.",
+      "identity_normalization_selftests": [
+        {
+          "node": "a/b.py::test_f",
+          "classname": "a.b",
+          "name": "test_f"
+        },
+        {
+          "node": "a/b.py::K::test_f[x::y]",
+          "classname": "a.b.K",
+          "name": "test_f[x::y]"
+        },
+        {
+          "node": "a/b.py::test_f[c/d.py::test_g]",
+          "classname": "a.b",
+          "name": "test_f[c/d.py::test_g]"
+        },
+        {
+          "node": "a/b.py::K::Inner::test_f[x[y]::z]",
+          "classname": "a.b.K.Inner",
+          "name": "test_f[x[y]::z]"
+        }
+      ]
+    },
+    "groups": {
+      "choice": [
+        "research/semantic_reentry_external_design/test_supplier_choice.py",
+        "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py",
+        "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py::test_new_epoch_guard_rejects_older_and_unknown_source"
+      ],
+      "a": [
+        "research/semantic_reentry_external_design/test_supplier_reentry.py",
+        "research/semantic_reentry_external_design/test_supplier_reentry_boundaries.py",
+        "research/semantic_reentry_external_design/test_accepted_read_view.py",
+        "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+        "research/semantic_reentry_external_design/test_supplier_walkthrough.py"
+      ],
+      "b": [
+        "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+        "research/semantic_reentry_external_design/test_supplier_program.py",
+        "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+        "research/semantic_reentry_external_design/test_supplier_components.py",
+        "research/semantic_reentry_external_design/test_supplier_initialization.py",
+        "research/semantic_reentry_external_design/test_supplier_proposals.py"
+      ],
+      "c": [
+        "research/semantic_reentry_external_design/test_supplier_authorization.py",
+        "research/semantic_reentry_external_design/test_supplier_execution.py",
+        "research/semantic_reentry_external_design/test_supplier_observation.py",
+        "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+        "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_epoch_guard_rejects_historical_and_unknown_pins",
+        "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_current_supplier_distinct_histories_same_graph",
+        "research/action_history_contract_freeze/programs/test_action_inputs.py",
+        "tests/contract_compiler/pareto/test_maintained_projection.py",
+        "tests/test_inquisition.py::TestSkillsAreInstallable",
+        "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
+      ]
+    },
+    "execution_note": "The focused/epoch group reran on the final implementation. The other three disjoint groups ran on 7c1accc7. The only subsequent executable changes are supplier_choice.py and test_supplier_choice.py, neither consumed by those three groups. Existing supplier source capsules name an explicit unchanged file set. All selected tests and their consumed implementation remain unchanged; no full-repository CI claim.",
+    "starting_base_union": {
+      "reports": [
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/choice-final.xml",
+          "sha256": "f7de52a4c99c0bb2fcc9eff6ee3b36bf9c63a36fabaade36994a07c15ab14988",
+          "cases": 28,
+          "passed": 28,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/supplier_a.xml",
+          "sha256": "77a5d74e9af8f3897ad0df6c0e7a999bfc0811dbe2caeec8bb070f8886e7c10d",
+          "cases": 109,
+          "passed": 109,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/supplier_b.xml",
+          "sha256": "7553bbe146793f5a43a9c03b97a03fd8592972358e2ede265ef0a39b24eda59e",
+          "cases": 189,
+          "passed": 189,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/supplier-c-final.xml",
+          "sha256": "dba79f43a881848b393110a5ee0df21cfbaaf4e3cf7e27d29bf066c35a5a90a5",
+          "cases": 141,
+          "passed": 140,
+          "failure": 0,
+          "error": 0,
+          "skipped": 1,
+          "skips": [
+            {
+              "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+              "name": "test_public_and_private_doctrine_do_not_diverge",
+              "message": "the paper-program doctrine is not present in this tree"
+            }
+          ]
+        }
+      ],
+      "unique_cases": 467,
+      "passed": 466,
+      "skipped": 1,
+      "missing": 0,
+      "extra": 0,
+      "duplicates": 0,
+      "collected_node_ids_sha256": "b23e0c235b8a83a3f39fd1bcc75f6836139489635126cd931f4d2cd4fa92ed75",
+      "identity_normalization": "Split structural node identifiers before the first parameter bracket. Preserve parameter text, including nested brackets, slashes and ::, verbatim."
+    },
+    "first_integrated_union": {
+      "reports": [
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-choice.xml",
+          "sha256": "b86910470abdc5247f1dd29972067fefaa345666f85ecd1479dad9e4a962c5ea",
+          "cases": 35,
+          "passed": 35,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-a.xml",
+          "sha256": "796994e2a813d5faa7095470fe2b079f4cef90645674de70c7b2474ac5a2cc7b",
+          "cases": 112,
+          "passed": 112,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-b.xml",
+          "sha256": "b6537c838b64b4f5ae7538513a7b661df8bdb10c4d080cb03e7c9a25c4dd10aa",
+          "cases": 193,
+          "passed": 193,
+          "failure": 0,
+          "error": 0,
+          "skipped": 0,
+          "skips": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-c.xml",
+          "sha256": "74864a212c44b122474ccd6a034de3d4d5e20a634a163109643ce4cb6bd5a4d3",
+          "cases": 141,
+          "passed": 140,
+          "failure": 0,
+          "error": 0,
+          "skipped": 1,
+          "skips": [
+            {
+              "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+              "name": "test_public_and_private_doctrine_do_not_diverge",
+              "message": "the paper-program doctrine is not present in this tree"
+            }
+          ]
+        }
+      ],
+      "unique_cases": 481,
+      "passed": 480,
+      "skipped": 1,
+      "missing": 0,
+      "extra": 0,
+      "duplicates": 0,
+      "collected_node_ids_sha256": "a154e888fa1a1b7ee447a5f8ccdb02fa8002867fd8af46f7b79958ce778dc4bf",
+      "identity_normalization": "Split structural node identifiers before the first parameter bracket. Preserve parameter text, including nested brackets, slashes and ::, verbatim."
+    },
+    "scope_checks": {
+      "base_diff_check": "PASS",
+      "ruff_check": "PASS",
+      "ruff_format_check": "PASS",
+      "core_and_ontology_unchanged": true,
+      "prior_runtime_and_fixture_files_unchanged": true,
+      "prior_evidence_hashes": [
+        {
+          "path": "research/semantic_reentry_external_design/test_supplier_replay_laws.py",
+          "sha256": "80921300ae0d53bdd982c2cda13618fce7bd6000ba7fc86d11678e992525b643"
+        },
+        {
+          "path": "research/semantic_reentry_external_design/supplier-reentry-gate.json",
+          "sha256": "c55c0ef92a47204cb67e19593ca81a74a3397830d2f7afbda419afaaaf624585"
+        },
+        {
+          "path": "research/semantic_reentry_external_design/current-core-landing-result.json",
+          "sha256": "a2907c4c8703fb764acf9ee95ac45ca03e3de70a699785b4451662c6fbe3922e"
+        }
+      ]
+    },
+    "audit_correction": {
+      "defect": "The first ad hoc coverage normalizer treated :: inside a parametrized test ID as a class separator.",
+      "guard": "Normalize only the structural part preceding the first parameter bracket. Four adversarial normalization cases run before exact Counter comparison; recorded in final_union.",
+      "effect": "No pytest case was skipped or changed. The corrected comparison finds zero missing, extra or duplicate cases."
+    }
+  },
+  "red_and_historical_evidence": [
+    {
+      "name": "red",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/red.xml",
+      "sha256": "32e22bd2fb66e887cd17c500076b667eb1f07af38bfc809d702363137cf5bca0",
+      "cases": 15,
+      "passed": 0,
+      "failed": 0,
+      "errors": 15,
+      "skipped": 0,
+      "interpretation": "Setup RED: modules did not exist. Not a behavioral failure.",
+      "findings": [
+        {
+          "classname": "research.semantic_reentry_external_design.test_supplier_choice",
+          "name": "test_choice_contract_roundtrip_and_pure_explicit_selection",
+          "kind": "error",
+          "message": "failed on setup with \"ModuleNotFoundError: No module named 'research.semantic_reentry_external_design.supplier_choice_walkthrough'\""
+        }
+      ]
+    },
+    {
+      "name": "diagnostics-red",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/diagnostics-red.xml",
+      "sha256": "3cb7a2bc4e1c2fb7c335681d742ca1fa90c038fe922be0205157af8c90e742d5",
+      "cases": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "interpretation": "Behavioral RED: diagnostic carrier exposed unselected candidate bytes.",
+      "findings": [
+        {
+          "classname": "research.semantic_reentry_external_design.test_supplier_choice",
+          "name": "test_alternative_diagnostics_cannot_carry_proposal_bytes",
+          "kind": "failure",
+          "message": "AssertionError: assert {'candidate',...dicted_total'} == {'order_id', ...dicted_total'}\n  \n  Extra items in the left set:\n  'candidate'\n  Use -v to get more diff"
+        }
+      ]
+    },
+    {
+      "name": "diagnostics-green",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/diagnostics-green.xml",
+      "sha256": "9be679117c5f13c775197edaab3bfd4a2bf6a19a0f80d8604a5824aa5e1cc145",
+      "cases": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "interpretation": "Carrier restricted to order ID and predicted total.",
+      "findings": []
+    },
+    {
+      "name": "lifecycle-red",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/lifecycle-red.xml",
+      "sha256": "2c59176bc1467b260a7b0c2dc3ff13fb83910fda9a5058885c998405f8d6b614",
+      "cases": 2,
+      "passed": 1,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "interpretation": "Behavioral RED: selected engine RuntimeError escaped; full basic lifecycle already passed.",
+      "findings": [
+        {
+          "classname": "research.semantic_reentry_external_design.test_supplier_choice",
+          "name": "test_model_failure_has_a_typed_empty_result",
+          "kind": "failure",
+          "message": "RuntimeError: controlled engine failure"
+        }
+      ]
+    },
+    {
+      "name": "gate-red",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/gate-red.xml",
+      "sha256": "c4379e3f8d528c2b3549b6506b9265696c6038bb7424e3ff87f8faccb9087fae",
+      "cases": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "interpretation": "Behavioral RED: current gate included a historical epoch guard.",
+      "findings": [
+        {
+          "classname": "research.semantic_reentry_external_design.test_supplier_choice",
+          "name": "test_gate_uses_inspected_core_without_modifying_it",
+          "kind": "failure",
+          "message": "ValueError: Historical epoch guard included in current gate"
+        }
+      ]
+    },
+    {
+      "name": "gate-green",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/gate-green.xml",
+      "sha256": "5afa310edb28c793219622f47081bf361bb384028b4bc648ce26d6c3631a3bde",
+      "cases": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "interpretation": "Six current-epoch and selector guard cases pass.",
+      "findings": []
+    },
+    {
+      "name": "historical-epoch-refusal",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/historical-epoch-refusal.xml",
+      "sha256": "c12cbf8b3938d63fda4bb781bedd7582df3a5e9bbea2003eaf93c23e5303168d",
+      "cases": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "interpretation": "The unchanged frozen prior test correctly rejects the newer Core source epoch. This failing command is not included in the current positive union.",
+      "findings": [
+        {
+          "classname": "research.semantic_reentry_external_design.test_supplier_replay_laws",
+          "name": "test_unified_gate_has_one_compatible_runtime_epoch",
+          "kind": "failure",
+          "message": "AssertionError: assert '3b4fd1c9eb66...970a6fc2572a8' == '763d3b72ad21...7a69e3f6b8cd1'\n  \n  - 763d3b72ad2143bc5735eed32d47a69e3f6b8cd1\n  + 3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8"
+        }
+      ]
+    },
+    {
+      "name": "supplier_c",
+      "path": "/private/tmp/malleus-reentry-choice.9qmXqA/supplier_c.xml",
+      "sha256": "3c63674cf989c92a71ad768acf9b7f6c4b88510a858580a716b10fabda70aafa",
+      "cases": 142,
+      "passed": 140,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 1,
+      "interpretation": "Initial mixed-epoch run: one historical guard failure, 140 passes, one optional skip. Corrected selection rerun separately.",
+      "findings": [
+        {
+          "classname": "research.semantic_reentry_external_design.test_supplier_replay_laws",
+          "name": "test_unified_gate_has_one_compatible_runtime_epoch",
+          "kind": "failure",
+          "message": "AssertionError: assert '3b4fd1c9eb66...970a6fc2572a8' == '763d3b72ad21...7a69e3f6b8cd1'\n  \n  - 763d3b72ad2143bc5735eed32d47a69e3f6b8cd1\n  + 3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8"
+        },
+        {
+          "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+          "name": "test_public_and_private_doctrine_do_not_diverge",
+          "kind": "skipped",
+          "message": "the paper-program doctrine is not present in this tree"
+        }
+      ]
+    }
+  ],
+  "child_result_guard": {
+    "path": "/private/tmp/malleus-reentry-choice.9qmXqA/child-output-red.xml",
+    "sha256": "9a8e1b7e19685720f18d59f0cc342b7b4311d95837e7759c3a092647d3f1e8e6",
+    "failed": 5,
+    "cases": [
+      "test_applied_child_result_obeys_its_contract[changes0]",
+      "test_applied_child_result_obeys_its_contract[changes1]",
+      "test_applied_child_result_obeys_its_contract[changes2]",
+      "test_applied_child_result_obeys_its_contract[changes3]",
+      "test_applied_child_result_obeys_its_contract[changes4]"
+    ],
+    "green": "The same five cases pass in integration-final-choice.xml.",
+    "guard": "The shared child-result boundary requires the exact child contract identity, a supported status, a nonblank reason, a tuple of bytes, and candidate count/model presence consistent with the status before any lifecycle branch consumes it."
+  },
+  "interrupted_exploration": {
+    "path": "/private/tmp/malleus-reentry-choice.9qmXqA/first-green.xml",
+    "sha256": "c4e331e9ce058ccefba5b86ca399a9d3de4c41f69368210e5f0600da09927bc6",
+    "description": "Exploratory run intentionally interrupted when implementation review required changes. Not final evidence.",
+    "junit_case_elements": 3
+  },
+  "standalone_demo": {
+    "result": {
+      "accepted_final": {
+        "B": 2,
+        "C": 1
+      },
+      "accepted_initial": {
+        "B": 1,
+        "C": 1
+      },
+      "change_set_identity": "sha256:1ed954b6e267b5539138f0fc887310e7e12588a36d3d93ac3a672e9e73cdb67e",
+      "contract_identity": "sha256:2b20bbf0c811e2bdf356d5b09da57f8187f60fbbcec54253beab12b591752a9f",
+      "dispatch_attempts": 1,
+      "executed_not_observed": {
+        "accepted": {
+          "B": 1,
+          "C": 1
+        },
+        "source": {
+          "B": 2,
+          "C": 1
+        }
+      },
+      "final": {
+        "candidates": 0,
+        "reason": "LINKED_OBSERVED_KCS",
+        "status": "SATISFIED"
+      },
+      "graph_digest": "sha256:2c554381f3af521f3a0d46105b0844aa1555760d23f7b4dff4fb83264cf1510b",
+      "ledger_event_count": 91,
+      "ledger_head": "sha256:9f3ee8702afa8b5b9c51e6c0bf5cd8c48a4cb7ce88a8f38886110161cd43658b",
+      "ledger_sha256": "sha256:c49e1b6c81367445a233a679fd4bddc9b2874c0f742e44651fc150bf90df610c",
+      "predicted_totals": {
+        "B": 3,
+        "C": 3
+      },
+      "with_preference": {
+        "candidates": 1,
+        "selected_order": "B"
+      },
+      "without_preference": {
+        "candidates": 0,
+        "reason": "AMBIGUOUS",
+        "status": "REFUSED"
+      }
+    },
+    "artifacts": [
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/final-demo/history.jsonl",
+        "sha256": "c49e1b6c81367445a233a679fd4bddc9b2874c0f742e44651fc150bf90df610c",
+        "bytes": 15970469
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/final-demo/choice-contract.json",
+        "sha256": "2b20bbf0c811e2bdf356d5b09da57f8187f60fbbcec54253beab12b591752a9f",
+        "bytes": 4428
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/final-demo/action-proposal.json",
+        "sha256": "f5ee213c68eb7156edb48658491edcfb0221420e2c6feb405e92bf973beb40e6",
+        "bytes": 1029
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/final-demo/choice-result.json",
+        "sha256": "627a2660bd4ba612ec732929cf14d082140c4350f24ddbc0b6898ed923802303",
+        "bytes": 886
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/final-demo/supplier.jsonl",
+        "sha256": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+        "bytes": 91
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/final-demo/supplier-C.jsonl",
+        "sha256": "64732fb402e77d41cd4881fba428ba601178dcda949fd490d3a5297cbf9b1477",
+        "bytes": 90
+      }
+    ],
+    "identical_to_final_test_output": true
+  },
+  "independent_terminal_audit": {
+    "cases": [
+      {
+        "case": "observed_success",
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-final-choice/test_full_choice_loop_observes0/episode/jsonl-only/history.jsonl",
+        "accepted": {
+          "B": 2,
+          "C": 1
+        },
+        "status": "SATISFIED",
+        "reason": "LINKED_OBSERVED_KCS",
+        "candidates": 0,
+        "execution_status": "SUCCEEDED",
+        "dispatches": 1,
+        "ledger_head": "sha256:9f3ee8702afa8b5b9c51e6c0bf5cd8c48a4cb7ce88a8f38886110161cd43658b",
+        "ledger_sha256": "sha256:c49e1b6c81367445a233a679fd4bddc9b2874c0f742e44651fc150bf90df610c",
+        "graph_digest": "sha256:2c554381f3af521f3a0d46105b0844aa1555760d23f7b4dff4fb83264cf1510b"
+      },
+      {
+        "case": "failed_after_write",
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-final-choice/test_effect_receipt_never_subs0/episode/history.jsonl",
+        "accepted": {
+          "B": 2,
+          "C": 1
+        },
+        "status": "SATISFIED",
+        "reason": "LINKED_OBSERVED_KCS",
+        "candidates": 0,
+        "execution_status": "FAILED",
+        "dispatches": 1,
+        "ledger_head": "sha256:13191ca26037cd3f2d9eca04fc8ec61a9cfe22f526c43da893adaa0ce4ebbf6c",
+        "ledger_sha256": "sha256:f7eb2f1c7d2712445946f9ffb1db435d54cb9189449a8dda13618ced5632fe97",
+        "graph_digest": "sha256:2c554381f3af521f3a0d46105b0844aa1555760d23f7b4dff4fb83264cf1510b"
+      },
+      {
+        "case": "success_without_change",
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/integration-final-choice/test_effect_receipt_never_subs1/episode/history.jsonl",
+        "accepted": {
+          "B": 1,
+          "C": 1
+        },
+        "status": "REFUSED",
+        "reason": "EPISODE_TERMINAL",
+        "candidates": 0,
+        "execution_status": "SUCCEEDED",
+        "dispatches": 1,
+        "ledger_head": "sha256:afea3ab9549443cec375efa0d6e8cbcf581c7180d6e7fc6587fc6a7af8425e7a",
+        "ledger_sha256": "sha256:fb0691b9f63f247985f750051222c55e47c11d77e5d494566e424d7857ed4704",
+        "graph_digest": "sha256:ea7628b6c4a2ebad643f8c0a906e37b62bb4c92bb097549337718f05a5e9b2b1"
+      }
+    ],
+    "checks": [
+      "Reopen from each real JSONL history in a separate process with no research test modules loaded.",
+      "Refresh the public maintained reader, then reevaluate with disk-byte reads, history replay/admission, model prediction and effect dispatch forbidden.",
+      "Require one dispatch, zero candidates, exact expected state/status/receipt, and unchanged ledger bytes."
+    ]
+  },
+  "self_review": {
+    "protocol_role_is_explicit": "Selector and composition are reference implementations, fixture and gates are conformance fixtures, aggregate goal and preference are adopter choices. No new protocol invariant.",
+    "optional_profile_stays_optional": "All additions are isolated research files; no Core, package, default fixture or skill requirement changes.",
+    "single_ledger_knowledge_change": "Existing initial-source and observed-source paths use the sole KnowledgeChangeSet identity. One history.jsonl reopens the full accepted state.",
+    "fail_closed": "Missing/unsupported rules, stale head, ambiguity, exhausted budget and selected-engine failure refuse without candidate or mutation.",
+    "evidence_does_not_transfer": "Modeled totals are not observed state. Execution status does not establish success. Failed-after-write and succeeded-without-write cases discriminate those claims.",
+    "module_declares_its_interface": "Immutable local contract and graph-free read are pure inputs; outputs are existing ActionProposal bytes or a typed empty result. Composition is exercised; replacement remains unproved.",
+    "mechanical_root_ontology_rites": "Not run: no root ontology profile change. No schema purity seal or full repository conformance claimed."
+  },
+  "final_file_sha256": [
+    {
+      "path": "research/semantic_reentry_external_design/TWO_ALTERNATIVES.md",
+      "sha256": "031166fc8153d4bc0b1295139d64c6cbbec52424e0d481379fd858d7edff950b"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_choice_v1/case.json",
+      "sha256": "4e87cfc50922633e0e0c310631f03506e1a97a913053bde44da7cd65d1e5dd28"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_choice_v1/input/supplier-C.jsonl",
+      "sha256": "64732fb402e77d41cd4881fba428ba601178dcda949fd490d3a5297cbf9b1477"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/fixtures/supplier_choice_v1/oracle/expected.json",
+      "sha256": "a1b51ba1bae770c7074dcf1d406c5560b68d0a7b47026fe0ff3e4c6a4c84d214"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-choice-gate.json",
+      "sha256": "25fcc4d8abb9691201ad522373f2f423a5728a37663546af7076154eb5db97c1"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_choice.py",
+      "sha256": "d3e58a26c2ce3efeae2db16d1d72976adac299c1043777a25eab92cbf10b7b70"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier_choice_walkthrough.py",
+      "sha256": "0a2651b6bc799acea0271ca702d5e2fb1e2cbc3d996f99907f619aeaa3b35533"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_choice.py",
+      "sha256": "eed13e42e6f0d466a9a892414a31a72078bbcd64d4eabde1eba90a265feecd6d"
+    }
+  ],
+  "final_file_hash_note": "Lists every new file except this self-referential receipt. The final completion commit and receipt hash are provided separately.",
+  "landing": {
+    "target": "Local main owned by Core",
+    "base": "55c038438ed67197b7e3345b9c80a885a7b6cf17",
+    "order": [
+      "Review additive base-to-head diff and completion receipt.",
+      "Land the clean current-main candidate through Core's local integration gate.",
+      "If consumed runtime or fixture bytes advance, re-evaluate exact epoch and rerun the relevant union before landing."
+    ],
+    "merged": false,
+    "pushed": false,
+    "published": false,
+    "repository": "/private/tmp/malleus-reentry-choice.9qmXqA/combined",
+    "branch": "codex/reentry-choice-current-integration",
+    "remaining_implementation_blockers": [],
+    "scope": "Only the reviewed local landing remains. No remote action is authorized by this receipt."
+  }
+}

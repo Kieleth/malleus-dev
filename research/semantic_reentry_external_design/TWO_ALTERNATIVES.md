@@ -1,6 +1,6 @@
 # Two valid amendments, explicit selection
 
-Status: 28 focused cases verified on the starting base; current-main integration verification in progress.
+Status: verified bounded slice, ready for Core's local integration review.
 Base: local main `e2b9e77912f9b36fdbfe2fca310548a789bffb4d`.
 Landing base: local main `55c038438ed67197b7e3345b9c80a885a7b6cf17`.
 
@@ -144,8 +144,8 @@ order ID and predicted total. Only the selected candidate leaves the selector.
 A controlled model RuntimeError escaped the new composition. A behavioral RED
 test confirmed it. The selected-engine boundary now returns ENGINE_FAILURE
 with no candidate and does not silently try the other order. Ordinary typed
-child refusals keep their reasons. The focused 28-case selection passes on the
-starting base; the complete relevant regression union remains in progress.
+child refusals keep their reasons. The final focused and regression results
+are recorded below.
 
 The first broad regression selection included the original frozen epoch guard.
 It correctly refused current Core source tree 3b4fd1c9 rather than silently
@@ -156,6 +156,12 @@ its whole module. The current gate selects the other two replay laws by name,
 verifies actual Core source and import location, rejects older/unknown epochs,
 and hashes the frozen prior evidence. The historical refusal remains recorded
 separately. All six current epoch/selection guard tests pass.
+
+Final review found that a correctly typed child result could still name the
+wrong contract or carry an invalid status, empty reason or malformed candidate
+shape. Five behavioral RED cases reproduce this after a real proposal
+submission. The shared child-result boundary now validates those fields before
+any fresh, pending or terminal branch consumes the result. All five cases pass.
 
 ## Run the bounded demonstration
 
@@ -180,3 +186,47 @@ The protocol uses the original fixed September 8 fixture timestamps. They are
 reproducible coordinates, not measurements of when this command ran.
 The result is a controlled supplier-record amendment, not physical delivery,
 customer-order fulfilment or production supplier integration.
+
+## Verification and landing
+
+The final current-main union has **485 passed, one existing optional skip**:
+40 focused/epoch cases, 112 supplier cases, 193 component cases, and 140 passes
+plus one skip in the action/observation/reader group. The focused group includes
+33 new cases and seven inherited epoch checks. The skip concerns private paper
+doctrine absent from this checkout, not a Re-entry boundary.
+
+The JUnit union matches all 486 collected case identities exactly, with no
+missing, extra or duplicate cases. Its identity comparison preserves parameter
+text containing `::`, slashes or nested brackets and checks four adversarial
+normalization examples first. This corrected an audit-only parsing mistake;
+it did not change or waive any test result.
+
+The final focused run uses implementation commit
+`e733438aeff3e3f0e1f69df65566248a28f96d9a`. The three regression groups ran at
+`7c1accc7442e2f8b763c12aa025bae5061c7326c`; their code and inputs are unchanged
+by the final selector/result-test fix. The earlier starting-base union is
+separate evidence: 466 passed and the same optional skip. Neither union claims
+full repository CI.
+
+The standalone run and final E2E test produce identical bytes for the ledger,
+contract, proposal, report and two source files. There are 91 ledger events and
+one dispatch. A separate process reopens each of the three terminal histories,
+then reevaluates without model, effect, history-replay or admission calls and
+without further ledger writes. A failed receipt after an actual write still
+allows the observed two-unit KCS. A successful receipt without a write leaves
+B/Y/1 and C/Y/1 accepted and refuses another attempt.
+
+The [completion receipt](supplier-choice-result.json) records exact tested
+commit/tree coordinates, source and artifact hashes, gate groups, raw result
+locations, RED evidence, historical refusal and landing order. Root ontology
+rites were not run because no root ontology change is in scope. Scope review
+applies `protocol_role_is_explicit`, `optional_profile_stays_optional`,
+`single_ledger_knowledge_change`, `fail_closed` and `evidence_does_not_transfer`:
+the roles and limits above remain explicit, the selector has no write owner,
+and observed KCS admission is the only acted path to accepted domain change.
+Composition is measured; replacement and general planning remain unproved.
+
+All additions are isolated research files. Core runtime, ontology, locked
+fixtures, prior evidence, dependencies, skills and paper work are unchanged.
+Core owns the reviewed local landing. This task performs no merge to main,
+push or publication.
