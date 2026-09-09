@@ -1,0 +1,87 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "claim": "TWO_ALTERNATIVES_EXPLICIT_SELECTION_AND_EXISTING_SUPPLIER_BOUNDARIES",
+  "base_commit": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d",
+  "landing_base_commit": "1385223eb274e63d98cc334d6dba6ecd54ed4007",
+  "core_source_tree": "63bc5650bda806b99fe8fb9fa060f2b8d0b113e2",
+  "groups": {
+    "choice": [
+      "research/semantic_reentry_external_design/test_supplier_choice.py"
+    ],
+    "supplier_a": [
+      "research/semantic_reentry_external_design/test_supplier_reentry.py",
+      "research/semantic_reentry_external_design/test_supplier_reentry_boundaries.py",
+      "research/semantic_reentry_external_design/test_accepted_read_view.py",
+      "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+      "research/semantic_reentry_external_design/test_supplier_walkthrough.py"
+    ],
+    "supplier_b": [
+      "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+      "research/semantic_reentry_external_design/test_supplier_program.py",
+      "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+      "research/semantic_reentry_external_design/test_supplier_components.py",
+      "research/semantic_reentry_external_design/test_supplier_initialization.py",
+      "research/semantic_reentry_external_design/test_supplier_proposals.py"
+    ],
+    "supplier_c": [
+      "research/semantic_reentry_external_design/test_supplier_authorization.py",
+      "research/semantic_reentry_external_design/test_supplier_execution.py",
+      "research/semantic_reentry_external_design/test_supplier_observation.py",
+      "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+      "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_epoch_guard_rejects_historical_and_unknown_pins",
+      "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_current_supplier_distinct_histories_same_graph",
+      "research/action_history_contract_freeze/programs/test_action_inputs.py",
+      "tests/contract_compiler/pareto/test_maintained_projection.py",
+      "tests/test_inquisition.py::TestSkillsAreInstallable",
+      "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
+    ],
+    "maintained_integration": [
+      "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py::test_maintained_epoch_guard_rejects_older_and_unknown_source",
+      "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py::test_new_epoch_guard_rejects_older_and_unknown_source"
+    ],
+    "authorization_compatibility": [
+      "tests/test_control.py",
+      "research/action_history_contract_freeze/programs/test_authorization_conformance.py",
+      "research/action_history_contract_freeze/programs/test_control_executor.py"
+    ]
+  },
+  "historical_epoch_guard": {
+    "selector": "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_unified_gate_has_one_compatible_runtime_epoch",
+    "reason": "The unchanged earlier guard correctly refuses this newer Core source epoch. Its refusal is retained separately, not relabeled as a current positive test. The new choice guard binds the current exact epoch and forbids including this historical guard directly or through its whole module."
+  },
+  "historical_evidence": [
+    {
+      "path": "research/semantic_reentry_external_design/test_supplier_replay_laws.py",
+      "sha256": "80921300ae0d53bdd982c2cda13618fce7bd6000ba7fc86d11678e992525b643"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-reentry-gate.json",
+      "sha256": "c55c0ef92a47204cb67e19593ca81a74a3397830d2f7afbda419afaaaf624585"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/current-core-landing-result.json",
+      "sha256": "a2907c4c8703fb764acf9ee95ac45ca03e3de70a699785b4451662c6fbe3922e"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py",
+      "sha256": "4859b70b47e7aaf0ae6590ebdb0f9011251f30c44c94c4df5fa45ba962b9681c"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/maintained-integration-gate.json",
+      "sha256": "b9b76a9f30ecef5f7ca4f64701c860d23ab13a350853211a8f93cf8ddab7cf2a"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py",
+      "sha256": "dc4a9bb164f67b878acf47dc2fca40a12807ea75d99f6dc8569c66c9b3d80e8f"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-choice-result.json",
+      "sha256": "31181ad7688c48c75072883aed6da09fd3c49d463deb89a0108d995560afd76e"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-choice-authorization-result.json",
+      "sha256": "afb94693afaf46671890d925013d80705a94a1e35c5986cd0005fb1c2bf183e6"
+    }
+  ],
+  "scope": "Union of these disjoint current-epoch selectors, not full repository CI. Existing evidence and historical runtime guards are unchanged. Old maintained and observed-mismatch positive guards remain bound to their own source epochs; their negative tests still run here. Authorization compatibility adds the current Core control and finite-executor suites. The initial historical refusals are retained separately."
+}

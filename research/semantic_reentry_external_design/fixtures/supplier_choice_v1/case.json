@@ -1,0 +1,19 @@
+{
+  "schema": "malleus.reentry.supplier-choice-fixture/research-v1",
+  "classification": "CONFORMANCE_FIXTURE",
+  "base_fixture": "supplier_commitment_v1",
+  "additional_source": "input/supplier-C.jsonl",
+  "goal": {
+    "kind": "GoalPredicate",
+    "operator": "AT_LEAST",
+    "product_code": "Y",
+    "quantity": 3,
+    "order_ids": ["B", "C"]
+  },
+  "selection": {"strategy": "ORDER_PREFERENCE", "order_preference": ["B", "C"]},
+  "evaluation_budget": 2,
+  "candidate_budget": 1,
+  "dispatch_attempt_budget": 1,
+  "automatic_retry": false,
+  "stopping": "INITIAL_SATISFIED_OR_LINKED_OBSERVED_KCS"
+}

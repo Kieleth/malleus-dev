@@ -1,0 +1,10 @@
+{
+  "accepted_initial": {"B": 1, "C": 1},
+  "predicted_totals": {"B": 3, "C": 3},
+  "without_preference": {"status": "REFUSED", "reason": "AMBIGUOUS", "candidates": 0},
+  "with_preference": {"selected_order": "B", "candidates": 1},
+  "executed_not_observed": {"source": {"B": 2, "C": 1}, "accepted": {"B": 1, "C": 1}},
+  "accepted_final": {"B": 2, "C": 1},
+  "final": {"status": "SATISFIED", "reason": "LINKED_OBSERVED_KCS", "candidates": 0},
+  "dispatch_attempts": 1
+}

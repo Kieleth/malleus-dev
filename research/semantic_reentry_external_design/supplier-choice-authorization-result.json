@@ -1,0 +1,281 @@
+{
+  "schema": "malleus.reentry.authorization-compatibility-receipt/research-v1",
+  "classification": "CONFORMANCE_FIXTURE",
+  "status": "VERIFIED_FOR_CORE_LOCAL_LANDING",
+  "recorded_at": "2026-09-09T01:26:36Z",
+  "claim": "The unchanged two-alternative Shop Re-entry implementation composes with Core's artifact-driven authorization implementation, preserving the original full episode bytes and authority boundaries.",
+  "lowest_affected_profile": "Compiler-enabled state-version composed with the experimental single-action supplier profile",
+  "coordinates": {
+    "base_commit": "a0026cbd25a90b5c2b6c9eb7b31df4e42df16804",
+    "base_tree": "ca0ace8bf60f5a0519acd4c020f3728021f51c27",
+    "original_proof_commit": "a1e02d1227d39fc2a85310bbc5537af20873ba9f",
+    "tested_commit": "d9b47923d665b4b0605ef904b25f64e593812dac",
+    "tested_tree": "b6a2e03a2a1c98ae7b4a8509bb4af3ebc746509e",
+    "core_source_tree": "ce8aeee94ed2e88a6e9785e9699e08f0dee70bec",
+    "ontology_tree": "4613b5004eff5713deeeafa6dff9874de5383f67",
+    "reviewed_landing_base_commit": "ed4d26da4187283e2c82c9de77779c0512140feb",
+    "reviewed_landing_base_tree": "5d688d6cfe0afc2e280ee6c6013073f7296e5fd0",
+    "guard_red_commit": "cc131a3142772118f5ec340665eb9be927264b9f",
+    "guard_red_tree": "cdefb2e897817c978810b97fc02f158bcffea17f",
+    "completion_note": "The completion commit adds this receipt and changes only TWO_ALTERNATIVES.md. Its final commit/tree and this receipt hash are supplied in the Core landing handoff."
+  },
+  "verification": {
+    "runtime": {
+      "python": "3.12.9",
+      "python_executable": "/Users/luis/Projects/malleus-dev/.venv/bin/python",
+      "cwd": "/private/tmp/malleus-reentry-choice.9qmXqA/combined",
+      "pythonpath": "src:.",
+      "write_bytecode": false,
+      "pytest_cache": false,
+      "dependency_configuration": "root pyproject.toml, unchanged by this slice",
+      "new_dependencies": []
+    },
+    "groups": {
+      "choice": [
+        "research/semantic_reentry_external_design/test_supplier_choice.py"
+      ],
+      "supplier_a": [
+        "research/semantic_reentry_external_design/test_supplier_reentry.py",
+        "research/semantic_reentry_external_design/test_supplier_reentry_boundaries.py",
+        "research/semantic_reentry_external_design/test_accepted_read_view.py",
+        "research/semantic_reentry_external_design/test_supplier_initial_source.py",
+        "research/semantic_reentry_external_design/test_supplier_walkthrough.py"
+      ],
+      "supplier_b": [
+        "research/semantic_reentry_external_design/test_supplier_action_contract.py",
+        "research/semantic_reentry_external_design/test_supplier_program.py",
+        "research/semantic_reentry_external_design/test_frozen_supplier_inputs.py",
+        "research/semantic_reentry_external_design/test_supplier_components.py",
+        "research/semantic_reentry_external_design/test_supplier_initialization.py",
+        "research/semantic_reentry_external_design/test_supplier_proposals.py"
+      ],
+      "supplier_c": [
+        "research/semantic_reentry_external_design/test_supplier_authorization.py",
+        "research/semantic_reentry_external_design/test_supplier_execution.py",
+        "research/semantic_reentry_external_design/test_supplier_observation.py",
+        "research/semantic_reentry_external_design/test_supplier_observed_source.py",
+        "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_epoch_guard_rejects_historical_and_unknown_pins",
+        "research/semantic_reentry_external_design/test_supplier_replay_laws.py::test_current_supplier_distinct_histories_same_graph",
+        "research/action_history_contract_freeze/programs/test_action_inputs.py",
+        "tests/contract_compiler/pareto/test_maintained_projection.py",
+        "tests/test_inquisition.py::TestSkillsAreInstallable",
+        "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
+      ],
+      "maintained_integration": [
+        "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py::test_maintained_epoch_guard_rejects_older_and_unknown_source",
+        "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py::test_new_epoch_guard_rejects_older_and_unknown_source"
+      ],
+      "authorization_compatibility": [
+        "tests/test_control.py",
+        "research/action_history_contract_freeze/programs/test_authorization_conformance.py",
+        "research/action_history_contract_freeze/programs/test_control_executor.py"
+      ]
+    },
+    "unified_gate": {
+      "reports": [
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-union-0.xml",
+          "sha256": "53a7e55146e6b4af7e26b202e94691934cd348d6e461fdfd04d27ccd78de6245",
+          "cases": 204,
+          "passed": 204,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "skip_details": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-union-1.xml",
+          "sha256": "3c3cb5c64434c83c5e2f2637015eedcc27faa3aeafd5177adbb7a72b283916ee",
+          "cases": 305,
+          "passed": 305,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "skip_details": []
+        },
+        {
+          "path": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-union-2.xml",
+          "sha256": "bffc25ad843819ca92ac3e9b4e14386daf1e282cc5e4d3c523e0b70c6b00f915",
+          "cases": 141,
+          "passed": 140,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "skip_details": [
+            {
+              "classname": "tests.test_inquisition.TestShippedGuidanceSaysWhatTheCodeDoes",
+              "name": "test_public_and_private_doctrine_do_not_diverge",
+              "message": "the paper-program doctrine is not present in this tree"
+            }
+          ]
+        }
+      ],
+      "collected_cases": 650,
+      "passed": 649,
+      "skipped": 1,
+      "missing": 0,
+      "extra": 0,
+      "duplicates": 0,
+      "collected_nodes_sha256": "c6884ee36df76edbc3ee867661ed211d473a400268740b27bd47b8d42a79df21",
+      "node_digest_encoding": "UTF-8 compact JSON array of sorted pytest node IDs",
+      "normalization": "Split structural separators only before the first parameter bracket; preserve all parameter text.",
+      "normalization_selftests": [
+        [
+          "a/b.py::test_f",
+          [
+            "a.b",
+            "test_f"
+          ]
+        ],
+        [
+          "a/b.py::K::test_f[x::y]",
+          [
+            "a.b.K",
+            "test_f[x::y]"
+          ]
+        ],
+        [
+          "a/b.py::test_f[c/d.py::test_g]",
+          [
+            "a.b",
+            "test_f[c/d.py::test_g]"
+          ]
+        ],
+        [
+          "a/b.py::K::Inner::test_f[x[y]::z]",
+          [
+            "a.b.K.Inner",
+            "test_f[x[y]::z]"
+          ]
+        ]
+      ]
+    },
+    "supplemental_reports": [
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-smoke.xml",
+        "sha256": "994ba08c5f73a9a94484b312a1137ea3c5c09e033bcfc83a39231b434364b740",
+        "cases": 3,
+        "failures": 0
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-guard-red.xml",
+        "sha256": "568fa73999280905e28e68a6ea5771b7d85fd8c1d4428dd3906322aa4a81f3c9",
+        "cases": 10,
+        "failures": 5
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-guard-green.xml",
+        "sha256": "22521349d9a42773664b13f329afb21a530d618a0719a0ad1169a2ed72cd32ef",
+        "cases": 11,
+        "failures": 0
+      },
+      {
+        "path": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-historical-refusal.xml",
+        "sha256": "31906da20d1e1cf889da0b6996c4d233429e2046c8fd8ead47465c580073b618",
+        "cases": 2,
+        "failures": 2
+      }
+    ]
+  },
+  "recorded_episode": {
+    "directory": "/private/tmp/malleus-reentry-choice.9qmXqA/authorization-union-0/test_full_choice_loop_observes0/episode",
+    "comparison_directory": "/private/tmp/malleus-reentry-choice.9qmXqA/final-demo",
+    "byte_identical_files": {
+      "history.jsonl": "c49e1b6c81367445a233a679fd4bddc9b2874c0f742e44651fc150bf90df610c",
+      "choice-contract.json": "2b20bbf0c811e2bdf356d5b09da57f8187f60fbbcec54253beab12b591752a9f",
+      "action-proposal.json": "f5ee213c68eb7156edb48658491edcfb0221420e2c6feb405e92bf973beb40e6",
+      "choice-result.json": "627a2660bd4ba612ec732929cf14d082140c4350f24ddbc0b6898ed923802303",
+      "supplier.jsonl": "7828cebdf6a98496196a72e501f1637d2141550d76f4313751787d4a04d03ea0",
+      "supplier-C.jsonl": "64732fb402e77d41cd4881fba428ba601178dcda949fd490d3a5297cbf9b1477"
+    },
+    "result": {
+      "accepted_final": {
+        "B": 2,
+        "C": 1
+      },
+      "accepted_initial": {
+        "B": 1,
+        "C": 1
+      },
+      "change_set_identity": "sha256:1ed954b6e267b5539138f0fc887310e7e12588a36d3d93ac3a672e9e73cdb67e",
+      "contract_identity": "sha256:2b20bbf0c811e2bdf356d5b09da57f8187f60fbbcec54253beab12b591752a9f",
+      "dispatch_attempts": 1,
+      "executed_not_observed": {
+        "accepted": {
+          "B": 1,
+          "C": 1
+        },
+        "source": {
+          "B": 2,
+          "C": 1
+        }
+      },
+      "final": {
+        "candidates": 0,
+        "reason": "LINKED_OBSERVED_KCS",
+        "status": "SATISFIED"
+      },
+      "graph_digest": "sha256:2c554381f3af521f3a0d46105b0844aa1555760d23f7b4dff4fb83264cf1510b",
+      "ledger_event_count": 91,
+      "ledger_head": "sha256:9f3ee8702afa8b5b9c51e6c0bf5cd8c48a4cb7ce88a8f38886110161cd43658b",
+      "ledger_sha256": "sha256:c49e1b6c81367445a233a679fd4bddc9b2874c0f742e44651fc150bf90df610c",
+      "predicted_totals": {
+        "B": 3,
+        "C": 3
+      },
+      "with_preference": {
+        "candidates": 1,
+        "selected_order": "B"
+      },
+      "without_preference": {
+        "candidates": 0,
+        "reason": "AMBIGUOUS",
+        "status": "REFUSED"
+      }
+    }
+  },
+  "audit": {
+    "original_proof_receipt_sha256": "31181ad7688c48c75072883aed6da09fd3c49d463deb89a0108d995560afd76e",
+    "code_changes": "Relative to the original proof, no selector, walkthrough, source fixture or supplier implementation bytes changed. Only the current gate manifest and its test were updated.",
+    "core_changes": "No slice-owned Core runtime, ontology, dependency, existing fixture, skill or paper changes. The candidate merges the already completed authorization Core base.",
+    "newer_landing_base": "Compared a0026cbd to ed4d26da: only separate connected-Shop expectations and Core journal/preparation files changed. src, ontology, pyproject.toml, supplier modules, action-history modules and tests are unchanged.",
+    "historical_refusals": "Two original positive source-epoch checks correctly refused the new Core source. Their failures are retained separately, not included in the green union. The old maintained guard and receipt remain byte-identical.",
+    "class_guardrail": "Five behavioral REDs first established stale-source acceptance and missing rejection of direct or whole-module historical guard selection. The current exact-epoch guard rejects both; applicable historical negative tests still execute.",
+    "lint": "Ruff passed for supplier_choice.py, supplier_choice_walkthrough.py and test_supplier_choice.py; git diff --check passed.",
+    "file_hashes_at_completion": {
+      "research/semantic_reentry_external_design/TWO_ALTERNATIVES.md": "da465557cff20f97027845271cd71095e75406cd02e2c3dfccd2b0d169610287",
+      "research/semantic_reentry_external_design/fixtures/supplier_choice_v1/case.json": "4e87cfc50922633e0e0c310631f03506e1a97a913053bde44da7cd65d1e5dd28",
+      "research/semantic_reentry_external_design/fixtures/supplier_choice_v1/input/supplier-C.jsonl": "64732fb402e77d41cd4881fba428ba601178dcda949fd490d3a5297cbf9b1477",
+      "research/semantic_reentry_external_design/fixtures/supplier_choice_v1/oracle/expected.json": "a1b51ba1bae770c7074dcf1d406c5560b68d0a7b47026fe0ff3e4c6a4c84d214",
+      "research/semantic_reentry_external_design/supplier-choice-gate.json": "7c2d5fd78580f6b9100cac5b385e32f1b638539183da83ddd0296617cffdc9da",
+      "research/semantic_reentry_external_design/supplier-choice-result.json": "31181ad7688c48c75072883aed6da09fd3c49d463deb89a0108d995560afd76e",
+      "research/semantic_reentry_external_design/supplier_choice.py": "d3e58a26c2ce3efeae2db16d1d72976adac299c1043777a25eab92cbf10b7b70",
+      "research/semantic_reentry_external_design/supplier_choice_walkthrough.py": "0a2651b6bc799acea0271ca702d5e2fb1e2cbc3d996f99907f619aeaa3b35533",
+      "research/semantic_reentry_external_design/test_supplier_choice.py": "d915d6253301601e7a728d427437f2310ef7ca0a427e7e0dbef2d7fecdca144c"
+    },
+    "self_inquisition": [
+      "protocol_role_is_explicit",
+      "optional_profile_stays_optional",
+      "single_ledger_knowledge_change",
+      "fail_closed",
+      "evidence_does_not_transfer"
+    ]
+  },
+  "landing": {
+    "owner": "Core",
+    "authority": "Operator Go following the request for compatibility verification and reviewed local integration",
+    "next_action": "Core reviews the exact sealed candidate and integrates locally at a committed boundary, preserving unrelated work. No shared-main mutation was performed by this consumer task.",
+    "source_pin": "ce8aeee94ed2e88a6e9785e9699e08f0dee70bec",
+    "changed_runtime_rule": "This receipt does not attest any later Core runtime bytes or unfinished transition-admission edits."
+  },
+  "exclusions": [
+    "No full repository CI or installed-wheel claim for this compatibility run",
+    "No new protocol object, public API, ontology term or packaged Re-entry API",
+    "No production supplier connection, physical delivery, inventory or fulfilment claim",
+    "No general planner, automatic retry, simultaneous action or second complete effect for C",
+    "Preference constrains the selected producer, not arbitrary callers or policy legitimacy",
+    "No second synthesizer or empirical replacement claim",
+    "No whole-application incremental-performance claim",
+    "No push, publication or release"
+  ]
+}
