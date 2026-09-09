@@ -479,6 +479,7 @@ def test_gate_uses_inspected_core_without_modifying_it():
         "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1",
         "31e11514b1f999dd145724c3a0f9b7e95c126595",
         "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
+        "ce8aeee94ed2e88a6e9785e9699e08f0dee70bec",
         "unknown",
     ],
 )
