@@ -4,6 +4,8 @@ from copy import deepcopy
 import importlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 import malleus.compiler as api
@@ -163,6 +165,43 @@ def test_reopen_incremental_and_repeat_preserve_exact_account(
 def test_quantity_grammar_refuses_ambiguity_without_regex(subject, text):
     with pytest.raises(ValueError, match="quantity"):
         subject.parse_quantities(text)
+
+
+def test_supplier_update_never_guesses_another_orders_predecessor(subject, executed):
+    path, replay = executed
+    before = path.read_bytes()
+    rows, boundary = subject.load_sources(subject.HERE)
+    ordinal, original = next(
+        (i, row) for i, row in enumerate(rows) if row["event_id"] == "e7"
+    )
+    synthetic = deepcopy(original)
+    synthetic["supplier_order_ids"] = ["A"]  # A has X, never a Y predecessor.
+    profile, _ = subject.history_configuration()
+    with pytest.raises(ValueError, match="predecessor is missing or ambiguous"):
+        subject.build_plan(replay, profile, synthetic, ordinal, boundary)
+    assert path.read_bytes() == before
+
+
+def test_documented_schema_check_uses_resolved_import_paths(subject):
+    from malleus import bundled_ontology_path
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "malleus.inquisition.cli",
+            str(subject.HERE / "shop.yaml"),
+            "--map",
+            f"object-event={bundled_ontology_path('profiles', 'object-event.yaml').resolve()}",
+            "--map",
+            f"malleus={bundled_ontology_path('malleus.yaml').resolve()}",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "ROOT ONTOLOGY PROFILE PURITY SEAL GRANTED" in result.stdout
 
 
 def test_occurrence_replacement_refuses_at_real_admission_boundary(
