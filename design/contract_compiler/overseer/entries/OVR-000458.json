@@ -1,0 +1,50 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000458",
+  "ledger": "overseer",
+  "sequence": 458,
+  "entry_type": "OBSERVATION",
+  "previous_entry_hash": "sha256:07e195cf90ddc3bbce82d95f2d1ac0aca3b8217eeb2bde5ead4a5ead4425e735",
+  "recorded_at": "2026-09-09T21:46:57Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-authorization-rule-artifact",
+    "type": "DOCUMENT"
+  },
+  "summary": "GitHub CI is green again on main after OVR-000457's canonical-JSON identity for the authorization rule artifact: run 34405385689 at dde26d28, all five jobs.",
+  "why": "OVR-000457 fixed the Windows recon failure from the artifact's raw-bytes identity against a CRLF checkout and said the overseer's push would confirm. The push of 92463f35 (with 5b7eb6c7) started run 34403072217, whose Windows recon and Python 3.11 jobs succeeded before the next push cancelled it under the workflow's cancel-in-progress rule; the push of dde26d28 started run 34405385689, which completed with every job successful: Windows recon (3.12) and Python tests 3.10, 3.11, 3.12, 3.13. This observation records the remote confirmation and changes no bytes.",
+  "data": {
+    "as_of": "2026-09-09T21:46:57Z",
+    "basis": [
+      "GitHub Actions run 34405385689 on Kieleth/malleus-dev main at dde26d28: conclusion success; jobs Windows recon (Python 3.12) success, Python tests (3.13) success, (3.12) success, (3.11) success, (3.10) success; read with gh run view.",
+      "Run 34403072217 at 5b7eb6c7 (the first push after OVR-000457): Windows recon (Python 3.12) success and Python tests (3.11) success, the other three cancelled by the later push's concurrency group; conclusion cancelled.",
+      "The failing runs before the fix: 34380853031 (392fe0b5), 34385335112 (7d3860f9), 34392699748 (051f45b4), 34396370729 (a8e9a85c), each with only the Windows recon job failing at import of malleus."
+    ],
+    "limitations": [
+      "A remote CI conclusion is evidence that the checkout on the runner accepts the artifact; it does not observe the runner's line-ending setting directly.",
+      "The latent same-class instance OVR-000457 names (document digests over raw bytes in scripts/contract_compiler_ledger.py) is unchanged and is not exercised by the Windows job.",
+      "No runtime, ontology, fixture, skill, release or push is claimed by this entry beyond the recorded runs."
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "ENTRY",
+      "target": "OVR-000457"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "dde26d2873227c1fb14cbfde9cab48dcedd87b3b"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "DOCUMENT",
+      "target": ".github/workflows/tests.yml"
+    }
+  ],
+  "entry_hash": "sha256:acda9f71ce6b92034b832e75486e383d3a231d582af8aff7980cf46ab07e3007"
+}

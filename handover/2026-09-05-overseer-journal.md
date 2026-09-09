@@ -689,3 +689,15 @@ One Opus session under protocol v3, all thirty questions, 449 witnesses. Support
 The finding that hurts: eleven of the twenty absences, and the one NONE, are my type sets. Under v4.12 a set that lists the claim type alone reaches only subject-less claims; 63 of 124 claims carry a subject, 53 of them a geologic feature, and the claims that state the preferred explanation are among them. The closure check I built on 09-06 guards subtypes and says nothing about subject types. The run-21 catalogue lesson pushed the sets small; the subject mechanics punish small sets on exactly the claim questions. RCA: handover/2026-09-09-run-22-rca.md, three options, my pick is a v4.13 that lets a listed subject-bearing type reach all its records so the evaluator cannot lose them by omission.
 
 Also recorded: Core-23 was already on main since 09-06 (Codex Core, 5c8b0cc9); my "not dispatched" was true of my dispatch and wrong about the work.
+
+## Harness v4.13 and run-23 (2026-09-09, evening): the third replicate launches
+
+Luis ruled option 2 of the run-22 RCA. Paper-30 (Opus) built v4.13 in one change across three files: a SUBJECT_ANY case per listed subject-bearing type paired with every entity type on the surface, answered by the SUBJECT row builder; binding schema v6; on run-09's frozen record it reaches 156 rows over 143 records that no typed SUBJECT case returned, 405 of 407 SUPPORTED under run-09's reviewers. Run-23 opened as run-22's producer condition byte for byte (RED 5b7eb6c7, GREEN b06a0283), E-0343 at dde26d28 after one amendment the cell's own guard demanded (run-22's row total named in the comparability statement; the first gate read 1 failed). Workspace staged, inputs identical to run-22's; producer launched.
+
+Meanwhile CI: Core-24 (Opus) proved the Windows failure at the byte level (the rule artifact's raw-bytes identity against a CRLF checkout), moved the identity to canonical JSON with tests under both line endings, OVR-000457; the Windows recon job is green on the fix push. A latent instance remains in the governance ledger tool's raw-bytes document digests; a repo-wide line-ending rule is Luis's call.
+
+Two mechanical slips of mine today, same shape: a file written inside an if-branch that a red run skipped (E-0341's body, then E-0343's commit message). Rule for myself from here: write bodies and messages before the conditional, never inside it.
+
+## CI green (2026-09-09, 21:4xZ)
+
+Run 34405385689 at dde26d28: all five jobs green, the Windows recon job among them. The fix of OVR-000457 holds on the runner; recorded as OVR-000458. The first fix push's run had shown Windows and 3.11 green before the next push cancelled it.
