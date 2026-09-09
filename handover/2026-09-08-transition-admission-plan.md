@@ -191,3 +191,14 @@ No new public Python symbols are required. The conformance fixture uses the
 existing public machine, profile, contract, history and projection constructors.
 Its literal expected outcomes cover both matching modes. The domain role
 choice remains fixture/adopter data, not a new Core default.
+
+Integration closure before GREEN: `create_structural_history` gains an optional
+`transition_program` keyword using the existing `ProtocolMachineProgram` type.
+Its only accepted variation from the installed structural machine is the
+explicit private-v1 grammar and validated admission-rule section. All event,
+record, policy and binding semantics remain exact. `admit_structural_change`
+recognizes precisely this extension and still produces its own check events.
+No caller outcome or general custom-machine bypass is added. Omission selects
+the existing unmodified structural machine. Core tests use the existing Shop
+e4/e7 source fixture through compilation, preparation, admission and reopen;
+they do not edit or rebind the separately owned connected-Shop experiment.

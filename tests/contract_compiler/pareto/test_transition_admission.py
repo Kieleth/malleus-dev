@@ -7,6 +7,7 @@ import pytest
 
 from malleus import compiler as api
 from tests.contract_compiler.pareto import test_knowledge_change_history as fixtures
+from tests.contract_compiler.pareto import test_public_compiler as public
 from tests.contract_compiler.pareto.test_maintained_projection import (
     assert_parity,
     coordinates,
@@ -101,7 +102,9 @@ def change(history, name, kind="State", *, prior=None, include_profile=True):
     return history.compose_change_set(
         change_set_id=f"change:{name}",
         source_record_ids=("source-generic",),
-        evidence_record_ids=("selected-history-profile",) if include_profile else (),
+        evidence_record_ids=("selected-history-profile",)
+        if include_profile
+        else ("evidence-generic",),
         operations=(operation,),
         valid_time=api.KnowledgeValidTime("ORDER_ONLY", name),
         supersedes=(),
@@ -314,7 +317,8 @@ def test_valid_hash_chain_cannot_hide_forbidden_transition_from_replay(
                 "transaction_time": fixtures.TRANSACTION_TIME,
             }
             for index, value in enumerate(payloads)
-        ]
+        ],
+        validate=lambda _: None,
     )
     envelopes = history._ledger.read()
     for read in (
@@ -329,3 +333,102 @@ def test_valid_hash_chain_cannot_hide_forbidden_transition_from_replay(
             read()
         assert caught.value.reason.name == "TRANSITION_RULE_REFUSAL"
     assert_parity(reader.current(**coordinates(before)), before)
+
+
+def structural_program(*, match="SUBTYPE"):
+    data = json.loads(
+        api.STRUCTURAL_HISTORY_BUNDLE.protocol_machine_program.canonical_bytes
+    )
+    data["grammar"] = "malleus.protocol-machine/private-v1"
+    data["admission_rules"] = program(api.STATE_VERSION_PROFILE, match=match)[
+        "admission_rules"
+    ]
+    return data
+
+
+@pytest.mark.parametrize("match,accepted", [("EXACT", False), ("SUBTYPE", True)])
+def test_public_shop_preparation_and_core_owned_checks(tmp_path, match, accepted):
+    compiled = public._compiled_shop(api)
+    selected = api.ProtocolMachineProgram.from_bytes(
+        _canonical(structural_program(match=match))
+    )
+    history = api.create_structural_history(
+        tmp_path / "history.jsonl",
+        compilation=compiled,
+        transition_program=selected,
+        transaction_time=fixtures.TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    source = (
+        public.SHOP_FIXTURE / "input/sources/supplier-order-history.jsonl"
+    ).read_bytes()
+    history.append_anchors(
+        anchors=api.structural_source_anchors(
+            content=source,
+            source_id="source:supplier-order-history",
+            artifact_id="artifact:supplier-order-source",
+            media_type="application/jsonl",
+        ),
+        transaction_time=fixtures.TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    for occurrence in ("e4", "e7"):
+        plan = public._plan(api, history.partial_contract, source, occurrence)
+        prepared = api.prepare_population_change(
+            history=history,
+            plan=plan,
+            profile=api.STATE_VERSION_PROFILE,
+            retention_events=public._retention_events(api, plan, occurrence == "e4"),
+            transaction_time=fixtures.TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+        before = history.path.read_bytes()
+        if occurrence == "e7" and not accepted:
+            with pytest.raises(api.KnowledgeChangeRefusal) as caught:
+                api.admit_structural_change(
+                    history=history,
+                    preparation=prepared,
+                    transaction_time=fixtures.TRANSACTION_TIME,
+                    actor_id="actor:test",
+                )
+            assert caught.value.reason.name == "TRANSITION_RULE_REFUSAL"
+            assert history.path.read_bytes() == before
+        else:
+            api.admit_structural_change(
+                history=history,
+                preparation=prepared,
+                transaction_time=fixtures.TRANSACTION_TIME,
+                actor_id="actor:test",
+            )
+    replay = api.KnowledgeChangeHistory.reopen(history.path).replay()
+    assert replay.graph.query("SupplierOrderState")[0]["ordered_quantity"] == (
+        2 if accepted else 1
+    )
+    assert (
+        replay.partial_contract.normative_profile.protocol_machine_program == selected
+    )
+    if accepted:
+        assert (
+            replay.record_history["supplier-order-state:B:e4"].superseded_by
+            == "supplier-order-state:B:e7"
+        )
+
+
+def test_structural_helper_does_not_allow_other_machine_changes(tmp_path):
+    compiled = public._compiled_shop(api)
+    data = structural_program()
+    data["events"]["ARTIFACT_REGISTERED"]["instructions"][0]["refusal"] = (
+        "CHANGED_PROTOCOL"
+    )
+    selected = api.ProtocolMachineProgram.from_bytes(_canonical(data))
+    path = tmp_path / "history.jsonl"
+    with pytest.raises(api.KnowledgeChangeRefusal) as caught:
+        api.create_structural_history(
+            path,
+            compilation=compiled,
+            transition_program=selected,
+            transaction_time=fixtures.TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+    assert caught.value.reason.name == "IDENTITY_MISMATCH"
+    assert not path.exists()
