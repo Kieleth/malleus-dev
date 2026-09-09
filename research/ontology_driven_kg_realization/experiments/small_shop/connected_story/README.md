@@ -30,9 +30,13 @@ completeness score. Exact reproducibility coordinates are in the
 [receipt](run_receipt.json), and the [self-check](MALLEUS_INQUISITION.md) separates
 mechanical guarantees from source interpretation.
 
-Shipment eligibility is explicitly `NOT_EVALUATED`. The context passages are
-retained evidence, not yet a checked customer/payment rule. This completes the
-connected table population, not every deliverable in the broader Shop plan.
+The producer's shipment eligibility remains explicitly `NOT_EVALUATED` in its
+frozen receipt. The separate [shipment explanation](SHIPMENT_EXPLANATION.md)
+now reads the saved graph before and after payment clearing, joins the evidence
+and checks the unpaid-count bounds. It returns `CANNOT_DETERMINE` for the full
+customer account, which the source does not supply. No missing payment row is
+turned into an unpaid balance. This completes the connected table population
+and bounded payment explanation, not every deliverable in the broader Shop plan.
 
 The source slice retains all 21 rows of Fahland's Table 1, its exact published
 image, and four selected context excerpts. [source_boundary.json](source_boundary.json)

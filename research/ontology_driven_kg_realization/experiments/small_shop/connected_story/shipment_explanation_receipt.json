@@ -1,0 +1,24 @@
+{
+  "purpose": "SHOP_READ_REPORT_RECEIPT_NOT_A_PROTOCOL_RECORD",
+  "implementation_commit": "b28b2ffe4cef0c029707508884133ad630b774c2",
+  "implementation_tree": "7083bfdc961700936fdcc151d88ba532c77a3c31",
+  "history_sha256": "sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe",
+  "history_head": "sha256:0f33125b77cccce4885aad303f2dace0d0ad46503f88025107715921541a5b7a",
+  "history_receipt": "sha256:78e211ddffccbe800a44b21b48c24fe546c877caccde721c60be2bd88e54a13c",
+  "reader_sha256": "sha256:51736f97540c7f4ff97ff7e643b7991041589feb14c6f2814116f0a9f7604290",
+  "spec_sha256": "sha256:267d758bb8d5dc80c0373299dee6a74cae4b8df78f5b9cb0ad11a54ff2176098",
+  "reports": [
+    {"at_occurrence": "e28", "report_sha256": "sha256:d6bb4fcf90456388ae6111482b859af11ce4150743dbf2c565f8752bfa497c73", "graph_sha256": "sha256:ecd8dcf678aaf44317138ea061420b170c41b68c435a5bec17f9ceefbef6854b"},
+    {"at_occurrence": "e30", "report_sha256": "sha256:bf9bb368ff043705dcff876cd60cdecd8260187874996316787f526ae0508690", "graph_sha256": "sha256:03c5e6f099764fb37e63c93916c0fdbcc6aac8179e12e4628fd01b4f4d3a10ee"},
+    {"at_occurrence": null, "report_sha256": "sha256:458f70847cfbe512b2472746ce24d6937c725b39b71d0a3e1b07e77c14056fbb", "graph_sha256": "sha256:4a890bb06d4cd4a016a8949aa6ea6483d6ee9302cea0951fd9945a22cf1b5e78"}
+  ],
+  "actual_unpaid_limit_outcome": "CANNOT_DETERMINE",
+  "nonclaims": [
+    "No complete customer account or invoice balance snapshot is supplied.",
+    "Clearance occurrences do not assert permanent paid status.",
+    "The source reports the delay; the graph joins do not prove causation.",
+    "Accepted import checkpoints are not domain-time cutoffs.",
+    "Synthetic PAID and UNPAID controls are not source observations or admitted knowledge.",
+    "No authorization, effect, Core change, public API promotion or release."
+  ]
+}

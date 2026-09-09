@@ -3,7 +3,12 @@
 Status: execution approved by Luis on 2026-09-08. Shop owns the example only.
 Any missing Core contract must be requested from Core and delivered there.
 The ontology-led history choice is selected in `connected_story/MODEL.md`.
-Connected Table 1 population is implemented; rule-based explanation remains next.
+Connected Table 1 population and a bounded read-only payment explanation are
+implemented. The reader preserves the source's stated reason for O2's delay,
+shows invoice clearing at accepted import checkpoints and returns unknown for
+unprovided account completeness. Per-object domain ordering and a broader
+shipment-eligibility claim remain separate. See
+[`connected_story/SHIPMENT_EXPLANATION.md`](connected_story/SHIPMENT_EXPLANATION.md).
 
 This task owns the Shop example as a Malleus adopter. It does not own Core,
 the paper task, Robotics, or Semantic Re-entry. This is one Shop planning

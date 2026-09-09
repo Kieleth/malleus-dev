@@ -51,3 +51,19 @@ the verdict. No parser, severity or Core source was changed.
 - **Scoped reuse:** the public compiled contract, history program and profile
   are reused without promoting Shop into Core. This is a bounded source mapper,
   not a generic frontend or proof of another interpreter.
+
+## Shipment reader successor
+
+The earlier notes above describe the frozen population. Shop-only reader
+`shipment_explanation.py` now joins the retained explanation and rule to real
+accepted graph checkpoints through public `graph_at_change`, queries and trace.
+It checks explicit unpaid-count bounds, not guessed invoice status. The source
+still does not establish a complete customer account, so actual eligibility
+remains unknown. No source, mapping, ontology, admission policy or Core path
+was changed for this reader.
+
+The tests cover missing invoice/receipt/link evidence, wrong ownership,
+unchanged history and graph, source identity refusal, and synthetic explicit
+status controls. Known clearing is separate from a complete balance snapshot.
+This closes the pending bounded source/payment explanation, while domain
+ordering, human source ratification and action authority remain outside it.

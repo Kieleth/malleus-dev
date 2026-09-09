@@ -224,3 +224,22 @@ def test_no_fallback_when_retained_context_is_changed_or_absent(
     with pytest.raises((ValueError, KeyError), match="context"):
         subject.explain_shipments(replay)
     assert path.read_bytes() == before
+
+
+def test_committed_reader_receipt_reproduces_from_fresh_history(subject, executed):
+    path, replay = executed
+    receipt = json.loads((run.HERE / "shipment_explanation_receipt.json").read_bytes())
+    assert receipt["history_sha256"] == run.digest(path.read_bytes())
+    assert receipt["history_head"] == replay.ledger_head
+    assert receipt["history_receipt"] == replay.receipt.identity
+    for expected in receipt["reports"]:
+        report = subject.explain_shipments(
+            replay, at_occurrence=expected["at_occurrence"]
+        )
+        assert run.digest(run.canonical(report)) == expected["report_sha256"]
+        assert report["checkpoint"]["graph_sha256"] == expected["graph_sha256"]
+        assert report["reader"]["implementation_sha256"] == receipt["reader_sha256"]
+        assert report["reader"]["spec_sha256"] == receipt["spec_sha256"]
+        assert (
+            report["invoice_limit"]["outcome"] == receipt["actual_unpaid_limit_outcome"]
+        )

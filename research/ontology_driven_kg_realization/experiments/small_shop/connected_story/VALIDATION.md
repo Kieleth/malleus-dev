@@ -147,3 +147,38 @@ tests and the read-only CLI/committed-receipt guard. Ruff lint, format and diff
 checks pass; the detached checkout remains clean. The final commit after this
 coordinate only appends this validation result, with no implementation or
 receipt-byte change.
+
+## Shipment explanation successor
+
+RED `c363ffc5971e03e8c6e10c147e9333ac2548d55b` records the Shop-only scope and
+18 missing-reader errors. GREEN `b28b2ffe4cef0c029707508884133ad630b774c2`, tree
+`7083bfdc961700936fdcc151d88ba532c77a3c31`, adds the reader, its explicit source
+and rule specification, and two additional context-retention guards. The focused
+suite is **20 passed**, zero skips. No existing population, ontology, source,
+mapping, historical receipt or Core implementation changed.
+
+A local detached clone at exact GREEN, retaining Git objects but no shared
+worktree dirt, ran the same whole-Shop plus transition selector above. Result:
+**317 passed, zero skips**, 145.00 seconds. Dependencies are the existing
+declared repository environment; no installation or packaging work was done.
+
+A separate from-empty run in that clone reproduced the existing history digest
+`sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe`,
+head, replay receipt and all 107 historical records. The reader's after-e28,
+after-e30 and final reports reproduced identically after reopen. Their exact
+digests are retained in [shipment_explanation_receipt.json](shipment_explanation_receipt.json).
+The later documentation/receipt guard checks those exact values against a fresh
+history. It does not change the implementation or historical receipt.
+
+The read-only CLI is executed in the tests. Actual source data returns
+`CANNOT_DETERMINE` for the unpaid limit, both before and after the two invoice
+clearings. Missing invoice, receipt and relation evidence cannot shrink the
+selected inventory into a passing result. Synthetic explicit PAID/UNPAID inputs
+separately distinguish SATISFIED, VIOLATED and incomplete evidence. They never
+enter the source history. Checkpoints are accepted import positions, not domain
+times, and the full retained commentary is labeled as such.
+
+This proves the bounded payment explanation and reproducible read results. It
+does not prove a complete customer account, historical unpaid balances, causal
+delay, shipment permission, source truth or every part of the connected Shop
+plan. No full-Core, package, external-effect, push or release claim follows.
