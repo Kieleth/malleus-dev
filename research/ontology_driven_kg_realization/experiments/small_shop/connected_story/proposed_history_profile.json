@@ -1,0 +1,35 @@
+{
+  "grammar": "malleus.domain-history-profile/private-v1",
+  "profile_id": "shop-connected-history-proposal-v1",
+  "semantic_unit": "COMPOSITION",
+  "origin": "HISTORICAL_RECONSTRUCTION",
+  "genesis": {
+    "boundary": "RETAINED_HISTORICAL_RECONSTRUCTION",
+    "completeness_scope": "DECLARED_SOURCE_BOUNDARY_ONLY"
+  },
+  "time_semantics": {
+    "assertion_time": "NOT_REPRESENTED",
+    "domain_time": "RETAINED_SOURCE_TEXT",
+    "knowledge_valid_time": "NONE_STATED_WHEN_NO_SUPPORTED_DOMAIN_COORDINATE",
+    "transaction_time": "LEDGER_TRANSACTION_TIME"
+  },
+  "change_semantics": {
+    "addition": "APPEND_EXPLICIT_RECORDS",
+    "correction": "EXPLICIT_SAME_TYPE_STATE_SUPERSESSION",
+    "retraction": "NOT_ADMITTED",
+    "transition": "APPLY_EXPLICIT_OPERATIONS_NOT_INFERRED_EVENT_EFFECTS"
+  },
+  "ontology_roles": {
+    "claim": [],
+    "entity": ["Entity"],
+    "event": ["Event"],
+    "state": ["SupplierOrderState"]
+  },
+  "projection_rule_family": "CURRENT_NON_SUPERSEDED_RECORDS",
+  "grounding": {
+    "source": "https://doi.org/10.1007/978-3-031-08848-3_9",
+    "basis": "Table 1 occurrences plus the existing Shop explicit state-version representation.",
+    "status": "PROPOSAL_FOR_SHOP_REVIEW_NOT_A_SHIPPED_CORE_PROFILE",
+    "execution_limit": "Core validates profile identity and supported structure. These text labels do not install new transition rules. Family-specific replacement restrictions are not established by this probe."
+  }
+}

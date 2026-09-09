@@ -1,0 +1,76 @@
+id: https://example.malleus.dev/shop-connected-probe
+name: shop_connected_probe
+version: 0.1.0
+description: Proposed Shop-only compatibility probe, not the final connected ontology.
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  probe: https://example.malleus.dev/shop-connected-probe/
+imports:
+  - linkml:types
+  - small-shop
+  - object-event
+enums:
+  SupplierOrderActivity:
+    permissible_values:
+      PLACE_SO:
+      UPDATE_SO:
+  SupplierOrderParticipationRole:
+    permissible_values:
+      SUPPLIER_ORDER:
+slots:
+  time_text:
+    range: string
+    description: Printed source time, not a resolved calendar instant.
+classes:
+  SupplierOrder:
+    is_a: Entity
+    description: Enduring supplier-order identity, not a supplier party or state version.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Object-centric business process data
+          taxonomy: Event knowledge graphs
+          vocabularies:
+            - vocabulary: Fahland 2022, Table 1
+              vocabulary_url: https://doi.org/10.1007/978-3-031-08848-3_9
+              borrowed_terms: [Supplier Order]
+          invented_terms: []
+    slots: [supplier_order_id]
+    slot_usage:
+      supplier_order_id:
+        required: true
+  SupplierOrderOccurrence:
+    is_a: Event
+    description: Reported place or update occurrence. Its effects are not inferred by Core.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Object-centric business process data
+          taxonomy: Event knowledge graphs
+          vocabularies:
+            - vocabulary: Fahland 2022, Table 1
+              vocabulary_url: https://doi.org/10.1007/978-3-031-08848-3_9
+              borrowed_terms: [Place SO, Update SO]
+          invented_terms: []
+    slots: [time_text]
+    slot_usage:
+      event_type:
+        range: SupplierOrderActivity
+        required: true
+  SupplierOrderParticipation:
+    is_a: EventParticipation
+    slot_usage:
+      event_id:
+        range: SupplierOrderOccurrence
+        required: true
+      entity_id:
+        range: SupplierOrder
+        required: true
+      qualifier:
+        range: SupplierOrderParticipationRole
+        required: true
+        equals_string: SUPPLIER_ORDER

@@ -304,3 +304,13 @@ population, not chosen opportunistically to make a test pass.
   Start with retained source coverage, then a public-only history compatibility
   probe. The new work lives in `connected_story/`; predecessor fixtures remain
   unchanged. Core receives requirements, not edits from this task.
+- 2026-09-08: Source-boundary RED `9268617e` and GREEN `5383647e` retain the
+  selected Table 1 image, 21 rows, 123 nonempty fields and four context excerpts.
+  Seven checks pass. Independent human source ratification remains pending.
+- 2026-09-08: History compatibility RED `cacc2e4e`; the proposed mixed record
+  profile passes the two-row public integration probe, with three tests. The
+  profile does not yet have adopted status. A separate probe shows its declared
+  state-only correction wording does not itself prohibit Event supersession.
+  [Core receives this exact contract question](connected_story/CORE_REQUIREMENT.md).
+  Hold final model selection and the full connected population, not unrelated
+  source work. No Core runtime, ontology or governance file was edited.
