@@ -467,6 +467,7 @@ def test_gate_uses_inspected_core_without_modifying_it():
     [
         "763d3b72ad2143bc5735eed32d47a69e3f6b8cd1",
         "31e11514b1f999dd145724c3a0f9b7e95c126595",
+        "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
         "unknown",
     ],
 )
@@ -476,7 +477,17 @@ def test_gate_rejects_older_or_unknown_core(epoch):
 
 
 @pytest.mark.parametrize(
-    "selector", [HISTORICAL_GUARD, HISTORICAL_GUARD.split("::")[0]]
+    "selector",
+    [
+        HISTORICAL_GUARD,
+        HISTORICAL_GUARD.split("::")[0],
+        "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py"
+        "::test_maintained_gate_pins_actual_core_and_preserves_prior_evidence",
+        "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py",
+        "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py"
+        "::test_new_gate_pins_actual_core_and_preserves_historical_evidence",
+        "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py",
+    ],
 )
 def test_gate_rejects_direct_or_implicit_historical_guard(selector):
     with pytest.raises(ValueError, match="Historical epoch guard"):
