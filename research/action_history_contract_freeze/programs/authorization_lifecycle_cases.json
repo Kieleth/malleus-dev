@@ -1,0 +1,9 @@
+{
+  "classification": "CONFORMANCE_FIXTURE",
+  "cases": [
+    {"outcomes": ["SATISFIED", "SATISFIED"], "verdict": "AUTHORIZE", "state": "AUTHORIZED", "triggers": [], "grantee": "actor:executor"},
+    {"outcomes": ["VIOLATED", "VIOLATED"], "verdict": "BLOCK", "state": "BLOCKED", "triggers": [0, 1], "grantee": "actor:other"},
+    {"outcomes": ["UNKNOWN", "SATISFIED"], "verdict": "CLARIFY", "state": "CLARIFICATION_REQUIRED", "triggers": [0], "grantee": "actor:executor"}
+  ],
+  "refused_mutations": ["evaluation", "actor", "assessment_order", "grant", "interval", "transition", "source", "stale_head"]
+}
