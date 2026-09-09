@@ -1,6 +1,6 @@
 """Two permitted translations, no implicit selection or new authority."""
 
-from dataclasses import FrozenInstanceError, fields
+from dataclasses import FrozenInstanceError, fields, replace
 import builtins
 from contextlib import contextmanager
 from importlib import import_module
@@ -516,3 +516,48 @@ def test_effect_receipt_never_substitutes_for_observation(inputs, monkeypatch, f
     if fault == "unchanged-success":
         assert (final.status, final.reason) == ("REFUSED", "EPISODE_TERMINAL")
         assert runner().quantities(replay) == {"B": 1, "C": 1}
+
+
+@pytest.fixture(scope="module")
+def applied_choice(prefix, tmp_path_factory):
+    path = tmp_path_factory.mktemp("applied-choice") / "episode"
+    shutil.copytree(prefix, path)
+    history = core.KnowledgeChangeHistory.reopen(path / "history.jsonl")
+    contract, result = evaluate(history, runner().RULE)
+    original = json.loads(contract.canonical_bytes)["original_contexts"]["B"]
+    single.proposals.submit_supplier_proposal(
+        history=history,
+        **single.position(history),
+        original_context_bytes=single.canonical(original),
+        action_bytes=result.candidates[0],
+        proposal_key="supplier:synthesized:proposal",
+        context_actor_id=single.ACTOR,
+        artifact_version="research-v1",
+    )
+    view = read(history)
+    return api().bind_supplier_choice(view=view, rule_source_id=runner().RULE), view
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"status": "UNKNOWN"},
+        {"contract_identity": "sha256:" + "0" * 64},
+        {"reason": ""},
+        {"status": "CANDIDATES", "candidates": ()},
+        {"candidates": []},
+    ],
+)
+def test_applied_child_result_obeys_its_contract(applied_choice, changes):
+    contract, view = applied_choice
+
+    class InvalidResult(child.SupplierReentrySynthesizer):
+        def synthesize(self, *args, **kwargs):
+            return replace(super().synthesize(*args, **kwargs), **changes)
+
+    result = synthesize(contract, view, synthesizer=InvalidResult())
+    assert (result.status, result.reason, result.candidates) == (
+        "REFUSED",
+        "MALFORMED_INPUT",
+        (),
+    )
