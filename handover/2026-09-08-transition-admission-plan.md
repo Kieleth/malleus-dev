@@ -1,6 +1,6 @@
 # Transition admission: implementation preparation
 
-Status: **accepted direction, prepared for contract freeze; not implemented**.
+Status: **activated by Luis's subsequent "Go"; encoding frozen below for TDD**.
 Luis accepted the [revised design](2026-09-08-history-profile-enforcement.md):
 "Correct, this is better, add to journal and prepare to implement."
 This records preparation within the existing Core runtime workstream, not a
@@ -136,3 +136,58 @@ still requires a deliberately different interpreter and is not claimed here.
 Preparation is complete when this plan and its approval are journaled and the
 existing ledger validates. Runtime completion requires RED/GREEN and the
 bounded evidence above; preparation must never be reported as that result.
+
+## Frozen first encoding
+
+The extension is a rule section in the existing machine, not a host capability
+or a new public artifact class. Machine grammar `malleus.protocol-machine/private-v1`
+requires the existing fields plus `admission_rules`. Private-v0 keeps exactly
+its existing closed fields and meaning. Both still reject host capabilities.
+The existing normative profile embeds and hashes the selected machine as before.
+
+```json
+{
+  "history_profile_identity": "sha256:<exact canonical profile digest>",
+  "instructions": [
+    {
+      "opcode": "REQUIRE_TYPES_IN_ROLE",
+      "selection": "REPLACEMENTS",
+      "role": "state",
+      "match": "EXACT",
+      "refusal": "REPLACEMENT_OUTSIDE_SELECTED_ROLE"
+    }
+  ]
+}
+```
+
+This is the `admission_rules` value, not a complete machine or a valid digest
+example. Its two fields and each instruction's five fields are closed. The
+instruction sequence is nonempty. The first cut supports only `REPLACEMENTS`;
+`match` must be `EXACT` or `SUBTYPE`. Both prior and new record types must match
+one type in the named profile role. An empty role permits no replacements.
+No replacement means the predicate is vacuously satisfied, but required profile
+and type bindings must still resolve. Unknown opcodes, fields, matching modes
+and selections refuse during machine parsing. No callable or network input.
+
+The selected profile must be canonical retained evidence in every admitted
+KCS closure, matching the machine's exact digest. Its existing parser validates
+the profile; every type in a referenced role must resolve through the active
+compiled contract. Unresolved profile, role or type bindings produce
+`TRANSITION_BINDING_REFUSAL`. Predicate failure produces
+`TRANSITION_RULE_REFUSAL`, retaining the program's refusal code and offending
+operation ordinals/record IDs in declared order. Existing base, integrity and
+structural refusals remain distinct.
+
+The owning fold first checks the existing structural change contract without
+publishing the resulting graph. It then derives immutable transition inputs
+from the verified prestate and evaluates the selected instructions before
+publishing the candidate state. Full and incremental replay use that same
+fold. A protocol-event receipt alone does not establish KCS admission. Changing
+the role or matching mode changes the machine and effective-contract identity;
+this slice supplies no in-place rule migration. Old explicit private-v0
+selection remains structural-only, never fallback from private-v1.
+
+No new public Python symbols are required. The conformance fixture uses the
+existing public machine, profile, contract, history and projection constructors.
+Its literal expected outcomes cover both matching modes. The domain role
+choice remains fixture/adopter data, not a new Core default.
