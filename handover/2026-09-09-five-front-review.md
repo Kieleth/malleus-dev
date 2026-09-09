@@ -26,7 +26,7 @@ All Codex threads are stopped on the account usage limit. Last error in the pape
 - After the tag: declarative authorization rule artifact (a7c54fa8); transition rules RED 29508f3b/57537d20, GREEN 1385223e; maintained ledger-fed projection 851913c0 (469 tests); Shop shipment explanation on existing Core APIs (Shop reports 318 passing); adopter completion guidance (the "we finished looking is not we finished representing" rule).
 - HEAD collects 3,430 tests (not run this review).
 - Open: `AuthorizationDecision.relied_on_claim_version_ids` is required in assent.yaml; standalone `_missing_required` treats an empty list as missing, compiled `validate_instance` accepts it, the finite authorization program constrains it to maxItems=0. Backlog: "Resolve that contract choice before any cutover" (`handover/2026-09-08-core-backlog.md:120`; detail `2026-09-08-authorization-lifecycle-comparison.md:70-81`).
-- Core-23 (valid-time kind for "none stated", from the 2026-09-06 paper handover) still not dispatched.
+- Core-23 (valid-time kind for "none stated", from the 2026-09-06 paper handover) was never dispatched by the overseer, but its substance landed on 09-06 through the Codex Core thread on Luis's approval: RED 32804a0b, GREEN 5c8b0cc9 (NONE_STATED kind in src/malleus/valid_time.py, the skill and the docs; OVR-000420 and OVR-000425; handover/2026-09-06-unstated-valid-time.md). Verified 2026-09-09: tests/contract_compiler/pareto/test_unstated_valid_time.py 16 passed at HEAD. Nothing to dispatch.
 - Last turn: idle after answering Luis's "Too abstract, bring it to an example" (2026-09-09T03:05Z).
 
 ## Paper (Codex 01a063a6)

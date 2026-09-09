@@ -1,0 +1,134 @@
+{
+  "question_id": "CQ-T2-05",
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every required semantic names a row. The credit relation carries the award identifier and joins the funder row to the author row, both of which are returned.",
+  "assembly": "LINKED_ROWS",
+  "coverage": [
+    {
+      "semantic": "funding_record",
+      "row_index": 20,
+      "absent_reason": null,
+      "note": "The CreditRelation row is the funding record, from the funding body to the author."
+    },
+    {
+      "semantic": "grant_identifier",
+      "row_index": 20,
+      "absent_reason": null,
+      "note": "The same row carries the award number."
+    },
+    {
+      "semantic": "person",
+      "row_index": 14,
+      "absent_reason": null,
+      "note": "The ResearchAgent row names the individual author the grant is attributed to."
+    },
+    {
+      "semantic": "attribution_relation",
+      "row_index": 20,
+      "absent_reason": null,
+      "note": "The same relation row carries the attribution and its endpoints."
+    }
+  ],
+  "source_locators": [
+    "page:10:block:044",
+    "page:11:block:002"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "agent:anne-briais"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "agent:brittany"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "agent:cedric-hamelin"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "agent:cnr-igag"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "agent:daniele-brunelli"
+    },
+    {
+      "row_index": 5,
+      "witness_key": "agent:erc"
+    },
+    {
+      "row_index": 6,
+      "witness_key": "agent:french-fleet"
+    },
+    {
+      "row_index": 7,
+      "witness_key": "agent:geo-ocean"
+    },
+    {
+      "row_index": 8,
+      "witness_key": "agent:ipgp"
+    },
+    {
+      "row_index": 9,
+      "witness_key": "agent:isblue"
+    },
+    {
+      "row_index": 10,
+      "witness_key": "agent:lea-grenet"
+    },
+    {
+      "row_index": 11,
+      "witness_key": "agent:lorenzo-petracchini"
+    },
+    {
+      "row_index": 12,
+      "witness_key": "agent:marcia-maia"
+    },
+    {
+      "row_index": 13,
+      "witness_key": "agent:nsfc"
+    },
+    {
+      "row_index": 14,
+      "witness_key": "agent:satish-singh"
+    },
+    {
+      "row_index": 15,
+      "witness_key": "agent:sio"
+    },
+    {
+      "row_index": 16,
+      "witness_key": "agent:springer-nature"
+    },
+    {
+      "row_index": 17,
+      "witness_key": "agent:univ-modena"
+    },
+    {
+      "row_index": 18,
+      "witness_key": "agent:zhiteng-yu"
+    },
+    {
+      "row_index": 19,
+      "witness_key": "agent:zjnsf"
+    },
+    {
+      "row_index": 20,
+      "witness_key": "credit:erc-transatlanticilab"
+    },
+    {
+      "row_index": 21,
+      "witness_key": "credit:nsfc-42330308"
+    },
+    {
+      "row_index": 22,
+      "witness_key": "credit:nsfc-42422603"
+    },
+    {
+      "row_index": 23,
+      "witness_key": "credit:zjnsf"
+    }
+  ]
+}

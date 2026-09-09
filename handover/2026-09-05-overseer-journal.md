@@ -671,3 +671,21 @@ Luis: "correct, do this" on the runner exporting the pinned Core commit from git
 On the four verbatim quotations Luis asked "is this really important?" and I said no: the 60-character rule guards the population files' verbatim sentences, not attributed quotation in prose. Luis: "correct, I think we're enforcing too much." Ruled at E-0340: prose may quote with attribution and a locator; data artifacts keep the check; private/ and the PDF never enter git. The checkpoint branch merged to main from a temporary index and pushed; the ledger is one file again, E-0001 to E-0340.
 
 What I got wrong today: I put the quotes on the same footing as the gate. The gate was a real hidden input; the quotes were a rule applied past its purpose. One sentence from Luis sorted it.
+
+## Run-22, launch 2 (2026-09-09, 17:55Z to 19:05Z): the second replicate, frozen at E-0341
+
+Luis: "go". The workspace's launch 1 had ended ungated with the 09-06 session, so its work/ went aside and the producer was relaunched as ordinal 2 (Opus 5) with the eight inputs verified against the receipt. One thing the handover did not foresee: the repository's src/malleus moved 19 files past the pin c95dba7 during Core's 09-08 release work, and the cell's runner reads Core from ./src. Every parent-side command therefore ran against src/malleus exported from the pin by git archive, the same mechanism the paper gate now uses (E-0339); recorded in the launch log and E-0341, the pin unchanged.
+
+The cell: ONTOLOGY_READY at attempt 01, gate ACCEPTED (3,664 facts, 27 types), thirty type sets closed, 3,617 cases bound, phase two in the same session, ADMITTED_AND_REPLAYED at runner attempt 1 with no return (443 entities, 1 event, 31 relations, 475 traced, 366 assertions over 186 blocks), 5,414 rows over 449 witnesses. Freeze: 19 public files, ladder 0, 8 withheld; the v3 review package written by the cell's builder, after one correction (it read a witnesses list the trace summary never had). Two open-stage tests asserting count placeholders inverted by hand to their frozen form. Gate after the append: 619 plus 2 subtests, 1,758; commit 051f45b4, pushed.
+
+Two errors of mine on the record. The E-0341 body sat inside an if-branch that a red cell-test run skipped, so a gate started over a ledger without the entry; stopped, appended, gated again. The commit message of 051f45b4 says 1,750 for the rest group; the gate line reads 1,758. Corrected here and in E-0342.
+
+Review: E-0341 said two sessions. Measured before dispatch: any split of the thirty questions shares 399 of the 449 witnesses between halves, because the type sets reach nearly every record of their types. One Opus session under protocol v3 was dispatched instead (19:03Z, from the transcript); the deviation and its reason are in the launch log. Beside run-21: RELATION_ABSENT gaps 1 against 88, relations 31 against 26, non-local relations 9 against 0. The producer modelled relations where run-21's declared gaps. What that does to the questions is the review's to say.
+
+## Run-22 reviewed (2026-09-09, 19:03Z to 19:24Z): support saturated, the absences are mostly mine
+
+One Opus session under protocol v3, all thirty questions, 449 witnesses. Support 449 of 449, every digest matches. Responsiveness over the 25 positive questions 12 COVERED, 12 PARTIAL, 1 NONE; 82 of 102 semantics named; controls four of five as expected, CQ-C-03 PARTIAL because one sentence in the text does carry the compilation source. Record validated, E-0342.
+
+The finding that hurts: eleven of the twenty absences, and the one NONE, are my type sets. Under v4.12 a set that lists the claim type alone reaches only subject-less claims; 63 of 124 claims carry a subject, 53 of them a geologic feature, and the claims that state the preferred explanation are among them. The closure check I built on 09-06 guards subtypes and says nothing about subject types. The run-21 catalogue lesson pushed the sets small; the subject mechanics punish small sets on exactly the claim questions. RCA: handover/2026-09-09-run-22-rca.md, three options, my pick is a v4.13 that lets a listed subject-bearing type reach all its records so the evaluator cannot lose them by omission.
+
+Also recorded: Core-23 was already on main since 09-06 (Codex Core, 5c8b0cc9); my "not dispatched" was true of my dispatch and wrong about the work.

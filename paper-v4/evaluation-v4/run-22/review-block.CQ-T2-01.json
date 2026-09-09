@@ -1,0 +1,749 @@
+{
+  "question_id": "CQ-T2-01",
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "The subsection, the structural feature and the bounding relation each name a row, and the returned BOUNDED_BY relation joins the first two. The side of the axis is not projected anywhere: the sentence that states it is held only through the assertion locator and its digest.",
+  "assembly": "LINKED_ROWS",
+  "coverage": [
+    {
+      "semantic": "named_subsection",
+      "row_index": 38,
+      "absent_reason": null,
+      "note": "The GeologicFeature row names the ridge subsection."
+    },
+    {
+      "semantic": "structural_feature",
+      "row_index": 11,
+      "absent_reason": null,
+      "note": "The GeologicFeature row carries the detachment fault and, in its description, the side of the subsection it bounds."
+    },
+    {
+      "semantic": "bounding_relation",
+      "row_index": 118,
+      "absent_reason": null,
+      "note": "The relation row carries BOUNDED_BY between the subsection and the fault."
+    },
+    {
+      "semantic": "side_of_axis",
+      "row_index": null,
+      "absent_reason": "WITHHELD_STATEMENT",
+      "note": "The reading sentence puts the core complex on the eastern side of the ridge axis; the core complex row projects only a name and a kind, and the words that carry the side reach the graph as an assertion locator and a digest."
+    }
+  ],
+  "source_locators": [
+    "page:1:block:005"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "boundary:bdb"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "boundary:isotherm-600-800"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "boundary:isotherm-700"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "boundary:isotherm-750"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "boundary:lab"
+    },
+    {
+      "row_index": 5,
+      "witness_key": "boundary:moho"
+    },
+    {
+      "row_index": 6,
+      "witness_key": "boundary:solidus-peridotite"
+    },
+    {
+      "row_index": 7,
+      "witness_key": "feature:ascending-melt"
+    },
+    {
+      "row_index": 8,
+      "witness_key": "feature:askja"
+    },
+    {
+      "row_index": 9,
+      "witness_key": "feature:axial-valley"
+    },
+    {
+      "row_index": 10,
+      "witness_key": "feature:chain-tf"
+    },
+    {
+      "row_index": 11,
+      "witness_key": "feature:detachment-fault-rti"
+    },
+    {
+      "row_index": 12,
+      "witness_key": "feature:equatorial-atlantic"
+    },
+    {
+      "row_index": 13,
+      "witness_key": "feature:extinct-vent-field"
+    },
+    {
+      "row_index": 14,
+      "witness_key": "feature:fagradalsfjall"
+    },
+    {
+      "row_index": 15,
+      "witness_key": "feature:gakkel"
+    },
+    {
+      "row_index": 16,
+      "witness_key": "feature:iceland"
+    },
+    {
+      "row_index": 17,
+      "witness_key": "feature:inactive-hydrothermal-mound"
+    },
+    {
+      "row_index": 18,
+      "witness_key": "feature:juan-de-fuca"
+    },
+    {
+      "row_index": 19,
+      "witness_key": "feature:knipovich-ridge"
+    },
+    {
+      "row_index": 20,
+      "witness_key": "feature:lithosphere"
+    },
+    {
+      "row_index": 21,
+      "witness_key": "feature:logachev-seamount"
+    },
+    {
+      "row_index": 22,
+      "witness_key": "feature:magma-reservoir"
+    },
+    {
+      "row_index": 23,
+      "witness_key": "feature:mantle"
+    },
+    {
+      "row_index": 24,
+      "witness_key": "feature:mar"
+    },
+    {
+      "row_index": 25,
+      "witness_key": "feature:mayotte"
+    },
+    {
+      "row_index": 26,
+      "witness_key": "feature:mylonite-shear-zones"
+    },
+    {
+      "row_index": 27,
+      "witness_key": "feature:ntd1"
+    },
+    {
+      "row_index": 28,
+      "witness_key": "feature:ntd1-faults"
+    },
+    {
+      "row_index": 29,
+      "witness_key": "feature:ntd2"
+    },
+    {
+      "row_index": 30,
+      "witness_key": "feature:ntd2-normal-faults"
+    },
+    {
+      "row_index": 31,
+      "witness_key": "feature:occ"
+    },
+    {
+      "row_index": 32,
+      "witness_key": "feature:occ-corrugated-surface"
+    },
+    {
+      "row_index": 33,
+      "witness_key": "feature:occ-normal-faults"
+    },
+    {
+      "row_index": 34,
+      "witness_key": "feature:oceanic-crust"
+    },
+    {
+      "row_index": 35,
+      "witness_key": "feature:pre-eruptive-melt"
+    },
+    {
+      "row_index": 36,
+      "witness_key": "feature:primary-melt"
+    },
+    {
+      "row_index": 37,
+      "witness_key": "feature:rainbow-massif"
+    },
+    {
+      "row_index": 38,
+      "witness_key": "feature:rc1"
+    },
+    {
+      "row_index": 39,
+      "witness_key": "feature:rc2"
+    },
+    {
+      "row_index": 40,
+      "witness_key": "feature:rc2-inward-dipping-faults"
+    },
+    {
+      "row_index": 41,
+      "witness_key": "feature:rc2-median-valley"
+    },
+    {
+      "row_index": 42,
+      "witness_key": "feature:rc2-neovolcanic-ridge"
+    },
+    {
+      "row_index": 43,
+      "witness_key": "feature:rc3"
+    },
+    {
+      "row_index": 44,
+      "witness_key": "feature:romanche-tf"
+    },
+    {
+      "row_index": 45,
+      "witness_key": "feature:rti"
+    },
+    {
+      "row_index": 46,
+      "witness_key": "feature:sedimentary-layers"
+    },
+    {
+      "row_index": 47,
+      "witness_key": "feature:swir"
+    },
+    {
+      "row_index": 48,
+      "witness_key": "feature:volcanic-cones"
+    },
+    {
+      "row_index": 49,
+      "witness_key": "feature:western-indian-ocean"
+    },
+    {
+      "row_index": 50,
+      "witness_key": "feature:western-ridge-flank"
+    },
+    {
+      "row_index": 51,
+      "witness_key": "claim:all-authors-discussed"
+    },
+    {
+      "row_index": 52,
+      "witness_key": "claim:arrivals-checked-manually"
+    },
+    {
+      "row_index": 53,
+      "witness_key": "claim:average-model-best-fitting"
+    },
+    {
+      "row_index": 54,
+      "witness_key": "claim:axial-valley-floor-character"
+    },
+    {
+      "row_index": 55,
+      "witness_key": "claim:ba90-rb90-calculated"
+    },
+    {
+      "row_index": 56,
+      "witness_key": "claim:categories-ab-good-quality"
+    },
+    {
+      "row_index": 57,
+      "witness_key": "claim:category-criteria"
+    },
+    {
+      "row_index": 58,
+      "witness_key": "claim:circles-show-location-qualities"
+    },
+    {
+      "row_index": 59,
+      "witness_key": "claim:co2-behaves-like-incompatible-elements"
+    },
+    {
+      "row_index": 60,
+      "witness_key": "claim:co2-calculated-from-rb90-ba90"
+    },
+    {
+      "row_index": 61,
+      "witness_key": "claim:co2-solubility-pressure-dependent"
+    },
+    {
+      "row_index": 62,
+      "witness_key": "claim:compiled-maximum-depths"
+    },
+    {
+      "row_index": 63,
+      "witness_key": "claim:compiled-morb-analyses"
+    },
+    {
+      "row_index": 64,
+      "witness_key": "claim:deeper-earthquakes-associations"
+    },
+    {
+      "row_index": 65,
+      "witness_key": "claim:deepest-earthquakes-documented"
+    },
+    {
+      "row_index": 66,
+      "witness_key": "claim:depth-resolution-tests"
+    },
+    {
+      "row_index": 67,
+      "witness_key": "claim:depth-selection-criterion"
+    },
+    {
+      "row_index": 68,
+      "witness_key": "claim:depth-tests-support-deep-events"
+    },
+    {
+      "row_index": 69,
+      "witness_key": "claim:depths-forced-fixed"
+    },
+    {
+      "row_index": 70,
+      "witness_key": "claim:fig2b-depth-profiles"
+    },
+    {
+      "row_index": 71,
+      "witness_key": "claim:fig3-depth-shading"
+    },
+    {
+      "row_index": 72,
+      "witness_key": "claim:fig4-content"
+    },
+    {
+      "row_index": 73,
+      "witness_key": "claim:fig5-content"
+    },
+    {
+      "row_index": 74,
+      "witness_key": "claim:fixed-depth-rms-worse"
+    },
+    {
+      "row_index": 75,
+      "witness_key": "claim:focal-mechanisms-not-robust"
+    },
+    {
+      "row_index": 76,
+      "witness_key": "claim:focus-on-ridge-subsections"
+    },
+    {
+      "row_index": 77,
+      "witness_key": "claim:influencing-information-included"
+    },
+    {
+      "row_index": 78,
+      "witness_key": "claim:isotherms-from-thermal-model"
+    },
+    {
+      "row_index": 79,
+      "witness_key": "claim:local-magnitudes-determined"
+    },
+    {
+      "row_index": 80,
+      "witness_key": "claim:magmatic-tectonic-events-need-eruptions"
+    },
+    {
+      "row_index": 81,
+      "witness_key": "claim:max-depth-depends-on-other-factors"
+    },
+    {
+      "row_index": 82,
+      "witness_key": "claim:max-depths-affected-by-processes"
+    },
+    {
+      "row_index": 83,
+      "witness_key": "claim:maximum-likelihood-preferred"
+    },
+    {
+      "row_index": 84,
+      "witness_key": "claim:may-produce-long-period-earthquakes"
+    },
+    {
+      "row_index": 85,
+      "witness_key": "claim:measured-co2-close-to-solubility"
+    },
+    {
+      "row_index": 86,
+      "witness_key": "claim:mechanism-similar-to-volcanoes"
+    },
+    {
+      "row_index": 87,
+      "witness_key": "claim:melt-focused-beneath-ridge-axis"
+    },
+    {
+      "row_index": 88,
+      "witness_key": "claim:melt-movement-brittle-failure"
+    },
+    {
+      "row_index": 89,
+      "witness_key": "claim:melt-movement-not-applicable"
+    },
+    {
+      "row_index": 90,
+      "witness_key": "claim:model-selection-criterion"
+    },
+    {
+      "row_index": 91,
+      "witness_key": "claim:more-earthquakes-needed"
+    },
+    {
+      "row_index": 92,
+      "witness_key": "claim:no-competing-interests"
+    },
+    {
+      "row_index": 93,
+      "witness_key": "claim:no-detachment-faults-rc2"
+    },
+    {
+      "row_index": 94,
+      "witness_key": "claim:no-permission-for-adapted-material"
+    },
+    {
+      "row_index": 95,
+      "witness_key": "claim:ntd1-magmatic-tectonic-origin"
+    },
+    {
+      "row_index": 96,
+      "witness_key": "claim:peer-review"
+    },
+    {
+      "row_index": 97,
+      "witness_key": "claim:poor-azimuthal-distribution"
+    },
+    {
+      "row_index": 98,
+      "witness_key": "claim:record-is-a-snapshot"
+    },
+    {
+      "row_index": 99,
+      "witness_key": "claim:reduced-velocity-model-reasonable"
+    },
+    {
+      "row_index": 100,
+      "witness_key": "claim:samples-are-degassed"
+    },
+    {
+      "row_index": 101,
+      "witness_key": "claim:selected-model-preferred"
+    },
+    {
+      "row_index": 102,
+      "witness_key": "claim:station-corrections-and-swave-delays"
+    },
+    {
+      "row_index": 103,
+      "witness_key": "claim:station-corrections-iterated"
+    },
+    {
+      "row_index": 104,
+      "witness_key": "claim:swave-delays-removed"
+    },
+    {
+      "row_index": 105,
+      "witness_key": "claim:trace-element-assumption"
+    },
+    {
+      "row_index": 106,
+      "witness_key": "claim:velocity-structure-matters"
+    },
+    {
+      "row_index": 107,
+      "witness_key": "claim:volatile-ratios-examined"
+    },
+    {
+      "row_index": 108,
+      "witness_key": "claim:volatile-role-melt-migration"
+    },
+    {
+      "row_index": 109,
+      "witness_key": "claim:volatiles-control-magma-properties"
+    },
+    {
+      "row_index": 110,
+      "witness_key": "claim:volatiles-extend-melting-depth"
+    },
+    {
+      "row_index": 111,
+      "witness_key": "claim:vpvs-17-reasonable"
+    },
+    {
+      "row_index": 112,
+      "witness_key": "rel:bdb-corresponds-isotherm-700"
+    },
+    {
+      "row_index": 113,
+      "witness_key": "rel:bdb-corresponds-isotherm-750"
+    },
+    {
+      "row_index": 114,
+      "witness_key": "rel:corrugated-surface-part-of-occ"
+    },
+    {
+      "row_index": 115,
+      "witness_key": "rel:mar-within-equatorial-atlantic"
+    },
+    {
+      "row_index": 116,
+      "witness_key": "rel:ntd2-faults-within"
+    },
+    {
+      "row_index": 117,
+      "witness_key": "rel:occ-cut-by-normal-faults"
+    },
+    {
+      "row_index": 118,
+      "witness_key": "rel:rc1-bounded-by-detachment"
+    },
+    {
+      "row_index": 119,
+      "witness_key": "rel:rc2-adjacent-ntd1"
+    },
+    {
+      "row_index": 120,
+      "witness_key": "rel:rc2-bounded-by-inward-faults"
+    },
+    {
+      "row_index": 121,
+      "witness_key": "rel:rc3-adjacent-ntd2"
+    },
+    {
+      "row_index": 122,
+      "witness_key": "claim:bdb-shallower-southward"
+    },
+    {
+      "row_index": 123,
+      "witness_key": "claim:hydrothermal-cooling"
+    },
+    {
+      "row_index": 124,
+      "witness_key": "claim:melt-at-lab-from-co2-and-h2o"
+    },
+    {
+      "row_index": 125,
+      "witness_key": "claim:analyzed-rc2-rc3-samples"
+    },
+    {
+      "row_index": 126,
+      "witness_key": "claim:ascending-melt-resides-in-mantle"
+    },
+    {
+      "row_index": 127,
+      "witness_key": "claim:co2-influences-melt-at-lab"
+    },
+    {
+      "row_index": 128,
+      "witness_key": "claim:cold-thick-lithosphere"
+    },
+    {
+      "row_index": 129,
+      "witness_key": "claim:crust-formed-by-mantle-melt"
+    },
+    {
+      "row_index": 130,
+      "witness_key": "claim:deep-earthquakes-along-transform-faults"
+    },
+    {
+      "row_index": 131,
+      "witness_key": "claim:deep-eq-aligned-n150e"
+    },
+    {
+      "row_index": 132,
+      "witness_key": "claim:deep-eq-interpreted-as-degassing"
+    },
+    {
+      "row_index": 133,
+      "witness_key": "claim:deep-events-not-location-artifact"
+    },
+    {
+      "row_index": 134,
+      "witness_key": "claim:deep-events-well-constrained"
+    },
+    {
+      "row_index": 135,
+      "witness_key": "claim:deep-microseismicity-related-to-co2-degassing"
+    },
+    {
+      "row_index": 136,
+      "witness_key": "claim:degassing-causes-deep-earthquakes"
+    },
+    {
+      "row_index": 137,
+      "witness_key": "claim:degassing-volume-change-triggers-earthquakes"
+    },
+    {
+      "row_index": 138,
+      "witness_key": "claim:detachment-fault-inactive"
+    },
+    {
+      "row_index": 139,
+      "witness_key": "claim:earthquakes-occur-in-mantle"
+    },
+    {
+      "row_index": 140,
+      "witness_key": "claim:enrichment-from-low-degree-melting"
+    },
+    {
+      "row_index": 141,
+      "witness_key": "claim:estimated-primary-melt-co2-on-maps"
+    },
+    {
+      "row_index": 142,
+      "witness_key": "claim:fastest-model-shallow-events"
+    },
+    {
+      "row_index": 143,
+      "witness_key": "claim:faults-favor-melt-migration"
+    },
+    {
+      "row_index": 144,
+      "witness_key": "claim:fig3-transects"
+    },
+    {
+      "row_index": 145,
+      "witness_key": "claim:fig3a-content"
+    },
+    {
+      "row_index": 146,
+      "witness_key": "claim:fig6-brittle-ductile-patches"
+    },
+    {
+      "row_index": 147,
+      "witness_key": "claim:hummocky-seafloor-and-cones"
+    },
+    {
+      "row_index": 148,
+      "witness_key": "claim:iceland-mayotte-contexts-differ"
+    },
+    {
+      "row_index": 149,
+      "witness_key": "claim:magmatic-tectonic-hypothesis"
+    },
+    {
+      "row_index": 150,
+      "witness_key": "claim:magmatism-dominates-rc2"
+    },
+    {
+      "row_index": 151,
+      "witness_key": "claim:mantle-beneath-rc2-is-hot"
+    },
+    {
+      "row_index": 152,
+      "witness_key": "claim:max-depth-does-not-follow-spreading-rate"
+    },
+    {
+      "row_index": 153,
+      "witness_key": "claim:melt-freezes-at-lithosphere-base"
+    },
+    {
+      "row_index": 154,
+      "witness_key": "claim:melt-migration-not-understood"
+    },
+    {
+      "row_index": 155,
+      "witness_key": "claim:no-active-vents-rc2"
+    },
+    {
+      "row_index": 156,
+      "witness_key": "claim:no-current-eruption"
+    },
+    {
+      "row_index": 157,
+      "witness_key": "claim:normal-vpvs-in-rc2"
+    },
+    {
+      "row_index": 158,
+      "witness_key": "claim:offaxis-magmatism-in-crust"
+    },
+    {
+      "row_index": 159,
+      "witness_key": "claim:pre-eruptive-co2-estimated"
+    },
+    {
+      "row_index": 160,
+      "witness_key": "claim:primary-vs-pre-eruptive"
+    },
+    {
+      "row_index": 161,
+      "witness_key": "claim:rainbow-at-ntd"
+    },
+    {
+      "row_index": 162,
+      "witness_key": "claim:rc1-amagmatic"
+    },
+    {
+      "row_index": 163,
+      "witness_key": "claim:rc1-exhumed-mantle"
+    },
+    {
+      "row_index": 164,
+      "witness_key": "claim:rc2-magmatic-origin"
+    },
+    {
+      "row_index": 165,
+      "witness_key": "claim:rc2-magmatically-robust"
+    },
+    {
+      "row_index": 166,
+      "witness_key": "claim:rc3-magmatic"
+    },
+    {
+      "row_index": 167,
+      "witness_key": "claim:ridge-axis-relocating"
+    },
+    {
+      "row_index": 168,
+      "witness_key": "claim:shallow-eq-from-high-angle-faults"
+    },
+    {
+      "row_index": 169,
+      "witness_key": "claim:shear-zone-hypothesis"
+    },
+    {
+      "row_index": 170,
+      "witness_key": "claim:small-pressure-increase-induces-earthquakes"
+    },
+    {
+      "row_index": 171,
+      "witness_key": "claim:southern-flank-crust-free"
+    },
+    {
+      "row_index": 172,
+      "witness_key": "claim:transform-faults-in-equatorial-atlantic"
+    },
+    {
+      "row_index": 173,
+      "witness_key": "claim:ultraslow-ridges-high-co2"
+    },
+    {
+      "row_index": 174,
+      "witness_key": "claim:updated-compiled-data"
+    },
+    {
+      "row_index": 175,
+      "witness_key": "claim:velocity-model-set"
+    },
+    {
+      "row_index": 176,
+      "witness_key": "claim:volatiles-flush-melt-to-lab"
+    },
+    {
+      "row_index": 177,
+      "witness_key": "claim:zero-position-is-rti"
+    }
+  ]
+}
