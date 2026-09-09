@@ -117,9 +117,9 @@ def test_shared_wrong_rule_is_detected_even_when_both_paths_agree(
         "CLARIFY": "AUTHORIZE",
     }
     monkeypatch.setattr(
-        implementation,
-        "_authorization_control",
-        lambda outcome: replacements[case["verdict"]],
+        type(implementation._authorization_rules()),
+        "control",
+        lambda self, outcome: replacements[case["verdict"]],
     )
     args = control_inputs("AUTHORIZATION", case["outcomes"])
     for result in both_controls(args):

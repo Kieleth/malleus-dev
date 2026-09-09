@@ -153,6 +153,47 @@ def test_handwritten_authorization_mapping_is_removed():
     assert not hasattr(control, "_authorization_control")
 
 
+@pytest.mark.parametrize("controls", [[], ["UNDECLARED"], None])
+def test_rule_selection_has_no_empty_or_unknown_control_fallback(controls):
+    module = import_module("malleus._control_rules")
+    with pytest.raises(module.OutcomeRuleError):
+        rules_from(AUTHORIZATION_RULES).select(controls)
+
+
+def test_authorization_uses_loaded_rules_without_resource_io(monkeypatch):
+    from malleus import control
+
+    control._authorization_rules()
+    def forbidden_read(package):
+        raise AssertionError("pure authorization must not read resources")
+    monkeypatch.setattr(control.resources, "files", forbidden_read)
+    monitors = [authority_monitor("monitor:0")]
+    policy_record = authorization_policy(monitors)
+    output = authority_assessment(monitors[0], policy_record, "SATISFIED")
+    assert evaluate_authority(policy_record, monitors, [output]).verdict == "AUTHORIZE"
+
+
+def test_evaluation_consumes_rule_precedence_and_triggers_not_python_branches(monkeypatch):
+    from malleus import control
+
+    # Test-local alternate data proves execution, not a supported runtime override.
+    data = json.loads(json.dumps(AUTHORIZATION_RULES))
+    data["control_precedence"] = ["CLARIFY", "BLOCK", "AUTHORIZE"]
+    data["triggering_controls"] = []
+    rules = rules_from(data)
+    monkeypatch.setattr(control, "_authorization_rules", lambda: rules)
+    monitors = [authority_monitor(f"monitor:{i}") for i in range(2)]
+    policy_record = authorization_policy(monitors)
+    outputs = [
+        authority_assessment(m, policy_record, outcome, suffix=str(i))
+        for i, (m, outcome) in enumerate(zip(monitors, ["VIOLATED", "UNKNOWN"], strict=True))
+    ]
+    result = evaluate_authority(policy_record, monitors, outputs)
+    assert result.verdict == "CLARIFY"
+    assert result.triggered_assessment_ids == ()
+    assert policy_record["artifact_hash"] != "sha256:b5e411ff921cab7c61998a8197de0a04aed49f52483340ad55ba4d763a3b8f2a"
+
+
 @pytest.mark.parametrize("outcomes,expected_hash", [
     (("SATISFIED", "SATISFIED"), "761de10570bae6bc17d1bab8d1d74bc1e1e466b6fe9a14a7f686d8bedc4d5dd7"),
     (("SATISFIED", "VIOLATED"), "d6c440ac78c553ae4988575de1f63441ae1e67b27d6f46449affb7e614d24393"),

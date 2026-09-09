@@ -104,6 +104,8 @@ include = [
     "/src/malleus/ledger.py",
     "/src/malleus/staging.py",
     "/src/malleus/control.py",
+    "/src/malleus/_control_rules.py",
+    "/src/malleus/authorization-control-v1.json",
     "/src/malleus/logic.py",
     "/src/malleus/orchestration.py",
     "/src/malleus/execution.py",

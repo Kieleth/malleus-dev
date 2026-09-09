@@ -1,0 +1,10 @@
+{
+  "schema": "malleus.outcome-controls/private-v0",
+  "outcome_controls": {
+    "SATISFIED": "AUTHORIZE",
+    "VIOLATED": "BLOCK",
+    "UNKNOWN": "CLARIFY"
+  },
+  "control_precedence": ["BLOCK", "CLARIFY", "AUTHORIZE"],
+  "triggering_controls": ["BLOCK", "CLARIFY"]
+}

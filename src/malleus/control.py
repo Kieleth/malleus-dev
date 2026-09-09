@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
+from importlib import resources
 from typing import Any, Iterable, Mapping
 
+from malleus._control_rules import OutcomeControlRules, OutcomeRuleError
 from malleus.ledger import LedgerError, content_digest, require_digest, with_content_hash
 
 
@@ -28,6 +31,24 @@ class ControlError(ValueError):
 
 class MonitoringError(ControlError):
     """A required monitor did not produce a completed assessment."""
+
+
+# Fixed version-1 rule identity, not a caller-selectable policy override.
+AUTHORIZATION_CONTROL_IDENTITY = "sha256:2164015909de89d798c80432b9239016b439cf56da54e33a56dd6a8b92d6817a"
+
+
+@lru_cache(maxsize=1)
+def _authorization_rules() -> OutcomeControlRules:
+    """Load exact installed rules once; later evaluations consume immutable data."""
+    try:
+        data = resources.files("malleus").joinpath("authorization-control-v1.json").read_bytes()
+        return OutcomeControlRules.from_bytes(data, expected_identity=AUTHORIZATION_CONTROL_IDENTITY)
+    except (OSError, OutcomeRuleError) as error:
+        raise ControlError(f"invalid authorization control artifact: {error}") from error
+
+
+# Resolve the implementation's resource at import, never during pure control.
+_authorization_rules()
 
 
 @dataclass(frozen=True)
@@ -159,17 +180,14 @@ def authorization_policy_digest(
             "required_monitor_record_hashes",
         ),
     })
+    rules = _authorization_rules()
     return content_digest({
         "schema_version": schema_version,
         "policy_id": policy_id,
         "policy_version": policy_version,
         "requirements": requirements,
-        "outcome_controls": {
-            "SATISFIED": "AUTHORIZE",
-            "VIOLATED": "BLOCK",
-            "UNKNOWN": "CLARIFY",
-        },
-        "control_precedence": ["BLOCK", "CLARIFY", "AUTHORIZE"],
+        "outcome_controls": dict(rules.outcome_controls),
+        "control_precedence": list(rules.precedence),
     })
 
 
@@ -421,6 +439,8 @@ def evaluate_authorization_policy(
         raise ControlError("authorization policy semantic hash mismatch")
     requirements = authorization_policy_requirements(policy)
 
+    rules = _authorization_rules()
+
     if not isinstance(monitors, Mapping):
         raise ControlError("monitors must be a mapping")
     if any(not isinstance(value, str) or not value.strip() for value in monitors):
@@ -458,7 +478,7 @@ def evaluate_authorization_policy(
     ordered_assessment_ids: list[str] = []
     triggered_assessment_ids: list[str] = []
     bindings: list[dict[str, Any]] = []
-    triggered_controls: set[str] = set()
+    selected_controls: list[str] = []
     for requirement in requirements:
         monitor_id = requirement["monitor_id"]
         monitor = monitors[monitor_id]
@@ -517,8 +537,8 @@ def evaluate_authorization_policy(
                 )
         outcome = assessment.get("assessment_outcome")
         try:
-            selected_control = _authorization_control(outcome)
-        except ControlError as error:
+            selected_control = rules.control(outcome)
+        except OutcomeRuleError as error:
             raise ControlError(
                 f"invalid authority assessment outcome for monitor '{monitor_id}'"
             ) from error
@@ -526,8 +546,8 @@ def evaluate_authorization_policy(
         assessment_hash = assessment.get("content_hash")
         _text(assessment_id, "authority assessment id")
         _digest(assessment_hash, "authority assessment content_hash")
-        if selected_control != "AUTHORIZE":
-            triggered_controls.add(selected_control)
+        selected_controls.append(selected_control)
+        if rules.is_trigger(selected_control):
             triggered_assessment_ids.append(assessment_id)
         ordered_assessment_ids.append(assessment_id)
         bindings.append({
@@ -541,11 +561,7 @@ def evaluate_authorization_policy(
 
     if len(ordered_assessment_ids) != len(set(ordered_assessment_ids)):
         raise ControlError("authority assessment IDs must be unique")
-    verdict = "AUTHORIZE"
-    if "BLOCK" in triggered_controls:
-        verdict = "BLOCK"
-    elif "CLARIFY" in triggered_controls:
-        verdict = "CLARIFY"
+    verdict = rules.select(selected_controls)
     evaluation_hash = content_digest({
         "policy_id": policy_id,
         "policy_record_hash": policy_record_hash,
@@ -890,16 +906,6 @@ def _iterable_values(value: Any, name: str) -> list[Any]:
         return list(value)
     except TypeError as error:
         raise ControlError(f"{name} must be an iterable collection") from error
-
-
-def _authorization_control(outcome: Any) -> str:
-    if outcome == "SATISFIED":
-        return "AUTHORIZE"
-    if outcome == "VIOLATED":
-        return "BLOCK"
-    if outcome == "UNKNOWN":
-        return "CLARIFY"
-    raise ControlError("invalid authority assessment outcome")
 
 
 def _digest(value: Any, name: str) -> None:
