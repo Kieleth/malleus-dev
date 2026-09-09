@@ -256,7 +256,9 @@ def build_plan(replay, profile, row, ordinal, boundary):
 def prepare(history, plan):
     replay = history.replay()
     profile = api.DomainHistoryProfile.from_data(
-        json.loads(replay.retained_bytes(f"profile:{plan['history_profile']['profile_id']}"))
+        json.loads(
+            replay.retained_bytes(f"profile:{plan['history_profile']['profile_id']}")
+        )
     )
     return _prepare(history, plan, profile)
 
