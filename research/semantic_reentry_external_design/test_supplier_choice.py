@@ -22,10 +22,17 @@ from research.semantic_reentry_external_design.accepted_read_view import (
 )
 
 
-CORE_SOURCE_TREE = "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8"
+CORE_SOURCE_TREE = "ce8aeee94ed2e88a6e9785e9699e08f0dee70bec"
 HISTORICAL_GUARD = (
     "research/semantic_reentry_external_design/test_supplier_replay_laws.py"
     "::test_unified_gate_has_one_compatible_runtime_epoch"
+)
+HISTORICAL_GUARDS = (
+    HISTORICAL_GUARD,
+    "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py"
+    "::test_maintained_gate_pins_actual_core_and_preserves_prior_evidence",
+    "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py"
+    "::test_new_gate_pins_actual_core_and_preserves_historical_evidence",
 )
 
 
@@ -33,8 +40,9 @@ def require_current_gate(source_tree, selectors):
     if source_tree != CORE_SOURCE_TREE:
         raise ValueError("Unreviewed Core source epoch: " + source_tree)
     if any(
-        HISTORICAL_GUARD == s or HISTORICAL_GUARD.startswith(s + "::")
-        for s in selectors
+        historical == selector or historical.startswith(selector + "::")
+        for historical in HISTORICAL_GUARDS
+        for selector in selectors
     ):
         raise ValueError("Historical epoch guard included in current gate")
 
@@ -434,6 +442,9 @@ def test_gate_uses_inspected_core_without_modifying_it():
     selectors = [s for group in gate["groups"].values() for s in group]
     require_current_gate(source_tree, selectors)
     assert source_tree == gate["core_source_tree"]
+    assert subprocess.check_output(
+        ["git", "rev-parse", gate["landing_base_commit"] + ":src"], text=True
+    ).strip() == source_tree
     assert gate["base_commit"] == "e2b9e77912f9b36fdbfe2fca310548a789bffb4d"
     assert len(selectors) == len(set(selectors))
     assert gate["historical_epoch_guard"]["selector"] == HISTORICAL_GUARD

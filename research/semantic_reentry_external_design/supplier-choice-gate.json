@@ -2,8 +2,8 @@
   "classification": "CONFORMANCE_FIXTURE",
   "claim": "TWO_ALTERNATIVES_EXPLICIT_SELECTION_AND_EXISTING_SUPPLIER_BOUNDARIES",
   "base_commit": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d",
-  "landing_base_commit": "55c038438ed67197b7e3345b9c80a885a7b6cf17",
-  "core_source_tree": "3b4fd1c9eb66d84c31050b5f0fd970a6fc2572a8",
+  "landing_base_commit": "a0026cbd25a90b5c2b6c9eb7b31df4e42df16804",
+  "core_source_tree": "ce8aeee94ed2e88a6e9785e9699e08f0dee70bec",
   "groups": {
     "choice": [
       "research/semantic_reentry_external_design/test_supplier_choice.py"
@@ -36,8 +36,13 @@
       "tests/test_inquisition.py::TestShippedGuidanceSaysWhatTheCodeDoes"
     ],
     "maintained_integration": [
-      "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py",
+      "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py::test_maintained_epoch_guard_rejects_older_and_unknown_source",
       "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py::test_new_epoch_guard_rejects_older_and_unknown_source"
+    ],
+    "authorization_compatibility": [
+      "tests/test_control.py",
+      "research/action_history_contract_freeze/programs/test_authorization_conformance.py",
+      "research/action_history_contract_freeze/programs/test_control_executor.py"
     ]
   },
   "historical_epoch_guard": {
@@ -56,7 +61,23 @@
     {
       "path": "research/semantic_reentry_external_design/current-core-landing-result.json",
       "sha256": "a2907c4c8703fb764acf9ee95ac45ca03e3de70a699785b4451662c6fbe3922e"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_maintained_reentry_epoch.py",
+      "sha256": "4859b70b47e7aaf0ae6590ebdb0f9011251f30c44c94c4df5fa45ba962b9681c"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/maintained-integration-gate.json",
+      "sha256": "b9b76a9f30ecef5f7ca4f64701c860d23ab13a350853211a8f93cf8ddab7cf2a"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/test_observed_mismatch_epoch.py",
+      "sha256": "dc4a9bb164f67b878acf47dc2fca40a12807ea75d99f6dc8569c66c9b3d80e8f"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-choice-result.json",
+      "sha256": "31181ad7688c48c75072883aed6da09fd3c49d463deb89a0108d995560afd76e"
     }
   ],
-  "scope": "Union of these disjoint current-epoch selectors, not full repository CI. Existing evidence and historical runtime guards are unchanged. The initial mixed-epoch run is retained separately."
+  "scope": "Union of these disjoint current-epoch selectors, not full repository CI. Existing evidence and historical runtime guards are unchanged. Old maintained and observed-mismatch positive guards remain bound to their own source epochs; their negative tests still run here. Authorization compatibility adds the current Core control and finite-executor suites. The initial historical refusals are retained separately."
 }
