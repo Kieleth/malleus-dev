@@ -1,0 +1,95 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000454",
+  "ledger": "overseer",
+  "sequence": 454,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:ea0a539eba55e0e790c71cedd6d19241947f81bb31bcc7002dda1aceec49287a",
+  "recorded_at": "2026-09-09T02:38:18Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-authorization-history-comparison",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind bounded owning-history authorization comparison, unresolved claim-list incompatibility and verified local Re-entry consumer landing.",
+  "why": "Luis approved comparing owning authorization histories without a production cutover. Literal cases were frozen at ccd62578; tests at 52df279c pass 12 cases, with 398 neighboring regressions passing separately. Both native gates preserve bytes on the declared refusals and reconstruct permitted decisions. The same empty relied-on-claim list validates under the compiled view but fails standalone Assent; the finite profile requires it empty. The report preserves this divergence, not record-shape parity, and leaves the semantic correction to the operator. No runtime or ontology change. Separately, authorized local merge 62655e44 adds only twelve research-local Re-entry consumer files. Its sealed compatibility receipt records 650 passed and one skip; Core verified receipt/report hashes and ran 12 post-merge guards, not that full consumer suite again. Historical evidence remains unchanged. No push, release, new policy, interpreter replacement or Assent cutover.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "handover/2026-09-08-authorization-lifecycle-comparison.md",
+        "change": "CREATED",
+        "after_digest": "sha256:efe2870f3b951f65530fae514a62a09195835b427d84de990507fdccc2242435"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/authorization_lifecycle_cases.json",
+        "change": "CREATED",
+        "after_digest": "sha256:ede1c8402132d1674410288a25ac3ae92d60f8c5675d9ece151c3481a3833815"
+      },
+      {
+        "path": "research/action_history_contract_freeze/programs/test_authorization_lifecycle_comparison.py",
+        "change": "CREATED",
+        "after_digest": "sha256:376cc2429e980f82a0a18a46f51fe3d69f3f7f40c512130cff9e5aa9a8aa3bf0"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:5d7480453130c05ffbcacad6697f8b6d37e05bfc36ab553d3f5d214af672c7ff",
+        "after_digest": "sha256:6b6b13b0a67c26a99ee3bc1ce3f18cac5a13f0dd7e6f471ceda006c8b2d3314f"
+      },
+      {
+        "path": "handover/2026-09-08-reentry-choice-local-landing.md",
+        "change": "CREATED",
+        "after_digest": "sha256:36e0e2833fea3c7066ddde14a8a52e662ab598ebfe789ed48124cc410baa1415"
+      },
+      {
+        "path": "research/semantic_reentry_external_design/supplier-choice-transition-result.json",
+        "change": "CREATED",
+        "after_digest": "sha256:0359013dce659051a0bedfa895e067271f599776e321f0494c308a0ee9bddbd4"
+      },
+      {
+        "path": "research/semantic_reentry_external_design/supplier-choice-gate.json",
+        "change": "CREATED",
+        "after_digest": "sha256:9c5c0884a3dbe16d9b6f8c9346d1264b6a2e137cfcd40e9a7b8c6a0961c46286"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "ccd62578f5ed0da17dbc897ac180566c0ba8da37"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "52df279c2897006754f7b0c535d17adabccba23c"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "62655e444dc3188a92df08d9ea018cd1ecf84adc"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "14d995b22929ea28d14bb39e600f36177556c162"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "e29ecc59b0fbde8c215be98074fdab9dd8059e1d"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:741da8fbef93a94e31e827c4d0a2320b86a1a95206d3d5057e5c1ced1c84fbfb"
+}

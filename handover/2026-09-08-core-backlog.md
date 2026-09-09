@@ -41,6 +41,9 @@ that bounded publication work.
 Robotics owns its application integration. Semantic Re-entry owns its consumer
 experiment and adapters. Their local successes are not Core results until
 reported and bound separately. Neither lane owns Core runtime or governance.
+The [Re-entry choice consumer](2026-09-08-reentry-choice-local-landing.md) is now
+integrated locally at `62655e444dc3188a92df08d9ea018cd1ecf84adc`. Its verification
+is separately bound; it does not introduce a Core capability or a release.
 
 ## Implemented: maintained ledger-fed graph
 
@@ -97,8 +100,11 @@ The [bounded TDD plan](2026-09-08-transition-admission-plan.md) progressed throu
 RED `29508f3b`, corrected/helper RED `57537d20`, and GREEN `1385223e`.
 The [result](2026-09-08-transition-admission-results.md) records pure owning-fold
 enforcement, replay parity and the public Shop e4/e7 fixture. The separately
-owned connected-Shop history still needs to select its rule and rerun; this
-does not rebind that consumer or its released evidence.
+owned connected-Shop compatibility report at
+`e29ecc59b0fbde8c215be98074fdab9dd8059e1d` records 283 passing Shop and transition
+tests, including the restricted e4/e7 path and preserved structural-only
+counterexample. Its ontology-led connected story is a later consumer-owned
+slice, currently in progress. Neither result rebinds released evidence.
 
 This is not a replacement-specific policy subsystem. Adopter role/type choices
 stay in identified data; the owning gate enforces the selected interpretation.
@@ -111,7 +117,7 @@ remain outside this slice.
 
 | Work | Dependency and bounded next observation |
 |---|---|
-| Replace handwritten Assent with declarative execution | [Authorization comparison](2026-09-08-authorization-conformance.md) establishes neutral verdict expectations. The [identified rule artifact](2026-09-08-authorization-rule-artifact.md) now replaces handwritten outcome mapping and precedence while preserving old hashes. Full transition parity, evaluation-hash projection, broader profile coverage and old-path removal remain open. This is not the Assent hard cutover. |
+| Replace handwritten Assent with declarative execution | [Authorization comparison](2026-09-08-authorization-conformance.md) establishes neutral verdict expectations. The [identified rule artifact](2026-09-08-authorization-rule-artifact.md) replaces handwritten outcome mapping and precedence while preserving old hashes. The [owning-history comparison](2026-09-08-authorization-lifecycle-comparison.md) proves bounded permission, refusal and replay behavior but exposes incompatible empty required-claim-list validation. Resolve that contract choice before any cutover. Full transition parity, evaluation-hash projection, broader profile coverage and old-path removal remain open. |
 | Formal compiler and independent conformance | The [compiler program](../design/contract_compiler/program.md) still distinguishes the Pareto implementation from formal elaboration, artifact, cross-language and replacement gates. Do not mark those workstreams complete from Shop success. |
 | Ontology-bound Core governance ledger | The [registered migration workstream](../design/contract_compiler/workstreams/CC-003/manifest.json) remains blocked on the formal artifact gate. Its intended cut is a retained legacy checkpoint, current-state seed, and one replacement writer, not historical translation or dual writes. |
 | Complete projection closure | [Accepted design](../design/SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md), not a shipped generic artifact. It needs exact projection inputs, replay/rebuild convergence and a genuinely different projector before replaceability is claimed. |
