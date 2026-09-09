@@ -182,3 +182,11 @@ This proves the bounded payment explanation and reproducible read results. It
 does not prove a complete customer account, historical unpaid balances, causal
 delay, shipment permission, source truth or every part of the connected Shop
 plan. No full-Core, package, external-effect, push or release claim follows.
+
+Final detached gate at `07b8fe3a6f44dca07326b0b7e97b023416eca981`, tree
+`0ca4cedbb8579574835f16049c3f64b03c978980`: **318 passed, zero skips**, 146.29
+seconds, with the same whole-Shop plus transition selector. This includes all
+21 shipment-reader cases and the committed three-report receipt guard. Scoped
+Ruff lint, formatting and diff checks pass; the isolated checkout remains clean.
+The later commit only appends this result. Source/history inputs and the earlier
+run receipt remain byte-identical, and no Core path changed.
