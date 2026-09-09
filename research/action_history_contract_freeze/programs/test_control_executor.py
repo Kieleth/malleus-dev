@@ -1,4 +1,4 @@
-"""Finite control operations against the existing independent control recipe."""
+"""Finite control wiring against the shared existing control implementation."""
 
 from copy import deepcopy
 from dataclasses import asdict
@@ -30,7 +30,8 @@ def shape(value):
     return {"type": {str: "string", int: "integer", bool: "boolean"}[type(value)]}
 
 
-def control(kind, outcomes=("SATISFIED", "SATISFIED")):
+def control_inputs(kind, outcomes=("SATISFIED", "SATISFIED")):
+    """Build neutral inputs without computing expected control outputs."""
     authority = kind == "AUTHORIZATION"
     monitors = [
         established.authority_monitor(f"monitor:{i}")
@@ -76,9 +77,6 @@ def control(kind, outcomes=("SATISFIED", "SATISFIED")):
             "required": {"value": required},
         },
     }
-    expected = (established.evaluate_authority if authority else established.evaluate)(
-        policy, monitors, outputs
-    )
     definition = {
         "name": "existing-control",
         "inputs": {
@@ -115,7 +113,22 @@ def control(kind, outcomes=("SATISFIED", "SATISFIED")):
             evaluation_hash={"type": "string", "format": "sha256"},
         ),
     }
-    return arguments(definition, profile, inputs), expected
+    return arguments(definition, profile, inputs)
+
+
+def control(kind, outcomes=("SATISFIED", "SATISFIED")):
+    args = control_inputs(kind, outcomes)
+    artifacts = args["inputs"]["artifact"]
+    expected = (
+        established.evaluate_authority
+        if kind == "AUTHORIZATION"
+        else established.evaluate
+    )(
+        artifacts["policy"]["value"],
+        artifacts["context"]["value"]["monitors"],
+        args["inputs"]["event"]["outputs"]["value"],
+    )
+    return args, expected
 
 
 @pytest.mark.parametrize("kind", ["EPISTEMIC", "AUTHORIZATION"])

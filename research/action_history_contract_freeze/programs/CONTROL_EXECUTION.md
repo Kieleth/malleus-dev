@@ -6,6 +6,15 @@ The two typed capabilities select the existing `malleus.control` epistemic
 and authorization evaluators, including their existing evaluation-hash recipes.
 They are reference implementations, not a portability claim.
 
+The [authorization answer table](authorization_conformance_cases.json) records
+independently written verdict and trigger expectations for all nine pairs of
+two authority outcomes. Its test runs both control entry points, checks input
+order independence and typed refusals, and injects wrong shared rules to prove
+that agreement alone cannot satisfy the table. The table is test evidence, not
+an executable policy or a public wire. The
+[bounded comparison](../../../handover/2026-09-08-authorization-conformance.md)
+separates this control check from full history admission and Assent replacement.
+
 Context is exactly `{recipe, monitors, bindings}`. `recipe` is
 `ASSENT_EPISTEMIC_CONTROL_V1` or `ASSENT_AUTHORIZATION_CONTROL_V1`, explicitly
 required by the program. `monitors` is the complete finite list of resolved
