@@ -1,0 +1,558 @@
+{
+  "question_id": "CQ-T1-05",
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "The cruise row carries the recording span as a single duration string and the instrument row carries the network. The value and its unit are inside one field rather than typed separately, and nothing joins the two rows.",
+  "assembly": "UNLINKED_ROWS",
+  "coverage": [
+    {
+      "semantic": "recording_interval",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": "The duration field carries the continuous recording span of about twenty-one days."
+    },
+    {
+      "semantic": "duration_value",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": "The number sits inside the same duration string; the graph carries no separate value field for it."
+    },
+    {
+      "semantic": "time_unit",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": "The unit days sits inside the same duration string."
+    },
+    {
+      "semantic": "observing_system",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": "The instrument row names the ocean-bottom seismometers."
+    }
+  ],
+  "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "cruise:smarties"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "instr:obs"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "cnt:catalog-links"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "cnt:final-located"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "cnt:identified-earthquakes"
+    },
+    {
+      "row_index": 5,
+      "witness_key": "cnt:location-categories"
+    },
+    {
+      "row_index": 6,
+      "witness_key": "cnt:magnitude-groups"
+    },
+    {
+      "row_index": 7,
+      "witness_key": "cnt:new-focal-mechanisms"
+    },
+    {
+      "row_index": 8,
+      "witness_key": "cnt:ntds"
+    },
+    {
+      "row_index": 9,
+      "witness_key": "cnt:relocated-events"
+    },
+    {
+      "row_index": 10,
+      "witness_key": "cnt:relocation-iterations"
+    },
+    {
+      "row_index": 11,
+      "witness_key": "cnt:subsections"
+    },
+    {
+      "row_index": 12,
+      "witness_key": "cnt:total-focal-mechanisms"
+    },
+    {
+      "row_index": 13,
+      "witness_key": "cnt:velest-iterations"
+    },
+    {
+      "row_index": 14,
+      "witness_key": "cnt:velest-subdataset"
+    },
+    {
+      "row_index": 15,
+      "witness_key": "cnt:velocity-models"
+    },
+    {
+      "row_index": 16,
+      "witness_key": "cnt:well-relocated"
+    },
+    {
+      "row_index": 17,
+      "witness_key": "gchem:abstract-co2-primary"
+    },
+    {
+      "row_index": 18,
+      "witness_key": "obs:average-depth-uncertainty"
+    },
+    {
+      "row_index": 19,
+      "witness_key": "obs:axial-event-depth-stability"
+    },
+    {
+      "row_index": 20,
+      "witness_key": "obs:b-value"
+    },
+    {
+      "row_index": 21,
+      "witness_key": "obs:brittle-thickness"
+    },
+    {
+      "row_index": 22,
+      "witness_key": "obs:co2-gas-loss"
+    },
+    {
+      "row_index": 23,
+      "witness_key": "obs:co2-saturation-depth"
+    },
+    {
+      "row_index": 24,
+      "witness_key": "obs:co2-saturation-pressure"
+    },
+    {
+      "row_index": 25,
+      "witness_key": "obs:co2-saturation-temperature"
+    },
+    {
+      "row_index": 26,
+      "witness_key": "obs:criterion-arrivals"
+    },
+    {
+      "row_index": 27,
+      "witness_key": "obs:criterion-azimuthal-gap"
+    },
+    {
+      "row_index": 28,
+      "witness_key": "obs:criterion-swave-distance"
+    },
+    {
+      "row_index": 29,
+      "witness_key": "obs:crust-age-west-flank"
+    },
+    {
+      "row_index": 30,
+      "witness_key": "obs:crust-thickness-west-flank"
+    },
+    {
+      "row_index": 31,
+      "witness_key": "obs:degassing-eq-depth-range"
+    },
+    {
+      "row_index": 32,
+      "witness_key": "obs:depth-uncertainty-bound"
+    },
+    {
+      "row_index": 33,
+      "witness_key": "obs:dry-melting-depth"
+    },
+    {
+      "row_index": 34,
+      "witness_key": "obs:error-ellipsoid-confidence"
+    },
+    {
+      "row_index": 35,
+      "witness_key": "obs:expected-max-depth-slow"
+    },
+    {
+      "row_index": 36,
+      "witness_key": "obs:expected-max-depth-ultraslow"
+    },
+    {
+      "row_index": 37,
+      "witness_key": "obs:fig3-shading-threshold"
+    },
+    {
+      "row_index": 38,
+      "witness_key": "obs:fig4-isotherm"
+    },
+    {
+      "row_index": 39,
+      "witness_key": "obs:focal-selection-criteria"
+    },
+    {
+      "row_index": 40,
+      "witness_key": "obs:fraction-two-criteria"
+    },
+    {
+      "row_index": 41,
+      "witness_key": "obs:full-spreading-rate"
+    },
+    {
+      "row_index": 42,
+      "witness_key": "obs:group-b-values"
+    },
+    {
+      "row_index": 43,
+      "witness_key": "obs:high-frequency-threshold"
+    },
+    {
+      "row_index": 44,
+      "witness_key": "obs:horizontal-uncertainty-bound"
+    },
+    {
+      "row_index": 45,
+      "witness_key": "obs:instrument-spacing"
+    },
+    {
+      "row_index": 46,
+      "witness_key": "obs:lithosphere-age-45ma"
+    },
+    {
+      "row_index": 47,
+      "witness_key": "obs:lithospheric-age-contours"
+    },
+    {
+      "row_index": 48,
+      "witness_key": "obs:magnitude-completeness"
+    },
+    {
+      "row_index": 49,
+      "witness_key": "obs:mean-horizontal-error"
+    },
+    {
+      "row_index": 50,
+      "witness_key": "obs:mean-horizontal-uncertainty"
+    },
+    {
+      "row_index": 51,
+      "witness_key": "obs:mean-vertical-error"
+    },
+    {
+      "row_index": 52,
+      "witness_key": "obs:melting-initiation-depth"
+    },
+    {
+      "row_index": 53,
+      "witness_key": "obs:model1-vp"
+    },
+    {
+      "row_index": 54,
+      "witness_key": "obs:offaxis-cluster-depth"
+    },
+    {
+      "row_index": 55,
+      "witness_key": "obs:offaxis-swarm-depth"
+    },
+    {
+      "row_index": 56,
+      "witness_key": "obs:predicted-max-depth"
+    },
+    {
+      "row_index": 57,
+      "witness_key": "obs:profile-halfwidth"
+    },
+    {
+      "row_index": 58,
+      "witness_key": "obs:profile-tick-interval"
+    },
+    {
+      "row_index": 59,
+      "witness_key": "obs:quality-abc-uncertainty"
+    },
+    {
+      "row_index": 60,
+      "witness_key": "obs:quality-d-uncertainty"
+    },
+    {
+      "row_index": 61,
+      "witness_key": "obs:relocation-gap"
+    },
+    {
+      "row_index": 62,
+      "witness_key": "obs:relocation-obs-threshold"
+    },
+    {
+      "row_index": 63,
+      "witness_key": "obs:relocation-rms"
+    },
+    {
+      "row_index": 64,
+      "witness_key": "obs:relocation-uncertainty"
+    },
+    {
+      "row_index": 65,
+      "witness_key": "obs:rms-residual-bound"
+    },
+    {
+      "row_index": 66,
+      "witness_key": "obs:solubility-calc-temperature"
+    },
+    {
+      "row_index": 67,
+      "witness_key": "obs:station-gap-bound"
+    },
+    {
+      "row_index": 68,
+      "witness_key": "obs:studied-portion-length"
+    },
+    {
+      "row_index": 69,
+      "witness_key": "obs:triggering-pore-pressure"
+    },
+    {
+      "row_index": 70,
+      "witness_key": "obs:updated-horizontal-uncertainty"
+    },
+    {
+      "row_index": 71,
+      "witness_key": "obs:velocity-constraint-depth"
+    },
+    {
+      "row_index": 72,
+      "witness_key": "obs:velocity-perturbation"
+    },
+    {
+      "row_index": 73,
+      "witness_key": "obs:vpvs-test-range"
+    },
+    {
+      "row_index": 74,
+      "witness_key": "obs:young-crust-age"
+    },
+    {
+      "row_index": 75,
+      "witness_key": "cnt:min-obs-per-event"
+    },
+    {
+      "row_index": 76,
+      "witness_key": "cnt:obs-deployed"
+    },
+    {
+      "row_index": 77,
+      "witness_key": "cnt:useful-obs"
+    },
+    {
+      "row_index": 78,
+      "witness_key": "cnt:events-mar"
+    },
+    {
+      "row_index": 79,
+      "witness_key": "cnt:events-romanche"
+    },
+    {
+      "row_index": 80,
+      "witness_key": "cnt:forced-depth-subset"
+    },
+    {
+      "row_index": 81,
+      "witness_key": "cnt:located-earthquakes"
+    },
+    {
+      "row_index": 82,
+      "witness_key": "gchem:eq-atlantic-co2-avg"
+    },
+    {
+      "row_index": 83,
+      "witness_key": "gchem:eq-atlantic-co2-max"
+    },
+    {
+      "row_index": 84,
+      "witness_key": "gchem:rc2-ba"
+    },
+    {
+      "row_index": 85,
+      "witness_key": "gchem:rc2-co2-ba"
+    },
+    {
+      "row_index": 86,
+      "witness_key": "gchem:rc2-co2-ba90"
+    },
+    {
+      "row_index": 87,
+      "witness_key": "gchem:rc2-co2-minimum"
+    },
+    {
+      "row_index": 88,
+      "witness_key": "gchem:rc2-co2-preeruptive"
+    },
+    {
+      "row_index": 89,
+      "witness_key": "gchem:rc2-co2-primary-calc"
+    },
+    {
+      "row_index": 90,
+      "witness_key": "gchem:rc2-co2-rb"
+    },
+    {
+      "row_index": 91,
+      "witness_key": "gchem:rc2-co2-rb90"
+    },
+    {
+      "row_index": 92,
+      "witness_key": "gchem:rc2-rb"
+    },
+    {
+      "row_index": 93,
+      "witness_key": "gchem:rc3-co2-ba"
+    },
+    {
+      "row_index": 94,
+      "witness_key": "gchem:rc3-co2-ba90"
+    },
+    {
+      "row_index": 95,
+      "witness_key": "gchem:rc3-co2-primary-calc"
+    },
+    {
+      "row_index": 96,
+      "witness_key": "gchem:rc3-co2-rb"
+    },
+    {
+      "row_index": 97,
+      "witness_key": "gchem:rc3-co2-rb90"
+    },
+    {
+      "row_index": 98,
+      "witness_key": "gchem:swir-co2-highest"
+    },
+    {
+      "row_index": 99,
+      "witness_key": "obs:abstract-deep-eq-depth"
+    },
+    {
+      "row_index": 100,
+      "witness_key": "obs:bdb-isotherm"
+    },
+    {
+      "row_index": 101,
+      "witness_key": "obs:coverage-mar"
+    },
+    {
+      "row_index": 102,
+      "witness_key": "obs:coverage-romanche"
+    },
+    {
+      "row_index": 103,
+      "witness_key": "obs:deep-eq-rc2"
+    },
+    {
+      "row_index": 104,
+      "witness_key": "obs:deep-micro-rc2"
+    },
+    {
+      "row_index": 105,
+      "witness_key": "obs:forced-depths"
+    },
+    {
+      "row_index": 106,
+      "witness_key": "obs:h1-bdb-depth"
+    },
+    {
+      "row_index": 107,
+      "witness_key": "obs:h1-isotherms"
+    },
+    {
+      "row_index": 108,
+      "witness_key": "obs:iceland-magmatic-depths"
+    },
+    {
+      "row_index": 109,
+      "witness_key": "obs:interpreted-deep-eq-depth"
+    },
+    {
+      "row_index": 110,
+      "witness_key": "obs:lab-melt-fraction"
+    },
+    {
+      "row_index": 111,
+      "witness_key": "obs:lab-water-content"
+    },
+    {
+      "row_index": 112,
+      "witness_key": "obs:mar-half-spreading-rate"
+    },
+    {
+      "row_index": 113,
+      "witness_key": "obs:mar-segment-length"
+    },
+    {
+      "row_index": 114,
+      "witness_key": "obs:mayotte-depths"
+    },
+    {
+      "row_index": 115,
+      "witness_key": "obs:no-eq-below-20km"
+    },
+    {
+      "row_index": 116,
+      "witness_key": "obs:normal-depth-ntd2"
+    },
+    {
+      "row_index": 117,
+      "witness_key": "obs:ntd1-length"
+    },
+    {
+      "row_index": 118,
+      "witness_key": "obs:ntd2-depth-10"
+    },
+    {
+      "row_index": 119,
+      "witness_key": "obs:ntd2-depth-range"
+    },
+    {
+      "row_index": 120,
+      "witness_key": "obs:ntd2-offset"
+    },
+    {
+      "row_index": 121,
+      "witness_key": "obs:occ-depth-range"
+    },
+    {
+      "row_index": 122,
+      "witness_key": "obs:offaxis-bdb-depth"
+    },
+    {
+      "row_index": 123,
+      "witness_key": "obs:offaxis-crustal-age"
+    },
+    {
+      "row_index": 124,
+      "witness_key": "obs:rc2-crust-thickness"
+    },
+    {
+      "row_index": 125,
+      "witness_key": "obs:rc2-length"
+    },
+    {
+      "row_index": 126,
+      "witness_key": "obs:rc2-valley-width"
+    },
+    {
+      "row_index": 127,
+      "witness_key": "obs:rc3-length"
+    },
+    {
+      "row_index": 128,
+      "witness_key": "obs:shallow-eq-rti"
+    },
+    {
+      "row_index": 129,
+      "witness_key": "obs:thermal-model-temp"
+    }
+  ]
+}
