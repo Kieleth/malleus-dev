@@ -535,6 +535,24 @@ class SupplierChoiceSynthesizer:
                 "MALFORMED_INPUT",
                 "typed child Re-entry result required",
             )
+            require(
+                result.contract_identity == child_contract.identity
+                and result.status in ("CANDIDATES", "SATISFIED", "PENDING", "REFUSED")
+                and type(result.reason) is str
+                and bool(result.reason.strip())
+                and type(result.candidates) is tuple
+                and all(type(candidate) is bytes for candidate in result.candidates)
+                and (
+                    (
+                        result.status == "CANDIDATES"
+                        and len(result.candidates) == 1
+                        and type(result.model_prediction) is bytes
+                    )
+                    or (result.status != "CANDIDATES" and not result.candidates)
+                ),
+                "MALFORMED_INPUT",
+                "child result must obey its bound contract and output grammar",
+            )
             return result
 
         if active:
