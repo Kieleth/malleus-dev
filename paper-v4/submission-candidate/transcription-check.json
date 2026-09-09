@@ -1,0 +1,16 @@
+{
+  "status": "TRANSCRIPTION_AND_ARCHIVE_PASS",
+  "pages": 13,
+  "paragraph_heading_cell_units": 234,
+  "intact_json_exhibits": 12,
+  "archive_files": [
+    "appendix.tex",
+    "body.tex",
+    "main.bbl",
+    "main.tex",
+    "references.bib"
+  ],
+  "pdf_sha256": "c55ebc609b27b6be2f2d02254cd582ff9b29eec41cf3d0ae5f00726964f98e3a",
+  "visual_review": "SEPARATE_REQUIRED_CHECK",
+  "human_ratification": "PENDING"
+}

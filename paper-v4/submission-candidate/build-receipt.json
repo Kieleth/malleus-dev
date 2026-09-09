@@ -1,0 +1,27 @@
+{
+  "status": "BUILT_AWAITING_VISUAL_AND_AUTHOR_REVIEW",
+  "manuscript_sha256": "7d24ff8ff821db6316f03756ee505bf5c285c1c3c0f48ddfbd344553875dabe0",
+  "files": {
+    "main.tex": "92be0e61169771c6d06e5d130632c2931f1e3dc4135caf34810b126ad0c5578e",
+    "body.tex": "2d66f3456ed82f918c903022905a4a9480f4ff73816892a69d67892255ca9989",
+    "appendix.tex": "06008214fc44f04f38130bf9a17a07fc240802dcedbb91986d64ac3e8b9bd318",
+    "references.bib": "973e038a4dd10133548a8bc22b4189f925d8998c68968914c23a0fc61addfb19",
+    "main.bbl": "9dfd09458860e9b0d0d9607efc66f1755a87d764423b242048dcfd88bf05fc90"
+  },
+  "pdf_sha256": "c55ebc609b27b6be2f2d02254cd582ff9b29eec41cf3d0ae5f00726964f98e3a",
+  "archive_sha256": "98552f79c3ffdc1cd9c8a4653ac47b554f4607f4d1b8f0ac92b8d437d7ce763f",
+  "archive_files": [
+    "appendix.tex",
+    "body.tex",
+    "main.bbl",
+    "main.tex",
+    "references.bib"
+  ],
+  "build_directory": "/Users/luis/Projects/malleus-dev/tmp/pdfs/submission-candidate-hxl32ike",
+  "tool_versions": {
+    "pdflatex": "pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)",
+    "bibtex": "BibTeX 0.99e (TeX Live 2026)"
+  },
+  "arxiv_processing": "NOT_RUN",
+  "human_ratification": "PENDING"
+}

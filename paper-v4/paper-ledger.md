@@ -114,7 +114,75 @@ Change: Superseded only the Core coordinate in D-0014. Rebound the isolated pape
 
 Reason: Luis explicitly approved the rebind after Core passed its local and remote publication gates. The newer baseline contains the completed correction evidence and a domain-neutral private composer needed by a second real consumer, without creating a public API or stable wire claim.
 
+### PV-0011
+
+Date: 2026-09-06
+
+Plan version: 1.3.3
+
+Change: Reconciled the master plan's current status with E-0205 and Fable's
+completed handover. The separate selective-answer arm and approved fresh Sol
+population are recorded without changing the selected run-20 cell. Luis's
+continuation follows the proposed subject-aware query pass on the unchanged
+Sol graph. Run-22 restart, Core-23, Shop re-review and extra documents are not
+silently selected. Detailed answer plan is version 0.6; E-0212 records the
+execution and ownership boundary.
+
+### PV-0012
+
+Date: 2026-09-06
+
+Plan version: 1.4.0
+
+Change: Luis authorized parallel re-entry design and a bounded Core/Small Shop
+E2E, then resumed paper work with that vision. The lean working manuscript now
+uses the completed answer evidence and a prospective re-entry section. The
+paper's dependency and claim boundaries are in reentry-paper-plan.md. Existing
+publication sources, selected captures and review records are unchanged.
+
+Reason: The paper can explain controlled revision without claiming a result
+that the parallel task has not yet produced. Any document amendment and its
+evaluation must remain separate from the first-pass evidence.
+
+### PV-0013
+
+Date: 2026-09-06
+
+Plan version: 1.4.1
+
+Change: Luis selected Shop → existing PDF → robotics simulation as the next
+proof direction, replacing extra PDFs as the next breadth priority. A dedicated
+agent is researching established simulators. robotics-proof-plan.md records a
+candidate experiment and its author-selection boundaries. Framework, episode,
+implementation, runtime pin and publication inclusion remain open.
+
+Reason: The author wants to examine an agent's accepted environment model and
+the evidence that justifies changing it. This adds a dynamic observation use
+case without replacing marine evidence or enlarging the current Shop
+re-entry task. Extra-document plans remain reserved.
+
+### PV-0014
+
+Date: 2026-09-06
+
+Plan version: 1.5.0
+
+Change: Luis requested a newer, leaner paper, removal of development history
+from the narrative and clean presentation of results. The working draft now
+centers on two principal captures, complete review and six worked answers.
+Unmatched diagnostics and their poor result remain disclosed in supplementary
+evidence. Re-entry becomes brief future work. A separate review PDF is created;
+no publication source, review record or experimental coordinate is replaced.
+
+Reason: The completed document evidence is sufficient for a readable new
+version. Optional re-entry, robotics and additional captures are not required
+to write it. Author claim approval and publication/reproduction packaging are
+separate from waiting for more experiments.
+
 ## Author decisions already expressed
+
+Reason: The old opening still described run-02 as current. A frozen corpus
+result, a query-only revision and a fresh producer trial need separate claims.
 
 ### D-0001
 
@@ -8034,3 +8102,5203 @@ Core's ledger.
 
 Non-claim: no paper cell ran under this Core; every frozen cell is pinned
 at c95dba7, which predates it.
+
+### E-0212, paper handover reconciled; independent answer work retained; subject-aware query pass on the frozen Sol graph
+
+Date: 2026-09-06 (local author date; execution continued after midnight UTC).
+
+Author direction: Luis relayed Fable's completed handover and asked, "Can we get
+to work ?" This follows the proposed separate subject-aware query pass. The
+paper task announced that bounded interpretation before editing: no run-22
+restart, no Core-23 dispatch, no Shop re-review. Core was notified that this
+task resumes single-writer ownership of the paper plan and ledger. All Core and
+Shop work remains with Core. No commit, push or Git ref change is made here.
+
+Handover verified against the stored origin/main ref:
+dfa367aee7848a69cf6999b158ba1a1057c50b38, tree
+e936636bef576fd3671c8acf2b294d9585f49f7f. Its recorded paper gate is 1,746
+passed and Core gate 3,134 passed, 3 skipped. These are reports for that
+boundary, not new reruns here. Local Core has seven later commits through
+160878cf14c0d27b11a440e26688708e9b7a7e2b, tree
+d946a7550dee247a371889f5eadf1cfecc964450. Its capture-accounting guidance and
+six conformance tests are a separate accepted generic correction. Core reports
+three pre-existing Shop evidence-regeneration mismatches; Fable's earlier
+count does not erase those observations. No new Core read or replay gap was
+found by the paper task.
+
+Previously completed paper-owned work, now reconciled rather than replayed:
+answer-demonstration/REVIEW-RESULTS.md records full preliminary selective
+reviews of thirty questions on run-20/run-21, with eight/eleven covered,
+fourteen/nine partial and eight/ten uncovered respectively. These include
+controls, are not accuracy, and are not the historical human records ratified
+in E-0205. Complete source-definition supplements and a six-case recheck are
+retained separately. QUERY-CORRECTION.md records only three changed outputs
+out of sixty after query-only fixes, with unchanged relationship paths and a
+separately retained subset-review correction. No original output or judgment
+was overwritten and none of these new reviews is human-ratified.
+
+Luis selected a fresh Sol population for learning and quick comparison, not an
+Opus replicate. followup-sol-01 uses the unchanged run-20 ontology/reading,
+Core 160878c and its identified generic skill/profile, no questions or old
+populations in the producer input. The first submission admitted without
+structural feedback. Fourteen ledger events reopen to 41 entities and five
+PART_OF relations. Sixteen assertions cover fifteen distinct reading blocks;
+eight blocks are explicitly non-assertable and 163 untouched. The producer
+self-reported reading all 186 and intentionally making a partial population.
+This is not complete capture. Thirty queries returned seven candidates over
+six distinct central witnesses, with no relation path. Full independent Sol
+review: zero covered, four partial and twenty-six uncovered, including
+controls; all six returned witnesses supported. Human ratification pending.
+FOLLOWUP.md and FOLLOWUP-RESULTS.md carry exact input and result identities.
+
+This continuation changes only candidate selection. subject_answers.py follows
+one explicit subject reference for name, description or tags; it does not
+borrow numbers from the subject, use identifiers as meaning, join unlinked
+records or traverse a second subject hop. The original programs and projections
+are reused unchanged. Ten synthetic guards passed after failing without the
+implementation. subject_query.py reopened the frozen graph, reproduced all
+thirty original query objects exactly, then ran the revision under the same
+source-free guard. Ledger and graph were unchanged. The only changed outputs
+are CQ-T3-02, CQ-T5-02 and CQ-C-05: one stored primary-melt quantity is newly
+returned in each. Candidate-bearing questions increase from seven to ten.
+Every relation path is unchanged. Query result:
+sha256:aadffc12f69d46d7c074bb34da3e6c970ed4f7f0d8eb490925fb1cf10e1d38b4.
+
+A fresh independent Sol reviewer inspected the three changed cases against
+the same definitions and exact source. CQ-T3-02 and CQ-C-05 are PARTIAL/ONE_ROW:
+range, unit and material subject are present, but calculated-versus-measured
+status is not. CQ-T5-02 remains NONE/NO_ANSWER: one material-level quantity
+cannot answer a two-segment comparison without inventing scope. The shared
+witness is SUPPORTED. The bounded record validates under the existing rules.
+The other twenty-seven query objects and their prior review remain unchanged;
+this is not a newly dispatched full thirty-case review. No answer value or
+missing relationship was supplied by the parent or query.
+
+Gate integration finding: the answer harness was deliberately outside Fable's
+active manifest while ownership was split. Its standalone import assumptions
+also failed the manifest's importlib mode. Two new guards failed first; a
+test-only conftest now exposes the owned script directory and the manifest
+includes answer-demonstration. All 123 owned tests pass in the active import
+mode. The complete active paper gate is run after this append; its measured
+outcome is reported in the continuation handoff, not guessed here.
+
+Paper implication: subject-aware querying recovers a real stored value, but
+does not repair sparse capture, missing method/site qualifications or absent
+SUPPORTS edges. The older reviewed captures remain the stronger worked example.
+The draft section is updated in answer-demonstration/WORKED-EXAMPLE.md. The
+published manuscript, frozen cells, source PDF and private readings are not
+edited or committed. New producer conditions remain author decisions.
+
+### E-0213, parallel re-entry authorization and paper synthesis
+
+Date: 2026-09-06 (local author date).
+
+Luis first asked to consider Semantic Re-entry, then explicitly instructed:
+"Send sync to reentry session to get started in parallel and advance work and
+design, I’d suggest to use the core and shop dataset for starters and tdd where
+possible trying to get the e2e slice asap and then iterate". He then said:
+"Let’s resume paper work then with the vision of reentry".
+
+The prior re-entry task was inspected read-only. Its last completed work was
+the design-only Gedankenexperiment at 6018dfc; its latest acknowledgement kept
+implementation frozen against the old c20387a prerequisite. That old readiness
+assessment was not silently promoted to current capability. The author's new
+instruction was sent to Malleus-semantic-reentry and Malleus Core; both were
+observed active afterward. They must agree an exact baseline and ownership.
+Core owns generic runtime and Small Shop fixture changes. Re-entry owns its
+isolated design/producer/tests. Paper owns the manuscript, PDF experiments,
+queries and evaluation. No shared integration or new paper Core pin was sent.
+
+Plan 1.4.0 and reentry-paper-plan.md now separate completed document evidence
+from prospective accepted-state revision. The first protocol proof starts with
+Core/Shop. A later paper amendment needs an author-selected trigger and exact
+evidence. Missing subjects and source-attributed SUPPORTS relationships are
+candidates, not instructions to invent facts or increase an edge count.
+The same source and fixed ontology are proposed for the first bounded document
+test; no such run has launched. Evaluation-guided revision cannot be relabelled
+as the initial question-withheld result.
+
+The previous working draft described an early four-question run and still held
+terminal-result placeholders. It is replaced in place as a working document,
+not as a replacement for manuscript.md or arxiv/. The revision integrates
+run-20/run-21's complete selective reviews, distinct query-only corrections,
+the unmatched Sol capture and a prospective re-entry section. Complete-review
+counts are rechecked directly against the retained review objects: 8/14/8,
+11/9/10 and 0/4/26 for COVERED/PARTIAL/NONE. All human dispositions remain
+PENDING. Query subset changes do not silently alter those aggregate rows.
+
+Seven new draft-consistency tests failed before the revision: unresolved result
+placeholders, missing three result rows, absent explicit prospective/review
+status, undeclared private review inputs and missing local evidence links.
+The active manifest now declares the private answer-demonstration root; no PDF
+is added. These guards check consistency, not scientific validity. Gate outcome
+is recorded in the continuation handoff after execution, not assumed here.
+
+Related-work statements were checked against primary SPIRES, OntoLogX, PROV-O,
+OTTR, Nexus, RAG and Foster publication sources. The directly relevant ESAA
+event-sourced agent architecture is conceded by name, without claiming an
+implementation comparison. Two Nexus documentation URLs failed; the official
+product page supplies the narrower schema/provenance/revisions statement used.
+The Foster DOI endpoint refused access; its author publication page establishes
+the cited work, and no theorem or implemented lens-law claim is made.
+
+The preceding isolated gate had completed 1,870 tests, correcting the missing
+private-fixture setup recorded in E-0212's handoff. That is prior execution
+evidence, not a new Core gate or validation of later concurrent Core changes.
+This turn edits only paper-owned paths. It commits, pushes and submits nothing,
+does not touch run-22 or any frozen producer, and makes no re-entry success claim.
+
+### E-0214, immutable re-entry prerequisite handoff verified
+
+Date: 2026-09-06 (local author date).
+
+Received the re-entry task's consolidated prerequisite handoff, not an E2E
+completion. Read its README, tests and evidence.json. Verified commit
+1bbff3c2e064b776ac68728f6a86c739ee16e9f7 and tree
+639f37cd38e3bf5be92ae82ea7f1ffcadcd499ed in the clean detached worktree
+/private/tmp/malleus-reentry.5gFZdN. Base Core commit is
+7c5fdb491721122b6e0c7243862935acc8303a1f, tree
+155ac29b6fd87709f4d765c00d6c340411f9441c. Exact base-to-head scope is three
+added files under research/semantic_reentry_protocol; no Core/Shop/paper path
+was modified by that cut.
+
+Verified SHA-256 values: README
+8f9dd0153f96ac0e3d38ec34883c3aa1af974fb44b474de448b3087b359590b8;
+test_prerequisites.py
+117d7185f0c890e4617c3b37694cff467aa49b6e586cdabfa6ab636d47e74c38;
+evidence.json
+6e6ed12bc96677d9471725f5f26d7d71fa1d7a66ce1ce83d7dca59cc76880554.
+Reran the declared focused command with PYTHONPATH=src:., bytecode disabled,
+the existing project virtual environment and pytest cache disabled. Outcome:
+10 passed, 1 xfailed in 7.03 seconds. Worktree remains clean.
+
+The expected failure measures preparation's evidence append, not a defect in
+its documented contract. The existing history composer is write-free, but
+receives the full writable history. Re-entry requests an immutable-base and
+retained-input composition boundary that withholds that capability. This is a
+new requested API boundary, not demonstrated Core ledger/replay failure. Its
+selection remains with the Core/author coordination already in progress.
+
+The tests also distinguish locator resolution from source-value agreement and
+duplicate-plan refusal from semantic quiescence. They do not implement the
+future source-value guard or no-op producer. Source e7 is already in the
+retained file and newly processed, not the effect of a newly executed action.
+
+The handoff reports 725 passed, 3 failed and 1 xfailed in its broader gate,
+with three named Core-owned evidence-regeneration mismatches. That broader
+command was not rerun here. No unified GREEN, synthesizer or re-entry E2E
+is claimed. The paper plan records this received prerequisite audit while
+keeping milestone 2 open. No master-plan version bump, manuscript result,
+paper Core rebind, document intervention or shared-repository mutation follows.
+
+### E-0215, simulation direction and bounded re-entry sync
+
+Date: 2026-09-06 (local author date).
+
+Luis asked to frame the third proof as maintaining an agent's accepted model
+of its environment, instead of another PDF. His question is: "Show me what it
+believed, what supported that belief, and what justified changing it." He
+explicitly requested a dedicated agent for an established robotics simulator
+and a brief re-entry sync without much change to that task.
+
+Dispatched robotics_simulation_recon with ownership only of
+paper-v4/robotics-simulation-recon.md: current primary-source comparison,
+platform and sensor constraints, lean episode, bounded claims, no installation
+or implementation. Sent the requested sync to Malleus-semantic-reentry,
+thread 01a05f67-22dc-7043-8174-c24ee9ccb09f. The message explicitly preserves
+its current Shop ViewDelta scope and pending capability discussion. No new
+robotics prerequisites, ontology, Core API or planner were requested.
+
+Master plan 1.4.1 and robotics-proof-plan.md record design readiness, not a
+selected simulator or a run. The next breadth direction is Shop, existing
+marine PDF, then simulation. Extra PDFs remain reserved. A proposed relocation
+episode separates hidden world change from observed evidence and accepted
+assessment; inspection remains another option for Luis. The ontology/history
+decision must distinguish seed, observation, assessment and disposition before
+population. A recorded location is last-observed, not guaranteed current truth.
+
+The observation boundary prohibits privileged simulator state as producer
+input. Idealized labels must be named as such. Knowledge replay is not physical
+replay, structural admission is not a truth test, no detection is not absence,
+and intended actions are not observed outcomes. Queries inspect retained
+evidence and recorded checks, not hidden reasoning. Framework/episode and
+implementation remain author choices. No manuscript result, Core rebind,
+publication gate, package install, commit, push or shared-ref change follows.
+
+Primary KnowRob pose and logged-experience pages and the DynaMem project page
+were read for direct prior art. They already address robot beliefs, histories
+or changing environment memory. The proposed distinction is an implemented
+typed admission/revision/replay path, not invention of those ideas. Sources
+are linked in the new plan. The simulator comparison has its own citations.
+
+The dedicated agent completed its three-framework report: Webots, MuJoCo and
+Gazebo. Its recommendation is Webots with an explicitly idealized Recognition
+channel and evaluator-only Supervisor access, conditional on Luis's selection.
+Local macOS 15.7.9 arm64 lies outside the macOS 12 to 14 list in the inspected
+Webots requirements; this is unverified compatibility, not a measured failure.
+The main task independently checked the official requirements and interfaces.
+No simulator was executed. Existing working-draft and gate-integration guards
+passed, 10 tests; paper-scoped diff whitespace checks passed. These checks do
+not validate the proposed simulation or add a re-entry result.
+
+### E-0216, robotics asset handover and paper answer section
+
+Date: 2026-09-06 (local author date).
+
+Luis instructed: "send all this to the specialized robotics session please,
+we need to find some robotic datasets simulations, to move fast and hook malleus
+easily, lets continue focusing on the paper after handover". The existing
+robotics_simulation_recon agent received the full plan, research report and
+re-entry context, with a bounded follow-up to locate reusable simulation worlds
+and recorded datasets. It owns only its report and robotics-assets-shortlist.md.
+It must distinguish offline replay from interactive simulation and identify
+actual data shape, license/access, observation timing and a minimal adapter
+boundary. No simulator, dataset or execution target was selected by this
+handover. No new app task, installation or Core requirement was created.
+
+The paper task returned to the completed answer evidence. Section 4.2 of
+manuscript-v4-working.md now aligns the six preselected examples with their
+exact frozen question IDs and both complete-review coverage labels. It shows
+returned content and limits: instrument count, actual bounding relation,
+ambiguous quantity alternatives, qualified hypothesis, missing evidence path,
+and unavailable-information control. It links the question set and the existing
+source trail. These are editorial changes to reported evidence, not a new
+query, capture, review, source interpretation or human ratification.
+
+A new consistency guard failed first because the draft did not contain the
+six-case table. It now checks the exact six-case order and both per-question
+labels directly against the retained complete preliminary review records.
+Working-draft and gate-integration tests pass, 11 tests. Ruff lint passes;
+the formatter requested a mechanical change, which was applied. The draft is
+3,467 words. Existing aggregate results and prospective re-entry status remain
+unchanged. The full owned answer harness is checked after this append.
+
+No publication-source integration, Core rebind, frozen-record change, submission,
+commit, push or shared-ref mutation is made. Robotics research runs separately
+and is not required to write the existing paper. Re-entry remains a prospective
+result pending its own exact evidence. Master plan stays 1.4.1 because this
+handover executes the current direction rather than selecting a new experiment.
+
+Post-edit owned harness: 132 passed in 0.80 seconds under importlib mode, with
+bytecode and pytest cache disabled. This is a focused paper-harness measurement,
+not a rerun of the 1,877-test isolated gate or the concurrent Core suite.
+
+### E-0217, lean paper with results instead of development chronology
+
+Date: 2026-09-06 (local author date).
+
+Luis asked where the paper stands, what prevents a newer version, and whether
+we can make it leaner, remove history and present results cleanly. The edit
+does that now, rather than waiting for Core, re-entry, robotics or another
+capture. Master plan advances to 1.5.0 on this author decision.
+
+The main narrative keeps the protocol, ontology versus history semantics,
+enforced intermediate representation, evidence-bound admission and replay;
+one document and two captures; the complete thirty-question review; six worked
+examples; observed failures; related work and limitations. Display names
+Capture A and B map explicitly to run-20 and run-21. Original 8/14/8 and 11/9/10
+coverage counts and all six case labels remain unchanged. The task does not
+hide case selection, retrospective query development or model authorship.
+
+The unmatched Sol trial moves to a short supplementary note, including its
+0/4/26 result and different condition. Query corrections and evaluator-context
+history remain in their existing linked records. The long prospective re-entry
+section becomes one future-work paragraph; robotics is not reported as evidence.
+Nothing in a frozen run, query, review, PDF reading or ontology is edited.
+
+Four checks failed before the rewrite: shorter length, both renamed result
+rows and the absence of a separate supplementary boundary. All draft checks
+then passed. The existing owned answer harness passed 132 tests. Human
+ratification fields remain PENDING; completed LLM verification is not relabelled
+as expert annotation. No new reviewer was dispatched.
+
+The PDF skill was read and its authoring marker run. A small review renderer
+uses the existing bundled ReportLab runtime; exact preview dependencies are
+declared separately, with no installation or experiment-environment change.
+The companion Markdown retains repository evidence links; the PDF keeps external
+citations clickable. The original arXiv sources and older PDF remain untouched.
+
+The first four-page render was inspected page by page. Text, tables, headings
+and margins are legible, without overlap or missing glyphs. A new text-fidelity
+check initially treated inserted page footers as missing paragraph text. It was
+corrected to assert and remove only the renderer's exact two-line footer before
+checking every source paragraph and table cell. All five preview tests pass.
+Poppler emitted a nonfatal cache-permission warning on that render; the final
+QA render uses a task-owned writable cache, not a global permission change.
+
+Remaining publication work: author approval of the bounded claim/review
+treatment; integration into publication Markdown, TeX and bibliography; an
+explicit accessible reproduction package for currently private source-bearing
+artifacts; final isolated publication and layout checks. No new Core seam is
+required by this editorial cut. No commit, push, tag or submission is performed.
+
+Final review copy: output/pdf/malleus-paper-v4-lean-review.pdf, four A4 pages;
+companion Markdown 2,201 words versus the preceding 3,467. Final checks:
+132 owned answer-harness tests, five preview tests, Ruff/format and paper-scoped
+diff check pass. The changed final page was re-inspected after regeneration;
+the final Poppler run used the writable cache and emitted no cache warning.
+The application queued the PDF for display. These are review-copy checks,
+not a claim that the arXiv bundle has been updated or publicly reproduced.
+
+### E-0218, independent Malleus Robotics task
+
+Date: 2026-09-06 (local author date).
+
+Luis clarified that he needs a fully separate session that can work, grow and
+build, not the internal robotics_simulation_recon agent. He also endorsed the
+direction of the lean abstract and sees a future simulation result as a useful
+extension. This does not constitute a completed simulation claim or a simulator
+selection. Master plan advances to 1.5.1 for the ownership decision.
+
+Created robotics-task-handover.md with the purpose, all research inputs,
+asset-level recommendation and alternatives, observation/assessment/history
+distinctions, minimum E2E, negative cases, ownership and coordination task IDs.
+Robotics implementation transfers to research/robotics_simulation/** in the
+new task's worktree. Paper retains the manuscript and claim integration. Core
+retains Core/Shop, and re-entry retains its current Shop slice.
+
+The application accepted creation of a project worktree task titled Malleus
+Robotics under malleus-dev. Setup initially returned client task coordinate
+client-new-thread:40371e52-e639-4474-82a0-7e74f3f4028b. The prompt explicitly
+requires reading the uncommitted handover sources from their absolute shared
+paths and retaining copies in the new worktree, rather than assuming a checkout
+contains them. No model override or starting revision was requested or supplied.
+The OpenAI Docs skill and official worktree documentation were used to check
+the separate-checkout arrangement and its shared Git-metadata boundary.
+
+The new task is a continuing implementation owner. It should establish the
+smallest executable slice, coordinate exact capabilities with Core/re-entry,
+and bring the still-open framework/episode choice to Luis before committing to
+simulator-specific setup. Its research is not reclassified as executed evidence.
+No parent commit, push, publication-source change or abstract edit follows.
+
+Setup completed as task 01a079a5-4cfe-71e2-b4ab-33791c0d9078 in
+/Users/luis/.codex/worktrees/8ce0/malleus-dev. The task reported inherited HEAD
+79ae2feff7fc59436ef405fd91fe5a38c8253394 and confirmed ownership of
+research/robotics_simulation/**. A compact application snapshot independently
+confirmed its first turn is active. It has already checked the local runtime
+and contacted re-entry; neither a simulator run nor a passing re-entry loop is
+claimed. The inherited checkout identity is not an author-selected experiment
+pin. Core and re-entry receive the new ownership coordinate without a change to
+their current scope.
+
+### E-0219, three acceptance promises are a project/protocol distinction
+
+Date: 2026-09-06 (local author date).
+
+Luis asked to capture the three-row table separating structural and
+evidence-binding compliance, faithful source representation, and sufficient
+information for the intended use. His stated reason: "I thiink is critical
+for the malleus as a project/protocol". This endorses the distinction, not a
+new mandatory profile or Core evaluator.
+
+acceptance-promises.md retains the exact three promises and their establishing
+mechanisms in a clean two-column table. It separates replay from semantic
+quality, source faithfulness from world truth, and partial acceptance from
+intended-use sufficiency. Master plan advances to 1.5.2 on this author decision.
+
+The preceding read-only investigation found that the frozen run-20 adapter at
+Core c95dba7 checks at least one assertion formalizing the subject field, not
+every assertion contributing to a record. The producer log adopted a stricter
+reading; retained before/after captures show five subject derivations removed,
+122 to 117. That is not evidence that Core found five false subjects or that
+admission improved semantic completeness. No historical record is rewritten.
+
+The project-level distinction is sent to Core, re-entry and Robotics as
+coordination. Core retains generic mechanism ownership; adopters retain domain
+interpretation and purpose-specific assessment. No scoring API, automatic
+semantic repair, subject requirement, relation quota, rerun or manuscript
+revision is authorized by this record. No commit, push or shared-ref change.
+
+### E-0220, author-approved two-case source-grounded repair
+
+Date: 2026-09-06 (local author date).
+
+Luis approved the funding-attribution and missing-evidence-connection cases
+with "go". Master plan advances to 1.5.3. repair-experiment-plan.md 0.1.0 defines
+two independent deltas on copies of Capture B, fixed reading, ontology, original
+pilot-03 queries and Core c95dba7. Fresh Sol production continues his selected
+local learning condition, not the Opus replicate condition. Reviewer findings
+are inputs; the evaluator authors no population facts.
+
+Reopened the baseline under source-byte-verified Core c95dba7. Receipt
+sha256:2cab922f229d578f183a647e445d0b99348ce2f931fb161a0652547a29a6e832
+and graph sha256:77e4671620f5b8d35eeb097ee4beaa4488a55c28058688906573a00546a85ecf
+match the frozen run. The source-assertion profile already permits supersession
+of capture-batch formalizations. This is not a runtime rebind or execution of
+the newer Shop task's pure synthesis implementation.
+
+Frozen packets are private/paper-v4-answer-demonstration/repair-01. The manifest
+records each input identity before producer dispatch. No result, source truth,
+coverage gain or quiescence is claimed. Paper-local scope/preservation guards
+were added RED first, four expected missing-module failures, then four passed.
+No original history, producer output or review is modified. No Core write,
+commit, push or shared-ref change. Next: producer deltas and public admission
+on ledger copies, followed by independent source-grounded review.
+
+### E-0221, two amendments reproduce, one complete answer and one partial gain
+
+Date: 2026-09-06 (local author date; executions 2026-09-07 UTC).
+
+The first producer packet was defective: a common task template stated both
+funding supersession and evidence additions-only obligations unconditionally.
+The evidence producer refused before proposing facts. The funding producer
+interpreted its own case and supplied a candidate. Both outputs remain under
+repair-01. No refusal is relabelled as a Core or source-semantic failure.
+
+Added the case-specific task guard RED then GREEN, preserving old inputs, then
+staged repair-02. The same two fresh-origin Sol sessions continued on corrected
+instructions. This is not another fresh launch. Funding reproduced its first
+candidate byte-for-byte, sha256:b91951b4348a5d0585dfb6170357a26045a46b30cbef6b5ba963252bbe29c10d.
+Evidence submitted sha256:f92bf9dfc312d75d2e4fa6eeb0232ae4284f26a15e418123b5ea9c59fb325176.
+No evaluator-authored population or semantic repair. Neither candidate needed
+a compiler diagnostic retry. Their distinct immutable attempt directories
+retain the submitted bytes before any Core operation.
+
+Both cases use source-byte-verified Core c95dba7 and the original reading,
+ontology and pilot-03 queries. The original receipt and all thirty query outputs
+were reproduced before execution. Public adapter, compiler, preparation,
+structural admission and ledger-only reopen accepted both independent deltas.
+Each history has 20 events, two accepted KCS values and 536 historical records.
+Funding has 535 current records; evidence has 536. The baseline ledger prefix,
+unrelated record values and history are preserved. Funding's retired record
+updates only superseded_by and valid_to. Record-level evidence remains traceable.
+
+Funding ledger head sha256:fe41f86dd80a873f340c89d4fc68baab5ae18281d881c7732aa5de449f84003b;
+replay receipt sha256:31e5279514e57cd6c56d37c78f516a3de2b43a1426c8dc519141566b06c5d8ef.
+Evidence ledger head sha256:2ea6d9be941a88e7e3765a74fd8e524a9cee366391b32b0c94fdbe10a1c67f0a;
+replay receipt sha256:d7194623ebf3389cb78c2467fd06cf1d119dcb7332898dd66b290eed18bddc1d.
+Only CQ-T2-05 changes in funding, only CQ-T5-01 in evidence. Each other 29 query
+outputs is identical. Query guard counters are zero, not an OS sandbox claim.
+
+An independent reviewer verified 42 frozen material hashes and 13 source block
+locators, inspected both amendments and every changed question, and wrote
+repair-02/review-01/review.md. Funding replacement is SUPPORTED and its bounded
+question COVERED. Evidence relation is SUPPORTED as a model-qualified argument;
+composition stays PARTIAL because volatile-content and observed-depth records
+remain unreached. This is preliminary model assessment, not human annotation,
+ratification, a new aggregate score, or scientific validation. The review itself
+explicitly retains the original protocol's human-ratification boundary.
+
+Each original producer next received only its after-state and same finding,
+not queries or review judgments. Both wrote SATISFIED with scope limits and
+proposed no further change. The evidence finding is satisfied while the broader
+question is not. That distinction is the principal new learning: stopping on
+a narrow repair predicate does not establish intended-use sufficiency.
+
+Additional paper-harness mistakes were retained and guarded RED then GREEN:
+truthiness of an all-zero guard-counter mapping; looking up capture identity
+in a result inventory instead of its exact plan evidence binding; and an extra
+raw-history comparison that initially omitted the expected valid-to update.
+No Core failure was found. Reformatting the executor during the initial runs
+left their pre-format runner digest without retained source bytes. The executor
+now snapshots loaded bytes and refuses file drift at both boundaries. Separate
+reproduction-01 executions retain that source and, with explicit frozen protocol
+times, reproduce both full ledgers and every output artifact byte-for-byte.
+This reexecutes the delta through Core, not model generation, and does not
+overwrite the original results or their reported identities.
+
+Working manuscript now includes the two amendments, retains original scores,
+and states the three promises separately. It was cut to 2,284 words. The PDF
+skill generated malleus-paper-v4-repair-review.pdf; all four pages were visually
+inspected, including tables and the new section. The old review PDF, manuscript.md
+and arxiv/ remain unchanged. Fontconfig emitted an unwritable-cache warning;
+rendering completed and visual checks found no missing glyphs or clipping.
+
+Core and re-entry received bounded coordination: no missing generic capability
+and no runtime rebind. Core reports the three-promises principle landed at
+2a11240556532c2b6160ac0bfa5ab1165e862fd2; that coordinate is not consumed as a
+new runtime. No parent commit, push, branch/ref change or shared Core mutation.
+
+Final focused gate: 143 paper answer-demonstration tests passed; all five preview
+renderer tests passed; changed-file Ruff and scoped diff checks passed. This is
+not a newly run full Core gate. The reproduction command's printed label said
+eight artifacts, but each actual result map contains seven. Its comparisons
+iterated the map correctly. Removed the erroneous count from prose and added
+exact original/reproduction artifact-map equality to the regression check.
+
+Final four-page review PDF sha256:91073fc5446ad23497bf9fffbcf61f6757fe588215f01bc328b16158fb2bf67c.
+Independent review sha256:c00875ab482aed27dbf4d412efd8da2a6c1ce980bae37cdff773c6fc926d1d07.
+
+### E-0222, concrete questions and source-grounded coverage examples
+
+Date: 2026-09-06 (local author date).
+
+Luis required examples of the claims, including covered and partial answers.
+Master plan advances to 1.5.4. The working draft now prints shortened readable
+questions for the same six preselected cases, the returned facts, exact coverage
+boundaries and page/block source references. Checked frozen questions, complete
+reviews, original records and retained amendment query outputs. Source blocks
+were inspected for instrument counts, the preferred hypothesis, the qualified
+absence of vent observations and observed earthquake depths.
+
+The same preferred-hypothesis record covers the explanation question but only
+the mechanism part of the composition question. The funding example explains
+why the original question is NONE despite returning three rows: the relevant
+whole witness is only PARTIAL and the other rows concern different awards.
+The review rule excludes all fields of that mixed witness from coverage. This
+is distinct from an empty unavailable-information control. No label is changed.
+
+The amendment examples identify the corrected grant and recipient, and the
+approximately 25 km modelled saturation depth. A five-row before/after table
+separates mechanism, model result, volatile content, observed earthquake depth
+and evidence relation. The modelled depth cannot substitute for the observed
+16 to 19 km earthquake depths. The new relation is supported within its stated
+qualification; the unchanged broader question remains partial.
+
+Added mechanical manuscript guards RED first: three expected failures for the
+missing self-contained examples, then GREEN. These bind displayed labels and
+selected repair fields to retained data; they do not validate scientific judgment.
+The original narrow identifier column made readable questions produce six pages.
+A layout guard and text-fidelity page check caught that; wider question and
+explanation columns restored five pages without removing content. The draft is
+2,854 words, within the author's existing 3,500-word ceiling.
+
+The PDF skill generated malleus-paper-v4-examples-review.pdf. All five pages
+were visually inspected, including both example tables. No clipping, overlap
+or missing glyphs was found. Fontconfig's unwritable-cache warning did not prevent
+rendering. Previous PDFs, manuscript.md, arxiv/, source evidence and frozen
+reviews remain unchanged. No new capture, review round, Core change, runtime
+rebind, commit, push or shared-ref movement.
+
+Focused gate: 145 answer-demonstration tests and six preview tests passed;
+changed-file Ruff and scoped diff checks passed. This is not a new full Core gate.
+Five-page review PDF sha256:2665aa26efc4631289acaa2afc80973c3342ba120f501c8d14f60efef523f6ec.
+
+### E-0223, author clarification: print the evidence in the appendix
+
+Date: 2026-09-06 (local author date).
+
+Luis clarified: "I mean we need to show evidence in the paper appendix".
+Master plan advances to 1.5.5. Appendix A now contains ten exact JSON selections
+from retained query/capture files, six source quotations with page/block locators,
+the count record's derivation-to-capture-to-reading trace, requirement-level
+coverage, and the funding/evidence amendments. Spatial and quantity examples,
+qualified hypothesis, observation-to-absence distortion and empty control are
+all shown. Exact source, reading, ontology, ledger/receipt and query identities
+bind the principal B exhibits. No new identity framework or receipt stack.
+
+The JSON selections preserve keys, values and identifiers; omitted fields are
+explicitly not null. The original ANR identifier's punctuation is preserved
+inside the evidence excerpt. Quotations collapse whitespace only and were
+checked against the selected text layer. The source's page 11 license notice
+states CC BY-NC-ND 4.0; the appendix attributes Yu et al., the DOI and license.
+No full PDF, reading or capture is copied into the paper tree. The selected
+excerpts do not constitute a complete public reproduction package.
+
+New manuscript guards first failed because the appendix did not exist, then
+passed for all ten exact subset comparisons and six locator/quotation checks.
+Additional checks bind the printed identities, count derivations, spatial prose
+and shared hypothesis row to retained inputs. These validate transcription and
+trace closure, not the scientific or model-review judgments. A prose-presence
+test initially failed on Markdown line wrapping and was whitespace-normalized.
+
+The PDF renderer now admits only valid JSON evidence blocks within its small
+Markdown subset, refuses malformed or overwide blocks, and starts the appendix
+on a new page. Visual inspection caught a split record, then an orphan heading;
+each gained a failing regression check before the grouping correction. The
+renderer now keeps record exhibits, their lead-in and immediate heading together.
+The final text-fidelity check covers every paragraph, table cell and JSON block.
+One intermediate page-count change caused Poppler to zero-pad PNG names; stale
+un-padded previews were not used as final validation. The final render uses a
+fresh prefix and all nine current pages were inspected.
+
+Main text is 2,865 whitespace-delimited words, including its one new appendix
+cross-reference. Appendix is 1,520 words including keys/values and coordinates.
+The PDF skill produced five main pages plus four appendix pages. No clipping,
+split record, orphan heading or missing glyph remains. Fontconfig again warned
+about an unwritable cache; PDF/PNG generation completed.
+
+Focused gate: 149 answer-demonstration tests and eight preview tests passed.
+Changed-file Ruff/format and scoped diff checks passed. No capture, query
+execution, review judgment, runtime rebind, Core mutation, commit, push or
+shared-ref change. Previous PDFs and publication sources remain unchanged.
+Human ratification and publication packaging remain open.
+
+Nine-page appendix review PDF sha256:53e4bd934658deb58a2b4e7be123f39959ed72031fdd1c5647a607f348c15b19.
+
+### E-0224, authorized final task-directed composition test
+
+Date: 2026-09-06 (author local date; execution begins 2026-09-07 UTC).
+
+Luis approved the proposed final composition experiment with "go". Master plan
+advances to 1.5.6. composition-experiment-plan.md 0.1.0 defines a new condition,
+not a replacement result: a fresh Sol producer sees CQ-T5-01 and its five frozen
+requirements, with no expected values or query code. It starts from a copy of
+original B, not the previous amendment, for an explicit common baseline.
+New ResearchRelation records only, existing endpoints and hypothesis, no
+supersession, source/ontology change or evaluator-authored facts.
+
+Reuse the already tested public admission/replay/query executor on Core c95dba7.
+Added task-conditioned staging and tests RED then GREEN. The task explicitly
+permits the one question while excluding other questions and prior results;
+the old finding-guided task still excludes all questions. No contradictory
+shared instructions or hard-coded desired source values. Frozen input packet
+will be composition-01, before dispatch. At most two structural diagnostic
+returns; no semantic-feedback retry. A partial result or refusal remains valid.
+
+No new empirical result or completeness claim. No Core mutation, runtime
+rebind, commit, push or shared-ref change. Original captures, repair-02,
+reviews, appendix and publication sources remain unchanged by this staging.
+
+### E-0225, task-directed composition covers its bounded question
+
+Date: 2026-09-06 to 2026-09-07 local; execution and review 2026-09-07 UTC.
+
+Executed the author-approved composition-experiment-plan.md 0.1.0. Master
+remains 1.5.6, outcome recorded without a new author-decision bump. Frozen
+composition-01 uses original Capture B and Core c95dba7, not either amended
+history. Preflight reproduced the original graph, receipt and all thirty
+queries. A fresh gpt-5.6-sol producer received only the selected question and
+five requirements, source/ontology/accepted-state packet and operation rules.
+No expected answer values, query code, prior reviews or earlier candidates.
+No evaluator-authored population facts. The declared file boundary is not an
+OS sandbox.
+
+The first candidate adds two SUPPORTS relations from existing calculated RC2
+melt CO2 and deep-microseismicity records to the existing preferred hypothesis.
+No supersession, entity edit or new measurement. Candidate SHA-256:
+b7f58985daf35acb6e3f6eadf1e0dd597059f53cf4ae9616f6e4845b798548db.
+Public adapter/compile/prepare/admit succeeds without a diagnostic retry.
+Fourteen ledger events become twenty; one accepted change set becomes two.
+The graph has 508 entities, one event and 28 relations, 537 current/historical
+records. Exact prior records, history and ledger prefix are preserved.
+
+Only CQ-T5-01 changes. It now returns calculated RC2 CO2 of 0.4 to 3.0 wt% and
+approximately 10 to 20 km observed RC2 microseismicity on two directed paths
+to the same PREFERRED/HYPOTHESISED claim. All 29 other outputs are identical.
+The modelled 25 km depth from the separate earlier repair is not added here.
+Reopen matches the accepted graph/receipt. Reexecution of retained candidate
+bytes at protocol time 2026-09-07T06:42:00Z reproduces the full ledger and all
+seven output artifacts byte-for-byte. This does not regenerate the model output.
+The guarded query counters remain zero for file reads, network and embedding
+imports. Ledger head:
+562c8173fbfde84cbca9070a747eb4d201a58043d2796424d5fcaa5dab22a0ca.
+Replay receipt:
+6ce3de3fd09dec3310d279a18c51fe445bc76af540e507a575f78bf8aa527013.
+
+A separate fresh reviewer received 24 frozen materials, including exact source
+and before/after output, but no producer rationale. It judges the original
+hypothesis and both new relation witnesses SUPPORTED. CQ-T5-01 changes from
+PARTIAL to COVERED, with ONE_ROW to LINKED_ROWS assembly. The ontology permits
+reported derivations as observations; calculated melt CO2 is not direct
+measurement. SUPPORTS means the authors' contextual argument, not established
+causality. The returned rows omit proxy assumptions, RC3 comparison, an explicit
+melt-stage field, acquisition duration, snapshot caveat and depth reference
+surface. No unsupported addition or semantic regression found in this delta.
+Source faithfulness is preserved, sufficiency improves for one question only.
+No semantic-review feedback or favorable-result retry was performed.
+
+The review is Codex-authored Markdown using v3 judgment meanings, not a
+validator-certified CLAUDE_PRELIMINARY record. Its packet lacks ledger, receipt
+and executable programs, so it explicitly separates its record/source checks
+from the coordinator's execution claims. All 24 material hashes and all 12
+cited block locators were verified again. Review SHA-256:
+032206973022c09bb8c0673cf6f7de7d12edd87e0b0cc1e6870cc8fd718021bb.
+HUMAN RATIFICATION PENDING. Original capture totals and prior repairs unchanged.
+
+COMPOSITION-RESULTS.md records the condition. Working manuscript section 4.5
+and Appendix B print both exact relation selections, locators, five-requirement
+coverage and qualifications. Removed the duplicated main-text requirements
+table; its full earlier assessment remains in Appendix A. Main is 2,970 words,
+five pages; appendices six pages. No development-history narrative was added.
+
+New transcription/condition tests failed before the new appendix existed, then
+passed. Visual review found a split five-requirement table. A failing one-page
+table check preceded reuse of the existing exhibit grouping for tables and
+their lead-ins/headings. Final render preserves every paragraph, cell and JSON
+block; no split exhibit/table, orphan heading, clipping or missing glyph remains.
+All eleven pages were inspected, with seven final PNGs byte-identical to the
+already inspected render and all four changed pages inspected again. Fontconfig
+warned about an unwritable cache; PDF and PNG generation succeeded. Three
+editorial patch attempts refused context or syntax atomically before corrected
+patches applied; no partial file mutation or experiment error resulted.
+
+Focused gate: 158 answer-demonstration tests and eight preview tests passed.
+No new Core capability, rebind, Core mutation, commit, push or shared-ref change.
+Earlier PDF and formal publication sources remain unchanged. Review ratification,
+accessible reproduction packaging and publication integration remain open.
+Final review PDF SHA-256:
+8ddcfd1b54748cb214a560ae2c3591705d175b2ad33b10867dff411cf745c532.
+
+### E-0226, overnight submission preparation and consumer boundary
+
+Date: 2026-09-07.
+
+Luis: "im going to bed, but I want you to enter in loop and cotninue progress
+in the paper submission, probably we need sol executions of the pdf, and keep
+an eye on robotics session, remember Core accepts things at core, and deos
+the modifications, rest of the sessions are consumers".
+
+Master advances to 1.5.7. overnight-submission-plan.md 0.1.0 records scope.
+Implementation choice under that authorization: two fresh question-blind Sol
+populations against B's fixed ontology and original Core c95dba7, not a new
+ontology-acquisition condition. Freeze both packets and queries before dispatch;
+report both outcomes, allow only two structural returns each, and no semantic
+feedback or evaluator facts. No new primary aggregate or matched model ranking.
+
+Prepare candidate publication sources separately, check references/build/evidence
+access, and leave ratification, category, licence, integration and actual upload
+as author decisions. No Core edits, shared refs, commits, pushes or submission.
+The OpenAI Docs skill was used to check local scheduling; the app and computer
+must remain running for local files. Heartbeat malleus-paper-overnight is active
+every thirty minutes until 08:00 local, with only material-change notifications.
+
+Ownership sync sent to Robotics and Re-entry. Robotics' latest native smoke
+retains six assigned observations in each of three arms but includes no model
+calls, assessments or robot rollouts. Not new paper evidence. Re-entry supplies
+consumer commit 67b7ec2f27cec25a5c28cee13911611220ad6721 for compiled-input
+compatibility, not a general API or changed-world result; a later gate remains
+in progress. No paper rebind. Generic capability requests remain Core-owned.
+
+### E-0227, frozen Sol packets and query selection preflight
+
+Date: 2026-09-07.
+
+Two first staging calls refused before writing a workspace: the live query
+program contains later CO2 spelling, line-hyphen and declined-process selector
+corrections, while the plan binds original pilot-03 bytes. This is a paper
+coordinator input-selection error, not a Core contract failure or producer
+attempt. Neither program was changed. A new failing test preceded an explicit
+identified query loader; staging, binding and execution now use the same exact
+selected bytes. Wrong identities and loaded-source mismatches refuse. Existing
+live query users remain explicitly bound to their own bytes. No query fallback.
+
+Stager now identifies the fixed ontology run and unique run ID. Executor requires
+an explicit aware transaction time and retains its exact bytes plus artifact
+digests. The two preceding guards failed before implementation. Focused gate:
+161 passed. No Core modifications or rebind.
+
+Packets overnight-sol-01 and overnight-sol-02 froze at 07:14 UTC, Core c95dba7,
+Capture B ontology 6fbb99a283ddb057a2690e0bf7530a6a16bac7890f36780b4d397588f8592e6a,
+reading f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17,
+original query 389c4ff9565304be63caf432ece17ef108f3a0b2f229fbc53be70caf962dc698,
+query binding cf4ea3b913f630b4b464425de596dd26f8e3a9d7a29eb2ab72c3beb25ccddd4a.
+Each fresh gpt-5.6-sol agent owns only its producer/work directory. Identical
+instructions and source inputs except administrative identifiers and paths;
+no prior populations, questions, query code, evaluations or answers. Supplied
+Malleus acolyte skill read in full and used, no ambient installation. Fresh
+agents /root/overnight_sol_01 and /root/overnight_sol_02 are running. Neither has
+submitted or consumed a structural return at this entry. Both outcomes must
+remain reported regardless of success. Primary results stay unchanged.
+
+### E-0228, fresh admission results and candidate publication sources
+
+Date: 2026-09-07.
+
+Both overnight Sol producers submitted on their first attempts. No structural
+return, semantic-feedback retry or evaluator repair was used. 01 admitted 68
+ReportedClaim entities, no events or relations. 02 admitted eleven entities
+across six types, no events or relations. Each produced fourteen ledger events.
+Both reopened with matching receipts and graphs; separate from-empty execution
+reproduced every file in each attempt directory, including the full ledger and
+all seven artifact files. The shared fixed transaction coordinate
+2026-09-07T07:22:00Z is a protocol input, not a measured execution timestamp.
+
+01 ledger head c4b447e08946b3f6423782c7847051ad2893429cfce87d46efd84b74553c5100;
+receipt b6eede8322b1d13d693bbeb75582837f80353fb44b377c00c32c034295969943.
+02 ledger head ab55f8fb0ff3ded768ae93b2a089405fbffd2f4a929c1eea47d57803abe9776c;
+receipt 12706d3d77bd757f6d5fc0c86062be2ce2f4089fa7f9b46868952f8c1281a7f5.
+Both query guards report zero file, network and named embedding-import attempts.
+Six questions have rows in 01 and three in 02. Those counts are not coverage.
+
+01 accounts for 68 formally targeted assertions and 110 gap-only assertions;
+02 has six partly targeted assertions and 172 gap-only assertions. Both declare
+eight footer blocks with nothing assertable. Core's FULLY_FORMALIZED counter
+means a nonempty formalized_by list and no declared gaps; it does not assess the
+source paragraph's semantic completeness. 01 stores passage-sized descriptions
+with STATED modality throughout. 02 attaches TYPE_ABSENT to all 178 assertions.
+Those are model declarations, not established proof of ontology insufficiency.
+The same ontology admitted richer original B records. No Core failure inferred.
+
+Independent reviewers /root/overnight_review_01 and /root/overnight_review_02
+are completing thirty-question source assessments, eight and two distinct
+central witnesses respectively. Both packets include exact ontology closure;
+all 27 material hashes checked. Human ratification remains pending. No scores
+or new manuscript claims are recorded before completed reviews.
+
+The PDF skill was used to build and visually inspect separate candidate TeX
+sources from the unchanged working manuscript. Eight references checked against
+primary sources. See submission-candidate/REFERENCE-CHECK.md. The Nexus article
+DOI resolver failed; the candidate cites the verified official project page
+already used in the manuscript rather than unverified journal metadata.
+The arXiv source-preparation page was checked. Local TeX Live 2026 passed;
+arXiv processing has not run. No category, licence or affiliation was chosen.
+
+First TeX build stopped on an unavailable generated font. A failing guard
+preceded selecting installed Latin Modern outline fonts. Visual QA caught a
+bold lead-in split from its JSON; RED/GREEN paragraph grouping fixed that class.
+Transcription QA initially included page footers inside split paragraphs;
+explicit footer removal fixes that check, with all 233 printed units and twelve
+JSON exhibits verified. No scientific content changed. Minor tool path probes
+found no flat references.bib or extracted skill directory; the actual arxiv/
+bibliography and staged pinned skill were read. No files were mutated by them.
+
+Candidate PDF has five main pages, one references page, seven appendix pages.
+All pages visually inspected. An independently unpacked five-file source tar
+compiles to identical page PNGs and bibliography bytes. No full private source,
+capture, ledger, publisher PDF, credential or cache is in the tar. Selected
+attributed appendix excerpts are included; additional evidence publication and
+human ratification still require author review. QA.md records exact scope.
+
+Candidate PDF 3857be3ed8a9bb12c52a7b49d2786567ef303fd1fb2907907003f0cff179912c;
+source tar 4ab41371062ab5d5ccec3e827fc5c28a369d9e1269a06cd9ca9d54f3ad294b1b.
+Working manuscript and earlier composition PDF remain unchanged. Focused
+answer/review/candidate suite: 246 passed; preview: eight passed. Ruff and scoped
+diff checks pass after removing one unused QA import. No full Core CI claim.
+No Core mutation, rebind, commit, push, ref change or external publication.
+
+Robotics is preparing visual assessment packets, not yet supplying completed
+model outcomes. Re-entry reports a completed compiler-prerequisite gate at
+consumer f221c0994df530170c80726be29ff876d3dd195e, not external-world Re-entry.
+Both distinctions acknowledged; neither is added as paper evidence. Core was
+sent the no-capability-gap update and remains sole owner of Core changes.
+
+### E-0229, complete Sol reviews and refreshed submission candidate
+
+Date: 2026-09-07.
+
+Both independent thirty-question reviews completed and passed their unchanged
+validators on the first completed submission. Coordinator reran both validators.
+01: four COVERED, zero PARTIAL, 26 NONE; eight witnesses, five SUPPORTED and
+three PARTIAL. 02: zero COVERED, three PARTIAL, 27 NONE; two witnesses, both
+SUPPORTED. All human-ratification fields remain PENDING. Review digests:
+01 d6f559068d798e611108269348b8a2abf78b40b70166f6e62aaff1be3ee01c32;
+02 b141fd5b48f1dff9a7835b24de6144a2dcdd69f9582e6626f454fd5eb2ca3316.
+
+01's three PARTIAL witnesses have faithfully copied scientific prose but carry
+OTHER, defined as no listed kind fitting, where the reviewer identifies method
+justification or interpretation. This classification judgment needs author
+ratification. It is not proof that the scientific sentences are false. Its four
+covered answers are prose-carried ONE_ROW answers. CQ-T5-05 is fully covered
+despite zero graph relations: the existing instrument permits an explicit
+argument inside description. Do not claim typed graph composition from that label.
+
+02 returns two supported RC2 primary-melt quantities. ESTIMATED plus proxy names
+does not, in the reviewer's judgment, explicitly supply calculated-versus-measured
+status; CALCULATED stays in capture evidence outside these rows. The comparison
+also lacks RC3 and a comparison link. No source value was used to fill a missing
+answer field. Blanket TYPE_ABSENT gaps are not proof of ontology insufficiency.
+
+OVERNIGHT-RESULTS.md records both outcomes, actual capture and query structures,
+condition differences, uncertainties and exact evidence. Three new report tests
+failed before that report and manuscript summary existed; all four new tests
+then passed, including identical input conditions except administrative IDs/paths
+and complete byte-identical attempt/reproduction directories. No primary A/B
+count changes, model ranking, semantic retry or extra capture was introduced.
+
+Working manuscript adds one separate supplementary paragraph. Main remains
+five pages, 3,016 words. Candidate PDF remains thirteen pages: five main, one
+references, seven appendix. Twelve of thirteen pages are identical to the prior
+checked candidate render; changed page five was inspected. All 234 printed
+units and twelve exact JSON exhibits pass the transcription check. Final source
+tar was unpacked and built again in a new directory; all thirteen page PNGs
+match. No arXiv processing or human-ratification claim. Earlier composition
+review PDF remains unchanged.
+
+Working manuscript SHA-256:
+7d24ff8ff821db6316f03756ee505bf5c285c1c3c0f48ddfbd344553875dabe0.
+Candidate PDF SHA-256:
+c55ebc609b27b6be2f2d02254cd582ff9b29eec41cf3d0ae5f00726964f98e3a.
+Candidate source tar SHA-256:
+98552f79c3ffdc1cd9c8a4653ac47b554f4607f4d1b8f0ac92b8d437d7ce763f.
+Focused paper/query/review/candidate gate: 250 passed. Preview: eight passed.
+Ruff and scoped diff checks pass. Candidate QA.md is current; E-0228 retains
+the earlier build coordinates rather than rewriting that event.
+
+Robotics now reports six retained visual responses and ongoing replay/support
+review, not a finished paper result. No Core request or paper rebind. Core alone
+owns generic changes; paper has touched no Core path or shared ref. No commit,
+push, merge, public upload or private-source release. overnight-handover.md and
+the plan record completed agents, remaining bounded work and task cursors. The
+existing heartbeat was inspected and remains active through 08:00 local.
+
+### E-0230, author requires cross-task overnight reconciliation
+
+Date: 2026-09-07.
+
+Luis explicitly added Semantic Re-entry to the overnight coordination duty and
+asked this paper task to keep Core and consumers aligned toward a sound Malleus
+and a submission-ready paper grounded in that work. This does not authorize new
+architecture, experiments, Core changes by consumers, or a paper gate on Core.
+Master remains 1.5.7; existing evidence and runtime pins are unchanged.
+
+Sent sync messages to Malleus Core, Malleus-semantic-reentry and Malleus Robotics.
+Core remains sole owner of generic mechanisms and Small Shop. Consumers report
+exact generic gaps and consume verified handoffs. Paper owns claims, evaluation
+and submission preparation. Different pinned versions are not themselves drift.
+The existing malleus-paper-overnight heartbeat was updated, not duplicated, with
+the same thirty-minute schedule and 08:00 local cutoff. Other tasks' automations
+were inspected read-only and not changed. The OpenAI Docs skill informed use of
+the existing scheduling tool; it did not select a new experimental procedure.
+
+Two readiness checks are now explicit in the overnight plan. The Core check
+covers exact declared contracts, enforcement/refusals/replay and known failures,
+never global soundness inferred from a bounded gate. The paper check covers
+claim-to-evidence fidelity, complete declared evaluation, limitations and checked
+submission artifacts. Structural acceptance and replay do not establish source
+fidelity or use sufficiency. Human ratification and publication decisions remain
+pending. No manuscript or empirical result was changed in this coordination step.
+
+Latest task reports identify a shared action-ontology compiler dependency, not
+two separate fixes: Core has an isolated compatibility repair; Robotics saw the
+related date failure on an older pin. Core's action contract is still a draft
+and its check producers do not yet exist. Re-entry's compiler-prerequisite PASS
+does not establish the action or independently observed effect loop. These facts
+were relayed without approving the next architecture or rebinding the paper.
+
+Robotics reports its visual pilot complete while final artifacts are checked.
+All three stores reconstructed the same assessments over four replays. Malleus
+and the transactional event log each rejected all four stale-base attempts;
+mutable state accepted them. Reported visual review: four known responses
+supported, two initial unknowns indeterminate. Paper has not independently read
+the final bytes, so these remain coordination status, not manuscript evidence.
+Comparator parity is not superiority and this is not a policy-driven rollout.
+
+Only the overnight plan, rolling handover and this ledger changed. No code,
+Core path, frozen experiment, shared ref, commit, push or public upload. Existing
+250 focused and eight preview test results remain historical results from
+E-0229, not newly run tests. Scoped documentation diff check is the check for
+this step. The next ledger entry is E-0231.
+
+Core replied during this coordination step: both consumers now have the same
+exact compiler repair handoff, 1be958e88dce865c8e785638d1c15508c92bd1d2,
+tree 8334a558442eb64ec90973d6d0ab08eba3b85ce6, and completed audit packet
+ff0e1b31f3b44be56a63465b9180d7bbf4c17e54, tree
+b02650464120d2f43ba28c4613b9c01d7f8d6806. Paper read both trees and the
+compatibility/gate reports on disk in /private/tmp/malleus-action-contract.X6QNEw/repo.
+The gate result declares BOUNDED_COMPATIBILITY_PASS. Runtime GREEN is 5c559c2;
+2af45e0 is the gate implementation, not the compiler repair. Historical producer
+reproduces nine tests. The repaired producer has 1,165 passed, nine exact
+historical-receipt failures and one retained xfail. Six paired semantic probes
+support the reported bounded result; paper did not rerun those tests.
+Robotics' exact probe has not been rerun on the repair, and neither runtime
+rebind nor action execution follows. Acknowledged this to Core. The shared
+dependency is now reconciled at the handoff level, not declared fully resolved.
+
+### E-0231, complete the candidate's experiment-access index
+
+Date: 2026-09-07. Existing overnight heartbeat, no new condition or author choice.
+
+Read the current plan, handover, manuscript evidence section, primary review,
+Sol follow-up and overnight reports, candidate QA and access map. The map had
+not caught up with all printed supplementary conditions and still described
+the complete overnight results in the future tense. Primary entries named some
+reports in plain text, but no explicit linked index covered the seven experiment
+reports referenced by the manuscript.
+
+Added a generic candidate test extracting those report references and requiring
+an explicit access-map link plus an existing destination for each. RED: one
+failure reporting all seven missing mapped links. Added the seven-condition
+index and the missing Sol result rows, then changed the stale completion text.
+The map distinguishes paper typesetting, verification of retained results and
+fresh model generation. It does not export evidence, select redistribution
+terms or claim that an untested acquisition recipe reproduces the selected
+reading. Core is not needed to settle that publication-access decision.
+
+GREEN: nine candidate tests and the full focused paper/query/review/candidate
+selector, 251 passed in 1.02 seconds. Ruff passes. Its first format check found
+the new long expressions; the formatter changed only that owned test and the
+format check then passed. Scoped paper diff check passes. Eight preview tests
+remain the preceding unchanged-build result, not a rerun in this heartbeat.
+
+The exact manuscript, candidate PDF and five-file tar hashes still match
+E-0229. No manuscript text, rendered page, experimental data, Core code, shared
+ref, commit, push or public upload changed. Only the access map, its test, QA
+and paper progress records changed. Master remains 1.5.7.
+
+Compact snapshots: Core acknowledges no new blocker or scope change. Robotics
+is testing the unchanged action ontology against Core's isolated compiler
+repair in a separate process; no pilot rebind or action-execution claim.
+Re-entry remains active. No final new consumer result was imported into the
+paper. Next ledger entry E-0232.
+
+### E-0232, Robotics' exact compiler witness passes the isolated repair
+
+Date: 2026-09-07. Core supplied an on-disk result, superseding only the pending
+Robotics probe status in E-0230 and E-0231. No reply or new Core request needed.
+
+Paper read robotics_simulation/robomme/pilot/core-candidate-audit/result.json
+under /Users/luis/.codex/worktrees/8ce0/malleus-dev/research and independently
+matched SHA-256 39578cfc1850445708abbeebeab0af8e89b21f6b1eb09071e881953cec03facc.
+The receipt reports ontology_compiled and ValidatedContractCompilation for the
+three retained ontology sources, requested Core 1be958e88dce865c8e785638d1c15508c92bd1d2,
+tree 8334a558442eb64ec90973d6d0ab08eba3b85ce6. It records the isolated compiler
+import path and source identities. action_runtime_executed=false and
+default_robotics_core_rebound=false. Paper verified receipt bytes, not a fresh
+process execution. Core also reports receipt verification, not an independent
+rerun of Robotics' command.
+
+This witness no longer demonstrates the compiler defect on the isolated repair.
+The consumer artifact commit is pending; this is not an immutable consumer
+release, full Core CI, action execution or completed external-world Re-entry.
+Finite action definition and missing check producers remain separate. No paper
+pin or claim changes. Only this ledger and rolling handover changed; scoped
+documentation diff check passes. Next entry E-0233.
+
+### E-0233, inspect the frozen robotics pilot and prepare an optional addendum
+
+Date: 2026-09-07. Robotics delivered commit
+5727cc1b97aba1de6060684774c9bef4cf11032f, tree
+b994c0cc2a906735270412976845c0a3ba535dd5. Paper verified HEAD, clean worktree,
+tree and no pilot diff from that commit. HANDOVER.md hash matches
+ee43406dcaead981295c3b23670c17742c367c726141a57810a16476ed20abb6;
+output/evidence.json matches
+a7b256179d01d6595edf76ff8298dcdff7efcf1b0786499392cc8f0451c93546.
+
+Read the handover, visual report, retained responses/reviews, trace mapping,
+replay wrapper and runtime binding. Reran the three committed pilot-evidence
+tests read-only: three passed. Independent aggregation confirms 756 arm-event
+outcomes and four supported/two indeterminate review labels. All four run
+records retain Core 79ae2feff7fc59436ef405fd91fe5a38c8253394 and final-state
+equality across three arms. These are six model responses, not 756 model trials.
+Malleus and the transactional event log each refuse four injected stale-base
+attempts; typed mutable state accepts them. No semantic checker or robot rollout.
+
+Prepared robotics-evidence-assessment.md with an optional paragraph and the exact
+PickXtimes stale/fresh reader example: refusal preserves continue; accepting the
+same proposal values on a fresh base gives stop. JSON fields were compared
+against the retained selection. Stop is an offline answer, not task success.
+The recommendation is a short appendix example of another source modality, not
+an abstract-level third proof or a comparative advantage over the event log.
+No main-manuscript integration, evidence redistribution or new run is selected.
+
+Paper did not re-judge frames, audit every producer access, recreate observations,
+rerun the four full executions or rerun Robotics' reported 288-test suite.
+The three evidence tests verify retained consistency, not source truth or
+human ratification. Core's separate compiler candidate receipt is now committed
+inside this packet; neither robotics nor paper changes runtime pin. Executable
+action contracts remain Core-owned and pending.
+
+Sent inspection acknowledgment to Robotics and the bounded completed result to
+Re-entry. No new Core request, consumer gate or architecture approval. Updated
+the stale initial status in the paper-owned robotics plan, plus overnight
+continuity. No edits to Core or Robotics, no shared ref/commit/push/publication.
+The 251-test paper gate remains the preceding result, not a rerun for this
+documentation-only addition. Next entry E-0234.
+
+### E-0234, reproduce Re-entry's distinct-history witness
+
+Date: 2026-09-07. Consumer handoff
+51bb72a661d40c3aa442ee3eff37b41b14387acd, tree
+67105a7c558c4bcc9f20c5d204e0e4fc5bf2057f, in the isolated Re-entry design
+checkout. Paper verified HEAD/tree/clean status and both report hashes:
+REPLAY_NONINVERTIBILITY.md 12f2158525d78a067225b1155e39fcee9cc266711092dc119d473bf25712f887;
+replay-noninvertibility-result.json e30ae4e6fc4b194b9a2fb49bca01bd776a667254c28c5b0ccfd724b408da4d0f.
+
+Read the full witness and runtime guard. Reexecuted its two tests using the
+declared Core 2af45e03ee7d7bf528cef8db42c0798e6d99685b checkout and explicit
+Core pytest configuration, root environment and import mode: two passed in
+1.28 seconds. The printed graph, head and receipt identities match the retained
+observation. Both independent histories reopen from JSONL alone and every KCS
+round-trips. One has 28 events, the other 29, but the entire current graph,
+accepted KCS sequence, record history and supplier source are unchanged.
+Only the latter retains the authored conformance note.
+
+This is a concrete current-graph-to-full-history non-uniqueness witness under
+the existing compiler-enabled state-version profile. It is not a novel theorem,
+Core defect, changed-world observation or external Re-entry E2E. It supports
+distinguishing domain-state identity from protocol context, not selecting a new
+action stale-base policy. The earlier wrong-runtime attempt remains excluded.
+Paper did not rerun the consumer's reported 112-test selection or full Core CI.
+
+Added the bounded result and optional explanatory wording to the existing
+reentry-paper-plan.md, without changing the manuscript or paper runtime pin.
+An initial multi-file documentation patch refused a stale context before writes;
+the exact current lines were reread and the corrected patch applied. No code
+mechanism was changed. The new result is retained for author consideration,
+not silently made part of the submission candidate. Next entry E-0235.
+
+### E-0235, claim-condition audit and a short author inspection route
+
+Date: 2026-09-07, scheduled overnight continuation. Re-read the current argument,
+methods and result claims against the primary review, repair and composition
+reports and the actual two repair TASK.md inputs. The finding-guided inputs
+identify a record and source location without supplying query programs or the
+expected replacement value. The separate composition condition explicitly
+receives one question and its requirements. The manuscript distinguishes these
+conditions and keeps original counts unchanged. No new claim contradiction was
+found in that inspection; it is not a fresh semantic judgment or full audit.
+
+Added a short inspection route to the existing candidate README: primary worked
+answers, evidence-link contrast, disclosed task-directed gain, weak fixed-schema
+Sol outcomes, then optional consumer notes. It tells the author what is and is
+not in the current PDF without another report or new experiment. No manuscript,
+PDF, source archive, review label or runtime pin changes. An initial documentation
+patch refused mismatched context before writes; the corrected exact-context
+patch applied. Scoped diff check passes; no test rerun was needed for this
+navigation-only change. The preceding 251-test result remains attributed.
+
+Consumer snapshots: Robotics recorded paper's inspection, with no new result or
+request. Re-entry's delivered result is already inspected. Core reports finite
+schema RED/GREEN progress while exact checks continue; no completed executable
+action handoff is available. No duplicate queries to those tasks or new Core
+requirement. Rolling cursors updated. Next entry E-0236.
+
+### E-0236, coordination permission exception, no paper change
+
+Date: 2026-09-07, 08:51 UTC heartbeat. Read the retained continuation state and
+compact snapshots of all three tasks. Core reports a completed definition
+clarification, not an executable action capability. Its message to Re-entry
+failed; Core says the app requires permission to share that private design
+update and has asked Luis in the Core task. Paper inspected the failed tool
+marker and final request, but did not relay the payload, route it through files
+or another tool, or ask a duplicate approval question. The reason is attributed
+to Core's report; paper has not independently diagnosed the app's permission
+decision.
+
+Transaction boundaries and orphan-registration behavior remain author choices.
+No runtime work or new paper rebind follows. The completed marine candidate,
+consumer evidence and optional notes remain unchanged. No new generic capability
+gap, paper test failure or empirical contradiction is demonstrated. Updated only
+rolling coordination status/cursors and this ledger; no code or test rerun.
+The permission exception should be surfaced once, not repeated on unchanged
+heartbeats. Next entry E-0237.
+
+### E-0237, classify a later robotics accounting audit without changing claims
+
+Date: 2026-09-07, 09:21 UTC heartbeat. Core's permission/architecture status is
+unchanged and was not surfaced again. Re-entry has no new material handoff.
+Robotics reports a later controller-accounting audit, not another visual pilot.
+
+Paper read exact commit c968bd346aecc3becc4154468adec36b544bd179, tree
+ec50e79e5ab49f57d76f98c544b3e41d64cf395b, its report/result and extraction code.
+The reported witnesses execute isolated upstream resume and aggregation nodes
+on authored progress data. The former removes an error entry to permit retry;
+the latter raises on mixed Boolean/string outcomes. The report explicitly does
+not claim permanent denominator loss, an uncaught full-evaluator crash, model
+execution or a robot rollout. Its future online adapter must retain attempts
+independently. This is consumer integration work, not a new Core requirement.
+
+The already inspected pilot output/evidence.json still has SHA-256
+a7b256179d01d6595edf76ff8298dcdff7efcf1b0786499392cc8f0451c93546.
+Paper did not rerun the controller audit or its reported 292-test research gate.
+No new result is integrated into the manuscript or optional pilot paragraph.
+Only rolling status/cursors and this entry changed. Next entry E-0238.
+
+### E-0238, arrange the final morning wake without extending the loop
+
+Date: 2026-09-07, 14:52 UTC. The thirty-minute schedule's final ordinary wake
+occurred at 07:51 local, before the declared 08:00 closeout. Read OpenAI Docs
+and the existing automation, then updated that same heartbeat for one final
+15:00 UTC occurrence today. No duplicate automation or change to its prompt,
+ownership, notification policy or authorized work. The first hour-8 rule was
+refused as having no future occurrence; a disk read verified that the prior
+schedule remained intact. The explicit UTC hour-15 rule was accepted and the
+saved schedule was checked. Pause this task's heartbeat after final closeout.
+This is scheduling maintenance, not a new author decision or plan version.
+
+Compact snapshots show no new completed Core capability or consumer result.
+The existing Core sharing approval remains pending and was not bypassed or
+asked again. PDF, source archive and working manuscript SHA-256 values match
+the checked candidate exactly. No experiments, reviews or tests were repeated.
+Only this ledger and the rolling handover changed in the paper workspace.
+Next entry E-0239.
+
+### E-0239, morning closeout with bounded results and author decisions
+
+Date: 2026-09-07, final wake 15:02 UTC, 08:02 America/Los_Angeles. Compact
+snapshots show no new executable Core capability or consumer result. Closed
+the existing paper heartbeat through its update tool and verified PAUSED on
+disk. OpenAI Docs was read for that action. No other task or schedule changed.
+
+Completed paper artifacts: a thirteen-page candidate with a five-page,
+3,016-word main text, one reference page and seven evidence appendix pages;
+twelve exact JSON exhibits; independently rebuilt five-file source archive.
+The final digest check matches the prior inspected bytes:
+
+PDF c55ebc609b27b6be2f2d02254cd582ff9b29eec41cf3d0ae5f00726964f98e3a.
+Source tar 98552f79c3ffdc1cd9c8a4653ac47b554f4607f4d1b8f0ac92b8d437d7ce763f.
+Manuscript 7d24ff8ff821db6316f03756ee505bf5c285c1c3c0f48ddfbd344553875dabe0.
+
+Both authorized fresh Sol populations admitted on first submission and reproduce
+their full retained files. Complete independent model reviews report covered,
+partial and none counts of 4/0/26 and 0/3/27. Weak results remain included, no
+extra sampling or semantic retry. The primary eight/eleven covered totals and
+separate one-question task-directed composition gain remain distinct conditions.
+All human ratification remains pending. Coverage labels are not accuracy scores.
+
+Completed checks retain their actual scope: 251 focused paper tests, eight
+preview tests at the unchanged build, three Robotics evidence-consistency tests
+and two Re-entry non-invertibility witness tests. No tests or model judgments
+were rerun for this documentation-only closeout. The inspected Robotics pilot
+preserves event-log parity and does not execute a robot action. The Re-entry
+witness distinguishes two complete histories with an identical current graph;
+it is not external-world Re-entry. Both optional notes remain outside the PDF.
+
+Core owns generic changes. Its later compiler compatibility result remains a
+bounded pass with recorded receipt-comparison failures, not full CI GREEN.
+Executable action checks and author choices remain outstanding. The sharing
+approval requested in Core was not bypassed. None changes the marine paper pin
+or demonstrates a defect in its retained results. Structural acceptance/replay,
+source fidelity and use sufficiency remain separate promises.
+
+Author decisions remain semantic-review ratification, evidence-access and source
+permissions, optional consumer inclusion, final metadata/category/licence and
+formal-source integration. No arXiv processing or submission, no public full
+reproduction bundle, and no commit/push/shared-ref change by paper. Updated
+the existing handover and plan execution record, with no master-plan bump.
+Next entry E-0240.
+
+### E-0240, author corrects the session objective: build and learn before synthesis
+
+Date: 2026-09-07. Luis explicitly rejected treating this task as documenting
+the building process or merely reporting failures. His direction is to build
+and improve, journal the work, orchestrate the fronts, and write the paper when
+we have results. Failure documentation is useful only when accompanied by deep
+RCA, probing and contextual learning that moves the project forward.
+
+Master advances to 1.5.8. Its governing session directive now requires tracing
+causes, distinguishing hypotheses with bounded probes, routing changes to the
+correct owner, guarding demonstrated failure classes and testing improvement.
+Structural admissibility, source faithfulness and use sufficiency remain
+separate promises. The existing draft and submission package are retained
+snapshots, not the active objective or a reason to stop investigation. The paper
+will synthesize the contribution and evidence, not reproduce the journal.
+
+The preceding read-only zero-relation RCA is the immediate input. Both Sol
+producer scripts explicitly emitted empty relation arrays. Their plans and
+replayed graphs preserve the submitted records; no dropped-edge defect was
+found. The supplied ontology admits relations and original B uses them. The
+paper's stop rule allowed every block to be accounted for without capturing
+its relationships, and the producers did not receive the computed census for
+a capture-feedback step. Sol 01 also had incomplete full-text exposure after
+truncated tool output; Sol 02 recovered most of its source exposure, so
+truncation alone cannot explain both outcomes. Causal effects of these factors
+and model settings have not been isolated.
+
+Evidence inspected in that RCA includes each producer's work/build_attempt.py,
+producer-task.md, capture, plan and replayed export under
+private/paper-v4-answer-demonstration/overnight-sol-01/ and overnight-sol-02/,
+the recorded producer tool calls, FOLLOWUP-PRODUCER.md and the pinned Core
+document census implementation. Four existing overnight harness tests passed.
+These are observations from the preceding read-only investigation, not a new
+experiment or a test that the producers followed the full capture procedure.
+
+Next work is to define a discriminating capture probe and its required author
+choices, not to add an edge quota, invent relations or spend more model budget
+without a hypothesis. Core receives only demonstrated generic requirements;
+paper procedure and evaluation remain ours. This entry does not authorize or
+launch a new sampling condition, Core mutation, rebind or heartbeat. No draft,
+PDF, retained experiment, review judgment or publication artifact is changed.
+No commit, push or shared-ref change. Next entry E-0241.
+
+### E-0241, correct the unauthorized population-only substitution and run end to end
+
+Date: 2026-09-07. Luis rejected the substituted experiment: the intended Sol
+comparison was end to end, including ontology construction, not population
+against Opus's ontology. He ordered execution now. The coordinator owns that
+scope error. Existing population-only captures remain evidence of that separate
+condition and cannot answer the intended end-to-end comparison.
+
+Additional RCA correction: the retained Opus prompt also has a permissive
+block-review stopping rule, and Opus B admitted without a structural diagnostic
+return. Neither the stop rule nor absent returned feedback alone establishes
+why the earlier Sol producers stopped with zero relations. The matched content
+checks found byte-identical reading, ontology, packs and skill; profile and
+population surface differ only in JSON formatting. The material difference
+was that Opus designed its own ontology and retained that context into capture,
+where Sol started fresh at population. Model and agent-environment differences
+also remain. No causal effect has been isolated by those retrospective checks.
+
+Master advances to 1.5.9. sol-e2e-plan.md opens sol-e2e-01 and sol-e2e-02 under
+the original run-21 two-phase prompt, changed only for run IDs and paths. Both
+receive the exact eight original initial inputs and no project ontology or
+compiled population surface. Core remains c95dba7b86bb61487bda9a52458e1ea47cce20ab.
+Both use gpt-5.6-sol with fork_turns none and retain their own agent through
+the gate and population. No new model-specific prompt or reasoning override
+was supplied; effective settings must be recorded from execution metadata.
+
+Mechanical prevention: answer-demonstration/test_e2e_condition.py checks the
+two-phase prompt identity, fresh-session declaration, exact eight-file input
+closure, input digests and absence of inherited ontology/surface inputs. RED
+failed on both missing run packets. Reused run-21 preparation with the new
+manifests explicitly bound, including its environment preflight. GREEN passed.
+Each original input identity matches. No dependencies installed or Core edited.
+
+Fresh producer agents /root/sol_e2e_01 and /root/sol_e2e_02 are dispatched and
+working on ontology proposal. No ontology, population or evaluation result is
+claimed yet. The same-agent gate, admission/replay, queries and complete review
+remain required. Both outcomes will be retained. No manuscript/PDF change,
+commit, push, public release or heartbeat restart. Next entry E-0242.
+
+### E-0242, two own-ontology Sol runs complete; metadata-only population persists
+
+Date: 2026-09-07. Executed the author's E-0241 correction under master 1.5.9.
+Each fresh Sol producer constructed its own ontology and retained the same
+session through population. Exact eight initial files and the original run-21
+prompt match, with only run IDs and paths substituted. Actual session metadata
+records gpt-5.6-sol at low effort throughout; no override was supplied. Opus's
+effort is unrecorded and its agent environment differs. No equal-resource or
+isolated model-weights claim.
+
+sol-e2e-01 compiled ontology attempt 01 with 3,858 facts. sol-e2e-02 attempt 01
+refused INVALID_RANGE for resource_url range uri. The exact diagnostic returned
+to that same agent; attempt 02 changes only uri to string and compiles with
+3,336 facts. No hand repair. Query programs and type bindings were frozen before
+each population. Both first populations admit and replay on unchanged Core
+c95dba7b86bb61487bda9a52458e1ea47cce20ab. 01 has 74 Claim entities and 74
+assertions; 02 has 81 GeoscienceClaim entities and 81 assertions. Neither has
+relations, events, subject references or scientific-valued graph properties.
+The only properties are assertion_locator, assertion_modality and statement_sha256.
+Whole source blocks remain retained evidence. 01 marks 64 STATED and ten
+HYPOTHESISED; 02 marks all 81 STATED. Nothing-assertable counts are 112 and 105;
+both declare zero gaps and account for 186 blocks.
+
+Each history has thirteen ledger events. Two independent from-empty executions
+with the same transaction inputs reproduce every one of sixteen artifact files
+per run byte-for-byte, including the complete ledger and replay receipt.
+Thirty unchanged query programs return zero rows in both, twenty-nine
+NO_CANDIDATE and one NOT_EXPRESSIBLE. No forbidden file/network/named embedding
+import attempts and no query mutation were observed. Two fresh independent
+reviewers each assess all thirty questions and 121 required semantics against
+exact source evidence. Both yield 0 COVERED, 0 PARTIAL, 30 NONE, with no returned
+witnesses. Three controls ask for unavailable information, so these are not
+thirty failed positive questions or source-fidelity scores. Both first review
+submissions and the coordinator's validator rerun pass. Human ratification PENDING.
+
+RCA: both producer tool histories display page:1:block:005 in full; it names
+the feature and fault in the bounding relation. Both accepted ontologies admit
+BOUNDED_BY. Each nevertheless submits only a metadata claim for this paragraph.
+Core does not remove an edge; no edge or endpoint entity was proposed. The
+producer logs describe interpreting explicit source text into semantic records
+as risking invention or requiring further editorial judgment. The supplied
+skill already instructs named subjects, quantities, relations and modality
+separation. Restoring ontology construction and same-session continuity did not
+resolve the omission. The earlier missing-stage explanation was insufficient.
+
+Read-only tool-output audit finds all 186 complete blocks displayed for 01 after
+paged recovery, and only 166 for 02, with twenty blocks on pages three through
+five not recovered in full. 02 also did not read the final skill portion. This
+checks normalized raw/escaped text delivery, not model comprehension. Source
+truncation remains a limitation of 02 but cannot explain both outcomes. Low
+effort, agent environment and instruction interpretation have not been causally
+isolated. The census FULLY_FORMALIZED category checks declared targets and gaps,
+not semantic decomposition. It marks all these metadata claims fully formalized;
+that is not scientific completeness. No census-guided semantic continuation ran.
+
+Implementation is paper-owned orchestration only: reuse original preparation,
+compiler gate and public Core execution. e2e.py checks same-agent acceptance
+before exposing phase two; e2e_execute.py retains the original public runner
+with administrative run-ID substitution and executes source-free frozen queries;
+e2e_review.py stages complete source-grounded review. The existing review helper
+now distinguishes FRESH_END_TO_END and checks its acceptance-time binding.
+Mechanical guards cover initial input/prompt identity, same nonempty producer
+identity, ontology acceptance before population and honest review-mode labelling.
+The new condition and mode tests first failed, then passed after implementation.
+Focused paper harness: 255 passed and two subtests passed. No Core suite claim.
+
+01 ledger head bb494b30172b15a610fadfc6e0a65dbaa603f2d14af46993ac7c6851e38f50c9;
+replay receipt d4c6dcea54bd8e09041f35fbaa92ad7512e9a67fff0d7cf1156eeb90064586fb;
+ontology 14f2e09ef9ec0da42d9bdaa9d7b73720d64557bbe8bd3064e053db83d1492d8f;
+query binding 23b5d4bbdf0b7e54704ded4cbf061034125eba8b6b32638c7ad1a607ab85b168.
+02 ledger head 44c1aa7b25363e5b7ca96ff4b3d2afeae470569060da15de5dc1d226ae981ee7;
+replay receipt 8ca1437c20fd8e93048f3da1ad945858c2f723dad4297eca5a4583458306d242;
+ontology 75c6c87968b6bf76f32b1348b927869e5f9a73cf2f6c0f4752b0538f4cf9efcd;
+query binding 69da28499ff0923061294f4018f6b93798e348bbfed35e238f25b1e1bdc2ee48.
+Both use reading f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17.
+Completed review records: 01 8cd2f856e6d7cdce1570a2534027fe459a5dd6509be6e4efe2b75f796f2f7431;
+02 3ed0ba0fba04b6ae80c1e28b81ee28c41c0c2cb85c6980f0ed5ec0c21462f28d.
+All identities are SHA-256. Exact artifacts are retained under
+private/paper-v4-answer-demonstration/sol-e2e-01 and sol-e2e-02.
+
+E2E-RESULTS.md proposes, but does not execute, a separate interpretation-only
+continuation of 01. It would clarify source-supported decomposition versus
+invention without questions, answer values or edge quotas and keep the same
+own ontology and model setting. Its outcome would discriminate a repair
+hypothesis, not retroactively improve an unassisted replicate. The author has
+not selected a new condition. Core received a bounded diagnostic and no
+capability request. No Core change, rebind, manuscript/PDF change, commit, push,
+shared-ref mutation, human ratification or heartbeat restart. Next entry E-0243.
+
+E-0242 verification addendum: changed-file Ruff caught one unused digest import
+in the new review-packet builder. Removed that import only; retained run and
+review bytes are unchanged. The existing F401 lint guard now passes, as do
+format checks on all eight changed Python files and the scoped git diff check.
+
+### E-0243, defer cross-model ontology operation and purpose-handoff research
+
+Date: 2026-09-07. Luis identifies a separate useful question in the unintended
+population-only condition: what happens when one model creates an ontology and
+another operates it? He asks to add this to the roadmap/todo and focus elsewhere
+now. His hypothesis is that the new model was not informed sufficiently about
+what to do and why. This is recorded as a context/task-understanding hypothesis,
+not established causation or a claim that model weights need training.
+
+Master advances to 1.5.10. Expanded the existing deferred split-producer item,
+rather than opening a duplicate experiment plan. Future investigation should
+separate fresh-session effects from cross-model effects and test whether a
+purpose/rationale handoff improves source-faithful capture beyond a schema-only
+handoff, controlling settings and excluding evaluation answers. The sparse
+population-only results remain useful diagnostics. The own-ontology Sol runs
+also omitted scientific graph content, so missing creator context does not
+explain all failures. The root cause of the model difference remains open.
+
+Parked the zero-relation investigation and the proposed interpretation-only
+continuation in the master directive, Sol plan and handover. No new producer,
+review, model setting, Core request, experiment or manuscript change. This is
+not a gate for other work; Luis has not specified the replacement priority.
+All recorded results remain unchanged. Documentation-only update; no commit,
+push, shared-ref change or heartbeat restart. Next entry E-0244.
+
+### E-0244, deep RCA confirms a paper input-selection regression
+
+Date: 2026-09-07. Luis: "RCA this deeply, this smells to regression". This
+reopens read-only diagnosis, not a producer run or fix. Master advances to
+1.5.11; cross-model purpose-handoff experiments remain deferred. New report:
+answer-demonstration/REGRESSION-RCA.md. All previous reports and run bytes remain
+unchanged; this entry corrects the earlier incomplete interpretation.
+
+Confirmed: the first fixed-ontology Sol capture used Core 160878c and skill
+ddc28bbc894dbcd5996bb668d2a72c1534070098394756144095b570c2eacb9d. Core's accepted
+correction 723a4f92c4a11d695547d21d3bc213ef80a6b503 introduced those exact skill
+bytes, replacing the endpoint-name-only relationship guidance and clarifying
+proposition content, producer-owned interpretation and semantic limits of the
+census. Its acceptance and first consumer run are already in E-0212 and HANDOFF.md.
+E-0226 then selected historical Core c95dba7 and the original B ontology, causing
+followup.py to stage skill 8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81.
+Both overnight packets and both later end-to-end packets carry that older skill.
+Current inspected Core HEAD 2a11240556532c2b6160ac0bfa5ab1165e862fd2 still contains
+the correction. This is a paper instruction-selection regression, not a revert
+in current Core or a compiler loading bytes other than those requested.
+
+The earlier and overnight fixed-ontology task texts match after administrative
+run-ID replacement, but the ontology and skill differ. Reading, root, packs
+and canonical profile match. Actual transcript metadata records low effort
+for the earlier gpt-5.6-sol producer as well as both end-to-end producers. The
+earlier Sol produced 41 entities and five PART_OF relations. Thus low effort
+or another model's ontology alone is not an adequate explanation of inability
+to produce any relations. The earlier result was still partial, and the richer
+original Opus result also used the old skill. No causal effect of the rollback
+on all zero-relation outcomes is claimed.
+
+Mechanical diagnostic: used _assert_guidance from exact 160878c test source
+tests/contract_compiler/pareto/test_capture_coverage_boundary.py, SHA-256
+3a49d670fce7de4eb42da4e2d6b3d01b966cefd77fe88344c9f64308ccc02bf2. The earlier
+Sol skill passes; all four later Sol skill files fail the existing correction
+guard. The first identity check refused the current working-tree test because
+it differs from 160878c; then the exact committed source was loaded in memory.
+No test or fixture was patched. This compares each packet against the accepted
+correction, not against its own historical manifest. The paper's existing
+identity guards faithfully accept the old selected bytes and do not check
+whether they include corrections already accepted for adoption. Historical
+replication was conflated with testing the improved project.
+
+Verified all installed package blobs against c95dba7. Reopened four existing
+ledgers: earlier Sol, original Opus run-21 and both end-to-end Sol runs.
+Every graph export equals the retained export, receipts match, and exact ledger
+bytes remain unchanged. Re-adapted the earlier Sol's unchanged source/capture
+and records on c95dba7; canonical plan bytes equal its original 160878c plan.
+Public population compilation returns CHANGE_SET with all 41 entities and five
+relations. No new history or admission was written. The only src/malleus file
+changed between the two commits is population.py's structured CSV/JSONL locator
+resolution, outside this application/json document-reading path. Document,
+graph, compiler and replay implementation bytes match across those commits.
+
+Model-visible tool outputs confirm that the earlier Sol saw the corrected
+producer-interpretation and semantic-completeness text; both end-to-end runs
+saw the old endpoint rule instead. Both saw the explicit named-subject,
+census-inspection and stopping instructions. No removed Claim content slot:
+description and statement remain available, optional fields in all compared
+surfaces. The immediate semantic loss remains in model-authored population,
+not admission. Complete source delivery in end-to-end 01, and the common
+explicit bounding witness, still prevent treating truncation or the narrower
+endpoint rule as a sufficient explanation of every omission.
+
+OpenAI Docs was used to verify that model selection without a separate effort
+override can use the model's default effort. Actual run settings came from
+transcripts, not that guidance. No setting was changed. Proposals in the RCA:
+separate historical replication from current-adoption baselines; check staged
+skills with existing applicable correction guards as well as digests; verify
+actual delivery and settings; isolate guidance in any future causal comparison.
+Do not create a Core evaluator, edge quota or duplicate Core correction.
+
+No implementation, new model execution, input rebind, Core mutation, manuscript
+or PDF edit, commit, push, ref change or heartbeat restart. No whole-suite or
+semantic-success claim. Next entry E-0245.
+
+E-0244 verification addendum: the existing paper initial-condition and same-agent
+guards still pass on the old-skill packets, 3 passed and two subtests passed.
+That is the concrete contrast with the accepted Core guidance guard's four
+expected failures above. All seven shared source/root/pack/profile input files
+also compare byte-identical across the earlier and both overnight Sol packets.
+Scoped documentation diff check passes. No code was changed.
+
+## E-0245, 2026-09-07, accepted-guidance staging repair and one fresh rerun
+
+Author: "Document and fix and rerun", approving the preceding bounded proposal.
+Master 1.5.12 and sol-e2e-plan.md now select sol-e2e-corrected-01. Exact Core
+160878cf14c0d27b11a440e26688708e9b7a7e2b, tree
+d946a7550dee247a371889f5eadf1cfecc964450, not latest main. One fresh
+gpt-5.6-sol producer, explicit low effort, no inherited task context, its own
+ontology and population in the same session. Hidden questions and original
+two-phase task remain fixed. The corrected skill and bounded administrative
+delivery are both disclosed changes. No isolated model or skill-effect claim.
+
+Pre-action scope: paper-only staging guards, no server interaction or endpoint,
+no Core change, source invention, semantic evaluator, fallback or edge quota.
+Existing historical artifacts and tests remain active and unchanged. Reuse
+the original preparation, compiler gate and public E2E admission/query runner.
+The shared main checkout is already dirty; no commit, push, ref movement or
+integration is authorized. Preserve every unrelated edit. Source stays private.
+
+RED: nine new test cases failed because the current-adoption and delivery
+guards did not exist. GREEN: twelve focused tests and two historical subtests
+pass after implementation. Existing Core _assert_guidance and LABELS are loaded
+from exact 160878c test bytes, verified against the RCA's retained digest, not
+rewritten. It passes the earlier corrected Sol skill and rejects all four later
+regressed packets. Current-adoption inputs reject wrong pins, changed settings,
+missing required settings, changed or extra inputs, and a manifest redeclaring
+changed bytes as the selected condition. Historical pinning is not weakened.
+
+Bounded delivery shows exact UTF-8 text in numbered frames. The gate checks
+complete frame contents in actual function-call outputs, ignoring assistant
+messages and hidden reasoning, and checks observed model/effort/session identity.
+Missing, truncated or altered frames refuse. This proves recorded delivery,
+not attention, comprehension, semantic faithfulness or complete extraction.
+The administrative delivery appendix changes no modelling instruction.
+
+OpenAI Docs was used for explicit model and reasoning-effort configuration:
+https://learn.chatgpt.com/docs/agent-configuration/subagents. Actual settings
+will still be verified from the producer session, not inferred from documentation.
+The existing isolated runtime at /private/tmp/malleus-paper-sol-core.sudmIo/src
+passes whole-package identity verification against selected 160878c. No install,
+dependency or environment mutation was needed.
+
+Execution pending at this entry. No new semantic feedback condition, manuscript
+or PDF change, Core mutation, heartbeat restart, commit or push. Admission will
+be assessed separately from useful capture. Next entry E-0246.
+
+E-0245 execution addendum: staged the eight-input packet and launched exactly
+one producer, /root/sol_e2e_corrected_01, task
+01a07ccb-4a1c-70b1-89bd-5c457dad0c54. Observed metadata confirms
+gpt-5.6-sol and low effort. The retained launch request uses fork_turns=none.
+The helper emits 36 bounded frames, including ten skill and fifteen reading
+frames. Whole answer-demonstration gate before dispatch: 178 passed and two
+subtests; Ruff passes. No source fact has been authored by the evaluator.
+
+Live audit exposed a paper audit-reader defect: the synthetic test used
+function_call_output strings while this Codex session records
+custom_tool_call_output with input_text blocks. The first audit therefore
+reported zero visible frames. Added a RED reproducer of that exact envelope,
+then support for both documented transcript output shapes; reasoning and
+assistant messages are still excluded. Complete skill and reading frames now
+verify. A second RED/GREEN guards frozen delivery-helper and dispatch-text
+bytes. Eleven focused correction tests pass. The producer's frozen helper
+and packet were not modified; only the parent-side audit reader changed.
+An interim full-delivery check correctly refused the six schema-input frames
+the producer had not read yet. No gate attempt or diagnostic was charged for
+that ongoing progress check. No initial-prompt plaintext verification is
+claimed from the encrypted inter-agent transcript item; the exact dispatch
+text is retained separately and was supplied in the launch call.
+
+E-0245 ontology boundary: all 36 initial frames subsequently verified. Attempt
+01 was refused for default_prefix by the existing source reader. Returned its
+exact cause chain once; the same producer removed that field in attempt 02,
+which compiled with 4,582 facts. Accepted ontology SHA-256
+96b9b75ccf7a935b0d9b89f4aa5ae13d0f9c530fc4276fc18ccc0e94f22ec8ff.
+One direct-root grounding annotation uses the allowed none_found form with a
+bounded declared-input search; no external vocabulary URL is cited. This is
+not a verified claim that no geoscience vocabulary exists.
+
+At 17:05:13 UTC froze the accepted surface and unchanged thirty-query program
+against the producer's own ontology, before population existed. Binding
+b45e36f7d256ad02f1a7e2c206bd9cbd4f1e0b083054f494b52076123ede64d9.
+Resumed the same producer with its accepted diagnostic, surface and exact
+interface coordinates. The initial two-phase task still governs population;
+the phase-two dispatch is administrative and retained verbatim. Historical
+phase-two text is referenced by old logs but encrypted in available task
+transcripts, so byte-identical historical continuation wording is not claimed.
+The new dispatch adds no modelling hint, answer value or semantic feedback.
+Twenty-three accepted-input frames are required before admission. Focused
+answer/appendix/review/candidate gate now passes 271 tests and two subtests;
+changed-file Ruff, format and scoped diff checks pass. Core received a
+coordination-only note, with no requested capability or Core mutation.
+
+E-0245 correction-diff qualification: attempt 02 did more than delete the
+rejected root field. The producer also changed version 0.1.0 to 0.1.1,
+abbreviated document, grounding-search and class descriptions, and removed
+many class, slot and enum descriptions. No evaluator edit occurred. Both
+attempts remain available; do not describe this as a byte-exact one-line repair.
+This definition loss is recorded as producer behavior for later assessment,
+not repaired through undisclosed semantic feedback. All 23 accepted-input
+frames now verify in actual tool outputs before population submission.
+
+## E-0246, 2026-09-07, corrected run executed, capture and query failures separated
+
+Execution of E-0245, not a new author decision. Master remains 1.5.12. The one
+approved producer finished. Actual transcript evidence verifies all 36 initial
+and 23 accepted-input frames and Sol/low settings across the same fresh session.
+No semantic feedback or population retry was sent. The sole submitted population
+contains nine entities, no relations or events, six assertions from five blocks,
+33 blocks declared nothing assertable, 148 untouched and one TYPE_ABSENT gap.
+Two quantitative observations and three subject references survive as graph
+fields. This is not the prior metadata-only output, but broad capture is not
+solved. All six assertions were labelled STATED by the producer, not independently
+certified as epistemically correct.
+
+At transaction time 2026-09-07T17:13:44Z, one KCS produces fourteen ledger
+events. Admission and reopen/replay succeed. A separate from-empty execution
+matches all sixteen output files byte-for-byte, including the ledger. Exact
+runtime verification passes against all selected Core src/malleus bytes. Core
+remains 160878cf14c0d27b11a440e26688708e9b7a7e2b, tree
+d946a7550dee247a371889f5eadf1cfecc964450.
+
+Ledger head: sha256:21dbad0458764e5d1983be8195e9f009a8948e7d0c60a7eb052ae083f75717d0.
+Receipt: sha256:4643ce3f9ac7bee24dd186ebaae48d39c838ac571498c8dbb829728208e4d933.
+Graph export: sha256:3dc15d741f664c7cefff4cb3c18ac27ff1bc523c7184fb6974e8eb32d94e02a3.
+Query result: sha256:a981251703083902cf33da9622eea0e690b57e10105cdb92d9a285594b9e1c30.
+The remaining five-identity coordinates and exact private artifact paths are in
+answer-demonstration/CORRECTED-E2E-RESULTS.md. No PDF or private source bytes
+were added to public evidence.
+
+The unchanged thirty queries return 27 NO_CANDIDATE, one NOT_EXPRESSIBLE and
+two CANDIDATES_FOR_REVIEW, sharing one preferred-status claim. The graph has
+earthquake-depth bounds and primary-melt CO2 bounds, but the query text filter
+ignores observation_kind. It sees only depth and CO2 concentration, losing the
+qualifiers required by its own filters. Read-only public query, get_node and
+trace_population_record calls retrieve both stored observations and their
+derivations. Empty answers therefore do not establish absent captured values.
+This is a paper query-binding limitation, not a missing Core read API. Neither
+frozen queries nor results were changed or rescored. The missing Relation
+records are already absent in the producer's submission, not lost in replay.
+
+Review preparation initially refused assertion:preferred-degassing-mechanism
+at page:5:block:002: the retained assertion collapses source line breaks to
+spaces. The accepted Core document contract explicitly normalizes whitespace;
+paper's raw-substring preflight contradicted it. Retained the refusal as
+review-preparation-01-refusal.json. Four RED cases reproduce newline, tab,
+nonbreaking-space and repeated-space rejection. GREEN applies the same
+whitespace-collapse rule without changing bytes. Four negative tests preserve
+rejection of changed words, joined words, case and punctuation. All 28 packet
+tests pass. This does not convert semantic labels or alter the source/capture.
+
+The frozen review packet was then prepared successfully. A subsequent display
+lookup incorrectly requested schema from the preparation summary and raised
+KeyError; the complete packet already existed and was neither rebuilt nor
+overwritten. The independent reviewer verifies the packet itself, not that
+display. Review task 01a07ce0-7490-7c42-be04-30505c859569 is completing thirty
+questions and 121 semantics, with one distinct returned witness. Human
+ratification remains pending. Record the completed review as an addendum.
+
+Focused answer-demonstration, appendix, evaluation-v4 and candidate-source
+tests: 279 passed, two subtests. Ruff and formatting pass on seven changed
+Python files; scoped documentation diff check passes. Not a full Core CI claim.
+No Core mutation, dependency installation, manuscript/PDF edit, commit, push,
+shared-ref movement or heartbeat restart. Historical packets remain unchanged.
+Bounded source-grounded capture continuation and ontology-aware query binding
+are proposed next conditions, not selected or executed here. Next entry E-0247.
+
+E-0246 review completion: the fresh independent reviewer finished at
+2026-09-07T17:27:32Z. It verified all 27 packet materials and 186 reading blocks,
+reviewed thirty questions and 121 semantics, and assessed one distinct witness
+across two row occurrences. The frozen validator passes without a structural
+correction: PRELIMINARY_COMPLETE, thirty questions, one witness, human
+ratification PENDING. Record SHA-256
+fe85d346e105d7616a4226191e8f2edd9ddbd75f35ff8ffa304d93d2e2f3aa07;
+report SHA-256 99d274de213252f91ed09cadce06e608d1fe38a8fad084e8723b0dabde8a956b.
+
+Coverage is zero FULL, one PARTIAL and 29 NONE. CQ-T4-01 covers preferred
+disposition and coarse modality, not the mechanism or subject. CQ-T5-01's same
+SUPPORTED witness covers none of its evidence requirements. The reviewer
+distinguishes capture omissions from traced-but-unreturned observations; its
+packet lacks the actual values of those unreturned records, so it does not
+certify their full scope or independently verify the query-token diagnosis.
+The separate public-graph probes support that diagnosis. No source values
+were filled into empty answers. Controls retain source-absence/evidence-surface
+qualifications. This is not an accuracy score, and coarse modality remains a
+human-ratification question. No semantic label was overwritten by the parent.
+
+Parent reran the frozen review validator and the focused gate: 279 passed, two
+subtests. Both producer and reviewer are finished. Corrected results, master
+status and handover now record completion; no master version bump without a
+new decision. The capture problem remains open, not disguised by the staging
+fix. No further condition is launched. Next entry remains E-0247.
+
+## E-0247, 2026-09-07, approved query binding and bounded capture continuation
+
+Author: "Approved", accepting ontology-aware query binding followed by a
+bounded census-guided capture continuation with questions withheld. Master
+1.5.13 and answer-demonstration/CONTINUATION-PLAN.md record the two separate
+conditions. Original corrected capture, query outputs and review remain frozen.
+No model, effort, ontology, Core or source change. First isolate query-only
+effects on the old graph; then compare a consolidated revised capture under the
+same frozen new query method. The revised capture gets a separate from-empty
+history, not an undisclosed overwrite or a semantic re-entry claim.
+
+One semantic feedback dispatch to the original producer, no questions, scores,
+answer values, source-specific target records or edge minimum. At most two
+exact structural returns. Complete independent answer review remains model
+assisted and subject to human ratification. No automatic third condition.
+
+Pre-action scope: paper text-slot binding, execution/orchestration and tests.
+No server interaction or endpoint; no Core mutation. Missing required data
+refuses. Historical query code remains an experimental control, not a fallback
+for the new binding. New tests must reproduce the text-slot omission and guard
+metadata exclusion, unknown slot classification, exact projections and no
+inferred edges. Producer input closure must exclude questions and evaluations.
+No commit, push, shared ref change, dependencies or manuscript changes.
+
+OpenAI Docs used for existing-agent continuation mechanics; the explicit
+producer model/effort will be checked in actual session metadata. Official
+reference: https://learn.chatgpt.com/docs/agent-configuration/subagents.
+Implementation and execution pending. Next entry E-0248.
+
+E-0247 implementation: eight RED text-binding tests reproduced missing support
+for a declared qualifier slot, closed metadata exclusions, unknown string-slot
+refusal, missing numerical values, exact projection and declared multivalued
+text. GREEN uses an explicit content/exclusion table checked against all 36
+accepted record types. It changes candidate text only. No subject inference,
+relation inference, number parsing, record-ID matching or semantic grade.
+
+The first actual-graph integration check refused because the ambient answers.py
+is not this run's frozen query program. Its differences include later token
+normalization and declined-mechanism selection, outside this condition. The
+new binding now composes with the exact digest-checked historical module rather
+than importing the ambient implementation. A second check correctly refused
+the living Core package inserted by repository pytest ahead of PYTHONPATH.
+The test now executes in the same explicitly pinned subprocess environment as
+the real experiment, with the whole-package identity guard intact. No Core or
+historical query bytes were changed. Nine binding/integration tests pass,
+including original-graph byte preservation and review packet source bindings.
+
+The query method froze at 2026-09-07T17:46:24.370758+00:00. Its identity is
+sha256:a4cf93c6650b4177b809cf38e6ff93c7ffc276f3b91fc5a9652b1a42b4e1208e.
+The old thirty-query control reproduces exactly on the original graph. New
+selection returns six rows over six questions. Changed question IDs are
+CQ-T3-01, CQ-T3-02, CQ-T5-02 and CQ-C-05. Query result identity
+sha256:a7b5174b9b35fd65e0239cef665f5d578afd2ab3a383bc8e164da49353cdcfd0.
+Graph and ledger remain byte-identical. A fresh complete review is in flight
+at sol-census-01/before-review, agent /root/ontology_query_review. These are
+unreviewed candidates, not improved source capture or established answers.
+
+Two additional RED tests guard the closed, question-free producer packet and
+one-pass feedback scope. GREEN passes. One literal task-wording assertion
+initially failed only at a line wrap; the test now compares collapsed whitespace,
+preserving the exact producer task. Focused gate before dispatch: 290 passed,
+two subtests. Only paper-owned code and evidence are changed.
+
+The continuation packet froze at 2026-09-07T17:50:34.023769+00:00, manifest
+sha256:75cb1b3e7fc3ed5fe1c48c86f5b822a928082aeb5ba663a02b5237b88454d8c8.
+The same Sol producer was resumed with one generic census worklist and its
+own prior population, no evaluation material. Exact dispatch prose is retained
+in sol-census-01/dispatch-message.md, SHA-256
+9d8752d6698552917acba07d21f623f4fe95ca2b8ef0e4075572394289299346.
+Six new feedback frames are required. The query method was already frozen.
+Core received a coordination-only update, no capability request. Next entry
+remains E-0248 for execution and assessment outcomes.
+
+## E-0248, 2026-09-07, query recovery and a mixed capture continuation
+
+Execution of E-0247, not another decision or master-plan version. Master stays
+1.5.13. The source, ontology, Core 160878c and Sol/low condition remain fixed.
+Read answer-demonstration/CENSUS-RESULTS.md for the compact comparison and RCA.
+Private evidence root: private/paper-v4-answer-demonstration/sol-census-01.
+
+The query-only independent review completed. All 28 packet material digests and
+186 reading-block hashes match. Thirty questions, 121 semantics and all six rows
+were assessed, with three distinct central witnesses. Coverage: 0 FULL, 5 PARTIAL,
+25 NONE. All three witnesses are SUPPORTED for bounded returned fields. The
+reviewer does not infer missing ridge-segment scope or depth datum from source
+context. MEASURED means observational/inversion-based here, not a certified
+direct depth measurement. Both stored quantities become reachable, not fully
+site-qualified answers. Frozen validator passes without correction. Manifest
+SHA-256 522df78137e33cb434224b9d666f8a63fba5f6a29f6afc9d08423677add4719a;
+record 992d04896e31ac162a511986426a8103985c2cc4ad74138a51a3feed6ac5c61e;
+report 4cc74ed63788969a43851d208e691ee62e846019abf24247c4d7c0201692ab88.
+
+The same producer received exactly one generic semantic-feedback dispatch.
+Actual transcript verification confirms all six feedback frames and unchanged
+model/effort metadata. Its thirteen-file packet contains no question, query,
+answer, score or review. The original workspace and all historical bytes remain
+unchanged. New candidates and coverage/correction notes are retained under
+producer/work. This is a continuation, not a fresh independent sample.
+
+At transaction time 2026-09-07T17:54:52Z, candidate 01 refuses NOT_VERBATIM
+for three statements. candidate 02 restores source hyphenation and corresponding
+statement properties, then refuses SUBJECT_NOT_NAMED for three claims. The
+second and final structural return supplies only that exact diagnostic.
+candidate 03 adds source-written earthquake/event aliases and their derivations.
+Mechanical comparison confirms correction 01 changes six statement fields only;
+correction 02 adds one tags property and extends three formalized_by lists only.
+No hand repair, semantic score feedback or additional producer turn follows.
+
+Candidate 03 admits and replays in attempt-03: 20 entities, zero relations/events,
+16 assertions, 14 asserted blocks, 33 declared nothing assertable, 139 untouched.
+All sixteen assertions are structurally FULLY_FORMALIZED; no declared gaps.
+One KCS, thirteen events. Reproduction-01 independently matches all twelve files
+byte-for-byte. Ledger head
+sha256:22c60bb986e86db7abf1652a3e4b876ec3ed984bbc45837279ff25c5a39c4184;
+receipt sha256:1dba92596558599a486590df7c0e1e4f3a0f1f11dd5855c48fc873a3ba93b5ab;
+export sha256:d7c77f9f4b71edb6852bcad3228353e3af5955c3742abcec90470eb1460d414b.
+The admitted capture digest is
+sha256:25af4d61598c5297f532568f0f9454fc80fb85bbfb80b0e5b6a368c9570acd94.
+
+The same frozen new query method returns two rows over two questions, with one
+central witness. Result identity
+sha256:967c33085eab22be5e829c637028ca438c61162582476e1b09737c26b2a1dd3a.
+No query-time graph or ledger mutation. The after-query summary's false
+original_queries_reproduced flag means that optional original-control comparison
+was not requested on the new graph, not that the earlier exact control failed.
+The original control remains reproduced in before-query.
+
+The final independent review completed at 2026-09-07T18:07:59Z. All 28 packet
+materials, 186 block digests and six vocabulary files verify. Thirty questions,
+121 semantics and both row occurrences are reviewed. Coverage: 1 FULL, 1 PARTIAL,
+28 NONE. The single returned witness is SUPPORTED. CQ-T4-01 now carries the
+preferred explanation, subject and qualification in one row. CQ-T5-01 carries
+the mechanism but no supporting quantitative observations or evidence path.
+Qualitative deep-earthquake wording was treated as the phenomenon explained,
+not independently as supporting seismic evidence. That threshold, source-scope
+qualifications and the other judgments remain subject to human ratification.
+The complete graph is not declared faithful merely because this witness passes.
+Frozen validator passes without correction; parent reran both frozen validators.
+Final review manifest SHA-256
+d5a472a7bbceaca8e3f9c7bdfe4213bdcad6364cba8d9ab661483ac5282f32b0;
+record 416489ed0bd5a6dc979879bcdeeb22684c8ffc3eaca16ddc2f48d56b94445b96;
+report 51c919f5d0aa42dc13b627005e09280f23544a940dfcc06aa8da3a830f57b7df.
+
+RCA: all three submitted candidates already have zero scalar numeric fields.
+The original graph had four, across two quantitative observations. New claim
+prose includes their ranges but no typed numerical replacement. The frozen
+numeric queries correctly do not parse prose. The loss precedes structural
+correction and Core admission. I selected a consolidated from-empty replacement
+to isolate capture feedback from re-entry. The task asked for source-warranted
+retention/correction, but the paper workflow had no mechanical preservation or
+per-removal accounting obligation. The producer's representation choice plus
+that workflow boundary explains how the regression was accepted. Its internal
+reason for choosing claims instead of typed observations is not established.
+
+Added a read-only capture_delta diagnostic after three RED tests reproduced
+missing detection. GREEN exposes lost quantities despite prose replacement,
+changed values under retained IDs, and missing/duplicate export identities.
+The actual comparison reports seven removed IDs, eighteen added, one changed
+and one unchanged; four numeric properties become zero. Renamed records are
+not assumed semantically different or equivalent. This is a reporting guard,
+not retroactive admission policy or repaired population. Ruff formatting caught
+one missing blank line in the new diagnostic; formatter corrected it. No frozen
+query/executor byte changed after dispatch.
+
+No submitted relations exist, so no Core edge loss is demonstrated. Producer
+notes cite process/proposition identity ambiguity, but an explicit bounding
+source passage and compatible ontology remain unused. UNTOUCHED is capture
+accounting, not proof unread. No universal model limitation is established.
+Core received bounded coordination: no missing replay/read capability; these
+representation and preservation concerns remain paper-owned. Proposed next
+condition is incremental capture over retained accepted state with explicit
+change accounting, using existing Core mechanisms. It is not selected or run.
+
+Final focused paper gate: 293 passed, two subtests. Eight changed Python files
+pass Ruff and formatting; scoped diff check passes. Whole pinned-runtime, frozen
+method, producer-input and feedback-delivery verification passes. Both producer
+and reviewers are finished. No further dispatch, ontology/Core rebind, manuscript
+or PDF edit, dependency install, Core mutation, commit, push, shared ref change
+or heartbeat restart. Human ratification pending. Next entry E-0249.
+
+## E-0249, 2026-09-07, broader vision and regression review
+
+Luis requests a general review of the original paper vision, Malleus vision,
+changes and earlier successful Sol results, with evidence rather than another
+guessed cause. Read-only investigation; no new producer, feedback, query change,
+Core rebind or implementation. Master stays 1.5.13. Report:
+answer-demonstration/SITUATION-REVIEW.md. Next entry E-0250.
+
+Reviewed the original user objective, earliest committed master 6d685c5, the
+six-decision September 2 steer, v2 tasks/acquisition/population/review, the v3
+comparison, v4 brief-to-skill migration, Core README/PRINCIPLES/architecture,
+and the later capture, query, repair and composition evidence. Current Core and
+consumer status was inspected without dispatching work or changing their scope.
+Action-runtime design is separate from this document-capture diagnosis.
+
+Newly restored positive control: the v2 Sol reference, omitted by the recent
+RCA, has 7 entities and 6 relations. Two quantities carry bounds, units and
+observation basis, and its four-question review finds one responsive and one
+partial answer. The retained summary program reproduces those counts. Both
+actual producer transcripts record Sol/ultra. Ontology rollout:
+rollout-2026-09-03T00-58-33-01a06646-d737-7892-9efc-6cec139a72c9.jsonl;
+population rollout:
+rollout-2026-09-03T02-01-15-01a06680-3b9f-7951-b550-ef2f85f159c8.jsonl.
+The reference producer.json's population timestamp hint was inaccurate; the
+actual session metadata confirms the model/effort claim. No historical artifact
+was corrected in place. No equal-resource or controlled effort effect follows.
+
+V2 population sees four competency questions, an explicit constructible list
+and required-scalar domain records. V4 deliberately removes question-shaped
+selection, moves modelling guidance into the generic skill, uses packs and
+partial-import accounting, and changes the session sequence. These are not
+replicates. Compiled Claim types used in the later observed runs require only
+id; statement, description, name and subject remain available but optional.
+Restored guidance allows statement content or a retained evidence reference.
+This permits metadata-only proposals under structural acceptance. It establishes
+the acceptance failure path relative to our stronger capture aim, not why every
+producer selected it. Earlier follow-up also had optional Claim fields yet
+produced five relations, so optionality is not a sufficient behavioral cause.
+
+The recent positive composition control also matters: Sol authored two supported
+SUPPORTS relations over existing Opus records in the explicit task-directed
+condition. The source-grounded review finds a complete linked-row answer.
+Earlier repair.py already checks preservation and exact delta/history closure.
+Incremental preservation is therefore an existing successful workflow to reuse,
+not a novel missing Core capability or an explanation of sparse initial capture.
+
+Fresh mechanical check: verified all runtime package bytes at 160878c and
+reopened followup-sol-01, composition-01, sol-e2e-01, sol-e2e-corrected-01 and
+sol-census-01. All five graphs and byte-exact receipts match retained artifacts;
+all five ledger files are byte-identical before and after. Their relation counts
+are respectively 5, 28, 0, 0 and 0. These are replay checks, not regeneration or
+semantic certification. No output file or ledger was rewritten.
+
+The confirmed paper defects remain distinct: older guidance selected for later
+adoption, query text selection missing stored semantics, and the new consolidated
+capture dropping typed values without an enforced preservation obligation.
+Complete delivery, corrected guidance and own-ontology session continuity have
+not restored broad relational capture. The exact causes of producer strategy
+differences remain unisolated. I should not have treated the five-relation
+follow-up as the only relevant Sol baseline or recommended another workflow
+change as though the original generation regression were explained.
+
+OpenAI Docs was used only to check the separation of model/effort configuration;
+actual settings come from local turn_context records. Official source:
+https://learn.chatgpt.com/docs/agent-configuration/subagents. It supplies no
+causal explanation for the capture outcomes.
+
+Proposed next investigation, not authorized here: an exact positive-control
+population crossover, beginning with the question-withheld five-relation packet;
+hold inputs/task/ontology/query fixed and measure low versus ultra explicitly,
+then isolate representational/task changes rather than changing several factors
+at once. Source-to-record witnesses and independent assessment remain necessary.
+No question-conditioned ontology, hidden answer values, edge quota or Core-owned
+evaluation is proposed. No further condition, code or manuscript change, commit,
+push, shared ref movement or heartbeat restart. Reports and this journal only.
+
+## E-0250, 2026-09-07, standing lessons and controlled calibration approved
+
+Luis: "Ok, let’s add this situation review and have it in mind from now on,
+I dont want to repeat same mistake again. Now I agree with the controlled run
+for calibration, do that and in parallel we need to keep RCA and understanding
+why the 30 question is giving us almost no good results and what can we do
+about it incrementally".
+
+Master advances to 1.5.14 at this author decision. SITUATION-REVIEW.md becomes
+a standing reference with seven operational rules in the master. The selected
+condition is one fresh Sol/low and one fresh Sol/ultra population under the exact
+question-withheld followup-sol-01 inputs, fixed original ontology and original
+query program. Complete bounded delivery is shared and verified from actual
+tool outputs. No previous population, questions, answers or review reaches the
+producers. At most two structural returns per arm. One pair is a calibration
+pilot, not a reliability estimate or proof of an effort effect.
+
+CALIBRATION-PLAN.md records closure, predictions, historical harness control,
+reproduction and complete independent model-assisted assessment. A separate
+read-only agent audits thirty-question losses without interacting with the
+producers. No score correction or new capture condition is inferred from that
+audit. Core owns generic mechanisms; paper owns its experiment and evaluation.
+No Core or manuscript changes, git mutations, sampling loop or heartbeat restart.
+OpenAI configuration guidance verifies explicit dispatch settings; actual
+evidence will come from producer session metadata. Next E-0251.
+
+## E-0251, 2026-09-07, calibration dispatched and question-loss RCA
+
+Both E-0250 packets frozen under
+private/paper-v4-answer-demonstration/sol-calibration-01, arms a and b.
+TDD: ten calibration tests first fail because calibration.py does not exist,
+then pass. Gates refuse changed source, ontology, skill, task, primary query,
+undeclared questions/prior population and changed/inherited settings. The
+existing delivery guard rejects self-reported reading and mismatched actual
+model/effort. Both arms contain the twelve byte-identical historical inputs.
+Only workspace paths differ in the shared task plus administrative delivery
+appendix. All seventy-four exact input frames must be observed per producer.
+
+Before dispatch, the current public capture harness executed the original
+population using its recorded transaction time. The resulting graph, complete
+ledger, replay receipt and query bodies match the original byte-for-byte where
+serialized, structurally for query bodies. The full query envelope records the
+new executor provenance. Historical control remains 41 entities and 5 relations.
+The control sits outside the producer input closure, never supplied to either.
+
+Fresh launches, observed in session_meta and turn_context:
+a, /root/sol_calibration_a, 01a07d2c-26f2-7580-8e5e-bb7dfa3623b4,
+gpt-5.6-sol/low, fork_turns none, 2026-09-07T18:40:40.715Z;
+b, /root/sol_calibration_b, 01a07d2c-4ff4-7f71-81a6-ca0589930a02,
+gpt-5.6-sol/ultra, fork_turns none, 2026-09-07T18:40:51.212Z.
+Exact launch records name their local transcript files. Producers are still
+working at this entry. No semantic feedback or additional sample dispatched.
+
+Read-only parallel audit now covers all thirty question IDs in
+answer-demonstration/THIRTY-QUESTION-RCA.md. It corrects the earlier inference
+from absent returned rows to absent paired quantities: followup-sol-01 contains
+RC2 and RC3 calculated CO2 ranges with distinct subjects, and an RC2 depth
+observation. Its frozen lexical queries miss these. The depth query returns an
+NTD2 observation instead. Direct public reopen/read execution reproduces all
+three misses with byte-identical ledger. Five new diagnostic tests retain the
+existing-data counterexamples, duplicate-question identity and missing query
+slot evidence. These tests document the defect; they do not fix frozen queries.
+The first test draft confused nested export properties with flat query nodes;
+the fixture was corrected, and the independent public API check removes reliance
+on that fixture as evidence of Core behavior.
+
+Further distinctions: 25 distinct positive questions, three expected-absence
+controls, two paraphrases. Date and funding query slots are absent from the
+corrected ontology. Missing scientific scope and links remain after recall
+losses. A demonstrated partial-credit discrepancy needs blinded adjudication,
+not rewriting historical labels. A census quality claim may bind a catalogue
+percentage to a deep-earthquake subset; this is an unreviewed scope concern,
+not a prior formal UNSUPPORTED result.
+
+paper-v4/AGENTS.md now carries the standing directive for later work, pointing
+to the current master and both situation/question audits. Focused paper suite:
+308 passed, two subtests. New Python files pass Ruff and formatting. No Core
+capability gap, Core mutation, query correction, manuscript rewrite, git change
+or heartbeat restart. Master remains 1.5.14. Next E-0252 after execution evidence.
+
+## E-0252, 2026-09-07, calibration completed and failure stages separated
+
+Execution under E-0250, not a new decision. Master remains 1.5.14. Both producers
+and all independent diagnostic/review agents are finished. Main reports:
+answer-demonstration/CALIBRATION-RESULTS.md, THIRTY-QUESTION-RCA.md and
+SCOPE-PROBE.md. Standing instructions remain in paper-v4/AGENTS.md.
+Next entry E-0253.
+
+Arm a, fresh Sol/low, submitted a nine-Claim candidate. Actual tool-output
+delivery contains 47 of 74 required frames. All source-reading and skill frames
+were delivered, but population-surface parts 6 through 32 were not, before
+authoring or by completion. Ontology YAML and imports were delivered, so absence
+of compiled type definitions does not prove total unfamiliarity with the types.
+The delivery gate refuses before Core execution. No accepted graph, Core refusal
+or semantic score. No backfilled reading, continuation or replacement sample.
+Private a/delivery-refusal.json and a/delivery-evidence.json retain exact missing
+parts, the candidate digest, cutoff and minimal actual transcript evidence.
+The latter digest is 6007812f23954a11ccdabf4590bbb3539b1be19c5ea3e16edf76a80026d9f557.
+
+Arm b, fresh Sol/ultra, has all 74 frames verified before first authoring at
+2026-09-07T18:52:58.254Z. Its portable evidence retains 79 minimized actual
+metadata/tool-output entries, with no private reasoning. Evidence digest:
+27232e24db2098797dd4809a706dfdc22d86239c9a62ac33481b3ddbd72c64d5.
+No parent structural diagnostic or semantic feedback was returned. Producer
+local validation and local pre-submission edits are not Core acceptance rounds.
+
+The first b submission admits on exact Core
+160878cf14c0d27b11a440e26688708e9b7a7e2b, tree
+d946a7550dee247a371889f5eadf1cfecc964450, at transaction time
+2026-09-07T20:08:14.266872+00:00. Its digest is
+61571a50c14efc5759a9ceee850d54b06f775452e728130afdc14aaaf0a88021.
+Graph: 138 entities, twenty relations, one domain event, no signals or event
+participations. Entity types include 56 Observation, eleven CountObservation
+and three ReportedRatio. Eight relation predicates include BOUNDED_BY,
+LOCATED_IN and SAMPLED_FROM, but no SUPPORTS. One accepted change and fourteen
+ledger events. Graph export digest:
+17ed1dd187fac464b4a38a60641e4ab8cddd4705733189d5d189a4368136c95d;
+ledger head 8d4d223873d34d015cb7d7ed8716d17a008ebe1d638643f6215accd1ace4f46f;
+replay receipt 27f6d8ffed9634743c06cb690cb56991d22debfbb0a3bfcb81f8d04b39cc1420.
+Reopen matches the graph/receipt. A separate from-empty reproduction matches
+all twelve files, including the entire ledger. The initial commentary counted
+thirteen files incorrectly. A hard artifact-count test caught and corrected
+that reporting error; byte equality itself was never partial.
+
+The frozen original query program returns forty row occurrences on nineteen
+questions, ten NO_CANDIDATE and one NOT_EXPRESSIBLE. Fresh independent
+/root/calibration_b_review used only b/review-01, no RCA, alternate retrieval,
+producer transcript, prior review or expected outcome. Completed
+2026-09-07T20:23:03Z; first submission passes the frozen validator. All thirty
+questions, 121 semantics and 28 central witnesses are assessed. All 28 returned
+witnesses are SUPPORTED, not a certification of all 159 graph records.
+Coverage: 3 FULL, 11 PARTIAL, 16 NONE. On 25 distinct positives: 3/11/11.
+The other five are three expected-absence/excluded-source controls and two
+positive paraphrases. Thirty-four semantic items name answering rows. Assembly:
+twelve ONE_ROW, two UNLINKED_ROWS and sixteen NO_ANSWER. No composition question
+is fully covered. Full questions: acceptance date, pre-eruptive concentration,
+preferred hypothetical mechanism. Review record digest:
+596f968e6e5b1019d132804876632c0d9f4426df71e22e998691ad2c0be36dc9.
+CODEX_PRELIMINARY; human ratification remains PENDING.
+
+The low arm's delivery failure is part of the experiment, not zero semantic
+coverage and not an excluded unsuccessful sample. It prevents comparison of
+capture quality after equal complete delivery. The b result refutes a universal
+claim that Sol cannot populate this ontology or create relations under the
+corrected skill, but establishes no reproducible causal effort effect. This
+remains fixed-ontology operation, not fresh E2E ontology acquisition. Historical
+followup and b differ in fresh execution and reviewer; known partial-credit
+inconsistency also limits comparison of their aggregate totals.
+
+Parallel RCA now separates three layers. First, older F has paired calculated
+segment CO2 values and RC2 depth despite missing frozen rows. Second, richer b
+has four proxy-specific primary-melt estimates with separate RC2/RC3 MeltPhase
+subjects, explicit stage names and Rb90/Ba90 quantity labels, also missed by the
+frozen reader. Thus missing stage in F must not be generalized to b. Third,
+capture still omits propositions, qualifications and supporting links. Empty
+queries, incomplete records and unsupported source scope are different defects.
+
+Read-only diagnostic on exact public reopened b history: original four checked
+query bodies reproduce; existing SubjectGraphReads increases primary-carbon
+and comparison candidate counts from one to five, adding all four stored
+site/proxy-specific estimates. OBS-count and catalogue queries remain empty.
+Source-free guard counters are zero and ledger bytes unchanged. No frozen query,
+binding or review changed, no alternate full evaluation and no producer feedback.
+This diagnostic demonstrates a reusable retrieval repair, not a full answer.
+
+Independent source probe confirms two invalid nothing_assertable dispositions
+in b: page:5:block:005 and page:7:block:003 contain scientific assertions. Some
+numbers occur elsewhere, but their comparative/interpretative propositions do
+not all survive. The fixed Claim/quantity surface can represent content or gaps.
+The producer's claim that all 129 negative blocks are navigation, figure-only
+or references is contradicted. Census 57 asserted + 129 negative = 186, zero
+untouched, proves disposition accounting only. These findings did not reach the
+formal reviewer. They are model-assisted diagnostic findings, not human labels.
+
+Earlier scope probe also completes: census claim:location-quality has supported
+statement content but an unsupported assignment of catalogue-wide quality to
+the deep-mantle subset. This is not proof that the actual subset percentage
+differs. The record was outside prior returned witnesses. The initial probe
+dispatch guessed a nonexistent ontology path; manifest-selected path and digest
+resolved it, now guarded by a test. Several read-only inspection commands also
+used incorrect assumed JSON keys and stopped loudly; inspecting the actual
+schemas corrected those diagnostics, with no artifact or score mutation.
+
+New mechanical evidence tests retain low delivery refusal, missing compiled
+types, complete b delivery before authoring, exact twelve-file reproduction,
+hidden quantitative witnesses, one-hop recovery, the census counterexample and
+bound unratified full review. Focused paper gate: 316 passed, two subtests.
+All four new Python files pass Ruff and formatting; scoped diff check passes.
+No Core path, manuscript, PDF, original run or formal historical review changed.
+No commit, push, shared ref movement, dependency installation or heartbeat.
+
+Next proposal, not dispatched: choose richer b as the working baseline, correct
+retrieval and review that unchanged graph, then make preservation-checked
+amendments for demonstrated omissions/links. Do not apply the earlier F-specific
+qualification proposal blindly to b, where several requested roles already
+exist. No new full-document capture or missing Core read/replay capability is
+established. A new paired generation condition would need verified input
+completion before authoring and a separate author decision.
+
+## E-0253, 2026-09-07, subject-aware comparison approved
+
+Luis: "Approved", answering the proposal to run the subject-aware query
+comparison and independent review on the unchanged richer calibration graph.
+Master advances to 1.5.15. This selects the read-only next slice, not another
+capture, automatic repair loop or Core change. Capture amendments remain a
+later decision informed by this result. Next entry E-0254.
+
+Baseline private/paper-v4-answer-demonstration/sol-calibration-01/b/attempt-01
+is the accepted first ultra submission at exact Core 160878c. Its 159 graph
+records, ledger, receipt, original thirty queries and original complete review
+remain unchanged. Existing query machinery is reused without production-code
+changes. Actual runtime and packet identity verification passes. Existing
+subject-reader plus calibration-outcome tests: sixteen passed before execution.
+
+Method pinned before execution: answers.py
+1ace62715e813125fce9ec5b38278faae25018468069b22c52bf2d87ea1bbdb1;
+subject_answers.py 5c6d4506fbaa690a5c3b6995a83950c1c299cb56d54973a2991688f28e8e16d0;
+subject_query.py 337b8d3654597950b63b4ab8722c4051043d0448cac6595400f394b48f82d0dc;
+binding.py c2390d9fcfcf28f922c0b42bf8f49db9bc26b6636a84f60154feab723785b6f9.
+The reader follows one existing subject reference and considers that subject's
+declared name, description and tags when matching. Numeric values stay on their
+own records; no guessed joins, added aliases, source reads or inferred edges.
+
+Output names, checked absent: b/subject-query-01, subject-review-01 and
+subject-query-reproduction-01. The runner freezes method bytes before queries,
+requires original query reproduction, checks public replay against the accepted
+graph/receipt, and guards source-free reads and byte-identical ledger state.
+A repeat must match query results/traces and all bytes except the declared
+execution timestamp in method.json. No new population generation is involved.
+
+Predicted distinction: if the four existing site/proxy estimates become
+reachable and satisfy the same coverage requirements, that is retrieval gain
+on fixed knowledge. If scope, ordering or links remain absent, reaching them
+does not certify a complete answer. No gain is predetermined. Fresh review
+covers all thirty questions and all required semantics under the same protocol.
+Do not supply prior reviews, RCA or desired labels. Any changed judgment on
+unchanged rows is review variability, not an effect of retrieving new content;
+report it separately without silently rewriting either assessment.
+
+No semantic feedback, question-shaped producer input, Core path, manuscript,
+Git ref, commit, push, dependency installation or heartbeat is changed here.
+
+## E-0254, 2026-09-07, retrieval-only gain and independent review discrepancy
+
+E-0253 execution complete. Master remains 1.5.15. No producer, capture amendment
+or new query implementation. Existing subject_query.py executed against the
+unchanged calibration b history. Original thirty query bodies reproduce exactly;
+subject-aware matching adds sixteen row occurrences from eight stored quantitative
+observations. Only CQ-T3-02, CQ-T3-03, CQ-T5-02 and CQ-C-05 change. All forty
+original row occurrences, twenty-six other query objects and every relation
+path are preserved. Candidate-bearing question count remains nineteen.
+
+Actual method freeze: 2026-09-07T20:35:14.982523+00:00. Subject query digest:
+8b1fc2fe6bab4f80f31abffd667e8934f2c38b0ed461617a8d163979f3be6c5d.
+Public replay matches the accepted graph/receipt and ledger bytes remain
+unchanged; all source-file, network and embedding guard counters are zero.
+Repeat at 2026-09-07T20:36:06.241177+00:00 matches all eight output files except
+the declared timestamp in method.json. No new graph records, values or edges are inferred.
+The four primary-melt and four pre-eruptive additions retain their exact record
+properties and explicit subject projections from the accepted graph.
+
+Fresh /root/subject_calibration_review received only b/subject-review-01 and
+the task-scoped AGENTS.md, with retrospective links excluded. No old review,
+RCA, producer transcript or desired grade. All 27 declared materials verify;
+49 traces including context and 251 derivation paths resolve. An initial agent
+diagnostic compared whole query/population trace envelopes, which have different
+metadata; comparing their record types and actual derivation paths passed.
+No Core or packet error was established. Five statement digests recompute.
+
+First completed review passes its frozen validator without correction at
+2026-09-07T20:45:55Z: thirty questions, 121 semantics, 56 rows and 36 witnesses.
+All 36 witnesses SUPPORTED; all 28 old witnesses retain identical projected
+fields and the same support judgment. CODEX_PRELIMINARY, ratification PENDING.
+Review digest acad42df3fc6651d3fc222915e9add8197910e9e027781887fb0a25459f83725.
+Full counts are 5 COVERED, 13 PARTIAL, 12 NONE. On twenty-five distinct positive
+questions: 4 COVERED, 13 PARTIAL, 8 NONE. No composition question is fully covered.
+
+Attribution matters. The primary-melt question and its paraphrase change from
+NONE to COVERED using newly returned RC2 records with stage/site, proxy-specific
+values, units and ESTIMATED determination. The answer distinguishes Ba90 and
+Rb90, not an unlabelled expected range. The segment comparison changes NONE to
+PARTIAL, with both sites' values but no comparison/adjacency relation. The
+pre-eruptive answer remains COVERED, its summary and proxy alternatives retained.
+Those gains account for twelve newly credited semantics, eight on distinct
+positives and four on the repeated primary-melt question.
+
+Two further credits are not retrieval gain. CQ-T3-04 has byte-identical query
+rows but changes NONE to PARTIAL. Both reviewers acknowledge missing catalogue,
+processing-stage and event-set context. The second credits the updated statistic
+and unit anyway; the first withholds those credits because the requested scope
+is absent. This is an unresolved partial-coverage disagreement. No historical
+label or hybrid corrected total is substituted. The raw increase from 34 to 48
+covered semantic items must not be wholly attributed to retrieval. All other
+unchanged question outputs retain their responsiveness labels.
+
+b/subject-review-comparison.json retains exact review/query identities and
+per-question changes, outside both frozen execution directories. It tallies
+existing validated judgments and compares exact rows; it does not adjudicate
+or create evaluation semantics in Core. A mechanical test reproduces the
+twelve added-row credits versus two unchanged-query credits, preventing the
+aggregate increase from silently being reported as one intervention effect.
+
+Report: answer-demonstration/SUBJECT-CALIBRATION-RESULTS.md. Master, handover,
+calibration report and question RCA point to this completed result. A multi-file
+documentation patch initially failed on an inexact line context; verification
+confirmed no partial application, then the exact context was used. No experiment
+or source bytes changed during that documentation correction.
+
+Six new paper evidence tests cover method identity, four-output delta, preservation
+of old rows/paths and actual projected values, retained state, eight-file repeat,
+common witness projections and review-change attribution. Focused suite: 322
+passed, two subtests. New test file passes Ruff and formatting. Existing runtime,
+query and review production code unchanged. No Core, manuscript, PDF, original
+capture/review, dependency, shared Git ref, commit, push or heartbeat mutation.
+
+Next E-0255. All agents are finished. Proposed next work: a bounded source-grounded
+links-only amendment on this preserved graph, and blinded adjudication of the
+partial-credit disagreement before aggregate paper claims. Neither is dispatched.
+No additional Core capability request is supported by this query experiment.
+
+## E-0255, 2026-09-07, author approves the bounded evidence-link slice
+
+Luis's Go selects one finding-guided links-only amendment on calibration b,
+after the completed retrieval-only comparison. Master advances to 1.5.16.
+LINKS-PLAN.md freezes the sequence and non-claims. Fresh Sol/ultra is the
+explicit producer condition, with complete observed input delivery, no questions
+or desired endpoints/values, no semantic feedback and at most two structural
+returns. No new ontology, capture replacement or Core rebind.
+
+The base has 159 records, including one domain event. Only new ResearchRelation
+records involving claim:co2-degassing and existing entities are permitted.
+Old records, quantities, history entries, ledger prefix and the subject-aware
+reader remain fixed. A source-grounded refusal is allowed. Evidential support
+is not a causal predicate or independent proof of the preferred hypothesis.
+
+Reuse repair.py for public admission/replay, preservation and query checks.
+Test the new target/reader binding before implementation. Retain historical
+repair/composition conditions and bytes. Freeze the packet before dispatch,
+reproduce admitted artifacts, then obtain independent scoped semantic review.
+The prior unchanged-row reviewer disagreement stays unresolved and separate.
+No Core, manuscript, dependencies, shared refs, commits or pushes are changed.
+
+## E-0256, 2026-09-07, links packet and fresh producer dispatched
+
+sol-links-01 freezes 27 materials before dispatch. Base graph/receipt and every
+one of the thirty subject-aware query objects reproduce during preflight.
+Producer input closure has fourteen files, 94 exact bounded frames, including
+the whole fixed skill, reading, import closure, population surface, accepted
+records and their capture. Questions and reader code remain outside its scope.
+The inherited coordinates describe the unchanged source/contract, not permission
+to reuse the original plan or record IDs.
+
+Fresh /root/sol_links_producer dispatched at 2026-09-07T21:09:51.242Z,
+session 01a07db4-b9f5-71e3-bedd-c35899d39104. Actual session metadata confirms
+gpt-5.6-sol and ultra effort. fork_turns none. launch.json records the exact
+metadata source. Complete tool-output delivery still must pass before execution.
+No candidate or semantic result is claimed at dispatch.
+
+Three new REDs failed before implementation for the missing explicit hypothesis
+parameter, experiment context and frozen subject-reader route. All now pass.
+repair.py retains the historical conditions and adds the new explicit condition;
+links.py only stages the packet and delegates admission to that existing runner.
+No separate compiler/admission implementation was added. Exact old records,
+record history, ledger prefix, source-free reads and replay checks remain active.
+The old funding/composition tests pass as retained controls. The first complete
+paper-focused gate after this change passed 325 tests and two subtests.
+
+The independently frozen review will reuse repair_review_packet.py with a
+scoped links review task. It excludes rationale and earlier grades, assesses
+every new edge and every changed answer, and does not claim a complete validated
+thirty-question review. Additional packet tests enforce this separation and
+refuse the wrong review condition. No Core change or request is supported here.
+
+## E-0257, 2026-09-07, one link admitted and exactly reproduced
+
+All 94 frames verify in actual tool outputs by 2026-09-07T21:21:17.178Z.
+At the independent delivery check, producer/work was empty. A test verifies
+complete delivery within that prefix and no apply_patch call before it.
+delivery-order.json records this boundary. This establishes delivery, not
+comprehension. The producer then returned one candidate and stopped. No parent
+structural diagnostic, semantic coaching, extra candidate or sampling was needed.
+
+Candidate sha256:19e0b38e2bb10ffeab765c10c00a3f165a773cde6ea628ad27c0f4ab5c90d7b1.
+It adds one ResearchRelation from observation:saturation-depth to
+claim:co2-degassing, predicate SUPPORTS. Two new retained assertions bind the
+target to page:5:block:002 and the support/source endpoint to page:5:block:006.
+The producer's rationale treats this as the authors' model-based supporting
+argument, not physical causation or independent confirmation. Rationale is
+retained outside the independent review packet.
+
+First admission at protocol time 2026-09-07T21:25:26.982437+00:00 succeeded on
+Core 160878c. The graph has 138 entities, 21 relations and one domain event.
+All 159 old records and their historical metadata are identical. The original
+fourteen-event ledger is an exact prefix of the twenty-event amended history.
+Reopen reproduces graph and receipt. Ledger head:
+sha256:62a0b71c8fa98a750f9363385b427ee8d4da6027b51cda2d2f12c8e5531ab7dc.
+Receipt sha256:5339d580b2eaf038b802ee1097318c7c0a558fc5290e62f87a49a1982ccc090e.
+Graph export sha256:6ae31ffc633850627974e758d184daeee6434be40b649e4c05de3df45d20ac51.
+
+The frozen subject-aware method changes only CQ-T5-01, adding one relation row
+and one path. Twenty-nine complete query objects remain identical. The new row
+retains MODELLED, APPROXIMATE and 25 km on the saturation result; the target
+retains PREFERRED and HYPOTHESISED. It does not return a separate measured
+earthquake-depth record or a volatile-concentration record through that edge.
+This is an observable query boundary, not a semantic score.
+
+All thirteen execution files, including ledger, runner, submitted bytes,
+delivery check, traces, graph, receipt and query outputs, match a separate
+execution with the same protocol time. New tests check exact preservation,
+history, the single changed answer, modality distinctions and reproduction.
+
+A fresh independent /root/links_review was dispatched on the 24-material
+review-01 packet. No producer rationale or earlier grades. It will assess every
+new relation/endpoint and changed-answer semantic. Review is pending at this
+entry. No all-question regrade or correction to disputed earlier labels.
+No Core, ontology, source, manuscript or Git mutation. Master stays 1.5.16.
+
+## E-0258, 2026-09-07, supported amendment with a still-partial answer
+
+Fresh /root/links_review, session 01a07dc3-ee9d-7eb3-bf1e-9a672deb8824,
+completed the scoped source-grounded assessment. Actual metadata is
+gpt-6-astra/xhigh, fork_turns none, launched 2026-09-07T21:26:27.779Z.
+review-launch.json is outside its frozen packet. Review digest:
+sha256:3e3363dfdcbc8c3034df35a7f49fa66e93746fb367d64243bba23f6981277427.
+Packet digest:
+sha256:395f8324403e5ee06e50ed3fd86cbd9588f2d8b25a59b59366dfcb79d3062ad2.
+The 24 input identities still match. The reviewer independently checked all
+186 source block hashes and file-level delta/query closure, not ledger execution.
+
+The added relation and all four returned record identities are SUPPORTED as
+source representations. No unsupported addition or existing-record regression
+was found. The modeled saturation depth supports the authors' qualified
+hypothesis in their argument; it is neither physical causation nor observation
+of an earthquake at 25 km. The relation's HYPOTHESISED capture modality is
+retained evidence, not an extra relation property. Target qualification remains
+in the returned graph fields.
+
+CQ-T5-01 remains PARTIAL before and after in this scoped review. The new path
+does not return volatile-content evidence, although relevant records exist.
+Actual numerical seismic-depth records also remain unreturned. Source block
+page:5:block:007 says no earthquakes are observed below 20 km and offers a
+temperature explanation. That condition is absent from the returned rows.
+This prevents describing the modeled approximately 25 km result as numerical
+agreement with an observed earthquake at that depth.
+
+Do not turn review variability into progress. The prior complete subject review
+credited only causal_mechanism on the old hypothesis row. The new reviewer also
+credits supporting_observation and seismic_evidence from its unchanged qualitative
+deep-microseismicity wording. Under the new review's own before/after interpretation,
+three of five semantics become four of five, solely through evidence_relation.
+Two credits on old text are disagreement with the prior reviewer, not content
+added by the amendment. Neither historical label is rewritten. No hybrid total
+or new complete thirty-question score is produced. Human ratification PENDING.
+This Markdown review is not a complete validator-certified v3 record.
+
+LINKS-RESULTS.md records the actual improvement, qualifications and remaining
+gap. The broader question-loss RCA records this new evidence without claiming
+the producer's internal cause. The earlier question-conditioned two-link positive
+control remains visible, not misrepresented as the same graph/task condition.
+No new Core request: public adaptation, admission, replay and queries work here.
+Further argument completion and disputed-criterion adjudication remain proposed.
+No extra sampling, producer continuation, manuscript/Core edit or Git mutation.
+Master stays 1.5.16. Both new agents are finished. Next entry E-0259.
+
+Final verification: focused paper harness 332 passed, two subtests. Changed
+Python files pass Ruff and formatting; tracked plan/ledger scoped diff check
+passes. Ten links tests cover explicit scope, frozen reader reproduction,
+producer/evaluator separation, wrong review-condition refusal, actual complete
+pre-authoring delivery, exact admission preservation, thirteen-file repeat and
+the retained scoped review without overwriting historical grades. No further
+experiment or source bytes changed while writing the report and handover.
+
+## E-0259, 2026-09-07, author approves explicit argument completion
+
+Luis's Go accepts the recommendation to complete the specific argument under
+explicit coverage requirements. Master advances to 1.5.17. ARGUMENT-PLAN.md and
+argument-criteria.json define this prospective task-directed condition. They
+do not adjudicate or rewrite historical reviews. The question is now deliberately
+visible, but expected values, endpoint choices, query code, old grades and
+producer rationales remain withheld.
+
+Start from the accepted sol-links-01 amendment, not its predecessor. Preserve
+all 160 existing records and the twenty-event ledger prefix. Retain both source
+captures as separate artifacts. Keep the ontology, reading, Core 160878c and
+subject-aware query method fixed. One fresh Sol/ultra producer, complete observed
+input delivery, at most two exact structural returns, no semantic coaching.
+Allow only new ResearchRelation additions involving the existing hypothesis
+and existing entities. No edge quota or evaluator-authored population.
+
+The five prospective criteria require actual evidence roles rather than credit
+for restating the hypothesis. Source-supported geochemical and earthquake-depth
+observations need explicit connections; modelled saturation depth cannot silently
+substitute for seismic observation. No particular number or source endpoint is
+supplied. Incomplete capture or refusal remains a result. An independent reviewer
+uses the same frozen criteria before/after, without earlier grades. No new full
+thirty-question score. Use requirements are paper-owned, not Core semantics.
+
+The existing runner's fixed artifact IDs would collide with the already accepted
+amendment. Add a narrowly identified successor namespace, tested before use,
+without changing the Core path or earlier experiment artifacts. No other source,
+ontology, reader, Core, manuscript, dependency or Git mutation is authorized.
+
+## E-0260, 2026-09-07, task-directed successor frozen and dispatched
+
+sol-argument-01 freezes 31 materials before dispatch. Its base is the accepted
+twenty-event sol-links-01 history, not calibration b alone. Exact predecessor
+receipt and graph verify, and all thirty predecessor query objects reproduce.
+Both previous captures remain separately bound. The producer input closure is
+seventeen files, 97 bounded frames. It deliberately includes only CQ-T5-01 and
+the prospective criteria among evaluation materials, never the query code,
+other questions, expected values/endpoints, prior grades or producer rationale.
+
+Fresh /root/sol_argument_producer dispatched at 2026-09-07T21:47:59.417Z,
+session 01a07dd7-a417-7070-b0c4-61547ad4ff70. Actual metadata confirms
+gpt-5.6-sol, ultra, fork_turns none. Complete tool-output delivery must pass
+before execution. The producer owns only its work directory.
+
+Identity RED failed for the absent successor artifact-ID constructor; GREEN
+uses argument-01 for actor, capture and plan, preserving earlier repair-01
+identities for their original conditions. Public adaptation/admission/replay
+remains the existing runner. A second RED guards the exact argument review
+condition; GREEN selects the prospective argument-review-task.md without
+changing the frozen predecessor review. No second execution stack was added.
+
+A new preflight test initially imported living src/malleus through pytest's
+pythonpath setting, which precedes the experiment PYTHONPATH. The runtime
+identity guard correctly refused knowledge.py. Staging had run outside pytest
+and already verified the exact pinned runtime. Reused the existing
+test_ontology_answers subprocess convention for the new test; it now executes
+the identity check under the same pinned runtime as the experiment. No Core or
+frozen packet bytes changed. The guard was not bypassed. Four argument tests
+and the historical repair/links tests pass together, 32 tests.
+
+The independent review task is defined before producer completion and receives
+the same prospective role criteria. Historical partial-credit disagreements
+remain preserved, not silently resolved. No candidate or semantic result is
+claimed at this dispatch entry. Master remains 1.5.17.
+
+## E-0261, 2026-09-07, two observation links admitted and review interrupted
+
+Complete producer delivery verified at 2026-09-07T22:00:41Z: all 97 frames
+occur in actual tool outputs by 2026-09-07T22:00:18.310Z, before authoring.
+The work directory was empty at that check. Delivery is not comprehension.
+The producer submitted only candidate-01.json and rationale.md, then stopped.
+No structural diagnostic or semantic feedback was returned. Candidate identity:
+sha256:ae0a16269f43b6339980117d6038f6b46a2321ecc19f3323d2ad30d24965e6d6.
+
+First execution admitted at 2026-09-07T22:09:30.297583+00:00. It adds two
+ResearchRelation SUPPORTS edges, observation:abstract-deep-depth and
+observation:abstract-primary-co2 to claim:co2-degassing. No new observations,
+values, ontology change or supersession. Four retained assertions bind the
+source endpoint, relation predicate and target, using page:1:block:001 and
+page:5:block:002. All 160 old records and their complete historical metadata
+survive, as does the exact twenty-event ledger prefix. New graph: 138 entities,
+23 relations and one event, 162 records. New ledger: 26 protocol events.
+New KCS identity namespace: change:plan:paper-v4:argument-01:evidence.
+
+CQ-T5-01 alone changes: two rows/one path become four rows/three paths, retaining
+both old rows and the old model-result path. The new sources return 10 to 20 km
+MEASURED earthquake depth and approximately 0.4 to 3.0 wt% DERIVED primary-melt
+CO2. These numbers existed before the amendment. The preferred hypothesis stays
+HYPOTHESISED; the older 25 km saturation result stays MODELLED. Twenty-nine
+query objects remain identical; file/network/embedding access counters are zero.
+No independent source-support or coverage verdict is implied by these contents.
+
+evidence/attempt-01 and evidence/reproduction-01 match all thirteen files with
+the same protocol time. Ledger head:
+sha256:dda19b0b4f908fd93199dba310db7a976a302abf331ac462f006229c474fb7e0.
+Replay receipt:
+sha256:6bc621091ae4918c2079fae7a9a611058fc25fe5c2c29af321e821fadfa9232e.
+Query result:
+sha256:774668ad478e357e00a329718ad6f04c66fdc9598dc313ccee14d2953eaaec8e.
+
+The independently frozen review-01 packet contains 27 materials, excludes
+producer rationale and previous grades, and includes exactly the producer's
+prospective criteria. Manifest identity:
+sha256:05520f9493dbfe2a7b6418a3a4cb1be61d305529b806565fc7bb51208135a8ac.
+Fresh /root/argument_review, session 01a07deb-e885-7490-9bd1-5396e7459bf2,
+started 2026-09-07T22:10:07.656Z. Actual metadata confirms gpt-6-astra/xhigh,
+fork_turns none. It read packet materials but its turn failed with a usage-limit
+error. No completed review.md was written. review-launch-01.json records this
+outside the frozen packet. Do not convert interrupted work into a verdict.
+No private reasoning was inspected or retained in experiment evidence.
+
+Luis said Continue during execution. The user was then asked whether to use a
+fresh Sol reviewer with the model change recorded, or leave independent review
+pending. No answer has been received at this entry. No automatic replacement
+reviewer, quota reset, extra producer or manuscript update was initiated.
+
+ARGUMENT-RESULTS.md records mechanical improvement and the source/provenance
+checks performed by the coordinator, explicitly not independent ratification.
+The prospective five-criterion assessment is still pending. Original grades
+remain untouched and no aggregate score is recalculated. No Core defect found.
+Seven argument tests cover identities, frozen condition, observed pre-authoring
+delivery, exact preservation/query delta, distinct source captures and full
+reproduction. Focused answer/appendix/review/candidate harness: 339 passed,
+two subtests. Four changed Python files pass Ruff and format checks.
+Master stays 1.5.17. No Core, manuscript, dependency or Git mutation.
+
+## E-0262, 2026-09-07, resumed review confirms links and isolates scope loss
+
+Luis said Just resume work. Resumed the same /root/argument_review session,
+not a new model or producer. Actual turn 01a07e01-2d52-7522-9730-455e7730a8f3
+began at 2026-09-07T22:33:22.289Z with gpt-6-astra/xhigh. The frozen packet
+and criteria are unchanged. review-resume-01.json records this boundary;
+review-launch-01.json retains the earlier usage-limit failure. No quota reset
+or model substitution was used. Master stays 1.5.17 because the experiment
+condition and authorized scope did not change.
+
+The reviewer completed review-01/review.md. Identity:
+sha256:f2b03bf1c91520c859a47acbb0a2ec91e0783f7ea902e29b5273c2e7f50d77c7.
+All 27 manifest entries and 186 block hashes verify. A progress message said
+26 materials; the coordinator requested a count check only, and the reviewer
+corrected its reporting error to 27. No material changed and no substantive
+assessment feedback was supplied. The review output is the sole added file
+inside the packet. Its locators resolve; all eight returned record IDs and
+all five prospective criteria are explicitly assessed.
+
+Both added SUPPORTS relations and all eight returned record identities are
+SUPPORTED. The reviewer finds no unsupported new connection or record/query
+regression. It independently verified record delta closure and the single
+changed query, while explicitly treating ledger/replay execution as reported
+by the coordinator. Four composite row witnesses are supported. This does
+not certify all 162 accepted records or establish physical causation.
+
+Under the same prospective criteria before and after, CQ-T5-01 remains PARTIAL.
+Before: causal_mechanism and supporting_observation, the latter supplied by
+the distinguished model result. After: those two plus evidence_relation.
+The new paths make numerical geochemical and seismic observations reachable,
+but their scope remains incomplete for the source's RC2 argument. The depth
+record names ridge:mar; the melt quantity names melt:primary-unspecified.
+Neither inherits RC2 by supporting a hypothesis whose subject is segment:rc2.
+This is the reviewer's application of the declared scope requirement, pending
+human ratification, not a source-value contradiction or compiler refusal.
+Historical grades and their disagreements remain untouched. No global score.
+
+The coordinator's bounded follow-up inspected the existing export and reader.
+observation:rc2-deep-depth and the two observation:rc2-primary proxy estimates
+already exist, with site-bearing subjects. They are absent from this answer's
+witness IDs. The new producer linked broader abstract summaries instead; its
+reason for that choice is not established. Separately, relation rows use
+row_without_subject, preserving an endpoint's subject ID without expanding its
+properties. Existing entity-row expansion exposes the specific melt subject's
+RC2 tags. Even linking that record would not by itself demonstrate adequate
+scope projection under the current relation reader. Expanding the selected
+broad subjects cannot supply RC2 because those subjects do not contain it.
+
+Two new tests bind the completed review and failed/resumed launch lineage,
+check closed review-file output, preserve the scoped/unscoped distinction,
+and demonstrate the existing subject expansion without changing any query,
+graph, ontology or evidence. Nine argument tests pass. Full focused
+answer/appendix/review/candidate gate: 341 passed, two subtests. Ruff/format pass.
+ARGUMENT-RESULTS.md, the master, handover and thirty-question RCA record the
+actual gain and this narrower diagnosis. No manuscript/Core edit or Git mutation.
+
+Proposed next sequence, not dispatched: freeze a scope-preserving relation
+projection and run its query-only control, then separately test source-grounded
+links to suitable existing scoped observations. Keep effects separate, preserve
+old records, and reassess qualifications without promising full coverage. No
+new Core capability request is established. All subagents are finished.
+Human ratification remains PENDING. Next entry E-0263.
+
+## E-0263, 2026-09-07, author requests the projection fix in TDD
+
+Luis: Fix in tdd. Master advances to 1.5.18. RELATION-SCOPE-PLAN.md fixes
+the active reader, then compares it on the unchanged accepted argument graph.
+No new capture, model producer, relation amendment, Core change or regrade is
+included. Historical query bytes/results/reviews remain frozen.
+
+Pre-action checks: local paper-owned query and review-docket code only, no
+server interaction or API endpoint; no dependencies or installation. Required
+subject references must raise when missing, never inherit a location from the
+other endpoint. The implementation must replace the active flat relation path,
+reuse existing one-hop projection, and retain original endpoint properties.
+Synthetic RED tests precede implementation. Public traces must include every
+new context ID; the review docket must enforce paired context/identity binding.
+Existing frozen_queries already loads historical code from its own packet, so
+historical replay need not import the changed active answer implementation.
+No shared Git, Core or manuscript mutation.
+
+## E-0264, 2026-09-07, relation-scope TDD and shared review binding
+
+The first RED run of test_relation_scope.py reports seven failures and four
+passes on the original projection. Missing source/target context raises missing
+field assertions; the missing evidence subject is silently ignored; the docket
+rejects identified context but accepts an extra unidentified context field.
+The tests use synthetic records, distinct sites and an arbitrary quantity.
+No paper answer values are supplied to implementation logic.
+
+GREEN reuses GraphReads.row for each endpoint. Source/target properties remain
+unchanged; explicit subject references produce source_subject/target_subject
+and corresponding witness IDs. Expansion is one hop. Missing references raise
+the existing actionable error. Unlinked neighbors and the other endpoint cannot
+supply context. The incomplete active relation projection was replaced, not
+left as a selectable fallback. Historical frozen query files are unchanged.
+Projection/answer/docket tests: 70 passed. The existing broader gate at this
+point: 352 passed, two subtests.
+
+A second RED guards the read-only comparison and exact projection-only delta;
+two tests fail because relation_query is absent. GREEN reuses frozen_queries
+for both old and new query execution, binds the existing admitted history,
+checks the old thirty queries, and requires stripping only new context fields
+to reproduce them. It retains a separate unjudged docket and complete traces.
+It changes no graph, ledger, source, ontology, question program or selection.
+The first comparison tests pass, including exact repeat and source-file,
+network and embedding guard counts of zero.
+
+Consumer-level RED then reveals the active selective review reader still has
+a duplicate strict witness-key contract, and the new result envelope lacks its
+existing inputs binding. A CLI test also requires an explicit method before
+any path access. Three tests fail for those exact boundaries. GREEN extracts
+one central_key implementation into review_packet and imports it in
+selective_review, deleting the duplicate. Context must have a matching endpoint
+subject ID and public trace. The comparison uses the existing retrospective
+result envelope. Missing CLI method now produces an actionable parser error.
+All fifteen then-current scope tests pass. An additional AST guard verifies
+that only answer projection changes, not any selection program or constant.
+
+No semantic review is rerun and no label is converted. The source-grounded
+links remain those already accepted; the comparison will show their actual
+subject context, not manufacture an RC2 qualification. Production changes are
+paper-owned. No Core or manuscript edits, dependency change, commit or ref move.
+Master remains 1.5.18. The actual retained comparison is next; temporary test
+outputs were isolated and removed by their fixture lifecycle.
+
+## E-0265, 2026-09-07, retained query-only scope comparison passes
+
+scope-method-01 was frozen at 2026-09-07T23:14:01.021888+00:00 under the
+accepted sol-argument-01 run. It contains six bound materials: corrected answer
+projection, unchanged subject reader, comparison runner, shared docket contract,
+original questions and original population surface. Method identity:
+sha256:32204e1488aa8113bd6ed24bf2b60c52d64fcb235d8efbcd63c87144d02bf996.
+New answers.py identity:
+sha256:55c1e5cc50245c5eae8879bce71f4badb055027e50c51f85d38cd650eb4281a2.
+The AST guard confirms no changes outside the answer projection. Frozen
+historical inputs and their source identities remain unchanged.
+
+The original thirty query objects reproduce from their exact old code before
+the corrected read executes. The new read changes CQ-T5-01 only. Across the
+whole suite there are still 59 row occurrences, four paths and 53 traced record
+IDs. In the target question, witness IDs increase from eight to ten because
+ridge:mar and melt:primary-unspecified are now explicitly included as relation
+context. They were already traced for other questions, not newly created records.
+
+The seismic relation now displays source_subject name Mid-Atlantic Ridge with
+MAR/ridge tags; the geochemical relation displays primary melts without a site.
+Their target_subject displays segment RC2 independently. The older model result
+has no source subject, and the reader does not invent one. All original endpoint
+properties, values, qualifications, relation paths and record identities stay
+exact. Stripping only new context fields and IDs reproduces every old query.
+Each displayed context equals its actual graph record and has a public trace.
+
+The accepted graph still has 162 records, ledger 26 events. Ledger bytes and
+graph export remain identical; replay receipt remains
+sha256:6bc621091ae4918c2079fae7a9a611058fc25fe5c2c29af321e821fadfa9232e.
+No source-file, network or embedding access occurs under either query guard.
+scope-query-01 and scope-query-reproduction-01 match four files exactly:
+query-result.json, query-trace-summary.json, review-docket.json and summary.json.
+New query result:
+sha256:2369dbccb0da886b62478a31b99f0890ec82180b1ef409411ae3ac2eb8a4e66c.
+
+This is a projection fix, not a graph amendment or semantic review. The current
+broad subjects still do not encode RC2. No new semantic grade is assigned, and
+the prior independent review remains byte-identical with human ratification
+pending. The later source-grounded link choice remains separate. No producer,
+Core request, manuscript rewrite or ontology change was initiated.
+
+Seventeen relation-scope tests cover RED/GREEN contracts, exact consumer binding,
+unchanged selector ASTs, missing data, drift refusal before output writes,
+read-only reproduction and the actual retained comparison. Final focused
+answer/appendix/review/candidate suite: 358 passed, two subtests. Five changed
+Python files pass Ruff and formatting; scoped tracked diff check is clean.
+RELATION-SCOPE-RESULTS.md, README, master, RCA and handover now identify this
+completed boundary. Master stays 1.5.18. No dependency, commit, push or shared
+ref change. Next entry E-0266.
+
+## E-0266, 2026-09-07, author approves the scoped-links successor
+
+Luis says Go to the proposed source-grounded amendment using current records.
+Master advances to 1.5.19. SCOPED-LINKS-PLAN.md fixes the current 162-record,
+26-event sol-argument-01 state and the corrected scope-method-01 reader. The
+question and argument criteria stay unchanged. One fresh Sol/ultra producer,
+complete verified input delivery, no prescribed evidence endpoints or values,
+at most two exact structural returns. Preserve every existing record and all
+three capture namespaces. Independent assessment and exact reproduction follow.
+
+Pre-action checks: local paper-owned staging, tests and private artifacts only.
+No server interaction or endpoint implementation, installation or dependency
+change. Required identities and references must fail loudly. No replacement of
+the admission mechanism: reuse repair.execute and links.execute. Add failing
+tests before the bounded successor staging and duplicate-payload guard. The
+producer authors the delta, never the evaluator. No semantic coaching, further
+sampling, historical regrade, Core/manuscript edit or shared Git mutation.
+
+## E-0267, 2026-09-07, scoped successor frozen and fresh producer dispatched
+
+Four RED tests reproduce the absent successor namespace/staging path and exact
+duplicate relation payloads admitted under distinct IDs. GREEN extends existing
+argument staging to its bounded successor and keeps the same admission runner.
+The duplicate guard compares complete relation payloads except ID, both against
+accepted relations and within a candidate. Different qualifications are not
+collapsed. The first GREEN test run had one test-only message mismatch: overwrite
+already refused correctly; the test now matches the existing actionable error.
+Focused staging/amendment guard suite: 41 passed. No evaluator-authored facts.
+
+sol-argument-scope-01 now freezes 33 materials. Manifest identity:
+sha256:67dcaecd808719e4a6371cec251c5ad927f0fd7be34241c633eab6fa9d3f5c27.
+The 162-record export and 26-event history are the accepted argument successor,
+not its predecessor. The before query is the E-0265 corrected projection.
+Both before and after use that same frozen reader. The producer sees all three
+capture artifacts, the same competency question and unchanged prospective criteria,
+but no query code, review, desired endpoints, answer values or prior rationale.
+The declared delivery contains 98 frames across eighteen inputs.
+
+Fresh producer /root/sol_scoped_links_producer was dispatched with no inherited
+turns. Observed session 01a07e5f-315e-7110-bbc1-90abf40ee735 starts at
+2026-09-08T00:16:03.123Z; its actual context is gpt-5.6-sol/ultra. Delivery and
+pre-authoring order remain to be verified from tool outputs. No semantic result
+is claimed while it reads. No Core, manuscript, dependency or Git mutation.
+Master stays 1.5.19. Next entry E-0268.
+
+## E-0268, 2026-09-07, complete producer delivery and baseline provenance verified
+
+All 98 declared frames are present in tool outputs before the producer's
+delivery-notification event at 2026-09-08T00:32:46.691Z. Actual session settings
+remain fresh Sol/ultra. At the independent filesystem check, producer/work was
+empty. delivery-order.json records the boundary and limitation: delivery is not
+comprehension or source faithfulness. The producer is now authoring; no candidate,
+semantic result or structural feedback is recorded at this boundary.
+
+The first audit command tried to locate the notification by literal message
+text and raised StopIteration because persisted collaboration arguments are
+opaque. No decryption was attempted. The corrected check uses the observed
+notification event's timestamp and verifies exact preceding input outputs.
+A regression test binds that event metadata and refuses if the final delivered
+frame is removed, even with the notification retained. No producer input changed.
+
+A separate check resolves all 53 before-query trace records to exactly one of
+the three retained captures. Each source digest, formalization path and source
+span matches under the declared whitespace rule. A regression test retains this
+namespace closure; it does not grade source semantics. Six scoped-successor tests
+pass. The earlier full focused gate passed 362 tests and two subtests before
+these two additional evidence checks. Master stays 1.5.19. Next entry E-0269.
+
+## E-0269, 2026-09-07, two scoped links admit, reproduce and enter independent review
+
+The first Sol candidate proposes two new SUPPORTS relations, from the existing
+RC2 deep-microseismicity depth and RC2 primary-melt Ba90 estimate to the existing
+preferred degassing hypothesis. Four new assertions bind both endpoints and
+the predicates. No new entity, observation value, supersession or negative
+disposition is submitted. No structural return or semantic coaching was used.
+The producer's later status message said 100 frames; the observed transcript
+contains 98 declared frames and 98 frame occurrences. We retain the mechanically
+verified count, not the self-report. Its full delivery preceded authoring.
+
+The existing public admission/replay runner accepts the candidate. Every one of
+the 162 prior records, historical entries and the 26-event ledger prefix survives.
+The current state is 138 entities, 25 relations and one domain event, 164 records
+in a 32-event history. Only CQ-T5-01 changes. Its rows increase from four to six,
+paths from three to five and witness IDs from ten to fifteen. Across all thirty
+questions there are 61 row occurrences, six paths and 56 traced record IDs.
+All old rows and paths remain. The source-specific subjects now appear on the
+new relation endpoints through the already frozen corrected reader.
+
+The geochemical source retains ESTIMATED and its RC2 primary-melt subject. The
+seismic source has its RC2 subject but no determination field; the reader does
+not invent one. The target remains HYPOTHESISED/PREFERRED. These are projected
+fields, not a semantic grade. All traces resolve to their own one of four capture
+artifacts. No source-file, network or embedding access occurs in query execution.
+
+The original execution and separate reproduction match thirteen files exactly,
+using the same explicit protocol transaction time, 2026-09-08T00:39:00+00:00.
+Current ledger head:
+sha256:548321f95ab4e8631626cfd56e8cb747f390955696cc62acab16ade53bbf1981.
+Replay receipt:
+sha256:67b7f2ae747ab0f959c05882d1b99f7ef6bb260bf3b97f65c8c6065d3ab2e36b.
+Graph export:
+sha256:279f03552ee90217330701fa719bc1bb8e2d96cf444814124f662ba024f324d1.
+Query result:
+sha256:3e1c20778658b9e454f1058d2099a19a91d6e10903d1d86ab4d9e3b8c514488a.
+Eight scoped-successor tests pass, including preservation, reproduction,
+corrected-reader binding, missing-field honesty and four-capture trace closure.
+
+Fresh independent reviewer /root/scoped_links_review receives the frozen
+review-01 packet, not the producer's rationale or earlier reviews. Observed
+session 01a07e75-9e1d-7221-abae-d32e31da030b uses inherited gpt-6-astra/xhigh,
+with no inherited turns, launched at 2026-09-08T00:40:32.681Z. Packet identity:
+sha256:06da1d3a089cf53f3d8c2b453938e84a70161e7710558177667953aeb31ae39b.
+It must assess the same prospective requirements before and after, every new
+edge and every changed-answer witness. Review is in progress; human ratification
+is pending. No Core, manuscript, dependency or Git mutation. Next entry E-0270.
+
+## E-0270, 2026-09-07, scoped review completes and identifies the remaining boundary
+
+The independent review is complete at sol-argument-scope-01/review-01/review.md,
+sha256:357f3c96fb5f34e642ca3629b60eba4150e8b101e6b423399c710703a0cd9d9f.
+It verifies all 28 material identities, exact record-delta closure, four separate
+capture namespaces and all fifteen changed-answer record witnesses. Both added
+relations are SUPPORTED as representations of the authors' argument. The new
+geochemical row is SUPPORTED; the seismic row is PARTIAL as qualified evidence.
+The estimate, unit, RC2 primary-melt scope and ESTIMATED status are now reached.
+The seismic range and RC2 scope are now reached, but determination remains absent.
+
+Direct inspection confirms the latter diagnosis without guessing: the baseline
+assertion:027-key-depth-observations is MEASURED and maps the RC2 depth's values,
+unit, approximation, quantity kind and subject, but not determination. The current
+graph record lacks that property. The new capture again retains MEASURED but maps
+it only to the relation's source endpoint. The reader returns all existing source
+properties. Thus this is a representation omission surviving a links-only change,
+not removal by Core or the fixed reader. A future amendment could address it,
+but this authorization did not permit endpoint replacements or invented fields.
+
+The reviewer also flags unreturned axial/short-window seismic scope, proxy
+assumptions and the conditions of the earlier saturation model. It assembles
+a bounded answer joining the estimated RC2 primary-melt Ba90 concentration
+with the approximate RC2 microseismicity depth range through explicit paths to
+the preferred hypothesis. It deliberately does not add measured status from
+source context. Source truth, complete extraction and causal confirmation remain
+unclaimed. Human ratification is pending.
+
+Its prospective result is PARTIAL before and after, one of five credited
+requirements before and three after. That count is review-specific. The previous
+argument review treated supported asserted fields and missing coverage separately;
+this review assigns PARTIAL whole-row support to some incomplete qualifications,
+also removing supporting-observation and evidence-relation credits. The projection
+differs between those review packets as well. Do not interpret cross-review count
+movement as a graph regression or a clean repeated-review measurement. The reports
+remain unchanged. The objective within-run gains are two supported links and newly
+reached scoped evidence, with an explicit residual qualification omission.
+
+Nine successor tests now bind the completed review, every witness and source
+locator, unchanged criteria and prior review identity, alongside delivery,
+preservation and exact reproduction. The full focused gate before the final
+review-binding test passed 366 tests and two subtests. Results, master, README,
+RCA and handover record the completed cut. No new producer, Core request,
+manuscript edit, dependency change, commit, push or ref movement. Master stays
+1.5.19. Qualification amendment and support/coverage clarification remain next
+decisions, not performed work.
+
+Final verification on the completed code and review: 367 passed, two subtests.
+Ruff, formatting and scoped tracked diff check pass. Shared status remains
+main ahead 43 with the same pre-existing unrelated changes. This task made
+no Git mutation. Next entry E-0271.
+
+## E-0271, 2026-09-07, support and coverage decision prepared
+
+Luis says Ok to the recommended sequence of clarifying support versus coverage,
+then repairing observation qualifications. This entry prepares the concrete
+choice; it does not select a new interpretation on the author's behalf.
+QUALIFICATION-DECISION.md recommends judging the represented claims for source
+faithfulness and separately checking the question's predeclared requirements.
+Missing information is not automatically a false assertion; an omission that
+changes meaning can still be a faithfulness failure and must be identified.
+The alternative whole-row qualification gate is stated, not silently removed.
+
+Read-only inspection confirms the two historical review interpretations, the
+unchanged prospective criteria, the author-endorsed three promises, and the
+current observation's missing determination despite retained MEASURED evidence.
+The current export contains exactly one relation incident on that observation,
+its SUPPORTS edge. The ontology already admits determination. The smallest
+prospective repair therefore includes an observation version and its relation
+version, preserving old history and unrelated state. It is not an in-place field
+edit or a license to leave an active relation pointing to a retired endpoint.
+
+Qualification requirements, including whether axial and temporal scope must be
+returned for this question, must be explicit before dispatch. No guarantee of
+complete coverage from adding one field is made. Core/source/ontology/query
+bindings, population, review artifacts and grades remain unchanged. This turn
+changes planning/journal prose only, no code, runtime tests, dependencies,
+model dispatch, Core request, manuscript or Git state. Master stays 1.5.19;
+next entry E-0272. Author selection of the prospective rule remains open.
+
+## E-0272, 2026-09-07, author selects separate faithfulness and coverage
+
+Luis answers Ok to the explicit rule approval question. This supersedes E-0271's
+pending selection, not any historical review. Source faithfulness applies to what
+the representation claims. Task coverage applies to predeclared requirements.
+Missing information is not automatically false; a meaning-changing omission can
+be a faithfulness defect when its unsupported claim or implication is identified.
+
+Master advances to 1.5.20. QUALIFICATION-PLAN.md bounds the approved next repair:
+one fresh Sol/ultra producer may version observation:rc2-deep-depth and its single
+incident SUPPORTS relation, atomically, from the 164-record/32-event accepted
+history. Freeze status, axial/site and observation-window coverage requirements
+before dispatch. Existing values and historical versions stay fixed. Use existing
+ontology qualification fields, exact structural guards in TDD, the shared public
+admission executor and unchanged query reader. No source interpretation is authored
+by the evaluator. Preserve every attempt and allow at most two structural returns.
+
+Reproduction and independent before/after assessment follow any admission. No
+historical regrade, Core request, manuscript/dependency/Git mutation or claim of
+complete coverage. This entry records authorization and scope, not an execution
+result. Next entry E-0273.
+
+## E-0273, 2026-09-07, qualification guard GREEN and fresh packet frozen
+
+Pre-action classification: paper-local experiment support only, no server/API,
+dependency, Core or production endpoint change. Reuse repair.py admission/replay
+instead of another pipeline. Required candidate fields remain explicit. The new
+guard does not author source facts or assign semantic scores.
+
+TDD RED: 21 tests failed on the absent qualification guard/staging condition.
+GREEN: one observation plus its single incident relation may receive fresh IDs
+and exact supersessions; existing values/type/subject/predicate/endpoints other
+than the versioned source stay fixed. Changed values, removed fields, extra
+records, dependency expansion, forks and incomplete supersession refuse. A real
+shared-executor test proves refusal before any ledger retention. A separate
+review-route RED exposed the unrecognised prospective condition; GREEN admits
+only that condition and uses the review task frozen before producer dispatch.
+Forty qualification/argument/scoped tests pass. Full focused gate: 389 passed,
+two subtests. Changed Python Ruff and formatting pass.
+
+Frozen private run: sol-qualification-01, 35 materials, manifest
+sha256:438b935bf87369716380f4fcdd1e855473720f1085e5b98eff110fe973501db1.
+It binds the unchanged source/ontology/Core/query, current 164-record/32-event
+state, four separate captures and prospective rule/checklist. The fresh producer
+is /root/sol_qualification_producer, session 01a07ed0-b071-75a0-a4d2-dd7dc9de3bc1.
+Observed session metadata starts 2026-09-08T02:20:01.239Z; actual turn settings
+are gpt-5.6-sol/ultra, fork none. Launch metadata is retained. The producer is
+still reading, no candidate/admission or semantic result is claimed.
+
+No prior artifacts/grades, Core, manuscript, dependencies or Git refs changed.
+Master remains 1.5.20. Next entry E-0274.
+
+## E-0274, 2026-09-07, complete qualification input delivery before authoring
+
+All 99 declared frames across nineteen inputs are mechanically verified in the
+fresh Sol/ultra session's tool outputs before its send_message event at
+2026-09-08T02:37:04.974Z. The producer work directory was still empty when checked.
+No private reasoning or opaque call arguments were inspected. Actual model/effort
+and session identity match the frozen launch. The producer reported 100 frames;
+the exact declared-frame count is 99 and remains authoritative. The notification
+and mechanical observation are retained separately, not silently reconciled.
+
+The producer is authoring its first candidate. No structural return, semantic
+coaching, admission or outcome is reported yet. The additional frozen-input test
+also closes all 56 before-query witnesses to their four separate captures and
+preserves the historical criteria hash. Next entry E-0275.
+
+## E-0275, 2026-09-07, first qualification candidate admits and reproduces
+
+Fresh Sol/ultra completes candidate-01 and rationale. It proposes the declared
+observation and relation replacements with exactly two supersessions, preserving
+all existing fields. It adds determination/assertion_modality MEASURED, a source-
+located description of axial RC2 scope and the brief observation window, and
+duration approximately 21 days. These are producer-authored fields, not evaluator
+population facts or an independent truth judgment. Candidate identity:
+sha256:391f83c9da76281650e6a9b40d6146f29a11e9a8776070f862a211f8c8cc8d03.
+Retained new capture:
+sha256:22cbc32ac09e9409453411397fd8d1478fc20713a04f10a46e12486fd82bc74c.
+
+First-attempt admission succeeds without feedback. Public reopen/replay matches
+pre-close state. All 164 current records are accounted for; 166 historical entries
+retain both old versions and explicit successors. The ledger grows from 32 to
+39 events, preserving the exact prior prefix. Only CQ-T5-01 changes, through the
+versioned seismic row and path identities. It still returns six rows/five paths/
+fifteen witnesses; the whole suite retains 61 rows/six paths/56 traced identities.
+All thirteen files reproduce byte for byte. Exact prefix, record and historical
+metadata preservation checks pass. Query source/network/embedding counters are zero.
+
+QUALIFICATION-RESULTS.md records all identities and the bounded non-claims.
+The fixed protocol transaction time is 2026-09-08T02:45:00+00:00, not a wall-clock
+execution measurement. No new semantic grade or thirty-question total is claimed.
+
+Fresh independent reviewer /root/qualification_review receives the frozen
+29-material review-01 packet, including five capture artifacts, not the producer
+rationale or prior grades. Session 01a07ee5-bc3e-7322-97c5-5a81d4fabca7 starts
+2026-09-08T02:43:00.417Z, observed inherited gpt-6-astra/xhigh, fork none. It must
+apply the same prospective rule before/after and inspect every changed-answer
+witness. Review and human ratification are pending. No Core/manuscript/dependency
+or Git mutation. Master stays 1.5.20. Next entry E-0276.
+
+## E-0276, 2026-09-07, qualified evidence completes the scoped answer
+
+Independent review is complete at sol-qualification-01/review-01/review.md,
+sha256:f02323dd6762629c7da9c5eea7a89aab60650a58635cd44706dacfa91bed083a.
+The reviewer verifies 29 material identities, 186 reading-block hashes, all
+seventeen distinct before/after record witnesses, both replacements and 162
+unchanged current records. All represented claims are supported at their stated
+specificity. MEASURED is treated as coarse observational status, preserving the
+fact that earthquake locations involve calculation/relocation. Approximately
+21 days qualifies the observation record, not individual earthquake duration.
+
+Under the same prospective rule on both sides, CQ-T5-01 is PARTIAL before, four
+of five requirements, and COVERED after, all five. The gained requirement is the
+qualified seismic observation. The mechanism, distinct supporting observation,
+scoped estimated geochemical value and explicit evidence paths already fulfilled
+their roles before. Supported paths retain credit independently of absent endpoint
+qualifications. No source context is inserted as an absent answer field. All other
+29 query objects remain identical and are not rescored. Historical reviews and
+grades remain unchanged. This is model-assisted, human ratification pending,
+not a validator-certified full thirty-question review or a global score.
+
+The reviewer assembles the RC2 primary-melt Ba90 estimate and deep-microseismicity
+range through explicit SUPPORTS paths to the preferred hypothesis, now with axial
+scope and the brief-window qualification. It retains omitted proxy assumptions,
+location uncertainty/quality, seafloor reference, model conditions and the fuller
+causal/alternative argument as limitations. No physical causal proof is claimed.
+
+Read-only query RCA also confirms a next possible consumer-side correction:
+CQ-T3-01 still misses the qualified microseismicity observation because its
+whole-word filter lacks that term. Its broad numeric filter also returns a count
+and temperature as candidates. These are current output/code facts, not another
+capture regression or a missing Core seam. No query code is changed in this cut.
+
+The pre-review full focused gate passed 393 tests and two subtests. The completed
+review is now mechanically bound, including both states' witnesses, source
+locators, packet closure and historical review identity. Final verification follows.
+No further model run, Core request, manuscript/dependency/Git mutation. Master
+remains 1.5.20. Next entry E-0277.
+
+Final verification on the completed implementation, evidence and review:
+394 passed, two subtests. Twenty-seven qualification tests cover scope, refusal
+before retention, frozen rules, exact delivery, all five capture namespaces,
+version/history preservation, unchanged-query limits, reproduction and review
+binding. Ruff, formatting and scoped tracked diff checks pass. Both agents are
+finished. No new Git coordinate is claimed because this task made no Git mutation.
+
+## E-0277, 2026-09-08, author approves the depth selector fix in TDD
+
+Luis says go to the proposed depth-query correction. Master advances to 1.5.21.
+DEPTH-QUERY-PLAN.md fixes the cut: microseismicity vocabulary, explicit Length
+classification and numeric bounds, with no inferred dimension or missing qualifier.
+All other queries/projections and accepted sol-qualification-01 data remain fixed.
+Reproduce the old thirty queries, freeze and run the new selector, verify exact
+state/trace preservation and repeated outputs. No producer, capture, Core change,
+semantic regrade, manuscript, dependency or Git mutation is authorised.
+
+Pre-action checks: this is local paper-owned query code, no server or API endpoint.
+Required metadata is not defaulted. Optional absent dimension does not establish
+Length, and absent bounds are not extracted from prose. Replace the faulty active
+selector, retain frozen historical readers solely as experimental controls. The
+two observed failure classes receive synthetic tests before implementation.
+Shared main is ahead 174 at inspection; unrelated existing dirt is preserved.
+Core remains independently pinned to 160878c, not rebound to shared HEAD.
+Next entry E-0278.
+
+## E-0278, 2026-09-08, depth selector GREEN and exact query-only comparison
+
+RED: thirteen failures and five passing controls. Failures expose missed
+microseismicity, accepted non-length/count/ratio/uncertainty candidates, the absent
+bounded comparator and absent depth-mode staging. GREEN replaces only the active
+earthquake_depth selector: explicit Length plus a numeric lower/upper bound, with
+microseismicity added locally. Shared matching, other queries and projection remain
+unchanged. Zero/open bounds survive, no dimension or missing value is inferred.
+
+The existing relation_query executor now has an explicit depth-selection condition.
+It reproduces the historical thirty-query control before executing the frozen new
+reader, checks unchanged questions/shared rows/paths, and preserves the graph,
+ledger and receipt. No second execution pipeline or legacy fallback was added.
+Historical projection tests deliberately freeze their historical query program.
+
+Regression testing exposed three tests implicitly binding old text/projection
+conditions to the live selector. The two text-binding controls now load exact
+historical query bytes. The AST test binds the old projection-only intervention
+and restricts the active change to earthquake_depth. No historical fixture or
+grade was rewritten. Focused depth/projection/text-binding gate: 44 passed.
+Full focused paper gate: 412 passed, two subtests before the final artifact test.
+
+On sol-qualification-01, depth-method-01 is frozen at
+sha256:2b3e52b4952b394a10813a426e27efa56ea7891811a0350efcc71e62cc6379a7.
+depth-query-01 and depth-query-reproduction-01 match all four files exactly.
+Query identity:
+sha256:af325d88662ec2aee0fd29fb2cfcd37c5f9bd47e65375a9498fb9c1522e930aa.
+Only CQ-T3-01 changes. It gains the qualified RC2 observation and excludes
+count:forced-depth-subset and observation:bdb-temperature. Seven old rows stay
+exact. Nine depth candidates become eight; full output becomes 60 rows, six
+paths and 55 traced identities. All 29 other question objects remain exact,
+including the previously completed composition answer. All five capture namespaces
+remain distinct. The graph/ledger/receipt are unchanged and read-guard counters
+are zero. No new source interpretation or semantic grade is assigned.
+
+DEPTH-QUERY-RESULTS.md records the gain and limits. The reference-surface and
+full observational-method qualifications are still not supplied by the graph;
+query matching must not fabricate them. No producer, capture, review dispatch,
+Core/manuscript/dependency/Git mutation. Master stays 1.5.21. Next E-0279.
+
+Final verification, including the retained-artifact guard: 413 passed, two
+subtests, including 19 depth-query tests. Changed Python Ruff and formatting
+checks and the scoped tracked diff check pass. This is the focused paper gate,
+not a Core full-suite run.
+
+## E-0279, 2026-09-08, context audit and approved integration experiment
+
+Read-only source audit verified PDF digest 7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9
+and the unchanged selected reading. Figure 3c/d connects RC2 profiles to the
+bsf depth axis; page 1 defines bsf and page 7 explicitly associates the 10 to 20
+km RC2 subset with profile cc-prime. Figure 6 has a distinct 10 to 19 km bsf
+statement. Do not merge ranges. Baseline capture marks the relevant Figure 3
+blocks nothing_assertable; assertion 069 retains bsf but maps only a melt tag.
+No depth record captures this reference. It is not a source extraction or replay
+loss. No audit PNG becomes a producer input or new selected reading.
+
+Luis endorses contextual integration rather than isolated concept/assertion
+capture, then approves the bounded experiment proposed in conversation. Master
+advances to 1.5.22. One fresh Sol/ultra session will receive source, ontology,
+accepted graph and five retained captures, not questions, expected answers,
+audit findings or reviews. Prior task-directed amendments in the graph are
+disclosed; do not call this question-blind acquisition. The RC2 check stays
+evaluator-held. INTEGRATION-PLAN.md and producer/reviewer tasks freeze scope.
+
+Pre-action checklist: local paper code only, no server/API endpoint. Required
+inputs fail explicitly, no missing-value defaults. Reuse existing admission and
+replay, do not add another execution stack. Source-context omissions get exact
+quote/scope/preservation tests; semantic relevance still needs independent
+assessment. Shared main and unrelated dirt are preserved; no Core/ref changes.
+TDD RED: 26 integration tests fail before the scope/staging implementation exists.
+No producer has been dispatched at this entry. Next E-0280.
+
+## E-0280, 2026-09-08, integration guards GREEN and fresh producer launched
+
+Twenty-six focused integration tests pass. The new paper-owned scope checks
+account for every quantity, require exact witnesses and explanations for every
+changed property, preserve exact type and enforce atomic incident-edge retargeting.
+Explicit NO_CHANGE/UNRESOLVED results are allowed without empty admission. Tests
+also freeze the question-excluded input closure and reproduce all thirty queries.
+Ruff passes. Broader regression gate is running.
+
+Frozen sol-integration-01 manifest:
+sha256:695ea86b86f20b928e17132567db1d008a6c0a9276a63ba403a652ae471ac25d.
+One fresh gpt-5.6-sol/ultra producer /root/sol_integration_producer was launched,
+fork none, at 2026-09-08T15:01:44.710Z. Its launch and metadata path are retained.
+The packet has 18 declared inputs and five distinct captures. Query code, thirty
+questions, criteria, audit and reviews remain outside producer inputs. No new
+candidate or admission is yet reported. Master stays 1.5.22. Next E-0281.
+
+The broader gate passed 439 tests and two subtests. A subsequent RED/GREEN
+test binds candidate/report and source bytes into an independent pre-admission
+review packet and refuses input drift before writing. Focused integration tests
+now pass 27. The packet's structural preflight performs no retention/admission;
+source assessment is separate. Actual session metadata confirms gpt-5.6-sol/ultra.
+There are 70 quantified entities and 98 declared input frames. No candidate yet.
+
+## E-0281, 2026-09-08, full integration input delivery independently verified
+
+At 2026-09-08T15:17:05Z, all 98 exact frames are present in the fresh producer's
+actual tool outputs. Observed model/effort remain gpt-5.6-sol/ultra. Work directory
+is empty at that check. The producer separately announced complete reading and
+is authoring its first result. Retained delivery-before-output.json records this
+check; it does not certify comprehension. No new candidate/admission yet.
+
+The relevant integration and historical-amendment regression gate passes 83
+tests. A real pinned-Core no-candidate/refusal control leaves history bytes
+unchanged and creates no retention/admission artifacts. Focused integration tests
+now number 28. No Core, manuscript, dependency or Git mutation. Next E-0282.
+
+Before coordinator inspection of the producer candidate/report, the full focused
+paper gate passes 441 tests and two subtests. The later query-delta review task
+is separately frozen at
+sha256:be6bd1b7f596e81d3f4390f0adf05a068d4b42a07c18e107b4cfc51222ddf379.
+It preserves every existing required_semantics, separates faithfulness from
+coverage, assesses all witnesses of changed answers and leaves unchanged answers
+and historical grades alone. It is not a producer input. No admission yet.
+
+## E-0282, 2026-09-08, first integration proposal and exact quote-binding refusal
+
+Sol delivered candidate-01.json and candidate-01.report.json. Candidate digest:
+sha256:d05bbaf8e729b86f7e7fbdacdf0648bcbab1be359e8779d0b7903174a90ee169;
+report digest:
+sha256:e4d2542e931c9d2d558c0108ecb5b82c5813e580506a90f63ba8eb0a312c7558.
+The proposal versions ten entities and five incident relations, with 27 property
+changes and unchanged numerical values. Its report labels ten quantities AMENDMENT
+and sixty NO_CHANGE. These are producer dispositions, not independent findings.
+
+Read-only preflight refuses before the adapter because report witnesses are not
+literal selected-reading substrings. All 67 witness occurrences fail the frozen
+literal rule; 57 match after whitespace collapse. The eleven distinct nonliteral
+witnesses remain preserved. This is not a Core refusal or evidence of a source
+meaning failure. Core's capture-span whitespace rule and this report's explicitly
+stricter verbatim rule must not be conflated. A new regression case distinguishes
+those rules without changing either. No runtime patch or ledger write occurred.
+
+structural-return-01.md retains the exact first exception and candidate identities.
+The same producer was resumed for structural return 1 of at most 2, with no
+semantic feedback and no permission to revise the semantic proposal. It must
+write candidate-02 and its report separately. Master stays 1.5.22. Next E-0283.
+
+Candidate 02 is byte-identical to candidate 01. Report 02 is
+sha256:0e5e49faec490c6891259a34ac9b0601a6170f8e3a2c346b18f74f723e391b6e.
+It still has twelve nonliteral witness occurrences. A separate read-only public
+adapter diagnostic also finds the trace-element-assumption assertion NOT_VERBATIM.
+structural-return-02.md aggregates those exact errors for the second and final
+return. No source-meaning feedback or rule change. Earlier pairs remain intact;
+candidate 03 must preserve the semantic proposal. A remaining failure will be
+the result. Focused integration tests pass 29, including the literal-versus-
+normalized witness guard. No evidence retention or admission has occurred.
+
+## E-0283, 2026-09-08, final candidate compiles and source assessment begins
+
+Candidate 03 passes the frozen report/scope checks, public document adapter and
+population compiler without changing any ledger bytes. Candidate digest:
+sha256:923eade3e2fe10afc780600b65f40bcf951ce3473ea179c5456c278de60ba4cf;
+report digest:
+sha256:d48eb9edd44e842752024394be171e02188d8922943330fe40cb60d19ffaf917;
+compiled plan:
+sha256:fba1262f76940ec5aa9b14753da41140da42b33038b11b0be8d5a997684f1e17.
+Exactly two structural returns were used. Comparison confirms records,
+supersessions, report reasons, statuses and change lists stayed identical across
+all three attempts. Only report quote spans and the diagnosed capture assertion
+statement changed. Earlier candidate/report bytes remain intact.
+
+The twenty-material source-review packet is frozen at
+sha256:00be87f70fc227c4a2be4f457fd48a1223dcf622547a2bbbf9cad31a80afdc7b.
+One fresh independent reviewer, /root/integration_source_review, was dispatched
+at 16:08:07Z. Observed metadata confirms inherited gpt-6-astra/xhigh, fork none.
+It sees no questions, expected answers or query outputs. It assesses every
+changed property, retargeted relation and important missed contextual dependency.
+No source verdict or admission is yet claimed. Human ratification will remain
+pending. Master stays 1.5.22. Next E-0284.
+
+Workflow limitation recorded for the next design discussion, not changed here:
+the paper report duplicates source quotes under a stricter literal rule than
+Core's capture-span contract. Both are explicit and mechanically enforced, but
+the extra literal check does not establish source meaning. A future report could
+reference already retained assertions instead; that is not this run's condition.
+
+The reviewer has raised an admission-blocking unresolved attribution: describing
+the abstract primary-melt range as specifically the Ba90 estimate, where the
+source's synthesis uses both Ba90 and Rb90. Its full report is still running.
+It also flags two NO_CHANGE reasons that misread LAB as laboratory work. The
+coordinator confirms that the frozen graph already names interface:lab as the
+lithosphere-asthenosphere boundary and the source attributes the quantities to
+LAB reflection interpretation. These are report errors, not new graph changes.
+The held-out seafloor reference is still absent from both proposed depth records.
+No admission or after-query is run while the source verdict is unresolved.
+
+Final gate at this interim boundary: 444 passed, two subtests; focused integration
+31 passed. Changed Python Ruff/format and scoped tracked diff checks pass.
+
+## E-0284, 2026-09-08, integration source assessment complete, batch withheld
+
+Independent review is frozen at
+sha256:49ab1824f4e07aa18556fb73e0465c73bf87a63c66e7c5b2bfaef62a9cbfcc9a.
+It assesses all 27 changed properties and five retargeted relations. Twenty-six
+property changes are supported; the abstract CO2 description's particular Ba90
+identity is unresolved. The corresponding retarget is withheld because of its
+endpoint, while the underlying SUPPORTS proposition remains supported. Four
+other retargets are supported. Human ratification remains pending.
+
+The coordinator read the complete review and inspected the source's abstract,
+two-proxy synthesis, explicit per-proxy ranges and LAB passage. Numerical
+correspondence does not resolve the abstract's particular method identity. The
+batch is not admitted under the predeclared source-assessment gate. This is a
+paper-owned disposition, not a Core semantic refusal. No subset is selected,
+candidate repaired, extra producer sampled, after-query run or historical grade
+changed. Both agents are finished.
+
+The review preserves genuine cross-block improvements alongside failures: RC2
+scope and acquisition window, later depth-test qualification and a shared method
+assumption on four distinct primary estimates. It also identifies false claims
+about existing record fields, a false laboratory interpretation of LAB, omitted
+shared dependencies and unsupported representation-gap reasons. The initial
+source-supported seafloor reference remains absent. The producer's seventy-entry
+accounting is not evidence of complete contextual integration.
+
+The final quote correction shortened a 221-character attempted assertion to
+the 24-character fragment 'relies on the assumption'. The full cited source block
+supports the intended clauses; the fragment alone does not express the assumption.
+Records and intended property claims were preserved, but evidence-span content
+was weakened. Passing the location rule did not establish evidential sufficiency.
+
+outcome.json and INTEGRATION-RESULTS.md bind the final state and diagnosis. Replay
+still gives the original 164 current records, 166 historical versions and 39
+events. Base ledger, receipt and graph identities remain exact. New tests preserve
+all three attempts, both refusal boundaries, repair scope and the distinction
+between structurally compiled and source-withheld results. No Core, manuscript,
+dependency or Git mutation. A source-to-record reconciliation follow-up is
+recommended, not selected. Master stays 1.5.22. Next E-0285.
+
+Final focused paper gate: 445 passed, two subtests, including 32 integration
+tests. Ruff, formatting and scoped tracked diff checks pass. All 98 producer
+frames and actual Sol/ultra settings still verify across the completed turns.
+Outcome digest:
+sha256:aa31bf28834586ee92d1031acd8c8ee632df2f12a7c5dcecc266cc5ad918582e.
+This is not a full Core CI run or an automatic certification of the source review.
+
+## E-0285, 2026-09-08, proposed reconciliation pilot prepared
+
+Following Luis's acknowledgment of the recommended direction, prepared
+RECONCILIATION-PLAN.md for approval. Mechanically verified six existing Observation
+targets and their three incident SUPPORTS relations in the accepted baseline.
+The proposal covers subject-definition use, false field-presence claims, summary
+versus proxy identity, a positive proxy control and the depth-reference dependency.
+It is explicitly RCA-guided, not another question-blind acquisition comparison.
+
+The proposed TDD boundary requires actual graph paths for existing-context claims,
+capture-scoped evidence identities, complete newly cited source blocks, preserved
+records/dependencies and an affirmative source-review decision bound to exact
+candidate bytes before retention. It does not automate semantic truth. One fresh
+proposal, independent review and conditional replay/query comparison are proposed.
+No passing-subset selection, semantic retry or extra sampling is implied.
+
+Documentation only. No code, source/capture, accepted graph, Core, manuscript,
+dependency, automation or Git mutation. No new producer or reviewer. Concrete
+scope and condition await author approval; master stays 1.5.22. Prior 445-test
+gate is the last execution result, not a rerun for this planning entry. Next E-0286.
+
+## E-0286, 2026-09-08, six-record reconciliation pilot approved
+
+Luis says Go. Master advances to 1.5.23. Implement the E-0285 plan in TDD, freeze
+one RCA-guided Sol/ultra condition and preserve the rejected integration batch.
+The six actual Observation records and their dependent relations are the bounded
+scope. Numerical bounds and units remain exact. One independent source assessment
+must authorize the exact candidate before retention; no semantic retry or subset.
+
+Pre-action boundary: local paper checks and experiment only; no server operation
+or new API endpoint. Required data fail explicitly. Reuse the existing public
+admission/replay pipeline, preserve frozen prior mechanisms as historical run
+evidence, add tests for the newly identified error classes. No Core, manuscript,
+dependency, automation or Git changes. No result or dispatch claimed yet.
+
+## E-0287, 2026-09-08, reconciliation checks and one producer frozen
+
+TDD RED: 38 failures, one unchanged-outcome control passing. GREEN: 41 focused
+tests pass, including actual executor refusal before attempt creation or retention.
+The first GREEN run exposed two test-fixture mistakes: pretty versus compact
+capture hashing, and the wrong list index for a subject record. Corrected the
+fixtures against the actual capture serializer and record identities; positive
+controls now discriminate them. No producer output was involved. Ruff passes.
+
+New checks bind context claims to actual record paths/values, scope assertion IDs
+by capture digest, require complete newly captured blocks, protect bounds/units,
+explain every context-property change, and close incident relation replacements.
+Source-review authorization is checked by the existing public admission runner
+before any attempt or ledger is created. It is a paper-owned permission/identity
+gate, not a Core semantic verdict. The public structural preflight and independent
+review packet builder are reused, with a reconciliation condition branch.
+
+Frozen sol-reconciliation-01 manifest:
+sha256:9049f96404c69932ce3d0285c3e0a4c70261134c56363be74777a51ba1ccdb10.
+Twenty producer inputs, 113 exact frames. The added view copies real six-target
+records, their one-hop subjects and schema declarations; it invents no paraphrase.
+Capture catalog identifies all five historical captures. Source, ontology, base
+ledger/receipt and depth-method-01 queries reproduce unchanged. The rejected
+integration candidate/review are not producer inputs.
+
+One fresh gpt-5.6-sol/ultra producer dispatched, fork none, task
+/root/sol_reconciliation_producer, thread 01a081f3-27b3-7ff1-a5aa-36359705ad05.
+launch.json records the observed transcript coordinate. Complete tool-output
+delivery is still being read and will be verified before using a candidate.
+No structural return, source assessment, retention, admission or after-query yet.
+Master stays 1.5.23. Broader regression gate is running, not claimed complete.
+
+## E-0288, 2026-09-08, historical-evidence boundary corrected before output
+
+The new real-baseline preflight test failed before any producer output. The first
+reconciliation checker wrongly required raw substring equality for historical
+assertions as well as new evidence. The pinned Core document adapter explicitly
+accepts spans after whitespace collapse. The retained historical assertions use
+that rule, including all four qualification assertions. They are not new capture
+bytes, so applying the new full-block rule retroactively contradicted the approved
+boundary. This was a paper checker defect, not a Core admission/replay failure.
+
+Added a discriminating RED: a historical line-normalized span must resolve under
+its exact capture digest, while the same normalization in a NEW full-block assertion
+must refuse. GREEN preserves Core's historical locator rule and requires complete
+raw block equality only for the new capture. The real no-candidate public preflight
+and review packet now pass without retention. 43 reconciliation tests and 86
+evaluation/submission tests pass together, 129 total. Ruff and scoped diff pass.
+
+Preserved the first frozen reconciliation.py and manifest under harness-v1/.
+The active run manifest supersedes its exact predecessor, now
+sha256:bc285796a9033e8283726387846ece537bc789bea9377d09ac64ef515a915d95.
+Only reconciliation.py changed among manifest materials. All twenty producer
+inputs, task, review task, Core, accepted baseline and thirty-query instrument
+remain byte-identical. No producer feedback, semantic intervention or new sample.
+The work directory was empty at correction and verification. This is a harness
+correction inside the author-approved rule, not a new experiment condition.
+Producer delivery is in progress; no candidate, return or review yet. Master
+stays 1.5.23. Next E-0289.
+
+E-0288 final focused regression rerun: 483 passed, two subtests, across
+answer-demonstration, evaluation-v4 and submission-candidate/test_prepare.py.
+This is not a full Core CI gate. No producer result was available during the
+correction or tests.
+
+## E-0289, 2026-09-08, complete delivery independently verified before authorship
+
+The fresh producer reported all initial frames read. The coordinator independently
+verified all 113 complete frames in actual tool outputs, with observed model
+gpt-5.6-sol, effort ultra and fork none. The work directory was still empty at
+verification. evidence/input-delivery-initial.json retains the result. Delivery
+is established, not comprehension. No candidate or structural return yet.
+
+The producer notes that an accepted-phase helper request has no diagnostic in this
+amendment condition. No accepted-phase content was supplied; the declared initial
+packet is complete. The existing missing-diagnostic check refuses that path.
+The agent is now authoring inside its owned work directory. No feedback about
+source meaning or candidate values was sent. Master stays 1.5.23. Next E-0290.
+
+## E-0290, 2026-09-08, first reconciliation proposal compiles, source review running
+
+One fresh candidate and report submitted, producer finished. No structural return.
+Candidate sha256:5d5b3613bb3fc48c981b811167e1ffebb36e06813c9c91e7ff75a683c583af9e.
+Report sha256:f53767ee2af5011722c1b037f9e60881a88ae570d0e5719e81b971d3bdc3206b.
+Canonical capture sha256:f0dcd039e98091129151b0b009130ce0f7afb88ab4240e602475d577e2874aa7.
+
+The candidate contains nine complete-block assertions, five entity replacements,
+two incident relation replacements and seven explicit supersessions. The report
+accounts for all six targets and eleven changed properties. Ba90 is NO_CHANGE.
+The depth proposal now explicitly names below-seafloor depth. Other proposals
+alter epistemic status, scope and unsupported classifications. These are proposed
+meanings, not yet source-supported findings or accepted graph improvements.
+
+Read-only scope/report checks, public adapter and population compiler pass. Plan
+sha256:d1bd47a13ba5f646bab933c44174c033091da84e564574ab564b1a37ea4352db.
+History remains unchanged. No retention, admission or after-query occurred.
+Independent source-review-01 freezes 22 materials, manifest
+sha256:b6b80dc971405593b3f18d47a8b9d3e74f08f58d1245437ffc035a7b99ecaee9.
+
+Fresh independent reviewer /root/reconciliation_source_review is running,
+thread 01a0821c-3bc1-7043-ba37-ac05734c334c. It receives the frozen source,
+actual graph, captures, ontology, candidate and report, without questions or
+coordinator semantic findings. It must assess all changes and context claims.
+Human ratification remains pending. No source-review authorization exists yet.
+Master stays 1.5.23. Next E-0291.
+
+## E-0291, 2026-09-08, reconciliation assessed, atomic batch withheld
+
+Independent source review completed, thread 01a0821c-3bc1-7043-ba37-ac05734c334c,
+observed gpt-6-astra/xhigh, fork none. The complete assessment reads all eleven
+pages/186 blocks, 164 current records, six ontology/import files, five captures,
+candidate and report. It verifies all 22 packet material identities, 186 block
+hashes, nine new complete-block assertions, 34 capture-scoped report references
+and 46 actual graph references. The reviewer explicitly does not independently
+verify the run manifest outside its packet; the coordinator does verify that
+binding before recording the decision. No queries or source repairs by the reviewer.
+
+Review sha256:c89bb08903a4110df789ecd665ae28a7cf1622d228e990de041e52d0f320e071.
+Ten of eleven changed properties and both relation retargetings are supported.
+All fifteen context statements, the unchanged Ba90 record and three out-of-scope
+claims are assessed, including qualifications on otherwise supported claims.
+The seafloor-reference addition is supported across source blocks. The LAB
+proposal is correctly distinguished from present-study measurement; unstated
+mass-fraction bases and the water record's interface-as-material subject are
+conservatively removed. Abstract RC2 scope is supported without identifying the
+summary with the Ba90-specific estimate. NO_CHANGE does not certify completeness.
+
+Blocker: the new DERIVED determination on average-depth-uncertainty is unresolved.
+The source compares model-dependent depth shifts with an existing average
+uncertainty. It does not derive that uncertainty from those differences. The
+report's specific derivation is unsupported, and its exact averaging population
+is not established. CALCULATED is supportable only as a coarse numerical-average
+modality. Do not infer that the 2.6 km value is wrong or DERIVED proved false.
+This locates the semantic error; it does not explain model internals. Correct
+paths and full source blocks make it inspectable but do not establish entailment.
+
+Recorded paper-owned WITHHOLD under the approved atomic rule, decision digest
+sha256:bdde371692eff50f57c788640177f00a29e9d30f0c08fe6b1a1ee487f9f1afe4.
+Actual repair.execute reproduces the fixed baseline and then refuses with
+affirmative independent source-review decision required. No attempt directory
+is created and all run files stay exact. No retention, admission, after-query,
+subset, semantic retry, hand repair or replacement sample occurred. The accepted
+164-record graph, 166 historical versions and 39-event ledger remain unchanged.
+outcome.json binds all exact identities. Human ratification remains pending.
+
+Added a frozen-outcome regression test before creating the result record: RED
+fails for absent outcome. GREEN verifies decision/candidate/report/review/run
+closure, accepted ledger/graph/receipt/query bytes and actual pre-retention refusal
+without writes. This is a permission/identity test, not automatic semantic truth.
+The new test required formatting only; no frozen runtime or producer bytes changed.
+The earlier historical whitespace correction and all prior withheld artifacts
+remain preserved. Final broad focused gate is running, not claimed complete here.
+
+RECONCILIATION-RESULTS.md records concrete supported proposals and limitations.
+Recommended next author decision: one bounded source-review-feedback correction
+of this complete proposal, not another broad capture or a silently selected
+subset. Preserve baseline/scope/numbers/units/source/ontology/Core/queries, then
+independently reassess the full batch before conditional admission/replay.
+Not authorized or dispatched. No Core capability defect is established. No Core,
+manuscript, dependency, automation or Git change. Master stays 1.5.23. Next E-0292.
+
+E-0291 final validation: 485 passed, two subtests, across answer-demonstration,
+evaluation-v4 and submission-candidate/test_prepare.py. Changed Python Ruff and
+format checks pass; scoped tracked diff check passes. All result/plan local links
+resolve. Outcome sha256:82c84a3bd3f8c0be568d5730f578901f5f1f4e92fa66b649d92dca42c1c07e9a.
+This is not a full Core CI gate. Both agents are finished and no experiment
+command remains running. Source-supported proposals are not accepted graph gains.
+
+## E-0292, 2026-09-08, author approves one source-review-feedback correction
+
+Luis says go after the plain-English comparison and proposed model response to
+the specific review. Master advances to 1.5.24. Freeze a separate sibling run,
+continue the same Sol/ultra producer with exact prior candidate/report/review,
+then obtain a fresh independent full-batch source assessment. Preserve the
+original rejection and accepted sol-qualification-01 baseline. No hand repair or
+subset. Conditional public admission/replay and unchanged-query assessment are
+approved only after supported source review. Human ratification stays pending.
+
+RECONCILIATION-FEEDBACK-PLAN.md records the bounded condition. This is one disclosed
+semantic-feedback correction, not a fresh comparison or a retroactive return.
+Existing six-record scope, full-block evidence and protected values stay fixed.
+At most two exact structural returns, no further semantic feedback or sampling.
+
+Pre-action check: local paper-only orchestration and tests; no server interaction,
+new endpoint, Core, manuscript, dependency, automation or Git mutation. Reuse
+existing checks/public runner, required inputs fail explicitly. Test the distinct
+condition and feedback identities before dispatch. No new result claimed yet.
+
+## E-0293, 2026-09-08, feedback condition frozen and original producer resumed
+
+TDD RED: three failures, three negative controls already passing. The first
+condition check exposed that a new amendment identity could be labelled as the
+old condition. GREEN binds condition, amendment identity and reader together.
+The stager verifies the exact prior manifest/outcome/feedback and preserves all
+old artifacts. Fresh source-review packets exclude the feedback folder entirely.
+Combined new/existing reconciliation tests: 51 passed.
+
+A further RED identifies an omitted explicit CQ-T5-01 criteria reference in the
+generic query-review task. The new frozen task now names the accepted baseline's
+qualification-criteria.json for both states, with unchanged required semantics
+for every other question. This prevents silent criterion drift, not source
+evaluation by code. All six feedback tests pass after the fix; Ruff passes.
+
+New run: private/paper-v4-answer-demonstration/sol-reconciliation-feedback-01.
+Manifest sha256:6377d8330abc810c6bdc471c33e7570fa090775517c8ea9ab872a283ed119960.
+Twenty-four declared producer inputs, 129 frames. Sixteen frames are the exact
+prior candidate/report/review and current task; the other inputs remain unchanged.
+New generic artifact namespace is reconciliation-feedback-01. Baseline receipt
+and all thirty before queries reproduce without state changes.
+
+Resumed /root/sol_reconciliation_producer, thread
+01a081f3-27b3-7ff1-a5aa-36359705ad05, original Sol/ultra session. launch.json
+explicitly records CONTINUATION; fork none describes its original launch only.
+Full feedback delivery and continued settings will be independently verified.
+No new candidate, structural return, source verdict or admission yet. No Core
+or manuscript change. Master stays 1.5.24. Next E-0294.
+
+E-0293 regression gate: 491 passed, two subtests. The later query-review packaging
+helper adds no grader or new requirements. Six initial REDs precede GREEN for
+exact question order/closure and changed-answer accounting; two further controls
+refuse a packet before accepted execution. All eight pass. Before/after dockets
+reuse existing witness/trace closure checks. Ruff/format/scoped diff pass. No
+query-review packet exists yet because there is no accepted correction.
+
+E-0293 combined rerun after query-review code: 499 passed, two subtests. The full
+feedback is delivered in actual continuation outputs; source/graph rereading is
+still in progress. No candidate or admission. Final full-input verification will
+exclude outputs before the recorded continuation time, so original-session reads
+cannot falsely satisfy the current reread obligation.
+
+## E-0294, 2026-09-08, complete continuation input delivery verified
+
+The same Sol/ultra producer reports all 129 frames read. Independent verification
+matches every complete frame in actual tool outputs AFTER the recorded
+2026-09-08T18:27:44Z continuation boundary. Original-session outputs cannot satisfy
+this check. Observed model/effort remain gpt-5.6-sol/ultra. The new work directory
+was empty at verification. evidence/input-delivery-continuation.json retains all
+24 per-input counts and the measured boundary. Delivery is not comprehension.
+
+The producer is now authoring. No candidate, structural return, new source-review
+verdict, retention or admission yet. Master stays 1.5.24. Next E-0295.
+
+Before use, an additional query-packet RED detects disagreement between the query
+file's changed-question metadata and the execution report, despite correct
+recomputed differences. GREEN requires all three to agree. Nine query-review
+tests pass. This packaging check assigns no semantic grade and changes no frozen
+query, producer input or earlier artifact.
+
+## E-0295, 2026-09-08, corrected proposal frozen for fresh source assessment
+
+The same Sol/ultra producer has completed one corrected candidate and report.
+No structural return was needed. Fourteen complete-block assertions support
+the proposed five entity successors and two dependent relation successors, with
+seven supersessions. The report accounts for six targets, seventeen context
+statements, ten property changes and five out-of-scope statements. Root verified
+these counts and the unchanged protected artifacts, not only the producer report.
+
+Candidate sha256:be8a5a95071a50cfa53ba6a0f5b3cf88f8df253f5468ff23a3d715e026b9d856.
+Report sha256:1b730af9a7fc244784d0c725a78304993d507596594eb3df071b51d3ae9835bf.
+Capture sha256:d0e1ff6a6773a5af49ab82d4b85be45e1bceac62cd344fa2f8095edc9961ea08.
+Public structural preflight passes, plan
+sha256:7dee048a52aa1e740aa430b7c829c926ac36a874dbf619b58b8f33957b87dd76.
+No retention or admission. Accepted graph, history and thirty queries stay exact.
+Both prior withheld outcomes remain unchanged.
+
+The correction no longer asserts DERIVED for the depth uncertainty. It leaves
+determination and subject absent, retains the coarse CALCULATED proposal, and
+explicitly reports the unresolved averaging population, inputs and location stage.
+This describes the submitted proposal, not an affirmative source verdict.
+
+Fresh /root/feedback_source_review is independently assessing the complete batch,
+thread 01a0826d-3dde-7f30-b784-8dbdb2ad196e, observed gpt-6-astra/xhigh, fork none.
+Its 22-material packet excludes old feedback and questions. Packet manifest:
+sha256:77ce8fd6741ac32735baab89bf798c815782fcd13a8998eaa70bd5f30d56e5be.
+It owns only source-review-01/review.md. No decision or semantic result exists yet.
+An infrastructure-only producer status check supplied no new semantic guidance.
+Human ratification remains pending. Master stays 1.5.24. Next E-0296.
+
+E-0295 validation: 501 passed, two subtests, across answer-demonstration,
+evaluation-v4 and submission-candidate/test_prepare.py. Changed Python Ruff and
+format checks pass; scoped tracked diff check passes. Every current run/review
+material digest and candidate/report/run binding verifies. No admission decision
+or attempt directory exists. This gate is structural, not a source verdict.
+
+## E-0296, 2026-09-08, independent support permits the complete corrected batch
+
+Fresh reviewer 01a0826d-3dde-7f30-b784-8dbdb2ad196e completes the assessment:
+all ten changed properties and both retargeted relations are SUPPORTED at their
+asserted scope. It reads all required packet materials and assesses all seventeen
+contexts, the bounded NO_CHANGE disposition and five out-of-scope statements.
+Review sha256:51ea22d6f14193a8f445e14cd0026ee64f9a2e9c71e7b02f84db22993b39b774.
+
+The uncertainty's coarse CALCULATED label is supported without a claim about
+its exact inputs, population or determination. The new seafloor reference follows
+from the RC2 figure axis, caption and surrounding text. The abstract's RC2 scope
+uses explicit source context, not equal numerical endpoints. LAB proposal status
+and conservative removals are supported. No asserted change blocks the batch.
+
+One report limitation remains: "choice between Rb90 and Ba90" could imply an
+exclusive method selection, but the source uses both methods. This is ambiguous
+report wording, not a newly asserted graph field or a reason to merge estimates.
+Do not copy that ambiguity into the result narrative or silently repair the report.
+Other unrepresented method, population, material and citation details remain gaps.
+
+Root read the complete assessment, verified its final digest and all current
+run/packet/candidate/report bindings, then recorded ALLOW_SUPPORTED_BATCH through
+the existing paper-owned decision contract. This is the approved full-batch
+gate, not a selected subset or Core truth certification. Human ratification is
+PENDING_HUMAN. Public admission, same-clock reproduction and unchanged-query
+comparison are next. Master stays 1.5.24. Next E-0297.
+
+## E-0297, 2026-09-08, complete correction admitted and reproduced
+
+The exact ALLOW_SUPPORTED_BATCH decision hashes to
+sha256:bc8e87fd017a71987dad4d2c078ca792353d165ec95307f54cedc732e22bd44e.
+The existing runner verifies that decision before creating the attempt. Public
+adaptation, compilation, evidence retention, preparation, structural admission,
+reopen and replay succeed on the pinned Core. All seven declared successors
+are admitted together; the 157 untouched current records and exact old ledger
+prefix survive. Current graph stays 164 records: 138 entities, 25 relations,
+one event. History grows from 166 to 173 record versions; ledger from 39 to 45
+events. The historical versions and their traces remain available.
+
+Both executions use protocol time 2026-09-08T19:19:11+00:00. All fourteen files
+under evidence/attempt-01 and evidence/reproduction-01 are byte-identical.
+Ledger head sha256:47fc83713108a293a4c7b365b80c0314ca1e5176421ec607de424a8ccff7b181.
+Ledger file sha256:4a8a4672093ba1b4decd0900a324aa9a728f9d7c625cea3871b1fb95285a19aa.
+Replay receipt sha256:8a6a7c85df6b873e19806ffc09b916dc53332d6b3a8492d155908f34ec0a8b6a.
+Graph export sha256:e8c2fc6e0d84bcdd4fe0f5cb452208e6895197094e6c65dea2abf1798a9b3b1a.
+Execution result sha256:076f21ebda87aad78406495dc424e0f9249f294a0078bf86fcb8c235e77a4a45.
+
+The unchanged depth-method-01 reader runs all thirty questions. Five objects
+change: CQ-T3-01, CQ-T3-02, CQ-T5-01, CQ-T5-02 and CQ-C-05. The other 25 objects
+remain byte-equivalent. Total row occurrences stay 60 and paths stay six.
+Distinct traced records fall from 55 to 54 because the abstract observation now
+shares melt:primary-rc2; melt:primary-unspecified drops out of these query witnesses,
+not out of the graph. Query source-file, network and embedding access attempts
+are all zero. No new coverage grade is inferred from these mechanical results.
+
+The query-review helper successfully freezes the real accepted result and both
+witness dockets: 33 materials, manifest
+sha256:92e353a38a9dc97d2f6e85e850dca65ab2005cdc567bef70bc3a9f848059ab9a.
+The same independent reviewer now assesses every changed answer under the fixed
+requirements and the existing CQ-T5-01 qualification criteria on both sides.
+Source review and producer feedback remain separate. Human ratification pending.
+
+Local paper-only completion guard added in TDD: its first RED is the absent
+final outcome record. It will verify review bindings, exact 14-file reproduction,
+actual reopen/receipt/graph/history preservation and changed-question closure,
+not decide source truth or grade semantics. Required fields fail explicitly;
+no server, endpoint, fallback, Core or dependency change. The test is expected
+RED until the final query assessment exists and the outcome is frozen.
+Master stays 1.5.24. Next E-0298.
+
+## E-0298, 2026-09-08, changed answers assessed and outcome frozen
+
+The independent query assessment is complete, same reviewer thread and observed
+Astra/xhigh settings. It verifies all 33 materials, all 29 returned row occurrences
+per state across the five changed questions, all 31 distinct witnesses across
+both states, exact endpoint/path projections and capture derivations. Original
+source-review bytes remain unchanged. Query assessment:
+sha256:cbb676cb524674d928e7e3127524f7e4c87bfebc3b8e8e782628c961baa8527f.
+
+Matched findings: CQ-T3-01 PARTIAL 3/5 to 4/5, explicit seafloor reference gained
+but this-study/external location origin absent; CQ-T3-02 and paraphrase CQ-C-05
+PARTIAL 3/4 to COVERED 4/4; CQ-T5-01 COVERED 5/5 in both states; CQ-T5-02 PARTIAL
+4/5 in both states. No supported requested field or path is lost. The composition
+answer already had the necessary joined evidence. LAB and uncertainty changes
+are not returned in these five answers and receive no answer-coverage credit.
+
+Root checked a historical comparison before reporting grade gains. E-0254 had
+already graded the carbon answer and paraphrase COVERED on ESTIMATED-only rows.
+Their complete earlier query objects are exactly equal to the present before
+objects, including rows, paths and witnesses. The earlier review credits proxy
+estimation rather than measurement; the current reviewer requires explicit
+CALCULATED for the binary question. This is a review-interpretation disagreement,
+not regression or changed facts. Preserve both reviews and do not claim a
+longitudinal gain of two newly answered questions. The objective improvement is
+explicit RC2 scope and calculation status on the source-supported summary.
+Earlier review sha256:acad42df3fc6651d3fc222915e9add8197910e9e027781887fb0a25459f83725.
+No historical judgment or fixed requirement is rewritten or sent back to the
+independent reviewer for a grading correction.
+
+A second outcome guard is RED before freezing the record. It mechanically
+preserves that exact historical-query equality and requires the recorded
+NOT_A_LONGITUDINAL_COVERAGE_GAIN limit and earlier review identity. It does not
+adjudicate the semantic disagreement. The final outcome now binds both reviews,
+the exact admitted result and this caveat. RECONCILIATION-FEEDBACK-RESULTS.md
+records supported graph gains, all paired results, an answer example and limits.
+Both agents are finished. No further generation or semantic retry was used.
+Human ratification remains pending. Final artifact/regression validation is next.
+No Core, manuscript, dependency, automation or Git mutation. Master stays 1.5.24.
+
+E-0298 final validation: 503 passed, two subtests, across answer-demonstration,
+evaluation-v4 and submission-candidate/test_prepare.py. Changed Python Ruff and
+format checks pass; scoped tracked diff check passes. All current run, outcome,
+source-review and query-review materials verify. Both old withheld outcomes and
+the original accepted graph/ledger/query identities remain exact. Result/plan
+local links resolve. Outcome
+sha256:7ec427bfe2465d5cc8d963da662fc41953c25910e8028b0a0a0e5230c74af303.
+All agents and experiment commands are finished. No manuscript claim or global
+coverage total is updated. Next entry E-0299 requires a new substantive action.
+
+## E-0299, 2026-09-08, complete current snapshot review approved
+
+Luis: "lets do 1 first and then we evalaute". Step one is the complete thirty
+question evaluation of the current accepted PDF graph, not another capture or
+repair. Master advances to 1.5.25. CURRENT-SNAPSHOT-PLAN.md fixes the interpretation,
+authorship limits, evidence closure and reporting groups before new assessment.
+The accepted 164-record graph, 173 historical versions, 45-event history and
+depth-method-01 reader remain frozen. Historical grades remain separate.
+
+The current output contains 60 row occurrences and six paths. The evaluator
+must inspect all returned witnesses and all required semantics, not only the
+five objects changed by the last correction. Source faithfulness and coverage
+remain separate. Interpretation follows whole questions and accepted ontology
+definitions; no coverage is supplied from unreturned source or graph content.
+
+Asked Luis whether to dispatch one fresh independent reviewer, as the earlier
+review method excludes its query author. Preparation proceeds without assuming
+permission or calling a coordinator review independent. No reviewer dispatched.
+
+Pre-action scope check: local paper evidence preparation and validation only,
+no server interaction or endpoint, no dependency or legacy replacement. Required
+identities/fields must fail explicitly. New accounting checks are written RED
+before implementation. No population facts, query changes, Core edits, manuscript
+edits, commits, pushes or ref changes. Next E-0300 records the frozen packet.
+
+## E-0300, 2026-09-08, current thirty-answer packet frozen
+
+The new private packet is current-thirty-review-01 under
+private/paper-v4-answer-demonstration. It is prepared for a fresh independent
+reviewer, not yet dispatched or assessed. The request for reviewer authorization
+remains pending. Packet identity:
+sha256:dec5c61ede77cc4edb98c25861a2c38bdc118cfcd15f8e3ae1fbe21e4d0887ba.
+Thirty material files bind all thirty questions, 121 required semantics, 60 row
+occurrences, six paths, 41 distinct central witnesses and 54 traced records.
+The 287 derivations resolve through their six declared capture namespaces into
+28 selected-reading blocks. Complete selected text and accepted definition bytes
+are supplied, not just excerpts. No expected answers or old reviews are inputs.
+
+The exact accepted history was reopened through Core 160878c. Graph and receipt
+bytes match; the frozen source-free reader reproduces every query and trace;
+the ledger remains byte-identical. Source/reading/ontology, ledger/receipt and
+query-method identities remain those in E-0297/E-0298. Nothing was recaptured,
+repaired, regraded historically or admitted by this step. The new assessment
+schema validates completion and evidence accounting, not scientific meaning.
+Claim-level support and question coverage remain explicitly distinct.
+
+Errors retained: the first apply_patch request had one malformed patch line and
+was rejected before edits. The initial test run then correctly produced fifteen
+RED failures because the new accounting module did not exist. Implementation
+made all fifteen pass. A subsequent guard test covers runtime refusal before
+packet creation; a conformance test binds the completed packet and capture scope.
+The focused file now passes seventeen tests. Ruff and formatting pass.
+
+The first preparation command used the runtime path from the older overnight
+handover. The existing identity guard refused before any packet write. Its
+population.py blob a022fd683fa9faf19267691ca1c1f81303d9c07f exactly matches
+c95dba7, not the required 160878c blob 56d81a078e18fad5f497eb4bd96b3e80eb93f9c5.
+This was coordinator selection of stale execution instructions, not graph loss
+or a new Core regression. A fresh source-only archive of exact 160878c was
+extracted to /private/tmp/malleus-paper-snapshot-core.kOtQNc. The entire loaded
+Malleus package passes the existing Git-blob runtime verification there. No
+dependency installation or shared Git/ref change occurred.
+
+The first broad test invocation omitted answer-demonstration from subprocess
+PYTHONPATH: 502 passed and seventeen existing subprocess import checks failed,
+all ModuleNotFoundError before their assertions. The correct invocation supplies
+both the exact Core src and the paper script directory. Existing subprocess
+tests mechanically detect that invocation error; no test or implementation was
+weakened. The corrected broad run is in progress, not yet reported as passed.
+
+Review.json/review.md do not yet exist. No responsiveness totals or semantic
+findings are claimed from packet preparation. Master stays 1.5.25. The next
+entry records reviewer authorization/dispatch or the author's alternate choice.
+
+E-0300 validation completion: the corrected broad selection passed 519 tests
+and two subtests. It collected before the final packet-conformance test was
+added; the current focused snapshot file separately passed all seventeen tests,
+including that new check. Do not add those overlapping counts or call this a
+Core CI run. All thirty packet material identities verify. Packet and accepted
+execution bytes remain unchanged. No reviewer has been dispatched.
+
+## E-0301, 2026-09-08, fresh independent full reviewer authorized
+
+Luis answered "Go" to dispatching one fresh reviewer independent of the query
+author. Dispatched current_snapshot_reviewer with no inherited conversation
+history and no model/effort override. Its exclusive inputs are the unchanged
+current-thirty-review-01 packet, manifest
+sha256:dec5c61ede77cc4edb98c25861a2c38bdc118cfcd15f8e3ae1fbe21e4d0887ba.
+Its write ownership is review.json and review.md, with preservation copies only
+for a structurally malformed completed submission. No further delegation,
+outside sources, historical grades, producer feedback or manuscript access.
+
+The request covers all 41 central witnesses and 121 requirements across all
+thirty questions, under the fixed source-faithfulness/coverage distinction.
+Human ratification remains pending. The coordinator verifies accounting and
+evidence links while the independent reviewer assesses source meaning. No new
+producer, query, graph, ledger, Core or manuscript change. Master stays 1.5.25.
+Dispatch followed the clock reading 2026-09-08 20:38:51 UTC. No review outcome
+is inferred from dispatch or preliminary progress.
+
+Observed reviewer metadata: task 01a082bf-0007-7a12-997b-f4bb2a607b58,
+created 2026-09-08T20:39:10.624Z, agent path /root/current_snapshot_reviewer.
+Its first turn records gpt-6-astra, xhigh. These settings were read from the
+session metadata, not inferred from output. The reviewer reports verifying all
+thirty material digests and reading the complete selected text and ontology
+definitions. Root separately verifies that all six returned paths name actual
+graph relations with exact endpoints and that all 54 query witness IDs exist
+in the unchanged 164-record graph. No semantic verdict follows from those checks.
+
+E-0301 mechanical verification: 533 projected field occurrences match the exact
+stored properties, and all five distinct carried statement digests recompute.
+The current broad paper selection passes 520 tests and two subtests using exact
+Core 160878c and the paper script directory on PYTHONPATH. This is a paper harness
+result, not full Core CI or semantic certification. The reviewer reports all 54
+traces and 287 derivations resolved and is writing the complete assessment.
+
+## E-0302, 2026-09-08, complete current-answer assessment
+
+The sole fresh reviewer completed at 2026-09-08T20:54:13Z. It produced only
+review.json and review.md in current-thirty-review-01, with no structural retry.
+All thirty material hashes still match frozen manifest
+sha256:dec5c61ede77cc4edb98c25861a2c38bdc118cfcd15f8e3ae1fbe21e4d0887ba.
+Review JSON: sha256:d782e9640bc210c0180ea3985f595b193cc7f7842061658108d6e10865bea8e9.
+Review prose: sha256:d3efa11f24bd608dca7d40b42d21b299e43f7939492ae5674b0124923bfb67e8.
+Root reran the frozen validator: PRELIMINARY_COMPLETE, thirty questions,
+41 witnesses, PENDING_HUMAN. All 121 fixed requirements are represented in order.
+
+Counts recomputed from the review: twenty-five positive questions yield five
+COVERED, twelve PARTIAL, eight NONE. Three expected-absence controls yield NONE;
+two paraphrases yield one COVERED and one NONE. Positive requirements account
+for 102 of 121 entries, controls twelve and paraphrases seven. This accounting
+is not an accuracy measure or new historical improvement claim. The condition
+is the iteratively refined current Sol history, not fresh end-to-end capture.
+
+The independent reviewer judges all 41 central witnesses SUPPORTED for their
+represented fields, including inline context. Missing coverage remains separate.
+No unsupported returned assertion or unresolved trace was identified; this is
+not certification of all 164 graph records or the source's scientific truth.
+CQ-T5-01 is covered with two explicit SUPPORTS paths, calculated primary-RC2 CO2
+and qualified observed RC2 depth. CQ-T3-01 remains partial because the answer
+does not identify who located the events. CQ-T5-02 has separate site-specific
+values but no returned comparative/spatial pairing. The OBS count and repository
+identifier exist in the graph but are missed by the frozen reader. Widening
+retrieval is not assumed to supply their missing activity/deposition context.
+
+The complete public results note preserves all thirty rows, exact examples and
+the limits requiring human ratification: textual figure-axis support for the
+seafloor reference, saturation temperature as a model condition, and partial
+credit for broad magmatic-tectonic candidate wording. The other-site control
+returns irrelevant supported candidates, so its NONE is not a runtime refusal
+or a general abstention claim. No new Core capability gap is established.
+
+CURRENT-SNAPSHOT-RESULTS.md and forward completion notes are the only new public
+changes in this completion step. The review packet inputs, Core, manuscript,
+source graph/history/reader and historical grades remain unchanged. The paper
+harness result remains 520 passed and two subtests under exact Core 160878c;
+this is not full Core CI. No new capture, repair, agent, dependency, Git/ref
+mutation or manuscript claim. Master stays 1.5.25. Next substantive intervention
+requires Luis's decision after this assessment.
+
+E-0302 completion checks caught and corrected a malformed joined prose line.
+The first prose-style diagnostic also rejected Markdown table separators as
+double-hyphen prose; the corrected check excludes separator-only table rows.
+Neither error changed evidence or review judgments. Result-table equality,
+evidence-link resolution and frozen-material identity checks verify the final
+documents. No semantic or experiment correction was made.
+
+Final focused snapshot rerun: seventeen tests passed in 5.45 seconds against
+the same pinned Core runtime. All experiment commands and the reviewer are done.
+
+## E-0303, 2026-09-08, TDD gap-repair preparation
+
+Luis: "Let's work on the gaps tdd way please, prepare for this". Prepare the
+bounded plan and proposed tests; no implementation, new agent or population run
+is started. Master advances to 1.5.26 for this author-requested preparation.
+GAP-REPAIR-PLAN.md assigns all twenty incomplete positive questions, preserves
+the covered questions and separate controls, and recommends one count-only cut
+before deciding on context amendments. The prior 1.5.25 decision lacked its
+changelog line; that line is now added explicitly as late documentation of
+E-0299/E-0302, not a new or backdated experiment decision.
+
+Read-only inspection verified all thirty frozen packet material identities and
+the actual query code, graph properties, accepted type definitions and existing
+negative tests. The graph has both count:obs-network and count:useful-obs with
+different values and the same instrument subject. Removing the deployment-word
+test without scope discrimination would expose the useful subset too. Existing
+tests also reject minimum event-detection counts. Proposed REDs therefore target
+the whole count-role distinction with synthetic values, not just the known
+missing row or a special-case record ID.
+
+The catalogue gap is mixed: DataResource permits both input and deposited data.
+Four resources exist, with no relevant connecting relation. The repository record
+has a name and DOI but no catalogue/deposition description. Returning every
+identifier would not establish which resource holds the generated catalogue.
+The complete source deposition statement crosses two selected blocks. Later
+context work must preserve that meaning, not treat each block as independent.
+
+First proposed implementation changes only instrument_count and permits changes
+to CQ-T1-02 and CQ-C-04. Preserve all 28 other query objects, accepted state and
+history bytes; reproduce the old reader first and repeat the new execution.
+Reuse existing public replay, source-free read, trace and preservation mechanisms.
+The older relation_query dispatcher accepts other condition schemas, so adaptation
+must test the exact current base instead of silently selecting a historical run.
+Recovered candidates are not automatically complete answers or new semantic facts.
+
+Later proposed cuts cover catalogue context, one acquisition/origin pilot, then
+a separately selected comparison or qualification slice. Population remains
+model-authored and subject to source-grounded assessment before atomic admission.
+No automatic source-truth scorer or general text-matching engine is proposed.
+No Core capability request is justified at this boundary. Core and other tasks'
+unrelated shared-tree changes are untouched. No code/test, private evidence,
+manuscript, dependency, Git/ref or automation change occurs in preparation.
+
+Preparation checks pass: all twenty incomplete positive questions occur exactly
+once in the gap inventory; local links resolve; prose and master-version/changelog
+checks pass; scoped diff check passes. All thirty frozen material identities and
+the completed review JSON remain exact. No new repair test result is claimed.
+
+## E-0304, 2026-09-08, count-only TDD execution approved
+
+Luis: "Go, but 4 is another run comparing progress". Execute the first bounded
+count retrieval cut and add the new-run comparison to the roadmap. Master 1.5.27.
+Milestone four requires a separately frozen generation condition and common
+comparison instrument; it is not repeated ledger replay and is not dispatched
+here. No new population or ontology change is authorized in this reader cut.
+
+Pre-action checks: local paper implementation only, no server or endpoint.
+Pinned Core 160878c package bytes mechanically verify in the existing source
+archive. Required runtime/condition/material fields must fail loudly. Replace
+the active count rule, no legacy runtime fallback. Preserve frozen historical
+readers and test that later active changes cannot enter their reproduction.
+No dependency, Core, shared Git/ref or manuscript mutation. Write RED controls
+for scope discrimination and exact query/state preservation before GREEN.
+
+## E-0305, 2026-09-08, count repair RED to GREEN
+
+The first count selection/closure run returned seventeen failures and eleven
+passes. One failure was a test setup error: calling a pinned-history test inside
+pytest loaded the shared checkout package through project configuration. The
+runtime guard correctly refused before artifact writes. The test now follows
+the existing subprocess isolation pattern. Corrected RED: sixteen failures,
+twelve passes. Eight cases reproduce the network-count miss; other failures
+cover subset/threshold/negation, integer shape, subject-scope borrowing and the
+not-yet-implemented comparison API/guards. No semantic test was weakened.
+
+GREEN replaces only instrument_count's selector and note. The bounded rule
+matches instrument identity, requires an integer count and record-local explicit
+deployment/network-membership wording, and excludes the named subset/threshold
+and negation cases. It does not parse arbitrary count roles or invent deployment.
+An AST guard proves every other query function and declaration matches the frozen
+current reader. IDs, numeric values and source locators are not selection keys.
+
+The existing comparison runner gains one explicit count condition bound to the
+accepted reconciliation-feedback result. Exact source/graph/receipt validation,
+old query reproduction, public replay and the source-free trace executor are
+reused. Its delta guard checks all unrelated answers, stored field projections,
+duplicate/missing rows, actual subject identities and absence of invented paths.
+Historical depth reproduction now selects its own frozen reader rather than
+living answers.py. A separate test protects that boundary from future query edits.
+
+Focused count/depth/answer/subject gate: 88 passed in 44.27 seconds. Ruff passes.
+No retained current comparison or new semantic grade is claimed yet. One optional
+file-discovery command used a nonexistent shell glob and failed before reading;
+the corrected discovery uses rg --files. No experiment bytes changed from that
+diagnostic. Next: freeze the method, execute twice, verify traces and broader gate.
+
+## E-0306, 2026-09-08, count comparison retained and assessed
+
+The new method is frozen under private/paper-v4-answer-demonstration/count-query-01.
+Method sha256:af604ffe7ffe3c8f3bbcadb26a5f68f94dc139e72c7e2ecd6e08f293c9f94c68.
+Both first and repeat executions return the same four files, query output
+sha256:10f01d53610a3a6ff9f0c2023f5eb6bb7880b9fe60b6c6a19ef9f62d7b00b6e2.
+Exactly CQ-T1-02 and CQ-C-04 change, each gaining the stored network count and
+instrument subject. The useful-instrument subset remains excluded. All 28 other
+query objects, six paths, graph bytes, ledger and receipt remain unchanged.
+Total returned occurrences: 62. All 56 traced records and 292 capture-scoped
+derivations resolve against the unchanged selected reading and six captures.
+
+The coordinator assesses both changed questions under the existing three
+requirements. The returned count and observing system are supported; deployment
+context is still unreturned. Each changes from NONE 0/3 to PARTIAL 2/3, with
+ONE_ROW assembly and no paths. This assessment is MODEL_ASSISTED and explicitly
+COORDINATOR_NONINDEPENDENT; human ratification remains pending. No fresh reviewer
+was dispatched, no aggregate thirty-question score recomputed, and no prior
+assessment overwritten. It is one positive question and its paraphrase, not
+two independent gains. Private assessment identity:
+sha256:536c45429102938e95a695467a3ff1c817cebae9e667d8328d6080c4eaaea4a7.
+COUNT-QUERY-RESULTS.md records the evidence and bounded wording limitations.
+
+The broad gate found one stale test, with 547 passes and two subtests. That
+historical AST comparison treated the living reader as the depth-only revision.
+It now verifies the exact frozen depth method and keeps the original assertion
+that only earthquake_depth differs from its predecessor. The new active-count
+AST test separately permits only instrument_count to differ from the frozen
+current baseline. This preserves both comparisons rather than broadening their
+allowed edits. No production or frozen method bytes changed after execution.
+The corrected focused and broad gates are being rerun; not yet claimed GREEN.
+
+E-0306 final validation: corrected relation-scope/count selection passes 45 tests.
+The full current paper selection passes 548 tests and two subtests in 185.73
+seconds. This is answer-demonstration, evaluation-v4 and submission-candidate
+preparation, not full Core CI. Changed Python Ruff and format checks pass; scoped
+tracked diff check passes. Frozen method sources still equal executed bytes;
+first/repeat files, source traces, prior snapshot materials, graph, ledger and
+receipt verify unchanged. The manuscript was not edited. No commits, pushes,
+shared ref changes or new agent dispatch were made by this task. Core's unrelated
+parallel work remains outside this experiment pin. All experiment commands are
+finished. First cut complete; later source-context work and the new-run comparison
+remain pending their bounded conditions. Master stays 1.5.27.
+
+## E-0307, 2026-09-08, one experiment-context proposal and source review approved
+
+Luis replies "Yes, one proposal and one review" to the request for a fresh Sol
+experiment-context repair and a separate article-grounded check before acceptance.
+Master advances to 1.5.28. ACQUISITION-PLAN.md freezes a relations-only amendment
+among four actual existing records. No numbers, existing records, ontology or
+reader will change. The useful-instrument subset stays distinct. Allowed relation
+shapes constrain scope, not source truth; no number of edges is required.
+
+Pre-action check: local paper harness only, no server interaction or new endpoint.
+No runtime mechanism is replaced; the historical experiments remain frozen and
+the new condition will have explicit dispatch. Required inputs fail closed.
+Tests protect exact preservation and review binding. Core ownership remains
+unchanged. One attempted diagnostic lookup expected manifest.json in the count
+method directory; the recorded file is method.json. No bytes changed; staging
+will verify the exact recorded method name and digest mechanically.
+
+## E-0308, 2026-09-08, context amendment checked, frozen and dispatched
+
+The first RED is an actual unknown-condition refusal on the existing executor,
+with three mislabelling controls passing. The expanded tests initially produce
+23 failures and three passes, mostly the expected absence of the new acquisition
+module, not 23 runtime defects. Implementation adds explicit condition/scope
+checks, staging and read-only public structural preflight, reusing repair.py's
+existing preservation/admission/reopen/trace executor and review authorization.
+
+The new checks reject non-relation changes, supersession/reused IDs, wrong or
+duplicate routes, extra properties, missing endpoints, mismatched reading/source,
+partial or absent blocks and incomplete explanations. Staging tests verify the
+accepted history and count reader, all six capture inputs, and exclusion of old
+feedback, queries and reviews. One test initially used a temporary path outside
+private; the production privacy refusal was correct. The test now creates its
+own temporary directory under private. A separate public-signature RED catches
+the preflight's incorrect profile keyword before model execution; GREEN uses
+history_profile and mechanically binds both public calls' argument names.
+All 27 acquisition tests pass. Ruff and scoped tracked diff checks pass.
+The broader existing paper harness is running, not yet claimed complete.
+
+Frozen run: private/paper-v4-answer-demonstration/sol-acquisition-01.
+Manifest sha256:5060be6e6c6dc2ed6e77eff9f59cd12e6690eabfde5146b3ef0faf2455006830.
+Current history, replay receipt and count queries reproduce before dispatch.
+Actual fresh producer: 01a082f9-3b8c-7432-b81b-b63ae25eb4b2,
+/root/sol_acquisition_producer. Session metadata confirms gpt-5.6-sol/ultra and
+the fresh parent relationship; fork_turns is none. Twenty-one declared inputs
+require 106 display frames. Reading is in progress; complete delivery is not
+yet claimed. No candidate, independent source verdict, admission or new answer
+result exists yet. One reviewer remains authorized and undispatched.
+
+The frozen skill is carried as producer guidance, with explicit amendment scope
+overrides: existing endpoints resolve against accepted history, and complete
+document reading does not authorize a new full-document population. No number
+of added relations is required. Paper reporting guidance now requires concrete
+plain-English outcomes before internal identifiers. No manuscript/Core edits,
+commits, pushes or shared refs changed by this task. Master stays 1.5.28.
+
+E-0308 verification update: the full paper selection passes 575 tests and two
+subtests in 194.62 seconds. This includes the 27 new acquisition checks and the
+unchanged historical comparisons, not full Core CI. The delivery helper's computed
+inventory contains 104 frames; the producer's spoken sum of 106 above was wrong.
+Final verification uses the computed frame inventory, never that manual total.
+No source/input bytes differ. Producer reading continues; no population accepted.
+
+## E-0309, 2026-09-08, first context proposal passes structural preflight
+
+The retained input-delivery receipt matches transcript verification: all 104
+computed frames, all 21 inputs, fresh gpt-5.6-sol/ultra. This proves delivery,
+not comprehension. The producer finalized one candidate with three new relations
+and a report, with no admission or extra sample. It removed its temporary authoring
+and self-check scripts; the final candidate/report and session transcript remain.
+
+Candidate sha256:f7ffb64bd464792b1704172d3fcf88b713c1e52ea4465febeb68ddaac7d9a3e8.
+Report sha256:dea00c2ef00a11ecb897569cf6654bb25d7787888fc540ce4b2b9b96d9d94275.
+Paper scope and public adapter/plan compilation pass without a structural return.
+Compiled plan sha256:6e0b7ada0f457d864140920f82e64dea048ab7bb082fc50ea0d1b167a98c7173.
+No ledger retention or admission has occurred. The producer proposes count and
+duration PART_OF_CAMPAIGN links, plus duration OBSERVED_WITH instrument, and
+declines campaign OBSERVED_WITH instrument as an unsupported reading of that role.
+This is a model proposal, not yet a source-review verdict.
+
+The one separate reviewer is /root/acquisition_source_review,
+01a082fd-9211-74a1-8e95-67cc32accd01. Actual metadata reports gpt-6-astra/xhigh,
+fresh fork_turns none. It completed read-only source preparation in parallel,
+then received the exact frozen source-review-01 packet for the whole-batch review.
+No second reviewer or question-evaluation task was dispatched. No verdict yet.
+
+Coordinator diagnostic errors: nonexistent queries.json, a misspelled private
+directory and a guessed current_snapshot.py path all failed read-only. The actual
+files are questions.json/query-result.json and snapshot_review.py. None affected
+experiment inputs or outcomes. Frozen manifest validation, exact staged-path
+tests and the fail-closed loaders remain the mechanical protection against such
+path mistakes entering the experiment. Use file inventory before subsequent
+ad hoc lookups. No Core/source/query/manuscript changes. Master stays 1.5.28.
+
+## E-0310, 2026-09-08, context links accepted and reproduced
+
+The separate reviewer supports all three exact relations and admits the whole
+batch on that source assessment. It explicitly distinguishes instrument kind from
+per-instrument operation, network deployment from the useful subset, and recording
+duration from cruise duration. Review sha256:
+6ae73ca0330554336c8ea750254d00f03009271f264609e4bf79e268a0a35fa1.
+The paper decision binds those bytes and candidate/report digests, with human
+ratification pending. There was one producer and one separate reviewer, zero
+structural returns, zero semantic retries, and no evaluator-authored population.
+
+The public executor admits the entire batch at 2026-09-08T22:07:30.033646+00:00.
+Two independent executions from the same frozen baseline and transaction time
+produce the same 14 files. All 164 old records, original history prefix and prior
+record versions remain. New graph: 167 records, 138 entities, 28 relations and one
+event. History: 176 record versions and 51 ledger events. Current head:
+sha256:fa7abdaf8f05bea06ff9737714d011c1717ff909b659873f75884f0cc2b8fc68.
+Receipt: sha256:748f4c131b1ce2e197b177a2a42da297bcbbf086f3e1cb591495c7c682a8772d.
+Graph: sha256:e03e34d24957cc6da2478202c3e6fea786ff12d87b05f474a874d43d3cc7d15c.
+
+Only CQ-T1-01 changes under the unchanged count-query-01 reader. It now returns
+the cruise together with network-count and recording-duration PART_OF_CAMPAIGN
+paths. The duration OBSERVED_WITH relation is accepted but not reached by that
+campaign query. Count, duration and the other 27 questions remain exact. Total
+output: 64 row occurrences, eight paths, 58 traced records, 298 resolved field
+derivations across seven captures. Query execution has no source/network/embedding
+access. No new coverage grade, human assessment or aggregate total is claimed.
+
+The completion check verifies the final proposal/review binding, all material
+identities, actual delivery, exact delta and record history, unchanged questions,
+all returned source traces and byte-identical reproduction. It passes directly.
+The full paper selection is running. Ruff caught and removed one unused test
+import. outcome.json and ACQUISITION-RESULTS.md record identities and plain-English
+results. Master 1.5.28 now names the new accepted history and unchanged reader.
+No manuscript/Core/runtime/ontology edits, dependency changes, commits, pushes or
+shared ref changes. The separate query repair and milestone-four generation are
+not dispatched. Source/model inference remains distinct from Core acceptance.
+
+E-0310 final validation: the full paper selection passes 576 tests and two
+subtests in 199.76 seconds. The completion test is then extended to bind every
+reported outcome identity/count to the actual run, source, method, review,
+history and query artifacts. The 28 focused acquisition/completion tests pass
+on those final test bytes in 19.31 seconds. Ruff, format and scoped tracked diff
+checks pass. An initial patch against a pre-format context refused atomically;
+the corrected patch used the actual file text. Frozen experiment/executor bytes
+did not change. All commands and both authorized agents are complete.
+
+Next proposed work is a separate query-only comparison, particularly returning
+the duration's now-accepted instrument connection. The count's association with
+SMARTIES must not be silently promoted to an explicit deployment event. That
+remaining representation question needs inspection before claiming a complete
+count answer. No further model or query work is launched by this completion.
+
+## E-0311, 2026-09-08, duration query repair approved
+
+Luis says "fixing that query next" following the recommendation to return the
+duration's accepted instrument link without another capture. Master advances to
+1.5.29. DURATION-QUERY-PLAN.md freezes duration-only retrieval on the accepted
+acquisition history. The present program selects observations but never traverses
+their OBSERVED_WITH relations. No new Core gap is established.
+
+Pre-action check: local paper code only, no server interaction or endpoint.
+Required inputs and stale identities fail closed. No runtime mechanism is replaced;
+the duration query function is replaced in place and historical readers remain
+immutable evidence, never fallback execution. Synthetic tests and exact whole-run
+comparisons protect against wrong-direction joins, borrowed context, missing
+references, altered qualifiers and unrelated answer changes. Core/shared dirty
+files remain outside ownership. No new model dispatch or manuscript change.
+
+## E-0312, 2026-09-08, duration retrieval repaired and reproduced
+
+TDD starts with seven failing tests and seven passing controls. Adding the
+independent duration-only comparison guard produces sixteen expected failures
+and seven passes, including nine cases requiring that new checker. These are
+test-contract failures, not sixteen observed production incidents. GREEN changes
+only recording_duration in the query program, plus the existing comparison
+runner's explicit duration condition. The prior observation selection and rows
+remain exact; only outgoing OBSERVED_WITH links to exact Instrument records are
+returned. Wrong-direction, unrelated, missing or undeclared links are handled
+under the frozen plan, without borrowed fields or inferred deployment meaning.
+
+The historical count comparison now loads its own frozen reader. Separate AST
+guards restrict that historical change to instrument_count and this active
+change to recording_duration. The new independent delta check reconstructs the
+permitted relation rows from old duration sources and the unchanged graph; it
+refuses changed questions, values, qualifiers, witnesses, paths or unrelated
+answers. Wrong acquisition/run/runtime identities and changed method bytes refuse
+before output creation. No new execution stack or Core seam is introduced.
+
+The focused query selection passes 92 tests. The full paper selection passes
+599 tests and two subtests in 219.79 seconds. Ruff and formatting pass on the
+four changed code/test files. No additional model or reviewer is dispatched.
+
+Frozen duration-query-01 method:
+sha256:44109e65bc2c207cc194e47ebf4c3d1d2d288fc4d0af83efcdbf28aefbba0634.
+Before query: sha256:13730d1780398170a4dde2698dae4dc34d89391fcd9db2ddae85cf8ec7a3c50d.
+After query: sha256:de96e2ab5a04c03e69a47615e1e76c5e46d3b19ca9f08d6c8cf4dc00adac3c39.
+Two executions produce identical four-file output trees. Both reproduce the
+accepted before answers and prove ledger/graph preservation. Only CQ-T1-05
+changes. Output has 65 row occurrences, nine paths and 59 traced records.
+Independent trace_closure execution resolves 301 field derivations across seven
+captures. The added relation's predicate and both endpoints resolve to
+page:2:block:002 through the acquisition capture.
+
+The newly accessible answer is approximately 21 days of continuous seismic
+recording during SMARTIES, using ocean-bottom seismometers. The duration, unit,
+approximation and campaign were already returned. Coordinator assessment in
+duration-query-01/assessment.md maps the unchanged four requirements: PARTIAL
+3/4 before, COVERED 4/4 after. The prior separate source review supports the exact
+link; the coordinator additionally inspected page:2:block:002, page:6:block:002
+and page:2:block:007. This coverage judgment is non-independent, model-assisted
+and pending human ratification. It does not claim all deployed instruments
+recorded throughout, supply calendar endpoints, equate recording/cruise duration,
+regrade historical reviews or update a thirty-question total.
+
+An ad hoc read guessed current-snapshot-01/review.md and failed without writing.
+File inventory located the actual current-thirty-review-01/review.json. Its
+unchanged 3/4 assessment confirms the before interpretation. The experiment's
+frozen-material checks and fail-closed path/digest tests prevented any guessed
+input from entering execution; no fallback or fabricated review was used.
+
+Master stays 1.5.29. Current read view advances to duration-query-01/first over
+the unchanged acquisition history. DURATION-QUERY-RESULTS.md presents the result
+in plain English. No manuscript, source, ontology, Core, dependency or shared
+ref changes, commits or pushes. The deployment-meaning question and separately
+authorized later new-run comparison remain open, not launched by this cut.
+
+## E-0313, 2026-09-08, fresh comparison prepared, not launched
+
+Luis says "go" to preparing the fresh-run comparison plan and safeguards before
+launch. Master advances to 1.5.30. Read the governing directive, standing paper
+instructions, complete situation review and thirty-question RCA, original E2E
+and calibration conditions, existing query/binding/session checks, and current
+source-review interpretation. No code change or model dispatch is authorized
+by this preparation. No server writes, endpoints or dependencies are involved.
+
+FRESH-COMPARISON-PLAN.md proposes one fresh Sol/ultra session constructing its own
+ontology and then populating it, with one source-wide draft reconciliation and
+at most two structural returns per phase. No semantic feedback, inherited
+project ontology, previous population, questions, values, relation quotas or
+post-review repair. Exact condition and dispatch remain proposed, not frozen as
+an executed experiment. Source-assertion history is an explicit supplied control,
+not a claim that the model independently chooses its semantic ledger.
+
+The earlier own-ontology low-effort run, unamended fixed-ontology ultra positive
+control, and current iteratively repaired graph remain three distinct references.
+The new procedure would change task and effort relative to the earlier fresh run,
+so one result cannot isolate their effects. The source is a known development
+document, not held-out evidence. No new performance or reliability claim.
+
+Read-only code inspection found a concrete comparison constraint: current
+SubjectGraphReads does not compose ontology_answers.text_binding, duration uses
+exact Instrument type, and binding.prepare_binding validates identities and
+surface construction rather than every question's semantic compatibility. The
+plan therefore requires per-question schema dependency tests before dispatch and
+a schema-only compatibility audit before population. No new schema is to be
+forced into the old reader's vocabulary. Missing declarations, empty declared
+fields and missed graph facts must remain different findings. The existing
+unknown-text-field test is a useful positive/negative control, not proof this
+new comparison is already safe to launch.
+
+Most reusable capture rules already appear in the pinned Core skill. Proposed
+checklist text only makes source-wide reconciliation explicit as a paper-adopter
+procedure. It changes no Core skill or source facts. No missing Core seam is
+established and no downstream task is asked to wait or make a change.
+
+Existing-input check: current_adoption.verify_packet validates the corrected-E2E
+packet and exact pinned runtime. Input-manifest digest:
+sha256:5588a2b51b5c42682a1e16258afaed5cc185e3adebfc529747c6a6a899bfab28.
+The duration-method materials also verify, method digest unchanged:
+sha256:44109e65bc2c207cc194e47ebf4c3d1d2d288fc4d0af83efcdbf28aefbba0634.
+The six selected existing test modules, e2e, e2e_condition, current_adoption,
+binding, ontology_answers and duration_query, pass 57 tests and two subtests in
+29.44 seconds under the pinned-runtime environment. This does not count as
+testing new guards or running a new capture. Current_adoption's old settings and
+e2e's historical query identity must not be overwritten during future staging.
+
+The OpenAI Docs skill was used for model-session controls. The official Sol API
+page was searched and opened; it does not establish that API max and this Codex
+tool's ultra are equivalent. Preserve the exact requested model and verify the
+actual session settings. No API call, model substitution or installation follows.
+The earlier skill-read call also bundled repository inspection before its
+docs-first sequence completed; that procedural ordering error is recorded. The
+official source was subsequently fetched before drafting model-control guidance.
+
+Only the new plan and forward entries in the master, gap plan and ledger change.
+No runtime/test code, new run directory, historical output, manuscript, Core,
+shared dirty file, dependency, commit, push or ref is changed by this turn.
+
+Final preparation validation: plan links, referenced test paths, unique E-0313
+entry and master version verify; scoped diff check passes. A read-only prose
+check initially rejected Markdown table separators as punctuation. It was
+narrowed to exclude only separator rows, with positive and negative controls;
+the prose check then passed. No experiment or production behavior changed.
+
+## E-0314, 2026-09-08, fresh comparison implementation and launch approved
+
+Luis says "go" to implementing the new guards then launching the bounded run.
+Master advances to 1.5.31. Condition: one Sol/ultra fresh same-session ontology
+and capture, source-wide self-reconciliation checklist, two exact structural
+returns per phase at most, no semantic feedback or hand-authored population.
+The eight initial inputs, source, source-assertion profile and Core remain pinned.
+
+Mandatory pre-action check: code is paper-local orchestration and diagnostic
+accounting; no server interaction, endpoint or dependency. Required identities,
+settings and inputs fail visibly. Historical condition constants and programs
+are not replaced; add one explicit condition through reusable staging/execution
+functions. TDD must reject inherited inputs, wrong effort, incomplete delivery,
+premature population, method drift and missing or renamed query dependencies.
+No semantic score is computed by those tests. New prototype artifacts remain
+private, no Core/shared dirty file, manuscript, Git/ref or package mutation.
+
+OpenAI Docs was read and official Sol documentation searched and fetched for
+session-control verification. The markdown endpoint was unsupported by the web
+reader; the HTML page fetched successfully. No model substitution or API effort
+equivalence is inferred. This run uses the approved Codex Sol/ultra setting.
+
+## E-0315, 2026-09-08, prospective guards implemented before dispatch
+
+Initial RED: eleven tests fail because the new condition and declaration-audit
+modules do not exist. They define new contract obligations, not eleven historical
+production failures. After those pass, a real handoff RED shows e2e.stage skips
+the prospective delivery verification and would select its historical reader.
+A second execution RED shows e2e_execute skips the prospective delivery check.
+An extra-attempt RED shows attempt-04 would execute. Each now has an explicit
+prospective branch and a failure-before-output guard. Historical condition
+constants remain unchanged; existing frozen experiment files are not rewritten.
+
+fresh_comparison.py reuses the original staging and ontology compiler, fixes the
+eight inputs, same-session Sol/ultra condition, checklist, revision and return
+limits, and checks exact delivered frames. query_capacity.py is a value-free,
+thirty-question declaration audit bound to the exact duration reader. It records
+missing types, scalar shapes and predicate/enum declarations without aliasing or
+changing the ontology. DECLARED_SHAPES_PRESENT is not a semantic-compatibility
+guarantee: endpoint restrictions, co-located fields, unsearched text and actual
+matching still matter. Current subject matching remains unchanged.
+
+The new e2e branches bind this audit and SubjectGraphReads before population,
+verify them before execution, and reuse public Core admission/replay plus the
+existing source-free read/trace guard. No generic query planner or Core changes.
+The fixture integration admits retained test population, then reproduces its
+ledger, answers and traces exactly. Test fixture bytes never enter the live
+producer. Replay is not model regeneration. Reproduction requires the same
+submitted population and transaction time as the one admitted attempt.
+
+Focused evidence: twelve new tests pass in 4.66 seconds. The combined condition,
+historical-input, stage, binding and ontology-text selection passes 46 tests and
+two subtests before the final extra-attempt guard; the final new-file suite then
+passes. Ruff and formatting pass on all five modified/new implementation/test
+files. Full paper selection is running, not yet reported GREEN.
+
+Read-only audits of the selected old surfaces find declaration gaps for date,
+method sequence and funding in the earlier corrected fresh ontology; only method
+sequence is missing in the fixed-ontology and repaired references. Lists of text
+fields not locally searched include intentionally unsearched metadata, not a
+count of semantic errors. No source absence or new coverage total is inferred.
+
+E-0315 final gate: 611 paper tests and two subtests pass in 226.77 seconds.
+Frozen new run: sol-fresh-comparison-01. Input manifest:
+sha256:7a86c8cf098dfbf1dab7fb4ca9bfe5b752865d7f0721848f6b15a0753ff91a31.
+Staging receipt: sha256:d104f3cb6c7d614e76963f3d24d720be36640bc83ada26663606a85155f26dbf.
+Task: sha256:13e2f75119b99ac2e2f71a83c02b74c0f25482a3ef415e8d8dbd89fc707a1895.
+Exact approved checklist matches the plan, all eight inputs verify, and initial
+delivery requires 36 frames. No project ontology or prior result is staged.
+
+## E-0316, 2026-09-08, the one fresh producer launched
+
+Dispatched /root/sol_fresh_comparison_01 without inherited conversation, explicitly
+gpt-5.6-sol/ultra. Thread 01a08353-9159-74e2-bf36-324917d0d04b, recorded in the new
+run's launch.json with its exact local metadata path. The initial dispatch names
+only the frozen task and ownership boundary; phase one only. It supplies no
+previous result, question, expected value or answer-shaped ontology. No other
+producer is launched. Ontology, population, admission and review remain pending.
+
+Observed session metadata confirms the exact parent, producer path, Sol model
+and ultra effort. This is actual metadata, not just the launch request. Initial
+delivery remains under verification while the producer reads its inputs.
+
+## E-0317, 2026-09-08, common-reader reference outputs retained
+
+While the producer works independently, comparison_reads.py applies the frozen
+duration reader to the three selected histories. Its new test first fails on
+the absent module. Initial implementation also reveals that these historical
+run-result envelopes do not all carry a top-level validated_fact_set_sha256.
+The comparison now binds each exact surface digest explicitly alongside its
+exact result/receipt/graph coordinates, rather than inventing a default or
+assuming one result schema. The test executes every actual case, discriminates
+result and surface drift before writing, verifies untouched ledgers and exact
+reproduction, and requires the repaired case's query objects to equal E-0312.
+It passes in 16.82 seconds. A patch against pre-format text refused atomically;
+the actual formatted context was read before applying it. No frozen producer
+code or method changed during this work.
+
+Outputs are retained under sol-fresh-comparison-01/reference-reads. Under the
+same reader: earlier-fresh returns three rows and zero paths; fixed-ontology
+returns 57 rows and one path; repaired returns 65 rows and nine paths. These
+are row occurrences, not knowledge counts or answer grades. All 30 queries run
+for each case, all ledgers remain exact, and semantic coverage is NOT_ASSESSED.
+The repaired answers equal the current E-0312 objects; only the enclosing
+comparison provenance differs. No reference output reaches the fresh producer.
+
+## E-0318, 2026-09-08, complete delivery confirmed; review preparation
+
+Observed initial delivery passes: every exact frame of the eight declared inputs
+occurs in model-visible tool output. This verifies delivery, not comprehension.
+The ontology phase remains active, with no submitted ontology or population yet.
+
+Review preparation reuses the existing source-trace resolver, witness docket
+and field-level accounting validator. Pre-action check: only paper-local packet
+code and private generated evidence; no server, endpoint, dependency, Core or
+frozen producer-code changes. TDD must bind the exact source, accepted vocabulary,
+queries, traces and requirements, reject mismatches before writing, and exclude
+prior judgments and condition labels where practical. No semantic labels are
+generated by the packet builder. Historical review criteria remain byte-fixed;
+only their prospective interpretation is used, not their old run instructions.
+
+## E-0319, 2026-09-08, own ontology accepted; same-session population started
+
+The first ontology submission passes the pinned compiler without a diagnostic
+return. All initial input frames verify in the observed session. Ontology digest:
+sha256:3be7689812ca081a4a1427198d03ba19a39f4d949af2eebfa533577759556e24.
+Surface digest: sha256:c4c4f39050c2a444767cafef96b2362d83dda9e8d219647693295f3824cf56c8.
+Acceptance and population binding recorded at 2026-09-08T23:35:43.822427+00:00.
+Binding: sha256:3c134d4058660d1596e7ff524b0c288267a31a4c8f099b4865868f3ddb0978de.
+
+Schema-only audit: sha256:a603baf1dc5dc7731ffefef815bbb94aec8c64df2ba1c02bfb0fdd3a69d41c9d.
+The fixed reader lacks its expected method-order predicate (CQ-T2-02) and
+award_identifier scalar (CQ-T2-05). These are reader/declaration limitations,
+not findings of absent source capture. No audit or questions enter the producer.
+The other declaration checks passing does not establish semantic compatibility.
+
+The same Sol/ultra producer resumes phase two through followup_task, with only
+the accepted compiler materials and the existing task. It must read all accepted
+frames before authoring population. No new producer, hand repair, semantic return
+or source instruction is supplied. Its source-assertion profile was supplied by
+the experiment, despite the session log describing it as selected by the model.
+The log is retained unchanged; no independent profile-selection claim follows.
+
+## E-0320, 2026-09-08, reference review packets frozen and dispatched
+
+comparison_review.py reuses the existing trace resolver, docket and snapshot
+accounting validator. The integration test begins RED on the missing module.
+Its first implementations wrongly assumed common historical locations for graph
+and retained-capture files. The three-case test catches both before any actual
+packet is frozen. Graphs/receipts are now taken from public replay and checked
+against each exact result; capture paths are selected explicitly by case, with
+no existence-based fallback. A test also initially expected new refusal wording
+instead of the existing docket's exact question-closure refusal; its assertion
+now checks that existing contract. Final test passes in 38.94 seconds, including
+all three real references twice, identity refusal and unchanged answer objects.
+Ruff and format checks pass. The broader paper suite is running.
+
+Frozen packets under sol-fresh-comparison-01/reviews:
+
+| Packet | Coordinator-only condition | Manifest digest | Witnesses / traced records |
+| --- | --- | --- | --- |
+| case-a | Fixed ontology | sha256:acfd7bf765ff15823d6560f52cf951df6d559b4971546d4a3e2095fd6260ce18 | 37 / 51 |
+| case-b | Earlier fresh ontology | sha256:8d497e497b7689055fda420109b72841e086a013118049b2700b6e1712fd91ca | 2 / 3 |
+| case-c | Iteratively repaired | sha256:91e9604eca41342f14b85550fbfc686065ec6ecf7551c5dfdbf701591759466a | 45 / 59 |
+
+Each carries all thirty unchanged questions and required semantics, exact query
+objects, source/vocabulary and resolved capture-scoped traces. Query envelopes
+omit condition labels; rows and paths are unmodified. Artifacts can still reveal
+origin, so no perfect blinding is claimed. Prior judgments are absent. The fixed
+interpretation is extracted from its pinned prior document without carrying that
+document's obsolete run instructions. No automated support or coverage decision.
+
+Dispatched one fresh reviewer /root/fresh_comparison_review, no inherited
+conversation, with ownership only of each packet's review.json and review.md.
+Thread 01a08362-d2cd-7633-b03c-c6c99ea70973. It reviews the three views under one
+interpretation while the independent Sol producer populates. This is one
+reviewer, not three independent reviewer replicates. Human ratification remains
+pending. A fourth fresh-result packet can follow after successful execution.
+
+## E-0321, 2026-09-08, population delivery and review handoff guards verified
+
+Every accepted-input frame is observed in the same Sol/ultra session: one exact
+compiler diagnostic and all 22 population-surface parts. The ontology remains
+fixed. Population is still being authored; there is no submission or capture
+result to report yet.
+
+The new prepare_fresh review handoff begins RED on its absent entry point, then
+passes a compiler/admission fixture integration. It refuses incomplete delivery,
+changed query output and non-identical reproduction before creating any review
+packet. The positive fixture uses historical ontology/capture bytes only inside
+a temporary test run, never the live producer. It reuses the existing fresh-run
+fixture through an optional test callback instead of duplicating its setup.
+Final targeted test passes in 3.79 seconds. Runtime, accepted materials, exact
+query replay, trace closure and the separate reproduction remain prerequisites.
+
+The broader paper selection passes 613 tests and two subtests in 277.94 seconds.
+It was collected before the additional fresh-review test, which passed separately;
+do not report 614 as a single full-suite result. Ruff, format and scoped diff
+checks pass. No producer method, current graph, historical output, Core, manuscript
+or shared ref changed. Reviewer metadata confirms gpt-6-astra/xhigh in a fresh
+session; producer remains gpt-5.6-sol/ultra. Human ratification stays pending.
+
+## E-0322, 2026-09-08, all three reference reviews completed and checked
+
+The fresh reviewer completes all three packets. Coordinator reruns each frozen
+accounting validator: thirty questions and complete witness closure per packet,
+PRELIMINARY_COMPLETE and PENDING_HUMAN. No malformed submission or unresolved
+capture-scoped chain is reported. Review JSON identities:
+
+| Packet | Review digest | Positive complete / partial / none |
+| --- | --- | --- |
+| case-a | sha256:7e1c7b76c48cfd32a3ddf3696390b4186b97cd611b0da9f59d09d1936e848056 | 3 / 15 / 7 |
+| case-b | sha256:de5b87ac6b64cd9115537b029b22584ae14ad3d6177e970a214f5d14afb61a39 | 0 / 2 / 23 |
+| case-c | sha256:60627f62724075bfd7daa0e2e1d85aae52f86f5c6c1694d426595750727771e3 | 7 / 11 / 7 |
+
+The three absence controls are NONE in each view. The two paraphrases are both
+PARTIAL in A, both NONE in B, and one COVERED/one PARTIAL in C. These remain
+separate from the 25 positive questions, not accuracy or source-truth scores.
+The reviewer labels 37/2/45 returned central witnesses SUPPORTED under the
+field-level interpretation, not every graph record or every omitted assertion.
+Sparse-field interpretation and human ratification remain explicit limitations.
+
+The coordinator reads all three complete reports and spot-checks the detailed
+duration, depth and hypothesis coverage accounting. The repaired hypothesis
+answer is COVERED with explicit geochemical and seismic SUPPORTS paths and
+the qualified seismic endpoint. Duration is COVERED, while depth remains
+PARTIAL because the query does not return who produced the locations.
+FRESH-COMPARISON-RESULTS.md presents the three references in plain English and
+keeps the running fresh capture pending. No historical review is overwritten.
+
+Final combined selection: 614 tests and two subtests pass in 285.41 seconds,
+including the fresh-review handoff test. No new run result, Core capability gap,
+manuscript claim or author decision is inferred. Master stays 1.5.31.
+
+## E-0323, 2026-09-08, first capture refused; coordinator handoff defect
+
+The same producer submits document-population.json, digest
+sha256:b48a46d01b19c2ffb2050807755d94820af39fbad63356d0c346a59fd608c86e.
+First execution, transaction time 2026-09-09T00:13:35Z, refuses at preparation:
+PopulationPlanRefusal UNRETAINED_SOURCE, "source is not retained with an accepted
+role: article:yu-2025". The failed submission and execution are retained under
+attempt-01. No accepted new graph or semantic quality judgment follows.
+
+RCA: the runner registers source:yu-2025-mid-atlantic-ridge. The producer used
+article:yu-2025 in capture.attribution.source_id. Both the initial parent-owned
+manifest and accepted manifest contain the runner's interface_coordinates, but
+neither is a producer input. The delivered accepted inputs contain only compiler
+diagnostic and population surface. The task promises coordinates supplied by the
+parent; my phase-two follow-up omitted them. Complete input-frame delivery was
+therefore insufficient to establish complete operational configuration. This is
+a paper coordinator/handoff defect, not a Core retention failure or a failed
+semantic extraction. Core correctly refuses the unretained reference.
+
+Pre-action check: add a paper-only handoff-message guard and test this missing
+configuration class, with required fields refusing rather than defaulting. Freeze
+the exact first structural return and supplied machine identifiers, then resume
+the same producer. This is a disclosed administrative handoff correction, not an
+undisclosed clean first-pass success. The new capture must differ only in the
+registered source reference; a mechanical comparison protects every assertion,
+graph record and supersession. No semantics, query information, new ontology,
+new producer, Core or frozen executor code change is permitted by this repair.
+
+## E-0324, 2026-09-08, corrected capture admitted and reproduced
+
+The same producer returns digest
+sha256:df49bf9f6b73db65a4dcacc9f9861261361ba01654b9ebe46c5ef0797c135bfc.
+The execution guard checks the complete parsed JSON against the first submission:
+only capture.attribution.source_id differs. Assertions, every graph record,
+relation endpoint and supersession stay identical. The accepted ontology is
+unchanged. population_handoff.py carries the missing-coordinate refusal and
+identity-only execution guard. Three focused TDD tests pass; the execution guard
+also proves changed content never reaches the executor. The earlier combined
+fresh/review/handoff selection passes sixteen tests before adding that third guard.
+This correction is administrative, explicitly retained, and not a clean first
+execution claim. The original source-configuration omission remains our error.
+
+Attempt-02 admits and replays 126 entities, 76 relations and 2 events in a
+13-event ledger. Source assertion census: 77 assertions, 57 asserted blocks,
+129 producer-declared nothing-assertable blocks. These mechanical census labels
+do not certify complete semantic representation. The fixed thirty-question
+reader returns 23 row occurrences and two paths, with 24 traced records.
+The hypothetical mechanism has two returned SUPPORTS paths. No coverage grade
+is inferred from row, relation or path counts.
+
+Exact identities:
+
+- Ontology: sha256:3be7689812ca081a4a1427198d03ba19a39f4d949af2eebfa533577759556e24.
+- Ledger head: sha256:9882836bfa5f324f00f53543a72282e37ef858c4d85be92ec0aac6ca92db8d42.
+- Ledger bytes: sha256:c02d1a3ca85f74df0fb67e0398c51b0cc4eb9f1da80d88769cd5a483a12e9ddd.
+- Receipt: sha256:70a03cdf23aceab8f43b6611fea6687720cafb7cb723c9febceea9b696a2d2b2.
+- Graph: sha256:fdedb0b7472fa4129094605823b6877a911eafc6ddd2d3d603aa8374ba48b1e1.
+- Query result: sha256:b6c0efd4cb3b4c9c668d48fe5c0dedb2c12308c6cc174e6607a8f1cba88dcbdc.
+
+Reproduction-01 uses the identical submitted population and transaction time
+2026-09-09T00:13:35Z from empty history. Ledger bytes, query result, query traces
+and complete run-result.json match byte-for-byte. This is execution reproduction,
+not model regeneration. The source-free query guard records zero file reads,
+network calls and embedding imports.
+
+The fourth packet, reviews/case-d, is frozen at manifest
+sha256:a5c0b3b846db75357e6e346d52647cafef76cf9caecdc579e2261266797384e1,
+with thirty questions, twenty central witnesses and 24 traced records. The same
+independent reviewer resumes on it under unchanged interpretation, with no
+condition label, prior outside judgment or producer conversation. The previous
+three reviews remain fixed. Human ratification and this fourth assessment remain
+pending. No Core, manuscript, source or repository-ref change.
+
+## E-0325, 2026-09-08, fresh comparison assessed and diagnosed
+
+The fourth review is complete at
+private/paper-v4-answer-demonstration/sol-fresh-comparison-01/reviews/case-d/.
+review.json identity:
+sha256:82f64d08546999f6af39b055dba2643acdbf4c0ef6834090e3b2c81b40c9fa02.
+The coordinator reruns its frozen packet validator: PRELIMINARY_COMPLETE,
+30 questions, 20 witnesses, PENDING_HUMAN. All 121 required semantic items are
+accounted for. The reviewer reports verification of 23 materials, 24 traced
+records and 183 capture-scoped derivations. The coordinator reads the complete
+report and checks the detailed depth, funding, final-catalogue uncertainty,
+preferred-mechanism and supporting-path accounting. A/B/C review bytes still
+match their E-0322 identities. One independent-of-producer reviewer assessed
+the four views, not four independent reviewer replicates.
+
+Of 25 main questions, the new fresh run has 1 COVERED, 10 PARTIAL and 14 NONE.
+The three expected-absence controls are NONE; paraphrases have one PARTIAL and
+one NONE. The acceptance date is the complete answer. Partial content includes
+recording duration, primary-melt CO2, depth ranges, saturation conditions and
+explicit evidence paths. Coarse MEASURED meaning remains an identified human
+ratification question; it does not establish direct measurement or origin.
+All twenty returned central witnesses are assessed as supported under the
+field-level interpretation, not every graph record or a scientific-truth claim.
+
+The four-case comparison keeps the same reader and interpretation. Positive
+complete/partial/none: earlier fresh 0/2/23, supplied ontology 3/15/7, repaired
+graph 7/11/7, new fresh 1/10/14. The new capture has relational structure absent
+from the earlier fresh run but does not recover the stronger cases' answer
+coverage. Effort and task changed; ontology differs; repaired state includes
+targeted work. These observations neither isolate a cause nor estimate reliability.
+
+Read-only RCA verifies all 37 ScientificClaim records lack statement/name/
+description fields. Four do carry cause/effect references, so absent prose is
+not universally absent meaning. The snapshot-warning record carries only
+metadata; its proposition remains in the retained assertion. The mechanism's
+typed event meanings exist but the fixed reader does not expand them. Count 19
+exists without its network role; four site-specific pre-eruptive quantities
+exist without their material-stage qualification or incident relation. Forty-four
+of the 76 relations are contributor credits; three are SUPPORTS. The funding
+reader has a declared field mismatch, but the specifically requested ERC grant
+also is not captured. Thus query incompatibility cannot explain every absence.
+These findings diagnose full-graph content without adding it to frozen answers.
+No missing Core relation, subtype-read or replay capability is established.
+
+The source-reference-only correction and exact four-file reproduction are
+rechecked mechanically against retained bytes. Final selected harness command:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 \
+PYTHONPATH=/private/tmp/malleus-paper-snapshot-core.kOtQNc/src:/Users/luis/Projects/malleus-dev/paper-v4/answer-demonstration \
+.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short \
+paper-v4/answer-demonstration paper-v4/evaluation-v4 \
+paper-v4/submission-candidate/test_prepare.py
+```
+
+Result: 617 passed, two subtests passed in 281.92 seconds. This is the selected
+paper harness, not full Core CI or a semantic certification.
+
+FRESH-COMPARISON-RESULTS.md and FRESH-COMPARISON-RCA.md retain the comparison,
+concrete source/record examples, administrative failure, limits and proposed
+next choices. A reader-only causal-reference expansion is recommended before
+recapture; restoring source-only propositions and qualifications is a separate
+modelling intervention. Neither is launched. No extra producer, semantic retry,
+Core/manuscript/dependency edit, commit, push or ref change. Master stays 1.5.31.
+
+Final read-only checks rerun all four packet validators and every listed material
+digest. All pass unchanged. Fresh packet and observed initial/accepted delivery
+guards pass with the original Sol/ultra session. Scoped Ruff, format and diff
+checks pass. The completed evidence notes do not change any frozen experiment.
+
+## E-0326, 2026-09-08, causal-event query fix approved
+
+Luis says "Go and fix" to the proposed query-only causal-reference cut. Master
+1.5.32 and EVENT-QUERY-PLAN.md define the boundary: unchanged fresh Sol attempt-02
+and Core 160878c, unchanged original reader and queries, an explicit successor
+that returns directly referenced cause/effect Event records. Only the preferred,
+declined and supporting-mechanism questions may gain this context. All selected
+old rows and actual relation paths stay fixed; no source-only meaning, inferred
+edge or new population is introduced. Trace every newly returned record.
+
+Pre-action check: local paper code, no server/API endpoint/dependency change.
+Required reference metadata refuses if malformed. Preserve frozen historical
+methods as evidence, not fallback. Add tests first for the unexpanded-reference
+class and for incorrect role, type, missing target, invented context, recursive
+expansion and unrelated-answer changes. Freeze a successor method, execute twice
+and assess the changed answers locally under the existing interpretation. This
+assessment is not independent and cannot replace the complete review totals.
+No model dispatch, Core/manuscript edit, commit, push or shared-ref mutation.
+
+## E-0327, 2026-09-08, causal-event projection RED then GREEN
+
+The frozen-reader control proves it returns cause_event/effect_event IDs without
+their Event records. The new test contract initially has 22 failures for the
+absent successor and one passing control. event_query.py adds direct event rows
+using the existing projection, with unchanged original rows and relation paths.
+It checks the declared scalar Event range and resolves targets through public
+KnowledgeGraph reads. Duplicate references produce one row; recursive references
+are not followed. New event witnesses join the existing trace/docket machinery.
+
+First GREEN: 23 tests pass, including exact pinned-history reproduction and
+preservation. A further review finds that the successor uses a live projection
+helper without checking it against the frozen reader. A new RED proves changed
+projection bytes were accepted by preflight; two more REDs expose non-actionable
+KeyErrors for missing range/cardinality metadata. The guard now refuses both
+classes explicitly. The initial drift-test invocation encountered the known
+pytest shared-Core import before the intended check; the isolated unit test
+stubs that separate gate, while the integration test runs in a pinned subprocess.
+No experiment output is changed by these test failures.
+
+Final focused GREEN: 30 tests pass. These include public subtype-compatible
+range resolution, wrong target family/type, wrong reference role, missing or
+malformed reference, duplicate suppression, one-hop scope, modality/field
+preservation, unchanged unrelated questions, exact-delta mutation refusals,
+runtime and method drift, and identical five-file output trees. Ruff and scoped
+diff checks pass. No Core, frozen reader/executor, capture or existing review
+changes. The separate event-query-01 method can now be frozen and executed.
+
+## E-0328, 2026-09-08, causal explanation now readable from the graph
+
+event-query-01 is frozen and executed twice against the unchanged fresh Sol
+attempt-02. The old thirty answers reproduce first. Only CQ-T4-01 and CQ-T5-01
+change, each appending the two directly referenced Event records. All original
+rows and relation paths remain exact; all other 28 question objects are unchanged.
+The two five-file output trees match byte-for-byte. The ledger, replay receipt,
+graph, ontology, capture and original review remain fixed. No model dispatch or
+Core change was needed.
+
+Method: sha256:a16f3d5c5b9bb4bbb3a26ddfdccf7e23fffa7500a049133a2d4e970e88b47a6d.
+After queries: sha256:fbf863e8f86d9902ed42f823b36fe8fbd3be79ee634a0116d0325df62ea3515b.
+Local assessment: sha256:77b1e829565337e7559924bce06088639b84439273e1c0caefacaa73ffbf8b3f.
+
+The expanded events are event:co2-degassing and event:deep-earthquakes. They
+contribute 12 additional field derivations, for 195 across 26 traced records.
+All resolve through the retained capture. Both query-stage guards record zero
+file-read, network and embedding-import attempts. The reference roles come from
+declared cause_event/effect_event fields, not opaque IDs; existing event rows
+carry names, classifications and HYPOTHESISED. No new Relation record/path is
+invented and no recursive traversal occurs.
+
+The coordinator checks each newly returned field, accepted role/type definitions,
+exact statement digests and page:5:block:003 in the context of the abstract,
+page:5:block:002 and the subsequent evidence discussion. The after answer can
+state that the authors prefer CO2 degassing as a hypothesized cause of the deep
+axial earthquakes. It does not establish physical causation or return the full
+volume-change, stress and pressure chain. Existing evidence quantities retain
+their distinction from the hypothetical causal account.
+
+Under the unchanged requirements, coordinator source assessment finds CQ-T4-01
+PARTIAL 3/4 before and COVERED 4/4 after. CQ-T5-01 remains PARTIAL, improving from
+2/5 to 3/5 because the mechanism is now expressible alongside its two existing
+SUPPORTS paths. Geochemical site scope and seismic site/window qualifications
+remain missing. This assessment is MODEL_ASSISTED and NOT_INDEPENDENT, with
+human ratification pending. It replaces no complete independent-review total.
+
+A document check caught my paraphrase incorrectly presented as the exact frozen
+question in the draft assessment. A new RED discriminates question-wording drift;
+the text is corrected to the exact docket question and the guard passes. This
+does not change query bytes, requirements or judgments. The focused file now
+passes 31 tests. The broader selected paper harness is still running.
+
+EVENT-QUERY-RESULTS.md presents the result in plain English, linked to the raw
+answers, source assessment and trace evidence. Master stays 1.5.32. The new read
+view belongs to the fresh run only; repaired-history and historical comparison
+views remain unchanged. No Core/manuscript/dependency edits, commit, push or
+branch/ref changes. Source-only representation repair has not launched.
+
+Final validation: the broad selected paper suite passes 647 tests and two
+subtests in 300.78 seconds. It collected before the additional assessment-quote
+guard; the later focused file passes all 31 tests including that guard. Ruff,
+format and scoped diff checks pass. The final producer-packet audit initially
+used a relative path, which changes the expected embedded task coordinate and
+correctly refuses; it passes with the recorded absolute path. The integration
+test now explicitly guards that absolute baseline coordinate. Both event
+statement digests and all four previous review identities verify unchanged.
+No experiment bytes were repaired or replaced during those checks.
+
+## E-0329, 2026-09-08, full claim/context audit and bounded repair preparation
+
+Luis says “Full into this.” Master advances to 1.5.33 for the approved audit and
+repair workflow, not another producer run. I asked separately for permission to
+use one fresh Sol/ultra proposer and one independent reviewer. No answer yet and
+no dispatch. No model-authored or evaluator-authored amendment exists.
+
+Read the entire selected text layer, all eleven pages, all 37 ScientificClaim
+records and 39 quantitative records: 26 ScientificObservation, ten
+CountObservation and three RatioObservation. Checked source context across page
+and block boundaries, incident links, subject records and all formalization
+mappings. Mechanical scope has 574 field-source entries from 58 assertions.
+Four claims retain cause/effect references, one has incomplete comparison fields,
+and the other 32 lack proposition-specific fields beyond subject/category and
+possible evidence links. None has statement, name or description. These are
+representation findings, not a numerical semantic-quality score.
+
+No numerical mismatch found in the 39 records against selected reading. Important
+qualification losses remain: material stage, model conditions, catalogue stage,
+local scope, prior-work attribution and observational limitations. Two general/
+global claims use the local catalogue's shared subject; flag that correspondence
+for review rather than endorsing it. Source judgments are coordinator-assisted,
+not independent, with human ratification pending.
+
+Correction/refinement: deep-earthquake site and axial location already exist as
+population relations. The current answer does not traverse them. Snapshot meaning
+and explicit depth datum are genuinely absent from its graph representation.
+Five claims have multiple mapped source assertions, including separate evidence
+for preferred/declined dispositions. A preferred-locator-only audit would be
+wrong. The fresh graph has no useful-instrument count of 17; the older repaired
+run must not be confused with it. Ratio constants need input-versus-result
+attribution, not a hand-chosen enum replacement.
+
+Added a small read-only accounting helper and tests, with no semantic evaluator
+or population writer. Initial RED: 16 tests fail because helper is absent.
+GREEN: 16 pass. An initial real-artifact test entered pytest's shared-Core import
+context and correctly refused runtime drift. Moved that verification into a
+pinned subprocess, as existing experiment integration tests require. Exact
+runtime verification remains enabled. Tests also discriminate lost secondary
+evidence, fabricated graph fields, duplicate IDs, bad source locations, dangling
+and multivalued references, header shadowing and transitive dependency closure.
+Replacing the full audit set would retarget nine existing relations and no other
+declared dependants. This is not a requirement to replace all 76 records.
+
+MEANING-AUDIT.md records each claim and quantitative record, plus the reusable
+completion requirement: identify meaningful graph fields/links for each assertion
+or declare what remains retained-only. A citation alone cannot count as its
+proposition. MEANING-REPAIR-PLAN.md specifies the next bounded proposal, review
+before retention, exact preservation and unchanged-reader comparison. Scope
+guards and proposal dispatch remain to be completed. No Core capability defect
+was demonstrated. Accepted state, historical methods, manuscript and shared refs
+are unchanged.
+
+## E-0330, 2026-09-08, source-context preservation guards pass
+
+Added the bounded amendment scope check after 23 expected RED failures. It permits
+only declared statement, description, subject, count_scope, duration and evidence
+locator/digest changes on selected entities. All other properties stay exact,
+including numeric JSON types, bounds, counts, ratios, units, uncertainty,
+determination, modality and hypothesis disposition. Existing subjects can be
+explicitly corrected or removed when separately source-supported; adding prose
+does not excuse a misleading retained subject. New independent records, new
+relations, type changes, no-op/evidence-only versions and unselected content
+changes refuse. All declared reverse-reference dependants must be versioned and
+retargeted exactly, transitively. No candidate or population writer was added.
+
+One mutation test initially shared a nested relation object with its own baseline,
+making the changed-predicate test invalid. Deep-copy separation plus a direct
+fixture-isolation regression test repairs the test itself; runtime code did not
+need a workaround. The scoped tests pass. A punctuation diagnostic also caught
+Markdown table separator syntax as if it were prose; the report-style test now
+excludes separator lines, not substantive wording.
+
+The exact-artifact audit uses the pinned Core subprocess, verifies graph/capture/
+reading identities, and requires each of the 76 record IDs to appear once in
+its report table. The fresh graph's source mappings and nine-relation dependency
+closure remain unchanged. Added the prepared meaning-repair-task.md, without
+answer values or evaluator-authored replacement content. It is not a frozen
+launch packet and has not been sent to a model. Source/report checks, pre-retention
+review authorization and public admission will be joined at staging after the
+separate one-proposer/one-reviewer approval; no implicit semantic retry.
+
+Validation: full answer-demonstration directory, 602 passed and two subtests,
+285.07 seconds. This selection is narrower than the earlier 647-test combined
+paper selection, not a changed test outcome. Later focused audit/repair files,
+41 passed, include the final report-style and identity guards. Ruff, formatting
+and scoped tracked-file diff checks pass. Graph, capture and ledger bytes verify
+exact; both existing five-file event-query executions still match byte-for-byte.
+No Core, manuscript, accepted-state, dependency, commit, push or ref changes.
+Master remains 1.5.33. No complete answer regrade or fresh capture improvement
+is claimed. Model dispatch approval is the next required author input.
+
+## E-0331, 2026-09-08, author approves proposal and independent review
+
+Luis replies “Ok” to the explicit request for one fresh Sol proposal and one
+independent source review, followed by admission and comparison only if the
+amendment passes. Master becomes 1.5.34. Preserve the selected meaning-repair
+scope and original graph; no Core, manuscript, dependency or Git changes.
+There is no preauthorized structural return, semantic retry or extra sample.
+
+Preparing a private packet with the original eight declared inputs, own accepted
+ontology, full graph, retained capture, surface, exact target list, source/reading
+coordinates and output contract. No questions, scores, query code, old candidates
+or evaluator replacement prose enter the producer packet. The query method and
+base ledger remain outside its declared input surface. Original inputs are copied
+only from the verified manifest, not an open directory scan.
+
+OpenAI Docs was used to check explicit model configuration. Official configuration
+reference: https://learn.chatgpt.com/docs/config-file/config-reference.
+Official Sol API page: https://developers.openai.com/api/docs/models/gpt-5.6-sol.
+The app's available spawn tool explicitly supports Sol/ultra; the API page lists
+a different effort vocabulary. We retain the approved app setting and verify
+actual session metadata, without claiming an API-level equivalence.
+
+Staging test went RED before the new stage module, then GREEN against a pinned
+subprocess. It checks exact target count, complete declared frame coverage,
+producer/query separation, refusal to overwrite, changed-reading refusal and
+changed-ledger refusal. Source review and public adapter compilation are reused,
+not replaced with an automatic semantic evaluator. No producer dispatched yet.
+
+## E-0332, 2026-09-08, source-context proposal dispatched
+
+The approved fresh Sol session is running as sol_meaning_repair_01, thread
+01a083d5-baac-7e41-9c1e-5027c6606efa. Actual session and turn metadata confirm
+gpt-5.6-sol with ultra reasoning and no inherited conversation. The frozen private
+packet is sol-meaning-repair-01, manifest
+sha256:a95270fac17b3342896263fb99e08df6e9f20bcf2bf7ff92e427428763fc6c28.
+It declares seventeen inputs, including the full selected reading and all 76
+target records. Delivery verification is pending completion of the input frames.
+No candidate, source-review judgment, retention or admission exists yet.
+
+The public replay preflight reproduces the frozen event-query answers exactly,
+with 26 returned record traces. A new test first failed because the query helper
+was absent, then passed after connecting the existing fixed reader. It also
+requires missing source-review authorization to refuse before creating an output
+directory. Focused staging/query test: one passed. Earlier combined staging,
+audit and scope selection: 42 passed. Ruff and formatting pass for the two new
+runner/test files. These are harness checks, not source-quality results.
+
+The source-review and execution scaffolding is being completed outside the
+producer's declared inputs. It cannot change the frozen source, graph, task,
+reader or scope checks. Master remains 1.5.34. No additional sample, return,
+Core modification, manuscript edit, dependency or Git operation is authorized.
+
+## E-0333, 2026-09-08, full delivery verified and review gate connected
+
+Exact transcript verification passes for all 92 frames across seventeen producer
+inputs. Actual Sol/ultra and fresh session identity still match the launch. This
+establishes delivery, not understanding. The proposer is authoring; no submission
+or semantic feedback has occurred.
+
+The new executor requires exact candidate-bound positive source review plus
+verified fresh deliveries from two distinct sessions before creating its attempt
+directory. Five RED tests, then GREEN, cover acceptance, reused producer session,
+unbound reviewer, wrong producer model and missing frames. Existing tests cover
+stale candidate/report/run/review identities. The source-review packet builder
+has a separate RED/GREEN byte-preservation test. It keeps the complete source,
+schema and imports, baseline graph and capture, candidate and report; it omits
+the producer's procedural skill and generated compiler surface. Those two large
+inputs are unnecessary for semantic review; structural compilation is performed
+separately. No source, prior record or proposed change is omitted by that choice.
+
+The selected staging, audit and scope files pass 47 tests. A preceding command
+named a nonexistent test_input_delivery.py and collected no tests. Existing
+delivery tests were located mechanically in test_calibration.py and other
+experiment files; no test result is inferred from the failed selector. Ruff and
+formatting pass. The full answer-demonstration directory is now running. No
+admission, new answer assessment or change to the frozen packet/checks/reader.
+
+Completion of that full selection: 609 passed and two subtests passed in 312.63
+seconds. Scoped tracked-file diff check passes. Producer submission is still
+pending; these results do not claim an improved graph or source-faithful batch.
+
+## E-0334, 2026-09-08, one narrow proposal and independent source review
+
+Sol submitted candidate-01 once. Candidate identity:
+sha256:69ab09d6f26f32e4461350f90649a594b67f3b12c7e559b6da29855a456ea134.
+Report identity:
+sha256:f4ff44e0f963f840f766593384cef374c1f520268b860daa9bc05351de22eb12.
+It versions three existing saturation-model observations, adding a modeled-melt
+subject and model-condition description, with updated preferred source pointers.
+Twelve entity properties change. No relations, independent facts, numbers,
+classifications or hypothesis states change. One complete source block supplies
+the new capture assertion. The report labels three targets AMENDMENT and 73
+NO_CHANGE; it acknowledges missing proposition detail in the unchanged claims.
+This is not completion of the broader 76-record context repair.
+
+Exact producer delivery still passes. Public adapter and population compilation
+pass under pinned Core 160878c with no retention. Plan identity:
+sha256:18a8539e24656cd7eaf6ecc54a3b875613b28ce9f4a1a861b5d612a3b072a213.
+No structural return or semantic feedback occurred.
+
+The independent source-review packet is frozen at
+sha256:89c8189e98cac55ee8b24c4e671231375c0b15155dc57c79115ba04eae7b7a83.
+Fresh reviewer meaning_source_review_01 is running, thread
+01a083ea-5589-7560-ae25-d2a856d24c86. Actual metadata confirms inherited
+gpt-6-astra/xhigh, with no producer history. Its task covers all proposed changes
+and all report context assertions, including unchanged targets. No reviewer
+judgment, admission or new answer result yet. Human ratification remains pending.
+
+## E-0335, 2026-09-08, source review withholds the whole candidate
+
+Independent review identity:
+sha256:1c615436ba22486e46c69cc9a02b4ce283c5d8165fcf2526672da63949a6e50f.
+Disposition WITHHOLD_BATCH, human ratification pending. Blocking new field:
+observation:saturation-temperature:repair-01.properties.description. The source
+reports 1250 °C among saturation conditions but does not establish it as a
+temperature calculated by the model. This output-role claim is UNRESOLVED, not
+proof that the source explicitly identifies an input instead. Pressure/depth
+context additions are supported. No supported subset was selected.
+
+The reviewer examined all 76 targets, 119 report contexts, 12 changed properties,
+preserved fields, absence of retargeted dependants and four out-of-scope statements.
+Exact delivery passes for 80 review frames. Its earlier message said 82, then
+corrected that arithmetic; delivered bytes and source judgments did not change.
+The root read the full review, including the middle lines re-read after an output
+truncation, and checked the decisive source passages and schema declarations.
+
+Located production failure: the submitted builder assigns one DESCRIPTION
+constant to three distinct quantity records. That broadens the temperature's
+unresolved output interpretation before admission. Protected numeric values and
+source-binding checks remain exact. The original MODELLED/CALCULATED temperature
+fields are an inherited concern; the new description strengthens it. The schema
+does not require either field. Our experimental preservation rule, not a Core
+requirement, froze them. No source-ingestion, replay or generic Core failure is
+demonstrated. The source-review gate is paper-owned, not Core truth validation.
+
+The builder also gives the 73 unchanged records generic property-inventory
+contexts, leaving every claim unchanged. The task required accounting for every
+target but did not require a proposed repair or concrete obstacle for each
+acknowledged omission. The detailed independent review exposes inherited subject,
+material-stage and adopted-proxy issues that this generic account omitted. This
+explains the observable completion gap, not the model's internal choice of only
+three replacements. No causal claim about model capability is made.
+
+Recorded exact negative decision and private outcome. A real-artifact regression
+confirms public structural compilation succeeds, but the actual executor refuses
+the negative source decision before creating an attempt directory. Base ledger,
+receipt, graph and all thirty answers still reproduce. Latest focused selection:
+48 passed. Earlier full selection: 609 passed and two subtests, before this one
+additional real-artifact test. Ruff/formatting pass. No Core, manuscript,
+dependency, commit, push or ref change. Master remains 1.5.34.
+
+MEANING-REPAIR-RESULTS.md records the proposed next boundary: author approval for
+one declared semantic correction and re-review, potentially reopening only the
+temperature's determination/modality while keeping numbers and unrelated records
+fixed. No retry is authorized, sent or silently performed. The wider claim repair
+remains unfinished, and no new graph or answer improvement is claimed.
+
+## E-0336, 2026-09-08, author requests a reloadable completion safeguard
+
+Luis selected the finding that the experimental procedure did not establish
+wider reconciliation and asked: "We need to avoid this in the future, add it to
+the skill so when we reload it we get this up and allow prevention".
+
+This author decision changes prevention guidance, not the frozen experiment.
+Master becomes 1.5.35. The preceding suggestion to run a coherent source-
+reconciliation loop remains a recommendation. No new sample, semantic return,
+ontology revision, expanded amendment or experiment rebind is authorized.
+
+Added immediate instructions to paper-v4/AGENTS.md: compare the intended outcome
+with the permitted intervention before dispatch; every acknowledged in-scope gap
+needs a source-backed resolution, an exact already-represented witness, or a
+specific unresolved reason naming the missing evidence, capability or permission.
+An inventory, generic NO_CHANGE account, locator or structural pass cannot prove
+substantive reconciliation. Distinguish completion of an attempt from achievement
+of the wider objective. Preserve uncertainty, accepted history and unaffected
+knowledge. Partial import is not a protocol failure; removal merely to pass a
+check is not semantic improvement.
+
+Sent the generic requirement through the existing Core task
+01a02f71-fec6-7382-9c68-c3efd3dba5d4. Core owns the acolyte skill, its tests and
+installed distribution. The request excludes runtime semantics, a semantic
+evaluator, a new mandatory report grammar, quotas and domain examples. It asks
+for focused regression evidence where the existing mechanical surface permits
+it, actual loadable-skill verification and an explicit limit where instructions
+cannot establish semantic completion. No wording-only test may be reported as
+behavioral proof. At dispatch the current acolyte skill digest is
+sha256:e20f33af0159be22bbe16877fe4c28ce038aee93dad6c713447be3da641c65c6.
+Core delivery and verification are pending, not claimed complete here.
+
+The skill-creator guidance was read in full and keeps this correction narrow:
+retain user scope, avoid turning a local failure into a universal runtime rule,
+and distinguish skill packaging checks from behavioral validation. Paper changed
+only its standing instructions, master directive/changelog and this ledger. No
+Core skill, test, runtime, manuscript, dependency, commit or ref change by this
+task. Frozen producer packets remain unchanged.
+
+Core accepted this bounded scope and will put the shared rule in acolyte with a
+short reference from malleus-dev's pre-dispatch guidance. Its neutral executable
+counterexample will distinguish successful mapping/NO_DOMAIN_CHANGE accounting
+from an unresolved relationship gap. Core explicitly confirms that runtime
+checks do not inspect task permissions or establish substantive completion.
+Implementation and installed-skill verification are still in progress.
+
+Paper-local checks: scoped diff check passes and ledger entry IDs are unique.
+The frozen manifest, candidate, selected reading, base history and before-query
+digests remain equal to their recorded values. No new runtime test or semantic
+behavior result is claimed from this documentation-only change.
+
+## E-0337, 2026-09-08, Core prevention guidance delivered and verified
+
+Core delivered commit 59277bc4e62c65e8a227c10ab9cfb7ec5a350968, tree
+c7bb7cb64ac3f902a1bd8b41c2e357b3d9d2fdb7. The test-first commit is
+4d7511fb4335dcade5189e3e420dff030d53aaa9; guidance commit is
+d1125f6a196bd7892feae4320ec22d5f2171d474. The acolyte skill owns the shared
+Outcome and permission check, its revision loop links to it, and malleus-dev
+references it before dispatch. No case-specific ontology or evaluator was added.
+
+Paper independently verified the commit/tree and current skill digests:
+acolyte a7508dee74b0b1e9e1dde8ce021e6a509408e13165081093e6497b8d9f127deb;
+dev 30ee132553f4eb42943161f858457bf6f6050d93793cd1255b1cc5006eecc96f.
+The consumed src tree, both skills, focused test files and shared history test
+helper match the delivery commit with no diff. Paper read the actual instructions,
+report and new tests, then ran:
+
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q -p no:cacheprovider tests/contract_compiler/pareto/test_adopter_completion_boundary.py tests/contract_compiler/pareto/test_capture_coverage_boundary.py
+
+Result: 8 passed in 1.30s. The real installer copies both skills byte-for-byte
+into a temporary Codex project and its cross-skill link resolves. The neutral
+adapter/compiler counterexample preserves an explicit unresolved relationship
+gap while returning NO_DOMAIN_CHANGE with no operations. This demonstrates an
+accounting limit, not automatic permission checking, source assessment or model
+obedience. The counterexample already passed before the guidance change; the
+initial failure concerned missing installed navigation, not runtime semantics.
+
+Core separately reports 115 passed and one optional private-doctrine skip in a
+clean detached clone, plus 162 ledger tests. Those broader gates were not rerun
+by paper. The report is handover/2026-09-08-adopter-completion-guidance.md.
+No global skill refresh, package release or push is claimed. The current repo
+skill is updated; old frozen producer packets and experiment pins are not.
+
+E-0336's pending-delivery status is superseded. Master remains 1.5.35 because
+this records delivery, not another author decision. The deeper representation
+discussion remains design work, not authorization for a producer, feedback return,
+ontology revision or new capture. No Core files or shared refs changed by paper.

@@ -1,0 +1,15 @@
+{
+  "schema": "paper-submission-candidate-build/v1",
+  "python": "3.10 or later, standard library only",
+  "tex_distribution": "TeX Live, pdfLaTeX and BibTeX; only distribution packages",
+  "tex_packages": ["fontenc", "inputenc", "lmodern", "geometry", "array", "booktabs", "listings", "upquote", "hyperref"],
+  "tex_search_paths": ["/Library/TeX/texbin"],
+  "executables": ["pdflatex", "bibtex"],
+  "commands": [
+    ["pdflatex", "-no-shell-escape", "-halt-on-error", "-interaction=nonstopmode", "main.tex"],
+    ["bibtex", "main"],
+    ["pdflatex", "-no-shell-escape", "-halt-on-error", "-interaction=nonstopmode", "main.tex"],
+    ["pdflatex", "-no-shell-escape", "-halt-on-error", "-interaction=nonstopmode", "main.tex"]
+  ],
+  "archive_files": ["main.tex", "body.tex", "appendix.tex", "references.bib", "main.bbl"]
+}

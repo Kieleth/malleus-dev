@@ -1,0 +1,163 @@
+\maketitle
+
+\begin{abstract}
+
+Language models can produce structured records, but well-formed output is not yet accepted knowledge. Malleus connects a compiled ontology, a source-located intermediate representation, an admission policy and an append-only semantic ledger. A knowledge graph is reconstructed from that ledger and queried with its evidence trace. We demonstrate this path with two model-produced captures of one marine geoscience article and thirty graph queries. Both histories reproduce their recorded graphs. Complete model-assisted review finds eight and eleven questions fully covered, respectively, but neither initial capture fully covers a composition question. The graph returns scoped counts, quantities, a spatial relationship and a qualified hypothesis, while preserving inspectable omissions and attribution errors. Separate amendments correct a funding attribution and add a qualified evidence link that remains insufficient. A task-directed amendment then connects two existing observations to the hypothesis, covering one composition question under source-grounded model review. The result is an executable boundary between proposals and accepted state, not a guarantee of source truth or complete extraction.
+
+\end{abstract}
+
+\section*{1. What becomes accepted}
+
+An agent maintaining a domain model needs more than plausible output. A reader must be able to inspect what the system accepted, which evidence it cites and which rules admitted it. This applies to a document's assertions as well as operational state. The accepted model is a record of commitments, not an unqualified description of reality.
+
+Malleus separates proposing knowledge from accepting it. The ontology defines the permitted structure. A history profile defines what a change means. An identified policy governs admission. Accepted changes and their evidence are retained; the graph is a replaceable projection rebuilt by replay.
+
+This paper contributes an implemented composition of those boundaries and a worked account of what survives them. Compiler and admission checks establish structural and evidence-binding compliance. Source-grounded assessment examines faithfulness. Explicit use requirements determine what counts as sufficient coverage. None establishes the others. Replay separately checks reconstruction. Keeping these distinctions visible makes a failure actionable instead of treating every poor answer as the same problem.
+
+\section*{2. Protocol}
+
+\subsection*{2.1 Ontology and history meaning}
+
+An \textbf{ontology} declares legal record types, properties, relations and controlled values. A \textbf{change set} is an immutable proposal binding ordered operations to their evidence, contract and prior state. A \textbf{ledger} retains semantic and protocol history. \textbf{Replay} reconstructs accepted state under that contract. A \textbf{locator} identifies evidence within a declared source reading. A \textbf{query} reads the replayed graph without changing accepted state.
+
+The ontology does not alone define what a ledger entry means. A source assertion, an observation and a state replacement can have similar fields but different semantics. Seed knowledge also needs an identified origin and admission. The adopter chooses a history profile before population, including the unit of change, time interpretation and allowed replacement.
+
+Here the source-assertion profile treats one document capture as an atomic assertion batch. The import is explicitly partial. Batch valid time denotes capture/import order; assertion and domain times remain in retained assertions when stated. Neither a ledger timestamp nor a sentence in an article becomes an observed event in the physical world. Correcting a document representation would therefore differ from recording a changed-world observation.
+
+\subsection*{2.2 From proposed structure to a typed change}
+
+The producer proposes a LinkML ontology using identified domain-independent roots and reusable research, metrology and chronology vocabulary. Compilation resolves the declared sources and checks the supported structural contract. It does not assess scientific adequacy.
+
+Population pairs proposed records with a document capture. Each assertion identifies a reading block, source wording, modality and the record fields it formalizes. Typed gaps describe meaning the producer cannot represent. The document adapter checks reading and capture identities, locators, source wording under the declared normalization, and references into proposed records.
+
+The adapter emits a PopulationPlan, the neutral intermediate representation. Its grammar specifies record families, properties, relationships, derivations and gaps. The compiler enforces the ontology over that representation. Preparation retains the evidence package and composes a KnowledgeChangeSet for admission. Source assertions remain retained evidence, not automatically graph nodes. Record tracing joins the projected record to its plan, capture, locator and modality.
+
+The grammar makes interpretation inspectable; it does not invent it. One sentence can map to several legal records while losing the relationship between them. A valid locator establishes where to inspect a value, not that the value follows from the cited passage.
+
+\subsection*{2.3 Admission, replay and querying}
+
+The structural admission bundle checks the prepared change against the exact base state, retained source/evidence identities and structural application. Its outcomes are derived mechanically, not supplied as successful checks by the model. Grouped admission is atomic: a refused application cannot leave a partially accepted graph. Evidence retained during preparation may remain after a later refusal; retained evidence and accepted state are distinct.
+
+The experiment then discards live state, reopens the ledger and replays it. Equality of the receipt and exported records checks reconstruction. Replay does not regenerate model output: it reproduces an accepted omission or wrong attribution as faithfully as a correct record.
+
+Queries use public graph reads and return typed fields, stored prose and actual relationship witnesses. Shared provenance does not create a semantic join. Reading a qualification in a text field does not create a typed edge. A missing answer remains missing rather than being completed from the source during query execution.
+
+\section*{3. Experiment}
+
+\subsection*{3.1 Source and captures}
+
+The source is Yu et al., \emph{Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge}~\cite{yu2025deep}, published in \emph{Nature Communications} in 2025. One pinned text-layer reader projects the eleven-page PDF into 186 identified blocks. Figures, raster images, tabular layout and supplements are excluded from interpretation.
+
+Captures A and B use independently proposed ontologies and populations from fresh Opus 5 sessions. The producer inputs contain the selected reading and identified Malleus instructions, not evaluation questions or previous answers. Isolation is a declared task boundary over shared tools and files, not an operating-system sandbox. These are author-selected engineering cases from a development series, not a random sample of model performance.
+
+\subsection*{3.2 Queries and source review}
+
+Thirty questions cover direct facts, relationships, quantities, qualifications and composition, five each, plus three unavailable-information controls and two paraphrases. They were frozen after the captures. Query programs were developed retrospectively with access to the graphs. This is an exploratory demonstration, not a prospective accuracy benchmark.
+
+Selectors use declared fields and vocabulary, never expected answer values, population identifiers or source locators. Quantities come from numeric fields; alternative candidates remain separate. Each query run first reopens its history and checks graph and receipt equality. The guarded query region records zero source-file reads, network operations and named embedding imports. This describes those Python executions, not every possible host operation.
+
+One fresh model-assisted reviewer per capture inspects every question and distinct central witness, the record or relation carrying an answer. Review checks source support, coverage of required semantics, and whether answering rows are linked. A third reviewer independently rechecks six preselected examples. Reviewers can inspect exact source blocks and ontology definitions; queries cannot use that evidence to supply missing answers.
+
+COVERED means every listed semantic has a source-supported answering row; PARTIAL means some do; NONE means none do. These are coverage labels, not accuracy scores. COVERED can coexist with several candidates or unlinked rows. Support is assessed over the complete projected witness. A PARTIAL witness contributes none of its fields to coverage, even when some are correct. NONE therefore need not mean an empty output or absence of information in the source. The validator checks review consistency and locator resolution, not scientific judgment. The review is model-assisted, not an expert annotation study.
+
+\section*{4. Results}
+
+\subsection*{4.1 Reconstructed graphs and answer coverage}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+Both histories reopen to their recorded graphs and receipts. The first four numeric columns describe graph and ledger structure; the last three summarize each complete thirty-question review.
+
+{\scriptsize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr 0.14\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.1\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.08\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.12\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.14\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.15\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.14\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.13\linewidth-2\tabcolsep\relax}}
+\toprule
+\textbf{Capture} & \textbf{Entities} & \textbf{Events} & \textbf{Relations} & \textbf{Ledger events} & \textbf{COVERED} & \textbf{PARTIAL} & \textbf{NONE} \\
+\midrule
+Capture A & 426 & 1 & 55 & 14 & 8 & 14 & 8 \\
+Capture B & 508 & 1 & 26 & 14 & 11 & 9 & 10 \\
+\bottomrule
+\end{tabular}}
+\end{minipage}\par\medskip
+
+Reviews inspect 78 and 63 distinct central witnesses, respectively. Both captures account for all reading blocks, but neither fully covers any of the five composition questions. Block accounting is not semantic completeness.
+
+Three controls deliberately request information unavailable in the selected reading. Their NONE labels are not failed positive questions. Both paraphrases agree with their originals. Excluding controls, six of twenty-five questions are fully covered in A and nine in B. The counts describe these captures and reviews, not a statistical comparison.
+
+\subsection*{4.2 Questions, returned facts and missing information}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+These six examples were selected before review. Questions are shortened below; the frozen question set preserves their full wording. A and B refer to the original captures, before amendments. Source references use PDF page and text-layer block: p6/b2 means page 6, block 2. Displayed answers summarize returned fields, not a separate generated answer. Appendix A prints selected record extracts, source excerpts and review evidence.
+
+{\scriptsize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr 0.3\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.12\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.12\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.46\linewidth-2\tabcolsep\relax}}
+\toprule
+\textbf{Question, shortened} & \textbf{A} & \textbf{B} & \textbf{Returned facts and coverage boundary} \\
+\midrule
+How many seismometers were deployed? (CQ-T1-02) & COVERED & COVERED & Count 19, with ocean-bottom instrument and deployment scope. All three requested items are present. The 17 useful instruments are a different population (p6/b2). \\
+Which subsection is bounded by the fault, and where is its core complex? (CQ-T2-01) & PARTIAL & COVERED & Both return RC1 BOUNDED\_\allowbreak{}BY detachment fault. A omits the core complex's side of the axis; B's returned statement places it east of the axis (p1/b5). \\
+How much CO2 is in RC2 primary melts, in what unit, measured or calculated? (CQ-T3-02) & COVERED & COVERED & One Ba-based estimate supplies 0.4 to 3.0 wt\%, RC2 primary-melt scope and CALCULATED status (p8/b7). Six candidates remain, not one unique estimate. \\
+Which earthquake explanation is preferred, and how certain is it? (CQ-T4-01) & COVERED & COVERED & CO2 degassing from ascending melt beneath RC2; PREFERRED and HYPOTHESISED. These fields identify the authors' proposal, not an established cause (p5/b2). \\
+Which volatile-content and earthquake-depth observations support degassing? (CQ-T5-01) & PARTIAL & PARTIAL & Only the preferred mechanism returns. No supporting observation, volatile estimate, observed depth or SUPPORTS edge is returned, although the source discusses them (p2/b6, p5/b5-b6). \\
+What sulfur and chlorine concentrations are reported? (CQ-C-01) & NONE & NONE & No sulfur/chlorine values are returned. Source review finds none on the selected text surface. This is an unavailable-information control, not a failed positive question. \\
+\bottomrule
+\end{tabular}}
+\end{minipage}\par\medskip
+
+\textbf{A covered answer with limits.} In B, the count record has count=19 and count\_\allowbreak{}scope identifying the deployed OBS network. The scope supplies the instrument and deployment meaning in prose; there is no reconstructed deployment event. Likewise, the CO2 answer preserves a separate Rb-based estimate of 0.5 to 2.8 wt\%. COVERED means a supported, properly scoped answer is available, not that the query resolved all six candidates to one concentration.
+
+\textbf{Same record, different question.} B's preferred-hypothesis record supplies the explanation, RC2 subject, PREFERRED disposition and HYPOTHESISED modality. That covers CQ-T4-01. Returning the same record for CQ-T5-01 covers only the mechanism, not the observations or their evidential connection. A correct claim can therefore answer one question completely and another only partially.
+
+\subsection*{4.3 What fails, and where}
+
+Both captures retain the passage connecting the degassing calculation to deep microseismicity, but neither proposes its evidential relationship. Predicate counts agree between population plans and replayed graphs. In these cases, the missing SUPPORTS path is a representation omission, not a lost replay edge.
+
+Source faithfulness can fail even when values have locators. At p3/b2, the authors report that no active hydrothermal vents have been observed on RC2's axis to date. A's claim name instead asserts their absence, with NEGATED modality but no observation-to-date restriction. Review marks that witness PARTIAL: absence of observations has become absence of vents. A valid locator and a negative token do not preserve that distinction. Funding supplies a second example below, where correct and incorrect attributions share one relation.
+
+Query reachability is a different limitation: a correctly stored value may be missed when its subject is on a linked record. Query-only corrections can recover such content without changing the ledger, but cannot supply absent relationships. The evidence distinguishes these causes rather than treating all missing answers as extraction failures.
+
+\subsection*{4.4 Two repairs through the same path}
+
+Two fresh Sol producers receive separate findings about Capture B, its accepted records, reading and ontology, but no queries or evaluation answers. This is feedback-guided repair, not a matched model comparison. Each case starts from a copy of B's history; source, ontology and queries stay fixed.
+
+\textbf{Funding: an admitted error becomes a supported answer.} CQ-T2-05 asks which named grant agreement is attributed to which author. B originally returns an ERC-to-Satish C. Singh FUNDS relation carrying both 339442\_\allowbreak{}TransAtlanticILAB and an ANR award. The source assigns the ANR award to ISblue, not this ERC relation (p10/b44). The relation is PARTIAL, and the question is NONE despite returning three rows: its one relevant witness mixes correct and incorrect attribution; the other two rows concern different awards. The amendment supersedes that relation with the same endpoints and only 339442\_\allowbreak{}TransAtlanticILAB. Independent review now finds the funding record, identifier, person and attribution covered. The previous relation remains in history. This repairs the named agreement, not all funding mentioned in the paragraph.
+
+\textbf{Evidence: a supported addition still leaves a partial answer.} The second amendment adds a SUPPORTS relation from approximately 25 km modelled saturation depth to the preferred hypothesis (p5/b6). This is not an observed earthquake depth. Independent review accepts it as the authors' qualified argument, not proof of the cause. The unchanged CQ-T5-01 query reaches the model result and hypothesis, but not the volatile-content estimates or observed earthquake depths. Appendix A.3 gives the exact fields and requirement-level assessment.
+
+The evidence query still does not assemble the geochemical and seismic evidence, so its coverage remains PARTIAL. Both amendments pass ordinary admission and ledger-only replay, preserving unrelated records and prior history. In each case, 29 of 30 query outputs remain identical. Each producer's second assessment requests no further change within its narrow finding; the incomplete composition answer shows why that is not completeness. Original review counts remain unchanged.
+
+\subsection*{4.5 One task-directed composition test}
+
+A separate fresh Sol producer receives CQ-T5-01 and its five requirements, but no expected values or query code. Starting again from original B, it may only add relations between existing entities and the existing hypothesis. Source, ontology and queries remain fixed. Its first proposal adds two SUPPORTS edges; no structural retry or semantic-review feedback is needed.
+
+The unchanged query now links calculated RC2 melt CO2 of 0.4 to 3.0 wt\% and approximately 10 to 20 km observed microseismicity to the preferred hypothesis. An independent model-assisted review finds both relations SUPPORTED and all five requirements COVERED. Observation here includes a reported derivation, not only direct measurement. The target remains PREFERRED and HYPOTHESISED; SUPPORTS expresses the authors' argument, not established causality.
+
+All 29 other outputs remain identical. The amendment admits, reopens and reproduces its complete ledger and artifacts. Appendix B prints both paths, the requirement-level assessment and omitted qualifications. This is one bounded sufficiency gain, not a controlled test of question conditioning, general completeness or a replacement for the original review totals.
+
+\section*{5. Related work}
+
+Schema-guided extraction is established in SPIRES; OntoLogX combines ontology-grounded extraction with retrieval and iterative correction. Malleus claims neither structured generation nor diagnostic loops as new. SPIRES~\cite{caufield2024spires}, OntoLogX~\cite{cotti2026ontologx}.
+
+PROV-O standardizes provenance relationships, OTTR supplies reusable graph patterns, and Nexus combines validation, provenance, revisions and indexed views. ESAA separates agent intentions from validation, event persistence and state projection. These are direct precedents for the ingredients composed here. The demonstrated contribution is the typed proposal-to-evidence-to-replay path and its measured failure boundaries, not priority over those mechanisms. PROV-O~\cite{lebo2013provo}, OTTR~\cite{skjaeveland2024reasonable}, Nexus~\cite{nexusdelta}, ESAA~\cite{santos2026esaa}.
+
+The experiment has no matched RAG baseline. An embedding-free query execution does not establish better answers, cost or scale. Retrieval could locate evidence for a proposal without determining whether it becomes accepted state. Lewis et al.~\cite{lewis2020retrieval}.
+
+\section*{6. Limits and conclusion}
+
+One article and two selected captures do not establish general extraction quality. Retrospective queries and model-assisted review limit causal and scientific interpretation. Agreement on six rechecked examples does not estimate reviewer reliability. Source support concerns the selected reading, not independent geoscientific truth.
+
+Single-process replay does not demonstrate distributed durability, concurrent writers or cross-language conformance. Accepted interpretation is inspectable, not guaranteed correct.
+
+The amendment loop is not a general semantic repair system. Its unchanged source establishes neither changed-world reasoning nor a reliable general stopping rule. Robotics simulation is a candidate application, not evidence in this paper.
+
+The present result is a complete document-to-graph path that returns useful scoped facts and exposes missing arguments. Reproducibility, source support and answer sufficiency remain separate, testable properties.
+
+\section*{Evidence and supplementary experiments}
+
+Capture A is run-20 and B is run-21, pinned to Core c95dba7. The complete review binds all results. Human ratification of these selective reviews is pending. The amendment record includes the corrected coordinator instruction, producer refusal, exact replays and preliminary review. The task-directed composition record retains its separate condition and independent assessment. Its Codex-authored Markdown review uses v3 judgment meanings, not the primary review's full validator-certified record format.
+
+Separate query corrections, subject-query tests and an unmatched Sol-01 capture, with 0/4/26 coverage, do not replace primary results.
+
+Two further question-blind Sol populations used B's fixed ontology and unchanged queries. Complete reviews yield 4/0/26 and 0/3/27 (COVERED/PARTIAL/NONE). The first covers one composition question through stored prose despite having no relations. These fixed-schema executions test a separate condition, not ontology-acquisition replicates or a model ranking.
+
+Source, reading, ontology, ledger with replay receipt, and query binding are the five identity groups. Source-bearing artifacts remain private: public files alone cannot reproduce the experiment. Replaying retained output is distinct from generating it again.
