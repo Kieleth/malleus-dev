@@ -7,10 +7,14 @@ from enum import Enum, auto
 from hashlib import sha256
 import json
 from types import MappingProxyType
-from typing import Mapping
+from typing import TYPE_CHECKING, Mapping
+
+if TYPE_CHECKING:
+    from malleus._contract_pipeline.view import ContractView
 
 
 _MACHINE_GRAMMAR = "malleus.protocol-machine/private-v0"
+_TRANSITION_MACHINE_GRAMMAR = "malleus.protocol-machine/private-v1"
 _POLICY_GRAMMAR = "malleus.policy-program/private-v0"
 _PROFILE_GRAMMAR = "malleus.normative-admission-profile/private-v0"
 _PARTIAL_CONTRACT_GRAMMAR = "malleus.partial-effective-contract/private-v0"
@@ -331,14 +335,48 @@ def _resolve_operands(
     return frozenset(refs)
 
 
+def _validate_admission_rules(value: object) -> None:
+    rules = _object(value, "admission rules must be an object")
+    if set(rules) != {"history_profile_identity", "instructions"}:
+        raise ValueError("admission rule fields are not closed")
+    if not _is_digest(rules["history_profile_identity"]):
+        raise ValueError("admission rules require an exact history-profile digest")
+    instructions = _array(
+        rules["instructions"], "admission instructions must be an array"
+    )
+    if not instructions:
+        raise ValueError("admission instructions must be nonempty")
+    for raw in instructions:
+        instruction = _object(raw, "admission instruction must be an object")
+        if set(instruction) != {"opcode", "selection", "role", "match", "refusal"}:
+            raise ValueError("admission instruction fields are not closed")
+        for item in instruction.values():
+            _text(item, "admission instruction values must be nonempty strings")
+        if instruction["opcode"] != "REQUIRE_TYPES_IN_ROLE":
+            raise ProtocolMachineProgramRefusal(
+                ProtocolMachineProgramRefusalReason.UNSUPPORTED_OPCODE,
+                f"unsupported admission opcode: {instruction['opcode']}",
+            )
+        if instruction["selection"] != "REPLACEMENTS":
+            raise ValueError("unsupported admission selection")
+        if instruction["match"] not in {"EXACT", "SUBTYPE"}:
+            raise ValueError("unsupported admission type matching")
+
+
 def _validate_machine(data: dict[str, object]) -> frozenset[str]:
-    if set(data) != _ROOT_FIELDS:
-        raise ValueError("machine root fields are not closed")
-    if data.get("grammar") != _MACHINE_GRAMMAR:
+    grammar = data.get("grammar")
+    if grammar not in {_MACHINE_GRAMMAR, _TRANSITION_MACHINE_GRAMMAR}:
         raise ProtocolMachineProgramRefusal(
             ProtocolMachineProgramRefusalReason.UNSUPPORTED_GRAMMAR,
             "unsupported machine grammar",
         )
+    fields = _ROOT_FIELDS | (
+        {"admission_rules"} if grammar == _TRANSITION_MACHINE_GRAMMAR else set()
+    )
+    if set(data) != fields:
+        raise ValueError("machine root fields are not closed")
+    if grammar == _TRANSITION_MACHINE_GRAMMAR:
+        _validate_admission_rules(data["admission_rules"])
     capabilities = _array(data["capabilities"], "capabilities must be an array")
     if capabilities:
         raise ProtocolMachineProgramRefusal(
@@ -462,6 +500,66 @@ class ProtocolMachineProgram:
             event_names=frozenset(data["events"]),
             policy_refs=refs,
         )
+
+
+@dataclass(frozen=True, slots=True)
+class _TransitionInput:
+    """Verified owning-history input, not a persisted artifact or caller receipt."""
+
+    change_identity: str
+    contract_identity: str
+    history_profile_identity: str
+    base_coordinates: tuple[object, ...]
+    # Ordinal, new record ID, prior type, new type; declared operation order.
+    replacements: tuple[tuple[int, str, str, str], ...]
+    ontology_roles: Mapping[str, tuple[str, ...]]
+
+
+def _evaluate_transition_rules(
+    program: ProtocolMachineProgram,
+    transition: _TransitionInput,
+    contract: ContractView,
+) -> tuple[str, tuple[tuple[int, str], ...]] | None:
+    """Pure bounded type predicates. No writer, effects or external checks."""
+    rules = program.data["admission_rules"]
+    if rules["history_profile_identity"] != transition.history_profile_identity:
+        raise MachineArtifactRefusal(
+            MachineArtifactRefusalReason.IDENTITY_MISMATCH,
+            "transition history-profile identity differs from the selected rule",
+        )
+    resolved_roles = {}
+    for instruction in rules["instructions"]:
+        role = instruction["role"]
+        if role not in transition.ontology_roles:
+            raise MachineArtifactRefusal(
+                MachineArtifactRefusalReason.MALFORMED_ARTIFACT,
+                f"unknown history-profile role: {role}",
+            )
+        names = transition.ontology_roles[role]
+        unknown = tuple(name for name in names if not contract.has_type(name))
+        if unknown:
+            raise MachineArtifactRefusal(
+                MachineArtifactRefusalReason.MALFORMED_ARTIFACT,
+                f"unresolved types in history-profile role {role}: {unknown}",
+            )
+        resolved_roles[role] = tuple(contract.get_type(name).name for name in names)
+    for instruction in rules["instructions"]:
+        permitted = resolved_roles[instruction["role"]]
+        refused = []
+        for ordinal, record_id, prior_type, new_type in transition.replacements:
+            if not all(
+                any(
+                    contract.get_type(actual).name == expected
+                    if instruction["match"] == "EXACT"
+                    else contract.is_subtype_of(actual, expected)
+                    for expected in permitted
+                )
+                for actual in (prior_type, new_type)
+            ):
+                refused.append((ordinal, record_id))
+        if refused:
+            return instruction["refusal"], tuple(refused)
+    return None
 
 
 @dataclass(frozen=True, slots=True)

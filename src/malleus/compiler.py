@@ -236,6 +236,36 @@ def _load_structural_history_bundle() -> StructuralHistoryBundle:
 STRUCTURAL_HISTORY_BUNDLE = _load_structural_history_bundle()
 
 
+def _structural_normative_profile(
+    program: ProtocolMachineProgram | None,
+) -> NormativeAdmissionProfile:
+    """Permit only the explicit pure-rule extension of Core's exact machine."""
+    bundle = STRUCTURAL_HISTORY_BUNDLE
+    if program is None:
+        return bundle.normative_profile
+    try:
+        if not isinstance(program, ProtocolMachineProgram):
+            raise ValueError("transition_program must be a ProtocolMachineProgram")
+        rebuilt = ProtocolMachineProgram.from_bytes(program.canonical_bytes)
+        if rebuilt != program:
+            raise ValueError("transition program fields differ from its bytes")
+        base = json.loads(program.canonical_bytes)
+        if base["grammar"] == "malleus.protocol-machine/private-v1":
+            del base["admission_rules"]
+            base["grammar"] = "malleus.protocol-machine/private-v0"
+        if _canonical(base) != bundle.protocol_machine_program.canonical_bytes:
+            raise ValueError("transition program changes the structural protocol")
+        return compose_normative_profile(
+            protocol_machine_program=program,
+            policy_programs=dict(bundle.normative_profile.policy_programs),
+            capability_refs=(),
+        )
+    except ValueError as error:
+        raise KnowledgeChangeRefusal(
+            KnowledgeChangeRefusalReason.IDENTITY_MISMATCH, str(error)
+        ) from error
+
+
 def _machine_event(event_type: str, **payload: object) -> bytes:
     return _canonical({"event_type": event_type, "payload": payload})
 
@@ -324,11 +354,20 @@ def create_structural_history(
     compilation: ValidatedContractCompilation,
     transaction_time: str,
     actor_id: str,
+    transition_program: ProtocolMachineProgram | None = None,
 ) -> KnowledgeChangeHistory:
-    """Create and bootstrap a history under Core's structural policy."""
+    """Create a history under Core's structural policy and optional pure rules.
+
+    ``transition_program`` may select the private-v1 admission-rule section on
+    the exact installed structural machine. Other machine changes refuse. Its
+    selected canonical history profile must be retained in each change's
+    evidence before admission. Omission keeps the unmodified private-v0 bundle;
+    it is not fallback for a malformed or unsupported program.
+    """
 
     if not isinstance(compilation, ValidatedContractCompilation):
         raise TypeError("compilation must be a ValidatedContractCompilation")
+    normative_profile = _structural_normative_profile(transition_program)
     ledger_path = Path(path)
     if ledger_path.exists() and ledger_path.stat().st_size:
         raise KnowledgeChangeRefusal(
@@ -337,7 +376,7 @@ def create_structural_history(
         )
     partial = compose_partial_effective_contract(
         validated_fact_set_sha256=compilation.artifact.validated_fact_set_sha256,
-        normative_profile=STRUCTURAL_HISTORY_BUNDLE.normative_profile,
+        normative_profile=normative_profile,
     )
     history = KnowledgeChangeHistory(
         ledger_path,
@@ -447,7 +486,8 @@ def admit_structural_change(
 
     The successful check event is generated here and is persisted only if the
     same candidate batch passes base, retained-closure, and graph application
-    validation. The caller cannot supply a check outcome.
+    validation, including any explicitly selected pure transition rules.
+    The caller cannot supply a check outcome.
     """
 
     if not isinstance(history, KnowledgeChangeHistory):
@@ -460,15 +500,17 @@ def admit_structural_change(
             PopulationPlanRefusalReason.MALFORMED_PLAN,
             "NO_DOMAIN_CHANGE has no change set to admit",
         )
+    selected = _structural_normative_profile(
+        history.partial_contract.normative_profile.protocol_machine_program
+    )
     if (
-        history.partial_contract.normative_profile.identity
-        != STRUCTURAL_HISTORY_BUNDLE.normative_profile.identity
+        history.partial_contract.normative_profile.identity != selected.identity
         or history.binding.identity
         != STRUCTURAL_HISTORY_BUNDLE.history_binding.identity
     ):
         raise KnowledgeChangeRefusal(
             KnowledgeChangeRefusalReason.IDENTITY_MISMATCH,
-            "history does not use the shipped structural admission bundle",
+            "history does not use the structural admission bundle or its pure-rule extension",
         )
     current = history.replay()
     if current.receipt.identity != preparation.retention_replay.receipt.identity:
