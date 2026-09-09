@@ -1,5 +1,8 @@
 # Frozen Shop validation, 2026-09-08
 
+This file is chronological evidence. Earlier pending statuses describe their
+frozen boundary; the connected-run successor at the end records current work.
+
 Source and probe implementation:
 `5ea6c9031604916472a5402724bd09968de70905`, tree
 `685e09249865b924fb0e5477a4c4763587b71bbe`.
@@ -80,3 +83,59 @@ identities, replay parity, matching controls, refusal atomicity and limitations.
 The earlier structural-only evidence stays frozen. The missing Core capability
 is closed; final Shop history semantics and the full connected population are
 still pending selection and implementation respectively.
+
+## Ontology-led connected run
+
+The user selected the ontology-led approach after rejecting the exact-concrete-
+type recommendation. RED `dd36af1e` commits the modeling decision and eleven
+expected missing-module errors. GREEN is
+`90c3aeee0b04335a6eb6e9bf11f93c200b2d7dc4`; its runtime, ontology, profile,
+mapping and instruction are all Shop-owned. Guard commit
+`f53b48c16931003c691d46d79eca60bb0acdf159`, tree
+`0fc7a4e871b456a1adfed3401a3f538e5824fbcc`, adds tests without runtime changes.
+Core's unrelated closing documentation commit falls between RED and GREEN;
+it is not a Shop change. No old probe bytes were replaced.
+
+The frozen implementation uses the delivered Core transition mechanism,
+unchanged since `2ef5442e`. A local detached clone of exact `f53b48c1` retained
+its Git object history and excluded all shared worktree dirt. Python imports
+resolved under that clone via `PYTHONPATH=src:.`; dependencies came from the
+existing repository `.venv`, with no installation. Bytecode and pytest cache
+writes were disabled. The exact command was:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q --tb=short -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop tests/contract_compiler/pareto/test_transition_admission.py
+```
+
+Result: **296 passed, zero skips**, 122.83 seconds. The selector includes the
+13 connected-run tests at that commit. The detached checkout remained clean.
+This is a Shop/transition regression gate, not the full repository or package
+gate. Scoped Ruff and format checks pass. The public schema check and its
+intentional notes are recorded in [MALLEUS_INQUISITION.md](MALLEUS_INQUISITION.md).
+
+A separate run from the same detached source produced 895,225 ledger bytes,
+121 protocol events, 21 domain changes, 107 historical records and 106 current
+records. Formatting-only successor `88f8889d` wraps the retained-profile lookup;
+no behavior changes. Its detached rerun produces 895,257 bytes with the same
+domain results. Source attestation changes because the adapter itself is
+retained. Those final identities and output joins are in
+[run_receipt.json](run_receipt.json). Repetition and reopen tests agree. The
+maintained reader was opened at the final checkpoint, so this result does not
+claim incremental advancement across every row. That broader observation is
+still distinct from the earlier two-row incremental probe.
+
+All 21 retained table rows and 123 nonempty fields have plan derivations or
+declared gaps. Every historical record traces back to the retained table.
+The source mapper is tested with independent answer-file reads forbidden.
+The test suite separately specifies quantities, physical identity, invoice and
+payment joins, missing invoice values, malformed quantity inputs and same-owner
+predecessor selection. A synthetic occurrence replacement is refused after
+successful preparation with the admission-boundary bytes unchanged.
+
+The final documentation/receipt addition also exercises the documented read-only
+CLI against that exact history and binds the receipt to input bytes. It changes
+no implementation. Test counts for overlapping selectors must not be summed.
+
+No source authenticity, human semantic ratification, universal identity policy,
+business-rule eligibility, domain event ordering, authorization, action,
+incremental performance, installed-package or release result is claimed.

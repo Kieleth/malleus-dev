@@ -141,9 +141,7 @@ def test_reader_joins_the_connected_story_without_inventing_invoice_values(
         assert "amount" not in invoice
 
 
-def test_reopen_incremental_and_repeat_preserve_exact_account(
-    subject, executed, tmp_path
-):
+def test_reopen_reader_and_repeat_preserve_exact_account(subject, executed, tmp_path):
     path, result = executed
     reopened = api.KnowledgeChangeHistory.reopen(path).replay()
     reader = api.KnowledgeHistoryProjection.open(path)
@@ -159,6 +157,34 @@ def test_reopen_incremental_and_repeat_preserve_exact_account(
     repeated = subject.run_story(second)
     assert second.read_bytes() == path.read_bytes()
     assert subject.explain(repeated) == subject.explain(result)
+
+
+def test_read_only_cli_reproduces_the_recorded_receipt(subject, executed):
+    path, replay = executed
+    receipt = json.loads((subject.HERE / "run_receipt.json").read_bytes())
+    before = path.read_bytes()
+    result = subprocess.run(
+        [sys.executable, "-m", MODULE, str(path), "--reopen"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    output = json.loads(result.stdout)
+    assert path.read_bytes() == before
+    assert (
+        output["history_sha256"] == receipt["ledger_sha256"] == subject.digest(before)
+    )
+    assert output["ledger_head"] == receipt["ledger_head"] == replay.ledger_head
+    assert output["receipt"] == receipt["replay_receipt"] == replay.receipt.identity
+    assert output["changes"] == receipt["domain_changes"]
+    assert output["historical_records"] == receipt["historical_records"]
+    assert len(before) == receipt["ledger_bytes"]
+    assert {k: len(v) for k, v in output["graph"].items()} == receipt["current_records"]
+    for key, value in receipt["account"].items():
+        assert output["account"][key] == value
+    for relative, expected in receipt["input_sha256"].items():
+        assert subject.digest((subject.HERE / relative).read_bytes()) == expected
 
 
 @pytest.mark.parametrize("text", ["one Y", "1·Y, 2·Y", "0·Y", "1·", "1.5·Y"])

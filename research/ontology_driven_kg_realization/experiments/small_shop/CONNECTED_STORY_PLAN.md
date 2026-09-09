@@ -2,7 +2,8 @@
 
 Status: execution approved by Luis on 2026-09-08. Shop owns the example only.
 Any missing Core contract must be requested from Core and delivered there.
-Unresolved history semantics remain an explicit selection before population.
+The ontology-led history choice is selected in `connected_story/MODEL.md`.
+Connected Table 1 population is implemented; rule-based explanation remains next.
 
 This task owns the Shop example as a Malleus adopter. It does not own Core,
 the paper task, Robotics, or Semantic Re-entry. This is one Shop planning
@@ -27,14 +28,17 @@ not establish that the first is a faithful or complete interpretation.
 
 ## Baseline and ownership
 
-Use released Core `v0.14.0` as the proposed execution baseline:
+The original source/probe baseline was released Core `v0.14.0`:
 
 - Commit: `e2b9e77912f9b36fdbfe2fca310548a789bffb4d`.
 - Tree: `162325eb0048816654d2df5b6b0f00270d06385d`.
 - Planning checkout observed at `55c038438ed67197b7e3345b9c80a885a7b6cf17`.
 
-The later local Re-entry integration is not part of that release and is not a
-dependency of this plan. Runtime version changes require an explicit rebind.
+The ontology-led connected successor uses the exact later coordinate in
+[`connected_story/run_receipt.json`](connected_story/run_receipt.json), including
+Core's delivered state-category restriction. Earlier release receipts are not
+rebound. The later local Re-entry integration is not part of that release and
+is not a dependency of this plan. Runtime version changes require an explicit rebind.
 This planning pass inspected documents, source artifacts and tests; it did not
 rerun the release or Shop suites.
 
@@ -335,3 +339,19 @@ population, not chosen opportunistically to make a test pass.
   Core's missing executor dependency is resolved. The recommended first Shop
   rule allows only explicitly named state types; Luis's selection remains
   pending before the final connected ontology/profile and full population.
+- 2026-09-08: Luis requested reconsideration against the original goals, then
+  accepted the ontology-led recommendation. This supersedes the immediately
+  preceding exact-concrete-type recommendation. One abstract Shop recorded-state
+  category owns the distinction, and the selected program uses subtype matching.
+  The earlier profiles and probes remain unchanged. No new Core behavior was
+  requested or implemented.
+- 2026-09-08: RED `dd36af1e` records the model and 11 missing-consumer errors.
+  GREEN `90c3aeee` builds the new source-produced history over all 21 retained
+  Table 1 occurrences; guard commit `f53b48c1` adds same-owner predecessor and
+  executable schema-command checks. The [run receipt](connected_story/run_receipt.json)
+  binds 123 accounted fields, 21 admitted changes, current and historical state,
+  participant joins and exact reconstruction. This is the connected table
+  population, not completion of the whole five-deliverable milestone.
+  Context remains retained evidence. Next is the declared customer/payment
+  explanation and its incomplete-evidence controls; no unpaid balance, shipment
+  eligibility, authorization or domain order is inferred by this run.

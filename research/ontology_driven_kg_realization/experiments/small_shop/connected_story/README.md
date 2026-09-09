@@ -1,9 +1,40 @@
 # Connected Shop, source boundary first
 
 This is the new Shop adopter project. It does not replace the frozen predecessor
-examples. Core baseline is released `v0.14.0`; no Core source is modified here.
+examples. The original source/probe baseline is released `v0.14.0`; the connected
+successor consumes Core's later selected transition rule at the exact coordinate
+in [run_receipt.json](run_receipt.json). No Core source is modified here.
 
-The first slice retains all 21 rows of Fahland's Table 1, its exact published
+## Current connected run
+
+The [selected ontology-led model](MODEL.md) now drives one source-produced
+history across all 21 retained table rows. It records both orders, both supplier
+orders, five distinct units, invoices, payment and all occurrences. B's current
+quantity is two; its quantity-one state is retained as superseded. The reader
+joins P1 to both invoices and each packed order to its physical units through
+their recorded occurrences. I2's changed value remains unknown.
+
+Run from the repository's declared development environment, using a new output
+path. The first command creates the retained history and prints its graph and
+account. The second reads that file without writing it:
+
+```bash
+PYTHONPATH=src:. .venv/bin/python -m research.ontology_driven_kg_realization.experiments.small_shop.connected_story.run /tmp/shop-connected-history.jsonl
+PYTHONPATH=src:. .venv/bin/python -m research.ontology_driven_kg_realization.experiments.small_shop.connected_story.run /tmp/shop-connected-history.jsonl --reopen
+```
+
+The run is 21 domain changes expressed by 121 protocol ledger events. It has
+107 historical records, 106 current records and three explicit source gaps.
+These counts include the qualified participation links; they are not a semantic
+completeness score. Exact reproducibility coordinates are in the
+[receipt](run_receipt.json), and the [self-check](MALLEUS_INQUISITION.md) separates
+mechanical guarantees from source interpretation.
+
+Shipment eligibility is explicitly `NOT_EVALUATED`. The context passages are
+retained evidence, not yet a checked customer/payment rule. This completes the
+connected table population, not every deliverable in the broader Shop plan.
+
+The source slice retains all 21 rows of Fahland's Table 1, its exact published
 image, and four selected context excerpts. [source_boundary.json](source_boundary.json)
 binds the bytes and accounts for each column. [table-1.png](sources/table-1.png)
 is the independent visual reference for the transcription, not generated from
@@ -27,7 +58,7 @@ The inventory prints one locator and planned disposition per nonempty table
 field. It checks exact source hashes, omitted or duplicated rows, field closure
 and identifier-list shape. It does not claim that the planned records exist.
 Context excerpts remain evidence and rule inputs, not domain facts admitted by
-this command. A human has not yet ratified the transcription or its interpretation.
+the inventory command. A human has not yet ratified the transcription or its interpretation.
 The human-readable [coverage table](SOURCE_COVERAGE.md) separates what each row
 contains from what the connected run still needs to build. Exact test and replay
 receipts are in [VALIDATION.md](VALIDATION.md).
@@ -81,12 +112,12 @@ To reproduce only the compatibility probe, pass a new ledger path:
 PYTHONPATH=src:. .venv/bin/python -m research.ontology_driven_kg_realization.experiments.small_shop.connected_story.history_probe /tmp/shop-history-probe.jsonl
 ```
 
-The runner retains printed source times as text. Its provisional `NONE_STATED`
-choice makes no calendar-time claim; final handling of partial source dates is
-part of the pending Shop history decision. It also reuses the predecessor's
+The earlier probe runner retains printed source times as text. Its provisional `NONE_STATED`
+choice makes no calendar-time claim; the selected connected successor retains
+that bounded choice explicitly. It also reuses the predecessor's
 `SupplierOrderState.source_occurrence_id` field rather than silently changing
-that established vocabulary in the probe. The final model must state whether
-it preserves that domain-occurrence reference or relies solely on public trace.
+that established vocabulary in the probe. The connected model retains the
+domain-occurrence reference and uses public trace for source provenance.
 
 ## Core restriction delivered, new witness
 
@@ -95,4 +126,6 @@ transition rule in a new history. State correction succeeds, occurrence
 replacement refuses, and full replay, incremental replay and reopen agree.
 Both exact and subtype matching are tested. The earlier structural-only probe
 above retains its original behavior; no old receipt is rebound. The remaining
-choice is the Shop policy, not an unresolved Core implementation.
+choice was the Shop policy, not an unresolved Core implementation. The later
+selection in MODEL.md uses one ontology state category and subtype matching;
+the two old probes keep their original meaning and receipts.

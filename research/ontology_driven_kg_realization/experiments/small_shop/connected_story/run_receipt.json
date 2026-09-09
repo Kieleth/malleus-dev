@@ -1,0 +1,46 @@
+{
+  "purpose": "SHOP_CONFORMANCE_RECEIPT_NOT_A_PROTOCOL_RECORD",
+  "implementation_commit": "88f8889db67214ef5d8a7466d0041a609a6e6bf5",
+  "audit_commit": "88f8889db67214ef5d8a7466d0041a609a6e6bf5",
+  "audit_tree": "325291abfa5f7d1d136f1ccf74b2cf37e2061ffe",
+  "source_boundary": "shop-connected-table1-v1",
+  "source_rows": 21,
+  "nonempty_source_fields_accounted": 123,
+  "domain_changes": 21,
+  "protocol_ledger_events": 121,
+  "historical_records": 107,
+  "current_records": {"entities": 23, "events": 21, "event_participations": 62, "relations": 0, "signals": 0},
+  "ledger_bytes": 895257,
+  "ledger_sha256": "sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe",
+  "ledger_head": "sha256:0f33125b77cccce4885aad303f2dace0d0ad46503f88025107715921541a5b7a",
+  "replay_receipt": "sha256:78e211ddffccbe800a44b21b48c24fe546c877caccde721c60be2bd88e54a13c",
+  "partial_contract": "sha256:4dacf4d7ab862afea4d0e80452ec0bb81c91840d3cef6321094d71977266b91f",
+  "contract_facts": "sha256:fb0c0903de840de99f61ca556b52005b9e2074963cfa7ef5b7410d4cb2fa9873",
+  "history_profile": "sha256:c0669c8aa9c7b8fcca7be8bb6df83d173e35102857ccb7a5875f2445f7fa86cb",
+  "machine_program": "sha256:fe86f26f43a0e2d0ad36ad7306aa67b8e8395dd027415fd94b8a693af5916ece",
+  "input_sha256": {
+    "history_profile.json": "sha256:edee690700c4f4b095cfd03d7d883a986c8968b01f3271aa3f18c95bc0ac16e9",
+    "mapping.json": "sha256:dcf5284090033fd67021253685ef8e30672859d759eb974562dda41b321d622d",
+    "run.py": "sha256:7bb13ede36a9969b79ff5d93bbc02313d79328f0e6567beb7284a887c34c1e30",
+    "shop.yaml": "sha256:c5222315eeb8a5262be87ae055aa169c15af5b79632d9806be8fe7277cc5a96a",
+    "source_boundary.json": "sha256:04dc194c751b496c8926acbaaa738511340f38e0c1570df00539912da103aa74",
+    "transition_instruction.json": "sha256:9824e06b0c5ef8b28b2e5a2192750ef2228afeca89d4f453b55b990764698085"
+  },
+  "account": {
+    "invoice_orders": {"I1": ["O1"], "I2": ["O2"]},
+    "payment_invoices": {"P1": ["I1", "I2"]},
+    "packed_units": {"O1": ["X1", "X2", "Y1"], "O2": ["X3", "Y2"]},
+    "received_units": {"A": ["X1", "X2", "X3"], "B": ["Y1", "Y2"]},
+    "invoice_updates": [{"event_id": "e9", "invoices": ["I2"]}],
+    "packing_witnesses": {"O1": ["e27"], "O2": ["e33"]},
+    "shipment_eligibility": "NOT_EVALUATED"
+  },
+  "nonclaims": [
+    "No human source ratification or semantic completeness proof.",
+    "No invoice amounts, invented customer ID, repaired calendar time or domain order from row order.",
+    "No shipment eligibility, authorization or external execution.",
+    "The replacement guard checks the state category, not arbitrary same-owner semantic identity.",
+    "The fresh maintained reader agrees at the final checkpoint; this receipt does not measure incremental advancement through every row.",
+    "No package, full repository, new Core API or release claim."
+  ]
+}
