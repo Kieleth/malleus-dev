@@ -13,8 +13,27 @@ from research.ontology_driven_kg_realization.experiments.small_shop.connected_st
 
 HERE = Path(__file__).resolve().parent
 EVENTS = (
-    "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "e10", "e11",
-    "e18", "e19", "e20", "e21", "e27", "e28", "e29", "e30", "e33", "e34",
+    "e1",
+    "e2",
+    "e3",
+    "e4",
+    "e5",
+    "e6",
+    "e7",
+    "e8",
+    "e9",
+    "e10",
+    "e11",
+    "e18",
+    "e19",
+    "e20",
+    "e21",
+    "e27",
+    "e28",
+    "e29",
+    "e30",
+    "e33",
+    "e34",
 )
 
 
@@ -35,7 +54,9 @@ def test_every_selected_table_row_and_nonempty_field_is_accounted_for():
     }
 
 
-@pytest.mark.parametrize("defect", ["missing", "duplicate", "extra_field", "bad_locator"])
+@pytest.mark.parametrize(
+    "defect", ["missing", "duplicate", "extra_field", "bad_locator"]
+)
 def test_source_census_refuses_silent_loss_or_invention(defect):
     rows, boundary = load_sources(HERE)
     before = deepcopy(rows)
