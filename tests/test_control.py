@@ -67,6 +67,35 @@ def test_authorization_rule_artifact_is_installed_identified_and_immutable():
         rules.precedence = ()
 
 
+def test_rule_artifact_identity_ignores_the_checkout_line_ending_policy():
+    """A Windows checkout rewrites LF to CRLF; the identity must not depend on it."""
+    from malleus import control
+
+    module = import_module("malleus._control_rules")
+    data = resources.files("malleus").joinpath("authorization-control-v1.json").read_bytes()
+    assert b"\r\n" not in data
+    for candidate in (data, data.replace(b"\n", b"\r\n")):
+        rules = module.OutcomeControlRules.from_bytes(
+            candidate, expected_identity=control.AUTHORIZATION_CONTROL_IDENTITY,
+        )
+        assert rules.identity == control.AUTHORIZATION_CONTROL_IDENTITY
+        assert rules.control("VIOLATED") == "BLOCK"
+        assert rules.select(["AUTHORIZE", "CLARIFY"]) == "CLARIFY"
+
+
+def test_default_rule_loader_accepts_a_carriage_return_installation(monkeypatch, tmp_path):
+    from malleus import control
+
+    data = resources.files("malleus").joinpath("authorization-control-v1.json").read_bytes()
+    (tmp_path / "authorization-control-v1.json").write_bytes(data.replace(b"\n", b"\r\n"))
+    control._authorization_rules.cache_clear()
+    monkeypatch.setattr(control.resources, "files", lambda package: tmp_path)
+    try:
+        assert control._authorization_rules().identity == control.AUTHORIZATION_CONTROL_IDENTITY
+    finally:
+        control._authorization_rules.cache_clear()
+
+
 def test_outcome_executor_uses_declared_labels_order_and_trigger_membership():
     rules = rules_from({
         "schema": AUTHORIZATION_RULES["schema"],
