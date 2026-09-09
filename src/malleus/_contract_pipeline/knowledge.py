@@ -17,6 +17,8 @@ from malleus._contract_pipeline.machine import (
     MachineReceipt,
     MachineState,
     PartialEffectiveContract,
+    _TransitionInput,
+    _evaluate_transition_rules,
     execute_event,
 )
 from malleus._contract_pipeline.view import (
@@ -138,6 +140,8 @@ class KnowledgeChangeRefusalReason(Enum):
     PROTOCOL_REFUSAL = auto()
     REJECTED_CHANGE = auto()
     STRUCTURAL_REFUSAL = auto()
+    TRANSITION_BINDING_REFUSAL = auto()
+    TRANSITION_RULE_REFUSAL = auto()
 
 
 class KnowledgeChangeRefusal(ValueError):
@@ -2066,11 +2070,22 @@ class KnowledgeChangeHistory:
                         f"terminal policy verdict is {verdict}",
                     )
                 change = changes[change_identity]
-                projection, record_history = self._apply_change(
+                next_projection, next_record_history = self._apply_change(
                     projection,
                     record_history,
                     change,
                 )
+                self._validate_transition_rules(
+                    active_contract,
+                    active_view,
+                    change,
+                    retained,
+                    record_history,
+                    projection,
+                    acceptance_head,
+                    materialization_head,
+                )
+                projection, record_history = next_projection, next_record_history
                 applied_ids.add(change.change_set_id)
                 accepted_changes.append(change)
                 graphs_by_change[change.change_set_id] = projection.state_projection()
@@ -2200,6 +2215,90 @@ class KnowledgeChangeHistory:
             raise _refuse(
                 KnowledgeChangeRefusalReason.UNKNOWN_SUPERSESSION,
                 f"unknown superseded change: {sorted(unknown)[0]}",
+            )
+
+    @staticmethod
+    def _validate_transition_rules(
+        contract: PartialEffectiveContract,
+        view: ContractView,
+        change: KnowledgeChangeSet,
+        retained: Mapping[str, KnowledgeRetainedInput],
+        before_history: Mapping[str, KnowledgeRecordHistory],
+        before: KnowledgeGraph,
+        acceptance_head: str,
+        materialization_head: str,
+    ) -> None:
+        program = contract.normative_profile.protocol_machine_program
+        if "admission_rules" not in program.data:
+            return  # Explicit private-v0 selection, not failed-rule fallback.
+        if (
+            change.contract_identity != contract.identity
+            or change.base_acceptance_head != acceptance_head
+            or change.base_materialization_head != materialization_head
+            or change.base_accepted_state_digest != before.state_digest()
+        ):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.STALE_BASE,
+                "transition prestate changed after change-set retention",
+            )
+        identity = program.data["admission_rules"]["history_profile_identity"]
+        inputs = tuple(
+            retained[identifier]
+            for identifier, digest in change.evidence
+            if digest == identity and retained[identifier].role == "RETAINED_EVIDENCE"
+        )
+        if not inputs:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.TRANSITION_BINDING_REFUSAL,
+                "change evidence lacks the selected history-profile identity",
+            )
+        # The profile parser currently lives with population. Import at execution
+        # time so both layers reuse it without a module-initialization cycle.
+        from malleus._contract_pipeline.population import DomainHistoryProfile
+
+        try:
+            profile = DomainHistoryProfile.from_data(json.loads(inputs[0].content))
+            if (
+                profile.canonical_bytes != inputs[0].content
+                or profile.identity != identity
+            ):
+                raise ValueError("selected history-profile bytes are not canonical")
+            transition = _TransitionInput(
+                change_identity=change.identity,
+                contract_identity=contract.identity,
+                history_profile_identity=profile.identity,
+                base_coordinates=(
+                    change.base_ledger_head,
+                    change.base_ledger_event_count,
+                    change.base_acceptance_head,
+                    change.base_materialization_head,
+                    change.base_accepted_state_digest,
+                ),
+                replacements=tuple(
+                    (
+                        operation.ordinal,
+                        operation.record_id,
+                        before_history[
+                            operation.supersedes_record_id
+                        ].operation.record_type,
+                        operation.record_type,
+                    )
+                    for operation in change.operations
+                    if operation.supersedes_record_id is not None
+                ),
+                ontology_roles=profile.ontology_roles,
+            )
+            refused = _evaluate_transition_rules(program, transition, view)
+        except ValueError as error:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.TRANSITION_BINDING_REFUSAL,
+                str(error),
+            ) from error
+        if refused is not None:
+            code, operations = refused
+            raise _refuse(
+                KnowledgeChangeRefusalReason.TRANSITION_RULE_REFUSAL,
+                f"{code}: operations {_canonical(operations).decode('utf-8')}",
             )
 
     @staticmethod

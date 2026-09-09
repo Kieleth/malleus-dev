@@ -44,3 +44,21 @@ The request was delivered to the separate **Malleus Core** task
 fix, selected the final profile, populated all 21 events, or published a release.
 The next dependent action is to resolve the enforceable history contract,
 then complete the joined Shop runner with its independent expectations.
+
+## Source answer-key addition
+
+The later Shop-only addition follows test-data RED `50b7df40`, seven failures
+for the absent `source_expectations.json`. The hand-authored file supplies nine
+source questions and exact witnesses. Seven tests pass, including four mutated
+copies with a missing row, missing field, false value or duplicate case. These
+are source-accounting checks, not graph-query correctness or human ratification.
+The future producer must not read the expectation file.
+
+The combined selector above, now including these seven tests, returns **42
+passed**, zero skips, in the live declared environment. No installed-package,
+full-repository or release gate was run for this test-data addition. The frozen
+35-test release-baseline result above remains its own separate receipt.
+
+Core has acknowledged that custom correction text is descriptive, not a
+state-type admission restriction, and is investigating the execution contract.
+Shop has not selected that profile or implemented an upstream workaround.

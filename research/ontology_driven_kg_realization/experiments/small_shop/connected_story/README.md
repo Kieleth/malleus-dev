@@ -32,6 +32,11 @@ The human-readable [coverage table](SOURCE_COVERAGE.md) separates what each row
 contains from what the connected run still needs to build. Exact test and replay
 receipts are in [VALIDATION.md](VALIDATION.md).
 
+[Expected story](EXPECTED_STORY.md) makes the next connected run concrete:
+nine source-backed questions cover order quantities, physical units, invoice
+links, payment and the limits of the shipment explanation. These are independent
+test expectations, not populated graph results or inputs to the mapper.
+
 ## Do not repair the source by guessing
 
 - `e6` and `e8` visibly print `00-01` in the published table. Preserve those

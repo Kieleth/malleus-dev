@@ -314,3 +314,12 @@ population, not chosen opportunistically to make a test pass.
   [Core receives this exact contract question](connected_story/CORE_REQUIREMENT.md).
   Hold final model selection and the full connected population, not unrelated
   source work. No Core runtime, ontology or governance file was edited.
+- 2026-09-08: Continue independent source work while Core investigates the
+  history restriction. Test-data RED `50b7df40` fails for the missing answer
+  file; the [hand-authored expectations](connected_story/EXPECTED_STORY.md)
+  make seven source-accounting tests pass. The combined Shop/profile selector
+  passes 42 tests. Nine questions are inspection cases, not a smaller source
+  boundary, population inputs, a selected graph response format or evidence of
+  the finished connected run. No new modeling decision was taken. Core confirms
+  custom correction labels alone are descriptive; the enforcement response and
+  final Shop history choice remain pending.

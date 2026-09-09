@@ -1,0 +1,154 @@
+{
+  "scope": "shop-connected-table1-v1",
+  "status": "SOURCE_EXPECTATIONS_NOT_GRAPH_RESULTS",
+  "human_ratification": "PENDING",
+  "purpose": "Independently authored source expectations for the later Shop replay queries. Never a population input, complete source-meaning score, or Core protocol artifact.",
+  "cases": [
+    {
+      "id": "requested-items",
+      "question": "What quantities does each customer order request?",
+      "expected": {"O1": {"X": 2, "Y": 1}, "O2": {"X": 1, "Y": 1}},
+      "interpretation": "Read the printed quantity/product pairs. No unit allocation is implied by a request.",
+      "witnesses": [
+        {"source": "table", "locator": "row:0:order_ids", "value": ["O1"]},
+        {"source": "table", "locator": "row:0:order_details_text", "value": "2·X, 1·Y"},
+        {"source": "table", "locator": "row:1:order_ids", "value": ["O2"]},
+        {"source": "table", "locator": "row:1:order_details_text", "value": "1·X, 1·Y"}
+      ]
+    },
+    {
+      "id": "supplier-quantity-correction",
+      "question": "What was ordered from A and B, and what changed for B?",
+      "expected": {
+        "A/e3": {"X": 3}, "B/e4": {"Y": 1}, "B/e7": {"Y": 2},
+        "interpretation": "B/e7 corrects B/e4, not a second independent order"
+      },
+      "interpretation": "The context identifies the mistaken quantity. This does not select which runtime guard enforces the proposed state replacement.",
+      "witnesses": [
+        {"source": "table", "locator": "row:2:event_id", "value": "e3"},
+        {"source": "table", "locator": "row:2:supplier_order_ids", "value": ["A"]},
+        {"source": "table", "locator": "row:2:order_details_text", "value": "3·X"},
+        {"source": "table", "locator": "row:3:event_id", "value": "e4"},
+        {"source": "table", "locator": "row:3:supplier_order_ids", "value": ["B"]},
+        {"source": "table", "locator": "row:3:order_details_text", "value": "1·Y"},
+        {"source": "table", "locator": "row:6:event_id", "value": "e7"},
+        {"source": "table", "locator": "row:6:activity", "value": "Update SO"},
+        {"source": "table", "locator": "row:6:supplier_order_ids", "value": ["B"]},
+        {"source": "table", "locator": "row:6:order_details_text", "value": "2·Y"},
+        {"source": "context", "locator": "row:1:text", "value": "they ordered only one item Y from B while O1 and O2 both require one item Y each."}
+      ]
+    },
+    {
+      "id": "physical-unit-routing",
+      "question": "Which physical units were received and packed for each order?",
+      "expected": {
+        "received": {"A/e6": ["X1", "X2", "X3"], "B/e19": ["Y1", "Y2"]},
+        "packed_for": {"O1/e27": ["X1", "X2", "Y1"], "O2/e33": ["X3", "Y2"]},
+        "unit_replacements": []
+      },
+      "interpretation": "Y1 and Y2 are distinct units, not successive versions. Packing establishes the stated assignment, not a permanent ownership claim.",
+      "witnesses": [
+        {"source": "table", "locator": "row:5:event_id", "value": "e6"},
+        {"source": "table", "locator": "row:5:activity", "value": "Receive SO"},
+        {"source": "table", "locator": "row:5:supplier_order_ids", "value": ["A"]},
+        {"source": "table", "locator": "row:5:item_ids", "value": ["X1", "X2", "X3"]},
+        {"source": "table", "locator": "row:12:event_id", "value": "e19"},
+        {"source": "table", "locator": "row:12:activity", "value": "Receive SO"},
+        {"source": "table", "locator": "row:12:supplier_order_ids", "value": ["B"]},
+        {"source": "table", "locator": "row:12:item_ids", "value": ["Y1", "Y2"]},
+        {"source": "table", "locator": "row:15:event_id", "value": "e27"},
+        {"source": "table", "locator": "row:15:activity", "value": "Pack Shipment"},
+        {"source": "table", "locator": "row:15:order_ids", "value": ["O1"]},
+        {"source": "table", "locator": "row:15:item_ids", "value": ["X1", "X2", "Y1"]},
+        {"source": "table", "locator": "row:19:event_id", "value": "e33"},
+        {"source": "table", "locator": "row:19:activity", "value": "Pack Shipment"},
+        {"source": "table", "locator": "row:19:order_ids", "value": ["O2"]},
+        {"source": "table", "locator": "row:19:item_ids", "value": ["X3", "Y2"]}
+      ]
+    },
+    {
+      "id": "invoice-ownership",
+      "question": "Which order is named when each invoice is created?",
+      "expected": {"I1": "O1", "I2": "O2"},
+      "interpretation": "The create-invoice occurrences support invoice/order association. Invoice amounts are absent.",
+      "witnesses": [
+        {"source": "table", "locator": "row:4:activity", "value": "Create Invoice"},
+        {"source": "table", "locator": "row:4:order_ids", "value": ["O2"]},
+        {"source": "table", "locator": "row:4:invoice_ids", "value": ["I2"]},
+        {"source": "table", "locator": "row:11:activity", "value": "Create Invoice"},
+        {"source": "table", "locator": "row:11:order_ids", "value": ["O1"]},
+        {"source": "table", "locator": "row:11:invoice_ids", "value": ["I1"]}
+      ]
+    },
+    {
+      "id": "payment-clearing",
+      "question": "Which payment was received and which invoices were cleared with it?",
+      "expected": {"payment": "P1", "received_at": "e29", "cleared_at": "e30", "invoices": ["I1", "I2"], "amount": "NOT_STATED"},
+      "interpretation": "Receiving payment and clearing invoices are separate occurrences. No numeric balance can be recovered from these sources.",
+      "witnesses": [
+        {"source": "table", "locator": "row:17:event_id", "value": "e29"},
+        {"source": "table", "locator": "row:17:activity", "value": "Receive Payment"},
+        {"source": "table", "locator": "row:17:payment_ids", "value": ["P1"]},
+        {"source": "table", "locator": "row:18:event_id", "value": "e30"},
+        {"source": "table", "locator": "row:18:activity", "value": "Clear Invoice"},
+        {"source": "table", "locator": "row:18:payment_ids", "value": ["P1"]},
+        {"source": "table", "locator": "row:18:invoice_ids", "value": ["I1", "I2"]},
+        {"source": "context", "locator": "row:3:text", "value": "packing and shipment of O2 (another item X and the second Y) are delayed until Payment P1 is received which covers the amount for both invoices I1 and I2."}
+      ]
+    },
+    {
+      "id": "invoice-update-gap",
+      "question": "What does the invoice update tell us, and what can it not tell us?",
+      "expected": {"event": "e9", "invoice": "I2", "changed_field": "NOT_STATED", "new_value": "NOT_STATED", "replacement_value_record": "NOT_JUSTIFIED"},
+      "interpretation": "The complete retained e9 row has no changed-value field. This is a gap within this source boundary, not proof that no other source contains it.",
+      "witnesses": [
+        {"source": "table", "locator": "row:8:event_id", "value": "e9"},
+        {"source": "table", "locator": "row:8:activity", "value": "Update Invoice"},
+        {"source": "table", "locator": "row:8:invoice_ids", "value": ["I2"]}
+      ]
+    },
+    {
+      "id": "shared-customer-policy",
+      "question": "Why does one payment matter to both orders, and what does this not authorize?",
+      "expected": {
+        "customer_scope": "O1 and O2 have the same customer",
+        "customer_identifier": "NOT_STATED",
+        "policy": "At most one unpaid invoice for that customer before shipment",
+        "source_explanation": "O2 packing and shipment wait for P1 covering I1 and I2",
+        "unpaid_count_from_missing_payment": "NOT_JUSTIFIED",
+        "shipment_authorization": "NOT_ESTABLISHED"
+      },
+      "interpretation": "These passages supply the source explanation and the retailer's stated condition. They do not establish all invoice balances at every checkpoint, nor a Malleus authorization decision. Preserve observed shipments even if later analysis flags a conflict.",
+      "witnesses": [
+        {"source": "context", "locator": "row:0:text", "value": "Consider a retailer who took two Orders for multiple Items from the same customer:"},
+        {"source": "context", "locator": "row:2:text", "value": "The retailer has the policy that they only ship to a customer if there is at most one unpaid invoice."},
+        {"source": "context", "locator": "row:3:text", "value": "packing and shipment of O2 (another item X and the second Y) are delayed until Payment P1 is received which covers the amount for both invoices I1 and I2."}
+      ]
+    },
+    {
+      "id": "unresolved-time",
+      "question": "Can all printed times be treated as complete calendar instants?",
+      "expected": {"year": "NOT_STATED", "timezone": "NOT_STATED", "e6": "00-01 10:00", "e8": "00-01 10:30", "domain_order_from_row_number": "NOT_JUSTIFIED", "elapsed_duration": "NOT_COMPUTED"},
+      "interpretation": "Preserve the printed dates and do not invent their missing components. This expectation deliberately leaves the final history time representation undecided.",
+      "witnesses": [
+        {"source": "table", "locator": "row:5:event_id", "value": "e6"},
+        {"source": "table", "locator": "row:5:time_text", "value": "00-01 10:00"},
+        {"source": "table", "locator": "row:7:event_id", "value": "e8"},
+        {"source": "table", "locator": "row:7:time_text", "value": "00-01 10:30"}
+      ]
+    },
+    {
+      "id": "multi-object-packing",
+      "question": "Which different objects participate together in O1's packing?",
+      "expected": {"event": "e27", "activity": "Pack Shipment", "actor": "R4", "order": "O1", "units": ["X1", "X2", "Y1"]},
+      "interpretation": "One occurrence relates all these roles. Do not duplicate the occurrence into independent per-object events or infer causation from co-participation.",
+      "witnesses": [
+        {"source": "table", "locator": "row:15:event_id", "value": "e27"},
+        {"source": "table", "locator": "row:15:activity", "value": "Pack Shipment"},
+        {"source": "table", "locator": "row:15:actor_ids", "value": ["R4"]},
+        {"source": "table", "locator": "row:15:order_ids", "value": ["O1"]},
+        {"source": "table", "locator": "row:15:item_ids", "value": ["X1", "X2", "Y1"]}
+      ]
+    }
+  ]
+}
