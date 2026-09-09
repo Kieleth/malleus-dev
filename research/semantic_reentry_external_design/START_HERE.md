@@ -77,6 +77,12 @@ identify the exact tested versions. A working proof, its integration into main,
 and a production deployment are separate milestones. Those receipts do not
 automatically verify later Core code or claim that a merge has happened.
 
+The [transition-admission compatibility receipt](supplier-choice-transition-result.json)
+records a fresh check of both examples against the newer Core revision: 650
+tests passed and one optional paper-document check was skipped. Both examples
+still select their original protocol machine, not the newer optional transition
+rules. Their recorded episode files match the earlier runs byte for byte.
+
 This page is an explanation of the existing reference implementation and its
 conformance fixtures. It changes no fixture, contract, runtime or earlier
 verification receipt.
