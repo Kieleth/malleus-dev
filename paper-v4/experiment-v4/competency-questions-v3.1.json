@@ -1,0 +1,407 @@
+{
+  "schema": "malleus.paper-v4.competency-questions/v3",
+  "status": "FROZEN_BEFORE_V3_1_CELLS",
+  "visibility": "WITHHELD_FROM_PRODUCER_UNTIL_POST_REPLAY",
+  "scope": {
+    "answer_surface": "REPLAY_DERIVED_NATIVE_GRAPH_QUERY_WITH_PROVENANCE_TRACE",
+    "source_support": "SELECTED_READING_TEXT_LAYER",
+    "figures": "EXCLUDED",
+    "tables": "EXCLUDED",
+    "free_form_synthesis": "EXCLUDED"
+  },
+  "authored": {
+    "kind": "CLAUDE_FRESH_SESSION",
+    "authored_at": "2026-09-06T13:59:34-07:00",
+    "inputs": [
+      {
+        "role": "paper_text_layer",
+        "path": "private/paper-v4-text-layer/selected-reading.json",
+        "sha256": "f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+      },
+      {
+        "role": "format_reference",
+        "path": "paper-v4/experiment-v4/competency-questions.json",
+        "sha256": "fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86"
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "CQ-T1-01",
+      "tier": "T1",
+      "question": "Which research cruise deployed the ocean-bottom seismometer network whose recordings the microseismicity study uses?",
+      "required_semantics": [
+        "campaign_name",
+        "observing_system",
+        "data_acquisition"
+      ]
+    },
+    {
+      "id": "CQ-T1-02",
+      "tier": "T1",
+      "question": "How many ocean-bottom seismometers were deployed in the network for this experiment?",
+      "required_semantics": [
+        "instrument_count",
+        "observing_system",
+        "deployment_event"
+      ]
+    },
+    {
+      "id": "CQ-T1-03",
+      "tier": "T1",
+      "question": "On what date was this article accepted for publication?",
+      "required_semantics": [
+        "publication_record",
+        "acceptance_event",
+        "calendar_date"
+      ]
+    },
+    {
+      "id": "CQ-T1-04",
+      "tier": "T1",
+      "question": "Which repository and record identifier are given for the earthquake catalogue and picked arrivals deposited by this study?",
+      "required_semantics": [
+        "dataset_record",
+        "repository_name",
+        "persistent_identifier"
+      ]
+    },
+    {
+      "id": "CQ-T1-05",
+      "tier": "T1",
+      "question": "For how long were the seismic data recorded continuously during the deployment?",
+      "required_semantics": [
+        "recording_interval",
+        "duration_value",
+        "time_unit",
+        "observing_system"
+      ]
+    },
+    {
+      "id": "CQ-T2-01",
+      "tier": "T2",
+      "question": "Which ridge subsection is bounded on its eastern side by a detachment fault carrying an oceanic core complex, and on which side of the ridge axis does that core complex sit?",
+      "required_semantics": [
+        "named_subsection",
+        "structural_feature",
+        "bounding_relation",
+        "side_of_axis"
+      ]
+    },
+    {
+      "id": "CQ-T2-02",
+      "tier": "T2",
+      "question": "Which program produced the initial earthquake hypocentres, and which program was applied afterwards to relocate them?",
+      "required_semantics": [
+        "initial_location_method",
+        "relocation_method",
+        "method_sequence",
+        "earthquake_catalog"
+      ]
+    },
+    {
+      "id": "CQ-T2-03",
+      "tier": "T2",
+      "question": "On the flank of which discontinuity is an extinct hydrothermal vent field reported, and what is its position relative to the present-day axial valley?",
+      "required_semantics": [
+        "named_feature",
+        "host_discontinuity",
+        "spatial_relation",
+        "present_day_axis"
+      ]
+    },
+    {
+      "id": "CQ-T2-04",
+      "tier": "T2",
+      "question": "Which earlier study supplies the crustal thickness used for the study area, and which ridge flank and crustal age does that thickness belong to?",
+      "required_semantics": [
+        "source_study",
+        "crustal_thickness_claim",
+        "location_relation",
+        "crustal_age"
+      ]
+    },
+    {
+      "id": "CQ-T2-05",
+      "tier": "T2",
+      "question": "Which named grant agreement in the funding statement is attributed to which individual author?",
+      "required_semantics": [
+        "funding_record",
+        "grant_identifier",
+        "person",
+        "attribution_relation"
+      ]
+    },
+    {
+      "id": "CQ-T3-01",
+      "tier": "T3",
+      "question": "What depth range below the seafloor is reported for the deep earthquakes beneath the axis of the magmatic ridge segment, in what unit, and were those depths located in this study or taken from elsewhere?",
+      "required_semantics": [
+        "bounded_quantity",
+        "length_unit",
+        "quantity_subject",
+        "measurement_status",
+        "depth_reference_surface"
+      ]
+    },
+    {
+      "id": "CQ-T3-02",
+      "tier": "T3",
+      "question": "What carbon dioxide content is reported for the primary melts of the studied magmatic segment, in which unit, and is that content measured or calculated?",
+      "required_semantics": [
+        "bounded_quantity",
+        "concentration_unit",
+        "quantity_subject",
+        "calculated_or_measured_status"
+      ]
+    },
+    {
+      "id": "CQ-T3-03",
+      "tier": "T3",
+      "question": "What pre-eruptive carbon dioxide concentration range is given for the studied segment, in which unit, and is it presented as an estimate or as a direct measurement?",
+      "required_semantics": [
+        "bounded_quantity",
+        "concentration_unit",
+        "melt_stage",
+        "estimation_status"
+      ]
+    },
+    {
+      "id": "CQ-T3-04",
+      "tier": "T3",
+      "question": "What average horizontal location uncertainty is reported for the final catalogue after relocation, in what unit, and what set of events does it describe?",
+      "required_semantics": [
+        "bounded_quantity",
+        "length_unit",
+        "quantity_subject",
+        "derivation_status",
+        "event_set"
+      ]
+    },
+    {
+      "id": "CQ-T3-05",
+      "tier": "T3",
+      "question": "At what pressure and temperature is the melt said to become saturated with carbon dioxide, in which units, and were those conditions measured or obtained from a solubility model?",
+      "required_semantics": [
+        "bounded_quantity",
+        "pressure_unit",
+        "temperature_unit",
+        "quantity_subject",
+        "model_derived_status"
+      ]
+    },
+    {
+      "id": "CQ-T4-01",
+      "tier": "T4",
+      "question": "Which explanation for the deep mantle earthquakes do the authors put forward as their preferred one, and with what strength of claim is it stated?",
+      "required_semantics": [
+        "causal_claim",
+        "preferred_disposition",
+        "epistemic_modality",
+        "claim_subject"
+      ]
+    },
+    {
+      "id": "CQ-T4-02",
+      "tier": "T4",
+      "question": "Which explanation involving melt movement at depth is considered and then set aside for these earthquakes, and on what ground is it set aside?",
+      "required_semantics": [
+        "candidate_mechanism",
+        "declined_disposition",
+        "stated_ground",
+        "claim_subject"
+      ]
+    },
+    {
+      "id": "CQ-T4-03",
+      "tier": "T4",
+      "question": "What caveat do the authors attach to estimating carbon dioxide concentrations from trace element abundances, and which claim does that caveat qualify?",
+      "required_semantics": [
+        "qualified_claim",
+        "stated_assumption",
+        "caveat_disposition",
+        "claim_subject"
+      ]
+    },
+    {
+      "id": "CQ-T4-04",
+      "tier": "T4",
+      "question": "What do the authors state about the presence of active hydrothermal venting on the axis of the deep-earthquake segment, and is that statement an assertion of presence or of absence?",
+      "required_semantics": [
+        "existence_claim",
+        "negated_disposition",
+        "claim_subject",
+        "spatial_scope"
+      ]
+    },
+    {
+      "id": "CQ-T4-05",
+      "tier": "T4",
+      "question": "With what qualification do the authors say that some of the deep earthquakes may be long-period events, and what do they say is still needed to settle it?",
+      "required_semantics": [
+        "hedged_claim",
+        "hypothesised_disposition",
+        "epistemic_modality",
+        "stated_limitation"
+      ]
+    },
+    {
+      "id": "CQ-T5-01",
+      "tier": "T5",
+      "question": "Which observation about the volatile content of the melts and which observation about earthquake depth are brought together to support the degassing mechanism?",
+      "required_semantics": [
+        "causal_mechanism",
+        "supporting_observation",
+        "geochemical_evidence",
+        "seismic_evidence",
+        "evidence_relation"
+      ]
+    },
+    {
+      "id": "CQ-T5-02",
+      "tier": "T5",
+      "question": "How does the calculated primary-melt carbon dioxide content of the segment with the deep earthquakes compare with that of the adjacent segment to its south?",
+      "required_semantics": [
+        "comparison_relation",
+        "first_quantity_subject",
+        "second_quantity_subject",
+        "bounded_quantity",
+        "concentration_unit"
+      ]
+    },
+    {
+      "id": "CQ-T5-03",
+      "tier": "T5",
+      "question": "Across the studied subsections, which ones have maximum earthquake depths within the range expected for this spreading rate and which one exceeds it?",
+      "required_semantics": [
+        "subsection_set",
+        "maximum_depth_claim",
+        "expected_depth_claim",
+        "comparison_relation"
+      ]
+    },
+    {
+      "id": "CQ-T5-04",
+      "tier": "T5",
+      "question": "Into how many location-quality categories are the located earthquakes classified, and which of those categories are used for interpretation?",
+      "required_semantics": [
+        "category_set",
+        "category_count",
+        "selection_for_interpretation",
+        "earthquake_catalog"
+      ]
+    },
+    {
+      "id": "CQ-T5-05",
+      "tier": "T5",
+      "question": "Which observations of axial morphology and of off-axis shallow seismicity are read together to argue against a cold and thick lithosphere beneath the deep-earthquake segment?",
+      "required_semantics": [
+        "candidate_explanation",
+        "morphological_observation",
+        "seismic_observation",
+        "evidence_relation",
+        "declined_disposition"
+      ]
+    },
+    {
+      "id": "CQ-C-01",
+      "tier": "C",
+      "question": "What sulfur and chlorine concentrations are reported for the basalt samples used in the volatile estimation?",
+      "required_semantics": [
+        "bounded_quantity",
+        "concentration_unit",
+        "sample_set",
+        "measurement_status"
+      ],
+      "expected_outcome": {
+        "kind": "NOT_IN_SOURCE",
+        "expected_coverage": "NONE",
+        "why": "The paper treats carbon dioxide and water as the volatiles of interest and reports no sulfur or chlorine data anywhere in its text."
+      }
+    },
+    {
+      "id": "CQ-C-02",
+      "tier": "C",
+      "question": "What recurrence interval is given for the deep mantle earthquakes beneath the ridge axis?",
+      "required_semantics": [
+        "temporal_quantity",
+        "time_unit",
+        "event_population",
+        "measurement_status"
+      ],
+      "expected_outcome": {
+        "kind": "NOT_IN_SOURCE",
+        "expected_coverage": "NONE",
+        "why": "The record is described as a short snapshot and carries magnitude statistics, but no repeat time or recurrence interval for the deep events is stated."
+      }
+    },
+    {
+      "id": "CQ-C-03",
+      "tier": "C",
+      "question": "For each of the other slow- and ultraslow-spreading ridge sites compiled for comparison, what maximum earthquake depth and full spreading rate is plotted?",
+      "required_semantics": [
+        "site_set",
+        "maximum_depth_quantity",
+        "spreading_rate_quantity"
+      ],
+      "expected_outcome": {
+        "kind": "EXCLUDED_SURFACE",
+        "expected_coverage": "NONE",
+        "why": "The per-site depths and rates live only in the comparison figure and its supplementary table, surfaces the scope excludes. v3.1 drops compilation_source from the required semantics: the sentence that names the compilation is in the text, and both v3 cells (E-0342, E-0345) covered it and read PARTIAL against the expected NONE, so under v3 the control tested the text as well as the excluded surface."
+      }
+    },
+    {
+      "id": "CQ-C-04",
+      "tier": "C",
+      "question": "For this experiment, what number of ocean-bottom seismometers was placed on the seafloor?",
+      "required_semantics": [
+        "instrument_count",
+        "observing_system",
+        "deployment_event"
+      ],
+      "expected_outcome": {
+        "kind": "PARAPHRASE",
+        "expected_coverage": "SAME_AS",
+        "of": "CQ-T1-02",
+        "why": "Same instrument count of the same deployment, asked in different words, so coverage must match its source question."
+      }
+    },
+    {
+      "id": "CQ-C-05",
+      "tier": "C",
+      "question": "In the primary melts of the studied magmatic segment, how much carbon dioxide is reported, in which unit, and was that arrived at by measurement or by calculation?",
+      "required_semantics": [
+        "bounded_quantity",
+        "concentration_unit",
+        "quantity_subject",
+        "calculated_or_measured_status"
+      ],
+      "expected_outcome": {
+        "kind": "PARAPHRASE",
+        "expected_coverage": "SAME_AS",
+        "of": "CQ-T3-02",
+        "why": "Same bounded quantity, unit and calculation status for the same melts, reworded, so coverage must match its source question."
+      }
+    }
+  ],
+  "frozen": {
+    "at": "2026-09-09T22:57Z",
+    "by": "overseer session at Luis's ruling of 2026-09-09 (E-0346)",
+    "read_before_freeze": "the one changed question read against both v3 records (E-0342, E-0345); no other edit"
+  },
+  "supersedes": {
+    "file": "paper-v4/experiment-v4/competency-questions-v3.json",
+    "sha256": "sha256:76d501cdb91741ede6ab51e36f1a567d59009f0b3ecf970cf7b19adf97c7490d",
+    "for": "cells opened after the entry that freezes this file; the v3 file stays frozen for run-22 and run-23",
+    "change": "CQ-C-03.required_semantics loses compilation_source and its expected_outcome.why says why; the other twenty-nine questions and CQ-C-03's text, tier and expected kind and coverage are byte-identical to v3"
+  },
+  "amended": {
+    "kind": "OVERSEER_AMENDMENT",
+    "amended_at": "2026-09-09T22:57:03Z",
+    "by": "overseer session, at Luis's ruling of 2026-09-09 ('lets follow your rec': re-author CQ-C-03 before another cell, then run-24, then write)",
+    "basis": [
+      "E-0342: run-22 CQ-C-03 PARTIAL against expected NONE, compilation_source covered by a row, three semantics NOT_IN_SOURCE",
+      "E-0345: run-23 the same, one of four covered"
+    ]
+  }
+}
