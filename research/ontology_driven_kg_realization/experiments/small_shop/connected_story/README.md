@@ -28,6 +28,9 @@ field. It checks exact source hashes, omitted or duplicated rows, field closure
 and identifier-list shape. It does not claim that the planned records exist.
 Context excerpts remain evidence and rule inputs, not domain facts admitted by
 this command. A human has not yet ratified the transcription or its interpretation.
+The human-readable [coverage table](SOURCE_COVERAGE.md) separates what each row
+contains from what the connected run still needs to build. Exact test and replay
+receipts are in [VALIDATION.md](VALIDATION.md).
 
 ## Do not repair the source by guessing
 

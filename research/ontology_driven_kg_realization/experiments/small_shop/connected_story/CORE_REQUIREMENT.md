@@ -13,10 +13,10 @@ after reopen. It does not infer state changes by executing event descriptions.
 
 Core baseline: released `v0.14.0`, commit
 `e2b9e77912f9b36fdbfe2fca310548a789bffb4d`, tree
-`162325eb0048816654d2df5b6b0f00270d06385d`. The live source closure used in this
-probe has no difference from that release under `src/malleus`, `ontology` or
-`pyproject.toml`. Local Shop and unrelated consumer commits are later than the
-release; they do not represent a runtime rebind.
+`162325eb0048816654d2df5b6b0f00270d06385d`. Final validation used an isolated
+export of this release plus only the Shop files at `5ea6c903`, excluding
+concurrent Core edits. Local Shop and unrelated consumer commits are later
+than the release; they do not represent a runtime rebind.
 
 ## What works
 
