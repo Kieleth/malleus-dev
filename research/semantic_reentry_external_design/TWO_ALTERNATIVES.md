@@ -1,8 +1,9 @@
 # Two valid amendments, explicit selection
 
-Status: verified bounded slice, ready for Core's local integration review.
-Base: local main `e2b9e77912f9b36fdbfe2fca310548a789bffb4d`.
-Landing base: local main `55c038438ed67197b7e3345b9c80a885a7b6cf17`.
+Status: bounded slice and authorization compatibility verified; Core owns local landing.
+Original base: local main `e2b9e77912f9b36fdbfe2fca310548a789bffb4d`.
+Original landing base: local main `55c038438ed67197b7e3345b9c80a885a7b6cf17`.
+Current authorization base: `a0026cbd25a90b5c2b6c9eb7b31df4e42df16804`.
 
 ## Bound slice
 
@@ -187,9 +188,9 @@ reproducible coordinates, not measurements of when this command ran.
 The result is a controlled supplier-record amendment, not physical delivery,
 customer-order fulfilment or production supplier integration.
 
-## Verification and landing
+## Original verification and landing evidence
 
-The final current-main union has **485 passed, one existing optional skip**:
+The original landing-base union has **485 passed, one existing optional skip**:
 40 focused/epoch cases, 112 supplier cases, 193 component cases, and 140 passes
 plus one skip in the action/observation/reader group. The focused group includes
 33 new cases and seven inherited epoch checks. The skip concerns private paper
@@ -228,5 +229,54 @@ Composition is measured; replacement and general planning remain unproved.
 
 All additions are isolated research files. Core runtime, ontology, locked
 fixtures, prior evidence, dependencies, skills and paper work are unchanged.
-Core owns the reviewed local landing. This task performs no merge to main,
-push or publication.
+Core owns the coordinated local landing. The original proof did not merge to
+main, push or publish. The operator subsequently authorized local integration.
+
+## Authorization compatibility and local integration
+
+Core subsequently moved authorization outcome rules into an exact pinned data
+artifact. This follow-on checks the unchanged two-order implementation against
+that completed Core source, rather than treating the older proof as evidence
+about an untested version. No selector, action, mapper, observer, source fixture,
+public API or ontology change is part of this compatibility update.
+
+The current `supplier-choice-gate.json` selects the supplier/Re-entry regression
+suite plus Core's authorization, finite-control and independent expectation
+tests. Earlier runtime-identity tests and receipts remain byte-identical and
+bound to their historical versions. Their positive identity checks correctly
+refuse newer source. Current verification uses its own exact source pin and
+still runs the applicable historical negative checks. Five new failing tests
+first exposed stale-source acceptance and accidental inclusion of old positive
+identity checks; the current guard now rejects both classes.
+
+Run every selector in the current manifest from the configured environment:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. python -c 'import json, pytest; from pathlib import Path; gate = json.loads(Path("research/semantic_reentry_external_design/supplier-choice-gate.json").read_bytes()); selectors = [s for group in gate["groups"].values() for s in group]; raise SystemExit(pytest.main(["-q", "-p", "no:cacheprovider", *selectors]))'
+```
+
+The compatibility union has **649 passed and one existing optional skip**:
+204 focused/authorization cases, 305 supplier/component cases, and 140 passes
+plus the private-paper-doctrine skip in the action/observation/reader group.
+All 650 collected case identities match the three JUnit reports exactly, with
+no missing, extra or duplicate case. All runtime and test bytes were those of
+`d9b47923d665b4b0605ef904b25f64e593812dac`; only this documentation was edited
+while the suites ran. This is the selected relevant gate, not full repository CI.
+
+The new full episode reproduces the earlier standalone demonstration byte for
+byte across its ledger, contract, proposal, result and both source files. It
+still has 91 ledger events, one dispatch, accepted B/Y/1 and C/Y/1 until observed
+admission, then B/Y/2 and C/Y/1 with no further candidate. Success without a
+source change and failure after a real change remain separately tested.
+
+The [authorization compatibility receipt](supplier-choice-authorization-result.json)
+binds the tested snapshot, raw reports, five RED failures, historical version
+refusals, source and file hashes, and the unchanged original proof receipt.
+Core's later `ed4d26da4187283e2c82c9de77779c0512140feb` commit adds only separate
+Shop expectations and Core preparation/journal work relative to the tested
+authorization base. The runtime and consumed supplier dependencies were checked
+unchanged. Any subsequent runtime change needs its own compatibility evidence.
+
+The operator authorized reviewed local integration, which Core coordinates at
+a committed boundary. This does not authorize a push, package release or
+production supplier connection, and does not attest unfinished Core edits.
