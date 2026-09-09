@@ -1,0 +1,32 @@
+{
+  "adapter": {"adapter_id": "shop-connected-table1", "version": "1"},
+  "object_columns": {
+    "actor_ids": {"prefix": "actor", "type": "ShopActor", "qualifier": "ACTOR"},
+    "order_ids": {"prefix": "order", "type": "SalesOrder", "qualifier": "ORDER"},
+    "supplier_order_ids": {"prefix": "supplier-order", "type": "SupplierOrder", "qualifier": "SUPPLIER_ORDER"},
+    "item_ids": {"prefix": "item", "type": "InventoryUnit", "qualifier": "ITEM"},
+    "invoice_ids": {"prefix": "invoice", "type": "Invoice", "qualifier": "INVOICE"},
+    "payment_ids": {"prefix": "payment", "type": "Payment", "qualifier": "PAYMENT"}
+  },
+  "activities": {
+    "Create Order": {"event_type": "CREATE_ORDER", "quantity": {"owner_field": "order_ids", "state_type": "SalesOrderState", "mode": "INITIAL"}},
+    "Place SO": {"event_type": "PLACE_SUPPLIER_ORDER", "quantity": {"owner_field": "supplier_order_ids", "state_type": "SupplierOrderState", "mode": "INITIAL"}},
+    "Update SO": {"event_type": "UPDATE_SUPPLIER_ORDER", "quantity": {"owner_field": "supplier_order_ids", "state_type": "SupplierOrderState", "mode": "REPLACE"}},
+    "Create Invoice": {"event_type": "CREATE_INVOICE", "quantity": null},
+    "Receive SO": {"event_type": "RECEIVE_SUPPLIER_ORDER", "quantity": null},
+    "Unpack": {"event_type": "UNPACK", "quantity": null},
+    "Update Invoice": {"event_type": "UPDATE_INVOICE", "quantity": null},
+    "Pack Shipment": {"event_type": "PACK_SHIPMENT", "quantity": null},
+    "Ship": {"event_type": "SHIP", "quantity": null},
+    "Receive Payment": {"event_type": "RECEIVE_PAYMENT", "quantity": null},
+    "Clear Invoice": {"event_type": "CLEAR_INVOICE", "quantity": null}
+  },
+  "views": {
+    "invoice_orders": {"activity": "Create Invoice", "from": "invoice_ids", "to": "order_ids"},
+    "payment_invoices": {"activity": "Clear Invoice", "from": "payment_ids", "to": "invoice_ids"},
+    "packed_units": {"activity": "Pack Shipment", "from": "order_ids", "to": "item_ids"},
+    "received_units": {"activity": "Receive SO", "from": "supplier_order_ids", "to": "item_ids"}
+  },
+  "valid_time": {"kind": "NONE_STATED", "value": null},
+  "claim": "Declared Shop interpretation of named source columns and activities, not automatically entailed causality or a generic mapping DSL."
+}

@@ -1,0 +1,7 @@
+{
+  "opcode": "REQUIRE_TYPES_IN_ROLE",
+  "selection": "REPLACEMENTS",
+  "role": "state",
+  "match": "SUBTYPE",
+  "refusal": "REPLACEMENT_OUTSIDE_SHOP_STATE_ROLE"
+}

@@ -1,0 +1,156 @@
+id: https://example.malleus.dev/shop-connected-v1
+name: shop_connected_v1
+version: 0.1.0
+description: Shop-owned connected Table 1 reconstruction. Not a Core vocabulary.
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  shop: https://example.malleus.dev/shop-connected-v1/
+imports:
+  - linkml:types
+  - malleus
+  - object-event
+enums:
+  ShopActivity:
+    permissible_values:
+      CREATE_ORDER:
+      PLACE_SUPPLIER_ORDER:
+      CREATE_INVOICE:
+      RECEIVE_SUPPLIER_ORDER:
+      UPDATE_SUPPLIER_ORDER:
+      UNPACK:
+      UPDATE_INVOICE:
+      PACK_SHIPMENT:
+      SHIP:
+      RECEIVE_PAYMENT:
+      CLEAR_INVOICE:
+  ShopParticipationRole:
+    permissible_values:
+      ACTOR:
+      ORDER:
+      SUPPLIER_ORDER:
+      ITEM:
+      INVOICE:
+      PAYMENT:
+slots:
+  source_identifier:
+    range: string
+    required: true
+    description: Identifier printed in the source, not a provenance locator.
+  time_text:
+    range: string
+    required: true
+    description: Exact printed partial date and time, not a calendar instant.
+  order_id:
+    range: ShopObject
+    required: true
+    description: Enduring order whose recorded quantity this state describes.
+  product_code:
+    range: string
+    required: true
+  ordered_quantity:
+    range: integer
+    required: true
+  source_occurrence_id:
+    range: string
+    required: true
+    description: Domain occurrence identifier printed with the quantity.
+classes:
+  ShopObject:
+    abstract: true
+    is_a: Entity
+    description: Enduring source identity. Not a state version or occurrence.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Object-centric business process data
+          taxonomy: Event knowledge graphs
+          vocabularies:
+            - vocabulary: Fahland 2022 Table 1
+              vocabulary_url: https://doi.org/10.1007/978-3-031-08848-3_9
+              borrowed_terms: [Order, Supplier Order, Item, Invoice, Payment, Actor]
+          invented_terms: [ShopObject]
+          invention_search: >-
+            Table 1 separates these identifier columns. The local ShopObject
+            category groups their enduring objects for participation endpoints;
+            it is not claimed as a term defined by the chapter.
+    slots: [source_identifier]
+  SalesOrder:
+    is_a: ShopObject
+  SupplierOrder:
+    is_a: ShopObject
+  InventoryUnit:
+    is_a: ShopObject
+    description: One physical unit. Y1 and Y2 cannot be treated as state versions.
+  Invoice:
+    is_a: ShopObject
+  Payment:
+    is_a: ShopObject
+  ShopActor:
+    is_a: ShopObject
+    description: Source actor identity only, with no action authority implied.
+  RecordedOrderState:
+    abstract: true
+    is_a: Entity
+    description: >-
+      Immutable recorded product quantity for an enduring order. The selected
+      history program permits this category's subtypes to supersede a prior
+      same-type record. A state version is not the order or a physical unit.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Business order state representation
+          taxonomy: Knowledge representation
+          none_found: true
+          search: >-
+            Reviewed the retained Shop state-version fixture and the shipped
+            chronology, metrology and research class inventories. They supply
+            no shared recorded-order-state category. This local abstraction
+            groups the two order-state families, retaining ordered_quantity
+            from the predecessor Shop representation. No exhaustive search claimed.
+          invented_terms: [RecordedOrderState]
+    slots: [order_id, product_code, ordered_quantity, source_occurrence_id]
+  SalesOrderState:
+    is_a: RecordedOrderState
+    slot_usage:
+      order_id:
+        range: SalesOrder
+  SupplierOrderState:
+    is_a: RecordedOrderState
+    slot_usage:
+      order_id:
+        range: SupplierOrder
+  ShopOccurrence:
+    is_a: Event
+    description: One reported occurrence. Its effects are not inferred by Core.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Object-centric business process data
+          taxonomy: Event knowledge graphs
+          vocabularies:
+            - vocabulary: Fahland 2022 Table 1
+              vocabulary_url: https://doi.org/10.1007/978-3-031-08848-3_9
+              borrowed_terms: [EventID, Activity]
+          invented_terms: [ShopOccurrence]
+          invention_search: >-
+            Local type for the chapter's occurrence rows; the exact class
+            spelling is ours, not a borrowed class identifier.
+    slots: [source_identifier, time_text]
+    slot_usage:
+      event_type:
+        range: ShopActivity
+        required: true
+  ShopParticipation:
+    is_a: EventParticipation
+    slot_usage:
+      event_id:
+        range: ShopOccurrence
+      entity_id:
+        range: ShopObject
+      qualifier:
+        range: ShopParticipationRole
