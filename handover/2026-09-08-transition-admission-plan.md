@@ -1,6 +1,9 @@
 # Transition admission: implementation preparation
 
 Status: **activated by Luis's subsequent "Go"; encoding frozen below for TDD**.
+Implemented by GREEN `1385223e`; see the separate
+[result and evidence](2026-09-08-transition-admission-results.md). This plan
+preserves the sequence and its original pre-implementation limits.
 Luis accepted the [revised design](2026-09-08-history-profile-enforcement.md):
 "Correct, this is better, add to journal and prepare to implement."
 This records preparation within the existing Core runtime workstream, not a

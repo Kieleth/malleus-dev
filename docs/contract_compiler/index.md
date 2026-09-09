@@ -125,6 +125,56 @@ capability is an explicit profile reference with its own conformance contract.
 Another language may load the same canonical artifacts and is conforming only
 when it produces the same state or typed refusal.
 
+## Selected transition admission rules
+
+The optional `malleus.protocol-machine/private-v1` machine adds a closed
+`admission_rules` section to the existing protocol program. It binds the exact
+canonical identity of a retained `DomainHistoryProfile` and an ordered list of
+pure instructions. Private-v0 machine bytes keep their earlier meaning.
+
+The first instruction, `REQUIRE_TYPES_IN_ROLE`, selects `REPLACEMENTS` and a
+named history-profile role. Both prior and replacement types must belong to
+that role, using explicitly selected `EXACT` or `SUBTYPE` matching through the
+compiled contract. The role holds the type choices; Python contains no domain
+type list. An empty role permits no replacements. Ordinary additions are not
+forbidden by this replacement predicate.
+
+`KnowledgeChangeHistory` derives the transition input from its verified KCS
+base and record history. It evaluates the rule in its owning fold, before
+publishing candidate state. Full replay, reopen and maintained incremental
+replay use that same fold. A caller-supplied successful check event cannot
+override the rule. This is protocol validation, not protection against arbitrary
+filesystem rewriting or proof of source truth.
+
+The selected profile must be canonical retained evidence in each change's
+closure. Missing or unresolved profile, role and type bindings refuse with
+`TRANSITION_BINDING_REFUSAL`. A failed predicate refuses with
+`TRANSITION_RULE_REFUSAL`, including its declared refusal code and operation
+ordinals/IDs. Admission refusal preserves the exact pre-admission bytes;
+earlier successful preparation remains a separate transaction.
+
+To use Core's structural checks with this additional rule, copy the installed
+structural machine as data, select the private-v1 grammar and add its rule
+section. Pass the parsed `ProtocolMachineProgram` as `transition_program` to
+`create_structural_history`. That constructor refuses any other change to the
+installed machine. `admit_structural_change` accepts this exact extension and
+still produces its own structural check events. Omission selects the unchanged
+default; malformed or unsupported rules never fall back to it.
+
+The executable Core test is
+`tests/contract_compiler/pareto/test_transition_admission.py`. It includes the
+existing Shop e4/e7 source-to-population path with both matching modes and a
+neutral Event replacement refusal. The shipped state-version profile's state
+role names `Entity`, so `SUBTYPE` means its Entity descendants, not a claim
+that Core has inferred which domain concepts represent replaceable state.
+Narrower role choices belong in an adopter's explicitly bound profile.
+
+This is a bounded reference implementation within the optional compiler-bound
+semantic-history profile. No general rule DSL, host callbacks, external check
+reexecution, rule migration, stable wire or second interpreter is claimed.
+External engine receipts remain retained attestations; their replay is not
+converted into proof of execution by this pure guard.
+
 ## Private source-to-history slice
 
 The third Pareto slice now proves one narrow end-to-end path with the frozen

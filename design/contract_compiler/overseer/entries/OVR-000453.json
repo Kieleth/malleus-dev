@@ -1,0 +1,112 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000453",
+  "ledger": "overseer",
+  "sequence": 453,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:9662ae01008701955e25cd3600ac724aac95a994895b1c04609d54ea4025b0e8",
+  "recorded_at": "2026-09-09T01:47:55Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-selected-transition-admission",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind selected pure transition-rule admission and replay after RED/GREEN, with bounded public structural-helper selection.",
+  "why": "Luis activated the journaled transition-admission plan with Go. Freeze 56639221; RED 29508f3b; corrective/helper RED 57537d20 reproduced 29 failures from an immutable archive; GREEN 1385223e changes three runtime files. Private-v1 machine data binds retained history-profile roles and explicit exact/subtype matching. The owning KCS fold enforces the pure guard on admission and replay, so caller check outcomes cannot bypass it. The structural constructor permits only this extension of its exact machine. Focused 29, existing machine/history/reader 152, Shop 246 and complete Pareto 738 pass in the declared environment; overlapping selectors are not summed. The report distinguishes development gates from immutable audit. This entry closes current code/docs bindings forward-only. No domain vocabulary, new ledger, arbitrary callback, external check replay, policy migration, old-history reinterpretation, Assent cutover, package/dependency change, release or push. Closing documentation and overseer tests: 291 passed.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "src/malleus/_contract_pipeline/machine.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a6d1044a0f0d9e8ee50ca7157f4a636745ee1b718b5ca2ee65fdff9c3a6f1770",
+        "after_digest": "sha256:00b8320cf88c494bf0de0f3df52475e246904aa3a67c19b6da5911253c01e6d1"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:bbf6416adab228a2d3b1d52c7f29b79fcbefaae30bbcc906830b4176be664441",
+        "after_digest": "sha256:d4ac8be73cde6a3058c854c6c20c8a40afd76874706886c5b7e5c1b4bf81cd68"
+      },
+      {
+        "path": "src/malleus/compiler.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:42e27b2c8946e6e54f578fe4537a36856b822a568004e4e2cc57d8c03debe301",
+        "after_digest": "sha256:93c7b6ea6cc117da2c63322c1ed79fd5299d6a94767fc61bf52ac1b8ea53da63"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_transition_admission.py",
+        "change": "CREATED",
+        "after_digest": "sha256:ed2ec2deea36d2a9848e38a3dfde04f3cea5838a0a4fa6705b250f2c485d00a0"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:b3ec436694388a97caba71d50877ffaec70e2c20c77eede8a4e1b9c62f637523",
+        "after_digest": "sha256:0487eb3fa4814afbba9672e8ea939cb2e747ac7156d6f1f8f3337f5b87f63bca"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:23ca36c8b2f9c25d41494cc94b22790853f38eea6f912b4ba61e803d90136543",
+        "after_digest": "sha256:2d56b96be1367412881409d0461b7406f21414f5cd50954b408163d40573c9ec"
+      },
+      {
+        "path": "handover/2026-09-08-transition-admission-results.md",
+        "change": "CREATED",
+        "after_digest": "sha256:1b85026cb3f8a00d7792f1b3a9ca710f5542476524704c790f10ae1278f111a4"
+      },
+      {
+        "path": "handover/2026-09-08-transition-admission-plan.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:913f195aa0d43cb6a8d3fea2df2e8f136c20f3b08248a20a911aa6a8e8a0f6d1",
+        "after_digest": "sha256:94ea308531bdf231a352a136050de48bbbde063dae0a9f92bf879ac6c818e0d7"
+      },
+      {
+        "path": "handover/2026-09-08-history-profile-enforcement.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6ab7578c63335eeb8306647034b75c6d871c1b395a238657b2ee9556f950042c",
+        "after_digest": "sha256:8258b40e79a083bd656254d6077a93924fc5d9d53e60efe2ef312198d22f6077"
+      },
+      {
+        "path": "handover/2026-09-08-core-backlog.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a65ef44907f70e4ac0c7ce58cbaf10bc7700f96128222a41c9f110d7a4c37c5e",
+        "after_digest": "sha256:5d7480453130c05ffbcacad6697f8b6d37e05bfc36ab553d3f5d214af672c7ff"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "56639221b5ca1b150ebb272a4eab9e8e28b82198"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "29508f3b9cc5198732d92c9c36119bafeb8ccbdb"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "57537d20d5161b2e6ff660f99c353be0da6eb0ba"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "1385223eb274e63d98cc334d6dba6ecd54ed4007"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:ea0a539eba55e0e790c71cedd6d19241947f81bb31bcc7002dda1aceec49287a"
+}

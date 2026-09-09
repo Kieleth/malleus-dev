@@ -5,8 +5,11 @@ below and requested journaling plus implementation preparation: "Correct, this
 is better, add to journal and prepare to implement." The initial
 replacement-specific recommendation remains superseded. Exact instruction
 encoding and public names are not frozen; no runtime has been changed by this
-work. The [implementation preparation](2026-09-08-transition-admission-plan.md)
+audit. The [implementation preparation](2026-09-08-transition-admission-plan.md)
 separates that remaining design step from RED, GREEN and consumer evidence.
+The later [implementation result](2026-09-08-transition-admission-results.md)
+supersedes preparation status only. The census below remains evidence about
+the explicitly identified earlier runtime, not the new opt-in machine grammar.
 
 Runtime inspected: `a0026cbd25a90b5c2b6c9eb7b31df4e42df16804`, tree
 `ca0ace8bf60f5a0519acd4c020f3728021f51c27`. The live checkout also contained

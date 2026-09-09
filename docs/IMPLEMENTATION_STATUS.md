@@ -130,6 +130,19 @@ arbitrary projection programs from them. Contract revision is additive only;
 it is not a general ontology migration or import-admission mechanism. See
 `contract_compiler/index.md`.
 
+An explicitly selected private-v1 protocol machine can now bind a retained
+history profile to a pure replacement-type rule. `REQUIRE_TYPES_IN_ROLE` uses
+the selected role and explicit exact/subtype matching, rather than treating
+free-form profile labels as code. The owning KCS fold enforces it during
+admission, full replay and maintained replay. Missing bindings and forbidden
+replacements refuse; successful caller-authored check events cannot bypass it.
+`create_structural_history(transition_program=...)` permits only this rule
+extension of the installed structural machine; `admit_structural_change` still
+computes its own structural result. Existing private-v0 histories are unchanged.
+This is not a general history-profile interpreter, policy migration or full
+Assent cutover. Exact tests and limits are in
+`handover/2026-09-08-transition-admission-results.md`.
+
 Three optional, grounded knowledge packs also ship: `metrology`, `chronology`,
 and `research`. They provide reusable mixins, reference classes, and enums
 between the root primitives and a project ontology. A closed, content-addressed

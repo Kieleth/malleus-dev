@@ -89,20 +89,25 @@ remains consumer-owned work against existing Core seams, not part of this item.
 
 ## Larger Core work still pending, not prerequisites for this Shop exercise
 
-### Next Core preparation: executable transition restrictions
+### Implemented bounded slice: executable transition restrictions
 
 Luis accepted completing the existing normative admission role, following the
 [profile-enforcement audit](2026-09-08-history-profile-enforcement.md).
-The [bounded TDD plan](2026-09-08-transition-admission-plan.md) is prepared:
-freeze verified transition inputs and exact rule binding, commit RED through
-the owning history, implement the pure guard, prove replay parity, then send
-Shop the public consumer coordinate. No runtime change is claimed yet.
+The [bounded TDD plan](2026-09-08-transition-admission-plan.md) progressed through
+RED `29508f3b`, corrected/helper RED `57537d20`, and GREEN `1385223e`.
+The [result](2026-09-08-transition-admission-results.md) records pure owning-fold
+enforcement, replay parity and the public Shop e4/e7 fixture. The separately
+owned connected-Shop history still needs to select its rule and rerun; this
+does not rebind that consumer or its released evidence.
 
 This is not a replacement-specific policy subsystem. Adopter role/type choices
 stay in identified data; the owning gate enforces the selected interpretation.
 Unresolved required rules refuse. Existing structural-only histories retain
 their explicit weaker selection, with no silent fallback or reinterpretation.
-The precise instruction/capability encoding remains to be settled before RED.
+The explicit private-v1 machine adds a closed rule section, not host
+capabilities. The structural constructor accepts only that rule extension of
+its exact installed machine. General transition programs and rule migration
+remain outside this slice.
 
 | Work | Dependency and bounded next observation |
 |---|---|
