@@ -33,8 +33,9 @@ class MonitoringError(ControlError):
     """A required monitor did not produce a completed assessment."""
 
 
-# Fixed version-1 rule identity, not a caller-selectable policy override.
-AUTHORIZATION_CONTROL_IDENTITY = "sha256:2164015909de89d798c80432b9239016b439cf56da54e33a56dd6a8b92d6817a"
+# Fixed version-1 rule identity, not a caller-selectable policy override. It
+# digests the artifact's canonical JSON, so a CRLF checkout still resolves it.
+AUTHORIZATION_CONTROL_IDENTITY = "sha256:4f100b62dbdc444f240327d6dc26eac3764409d83ba875db73692d4e1aaac37e"
 
 
 @lru_cache(maxsize=1)

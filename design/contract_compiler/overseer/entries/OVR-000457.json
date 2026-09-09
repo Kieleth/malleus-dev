@@ -1,0 +1,84 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000457",
+  "ledger": "overseer",
+  "sequence": 457,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:3c84e38443b832c92ad0bbfba9f0a083c21018e99f79374f0dec6ffeb10f8a14",
+  "recorded_at": "2026-09-09T21:20:00Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-authorization-rule-artifact",
+    "type": "DOCUMENT"
+  },
+  "summary": "Identify the pinned authorization rule artifact by the digest of its canonical JSON so a CRLF checkout resolves it, ending the Windows CI failure on every push since 2026-09-09.",
+  "why": "GitHub CI on main failed on every push since 2026-09-09 17:06Z. Runs 34380853031, 34385335112, 34392699748 and 34396370729 fail only in 'Windows recon (Python 3.12)'; the four Linux jobs of 34396370729 pass. Git for Windows checks src/malleus/authorization-control-v1.json out with CRLF, so SHA-256 over the raw bytes is ba099f78b17488f9e811168f7e098518e7a2c5b997a4411d164c6564b19a880f, not the pinned identity, and importing malleus raises ControlError at control.py:51. That byte identity arrived in a7c54fa8, first pushed inside 74c715b4..82b33967; the last green run is 34291242305 at 74c715b4. OutcomeControlRules.from_bytes now parses first and digests the canonical JSON (compact separators, sorted keys, no NaN, UTF-8), the grammar malleus.ledger.canonical_json uses, so AUTHORIZATION_CONTROL_IDENTITY is re-derived from sha256:2164015909de89d798c80432b9239016b439cf56da54e33a56dd6a8b92d6817a to sha256:4f100b62dbdc444f240327d6dc26eac3764409d83ba875db73692d4e1aaac37e. Rule content, version-1 policy and evaluation hashes are unchanged. The guard is the test: RED 3d79de8c accepts the artifact from committed bytes and from the same bytes with CRLF. Windows stays unverified locally.",
+  "data": {
+    "affected_ids": [
+      "CC-R11",
+      "CC-PKG02"
+    ],
+    "documents": [
+      {
+        "path": "src/malleus/_control_rules.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e7d39a1761bda40f87e3b2cc772633897fbe1d0399d4021654d4a5f69a177942",
+        "after_digest": "sha256:ff088be8fed6bbb501db49ea6ac486fad2f0f144d08faa00eb328926e460b396"
+      },
+      {
+        "path": "src/malleus/control.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:254359e09a43270d212b0483a994e769ea57dbc92e220772fba01da18d57d40d",
+        "after_digest": "sha256:ac794cd7c769c8c34208af5db69c4a6b5db3b992c28a0c49678fe2f0affd096a"
+      },
+      {
+        "path": "tests/test_control.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:10d7047b65267f859bb57a766c5ce007520381799f47559f25f61d0f7ab19141",
+        "after_digest": "sha256:c5c7080eee088bf54e590723beacd69b6de456a14dcfad408c3f35551315cd44"
+      },
+      {
+        "path": "docs/ASSENT_PROTOCOL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e7f6041426f454d15dabe10c4ed0168476885cab7c18d02162baf3c8e066f770",
+        "after_digest": "sha256:2465c25540fb582d7d08268cc8ea898d2ade4116565825acb6096f6b1d6401ec"
+      },
+      {
+        "path": ".gitattributes",
+        "change": "CREATED",
+        "after_digest": "sha256:9955f44744772a8cbc0896fd19aa08b64554a56ec3bf30c0828e01dac64dfd3d"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "3d79de8c3ca140aa555e8fd3ce712a5b5e34820e"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "a7c54fa8453b28616c37942a1411e464dd0622e2"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "ENTRY",
+      "target": "OVR-000451"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-PKG02"
+    }
+  ],
+  "entry_hash": "sha256:07e195cf90ddc3bbce82d95f2d1ac0aca3b8217eeb2bde5ead4a5ead4425e735"
+}

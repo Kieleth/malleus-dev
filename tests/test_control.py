@@ -43,11 +43,18 @@ AUTHORIZATION_RULES = {
 }
 
 
+def canonical(value):
+    """The identity grammar, spelled out here so the tests do not import it."""
+    return json.dumps(
+        value, allow_nan=False, ensure_ascii=False, separators=(",", ":"), sort_keys=True,
+    ).encode("utf-8")
+
+
 def rules_from(value):
     module = import_module("malleus._control_rules")
     data = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
     return module.OutcomeControlRules.from_bytes(
-        data, expected_identity="sha256:" + sha256(data).hexdigest(),
+        data, expected_identity="sha256:" + sha256(canonical(value)).hexdigest(),
     )
 
 
@@ -57,7 +64,7 @@ def test_authorization_rule_artifact_is_installed_identified_and_immutable():
     data = resources.files("malleus").joinpath("authorization-control-v1.json").read_bytes()
     assert json.loads(data) == AUTHORIZATION_RULES
     rules = control._authorization_rules()
-    assert rules.identity == "sha256:" + sha256(data).hexdigest()
+    assert rules.identity == "sha256:" + sha256(canonical(json.loads(data))).hexdigest()
     assert rules.identity == control.AUTHORIZATION_CONTROL_IDENTITY
     assert rules.control("UNKNOWN") == "CLARIFY"
     assert rules.select(["AUTHORIZE", "BLOCK", "CLARIFY"]) == "BLOCK"

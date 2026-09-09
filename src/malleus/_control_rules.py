@@ -1,7 +1,12 @@
 """Private, pure execution of identified finite outcome-control data.
 
 No authorization vocabulary, policy selection, callbacks or persistence live
-here. The owning profile selects exact bytes and supplies their identity.
+here. The owning profile selects exact content and supplies its identity.
+
+Identity is the digest of the artifact's canonical JSON, the same grammar
+`malleus.ledger.canonical_json` uses: compact separators, sorted keys, no
+NaN, UTF-8. Raw-byte identity would make the artifact's acceptance depend on
+the checkout's line-ending policy, which is not part of its meaning.
 """
 
 from dataclasses import dataclass
@@ -33,6 +38,21 @@ def _labels(values, *, nonempty=True):
     return tuple(values)
 
 
+def _canonical_identity(value):
+    """Digest the artifact's meaning, not one serialization of it."""
+    try:
+        blob = json.dumps(
+            value,
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+    except (TypeError, ValueError) as error:
+        raise OutcomeRuleError("noncanonical rule content") from error
+    return "sha256:" + sha256(blob).hexdigest()
+
+
 @dataclass(frozen=True)
 class OutcomeControlRules:
     """Immutable lookup, highest-first precedence and explicit trigger set."""
@@ -46,13 +66,13 @@ class OutcomeControlRules:
     def from_bytes(cls, data, *, expected_identity):
         if type(data) is not bytes:
             raise OutcomeRuleError("exact rule bytes required")
-        identity = "sha256:" + sha256(data).hexdigest()
-        if identity != expected_identity:
-            raise OutcomeRuleError("rule artifact identity differs")
         try:
             value = json.loads(data, object_pairs_hook=_object)
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
             raise OutcomeRuleError("invalid rule JSON") from error
+        identity = _canonical_identity(value)
+        if identity != expected_identity:
+            raise OutcomeRuleError("rule artifact identity differs")
         if type(value) is not dict or set(value) != {
             "schema",
             "outcome_controls",
