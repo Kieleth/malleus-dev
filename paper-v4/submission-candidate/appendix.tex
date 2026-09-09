@@ -1,0 +1,348 @@
+\clearpage
+\section*{Appendix A. Evidence for the worked claims}
+
+JSON exhibits select fields from retained query results or the identified capture. Keys, values and identifiers are unchanged; unshown fields are omitted, not null. Row indices are zero-based within each question. B supplies most exhibits; A shows contrasting failures. Additional candidates and complete reviews remain retained.
+
+Source excerpts are from Yu et al. (2025), DOI 10.1038/s41467-024-55792-9, under \href{https://creativecommons.org/licenses/by-nc-nd/4.0/}{CC BY-NC-ND 4.0}. Only whitespace is collapsed in quotations. Locators identify the selected PDF text layer, not figures or supplements. Model-assisted judgments remain HUMAN RATIFICATION PENDING, not ratified publication evidence.
+
+\subsection*{A.1 A supported count and its evidence trace}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{Question CQ-T1-02, B, row 0.} How many ocean-bottom seismometers were deployed? The returned observation is:
+
+\begin{lstlisting}
+{
+  "record_type": "ReportedObservation",
+  "witness": {"record_id": "obs:obs-network-size-methods"},
+  "record": {
+    "count": 19,
+    "count_scope": "OBSs deployed in the network",
+    "assertion_modality": "STATED",
+    "assertion_locator": "assertion:175"
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+The public trace binds count and count\_\allowbreak{}scope to assertion:175. This retained capture excerpt connects that assertion to the source block; it is evidence behind the graph, not a graph node:
+
+\begin{lstlisting}
+{
+  "id": "assertion:175",
+  "block": "page:6:block:002",
+  "modality": "STATED"
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Source excerpt, page:6:block:002:} "A network of 19 OBSs was deployed,"
+
+\textbf{Retained judgment.} Witness SUPPORTED; question COVERED. Its required instrument\_\allowbreak{}count, observing\_\allowbreak{}system and deployment\_\allowbreak{}event all cite row 0. The last two are expressed by count\_\allowbreak{}scope, not separate instrument or event nodes. The same source block uses 17 for useful instruments; substituting that count would change the population being counted. This exhibit establishes a scoped answer, not a complete deployment model.
+
+\subsection*{A.2 Spatial and quantitative answers retain their scope}
+
+\textbf{Spatial question CQ-T2-01.} A returns the path feature:rc1 through rel:rc1-bounded-by-detachment to feature:detachment-fault. Its relation\_\allowbreak{}type is BOUNDED\_\allowbreak{}BY; the endpoints are named RC1 and detachment fault. There is no returned side-of-axis qualifier. B also returns that kind of edge, but adds claim:rti-amagmatic with subject feat:rc1. Its statement contains the following source wording, including the core complex's position.
+
+\textbf{Source excerpt, page:1:block:005:} "The RTI segment is amagmatic and bounded to the east by a westward dipping detachment fault with a prominent oceanic core complex (OCC) on the eastern side of the ridge axis"
+
+\textbf{Retained judgment.} A is PARTIAL; B is COVERED. In B, named\_\allowbreak{}subsection, structural\_\allowbreak{}feature, bounding\_\allowbreak{}relation and side\_\allowbreak{}of\_\allowbreak{}axis cite its statement row 0. The eastern qualifier is readable prose. Neither this judgment nor the explicit BOUNDED\_\allowbreak{}BY edge establishes a typed east-of relation.
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{Quantity question CQ-T3-02, B, row 0 of six.} The Ba-based candidate is:
+
+\begin{lstlisting}
+{
+  "witness": {"record_id": "obs:co2-ba90-rc2"},
+  "record": {
+    "quantity_kind": "CO2 (Ba90) in the primary melts for the segment RC2",
+    "subject": "feat:rc2",
+    "value_lower": 0.4, "value_upper": 3.0, "unit": "wt%",
+    "assertion_modality": "CALCULATED",
+    "determination": "ESTIMATED",
+    "assertion_locator": "assertion:259"
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Source comparison, page:8:block:007.} Primary-melt CO2 estimates for RC2 are 0.4 to 3.0 wt\% from Ba and 0.5 to 2.8 wt\% from Rb. The latter returns separately as obs:co2-rb90-rc2, alongside RC3 estimates, an abstract-level estimate and a lower-bound record.
+
+\textbf{Retained judgment.} Row 0 covers bounded\_\allowbreak{}quantity, concentration\_\allowbreak{}unit, quantity\_\allowbreak{}subject and calculated\_\allowbreak{}or\_\allowbreak{}measured\_\allowbreak{}status. The question is COVERED, not uniquely resolved across all six candidates. Neither CALCULATED nor ESTIMATED means directly measured undegassed primary melt.
+
+\subsection*{A.3 One supported hypothesis, two different coverage results}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{Questions CQ-T4-01 and CQ-T5-01, B.} Both original outputs return this record:
+
+\begin{lstlisting}
+{
+  "record_type": "ReportedClaim",
+  "witness": {"record_id": "claim:hyp-co2-degassing"},
+  "record": {
+    "subject": "feat:rc2",
+    "claim_kind": "MECHANISM_HYPOTHESIS",
+    "hypothesis_disposition": "PREFERRED",
+    "assertion_modality": "HYPOTHESISED",
+    "assertion_locator": "assertion:133"
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+The record's returned statement preserves this sentence:
+
+\textbf{Source excerpt, page:5:block:002:} "The fourth possibility, and our preferred, is that the observed deep microseismicity beneath the segment RC2 is related to CO 2 degassing from the ascending melt."
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{Retained judgment.} The witness is SUPPORTED. For CQ-T4-01 it supplies all four requirements: causal\_\allowbreak{}claim, preferred\_\allowbreak{}disposition, epistemic\_\allowbreak{}modality and claim\_\allowbreak{}subject. The question is COVERED. For CQ-T5-01 it supplies only the causal\_\allowbreak{}mechanism. The original composition output explicitly has no path:
+
+\begin{lstlisting}
+{
+  "question_id": "CQ-T5-01",
+  "paths": []
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{After the evidence amendment, row 1.} A new relation reaches that same hypothesis. The following selects its relation, endpoints and quantity fields:
+
+\begin{lstlisting}
+{
+  "witness": {
+    "relation_id": "repair:evidence:saturation-depth-supports-co2-degassing",
+    "source_id": "obs:saturation-depth",
+    "target_id": "claim:hyp-co2-degassing"
+  },
+  "relation": {"relation_type": "SUPPORTS"},
+  "source": {
+    "value_lower": 25.0, "value_upper": 25.0, "unit": "km",
+    "determination": "MODELLED",
+    "value_qualification": "APPROXIMATE",
+    "assertion_modality": "HYPOTHESISED"
+  },
+  "target": {
+    "hypothesis_disposition": "PREFERRED",
+    "assertion_modality": "HYPOTHESISED"
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Source excerpt, page:5:block:006:} "would start degassing CO2, in agreement with the observed deep microseismicity."
+
+The preceding source conditions are melt above 0.7 wt\% CO2, approximately 0.7 GPa and 1250 degrees C. The approximately 25 km value is predicted saturation depth, not the observed earthquake depths. The edge alone carries SUPPORTS; the conditional, source-attributed interpretation requires its endpoints and trace.
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+The retained reviews give this requirement-level account. A row reference means supported coverage; the uppercase absence codes are the original review terms.
+
+{\scriptsize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr 0.3\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.12\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.12\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.46\linewidth-2\tabcolsep\relax}}
+\toprule
+\textbf{Required semantic} & \textbf{Before} & \textbf{After} & \textbf{Evidence or remaining gap} \\
+\midrule
+causal\_\allowbreak{}mechanism & Row 0 & Row 0 & Hypothesis, not established cause. \\
+supporting\_\allowbreak{}observation & Absent & Row 1 & Before: UNREACHED\_\allowbreak{}RECORD. After: a model result in the ontology's broad observation sense, not an empirical earthquake measurement. \\
+geochemical\_\allowbreak{}evidence & Absent & Absent & UNREACHED\_\allowbreak{}RECORD. Volatile-content estimates remain outside this output. \\
+seismic\_\allowbreak{}evidence & Absent & Absent & UNREACHED\_\allowbreak{}RECORD. The observed RC2 depths in page:2:block:006 are not returned. \\
+evidence\_\allowbreak{}relation & Absent & Row 1 & Before: NOT\_\allowbreak{}MODELLED. After: the new model-result-to-hypothesis relation, not a join of both requested evidence types. \\
+\bottomrule
+\end{tabular}}
+\end{minipage}\par\medskip
+
+Coverage stays PARTIAL. Assembly changes from ONE\_\allowbreak{}ROW to LINKED\_\allowbreak{}ROWS, not a higher grade. Requiring an empirical supporting observation would leave that requirement absent too; the full composition question remains incomplete.
+
+\subsection*{A.4 Nonempty does not mean supported: funding before and after}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{Question CQ-T2-05, B, original row 0 of three.} The relevant named agreement appears on this ERC-to-Singh relation, together with a second award:
+
+\begin{lstlisting}
+{
+  "witness": {"relation_id": "rel:erc-funds-singh"},
+  "source": {"name": "European Research Council"},
+  "target": {"name": "Satish C. Singh"},
+  "relation": {
+    "relation_type": "FUNDS",
+    "award_identifier": ["339442_TransAtlanticILAB", "ANR--17-EURE-0015"]
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Source excerpt, page:10:block:044:} "Grant agreement no. 339442\_\allowbreak{}TransAtlanticILAB to S.C.S."
+
+The same paragraph assigns the ANR award to ISblue. The byline and correspondence identify S.C.S. as Satish C. Singh. The displayed ANR spelling is retained output, not a correction of the source's text-layer punctuation.
+
+\textbf{Retained judgment before.} Witness PARTIAL; question NONE under the support gate. funding\_\allowbreak{}record, grant\_\allowbreak{}identifier, person and attribution\_\allowbreak{}relation lack a fully supported answering witness, despite correct subfields. The other two rows concern NSFC and Zhejiang funding to Yu, not this named agreement.
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{After amendment, row 2 of three.} The replacement keeps the endpoints and only the supported agreement:
+
+\begin{lstlisting}
+{
+  "witness": {"relation_id": "repair:funding:erc-funds-singh"},
+  "source": {"name": "European Research Council"},
+  "target": {"name": "Satish C. Singh"},
+  "relation": {
+    "relation_type": "FUNDS",
+    "award_identifier": ["339442_TransAtlanticILAB"]
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Retained judgment after.} Witness SUPPORTED; all four requirements cite row 2; question COVERED. The original relation remains in history, superseded by the replacement. The two other funding paths are unchanged but occupy rows 0 and 1. This is a correction of one attribution, not full capture of the funding paragraph.
+
+\subsection*{A.5 An admitted statement can lose a source qualification}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{Capture A, CQ-T4-04 witness.} This is a source-support failure, not a compiler or replay refusal:
+
+\begin{lstlisting}
+{
+  "witness": {"record_id": "claim:no-active-vents-rc2"},
+  "record": {
+    "name": "absence of active hydrothermal vents on the RC2 axis",
+    "assertion_modality": "NEGATED",
+    "assertion_locator": "assertion:0087",
+    "subject": "feature:rc2"
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Source excerpt, page:3:block:002:} "To date, there are no observations of active hydrothermal vents on the segment RC2 axis."
+
+\textbf{Retained judgment.} Witness PARTIAL. The site and negative polarity match, but the returned name asserts absence of vents instead of the absence of observations available to date. The correct locator makes that loss inspectable; it does not prevent it. No amendment of this witness is reported here.
+
+\subsection*{A.6 An empty unavailable-information control}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{Question CQ-C-01, B.} The sulfur/chlorine query returns:
+
+\begin{lstlisting}
+{
+  "question_id": "CQ-C-01",
+  "outcome": "NO_CANDIDATE",
+  "rows": [],
+  "paths": [],
+  "witness_ids": []
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Retained judgment.} NONE. bounded\_\allowbreak{}quantity, concentration\_\allowbreak{}unit and measurement\_\allowbreak{}status carry NOT\_\allowbreak{}IN\_\allowbreak{}SOURCE. sample\_\allowbreak{}set carries UNREACHED\_\allowbreak{}RECORD: the graph has sample:morb, but this output returns no sample record. The review checked page:5:block:004 and page:8:block:005 through page:8:block:007 and the retained assertion inventory. No single quotation proves document-wide absence. This is a model-assisted negative finding on the selected text surface, not a claim about figures, supplements or all available geochemical data. Unlike A.4, this is an unavailable-information control, not rejected mixed attribution.
+
+\subsection*{A.7 Artifact coordinates and limits of this appendix}
+
+SHA-256 coordinates for Capture B. Source PDF: {\small\ttfamily 7d3d42bf\allowbreak{}17cbf128\allowbreak{}0a63cbb1\allowbreak{}64254b5b\allowbreak{}839f4e38\allowbreak{}0d458086\allowbreak{}065cb309\allowbreak{}caf1a2a9}. Selected reading: {\small\ttfamily f3885c7b\allowbreak{}50292cd2\allowbreak{}dea05b54\allowbreak{}0abe6846\allowbreak{}4b089767\allowbreak{}e478eca7\allowbreak{}4cd37149\allowbreak{}900a8a17}. Ontology: {\small\ttfamily 6fbb99a2\allowbreak{}83ddb057\allowbreak{}a2690e0b\allowbreak{}f7530a6a\allowbreak{}16bac789\allowbreak{}0f36780b\allowbreak{}4d397588\allowbreak{}f8592e6a}.
+
+B's original ledger head is {\small\ttfamily a2f3ad2e\allowbreak{}6ef4b8a3\allowbreak{}3d508ae5\allowbreak{}eee4d0a6\allowbreak{}54f16e51\allowbreak{}2dc4189f\allowbreak{}df043230\allowbreak{}cab3e217}; admitted and reopened receipt: {\small\ttfamily 2cab922f\allowbreak{}229d578f\allowbreak{}183a647e\allowbreak{}445d0b99\allowbreak{}348ce2f9\allowbreak{}31fb161a\allowbreak{}0652547a\allowbreak{}29a6e832}. The retained result reports equal records and receipts after reopen. Query binding: {\small\ttfamily d73119a0\allowbreak{}74c4cef1\allowbreak{}f8f5750c\allowbreak{}4c57116a\allowbreak{}8c74e4c0\allowbreak{}3682429a\allowbreak{}d7c280a3\allowbreak{}b31374a4}; answer program: {\small\ttfamily 389c4ff9\allowbreak{}565304be\allowbreak{}63caf432\allowbreak{}ece17ef1\allowbreak{}08f3a0b2\allowbreak{}f229fbc5\allowbreak{}3be70caf\allowbreak{}962dc698}. Both repairs reuse those programs.
+
+Original excerpts come from the retained pilot-03/run-20 and pilot-03/run-21 query-result.json files; the amendments come from repair-02/funding/attempt-01 and repair-02/evidence/attempt-01. Original judgments are in the complete review-01 records, not inferred from the query's candidate status. The independent amendment review is repair-02/review-01/review.md. It assesses source support and changed answers; the coordinator's separate admission/reproduction checks establish the replay claims. These are different evidence roles.
+
+All paths in the preceding paragraph are relative to the retained private paper-v4-answer-demonstration directory. The appendix exposes selected evidence, but is not a complete reproduction package. Full source-bearing material remains private, and a publication-accessible package and human ratification remain open.
+
+\clearpage
+\section*{Appendix B. Task-directed composition evidence}
+
+This separate amendment starts from original B, not the evidence repair in A.3. The producer receives CQ-T5-01 and its five requirements, but no expected answer values or query code. Its first candidate adds only the two relations shown below. The unchanged query returns the original hypothesis as row 0 and these two additional witnesses as rows 1 and 2. Field selections follow Appendix A's transcription and source-attribution rules.
+
+\subsection*{B.1 Two observations reach one qualified hypothesis}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{CQ-T5-01, amended row 1.} Calculated volatile content:
+
+\begin{lstlisting}
+{
+  "witness": {
+    "relation_id": "repair:evidence:co2-enrichment-supports-degassing",
+    "source_id": "obs:co2-calculated-rc2",
+    "target_id": "claim:hyp-co2-degassing"
+  },
+  "relation": {"relation_type": "SUPPORTS"},
+  "source": {
+    "value_lower": 0.4, "value_upper": 3.0, "unit": "wt%",
+    "determination": "DERIVED",
+    "assertion_modality": "CALCULATED",
+    "subject": "feat:rc2", "assertion_locator": "assertion:147"
+  },
+  "target": {
+    "hypothesis_disposition": "PREFERRED",
+    "assertion_modality": "HYPOTHESISED"
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+\textbf{CQ-T5-01, amended row 2.} Observed earthquake depth:
+
+\begin{lstlisting}
+{
+  "witness": {
+    "relation_id": "repair:evidence:deep-microseismicity-supports-degassing",
+    "source_id": "obs:deep-microseismicity-rc2",
+    "target_id": "claim:hyp-co2-degassing"
+  },
+  "relation": {"relation_type": "SUPPORTS"},
+  "source": {
+    "value_lower": 10.0, "value_upper": 20.0, "unit": "km",
+    "value_qualification": "APPROXIMATE",
+    "assertion_modality": "MEASURED",
+    "subject": "feat:rc2", "assertion_locator": "assertion:055"
+  },
+  "target": {
+    "hypothesis_disposition": "PREFERRED",
+    "assertion_modality": "HYPOTHESISED"
+  }
+}
+\end{lstlisting}
+\end{minipage}\par\medskip
+
+\textbf{Source comparison.} page:5:block:005 reports calculated RC2 melt CO2 of 0.4 to 3.0 wt\%, compared with less enriched RC3 melts. page:2:block:004 reports approximately 10 to 20 km microseismicity beneath the RC2 axis and calls the record a brief time snapshot. This is the returned broad observed range, not the 16 to 19 km range discussed in page:2:block:006 or the modelled 25 km in A.3. The new relation assertions cite page:5:block:005 and page:5:block:002; their existing endpoints trace separately to the quantitative source assertions.
+
+\subsection*{B.2 Source support and question coverage}
+
+\par\medskip
+\noindent\begin{minipage}{\linewidth}
+Independent review judges row 0 and both added relation witnesses SUPPORTED. The SUPPORTS direction requires context across page 5, blocks 2 through 6; the relation's short assertion excerpt alone does not establish the argument. The table preserves the five frozen requirements and zero-based row references.
+
+{\scriptsize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr 0.3\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.12\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.12\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.46\linewidth-2\tabcolsep\relax}}
+\toprule
+\textbf{Required semantic} & \textbf{Before} & \textbf{After} & \textbf{What the answering witness establishes} \\
+\midrule
+causal\_\allowbreak{}mechanism & Row 0 & Row 0 & The preferred, hypothesised explanation remains qualified. \\
+supporting\_\allowbreak{}observation & Absent & Rows 1, 2 & Calculated volatile content and observed seismic depth, with different bases. \\
+geochemical\_\allowbreak{}evidence & Absent & Row 1 & RC2 melt CO2, 0.4 to 3.0 wt\%, CALCULATED and DERIVED. \\
+seismic\_\allowbreak{}evidence & Absent & Row 2 & RC2 microseismicity, approximately 10 to 20 km, MEASURED. \\
+evidence\_\allowbreak{}relation & Absent & Rows 1, 2 & Two actual SUPPORTS records share the same hypothesis target. \\
+\bottomrule
+\end{tabular}}
+\end{minipage}\par\medskip
+
+Coverage changes from PARTIAL to COVERED, with assembly ONE\_\allowbreak{}ROW to LINKED\_\allowbreak{}ROWS. The review accepts the ontology's broad reported-observation meaning, including calculation from geochemical data. It does not treat calculated melt CO2 as directly measured or seismically located depth as a direct instrument reading.
+
+\textbf{Remaining qualifications.} The returned rows omit the geochemical proxy assumptions, RC3 comparison, an explicit primary-melt stage field, the seismic time-snapshot caveat, acquisition duration and depth reference surface. These remain inspectable in source context. The review finds no unsupported addition or semantic regression, but does not claim a complete causal argument. Source faithfulness is preserved; intended-use sufficiency improves for this question.
+
+\subsection*{B.3 Replay coordinates}
+
+The added relations admit in one change set. The ledger grows from 14 to 20 events, preserving its baseline byte prefix and all existing records. The graph has 537 current records. Only CQ-T5-01 changes; the other 29 outputs are identical. A separate execution reproduces the complete ledger and all seven result artifacts byte-for-byte. Model-assisted judgments remain HUMAN RATIFICATION PENDING.
+
+The source, reading, ontology and query identities are those in A.7. This condition's ledger head is {\small\ttfamily 562c8173\allowbreak{}fbfde84c\allowbreak{}bca9070a\allowbreak{}747eb4d2\allowbreak{}01a58043\allowbreak{}d2796424\allowbreak{}d5fcaa5d\allowbreak{}ab22a0ca}; its reopened receipt is {\small\ttfamily 6ce3de3f\allowbreak{}d09dec33\allowbreak{}10d279a1\allowbreak{}8c51fe44\allowbreak{}5bc76af5\allowbreak{}40e507a5\allowbreak{}75f78bf8\allowbreak{}aa527013}. The retained output is composition-01/evidence/attempt-01/query-result.json; the separate review is composition-01/review-01/review.md, under the same private evidence root as A.7. Original review totals remain unchanged.

@@ -5,11 +5,30 @@
     ".",
     "src"
   ],
+  "core_pins": [
+    {
+      "commit": "160878cf14c0d27b11a440e26688708e9b7a7e2b",
+      "pythonpath": ["paper-v4/answer-demonstration"],
+      "paths": [
+        "paper-v4/answer-demonstration",
+        "paper-v4/submission-candidate/test_prepare.py"
+      ]
+    }
+  ],
   "pytest_args": [
     "--import-mode=importlib",
     "-q"
   ],
+  "private_fixture_patterns": [
+    "private/paper-v4-text-layer",
+    "private/paper-v4-v4-run-*",
+    "private/paper-v4-v4-shop-01",
+    "private/paper-v4-answer-demonstration"
+  ],
+  "private_fixture_excludes": ["*.pdf", "__pycache__/"],
   "paths": [
+    "paper-v4/answer-demonstration",
+    "paper-v4/submission-candidate/test_prepare.py",
     "paper-v4/appendix-evidence",
     "paper-v4/environment",
     "paper-v4/evaluation-v2",
@@ -37,7 +56,8 @@
     "paper-v4/experiment-v4/run-21",
     "paper-v4/experiment-v4/run-22",
     "paper-v4/experiment-v4/shop-01",
-    "paper-v4/test_publication_consistency.py"
+    "paper-v4/test_publication_consistency.py",
+    "paper-v4/test_run_active_tests.py"
   ],
   "excluded_roots": [
     "research/ontology_driven_kg_realization/experiments/document_paper",

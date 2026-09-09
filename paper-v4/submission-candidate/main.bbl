@@ -1,0 +1,61 @@
+\begin{thebibliography}{1}
+
+\bibitem{nexusdelta}
+{Blue Brain Nexus}.
+\newblock Nexus delta: Managing the data and knowledge graph lifecycle.
+\newblock Project documentation.
+\newblock Accessed 7 September 2026.
+  \url{https://bluebrainnexus.io/products/nexus-delta/}.
+
+\bibitem{caufield2024spires}
+J.~Harry Caufield, Harshad Hegde, Vincent Emonet, Nomi~L. Harris, Marcin~P.
+  Joachimiak, Nicolas Matentzoglu, HyeongSik Kim, Sierra A.~T. Moxon, Justin~T.
+  Reese, Melissa~A. Haendel, Peter~N. Robinson, and Christopher~J. Mungall.
+\newblock Structured prompt interrogation and recursive extraction of semantics
+  ({SPIRES}): A method for populating knowledge bases using zero-shot learning.
+\newblock {\em Bioinformatics}, 40(3):btae104, 2024.
+\newblock \url{https://doi.org/10.1093/bioinformatics/btae104}.
+
+\bibitem{cotti2026ontologx}
+Luca Cotti, Idilio Drago, Anisa Rula, Devis Bianchini, and Federico Cerutti.
+\newblock {OntoLogX}: Ontology-guided knowledge graph extraction from
+  cybersecurity logs with large language models.
+\newblock arXiv:2510.01409v2, 2026.
+\newblock \url{https://arxiv.org/abs/2510.01409v2}.
+
+\bibitem{santos2026esaa}
+Elzo~Brito dos Santos~Filho.
+\newblock {ESAA}: Event sourcing for autonomous agents in {LLM}-based software
+  engineering.
+\newblock arXiv:2602.23193v1, 2026.
+\newblock \url{https://arxiv.org/abs/2602.23193v1}.
+
+\bibitem{lebo2013provo}
+Timothy Lebo, Satya Sahoo, and Deborah McGuinness.
+\newblock {PROV-O}: The {PROV} ontology.
+\newblock W3C Recommendation, edited by the named authors, 2013.
+\newblock \url{https://www.w3.org/TR/2013/REC-prov-o-20130430/}.
+
+\bibitem{lewis2020retrieval}
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
+  Karpukhin, Naman Goyal, Heinrich K{\"u}ttler, Mike Lewis, Wen-tau Yih, Tim
+  Rockt{\"a}schel, Sebastian Riedel, and Douwe Kiela.
+\newblock Retrieval-augmented generation for knowledge-intensive {NLP} tasks.
+\newblock In {\em Advances in Neural Information Processing Systems}, 2020.
+\newblock \url{https://arxiv.org/abs/2005.11401}.
+
+\bibitem{skjaeveland2024reasonable}
+Martin~Georg Skj{\ae}veland and Leif~Harald Karlsen.
+\newblock The reasonable ontology templates framework.
+\newblock {\em Transactions on Graph Data and Knowledge}, 2(2):5:1--5:54, 2024.
+\newblock \url{https://doi.org/10.4230/TGDK.2.2.5}.
+
+\bibitem{yu2025deep}
+Zhiteng Yu, Satish~C. Singh, C{\'e}dric Hamelin, L{\'e}a Grenet, Marcia Maia,
+  Anne Briais, Lorenzo Petracchini, and Daniele Brunelli.
+\newblock Deep mantle earthquakes linked to {CO$_2$} degassing at the
+  {Mid-Atlantic Ridge}.
+\newblock {\em Nature Communications}, 16:563, 2025.
+\newblock \url{https://doi.org/10.1038/s41467-024-55792-9}.
+
+\end{thebibliography}

@@ -1,0 +1,13 @@
+{
+  "condition": "TASK_DIRECTED_ARGUMENT_COMPLETION",
+  "question_id": "CQ-T5-01",
+  "prospective_only": true,
+  "criteria": [
+    {"semantic": "causal_mechanism", "requirement": "Return the source-attributed proposed mechanism and what it explains, preserving its hypothesis status. This does not establish causal truth."},
+    {"semantic": "supporting_observation", "requirement": "Return a distinct source-supported evidence record connected to the mechanism. A hypothesis merely naming the phenomenon it explains is not itself the requested supporting observation. Model results may contribute when explicitly distinguished from measurements."},
+    {"semantic": "geochemical_evidence", "requirement": "Return the observation about melt volatile content or enrichment used in the argument. Preserve the stated scope and whether the value is measured, calculated or estimated. Naming the volatile or returning a saturation-depth result alone is insufficient."},
+    {"semantic": "seismic_evidence", "requirement": "Return the observation about earthquake depth used in the argument, preserving its scope and evidential status. Do not substitute a modelled saturation depth or the hypothesis's restatement of deep microseismicity for this evidence record."},
+    {"semantic": "evidence_relation", "requirement": "Return explicit source-supported paths connecting the claimed geochemical and seismic evidence to the proposed mechanism. Do not infer support from co-occurrence, physical causation or a required edge quota. A link to some other relevant result alone does not complete both evidence roles."}
+  ],
+  "assessment_rule": "Use projected fields and explicit paths of source-supported witnesses. Context may establish support but cannot supply absent answer content. COVERED requires all five criteria, PARTIAL a nonempty proper subset, NONE otherwise. Preserve assumptions and limits rather than claiming independent confirmation. Do not overwrite historical labels or infer a global score."
+}
