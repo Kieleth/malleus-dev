@@ -1,0 +1,192 @@
+{
+  "CQ-T1-01": [
+    "Campaign",
+    "Instrument",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T1-02": [
+    "Campaign",
+    "Instrument",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T1-03": [
+    "ResearchSource",
+    "Instant",
+    "Claim"
+  ],
+  "CQ-T1-04": [
+    "ResearchSource",
+    "Claim"
+  ],
+  "CQ-T1-05": [
+    "Campaign",
+    "Interval",
+    "QuantityValue",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T2-01": [
+    "GeologicFeature",
+    "GeologicBoundary",
+    "GeologicRelation",
+    "Claim"
+  ],
+  "CQ-T2-02": [
+    "SoftwarePackage",
+    "Method",
+    "Claim",
+    "StudyRelation"
+  ],
+  "CQ-T2-03": [
+    "GeologicFeature",
+    "GeologicRelation",
+    "Claim",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T2-04": [
+    "ResearchSource",
+    "Claim",
+    "QuantityValue",
+    "GeologicFeature",
+    "StudyRelation"
+  ],
+  "CQ-T2-05": [
+    "CreditRelation",
+    "ResearchAgent"
+  ],
+  "CQ-T3-01": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "GeologicalEvent",
+    "GeologicFeature"
+  ],
+  "CQ-T3-02": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "RockSample",
+    "GeologicFeature"
+  ],
+  "CQ-T3-03": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "RockSample",
+    "GeologicFeature"
+  ],
+  "CQ-T3-04": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "Method",
+    "GeologicalEvent"
+  ],
+  "CQ-T3-05": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "Method"
+  ],
+  "CQ-T4-01": [
+    "Claim"
+  ],
+  "CQ-T4-02": [
+    "Claim"
+  ],
+  "CQ-T4-03": [
+    "Claim",
+    "Method"
+  ],
+  "CQ-T4-04": [
+    "Claim",
+    "GeologicFeature",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T4-05": [
+    "Claim",
+    "GeologicalEvent"
+  ],
+  "CQ-T5-01": [
+    "Claim",
+    "Evidence",
+    "StudyRelation",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T5-02": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "GeologicFeature",
+    "RockSample"
+  ],
+  "CQ-T5-03": [
+    "GeologicFeature",
+    "QuantityValue",
+    "GeologicalEvent",
+    "Claim",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T5-04": [
+    "Claim",
+    "Method",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-T5-05": [
+    "Claim",
+    "GeologicFeature",
+    "Evidence",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-C-01": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "RockSample"
+  ],
+  "CQ-C-02": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "GeologicalEvent",
+    "Interval"
+  ],
+  "CQ-C-03": [
+    "GeologicFeature",
+    "QuantityValue",
+    "ResearchSource",
+    "Claim",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-C-04": [
+    "Campaign",
+    "Instrument",
+    "Observation",
+    "CountObservation"
+  ],
+  "CQ-C-05": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "Claim",
+    "RockSample",
+    "GeologicFeature"
+  ]
+}

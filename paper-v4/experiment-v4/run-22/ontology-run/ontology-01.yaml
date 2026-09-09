@@ -1,0 +1,580 @@
+id: https://malleus.dev/schema/projects/oceanic-ridge-geoscience
+name: oceanic_ridge_geoscience
+version: 0.1.0
+title: Oceanic Ridge Geoscience Project Ontology
+description: >-
+  Proposed project vocabulary for material a source reports about oceanic
+  spreading centres: named geological features and the boundaries a source
+  locates by depth, occurrences a source places in time, rock samples,
+  software, agents, and the spatial and structural relations a source states
+  between them. Quantities, counts, claims, observations, methods,
+  instruments, campaigns, samples, sources and evidence are taken from the
+  metrology, chronology and research packs rather than redeclared here. This
+  is a proposal, not accepted knowledge.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  ridge: https://malleus.dev/schema/projects/oceanic-ridge-geoscience/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+#
+# Every value below is a kind or a predicate, never an instance. Names,
+# identifiers, counts, measured values and conclusions the source reports
+# are data and stay out of this section.
+# -------------------------------------------------------------------
+
+enums:
+
+  GeologicFeatureKind:
+    description: >-
+      Kind of geological feature, for a feature the source names and treats as
+      a thing with material extent. The values group three families the source
+      keeps apart: structures and morphology it maps, regions it locates work
+      in, and bodies of rock or melt it reasons about. OTHER records that no
+      listed kind fits, and the source's own wording for the kind stays in the
+      record's description. The list grows by adding values, never by
+      redefining one.
+    permissible_values:
+      SPREADING_RIDGE:
+      RIDGE_SEGMENT:
+      NON_TRANSFORM_DISCONTINUITY:
+      TRANSFORM_FAULT:
+      FRACTURE_ZONE:
+      RIDGE_TRANSFORM_INTERSECTION:
+      OCEANIC_CORE_COMPLEX:
+      DETACHMENT_FAULT:
+      NORMAL_FAULT:
+      SHEAR_ZONE:
+      AXIAL_VALLEY:
+      NEO_VOLCANIC_RIDGE:
+      VOLCANIC_CONE:
+      VOLCANO:
+      SEAMOUNT:
+      HYDROTHERMAL_FIELD:
+      RIDGE_FLANK:
+      OCEAN_BASIN:
+      ISLAND:
+      TECTONIC_PLATE:
+      OCEANIC_CRUST:
+      MANTLE:
+      LITHOSPHERE:
+      ASTHENOSPHERE:
+      MELT:
+      MAGMA_RESERVOIR:
+      SEDIMENT_LAYER:
+      OTHER:
+
+  GeologicBoundaryKind:
+    description: >-
+      Kind of boundary, for a surface the source defines by a property
+      crossing a threshold rather than by material extent, and locates by
+      depth or by temperature. OTHER records that no listed kind fits. The
+      list grows by adding values, never by redefining one.
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY:
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+      CRUST_MANTLE_BOUNDARY:
+      ISOTHERM:
+      SOLIDUS:
+      OTHER:
+
+  GeologicalEventType:
+    description: >-
+      Kind of occurrence, for an occurrence the source names and places in
+      time. A mechanism or process a source proposes without placing one
+      occurrence in time is a claim and not an event. OTHER records that no
+      listed kind fits. The list grows by adding values, never by redefining
+      one.
+    permissible_values:
+      EARTHQUAKE:
+      EARTHQUAKE_SUBEVENT:
+      EARTHQUAKE_SWARM:
+      VOLCANIC_ERUPTION:
+      OTHER:
+
+  GeologicRelationType:
+    description: >-
+      Spatial, structural and compositional predicates a source states between
+      two named geological entities. The predicate recorded is the one the
+      source's sentence states, read in the direction source_id to target_id.
+      A relation the source only implies is a declared gap and not a value
+      from this list. OTHER records that no listed predicate fits. The list
+      grows by adding values, never by redefining one.
+    permissible_values:
+      PART_OF:
+      ADJACENT_TO:
+      BOUNDED_BY:
+      OFFSET_BY:
+      CUT_BY:
+      LOCATED_BENEATH:
+      LOCATED_WITHIN:
+      OVERLIES:
+      CORRESPONDS_TO:
+      COMPOSED_OF:
+      OTHER:
+
+  RockType:
+    description: >-
+      Kind of rock or glass a source reports for a sample, in the source's own
+      classification. OTHER records that no listed kind fits, and the source's
+      own wording stays in the record's description. The list grows by adding
+      values, never by redefining one.
+    permissible_values:
+      BASALT:
+      PILLOW_BASALT:
+      MID_OCEAN_RIDGE_BASALT:
+      BASALT_GLASS:
+      PERIDOTITE:
+      MYLONITE:
+      MELT_INCLUSION:
+      POPPING_ROCK:
+      OTHER:
+
+  SourceKind:
+    description: >-
+      Kind of work a source is, as the source that cites it presents it. OTHER
+      records that no listed kind fits. The list grows by adding values, never
+      by redefining one.
+    permissible_values:
+      JOURNAL_ARTICLE:
+      BOOK_CHAPTER:
+      CONFERENCE_ABSTRACT:
+      PREPRINT:
+      DATASET:
+      DATABASE:
+      CRUISE_REPORT:
+      OTHER:
+
+  AgentKind:
+    description: >-
+      Whether the agent a source names is a person or an organization. The
+      part an agent played is carried by a credited contribution and never by
+      this value, so a funder and an employer are both ORGANIZATION here.
+      OTHER records that neither fits.
+    permissible_values:
+      PERSON:
+      ORGANIZATION:
+      OTHER:
+
+# -------------------------------------------------------------------
+# Classes
+# -------------------------------------------------------------------
+
+classes:
+
+  SourceRouted:
+    mixin: true
+    description: >-
+      The modality a source states a record under, and the route and digest
+      back to the retained assertion behind it. This is not the research
+      pack's SourceAsserted and does not replace it: SourceAsserted also
+      carries subject, the entity an assertion is about, and is worn by
+      records whose assertion is about something other than themselves. The
+      records that wear this mixin are the thing their assertion is about, so
+      they carry no subject, and setting one would make a record the subject
+      of itself. Both mixins draw the same slots from the research pack.
+    slots:
+      - assertion_modality
+      - assertion_locator
+      - statement_sha256
+
+  GeologicFeature:
+    is_a: Entity
+    mixins:
+      - SourceRouted
+    description: >-
+      A named geological thing with material extent that a source refers to: a
+      spreading ridge or one of its segments, a discontinuity, a fault or
+      shear zone, a valley or volcanic construction, a hydrothermal field, an
+      ocean basin, a plate, or a body of crust, mantle, lithosphere, melt or
+      sediment. Which of those it is stays in feature_kind. The form the
+      source uses to refer to it stays in name, the descriptive introduction
+      the source gives it stays in description, and the other forms the source
+      writes for the same thing stay in tags. Depths, lengths, thicknesses,
+      ages and temperatures the source reports about it are observations that
+      carry it as their subject, never slots here.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Marine and structural geology
+          taxonomy: "Outline of academic disciplines: Natural sciences > Earth science > Geology > Marine geology"
+          none_found: true
+          search: >-
+            The five declared inputs were read for a term naming a spatially
+            delimited geological thing. The Malleus root declares Entity,
+            Event, Signal and Relation and nothing spatial. Metrology declares
+            quantities, bounds, units and counts. Chronology declares instants
+            and intervals. The research pack declares Claim, Observation,
+            Method, Instrument, Campaign, Sample, Source and Evidence, of
+            which Sample is the nearest and names a thing observed or
+            analysed rather than the body it was taken from, so none was
+            reused. Outside the declared inputs the candidates considered were
+            GeoSciML, the IUGS-CGI and OGC geoscience standard whose
+            GeologicUnit, GeologicStructure and MappedFeature would fit, and
+            the SWEET earth and environmental terminology maintained by ESIP.
+            This session has no network access and cannot verify either
+            vocabulary's current term URLs from the declared inputs. A URL
+            recalled rather than read is not a citation, so no vocabulary is
+            cited here and the class and its kind enum are recorded as local
+            names. A reviewer with access to those vocabularies can replace
+            this block with a cited one.
+          invented_terms:
+            - GeologicFeature
+            - GeologicFeatureKind
+    slots:
+      - feature_kind
+      - structural_orientation
+
+  GeologicBoundary:
+    is_a: Entity
+    mixins:
+      - SourceRouted
+    description: >-
+      A surface a source defines by a property crossing a threshold rather
+      than by material extent, and locates by depth or by temperature: a
+      rheological transition, a mechanical or compositional interface between
+      layers, an isotherm, or a solidus. Which of those it is stays in
+      boundary_kind. The depth or temperature a source assigns it is an
+      observation that carries it as its subject, never a slot here, because
+      a source may assign several and they are separately attributed.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structure of the Earth's interior
+          taxonomy: "Outline of academic disciplines: Natural sciences > Earth science > Geophysics"
+          none_found: true
+          search: >-
+            The five declared inputs were read for a term naming a
+            property-defined interface inside the Earth. The Malleus root, the
+            metrology pack and the chronology pack declare none. The research
+            pack's Sample and Observation name what is collected and what is
+            reported, not the surface a report is about, so none was reused.
+            Outside the declared inputs the candidates considered were
+            GeoSciML's contact and boundary vocabulary and the established
+            names of Earth-interior discontinuities, which supply the
+            individual interfaces rather than a class for the family of them.
+            This session has no network access and cannot verify their term
+            URLs from the declared inputs, and a URL recalled rather than read
+            is not a citation, so no vocabulary is cited and the class and its
+            kind enum are recorded as local names.
+          invented_terms:
+            - GeologicBoundary
+            - GeologicBoundaryKind
+    slots:
+      - boundary_kind
+
+  GeologicalEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+      - SourceRouted
+    description: >-
+      A geological occurrence a source names and places in time, such as an
+      earthquake, a subevent of one, a swarm, or a volcanic eruption. Under an
+      Entity-to-Entity relation surface nothing can point at an occurrence:
+      a relation endpoint and an observation's subject are both ranged on
+      Entity. Every fact a source attaches to the occurrence itself therefore
+      lives on this record, which is why it wears Quantified and carries at
+      most the one quantity the source states for it, such as a magnitude.
+      A source that states a second quantity for the same occurrence is a
+      declared gap, not a second record for the same occurrence. A mechanism
+      or process a source proposes without placing one occurrence in time is
+      a claim and not an event.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology and volcanology
+          taxonomy: "Outline of academic disciplines: Natural sciences > Earth science > Geophysics > Seismology"
+          none_found: true
+          search: >-
+            The five declared inputs were read for a term naming a
+            geological occurrence. The Malleus root's Event, which this class
+            extends, names an occurrence in general and leaves its
+            classification to the adopter, and its event_type slot says so.
+            Chronology's Instant and Interval carry domain time and are not
+            occurrences. Metrology and the research pack declare none. Outside
+            the declared inputs the candidate considered was QuakeML, the
+            FDSN and IASPEI exchange format, whose event, origin, magnitude
+            and focal mechanism terms would fit an earthquake. This session
+            has no network access and cannot verify its term URLs from the
+            declared inputs, and a URL recalled rather than read is not a
+            citation, so no vocabulary is cited and the class and its type
+            enum are recorded as local names.
+          invented_terms:
+            - GeologicalEvent
+            - GeologicalEventType
+    slot_usage:
+      event_type:
+        range: GeologicalEventType
+
+  GeologicRelation:
+    is_a: Relation
+    mixins:
+      - SourceRouted
+    description: >-
+      A spatial, structural or compositional relation a source states between
+      two named geological entities, with the predicate in relation_type read
+      in the direction source_id to target_id. Both endpoints are Entity, so
+      this relation never reaches an occurrence. A relation the source only
+      implies is a declared gap and is never derived from a neighbouring
+      sentence.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Spatial and structural relations between geological entities
+          taxonomy: "Outline of academic disciplines: Natural sciences > Earth science > Geology > Structural geology"
+          none_found: true
+          search: >-
+            The five declared inputs were read for spatial or structural
+            predicates. The research pack's ResearchRelationType names eight
+            research predicates, CLAIM_CONCERNS, OBSERVED_WITH,
+            PART_OF_CAMPAIGN, SAMPLED_FROM, SUPPORTS, CHALLENGES, REPORTED_BY
+            and CONTRIBUTED_TO, and no spatial or structural one, so it was
+            not reused and its own subclasses are declared separately here.
+            Chronology cites the W3C Time Ontology, whose relations are
+            temporal. Outside the declared inputs the candidates considered
+            were OGC GeoSPARQL and the RCC-8 region connection calculus, which
+            name topological relations such as containment and contact but not
+            the directional and structural predicates a geological source
+            states, among them bounded by, offset by, beneath and cut by. This
+            session has no network access and cannot verify their term URLs
+            from the declared inputs, so no vocabulary is cited and the class
+            and its predicate enum are recorded as local names.
+          invented_terms:
+            - GeologicRelation
+            - GeologicRelationType
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+
+  SoftwarePackage:
+    is_a: Entity
+    mixins:
+      - SourceRouted
+    description: >-
+      A named program or package a source reports using, with the version and
+      the location the source gives for it. It is kept apart from the research
+      pack's Method because a source that names both a method and the program
+      implementing it distinguishes them, and from Instrument because that
+      names a measuring instrument.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research software
+          taxonomy: "Outline of academic disciplines: Applied sciences > Computer science > Software engineering"
+          vocabularies:
+            - vocabulary: Schema.org
+              vocabulary_url: https://schema.org/SoftwareApplication
+              borrowed_terms:
+                - SoftwareApplication
+                - softwareVersion
+                - url
+          invented_terms:
+            - SoftwarePackage
+          invention_search: >-
+            Schema.org names the class SoftwareApplication and the properties
+            softwareVersion and url, and this class borrows those three terms.
+            The shorter local class name SoftwarePackage is recorded here as
+            an invention rather than presented as a schema.org term. The
+            declared inputs name no software concept: the research pack's
+            Method is a method a source names and its Instrument is grounded
+            on the VIM term measuring instrument, and a source that
+            distinguishes a location method from the program implementing it
+            would be collapsed by either, so neither was reused. CodeMeta was
+            considered as the vocabulary specific to research software, but
+            its term URLs cannot be verified in this session and a URL
+            recalled rather than read is not a citation, so it is not cited.
+    slots:
+      - software_version
+      - resource_url
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+      - SourceRouted
+    description: >-
+      A person or an organization a source names. Whether the agent is a
+      person or an organization stays in agent_type; the part the agent played
+      is carried by a credited contribution and never here, because a source
+      may credit one agent in several parts.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Provenance and agency
+          taxonomy: "Outline of academic disciplines: Applied sciences > Computer science > Knowledge representation and reasoning"
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology, 2013 Recommendation
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+          invented_terms:
+            - ResearchAgent
+            - AgentKind
+          invention_search: >-
+            PROV-O names Agent and its subclasses Person and Organization, the
+            same alignment the Malleus root already declares for its Agent
+            mixin, and those three terms are borrowed. PROV-O carries no term
+            for a closed list of agent kinds, so AgentKind is local, and
+            ResearchAgent is a local class name for a prov:Agent that a
+            research source names, recorded here rather than presented as a
+            PROV-O term. The declared inputs name no person or organization
+            concept: the Malleus root's Agent is a mixin trait and not a
+            class, and the research pack's ContributionRelation credits a
+            contributor without declaring what a contributor is.
+    slot_usage:
+      agent_type:
+        range: AgentKind
+
+  RockSample:
+    is_a: Sample
+    mixins:
+      - SourceRouted
+    description: >-
+      A rock or glass sample a source reports, with the kind the source
+      classifies it as. Element and volatile concentrations reported for it
+      are observations that carry it as their subject, and the feature it was
+      taken from is reached by a SAMPLED_FROM study relation.
+    slots:
+      - rock_type
+
+  ResearchSource:
+    is_a: Source
+    mixins:
+      - SourceRouted
+    description: >-
+      A work a source reports domain assertions from or cites, with the kind
+      of work it is and the identifiers the source states for it. A DOI, a
+      dataset URL and an accession are facts the source reports about the
+      work, so they are slots here; a provenance locator into a retained
+      capture is not and stays out.
+    slots:
+      - source_kind
+      - doi
+      - resource_url
+
+  CountObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      An observation whose reported value is an integer count and the scope
+      counted, rather than a bounded quantity. It inherits subject, modality
+      and the route back to the retained assertion from Observation, so a
+      count the source reports about a named thing carries that thing as its
+      subject.
+
+  StudyRelation:
+    is_a: ResearchRelation
+    mixins:
+      - SourceRouted
+    description: >-
+      A research relation a source states, carrying the modality it states it
+      under and the route back to the retained assertion. relation_type stays
+      ranged on the research pack's ResearchRelationType.
+
+  CreditRelation:
+    is_a: ContributionRelation
+    mixins:
+      - SourceRouted
+    description: >-
+      A contribution to a work, campaign or dataset that a source credits,
+      carrying the CRediT role when the source states one and the award
+      identifier when the credited contribution is support the source
+      identifies by number. The role stays the one the source declares and is
+      never inferred, so a source that names a funder without stating a part
+      leaves contribution_role unset.
+    slots:
+      - award_number
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+
+  feature_kind:
+    range: GeologicFeatureKind
+    description: >-
+      Kind of geological feature. Optional, because a source names features
+      whose kind it does not state, and inventing one would report something
+      the source does not say.
+
+  boundary_kind:
+    range: GeologicBoundaryKind
+    description: >-
+      Kind of property-defined boundary. Optional, for the same reason as
+      feature_kind.
+
+  structural_orientation:
+    range: string
+    multivalued: true
+    description: >-
+      Orientation of a feature as the source writes it, one entry per
+      orientation the source states, retained verbatim and never converted to
+      a number or a bearing convention of ours. A source that states several
+      orientations for one feature yields several entries.
+
+  rock_type:
+    range: RockType
+    description: >-
+      Kind of rock or glass the source classifies a sample as. Optional, for a
+      sample the source reports without classifying.
+
+  source_kind:
+    range: SourceKind
+    description: >-
+      Kind of work, as the citing source presents it. Optional, for a work
+      cited without one.
+
+  doi:
+    range: string
+    description: >-
+      Digital Object Identifier the source states for a work, dataset or
+      cruise, exactly as the source writes it. It is a fact the source reports
+      about the work, not a route into a retained capture.
+
+  resource_url:
+    range: string
+    description: >-
+      Location the source states for a work, dataset, database or program,
+      exactly as the source writes it. Ranged on string rather than uri
+      because the lexical form is not checked here and a value that is not a
+      URL would commit either way; recording it as the source wrote it is the
+      honest surface.
+
+  software_version:
+    range: string
+    description: >-
+      Version the source states for a program, exactly as the source writes
+      it. Unset when the source names a program without a version.
+
+  award_number:
+    range: string
+    description: >-
+      Award, grant or agreement identifier the source states for a credited
+      contribution of support, exactly as the source writes it. A source that
+      states several identifiers for one funder yields one credited
+      contribution per identifier.

@@ -13,23 +13,16 @@ Copy this file for the review and edit only the JSON block. `BLANK` and
 The `questions` block below carries one entry per question of the cell's
 competency question file, 30 of them, in that file's order. Write one
 `witnesses` entry per distinct witness the query result returns,
-{{WITNESSES_TOTAL}} in all, and reference it from every row that shares it.
-Rows: {{ROWS_CQ_T1_01}} rows for `CQ-T1-01`, {{ROWS_CQ_T1_02}} for `CQ-T1-02`,
-{{ROWS_CQ_T1_03}} for `CQ-T1-03`, {{ROWS_CQ_T1_04}} for `CQ-T1-04`,
-{{ROWS_CQ_T1_05}} for `CQ-T1-05`, {{ROWS_CQ_T2_01}} for `CQ-T2-01`,
-{{ROWS_CQ_T2_02}} for `CQ-T2-02`, {{ROWS_CQ_T2_03}} for `CQ-T2-03`,
-{{ROWS_CQ_T2_04}} for `CQ-T2-04`, {{ROWS_CQ_T2_05}} for `CQ-T2-05`,
-{{ROWS_CQ_T3_01}} for `CQ-T3-01`, {{ROWS_CQ_T3_02}} for `CQ-T3-02`,
-{{ROWS_CQ_T3_03}} for `CQ-T3-03`, {{ROWS_CQ_T3_04}} for `CQ-T3-04`,
-{{ROWS_CQ_T3_05}} for `CQ-T3-05`, {{ROWS_CQ_T4_01}} for `CQ-T4-01`,
-{{ROWS_CQ_T4_02}} for `CQ-T4-02`, {{ROWS_CQ_T4_03}} for `CQ-T4-03`,
-{{ROWS_CQ_T4_04}} for `CQ-T4-04`, {{ROWS_CQ_T4_05}} for `CQ-T4-05`,
-{{ROWS_CQ_T5_01}} for `CQ-T5-01`, {{ROWS_CQ_T5_02}} for `CQ-T5-02`,
-{{ROWS_CQ_T5_03}} for `CQ-T5-03`, {{ROWS_CQ_T5_04}} for `CQ-T5-04`,
-{{ROWS_CQ_T5_05}} for `CQ-T5-05`, {{ROWS_CQ_C_01}} for `CQ-C-01`,
-{{ROWS_CQ_C_02}} for `CQ-C-02`, {{ROWS_CQ_C_03}} for `CQ-C-03`,
-{{ROWS_CQ_C_04}} for `CQ-C-04`, {{ROWS_CQ_C_05}} for `CQ-C-05`,
-{{ROWS_TOTAL}} in all.
+449 in all, and reference it from every row that shares it.
+Rows: 85 rows for `CQ-T1-01`, 85 for `CQ-T1-02`, 147 for `CQ-T1-03`, 147 for
+`CQ-T1-04`, 83 for `CQ-T1-05`, 178 for `CQ-T2-01`, 75 for `CQ-T2-02`, 299
+for `CQ-T2-03`, 252 for `CQ-T2-04`, 24 for `CQ-T2-05`, 300 for `CQ-T3-01`,
+309 for `CQ-T3-02`, 309 for `CQ-T3-03`, 149 for `CQ-T3-04`, 148 for
+`CQ-T3-05`, 61 for `CQ-T4-01`, 61 for `CQ-T4-02`, 66 for `CQ-T4-03`, 299 for
+`CQ-T4-04`, 62 for `CQ-T4-05`, 143 for `CQ-T5-01`, 309 for `CQ-T5-02`, 300
+for `CQ-T5-03`, 148 for `CQ-T5-04`, 299 for `CQ-T5-05`, 153 for `CQ-C-01`,
+144 for `CQ-C-02`, 385 for `CQ-C-03`, 85 for `CQ-C-04`, 309 for `CQ-C-05`,
+5414 in all.
 
 Three things the validator derives or forbids, so that writing them wrong is
 refused rather than recorded:

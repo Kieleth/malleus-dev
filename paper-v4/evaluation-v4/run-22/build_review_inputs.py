@@ -292,7 +292,7 @@ def _rows_per_question(ids: list[str]) -> dict[str, int]:
 
 def _witnesses_traced() -> int:
     summary = json.loads((RESULTS / "query-trace-summary.json").read_bytes())
-    return len(summary["witnesses"])
+    return int(summary["witnesses_traced"])
 
 
 def build_manifest(ids: list[str], counts: dict[str, int], witnesses: int) -> dict:

@@ -5,7 +5,7 @@ Template, the first written for protocol v3 and the successor of task version 4
 `paper-v4/evaluation-v4/shop-01/review-task.md`, its row translation).
 Instantiate it at freeze by substituting `run-22`, `SELECTED_READING_TEXT_LAYER`,
 one question id per question of the cell's frozen file, one row-count placeholder per question,
-`{{ROWS_TOTAL}}`, `{{WITNESSES_TOTAL}}` and every path below with the frozen
+`5414`, `449` and every path below with the frozen
 cell's own figures, and write the result to
 `paper-v4/evaluation-v4/run-22/review-task.md`. Run-05's task carried
 run-02's row counts on a wrapped line into a live review; a template with one
@@ -27,7 +27,7 @@ it and changes six things, every one of them from a recorded failure:
   lines from 1 with the CSV header as line 1 and its reviewer counted data rows
   from 0 with the header excluded, and the two read the same fifteen
   derivations as fifteen resolvable and two resolvable.
-- Source support is judged once per distinct witness, {{WITNESSES_TOTAL}} of
+- Source support is judged once per distinct witness, 449 of
   them here, and the rows that share a witness reference that judgement.
 - A witness whose locator does not resolve is `NOT_EVALUABLE` by rule.
 - The question label is derived from coverage per required semantic instead of
@@ -65,7 +65,7 @@ Every one of them is a material in the input manifest, bound by digest.
 - `paper-v4/experiment-v4/run-22/results/native-query-binding.json`, the type-only binding.
 - `private/paper-v4-v4-run-22/query/query-result.json`, the rows.
 - `paper-v4/experiment-v4/run-22/results/trace-summary.json`, provenance for every populated record, and
-  `paper-v4/experiment-v4/run-22/results/query-trace-summary.json`, the same for the {{WITNESSES_TOTAL}}
+  `paper-v4/experiment-v4/run-22/results/query-trace-summary.json`, the same for the 449
   witnesses the returned rows use.
 - the retained evidence the manifest lists: the retained capture on a document
   cell, the retained population plans on a row cell.
@@ -210,22 +210,15 @@ answer is assembled and never moves a label:
 - `UNLINKED_ROWS`: several rows carry it and nothing in the row representation
   joins them.
 
-Judge every returned row exactly once, in order: {{ROWS_CQ_T1_01}} rows for `CQ-T1-01`, {{ROWS_CQ_T1_02}} for `CQ-T1-02`,
-{{ROWS_CQ_T1_03}} for `CQ-T1-03`, {{ROWS_CQ_T1_04}} for `CQ-T1-04`,
-{{ROWS_CQ_T1_05}} for `CQ-T1-05`, {{ROWS_CQ_T2_01}} for `CQ-T2-01`,
-{{ROWS_CQ_T2_02}} for `CQ-T2-02`, {{ROWS_CQ_T2_03}} for `CQ-T2-03`,
-{{ROWS_CQ_T2_04}} for `CQ-T2-04`, {{ROWS_CQ_T2_05}} for `CQ-T2-05`,
-{{ROWS_CQ_T3_01}} for `CQ-T3-01`, {{ROWS_CQ_T3_02}} for `CQ-T3-02`,
-{{ROWS_CQ_T3_03}} for `CQ-T3-03`, {{ROWS_CQ_T3_04}} for `CQ-T3-04`,
-{{ROWS_CQ_T3_05}} for `CQ-T3-05`, {{ROWS_CQ_T4_01}} for `CQ-T4-01`,
-{{ROWS_CQ_T4_02}} for `CQ-T4-02`, {{ROWS_CQ_T4_03}} for `CQ-T4-03`,
-{{ROWS_CQ_T4_04}} for `CQ-T4-04`, {{ROWS_CQ_T4_05}} for `CQ-T4-05`,
-{{ROWS_CQ_T5_01}} for `CQ-T5-01`, {{ROWS_CQ_T5_02}} for `CQ-T5-02`,
-{{ROWS_CQ_T5_03}} for `CQ-T5-03`, {{ROWS_CQ_T5_04}} for `CQ-T5-04`,
-{{ROWS_CQ_T5_05}} for `CQ-T5-05`, {{ROWS_CQ_C_01}} for `CQ-C-01`,
-{{ROWS_CQ_C_02}} for `CQ-C-02`, {{ROWS_CQ_C_03}} for `CQ-C-03`,
-{{ROWS_CQ_C_04}} for `CQ-C-04`, {{ROWS_CQ_C_05}} for `CQ-C-05`,
-{{ROWS_TOTAL}} in all, over {{WITNESSES_TOTAL}} distinct witnesses. Cite at
+Judge every returned row exactly once, in order: 85 rows for `CQ-T1-01`, 85 for `CQ-T1-02`, 147 for `CQ-T1-03`, 147 for
+`CQ-T1-04`, 83 for `CQ-T1-05`, 178 for `CQ-T2-01`, 75 for `CQ-T2-02`, 299
+for `CQ-T2-03`, 252 for `CQ-T2-04`, 24 for `CQ-T2-05`, 300 for `CQ-T3-01`,
+309 for `CQ-T3-02`, 309 for `CQ-T3-03`, 149 for `CQ-T3-04`, 148 for
+`CQ-T3-05`, 61 for `CQ-T4-01`, 61 for `CQ-T4-02`, 66 for `CQ-T4-03`, 299 for
+`CQ-T4-04`, 62 for `CQ-T4-05`, 143 for `CQ-T5-01`, 309 for `CQ-T5-02`, 300
+for `CQ-T5-03`, 148 for `CQ-T5-04`, 299 for `CQ-T5-05`, 153 for `CQ-C-01`,
+144 for `CQ-C-02`, 385 for `CQ-C-03`, 85 for `CQ-C-04`, 309 for `CQ-C-05`,
+5414 in all, over 449 distinct witnesses. Cite at
 least one locator per witness and per question. Write each reason in your own
 words. Copy no source passage and no source row into the record beyond the
 locator, and add no numerical aggregate.
