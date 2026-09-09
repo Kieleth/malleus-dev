@@ -5,6 +5,16 @@
     ".",
     "src"
   ],
+  "core_pins": [
+    {
+      "commit": "160878cf14c0d27b11a440e26688708e9b7a7e2b",
+      "pythonpath": ["paper-v4/answer-demonstration"],
+      "paths": [
+        "paper-v4/answer-demonstration",
+        "paper-v4/submission-candidate/test_prepare.py"
+      ]
+    }
+  ],
   "pytest_args": [
     "--import-mode=importlib",
     "-q"
@@ -46,7 +56,8 @@
     "paper-v4/experiment-v4/run-21",
     "paper-v4/experiment-v4/run-22",
     "paper-v4/experiment-v4/shop-01",
-    "paper-v4/test_publication_consistency.py"
+    "paper-v4/test_publication_consistency.py",
+    "paper-v4/test_run_active_tests.py"
   ],
   "excluded_roots": [
     "research/ontology_driven_kg_realization/experiments/document_paper",
