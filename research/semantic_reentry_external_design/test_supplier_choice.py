@@ -22,7 +22,7 @@ from research.semantic_reentry_external_design.accepted_read_view import (
 )
 
 
-CORE_SOURCE_TREE = "ce8aeee94ed2e88a6e9785e9699e08f0dee70bec"
+CORE_SOURCE_TREE = "63bc5650bda806b99fe8fb9fa060f2b8d0b113e2"
 HISTORICAL_GUARD = (
     "research/semantic_reentry_external_design/test_supplier_replay_laws.py"
     "::test_unified_gate_has_one_compatible_runtime_epoch"

@@ -2,8 +2,8 @@
   "classification": "CONFORMANCE_FIXTURE",
   "claim": "TWO_ALTERNATIVES_EXPLICIT_SELECTION_AND_EXISTING_SUPPLIER_BOUNDARIES",
   "base_commit": "e2b9e77912f9b36fdbfe2fca310548a789bffb4d",
-  "landing_base_commit": "a0026cbd25a90b5c2b6c9eb7b31df4e42df16804",
-  "core_source_tree": "ce8aeee94ed2e88a6e9785e9699e08f0dee70bec",
+  "landing_base_commit": "1385223eb274e63d98cc334d6dba6ecd54ed4007",
+  "core_source_tree": "63bc5650bda806b99fe8fb9fa060f2b8d0b113e2",
   "groups": {
     "choice": [
       "research/semantic_reentry_external_design/test_supplier_choice.py"
@@ -77,6 +77,10 @@
     {
       "path": "research/semantic_reentry_external_design/supplier-choice-result.json",
       "sha256": "31181ad7688c48c75072883aed6da09fd3c49d463deb89a0108d995560afd76e"
+    },
+    {
+      "path": "research/semantic_reentry_external_design/supplier-choice-authorization-result.json",
+      "sha256": "afb94693afaf46671890d925013d80705a94a1e35c5986cd0005fb1c2bf183e6"
     }
   ],
   "scope": "Union of these disjoint current-epoch selectors, not full repository CI. Existing evidence and historical runtime guards are unchanged. Old maintained and observed-mismatch positive guards remain bound to their own source epochs; their negative tests still run here. Authorization compatibility adds the current Core control and finite-executor suites. The initial historical refusals are retained separately."
