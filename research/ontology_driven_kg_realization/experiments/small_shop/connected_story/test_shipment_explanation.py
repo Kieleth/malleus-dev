@@ -3,7 +3,6 @@
 from copy import deepcopy
 import importlib
 import json
-from pathlib import Path
 import subprocess
 import sys
 
@@ -204,3 +203,24 @@ def test_unrelated_supplier_update_does_not_change_rule_assessment(subject, exec
     )
     with pytest.raises(ValueError, match="occurrence"):
         subject.explain_shipments(replay, at_occurrence="missing")
+
+
+@pytest.mark.parametrize("missing", [False, True])
+def test_no_fallback_when_retained_context_is_changed_or_absent(
+    subject, executed, monkeypatch, missing
+):
+    path, replay = executed
+    before = path.read_bytes()
+    original = type(replay).retained_bytes
+
+    def read(self, identifier):
+        if identifier == "source:connected-shop:context":
+            if missing:
+                raise KeyError(f"unknown retained record: {identifier}")
+            return b"[]"
+        return original(self, identifier)
+
+    monkeypatch.setattr(type(replay), "retained_bytes", read)
+    with pytest.raises((ValueError, KeyError), match="context"):
+        subject.explain_shipments(replay)
+    assert path.read_bytes() == before

@@ -1,0 +1,16 @@
+{
+  "id": "shop-shipment-explanation-v1",
+  "scope_orders": ["O1", "O2"],
+  "account_completeness": "NOT_ESTABLISHED",
+  "maximum_unpaid": 1,
+  "context": {
+    "source_id": "source:connected-shop:context",
+    "sha256": "sha256:eab62357c1f41b049bd5a4f6c1589abaaed1559cb6f572912af986c2f9538525",
+    "passages": {
+      "customer_scope": "intro-1-customer",
+      "rule": "intro-7-policy",
+      "reported_delay": "intro-7-payment"
+    }
+  },
+  "interpretation": "The selected orders share the source's unnamed customer. Count only explicit invoice statuses; clearance occurrences are not a complete current balance snapshot. This read specification is not an admission policy or authorization."
+}
