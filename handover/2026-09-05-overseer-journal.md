@@ -663,3 +663,11 @@ Luis's ruling, verbatim: "Lets take over 1-2-3, store 4 through 9 for after we'v
 Done: full default suite at 82b33967 (3428 passed, 2 skipped), 62 commits pushed (74c715b4..82b33967). The Codex paper tree checkpointed verbatim on the local branch paper-checkpoint-2026-09-09 (774f4050), built from a temporary index; not on main, not pushed. Two reasons, both found by running the gates rather than trusting them: the manifest gate at HEAD is red (31 failed) because answer-demonstration pins Core to 160878cf and refuses HEAD src, while Codex gated with an out-of-repo Core snapshot on PYTHONPATH (reproduced: 696 passed); and the rewritten manuscript and submission appendix carry four verbatim 60-to-67-character runs of the withheld reading, which the committed manuscript does not. E-0338 on the branch records all of it; OVR-000456 records the takeover in Core's ledger. Decisions 4 to 9 stored.
 
 Lesson for the record: a gate that only passes with a path outside the repository on PYTHONPATH is a gate with a hidden input. The manifest declares [".", "src"]; the tests need a third entry that is not in git. Whatever Luis rules, the pin belongs inside the repository.
+
+## The pin and the quotes (2026-09-09, afternoon): the checkpoint lands
+
+Luis: "correct, do this" on the runner exporting the pinned Core commit from git history. Test first (4 RED), then export_core and plan in paper-v4/run_active_tests.py, core_pins in the manifest, 4 GREEN; the whole manifest gate through the runner: 619 passed plus 2 subtests under Core 160878cf, 1750 passed for the rest, exit 0, no path outside the repository (E-0339).
+
+On the four verbatim quotations Luis asked "is this really important?" and I said no: the 60-character rule guards the population files' verbatim sentences, not attributed quotation in prose. Luis: "correct, I think we're enforcing too much." Ruled at E-0340: prose may quote with attribution and a locator; data artifacts keep the check; private/ and the PDF never enter git. The checkpoint branch merged to main from a temporary index and pushed; the ledger is one file again, E-0001 to E-0340.
+
+What I got wrong today: I put the quotes on the same footing as the gate. The gate was a real hidden input; the quotes were a rule applied past its purpose. One sentence from Luis sorted it.
