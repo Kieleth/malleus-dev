@@ -51,7 +51,7 @@ TASK = HERE / "review-task.md"
 BLANK = HERE / "review-record.blank.md"
 MANIFEST = HERE / "review-input-manifest.json"
 
-QUESTIONS = ROOT / "paper-v4/experiment-v4/competency-questions-v3.json"
+QUESTIONS = ROOT / "paper-v4/experiment-v4/competency-questions-v3.1.json"
 SELECTED_READING = ROOT / "private/paper-v4-text-layer/selected-reading.json"
 SOURCE_PDF_SHA256 = (
     "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9"
@@ -96,7 +96,7 @@ def _digest(data: bytes) -> str:
 
 def question_ids() -> list[str]:
     document = json.loads(QUESTIONS.read_bytes())
-    if document["status"] != "FROZEN_BEFORE_V3_CELLS":
+    if document["status"] != "FROZEN_BEFORE_V3_1_CELLS":
         raise ReviewPackageRefusal("the competency question file is not frozen")
     return [str(item["id"]) for item in document["questions"]]
 

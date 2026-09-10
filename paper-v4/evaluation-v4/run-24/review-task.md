@@ -61,7 +61,7 @@ Every one of them is a material in the input manifest, bound by digest.
   `STRUCTURED_ROWS` cell it is the source files the manifest lists under
   `evidence_surface.sources`, each with a `source_id`, a path, a digest and a
   format, and you cite `<source_id>#row:N:field` in them.
-- `paper-v4/experiment-v4/competency-questions-v3.json`, the questions and their `required_semantics`.
+- `paper-v4/experiment-v4/competency-questions-v3.1.json`, the questions and their `required_semantics`.
 - `paper-v4/experiment-v4/run-24/results/native-query-binding.json`, the type-only binding.
 - `private/paper-v4-v4-run-24/query/query-result.json`, the rows.
 - `paper-v4/experiment-v4/run-24/results/trace-summary.json`, provenance for every populated record, and
