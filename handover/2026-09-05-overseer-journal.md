@@ -737,3 +737,7 @@ Running now: the four-arm controller-sensitivity probe (oracle, simple, wrong, g
 ## Subgoal probe read (2026-09-10, 03:40Z to 04:05Z): the policy follows the stage text; two native successes without Malleus
 
 Four arms, one episode, no Core, no memory. Oracle grounded text: native success at step 456. Ungrounded stage text: native success at 506. Generic "Pick up the object.": one pickup, then holds the cube for 33 batches. Displaced center: never lifts the cube. The policy is memoryless, so the stage advance in the subgoal line is the whole task memory; accepted memory can drive it with ungrounded text, grounding is an accelerator. Evidence on the branch at 70340bcc (native-integration/SUBGOAL-PROBE.md, subgoal-probe/). Ledger E-0351. Luis's explanation request answered in chat before the arms finished. Gate 17 running for this entry.
+
+## The governed loop, night of 2026-09-10: run 01 fails on a preserved perception error
+
+Luis: "go", then "enter in loop and keep iterating and connecting malleus in different ways, incrementally, and measure effects, during the night, continue till you get some results positive, or get blocked and out of ideas". Built the loop (1576cf26), ran it with Opus producers (aaa39b4e): 30 batches, 909 events, memory drove the robot through five stage sentences, then one grasp-without-lift read as a pickup put memory two stages ahead and the button press failed the episode at step 480. Event-log comparator: 29/29 agree, tie. Oracle-checker control and prompt v2 run started. Ledger E-0352. Gate 18 running.
