@@ -741,3 +741,7 @@ Four arms, one episode, no Core, no memory. Oracle grounded text: native success
 ## The governed loop, night of 2026-09-10: run 01 fails on a preserved perception error
 
 Luis: "go", then "enter in loop and keep iterating and connecting malleus in different ways, incrementally, and measure effects, during the night, continue till you get some results positive, or get blocked and out of ideas". Built the loop (1576cf26), ran it with Opus producers (aaa39b4e): 30 batches, 909 events, memory drove the robot through five stage sentences, then one grasp-without-lift read as a pickup put memory two stages ahead and the button press failed the episode at step 480. Event-log comparator: 29/29 agree, tie. Oracle-checker control and prompt v2 run started. Ledger E-0352. Gate 18 running.
+
+## Governed loop, day of 2026-09-10: runs 02 and 03 succeed, the operator floor is Sonnet
+
+Runs 02 (Opus, prompt v2) and 03 (v2 + corroboration) complete the task: native success at steps 554 and 555 against run 01's failure at 480 with the same policy, simulator and admission code; the change is the completion predicate given to the producer. Oracle control 506, the probe arm 506. Haiku alone and two Haiku opinions both stopped after confident misreads from the reset frame; Sonnet running, right where Haiku was wrong, late on placements. Comparator ties everywhere; 0 refusals in 199 admissions. Evidence on the branch (43c0b402 and earlier). Ledger E-0353. Gate 19 running.
