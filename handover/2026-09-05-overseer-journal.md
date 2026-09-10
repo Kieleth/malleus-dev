@@ -723,3 +723,13 @@ One launch, one session, two phases; ONTOLOGY_READY at attempt 01, gate ACCEPTED
 ## Run-24 reviewed (2026-09-10, 01:44Z to 02:06Z): five of five controls
 
 One Opus session under v3 and v3.1: 405 of 416 supported, 11 partial (typing beyond the sentence, mostly), 0 unsupported. Positive questions 15 covered, 10 partial, 0 none; 90 of 102 semantics; absences withheld 7, not modelled 5, unreached 0. CQ-C-03 reads NONE under v3.1: the change of E-0346 did what it said. Record validated, E-0349; the assembly script's first run was refused for naming the v3 file, the validator doing its job. Five cells of one condition now: the table and the reading are in handover/2026-09-10-run-24-rca.md. The replicates are done; what follows is the writing, on Luis's plan.
+
+## Robotics takeover (2026-09-10, from 02:2xZ): main into the branch, the pin rebound, the probe running
+
+Luis's rulings on the five robotics decisions, verbatim: "1. I'd merge main into the branch for starters, and yes 2. lets work and play with the simulator and see how far do we get and which results, and then we think about the paper. 3. fine 4. lets discuss with more info 5. merge main into branch, local work is fine."
+
+What was done on codex/robomme-offline, in the Codex worktree, by explicit pathspec: 996320c3 commits the native-capture admission stage Codex left uncommitted (research suite on that tree 758 passed); 400d8d7f merges main without conflicts; the tree pin check then refused in 23 tests (735 passed) because src/malleus moved to Core 0.14.0; a pytest-plugin override of the pin to the merge commit read 758 passed, so d638f436 rebinds runtime.CORE_BASE to 400d8d7f (suite 758 passed in 120.44s), gives the task factory an explicit step-budget parameter (default unchanged) and adds mac_policy/subgoal_probe.py. loop-state.json carries the takeover record. Ledger E-0350.
+
+Facts that shape the next step: the selected policy is symbolic and memoryless (history is a no-op), so every bit of task memory in this route sits in the subgoal producer, which is where Malleus's accepted memory plugs in; the trained subgoal text is the task's stage list with the target's mask center filled in ("pick up the red cube at <89, 122> for the first time"); the first native batch sent "Pick up the object." instead, so its motion says nothing about the task.
+
+Running now: the four-arm controller-sensitivity probe (oracle, simple, wrong, generic), same reset, up to 40 batches each, no Core, no memory, no claim. Its readings decide the grounding question Luis asked to discuss with more information. Gate 16 running for this entry.
