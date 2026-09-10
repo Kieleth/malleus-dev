@@ -1,0 +1,770 @@
+id: https://malleus.dev/schema/projects/ridge_seismicity_geochemistry
+name: ridge_seismicity_geochemistry
+version: 0.1.0
+title: Ridge Seismicity and Melt Geochemistry Project Ontology
+description: >-
+  Proposed project vocabulary for what one selected reading reports about
+  microseismicity, tectonic structure, and basalt geochemistry at an oceanic
+  spreading centre. Every class, slot, and enum is a proposal, not accepted
+  knowledge. Numbers, names, conclusions, and wording stay data: they are
+  never promoted into a class, slot, or enum name here.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  ridge: https://malleus.dev/schema/projects/ridge_seismicity_geochemistry/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+# -------------------------------------------------------------------
+# Enums
+#
+# No enum below carries an OTHER value. A kind the source states and
+# this list does not name is a TYPE_ABSENT gap to declare, which is how
+# the list grows; an OTHER value would hide that gap instead.
+# -------------------------------------------------------------------
+
+enums:
+
+  AccretionCharacter:
+    description: >-
+      Character a source attributes to the accretion of a ridge section.
+      Multivalued on the record, because a source may attribute more than one
+      to the same section.
+    permissible_values:
+      MAGMATIC:
+        description: The source attributes the section to magmatic accretion.
+      AMAGMATIC:
+        description: The source states the section is amagmatic.
+      TECTONIC:
+        description: The source attributes the section to tectonic processes.
+
+  StructureKind:
+    description: >-
+      Kind of geological structure the source names. Each value is a general
+      structural or morphological term; the source's own wording for the
+      individual structure stays in name, tags, and description.
+    permissible_values:
+      NORMAL_FAULT:
+      DETACHMENT_FAULT:
+      TRANSFORM_FAULT:
+      FRACTURE_ZONE:
+      SHEAR_ZONE:
+      OCEANIC_CORE_COMPLEX:
+      CORRUGATED_SURFACE:
+      AXIAL_VALLEY:
+      TRANSFORM_VALLEY:
+      SUSPENDED_VALLEY:
+      TRANSVERSE_RIDGE:
+      NEOVOLCANIC_RIDGE:
+      VOLCANIC_CONE:
+      HUMMOCKY_TERRAIN:
+      HYDROTHERMAL_VENT_FIELD:
+      HYDROTHERMAL_MOUND:
+      SEAMOUNT:
+
+  LithosphericBoundaryKind:
+    description: >-
+      Kind of subsurface interface the source names and locates in depth.
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY:
+      MOHOROVICIC_DISCONTINUITY:
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+      ISOTHERM:
+
+  LithosphericUnitKind:
+    description: >-
+      Kind of body in the vertical structure of the oceanic lithosphere that
+      the source names and makes statements about.
+    permissible_values:
+      CRUST:
+      MANTLE:
+      LITHOSPHERE:
+      ASTHENOSPHERE:
+      MANTLE_SOURCE:
+      SEDIMENT_LAYER:
+
+  MeltStage:
+    description: >-
+      Stage a source assigns to a melt when it reports a property of that
+      melt. The stages are distinguished because the source distinguishes
+      them and reports different values for each.
+    permissible_values:
+      PRIMARY:
+        description: The source describes the melt as in equilibrium with its mantle source.
+      PRIMITIVE:
+        description: The source calls the melt primitive without stating equilibrium.
+      PRE_ERUPTIVE:
+        description: The source describes the melt as it stood before eruption.
+      ERUPTED:
+        description: The source describes melt that has erupted or its solidified product.
+
+  ContributorKind:
+    description: Whether a credited contributor is a person or an organization.
+    permissible_values:
+      PERSON:
+      ORGANIZATION:
+
+  SeismicEventKind:
+    description: Kind of seismic occurrence the source reports as an individual event.
+    permissible_values:
+      EARTHQUAKE:
+      RUPTURE_SUBEVENT:
+
+  MagnitudeScale:
+    description: >-
+      Magnitude scale on which a source states an event magnitude. The scale
+      is the one the source names; a value is never converted between scales.
+    permissible_values:
+      LOCAL:
+      MOMENT:
+
+  MethodKind:
+    description: >-
+      Kind of procedure or representation a source uses to produce or check a
+      reported value. The individual procedure's name stays in name.
+    permissible_values:
+      ALGORITHM:
+      NUMERICAL_MODEL:
+      EMPIRICAL_SCALE:
+      CLASSIFICATION_CRITERION:
+      LABORATORY_PROCEDURE:
+
+  RockKind:
+    description: >-
+      Kind of rock or rock-hosted material a sample record reports, in the
+      general terms the source uses.
+    permissible_values:
+      BASALT:
+      PILLOW_BASALT:
+      MID_OCEAN_RIDGE_BASALT:
+      PERIDOTITE:
+      MELT_INCLUSION:
+      POPPING_ROCK:
+
+  ClaimKind:
+    description: >-
+      What a source is doing with an attributed statement. It classifies the
+      speech act, never whether the statement is true.
+    permissible_values:
+      MECHANISM_HYPOTHESIS:
+        description: The source proposes a mechanism that would explain an observation.
+      INTERPRETATION:
+        description: The source reads a meaning out of its own observations.
+      ASSUMPTION:
+        description: The source states something its own calculation relies on.
+      LIMITATION:
+        description: The source states a bound on what its result can establish.
+      KNOWLEDGE_GAP:
+        description: The source states that something is not known.
+
+  GeologicRelationType:
+    description: >-
+      Spatial and structural predicates between geological features that a
+      source states in one sentence naming both features.
+    permissible_values:
+      PART_OF:
+      BOUNDED_BY:
+      OFFSET_BY:
+      CUTS:
+      ADJACENT_TO:
+      LIES_BENEATH:
+
+  ScholarlyRelationType:
+    description: >-
+      Predicates between contributors, funding awards, works, and data
+      resources that a source states in one sentence naming both endpoints.
+    permissible_values:
+      FUNDED_BY:
+      AWARDED_BY:
+      DEPOSITED_IN:
+
+# -------------------------------------------------------------------
+# Classes
+#
+# Ten classes extend a Malleus root directly and each carries its own
+# grounding block. The remaining eleven derive through a pack type and
+# carry none.
+#
+# Every class wears SourceAsserted, so the route back to the retained
+# assertion and the source's own modality travel with each record.
+# -------------------------------------------------------------------
+
+classes:
+
+  RidgeSection:
+    is_a: Entity
+    mixins:
+      - SourceAsserted
+    description: >-
+      A named length of a spreading ridge, or a named discontinuity that
+      offsets one, that a source treats as a unit of description. Lengths,
+      offsets, ages, and rates are not slots here: each is a ReportedQuantity
+      whose subject is the section.
+    slots:
+      - accretion_character
+      - structural_orientation
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Morphology and segmentation of ocean spreading centres
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Marine geology"
+          none_found: true
+          search: >-
+            Checked from certain knowledge only. This session has no network
+            and its declared inputs are the Malleus root, the metrology,
+            chronology and research packs, the source-assertion profile, and
+            the selected reading; none of them declares a marine-geology
+            vocabulary. GeoSciML and the CGI geoscience terminology, the
+            IHO-IOC B-6 undersea feature terms, and the NASA GCMD keyword
+            hierarchy each plausibly name features of this kind, but this
+            session cannot vouch for a resolvable URL for any of them from
+            the declared inputs, and a fabricated URL is worse than an honest
+            gap. No citation is therefore recorded. The names below are local
+            schema names; the domain terms the records carry (mid-ocean
+            ridge, ridge segment, non-transform discontinuity) are the
+            reading's own wording and stay in the data.
+          invented_terms:
+            - RidgeSection
+            - AccretionCharacter
+            - accretion_character
+            - structural_orientation
+
+  GeologicStructure:
+    is_a: Entity
+    mixins:
+      - SourceAsserted
+      - Statusable
+    description: >-
+      A named deformational or constructional structure of the sea floor and
+      the lithosphere beneath it: a fault, a shear zone, a core complex, a
+      valley, a volcanic construction, a vent field. status carries the
+      activity a source states for it; the source's own word for that
+      activity stays in description.
+    slots:
+      - structure_kind
+      - structural_orientation
+      - dip_direction
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Deformational and constructional structures of oceanic lithosphere
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Structural geology"
+          none_found: true
+          search: >-
+            Checked from certain knowledge only, under the same input
+            boundary as RidgeSection. GeoSciML declares a GeologicStructure
+            class and a ShearDisplacementStructure subtype, and the CGI
+            vocabulary service publishes fault-type registers, but this
+            session cannot vouch for a resolvable URL for either from the
+            declared inputs and will not write one from recall. The class and
+            enum names below are therefore recorded as local. The value names
+            in StructureKind are general structural terms rather than terms
+            minted here; they are listed because the list itself is local.
+          invented_terms:
+            - GeologicStructure
+            - StructureKind
+            - structure_kind
+            - structural_orientation
+            - dip_direction
+
+  LithosphericBoundary:
+    is_a: Entity
+    mixins:
+      - SourceAsserted
+    description: >-
+      A subsurface interface a source names and locates in depth, such as a
+      rheological boundary, a seismic discontinuity, or an isotherm used as a
+      proxy for one. Its depth and its temperature are ReportedQuantity
+      records whose subject is the boundary.
+    slots:
+      - boundary_kind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Vertical rheological and thermal structure of the oceanic lithosphere
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geophysics > Geodynamics"
+          none_found: true
+          search: >-
+            Checked from certain knowledge only, under the same input
+            boundary as RidgeSection. The brittle-ductile boundary, the
+            Mohorovicic discontinuity, and the lithosphere-asthenosphere
+            boundary are standard literature terms, and the reading uses all
+            three, but this session found no controlled vocabulary it can
+            cite with a URL it can vouch for that types them as one kind of
+            thing. No citation is recorded rather than an invented one.
+          invented_terms:
+            - LithosphericBoundary
+            - LithosphericBoundaryKind
+            - boundary_kind
+
+  LithosphericUnit:
+    is_a: Entity
+    mixins:
+      - SourceAsserted
+    description: >-
+      A body in the vertical structure of the oceanic lithosphere that a
+      source names and makes statements about, such as the crust, the mantle,
+      or a sediment layer. Its thickness, age, and temperature are
+      ReportedQuantity records whose subject is the unit.
+    slots:
+      - unit_kind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Layered composition of the oceanic lithosphere
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geophysics > Geodynamics"
+          none_found: true
+          search: >-
+            Checked from certain knowledge only, under the same input
+            boundary as RidgeSection. GeoSciML declares GeologicUnit, which
+            is the near term, but this session cannot vouch for its URL from
+            the declared inputs. A layer and the interface that bounds it are
+            kept as two classes because the reading states different things
+            about each: a thickness and an age about the unit, a depth and an
+            isotherm about the boundary.
+          invented_terms:
+            - LithosphericUnit
+            - LithosphericUnitKind
+            - unit_kind
+
+  MagmaticMelt:
+    is_a: Entity
+    mixins:
+      - SourceAsserted
+    description: >-
+      A melt a source reports properties of, at the stage the source assigns
+      it. Concentrations, temperatures, and pressures are ReportedQuantity
+      records whose subject is the melt.
+    slots:
+      - melt_stage
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Composition and ascent of mantle-derived silicate melts
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Petrology"
+          none_found: true
+          search: >-
+            Checked from certain knowledge only, under the same input
+            boundary as RidgeSection. The IUGS Subcommission on the
+            Systematics of Igneous Rocks publishes a classification and
+            glossary that defines magma and melt, and it is the vocabulary
+            this class would borrow from, but this session cannot vouch for a
+            resolvable URL for it from the declared inputs and will not write
+            a DOI from recall. The stage distinctions in MeltStage are the
+            reading's own: it separates primary melts in equilibrium with the
+            mantle source from pre-eruptive melts that have fractionated, and
+            reports different values for each.
+          invented_terms:
+            - MagmaticMelt
+            - MeltStage
+            - melt_stage
+
+  Contributor:
+    is_a: Entity
+    mixins:
+      - Agent
+      - SourceAsserted
+    description: >-
+      A person or organization a source credits, names as an author, names as
+      an affiliation, or names as a funder.
+    slot_usage:
+      agent_type:
+        range: ContributorKind
+        description: Whether the source names this contributor as a person or an organization.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Agents and attribution in research provenance
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology, 2013 Recommendation
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+          invented_terms:
+            - Contributor
+            - ContributorKind
+          invention_search: >-
+            PROV-O supplies Agent, Person, and Organization, and the Malleus
+            root already declares Agent as a mixin, so a class named Agent
+            here would collide with it. Contributor is the local class name
+            for the union PROV-O splits into Person and Organization, and
+            ContributorKind is the local enum that records which of the two
+            the source names. The CRediT taxonomy already cited by the
+            research pack names roles, not the parties that hold them, so it
+            supplies no class here.
+
+  FundingAward:
+    is_a: Entity
+    mixins:
+      - SourceAsserted
+    description: >-
+      An award of financial support that a source names, carrying the award
+      identifier the source states. The funder is a Contributor and is linked
+      by a ScholarlyRelation, because a source may name an award without
+      naming its funder and the reverse.
+    slots:
+      - award_identifier
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research funding and awards
+          taxonomy: DDC 001.4
+          none_found: true
+          search: >-
+            Checked from certain knowledge only, under the same input
+            boundary as RidgeSection. The CRediT taxonomy cited by the
+            research pack names Funding acquisition as a contributor role,
+            not an award; DCMI Metadata Terms and PROV-O declare no funding
+            or award class; the Crossref Funder Registry names funders rather
+            than awards, and this session cannot vouch for its term list from
+            the declared inputs. No citation is recorded. The grant numbers
+            the reading states are domain identifiers and are carried in
+            award_identifier as data.
+          invented_terms:
+            - FundingAward
+            - award_identifier
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Describable
+      - SourceAsserted
+    description: >-
+      One seismic occurrence a source reports individually, with the
+      magnitude the source states on the scale the source names. Populations
+      of events that a source only counts or bounds are ReportedQuantity
+      records, not many SeismicEvent records that the reading never
+      individuates.
+    slots:
+      - magnitude_value
+      - magnitude_scale
+    slot_usage:
+      event_type:
+        range: SeismicEventKind
+        description: Whether the source reports this as an earthquake or as a subevent of one.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geophysics > Seismology"
+          vocabularies:
+            - vocabulary: USGS Earthquake Hazards Program Earthquake Glossary
+              vocabulary_url: https://earthquake.usgs.gov/learn/glossary/
+              borrowed_terms:
+                - earthquake
+                - hypocenter
+                - magnitude
+                - focal mechanism
+          invented_terms:
+            - SeismicEvent
+            - SeismicEventKind
+            - MagnitudeScale
+            - magnitude_value
+            - magnitude_scale
+          invention_search: >-
+            The USGS glossary defines earthquake, hypocenter, magnitude, and
+            focal mechanism, and those definitions are what these records
+            carry. It names no class for a seismic occurrence and no term for
+            the pair of a magnitude number and the scale it was read on, and
+            the QuakeML exchange format, which does carry such a structure,
+            is not something this session can cite with a URL it can vouch
+            for from the declared inputs. The class, the two enums, and the
+            two slots are therefore local. RUPTURE_SUBEVENT is listed because
+            the reading reports subevents of one rupture as distinct events.
+
+  GeologicRelation:
+    is_a: Relation
+    mixins:
+      - SourceAsserted
+    description: >-
+      A spatial or structural relation between two geological features that a
+      source states in a single sentence naming both. A relation a source
+      only implies is a declared gap, never a derivation from a neighbouring
+      sentence.
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Spatial and structural relations between geological features
+          taxonomy: "Outline of academic disciplines: Earth sciences > Geology > Structural geology"
+          none_found: true
+          search: >-
+            Checked from certain knowledge only, under the same input
+            boundary as RidgeSection. The research pack's
+            ResearchRelationType carries research predicates and none of
+            these six; GeoSciML models geological relations through feature
+            classes such as Contact rather than a predicate register this
+            session can cite with a URL it can vouch for. The predicate names
+            are ordinary structural-geology verbs, but the list is local and
+            is recorded as such.
+          invented_terms:
+            - GeologicRelation
+            - GeologicRelationType
+
+  ScholarlyRelation:
+    is_a: Relation
+    mixins:
+      - SourceAsserted
+    description: >-
+      A relation between contributors, funding awards, works, and data
+      resources that a source states in a single sentence naming both
+      endpoints.
+    slot_usage:
+      relation_type:
+        range: ScholarlyRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Relations among research works, contributors, funders, and repositories
+          taxonomy: DDC 001.4
+          none_found: true
+          search: >-
+            Checked from certain knowledge only, under the same input
+            boundary as RidgeSection. DCMI Metadata Terms supplies relation
+            terms for works, such as isPartOf and references, but none for
+            funding, and this session did not find a funding or deposition
+            predicate it can cite with a URL it can vouch for. The research
+            pack's ResearchRelationType carries CONTRIBUTED_TO and
+            REPORTED_BY and none of these three. The list is local.
+          invented_terms:
+            - ScholarlyRelation
+            - ScholarlyRelationType
+
+  # ---------------- derived through pack types: no grounding block ----------
+
+  ReportedQuantity:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      One number, bound pair, or count a source reports about a named thing,
+      carried with the source's own kind wording, unit, qualification, and
+      determination basis. subject names the thing the number is about.
+      Nothing here is converted: a bound pair is what the source states, and
+      value_qualification records the form of the statement.
+
+  ReportedRatio:
+    is_a: Ratio
+    mixins:
+      - SourceAsserted
+    description: >-
+      A ratio a source reports with both of its kinds kept explicit, such as
+      a concentration ratio between two elements or a wave-velocity ratio.
+
+  InterpretiveClaim:
+    is_a: Claim
+    description: >-
+      An attributed statement of the source's own reasoning: a proposed
+      mechanism, a reading of its observations, an assumption its calculation
+      rests on, a stated limitation, or a stated gap in knowledge.
+      hypothesis_disposition is captured from the sentence that disposes of a
+      hypothesis, never from the sentence that raises it.
+    slot_usage:
+      claim_kind:
+        range: ClaimKind
+
+  PublishedWork:
+    is_a: Source
+    mixins:
+      - SourceAsserted
+    description: >-
+      A published article, chapter, book, or abstract that the reading names,
+      including the reading itself. The bibliographic identifiers a source
+      prints are facts it reports about that work and are carried as slots.
+    slots:
+      - doi
+      - publication_year
+      - venue_name
+      - volume_designation
+      - page_range
+
+  DataResource:
+    is_a: Source
+    mixins:
+      - SourceAsserted
+    description: >-
+      A database, catalogue, archive, or deposited dataset that a source
+      names as a place data came from or went to.
+    slots:
+      - doi
+      - locator
+
+  SoftwarePackage:
+    is_a: Instrument
+    mixins:
+      - SourceAsserted
+    description: >-
+      A named software package or program a source uses to produce or process
+      a reported result, with the version and the retrieval route the source
+      states.
+    slots:
+      - software_version
+      - locator
+
+  AnalyticalMethod:
+    is_a: Method
+    mixins:
+      - SourceAsserted
+    description: >-
+      A procedure or representation a source uses to produce or check a
+      reported value: an algorithm, a numerical model, an empirical scale, a
+      classification criterion, or a laboratory procedure.
+    slots:
+      - method_kind
+
+  RockSample:
+    is_a: Sample
+    mixins:
+      - SourceAsserted
+    description: >-
+      A rock or rock-hosted material a source reports as collected, observed,
+      or analysed, in the general terms the source uses for it.
+    slots:
+      - rock_kind
+      - locator
+
+  ResearchCampaign:
+    is_a: Campaign
+    mixins:
+      - SourceAsserted
+    description: >-
+      A bounded field or laboratory activity a source names, such as a cruise
+      or a deployment, with the domain time and the counts the source states.
+
+  AttributedResearchRelation:
+    is_a: ResearchRelation
+    mixins:
+      - SourceAsserted
+    description: >-
+      A research-pack relation carrying the route back to the assertion that
+      states it, so a relation's provenance travels with the relation.
+
+  CreditedContribution:
+    is_a: ContributionRelation
+    mixins:
+      - SourceAsserted
+    description: >-
+      A credited contribution from a contributor to a work or campaign,
+      carrying the CRediT role the source declares and the route back to the
+      assertion that declares it. One relation per role.
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+
+  accretion_character:
+    range: AccretionCharacter
+    multivalued: true
+    description: >-
+      Character a source attributes to a ridge section's accretion.
+      Multivalued because a source may attribute more than one.
+
+  structural_orientation:
+    range: string
+    description: >-
+      Orientation a source states for a feature, in the source's own wording
+      and reference frame, such as a strike or a trend. Retained as written
+      and never converted to degrees.
+
+  dip_direction:
+    range: string
+    description: Dip direction a source states for a structure, in the source's own wording.
+
+  structure_kind:
+    range: StructureKind
+    description: Kind of geological structure, classified against the project list.
+
+  boundary_kind:
+    range: LithosphericBoundaryKind
+    description: Kind of subsurface interface, classified against the project list.
+
+  unit_kind:
+    range: LithosphericUnitKind
+    description: Kind of lithospheric body, classified against the project list.
+
+  melt_stage:
+    range: MeltStage
+    description: Stage a source assigns to a melt when reporting a property of it.
+
+  award_identifier:
+    range: string
+    description: >-
+      Award, grant, or agreement number exactly as the source states it. It
+      is a fact the source reports about the award, not a protocol locator.
+
+  magnitude_value:
+    range: float
+    description: Magnitude number a source states for one event.
+
+  magnitude_scale:
+    range: MagnitudeScale
+    description: >-
+      Scale a source names for that magnitude. Required alongside the number
+      for two magnitudes to compare; a value is never converted between
+      scales.
+
+  method_kind:
+    range: MethodKind
+    description: Kind of procedure or representation, classified against the project list.
+
+  rock_kind:
+    range: RockKind
+    description: Kind of rock or rock-hosted material, classified against the project list.
+
+  doi:
+    range: string
+    description: >-
+      Digital Object Identifier a source prints for a work or data resource,
+      as printed. A domain identifier, not a provenance locator.
+
+  publication_year:
+    range: integer
+    description: Year of publication a source states for a work.
+
+  venue_name:
+    range: string
+    description: >-
+      Journal, book, series, or meeting a source names for a work, in the
+      source's own wording, abbreviations included.
+
+  volume_designation:
+    range: string
+    description: >-
+      Volume, issue, or article designation a source prints for a work, as
+      printed. A string, because sources print letters and numbers alike.
+
+  page_range:
+    range: string
+    description: Page range or article number a source prints for a work, as printed.
+
+  software_version:
+    range: string
+    description: Version a source states for a software package, as stated.

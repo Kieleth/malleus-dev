@@ -1,0 +1,72 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-24",
+  "core": {
+    "commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
+  },
+  "producer_input_manifest_sha256": "sha256:7e247ac4b254bf5f439202a436b2bf1e2d30b638c314048f8a115b129b94f498",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "workspace_launches": 1,
+    "producing_launch_ordinal": 1,
+    "questions_visible": false,
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:a588e14edd40d110cb538d05e918c0a22e6da16e021af685114008a6f236d363",
+    "final_status_sha256": "sha256:8a4af616a5baa029f2a7b72dba3e1850257f7cb17a16d9ab8473a2d3304cfe22"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:33bc01eae5ba46b0660b245a48609c41536780ac8832bfa4770e196ee88c02a6",
+      "ontology_path": "paper-v4/experiment-v4/run-24/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-24/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:89bd19dc281022ff5415ebb6176f98d3646c03b8d0ed1e323b2798d05c70d1d3",
+      "accepted_at": "2026-09-10T00:40:47Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:33bc01eae5ba46b0660b245a48609c41536780ac8832bfa4770e196ee88c02a6",
+    "validated_contract_sha256": "sha256:87bb314771092878a106099de190220c646cc8a530813cfed51221979d16559e",
+    "validated_fact_set_sha256": "sha256:c37ca903b5f1e1d5b5b434d7ff15fdbaef231c6a5527e74261204571a6ff9f70",
+    "fact_count": 5032,
+    "grounding_receipt_sha256": "sha256:a1d3646db3cf1e7d56cf2407533d1f51f126c85bc4d999d1cc10eff290dd8f23",
+    "population_surface_sha256": "sha256:43101df6fb93fc0f4645ec8ffcc417a18b870a2f19dbdf198cdbc38321fcd21f",
+    "population_surface_families": {
+      "ENTITY": 29,
+      "EVENT": 2,
+      "RELATION": 6
+    }
+  },
+  "accepted_ontology_sha256": "sha256:33bc01eae5ba46b0660b245a48609c41536780ac8832bfa4770e196ee88c02a6",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "overseer, before phase two",
+    "checked_at": "2026-09-10T00:41:13Z",
+    "checked_at_end": "2026-09-10T00:41:42Z",
+    "checked_at_source": "the harness transcript's timestamps of the WebFetch calls",
+    "urls": 2,
+    "borrowed_terms": 7,
+    "fabricated": 0,
+    "unverified": 0,
+    "vocabulary_claims_unsupported": 0,
+    "cited_url_unreachable": 1,
+    "result": "www.w3.org/TR/prov-o/: Agent, Person, Organization present; earthquake.usgs.gov/learn/glossary/: HTTP 404, the four terms (earthquake, hypocenter, magnitude, focal mechanism) present at www.usgs.gov/glossary/earthquake-hazards-program; the eight none_found blocks cite nothing and claim nothing"
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-24 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

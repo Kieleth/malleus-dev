@@ -1,0 +1,320 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-24",
+  "protocol": "v4.13",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-10T00:27:01Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-24/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path (run-23's message with the run id moved, verified by diff)",
+      "outcome": "POPULATION_READY",
+      "execution": {
+        "pinned_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "paper_commit": "864e35da",
+        "staged_at": "2026-09-10T00:16:44Z",
+        "staged_at_source": "mtime of producer-input-receipt.json",
+        "interpreter": "VERIFIED by prepare_producer.py preflight",
+        "workspace_note": "staged by run-24/prepare_producer.py before E-0347's gate; the eight staged inputs are byte-identical to run-23's workspace (8 of 8 compared)",
+        "core_runtime": "every parent-side cell command runs with src/malleus exported from the pinned commit c95dba7 (git archive) first on PYTHONPATH, as run-22 and run-23 did; the repository's src at HEAD 864e35da differs from the pin"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-10T00:43:26Z",
+        "dispatched_at_source": "the harness transcript's timestamp of the SendMessage call",
+        "after_binding_frozen_at": "2026-09-10T00:42:34Z",
+        "message": "run-22's phase-two message with run-24's coordinates and fact count (5,032)",
+        "capture_id": "capture:paper-v4:yu-2025:v4:24",
+        "plan_id": "plan:paper-v4:yu-2025:v4:24",
+        "source_id": "source:yu-2025-mid-atlantic-ridge",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ],
+        "same_session": true
+      },
+      "usage_cumulative": {
+        "tokens": 178461,
+        "tool_uses": 18,
+        "duration_ms": 802107
+      },
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 390045,
+          "tool_uses": 46,
+          "duration_ms": 2662157
+        }
+      ],
+      "usage_note": "usage_cumulative is the harness's figure at the end of phase one; usage_by_resume carries the cumulative figure at the end of phase two in the same session (one resume by SendMessage)"
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:33bc01eae5ba46b0660b245a48609c41536780ac8832bfa4770e196ee88c02a6",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:c37ca903b5f1e1d5b5b434d7ff15fdbaef231c6a5527e74261204571a6ff9f70",
+      "fact_count": 5032,
+      "accepted_at": "2026-09-10T00:40:47Z",
+      "accepted_at_source": "mtime of gate/attempt-01/diagnostic.json",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 29,
+        "EVENT": 2,
+        "RELATION": 6
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "ResearchRelation",
+        "AttributedResearchRelation",
+        "CreditedContribution",
+        "GeologicRelation",
+        "ScholarlyRelation"
+      ],
+      "subject_bearing_types": [
+        "Claim",
+        "Observation",
+        "AnalyticalMethod",
+        "AttributedResearchRelation",
+        "Contributor",
+        "CreditedContribution",
+        "DataResource",
+        "FundingAward",
+        "GeologicRelation",
+        "GeologicStructure",
+        "InterpretiveClaim",
+        "LithosphericBoundary",
+        "LithosphericUnit",
+        "MagmaticMelt",
+        "PublishedWork",
+        "ReportedQuantity",
+        "ReportedRatio",
+        "ResearchCampaign",
+        "RidgeSection",
+        "RockSample",
+        "ScholarlyRelation",
+        "SeismicEvent",
+        "SoftwarePackage"
+      ],
+      "compiler": "paper-v4/experiment-v4/run-24/compile_ontology_candidate.py with src/malleus exported from the pinned commit c95dba7 first on PYTHONPATH (launches[0].execution.core_runtime)",
+      "note": "accepted at attempt 01; 21 project classes, 18 slots, 13 enums; ten root extensions each with a grounding block (RidgeSection, GeologicStructure, LithosphericBoundary, LithosphericUnit, MagmaticMelt, Contributor, FundingAward on Entity; SeismicEvent on Event; GeologicRelation, ScholarlyRelation on Relation), eleven pack-derived classes; 37 surface types (ENTITY 29, EVENT 2, RELATION 6); 23 subject-bearing types, relations among them, because the producer routes nearly every project type through a subject-bearing source mixin; every reported number a ReportedQuantity with a subject",
+      "producer_observations": [
+        "phase one report: profile source-assertion as supplied, Event role nonempty, no EventParticipation, no Signal type; imports the five locators explicitly",
+        "two of ten root extensions cite (Contributor: PROV-O; SeismicEvent: the USGS Earthquake Glossary); eight take none_found with the vocabularies they would borrow from named in search (GeoSciML/CGI, IHO-IOC B-6, GCMD, the IUGS igneous glossary, the Crossref Funder Registry), because no locator could be vouched for",
+        "two judgement calls flagged: velocity, thermal and solubility models as AnalyticalMethod with method_kind NUMERICAL_MODEL; software packages derived from research:Instrument on the pack's own definition",
+        "its own check was structural only, against the four declared pack files; it did not run the rite or the compiler"
+      ],
+      "overseer_observations": [
+        "the compiler at the pinned commit accepted at attempt 01",
+        "the repository's src at HEAD differs from the pin; every parent-side command runs against the export",
+        "the cited USGS glossary URL (earthquake.usgs.gov/learn/glossary/) returns 404; the four terms were verified at the glossary's current home, www.usgs.gov/glossary/earthquake-hazards-program"
+      ],
+      "phase_two_inputs_staged": [
+        "producer/accepted/population-surface.json",
+        "producer/accepted/diagnostic.json"
+      ],
+      "phase_two_inputs_digests": {
+        "population-surface.json": "sha256:43101df6fb93fc0f4645ec8ffcc417a18b870a2f19dbdf198cdbc38321fcd21f",
+        "diagnostic.json": "sha256:89bd19dc281022ff5415ebb6176f98d3646c03b8d0ed1e323b2798d05c70d1d3"
+      },
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "overseer, before phase two",
+        "checked_at": "2026-09-10T00:41:13Z",
+        "checked_at_end": "2026-09-10T00:41:42Z",
+        "checked_at_source": "the harness transcript's timestamps of the WebFetch calls",
+        "urls": 2,
+        "borrowed_terms": 7,
+        "fabricated": 0,
+        "unverified": 0,
+        "vocabulary_claims_unsupported": 0,
+        "cited_url_unreachable": 1,
+        "result": "www.w3.org/TR/prov-o/: Agent, Person, Organization present; earthquake.usgs.gov/learn/glossary/: HTTP 404, the four terms (earthquake, hypocenter, magnitude, focal mechanism) present at www.usgs.gov/glossary/earthquake-hazards-program; the eight none_found blocks cite nothing and claim nothing"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-10T01:28:27Z",
+      "execution_commit": "864e35da",
+      "core_executed_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+      "core_note": "src/malleus exported from the pinned commit c95dba7 (git archive) first on PYTHONPATH for the runner, the binder and the native query; the repository HEAD at execution was 864e35da; the runner script is run-24's with that one PYTHONPATH prefix",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 400,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 21,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 422,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 200,
+          "PARTLY_FORMALIZED": 119,
+          "UNFORMALIZED": 34
+        },
+        "blocks_asserted": 182,
+        "blocks_declared_nothing_assertable": 4,
+        "blocks_untouched": 0,
+        "blocks_reviewed": 186,
+        "blocks_total": 186
+      },
+      "derivation_census": {
+        "non_local_relations": 2,
+        "top_hubs": [
+          {
+            "assertion": "a:p10b44:funding",
+            "block": "page:10:block:044",
+            "records": 14
+          },
+          {
+            "assertion": "a:p1b1:title",
+            "block": "page:1:block:001",
+            "records": 9
+          },
+          {
+            "assertion": "a:p10b46:campaign",
+            "block": "page:10:block:046",
+            "records": 8
+          }
+        ]
+      },
+      "subject_coverage": {
+        "ambiguous": 0,
+        "attachable": 15,
+        "proposed": 48,
+        "total": 421,
+        "unnamed": 358,
+        "with_subject": 48,
+        "without_subject": 373
+      },
+      "provenance_coverage": {
+        "total": 421,
+        "with_digest": 421,
+        "with_locator": 421
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 1,
+        "RELATION_ABSENT": 7,
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE": 8,
+        "TYPE_ABSENT": 137
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-10T01:29:05Z",
+      "admitted_at_source": "mtime of results/run-result.json",
+      "note": "admitted at the first runner attempt with no return; 186 of 186 blocks reviewed, 182 asserted and 4 declared nothing assertable; 137 TYPE_ABSENT gaps, the most of any cell, declared where this producer's enums and types had no value (prior knowledge restated, processing steps, figure legends, volcanic edifices, a ridge-transform junction, by its own report)",
+      "producer_observations": [
+        "phase two report: 353 assertions (200 targets only, 119 targets plus gap, 34 gap only) across 182 of 186 blocks; 421 records (400 entities, 1 event, 21 relations), 0 supersessions; 22 of the contract's 37 types populated; subject set on 48, unset on 373; gaps TYPE_ABSENT 137, REQUIRED_FIELD_ABSENT_IN_SOURCE 8, RELATION_ABSENT 7, AGGREGATE_ONLY 1; modalities STATED 241, CALCULATED 51, MEASURED 30, HYPOTHESISED 19, NEGATED 12 (producer's own counts, the runner's census governs)",
+        "statements sliced from the block's raw bytes by whitespace-insensitive anchor, never retyped; values as printed (page_range '8 1–91' kept)",
+        "four decisions: earthquake populations are quantities with count and count_scope, one Event record (the 2016 Mw 7.1 Romanche event); no CRediT role assigned anywhere (prose parts, the pack forbids inference), contribution_role unset on all six contribution relations with a gap each; hypothesis dispositions from the disposing sentence (four NOT_SUPPORTED, CO2 degassing PREFERRED, the long-period reading UNDECIDED); relations only where one sentence names both endpoints (21), seven RELATION_ABSENT gaps",
+        "the producer names the TYPE_ABSENT clusters as candidates for an additive revision: no ClaimKind for restated prior knowledge, no type for a processing step, figure legends, no volcanic-edifice StructureKind, a ridge-transform junction",
+        "its verification: the builder refuses to write while any check fails; a second script re-derived every checkable rule from disk; both clean; parent-side refusals not checked"
+      ],
+      "overseer_observations": [
+        "the runner's census governs; the producer's counts are quoted as its report",
+        "one launch, one session, two phases; no environment probe reported"
+      ]
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-10T00:42:34Z",
+    "bound_at_source": "mtime of query-binding.acceptance.json",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:7f9fe8012bcea76a4563fa49ff61fbb68e2379e3bcdf45e6d2e2c233a6d6777b",
+    "type_sets_note": "query-type-sets.note.json",
+    "type_sets_written_at": "2026-09-10T00:42:34Z",
+    "questions_file": "paper-v4/experiment-v4/competency-questions-v3.1.json",
+    "closure": "paper-v4/experiment-v4/type_set_closure.py: ACCEPTED, no omissions (and the binder ran the closure again)",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:8fe17e63f3b8f24fb89e70bc854175212e7c8e995acbf090d545dfc530a9cf87",
+    "binding_schema": "malleus.paper-v4.native-query-binding/v6",
+    "cases_sha256": "sha256:87c01a64586530ba1f4b57197ad47e6394761d97cb5fd4e04e0512adc338a6b6",
+    "questions": 30,
+    "cases": 15638,
+    "cases_by_kind": {
+      "ENTITY": 35,
+      "ENTITY_NO_SUBJECT": 173,
+      "RELATION": 9240,
+      "SUBJECT": 1173,
+      "SUBJECT_ANY": 5017
+    },
+    "phase_two_dispatched_after": "2026-09-10T00:42:34Z",
+    "executed_at": "2026-09-10T01:31:20Z",
+    "executed_at_source": "mtime of query/query-result.json",
+    "binding_executed": "results/native-query-binding.json",
+    "binding_executed_sha256": "sha256:a1bfeefebb6f6c84f701823075b7a1fc8305153c3a9349b640c5b4da8acac9d2",
+    "bound_after_replay_receipt_sha256": "sha256:23ec9d8abc1998e7d81a1bd75369370a9e2d2f12669a41bdb4c25506b972359e",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "result_schema": "malleus.paper-v4.query-result/v3",
+    "rows_by_question": {
+      "NQ-CQ-C-01": 212,
+      "NQ-CQ-C-02": 197,
+      "NQ-CQ-C-03": 291,
+      "NQ-CQ-C-04": 158,
+      "NQ-CQ-C-05": 228,
+      "NQ-CQ-T1-01": 158,
+      "NQ-CQ-T1-02": 158,
+      "NQ-CQ-T1-03": 128,
+      "NQ-CQ-T1-04": 55,
+      "NQ-CQ-T1-05": 158,
+      "NQ-CQ-T2-01": 98,
+      "NQ-CQ-T2-02": 228,
+      "NQ-CQ-T2-03": 243,
+      "NQ-CQ-T2-04": 301,
+      "NQ-CQ-T2-05": 29,
+      "NQ-CQ-T3-01": 212,
+      "NQ-CQ-T3-02": 228,
+      "NQ-CQ-T3-03": 228,
+      "NQ-CQ-T3-04": 222,
+      "NQ-CQ-T3-05": 216,
+      "NQ-CQ-T4-01": 68,
+      "NQ-CQ-T4-02": 68,
+      "NQ-CQ-T4-03": 80,
+      "NQ-CQ-T4-04": 243,
+      "NQ-CQ-T4-05": 49,
+      "NQ-CQ-T5-01": 196,
+      "NQ-CQ-T5-02": 228,
+      "NQ-CQ-T5-03": 212,
+      "NQ-CQ-T5-04": 212,
+      "NQ-CQ-T5-05": 244
+    },
+    "rows_total": 5348,
+    "rows_by_kind": {
+      "ENTITY": 4245,
+      "SUBJECT": 1056,
+      "RELATION": 47
+    },
+    "rows_from_more_than_one_case": null,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:f1bddc6cbe019f49e0cdde26da82e3cb2af2bd61c208445796233238f60b146b",
+    "witnesses_traced": 416
+  },
+  "review": {}
+}

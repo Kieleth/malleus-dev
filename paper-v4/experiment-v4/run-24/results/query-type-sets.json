@@ -1,0 +1,270 @@
+{
+  "CQ-T1-01": [
+    "Campaign",
+    "ResearchCampaign",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T1-02": [
+    "Campaign",
+    "ResearchCampaign",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T1-03": [
+    "PublishedWork",
+    "Instant",
+    "Claim",
+    "InterpretiveClaim"
+  ],
+  "CQ-T1-04": [
+    "DataResource",
+    "Claim",
+    "InterpretiveClaim"
+  ],
+  "CQ-T1-05": [
+    "Campaign",
+    "ResearchCampaign",
+    "Interval",
+    "QuantityValue",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T2-01": [
+    "RidgeSection",
+    "GeologicStructure",
+    "LithosphericBoundary",
+    "GeologicRelation",
+    "Claim",
+    "InterpretiveClaim"
+  ],
+  "CQ-T2-02": [
+    "Instrument",
+    "SoftwarePackage",
+    "Method",
+    "AnalyticalMethod",
+    "Claim",
+    "InterpretiveClaim",
+    "DataResource",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T2-03": [
+    "RidgeSection",
+    "GeologicStructure",
+    "GeologicRelation",
+    "Claim",
+    "InterpretiveClaim",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T2-04": [
+    "PublishedWork",
+    "QuantityValue",
+    "RidgeSection",
+    "LithosphericUnit",
+    "ScholarlyRelation",
+    "Claim",
+    "InterpretiveClaim",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T2-05": [
+    "FundingAward",
+    "Contributor",
+    "ResearchRelation",
+    "ContributionRelation",
+    "AttributedResearchRelation",
+    "CreditedContribution"
+  ],
+  "CQ-T3-01": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "SeismicEvent",
+    "RidgeSection"
+  ],
+  "CQ-T3-02": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "RockSample",
+    "MagmaticMelt",
+    "RidgeSection",
+    "ReportedRatio"
+  ],
+  "CQ-T3-03": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "RockSample",
+    "MagmaticMelt",
+    "RidgeSection",
+    "ReportedRatio"
+  ],
+  "CQ-T3-04": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "Method",
+    "AnalyticalMethod",
+    "SeismicEvent",
+    "Instrument",
+    "SoftwarePackage"
+  ],
+  "CQ-T3-05": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "Method",
+    "AnalyticalMethod",
+    "MagmaticMelt"
+  ],
+  "CQ-T4-01": [
+    "Claim",
+    "InterpretiveClaim",
+    "RidgeSection",
+    "SeismicEvent",
+    "MagmaticMelt"
+  ],
+  "CQ-T4-02": [
+    "Claim",
+    "InterpretiveClaim",
+    "RidgeSection",
+    "SeismicEvent",
+    "MagmaticMelt"
+  ],
+  "CQ-T4-03": [
+    "Claim",
+    "InterpretiveClaim",
+    "Method",
+    "AnalyticalMethod",
+    "ReportedRatio",
+    "RockSample",
+    "MagmaticMelt"
+  ],
+  "CQ-T4-04": [
+    "Claim",
+    "InterpretiveClaim",
+    "RidgeSection",
+    "GeologicStructure",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T4-05": [
+    "Claim",
+    "InterpretiveClaim",
+    "SeismicEvent"
+  ],
+  "CQ-T5-01": [
+    "Claim",
+    "InterpretiveClaim",
+    "Evidence",
+    "ScholarlyRelation",
+    "GeologicRelation",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T5-02": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "RidgeSection",
+    "MagmaticMelt",
+    "RockSample",
+    "ReportedRatio",
+    "GeologicRelation"
+  ],
+  "CQ-T5-03": [
+    "RidgeSection",
+    "QuantityValue",
+    "SeismicEvent",
+    "Claim",
+    "InterpretiveClaim",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T5-04": [
+    "Claim",
+    "InterpretiveClaim",
+    "Method",
+    "AnalyticalMethod",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-T5-05": [
+    "Claim",
+    "InterpretiveClaim",
+    "RidgeSection",
+    "GeologicStructure",
+    "Evidence",
+    "SeismicEvent",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-C-01": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "RockSample",
+    "ReportedRatio",
+    "MagmaticMelt"
+  ],
+  "CQ-C-02": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "SeismicEvent",
+    "Interval"
+  ],
+  "CQ-C-03": [
+    "RidgeSection",
+    "QuantityValue",
+    "PublishedWork",
+    "Claim",
+    "InterpretiveClaim",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-C-04": [
+    "Campaign",
+    "ResearchCampaign",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "ReportedQuantity"
+  ],
+  "CQ-C-05": [
+    "QuantityValue",
+    "Observation",
+    "ReportedQuantity",
+    "Claim",
+    "InterpretiveClaim",
+    "RockSample",
+    "MagmaticMelt",
+    "RidgeSection",
+    "ReportedRatio"
+  ]
+}

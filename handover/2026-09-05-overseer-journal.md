@@ -711,3 +711,11 @@ The producer's three decisions worth a reader's eye: contribution roles left uns
 ## Run-23 reviewed (2026-09-09, 22:14Z to 22:42Z): the unreached records are gone
 
 One Opus session under v3: 422 of 428 supported, 6 partial from block boundaries cutting sentences, 0 unsupported. Positive questions 16 covered, 9 partial, 0 none; 92 of 102 semantics; absences NOT_MODELLED 8, WITHHELD 2, UNREACHED_RECORD 0 (run-22: 11). Record validated, E-0345. Two things changed at once (the SUBJECT_ANY kind and my sets), so the cell does not separate them; E-0343's offline measurement stands for the kind. Two questions moved down on this producer's modelling of the quantity subject. RCA: handover/2026-09-09-run-23-rca.md; options: a run-24, re-author CQ-C-03's expected outcome, or stop and write. Four cells of one condition, all admitted at runner attempt 1.
+
+## Questions v3.1 and run-24 (2026-09-09, 23:0xZ)
+
+Luis: "lets follow your rec". CQ-C-03 re-authored as a clean excluded-surface control (compilation_source dropped from its semantics, everything else byte-identical to v3), frozen as competency-questions-v3.1.json at E-0346, commit 789e8049. Paper-31 dispatched to open run-24: run-23's harness byte for byte, v3.1 bound, opening entry E-0347. Then the cell, its review, and the writing.
+
+## Run-24 (2026-09-10, 00:27Z to 01:3xZ): the fourth replicate, frozen at E-0348
+
+One launch, one session, two phases; ONTOLOGY_READY at attempt 01, gate ACCEPTED (5,032 facts, 37 types, 23 subject-bearing including relations, the first such surface), two citations verified (the cited USGS URL now 404, the terms at the glossary's current home), thirty type sets under v3.1, 15,638 cases (SUBJECT_ANY 5,017), ADMITTED_AND_REPLAYED at runner attempt 1 (400 entities, 1 event, 21 relations, 422 traced, 353 assertions over 182 blocks with 4 declared nothing assertable), 5,348 rows over 416 witnesses. This producer declared 137 TYPE_ABSENT gaps where run-23's declared 6, and gave 48 records a subject where run-23 gave 96: the same condition, a much more cautious modeller. Freeze clean, ladder 40; 104 cell tests. Four cells of one condition admitted at runner attempt 1 with no return, five counting run-20.
