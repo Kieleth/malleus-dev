@@ -1,0 +1,311 @@
+{
+ "question_id": "CQ-T4-02",
+ "question_responsiveness": "COVERED",
+ "responsiveness_rationale": "Every required semantic names a row. The ground for setting the explanation aside is a separate claim row and no relation in the result joins it to the claim it rebuts.",
+ "assembly": "UNLINKED_ROWS",
+ "coverage": [
+  {
+   "semantic": "candidate_mechanism",
+   "row_index": 18,
+   "absent_reason": null,
+   "note": "One row carries the melt-movement explanation."
+  },
+  {
+   "semantic": "declined_disposition",
+   "row_index": 18,
+   "absent_reason": null,
+   "note": "Its disposition marks it as not supported, derived from the block that sets it aside."
+  },
+  {
+   "semantic": "stated_ground",
+   "row_index": 5,
+   "absent_reason": null,
+   "note": "A second row carries the reason given, that the comparison settings are unlike a mid-ocean ridge."
+  },
+  {
+   "semantic": "claim_subject",
+   "row_index": 18,
+   "absent_reason": null,
+   "note": "The candidate row's name identifies the deep earthquakes it is about."
+  }
+ ],
+ "source_locators": [
+  "page:4:block:002",
+  "page:5:block:001",
+  "page:4:block:003"
+ ],
+ "rows": [
+  {
+   "row_index": 0,
+   "witness_key": "entity:claim:axis-relocating"
+  },
+  {
+   "row_index": 1,
+   "witness_key": "entity:claim:basalts-degassed"
+  },
+  {
+   "row_index": 2,
+   "witness_key": "entity:claim:co2-degassing"
+  },
+  {
+   "row_index": 3,
+   "witness_key": "entity:claim:cold-thick-lithosphere"
+  },
+  {
+   "row_index": 4,
+   "witness_key": "entity:claim:confident-hypocenters"
+  },
+  {
+   "row_index": 5,
+   "witness_key": "entity:claim:contexts-differ"
+  },
+  {
+   "row_index": 6,
+   "witness_key": "entity:claim:deepest-documented"
+  },
+  {
+   "row_index": 7,
+   "witness_key": "entity:claim:depth-not-following"
+  },
+  {
+   "row_index": 8,
+   "witness_key": "entity:claim:detachment-inactive"
+  },
+  {
+   "row_index": 9,
+   "witness_key": "entity:claim:enriched-source"
+  },
+  {
+   "row_index": 10,
+   "witness_key": "entity:claim:events-well-constrained"
+  },
+  {
+   "row_index": 11,
+   "witness_key": "entity:claim:fig6-interpretation"
+  },
+  {
+   "row_index": 12,
+   "witness_key": "entity:claim:focal-not-robust"
+  },
+  {
+   "row_index": 13,
+   "witness_key": "entity:claim:hydrothermal-cooling"
+  },
+  {
+   "row_index": 14,
+   "witness_key": "entity:claim:keller-flushing"
+  },
+  {
+   "row_index": 15,
+   "witness_key": "entity:claim:lab-melt"
+  },
+  {
+   "row_index": 16,
+   "witness_key": "entity:claim:lab-melt-combination"
+  },
+  {
+   "row_index": 17,
+   "witness_key": "entity:claim:long-period"
+  },
+  {
+   "row_index": 18,
+   "witness_key": "entity:claim:magmatic-tectonic"
+  },
+  {
+   "row_index": 19,
+   "witness_key": "entity:claim:magmatism-dominates"
+  },
+  {
+   "row_index": 20,
+   "witness_key": "entity:claim:max-depth-factors"
+  },
+  {
+   "row_index": 21,
+   "witness_key": "entity:claim:max-depth-selection"
+  },
+  {
+   "row_index": 22,
+   "witness_key": "entity:claim:melt-freeze"
+  },
+  {
+   "row_index": 23,
+   "witness_key": "entity:claim:melt-migration-unknown"
+  },
+  {
+   "row_index": 24,
+   "witness_key": "entity:claim:melt-movement-rejected"
+  },
+  {
+   "row_index": 25,
+   "witness_key": "entity:claim:melt-residence"
+  },
+  {
+   "row_index": 26,
+   "witness_key": "entity:claim:model1-inappropriate"
+  },
+  {
+   "row_index": 27,
+   "witness_key": "entity:claim:model5-preferred"
+  },
+  {
+   "row_index": 28,
+   "witness_key": "entity:claim:more-events-needed"
+  },
+  {
+   "row_index": 29,
+   "witness_key": "entity:claim:no-active-vents"
+  },
+  {
+   "row_index": 30,
+   "witness_key": "entity:claim:no-competing"
+  },
+  {
+   "row_index": 31,
+   "witness_key": "entity:claim:no-detachment-rc2"
+  },
+  {
+   "row_index": 32,
+   "witness_key": "entity:claim:no-eruption"
+  },
+  {
+   "row_index": 33,
+   "witness_key": "entity:claim:not-artifact"
+  },
+  {
+   "row_index": 34,
+   "witness_key": "entity:claim:offaxis-magmatism"
+  },
+  {
+   "row_index": 35,
+   "witness_key": "entity:claim:primary-vs-preeruptive"
+  },
+  {
+   "row_index": 36,
+   "witness_key": "entity:claim:quality-ab"
+  },
+  {
+   "row_index": 37,
+   "witness_key": "entity:claim:ratio-proxy"
+  },
+  {
+   "row_index": 38,
+   "witness_key": "entity:claim:rc2-magmatic"
+  },
+  {
+   "row_index": 39,
+   "witness_key": "entity:claim:reduced-model-reasonable"
+  },
+  {
+   "row_index": 40,
+   "witness_key": "entity:claim:samples-degassed"
+  },
+  {
+   "row_index": 41,
+   "witness_key": "entity:claim:shear-zone"
+  },
+  {
+   "row_index": 42,
+   "witness_key": "entity:claim:snapshot"
+  },
+  {
+   "row_index": 43,
+   "witness_key": "entity:claim:trace-element-assumption"
+  },
+  {
+   "row_index": 44,
+   "witness_key": "entity:claim:ultraslow-co2-high"
+  },
+  {
+   "row_index": 45,
+   "witness_key": "entity:claim:volatile-role-unknown"
+  },
+  {
+   "row_index": 46,
+   "witness_key": "entity:claim:volume-change"
+  },
+  {
+   "row_index": 47,
+   "witness_key": "entity:claim:vpvs-reasonable"
+  },
+  {
+   "row_index": 48,
+   "witness_key": "entity:melt:ascending"
+  },
+  {
+   "row_index": 49,
+   "witness_key": "entity:melt:pre-eruptive"
+  },
+  {
+   "row_index": 50,
+   "witness_key": "entity:melt:primary"
+  },
+  {
+   "row_index": 51,
+   "witness_key": "entity:melt:primitive"
+  },
+  {
+   "row_index": 52,
+   "witness_key": "entity:gakkel"
+  },
+  {
+   "row_index": 53,
+   "witness_key": "entity:juan-de-fuca"
+  },
+  {
+   "row_index": 54,
+   "witness_key": "entity:knipovich"
+  },
+  {
+   "row_index": 55,
+   "witness_key": "entity:mar"
+  },
+  {
+   "row_index": 56,
+   "witness_key": "entity:mar-supersegment"
+  },
+  {
+   "row_index": 57,
+   "witness_key": "entity:ntd1"
+  },
+  {
+   "row_index": 58,
+   "witness_key": "entity:ntd2"
+  },
+  {
+   "row_index": 59,
+   "witness_key": "entity:rc1"
+  },
+  {
+   "row_index": 60,
+   "witness_key": "entity:rc2"
+  },
+  {
+   "row_index": 61,
+   "witness_key": "entity:rc3"
+  },
+  {
+   "row_index": 62,
+   "witness_key": "entity:rti"
+  },
+  {
+   "row_index": 63,
+   "witness_key": "entity:swir"
+  },
+  {
+   "row_index": 64,
+   "witness_key": "entity:swir-oblique"
+  },
+  {
+   "row_index": 65,
+   "witness_key": "entity:swir-segment8"
+  },
+  {
+   "row_index": 66,
+   "witness_key": "event:romanche-2016"
+  },
+  {
+   "row_index": 67,
+   "witness_key": "relation:rc3:adjacent:rc2"
+  }
+ ]
+}

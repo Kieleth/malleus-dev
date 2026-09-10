@@ -1,0 +1,3405 @@
+[
+ {
+  "witness_key": "entity:claim:axis-relocating",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:basalts-degassed",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:co2-degassing",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, hypothesis_disposition, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001",
+   "page:5:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:cold-thick-lithosphere",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, hypothesis_disposition, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:confident-hypocenters",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:contexts-differ",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:deepest-documented",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:depth-not-following",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:detachment-inactive",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:enriched-source",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:events-well-constrained",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:fig6-interpretation",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:012"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:focal-not-robust",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:hydrothermal-cooling",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, hypothesis_disposition, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:keller-flushing",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:lab-melt",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:lab-melt-combination",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:long-period",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, hypothesis_disposition, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:magmatic-tectonic",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, hypothesis_disposition, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:002",
+   "page:5:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:magmatism-dominates",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:max-depth-factors",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:max-depth-selection",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:melt-freeze",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:melt-migration-unknown",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:melt-movement-rejected",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:melt-residence",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:model1-inappropriate",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:model5-preferred",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:more-events-needed",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:no-active-vents",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:no-competing",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:047"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:no-detachment-rc2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:no-eruption",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:not-artifact",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:offaxis-magmatism",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:primary-vs-preeruptive",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:quality-ab",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:ratio-proxy",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:rc2-magmatic",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:reduced-model-reasonable",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:samples-degassed",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:shear-zone",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, hypothesis_disposition, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:snapshot",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:trace-element-assumption",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:ultraslow-co2-high",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:volatile-role-unknown",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:volume-change",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:claim:vpvs-reasonable",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states this claim and the projection (claim_kind, name) reports it as the block frames it, including its modality, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:melt:ascending",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this melt and its stage as the row projects them (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:melt:pre-eruptive",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this melt and its stage as the row projects them (melt_stage, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:melt:primary",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this melt and its stage as the row projects them (melt_stage, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001",
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:melt:primitive",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this melt and its stage as the row projects them (melt_stage, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:avg-depth-uncertainty",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:avg-horizontal-uncertainty",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:axial-depth-range",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:b-value",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:b-value-groups",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:brittle-thickness-expected",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:catalog-links",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:categories",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:cluster-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:co2-gas-loss",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:cold-lithosphere-age",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:criterion-arrivals",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:q:criterion-gap",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:q:criterion-swave",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:q:crustal-age-offaxis",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:deep-events-threshold",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:q:depth-uncertainty-final",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:dry-melting-onset",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:equatorial-co2-average",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:equatorial-co2-max",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:error-ellipsoid-confidence",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:expected-max-depth",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block gives the bound and its unit as the projection has them, but it attributes the expectation to earlier microseismicity studies; the projected MODELLED determination says the figure came from a model, which this block does not say.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fig3-deep-shade",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fig3-shallow-shade",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fig3b-halfwidth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fig4-isotherm",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fixed-depth-range",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fixed-depth-subset",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-fault-plane",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-gap",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-misfit",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-new",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-polarities",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-probability",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-station-ratio",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:focal-total",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:full-spreading-rate",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:gap-final",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:groups",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:horizontal-uncertainty-final",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:hypodd-iterations",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:iceland-depths",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:identified-760",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:instrument-spacing",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:lithospheric-age-interval",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:located-514",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:located-514-methods",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:low-frequency-threshold",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:q:magnitude-completeness",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:mar-317",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:mar-events",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The count is verbatim in the block as a figure label and the projected count holds; the projected scope, that these are the events along the ridge profile, is not stated in the block and rests on the label's position in the extracted figure text.",
+  "source_locators": [
+   "page:3:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:max-separation",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:mayotte-depths",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:mean-horizontal-error",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:mean-vertical-error",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:microseismicity-residence",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:min-obs-detect",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:model1-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:model1-velocity",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:obs-spacing-focal",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:offaxis-swarm-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:pore-pressure-trigger",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:profile-halfwidth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:profile-interval",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:quality-d-uncertainty",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-co2-calculated",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-pre-eruptive-co2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-valley-width-2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc3-co2-calculated",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:recording-duration",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:relocated-276",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:relocated-364",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:relocation-gap",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:relocation-rms",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:relocation-uncertainty",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rms-final",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:romanche-events",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The count appears verbatim in the block as a figure label, so the projected count holds; the block states nowhere in prose that these are the events along the transform-fault profile, and the projected scope rests on where the label sits in the extracted figure text rather than on a sentence.",
+  "source_locators": [
+   "page:3:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:saturating-melt-co2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:saturation-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:saturation-pressure",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:saturation-temp",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:slow-expected-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:solubility-temp",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:studied-portion-length",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:subdataset",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:subevents",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:subsection-length",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:temp-below-20",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:tf-197",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:thermal-model-temp",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:two-criteria-share",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:q:ultraslow-expected-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:updated-uncertainty",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:useful-obs",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:velest-iterations",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (count, count_scope, name), with the same count and the same thing counted, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:velocity-constraint-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:velocity-perturbation",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:q:volatile-melting-onset",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:vpvs-range",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:young-crust-age",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:ratio:co2-ba",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block gives this ratio and its uncertainty as the row projects them (denominator_kind, name, numerator_kind, ratio_value, uncertainty), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:ratio:co2-rb",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block gives this ratio and its uncertainty as the row projects them (denominator_kind, name, numerator_kind, ratio_value, uncertainty), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:ratio:vpvs",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block gives this ratio and its uncertainty as the row projects them (denominator_kind, name, numerator_kind, ratio_value), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:anhydrous-peridotite",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:basaltic-rocks",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:basalts-seafloor",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:mantle-peridotites",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:melt-inclusions",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:morb-samples",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:peridotite-seafloor",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:pillow-basalts",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:popping-rocks",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block reports this rock material and the row projects only its name and kind (name, rock_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:abstract-co2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:abstract-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (count_scope, determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:bdb-isotherm",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, uncertainty, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:1:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:bdb-shallow-offaxis",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:brittle-thickness-ntds",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:cold-isotherm",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:crust-thickness",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, uncertainty, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:deep-rc2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:deep-rc2-abstract",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:degassing-depth-range",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:5:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fig6-crust-thickness",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, uncertainty, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:7:block:011"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fig6-deep-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:7:block:012"
+  ]
+ },
+ {
+  "witness_key": "entity:q:fig6-isotherm",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:7:block:011"
+  ]
+ },
+ {
+  "witness_key": "entity:q:half-spreading-rate",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:hot-mantle-temp",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:3:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:lab-melt-fraction",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:lab-sub-solidus-temp",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:lab-water-content",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:mar-coverage",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:q:no-quakes-below-20",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:5:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:ntd1-length",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:ntd2-bdb",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:ntd2-deeper",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:ntd2-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:ntd2-normal-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:ntd2-offset",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:occ-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:offaxis-shallow",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-alignment",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, value_qualification), and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:4:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-ba",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, subject, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-co2-ba",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-co2-rb",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-length",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-primary-ba90",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-primary-floor",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-primary-rb90",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-rb",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, subject, unit, value_lower, value_qualification), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc2-valley-width",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc3-co2-ba",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc3-co2-rb",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc3-length",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc3-primary-ba90",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:rc3-primary-rb90",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:q:shallow-rti",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:q:supersegment-length",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:q:swir-bdb-depth",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:q:swir-highest-co2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:5:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:q:tf-coverage",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity the row projects (name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper), with the same bound, unit and qualification, and the block names the subject the row points at, using the short form the record carries as a tag.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "event:romanche-2016",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block names the event, its magnitude and its magnitude scale, and those projections hold; it gives only the year, while the row projects an exact instant at the start of that year and carries no temporal-precision field to mark the difference, so the instant is finer than anything the block states.",
+  "source_locators": [
+   "page:3:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:012",
+   "page:8:block:013"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r10",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r11",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r12",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r13",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r14",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:011",
+   "page:9:block:012"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r15",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:013"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r16",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, name, page_range, publication_year, venue_name), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:014",
+   "page:9:block:015"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r17",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:016"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r18",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:017",
+   "page:9:block:018"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r19",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:019"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:014"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r20",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:020",
+   "page:9:block:021"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r21",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, name, page_range, publication_year, venue_name), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:022"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r22",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, name, publication_year), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:023",
+   "page:9:block:024"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r23",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:025",
+   "page:9:block:026"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r24",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:027",
+   "page:9:block:028"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r25",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:029"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r26",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:030"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r27",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, name, page_range, publication_year, venue_name), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:031"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r28",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:031",
+   "page:9:block:032"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r29",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:033"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r3",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:015"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r30",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:034"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r31",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:035"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r32",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:036"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r33",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:037",
+   "page:9:block:038"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r34",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:039"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r35",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:040"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r36",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:041"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r37",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:042"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r38",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:043"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r39",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:044",
+   "page:9:block:045"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r4",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:016"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r40",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:046",
+   "page:9:block:047"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r41",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:048"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r42",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:049"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r43",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:050"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r44",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:051"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r45",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:052"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r46",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:053",
+   "page:9:block:054"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r47",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:055"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r48",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:056",
+   "page:10:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r49",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r5",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:017"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r50",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r51",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:004",
+   "page:10:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r52",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:006",
+   "page:10:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r53",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r54",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r55",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r56",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:011"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r57",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:012"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r58",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:013",
+   "page:10:block:014"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r59",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:015"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r6",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:001",
+   "page:9:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r60",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:016"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r61",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:017"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r62",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:018"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r63",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:019"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r64",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:020"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r65",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:021"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r66",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:022",
+   "page:10:block:023"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r67",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:024"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r68",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:025"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r69",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:026"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r7",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, name, page_range, publication_year, venue_name), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:003",
+   "page:9:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r70",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:027",
+   "page:10:block:028"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r71",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:029"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r72",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:030"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r73",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, name, publication_year), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:031",
+   "page:10:block:032",
+   "page:10:block:033"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r74",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:034"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r75",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, name, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:035",
+   "page:10:block:036"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r76",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:037"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r77",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:038",
+   "page:10:block:039"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r78",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:040"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r79",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:041",
+   "page:10:block:042"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r8",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:ref:r9",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (name, page_range, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:9:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:work:yu-2025",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The reference entry in the cited block carries every bibliographic field the row projects (doi, licence, name, publication_year, venue_name, volume_designation), transcribed with the text layer's own spacing, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:045",
+   "page:10:block:048",
+   "page:11:block:001",
+   "page:11:block:003",
+   "page:11:block:005",
+   "page:11:block:006",
+   "page:1:block:001",
+   "page:1:block:006",
+   "page:2:block:008",
+   "page:3:block:006",
+   "page:4:block:008",
+   "page:5:block:011",
+   "page:6:block:006",
+   "page:7:block:013",
+   "page:8:block:018",
+   "page:9:block:056"
+  ]
+ },
+ {
+  "witness_key": "entity:gakkel",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:juan-de-fuca",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:knipovich",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:mar",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001",
+   "page:1:block:005",
+   "page:2:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:mar-supersegment",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:ntd1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (accretion_character, name, structural_orientation), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:ntd2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name, structural_orientation), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (accretion_character, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (accretion_character, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005",
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc3",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (accretion_character, name, structural_orientation), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rti",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (description, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:swir",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:swir-oblique",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:swir-segment8",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this ridge section and states the attributes the row projects (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:004"
+  ]
+ },
+ {
+  "witness_key": "relation:rc3:adjacent:rc2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_NON_LOCAL The methods sentence that formalizes the relation calls one segment the adjacent one to the south of the other, so the relation rests on it; the block derives neither endpoint, both of which come from earlier blocks.",
+  "source_locators": [
+   "page:8:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:campaign:smarties",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name the cruise, the size of the network, how long it recorded and when the experiment ran, which is what the row projects (begins_at, count, count_scope, duration, name, temporal_precision), and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:043",
+   "page:2:block:002",
+   "page:6:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:obs",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_NOT_CARRIED NO_SUBJECT_IN_ROW This Instrument record projects only a name and carries no assertion_locator or statement_sha256, so there is no statement digest to check; the three blocks its derivations reach all name the ocean-bottom seismometers, so the one projected claim rests on the surface.",
+  "source_locators": [
+   "page:1:block:001",
+   "page:2:block:002",
+   "page:2:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:software:global-mapper",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (locator, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:software:gmt",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:software:hash",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (locator, name, software_version), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:010",
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:software:hypodd",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (locator, name, software_version), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:006",
+   "page:8:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:software:nonlinloc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (locator, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:004",
+   "page:8:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:software:seisan",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (locator, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:002",
+   "page:8:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:software:velest",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (locator, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:004",
+   "page:8:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:software:zmap",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited blocks name this software and, where projected, its version and download location (locator, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:010",
+   "page:8:block:002"
+  ]
+ },
+ {
+  "witness_key": "relation:morb:sampled-from:rc2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_NON_LOCAL The figure caption that formalizes the relation places the sample set along this segment, but that block derives neither endpoint: the samples come from a methods sentence and the segment from the introduction. The relation still rests on the block that states it.",
+  "source_locators": [
+   "page:6:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:data:earthquake-catalog",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this resource and the row projects what it states about it (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:data:petdb",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this resource and the row projects what it states about it (locator, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:005",
+   "page:8:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:data:raw-seismic",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this resource and the row projects what it states about it (locator, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:data:refraction-profile",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this resource and the row projects what it states about it (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:data:seisan-db",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this resource and the row projects what it states about it (name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:data:zenodo",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block names the repository and gives the identifier prefix exactly as the record projects it; the block ends mid-identifier and the remaining digits fall in the next reading block, which the capture declared nothing-assertable, so the projected value is faithful to the cited block but is not a complete identifier.",
+  "source_locators": [
+   "page:8:block:008"
+  ]
+ },
+ {
+  "witness_key": "relation:catalog:deposited:zenodo",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:8:block:008"
+  ]
+ },
+ {
+  "witness_key": "entity:askja",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block names this volcano as one of the comparison sites, so the projected name holds, but it says nothing about its form; narrowing it to a volcanic cone is not stated in the cited block.",
+  "source_locators": [
+   "page:4:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:axial-valley-rc1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:chain-tf",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:detachment-rc1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW Both cited blocks are needed and both hold: the first states the fault, its kind and its dip direction, the second states that it is inactive. The second block frames that status as an inference drawn from an absence of seismicity, and the projection carries the status with no slot for that hedge, which is a modelling limit rather than a gap in the surface.",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:fagradalsfjall",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block names this locality as a comparison site, so the projected name holds; it gives it no structural description, so the projected volcanic-cone kind rests on nothing in the cited block.",
+  "source_locators": [
+   "page:4:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:hydrothermal-mound",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The figure caption in this block names the feature and calls it inactive, so the projected name, structure kind and status all rest on the block.",
+  "source_locators": [
+   "page:2:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:logachev",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:main-axial-faults",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:mayotte",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block names this island as a comparison site and gives the depth of its seismicity, so the projected name holds, but nothing in it describes a seamount; the projected structure kind goes beyond the block.",
+  "source_locators": [
+   "page:4:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:mylonite-shear-zones",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:ntd1-faults",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block gives this fault population and its two strike directions, so the projected name and orientation hold, but it calls them only faults; the projected NORMAL_FAULT kind is not stated for them, and the two places in the same block that do say normal faults are describing a different structure and a different discontinuity.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:ntd1-vent-field",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, status, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:ntd2-faults",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structural_orientation, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:occ",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:occ-corrugated",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:occ-dome-faults",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:occ-normal-faults",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block states the faults, their strike and that they point to recent active deformation, which is what the projected name, orientation, kind and status say; the block presents the activity as what the faults suggest and the projection has no slot for that hedge.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:occ-termination",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block names the termination of the core complex, so the projected name holds, but it does not describe it as a corrugated surface; the reading treats the corrugated surface and the termination as two different marked features, so the projected structure kind is not supported by the block cited.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:rainbow",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block names this massif and places it at a non-transform discontinuity, so the projected name holds, but it does not call it an oceanic core complex; that projected kind is not stated in the cited block.",
+  "source_locators": [
+   "page:8:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:rc2-axial-faults",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc2-bounding-faults",
+  "source_support": "PARTIAL",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The block states the faults, their orientation and their inward dip, which the projection carries, but it does not call them normal faults; the projected NORMAL_FAULT kind goes beyond what the cited block says, and the block's only other mention of a fault kind is a denial that detachment faults are present.",
+  "source_locators": [
+   "page:4:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc2-hummocky",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc2-median-valley",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc2-neovolcanic-ridge",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structural_orientation, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:rc2-volcanic-cones",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:romanche-tf",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:transform-valley",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this feature and states the attributes the row projects (name, structure_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:bdb",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this boundary and its kind as the row projects them (boundary_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001",
+   "page:1:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:lab",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this boundary and its kind as the row projects them (boundary_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001",
+   "page:5:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:moho",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this boundary and its kind as the row projects them (boundary_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:011"
+  ]
+ },
+ {
+  "witness_key": "relation:occ:cut-by:faults",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation also derives one endpoint, and it states a cutting relation between exactly these two records; the endpoint order in the row is the inverse of a source-cuts-target reading, which is a question about the relation type's own direction and not about what the block says.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "relation:logachev:part-of:knipovich",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:8:block:004"
+  ]
+ },
+ {
+  "witness_key": "relation:occ:beneath:mar",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:2:block:007"
+  ]
+ },
+ {
+  "witness_key": "relation:rc1:bounded-by:detachment",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:1:block:005"
+  ]
+ },
+ {
+  "witness_key": "relation:rc2:bounded-by:faults",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:4:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:method:double-difference",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:method:focal-criterion",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:method:local-magnitude",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:method:location-criteria",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:method:nonlinear-location",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:method:octtree",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:method:stalta",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:method:wadati",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:model:1d-velocity",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:model:average-velocity",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:model:co2-solubility",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:model:fastest",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:009"
+  ]
+ },
+ {
+  "witness_key": "entity:model:five-velocity",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:003"
+  ]
+ },
+ {
+  "witness_key": "entity:model:iacono-marziano",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:8:block:007"
+  ]
+ },
+ {
+  "witness_key": "entity:model:minimum-velocity",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:model:thermal",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this method and the row projects its name and kind (method_kind, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:3:block:001",
+   "page:7:block:012"
+  ]
+ },
+ {
+  "witness_key": "entity:brittle-lithosphere",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:005"
+  ]
+ },
+ {
+  "witness_key": "entity:crust-free-lithosphere",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:7:block:010"
+  ]
+ },
+ {
+  "witness_key": "entity:exhumed-mantle",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:lower-crust",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:4:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:mantle",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:mantle-source",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:5:block:004"
+  ]
+ },
+ {
+  "witness_key": "entity:oceanic-crust",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:oceanic-lithosphere",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:6:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:sediment-layers",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:002"
+  ]
+ },
+ {
+  "witness_key": "entity:western-flank-crust",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this unit and its kind as the row projects them (name, unit_kind), and the row carries no subject reference.",
+  "source_locators": [
+   "page:2:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:funder:erc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The funding block names this organisation and its role, so the projected name and agent type rest on the cited block; the record's assertion_locator points at a second assertion carved from the same block, and the digest of that assertion matches, so provenance stays inside the block that supports the claim.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "entity:funder:nsfc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "entity:funder:zjnsf",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "entity:org:1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:org:2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:org:3",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:org:4",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:org:5",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:org:6",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:006"
+  ]
+ },
+ {
+  "witness_key": "entity:person:briais",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:046",
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:person:brunelli",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:046",
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:person:grenet",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:person:hamelin",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:person:maia",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:046",
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:person:petracchini",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:046",
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:person:singh",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044",
+   "page:11:block:002",
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:person:yu",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block names this contributor and the projection (agent_type, name) adds nothing it does not state, and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044",
+   "page:11:block:002",
+   "page:1:block:001"
+  ]
+ },
+ {
+  "witness_key": "entity:award:erc1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The funding block gives this grant agreement number, which is what the record projects as both name and award identifier; as with the funder record, the assertion_locator names a sibling assertion cut from the same block and its digest matches.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "entity:award:isblue",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited funding block gives this award and its identifier (award_identifier, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "entity:award:nsfc1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited funding block gives this award and its identifier (award_identifier, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "entity:award:nsfc2",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited funding block gives this award and its identifier (award_identifier, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "entity:award:zjnsf1",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited funding block gives this award and its identifier (award_identifier, name), and the row carries no subject reference.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "relation:singh:funded-by:erc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "relation:yu:funded-by:nsfc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "relation:yu:funded-by:zjnsf",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "relation:erc1:awarded-by:erc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "relation:nsfc1:awarded-by:nsfc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "relation:nsfc2:awarded-by:nsfc",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ },
+ {
+  "witness_key": "relation:zjnsf1:awarded-by:zjnsf",
+  "source_support": "SUPPORTED",
+  "rationale": "DIGEST_OK DERIVATION_LOCAL The block that formalizes the relation states it between exactly these two records, and its block also derives at least one endpoint; the relation type the row projects is the one the sentence states.",
+  "source_locators": [
+   "page:10:block:044"
+  ]
+ }
+]
