@@ -13534,3 +13534,25 @@ Comparator correction. Codex's robotics thread came back before the printed Sep 
 Read across the cheaper producers. Haiku is below the operator floor on these frames (E-0353); Sonnet keeps the memory correct but late, and late was enough to miss the cap; Opus with the predicates completes the task with five batches to spare. None of the boundary rules recovers time lost to under-reporting.
 
 Not claimed: a rate, a benchmark score, a difference between Malleus and a transactional event log, an effect of admission semantics, or that Sonnet would finish with more budget. Open for Luis: rerun Sonnet with a larger cap (about the same wall time again) or proceed to the recorded increments (the evidence rule as an admission constraint given to both stores; injected faults through both stores). Next entry E-0355.
+
+### E-0355, injected faults through three stores: the Malleus arm and the event log refuse the same proposal-level faults and only the Malleus arm refuses a fabricated capture; every decision taken before Core is now journaled on both (2026-09-11)
+
+Continuation of E-0354, the first of the two increments recorded there. Offline, on run 03's retained history, no simulator and no model; branch commits b8757687 (first pass, tool and record) and 9fae9da1 (second pass, journaling change); records under native-integration/loop/faults-01 and faults-02, method and read in LOOP.md.
+
+Method. At turns 3, 10, 18, 25 and 34 three arms are rebuilt at the state just before the run admitted assessment t: the Malleus arm on a prefix copy of the run's own Core history (capture t retained, assessment t not), the transactional event log and the naive mutable store fresh, all fed the same captures and the same recorded proposals. Eleven proposal-level faults go to each arm there; three capture-level faults go to a second prefix per turn that already holds batch t+1's execution provenance. Each arm's outcome, reason, journal entry and the memory the policy would read next are compared with the honest proposal's; one Malleus refusal is replayed on the same prefix.
+
+| Fault | Malleus | Event log | Naive store |
+| :--- | :--- | :--- | :--- |
+| replayed proposal, same bytes | no-op | no-op | accepted |
+| same id, new bytes; stale supersession; order not advancing; stale receipt | refused | refused | accepted, memory changed |
+| support beyond the captures; wrong input digest; other episode; unknown with a count; capture bytes changed | refused | refused | refused |
+| plausible wrong count; evidence from the previous capture | accepted | accepted | accepted |
+| fabricated capture (digests recomputed); capture naming a nonexistent observation record | refused | accepted, memory cites it | accepted, memory cites it |
+
+All five turns identical; the honest proposal, and the honest next capture with its assessment, admitted by every arm at every turn; Malleus refusals replay with the same reason.
+
+Read. (1) The Malleus arm and the event log agree on every proposal-level fault: the shared adopter validation and the receipt compare-and-swap sit in front of both. (2) The naive store admits four faults that change its memory, so the policy would be handed a different stage sentence. (3) All three admit a plausible wrong count and an assessment citing an older capture: nothing at this boundary judges the count, which is the evidence-rule increment's target and where runs 01 and 04 failed. (4) Only the Malleus arm refuses a capture that is internally consistent but not bound to an executed command's retained sensor read; the other two admit it and the assessment citing it, so their memory rests on evidence the robot never produced. (5) The first pass found the Malleus adapter journaling only what reached Core; stores.py now writes every adapter and observe refusal and no-op to the harness attempts file beside Core's rows, and the event log writes observe refusals to its attempts table (2 new tests; robotics suite 796 passed).
+
+What the separation is and is not. The event log is this project's own strong comparator; its two admissions of fabricated captures are a property of an implementation that retains evidence by digest without binding a capture to the execution that produced it, and an event log that kept the command chain and checked the binding would refuse the same two faults. The measured separation is integrity (both) against provenance (Malleus, because permission, dispatch, execution, observation and capture of every batch sit in one history the binding check reads). Not claimed: any effect on task outcome, a rate, or a difference on faults the producer can commit within the rules.
+
+Running: Sonnet run 07, the 48-batch rerun ruled in E-0354's open item, launched 2026-09-11 (loop-sonnet-07). Next increment: the evidence rule as an admission constraint given to both stores. Next entry E-0356.
