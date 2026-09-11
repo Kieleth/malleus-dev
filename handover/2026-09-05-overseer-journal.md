@@ -761,3 +761,7 @@ Second increment of the pair recorded in E-0354. Rule version 2 in the shared re
 ## Run 07 and the close of the night's increments (2026-09-11)
 
 Sonnet with the full wrapper from turn 1 and a 48-batch cap completes the task at batch 33, native elapsed steps 521 (Opus 554/555, oracle 506), 32 admitted, 0 refusals, 3 h 34 min. Codex's step audit corrected E-0353's 480 (command count; native 475) and E-0354's 639 (ordinal; native 641); both coordinates now reported. Luis's morning message: "I grow more and more disconnected from what we are really doing" and "It does not improve task outcome over an event log with the same rules. Why? Truly, why"; answered in chat: the tie is by construction, outcome depends on claim content, stores guard form and lineage, the only live divergence is a fabricated frame under attack. Proposed and awaiting the ruling: stop adding increments, take the paper decision. Branch bb8d7e69; ledger E-0357; gate 23. Nothing running.
+
+## The plan of record, 2026-09-11: the front pivots to the learned, cloned graph
+
+Luis, after the morning's two questions: "lets then update our original plan with what has been achieved and this foundational work, and register the next stages properly, with deliverables, milestones, and just lets get started." PLAN.md on the branch (dfdf3b5b): goal, foundation, stages A1 to A6, milestones, decisions, conventions. Ledger E-0358; gate 24. A1 started: the ontology-authoring agent (Opus) dispatched with the prompt recorded in domain/AUTHORING.md.
