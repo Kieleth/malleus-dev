@@ -769,3 +769,7 @@ Luis, after the morning's two questions: "lets then update our original plan wit
 ## A1 done, M1 reached (2026-09-11): the seed, the seal, the pin, and the profile fact
 
 Opus authored robomme_domain from the recorded prompt; sixteen concrete classes, seal with zero heresies, fixtures commit and refuse as declared, contract pinned. Overseer read it whole, no edits, eight rulings recorded. One directed revision after measuring Core: no signals family exists, so the timing became an entity finding (0.2.1). Also measured: the seed's events need a project history profile (state-version plus Event role); written as domain/history-profile.json, admits entities, events and relations together, keeps supersession, reconstructs. Store bound to the seed; suite green. Ledger E-0359; gate 25. A2 next.
+
+## A2 and A3 built, two faults found live (2026-09-11 afternoon): the operator decides through the gate, findings enter as proposals
+
+Store on the project profile; operator turn with the graph view; gate before Core; M2 narrowly at run 08 batch 2. Run 08 exposed the supersession race (assessment applied before the decision), stopped at batch 8, fixed and regression-tested. A3: findings through their own gate and plan each, refusals verbatim, Core supersession, the adapter's timing counter under its own agent type (schema 0.2.2). L1's first launch exposed the proposer slot on SceneObject; fixed, relaunched. L1 running: turn 1 admitted nine findings, turn 2 cited two of them. Branch 4d0198ce, d623440d, 427d0ec5; ledger E-0360; gate 26.
