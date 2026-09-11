@@ -765,3 +765,7 @@ Sonnet with the full wrapper from turn 1 and a 48-batch cap completes the task a
 ## The plan of record, 2026-09-11: the front pivots to the learned, cloned graph
 
 Luis, after the morning's two questions: "lets then update our original plan with what has been achieved and this foundational work, and register the next stages properly, with deliverables, milestones, and just lets get started." PLAN.md on the branch (dfdf3b5b): goal, foundation, stages A1 to A6, milestones, decisions, conventions. Ledger E-0358; gate 24. A1 started: the ontology-authoring agent (Opus) dispatched with the prompt recorded in domain/AUTHORING.md.
+
+## A1 done, M1 reached (2026-09-11): the seed, the seal, the pin, and the profile fact
+
+Opus authored robomme_domain from the recorded prompt; sixteen concrete classes, seal with zero heresies, fixtures commit and refuse as declared, contract pinned. Overseer read it whole, no edits, eight rulings recorded. One directed revision after measuring Core: no signals family exists, so the timing became an entity finding (0.2.1). Also measured: the seed's events need a project history profile (state-version plus Event role); written as domain/history-profile.json, admits entities, events and relations together, keeps supersession, reconstructs. Store bound to the seed; suite green. Ledger E-0359; gate 25. A2 next.
