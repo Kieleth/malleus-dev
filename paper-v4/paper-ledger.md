@@ -13556,3 +13556,26 @@ Read. (1) The Malleus arm and the event log agree on every proposal-level fault:
 What the separation is and is not. The event log is this project's own strong comparator; its two admissions of fabricated captures are a property of an implementation that retains evidence by digest without binding a capture to the execution that produced it, and an event log that kept the command chain and checked the binding would refuse the same two faults. The measured separation is integrity (both) against provenance (Malleus, because permission, dispatch, execution, observation and capture of every batch sit in one history the binding check reads). Not claimed: any effect on task outcome, a rate, or a difference on faults the producer can commit within the rules.
 
 Running: Sonnet run 07, the 48-batch rerun ruled in E-0354's open item, launched 2026-09-11 (loop-sonnet-07). Next increment: the evidence rule as an admission constraint given to both stores. Next entry E-0356.
+
+### E-0356, the evidence rule at admission, shared by both stores: one stage per assessment and a declared span; it stops the Haiku runaway at admission without pixels and leaves the Opus and Sonnet runs untouched (2026-09-11)
+
+Continuation of E-0355, the second increment recorded there. Branch commit 7da827b2; records under native-integration/loop/evidence-rule-01 and loop/faults-03; method and read in LOOP.md.
+
+The rule. Admission rule version 2 in the shared revision check (assessment.py), stamped in every plan the Malleus arm admits and in each run's report: a known count may exceed the current record's count by at most one stage, and an advance must declare support from the previous assessment's last frame. Neither clause sees pixels. The adapters declare the span (the governed loop's proposal builder and the recorded-data producer). Because the rule sits in the shared check, the Malleus arm and the event log apply it identically; the naive store runs only the structural validation. Tests added; robotics suite 804 passed.
+
+Measured on every retained run's recorded responses, replayed through the event log under the rule:
+
+| Run | Attempts | Same outcome as the run | Refused under the rule | Final state |
+| :--- | ---: | :--- | :--- | :--- |
+| 01 Opus v1 | 29 | 29 | none | equal |
+| 02 Opus v2 | 34 | 34 | none | equal |
+| 03 Opus v2 + corroboration | 34 | 34 | none | equal |
+| 04 Haiku | 8 | 0 | every turn, as a jump | no record admitted |
+| 05 two Haiku opinions | 3 | 2 | turn 3's first opinion (3 after 1) | differs |
+| 06 Sonnet | 40 | 40 | none | equal |
+
+Through the fault harness on run 03, with the honest proposals rebuilt under the current adapter and two faults added: the plus-three count and a jump of two are refused as jumps, an advance without the declared span is refused for the missing span, by both stores that run the check; every other row of E-0355's table is unchanged; the honest proposals are admitted by every arm at every turn.
+
+Read. (1) On the Opus and Sonnet runs the rule changes nothing: no response refused, the admitted records differ only by the declared span on the advances, final states equal. (2) On run 04 it stops the runaway at admission: every Haiku claim is a jump, nothing is admitted, and the memory the policy reads stays at the first stage, where the checker was throughout; in the live loop the effect would be a halt after three refused attempts rather than a wrong instruction. (3) What it cannot do: run 01's failure was a false advance of exactly one stage with the previous frame in view; that claim is inside the rules and is admitted, as the run 01 replay shows. The rule narrows the producer's room to one stage per turn; it does not judge the stage. (4) The two stores tie by construction.
+
+Not claimed: any effect on a live run (all retained runs were made under rule 1, and run 07, running now, was launched under rule 1 code), a rate, or a benefit of one store over the other on this rule. Any run launched from now on runs under rule 2; its first live measurement is the next step after run 07. Next entry E-0357.
