@@ -377,3 +377,15 @@ population, not chosen opportunistically to make a test pass.
   at main `6c738959` passed 60 tests with no Shop edits. Start the per-object
   reader in RED, keep source and existing history bytes unchanged, and leave
   Paper, Robotics and Core ownership untouched.
+- 2026-09-14: Object-reader RED `03fd5bcb` and GREEN `993ce04b` add separate
+  views over the unchanged connected history. Fourteen focused tests pass,
+  including maintained/full equality across all 21 admissions and the three
+  selected payment checkpoints. Source data and prior receipts remain frozen.
+  The next source boundary is the chapter's Figure 14 warehouse events,
+  introduced in section 6.1. That section identifies e12 through e17, e22
+  through e26, and e31/e32 as additional observations of existing units.
+  This is a source-selection note, not a claim those bytes are retained,
+  transcribed or admitted. Next capture the exact figure and its locator
+  convention, declare the additive Shop vocabulary before code, and test how
+  the extra observations change unit views. Keep chapter reproduction and
+  Malleus protocol guarantees separate in the comparison.

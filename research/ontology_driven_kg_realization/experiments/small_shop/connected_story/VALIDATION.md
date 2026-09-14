@@ -233,3 +233,18 @@ Supplier A and B remain separate views; no flattened supplier history is built.
 Scoped Ruff lint/format and diff checks pass. No Core, packaging, release,
 external execution or full-repository gate is claimed. The isolated combined
 Shop regression result is recorded below after the implementation is frozen.
+
+Isolated final gate at GREEN `993ce04b704b99d922fdef0d9015f971467f09a8`, tree
+`1cd6a23f9cd8184d1bc222f04609152f2652f396`, from a clean detached local clone:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop tests/contract_compiler/pareto/test_transition_admission.py
+```
+
+Result: **332 passed, zero skips**, 256.40 seconds. This includes the 14 reader
+tests; do not sum overlapping selectors. The clone remains clean. Scoped Ruff
+lint, format and diff checks pass. The entire change from the previous main
+boundary touches nine Shop files only. Core, ontology, dependencies, original
+source and mapping, producer, original history receipt and earlier shipment
+receipt remain byte-identical. This is not a full Core or installed-package
+gate. No push or release was performed.
