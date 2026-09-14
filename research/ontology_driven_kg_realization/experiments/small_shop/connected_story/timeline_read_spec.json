@@ -1,0 +1,28 @@
+{
+  "id": "shop-object-views-v1",
+  "occurrence_type": "ShopOccurrence",
+  "source_id": "source:connected-shop:table-1",
+  "source_sha256": "sha256:37fab6c52bcc05e5fca08be67ef779fa27bfa8c960ccdee0f341e70166c8907c",
+  "interpretation": {
+    "source_trust": "TRUSTED_FOR_THIS_EXPERIMENT",
+    "correction": "ACCEPTED_SUCCESSOR_WITH_PRIOR_STATE_RETAINED",
+    "printed_time_format": "DD-MM HH:MM",
+    "ordering": "PRINTED_COORDINATES_WITHIN_SELECTED_SOURCE",
+    "calendar_instants": "NOT_DERIVED",
+    "duration": "NOT_DERIVED",
+    "causality": "NOT_DERIVED",
+    "ties": "UNORDERED_GROUP",
+    "unusable_times": "UNPLACED",
+    "inventory_order": "IDENTIFIER_PRESENTATION_ONLY",
+    "ledger_order": "NOT_USED_AS_DOMAIN_ORDER",
+    "order_scope": "RETROSPECTIVE_RECORDED_JOINS"
+  },
+  "limits": [
+    "Printed coordinate order is a declared source-relative display, not absolute or cross-year chronology.",
+    "Year, timezone and missing dates are never filled in.",
+    "Adjacent displayed groups are not complete directly-follows when unplaced events could intervene.",
+    "An order view references object views; it does not flatten their events into another sequence.",
+    "Relationships reflect observations at the accepted checkpoint, not ownership inferred before the relating occurrence.",
+    "Source trust is the adopter's experiment assumption, not a new Core truth check."
+  ]
+}

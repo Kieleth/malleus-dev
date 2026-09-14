@@ -1,0 +1,15 @@
+{
+  "purpose": "SHOP_READ_RECEIPT_NOT_A_PROTOCOL_RECORD",
+  "history_sha256": "sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe",
+  "history_head": "sha256:0f33125b77cccce4885aad303f2dace0d0ad46503f88025107715921541a5b7a",
+  "history_receipt": "sha256:78e211ddffccbe800a44b21b48c24fe546c877caccde721c60be2bd88e54a13c",
+  "report_sha256": "sha256:afc5072a5f8cd1e5988874d3c2d1d5423f5af25f34f23c90eb07508fb81254b6",
+  "spec_sha256": "sha256:3b082441f2723cef2ab1ded9c4751bcf98cf2eba0b5999745d95337dea586549",
+  "reader_sha256": "sha256:81049667ee9a28c0440a47a75accf34e3c9e5238c25440011730a6f41e736bc5",
+  "event_count": 21,
+  "object_count": 17,
+  "unplaced_events": ["e6", "e8"],
+  "source_trust": "TRUSTED_FOR_THIS_EXPERIMENT",
+  "ordering": "PRINTED_COORDINATES_WITHIN_SELECTED_SOURCE",
+  "calendar_instants": "NOT_DERIVED"
+}

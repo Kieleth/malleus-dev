@@ -67,3 +67,31 @@ unchanged history and graph, source identity refusal, and synthetic explicit
 status controls. Known clearing is separate from a complete balance snapshot.
 This closes the pending bounded source/payment explanation, while domain
 ordering, human source ratification and action authority remain outside it.
+
+## Object-reader successor, 2026-09-14
+
+This is a focused reader check, not another schema audit. The acolyte skill was
+reread in full before work. No ontology or Core path changes in this slice.
+
+Luis explicitly selected the chapter as trusted input for this experiment and
+its correction as the accepted successor. External source verification is not
+a blocking gate. That assumption supersedes the earlier human-ratification
+requirement for continuing this demonstration; it does not fill absent values.
+
+`object_timelines.py` reads one accepted replay through public APIs. Its
+specification names the printed-coordinate convention and the absence of
+calendar, duration and causality claims. It keeps shared occurrences singular,
+ties unordered and unusable times unplaced. Order scopes are retrospective
+recorded joins, not ownership backdated before the relating occurrence.
+
+The tests exercise source substitution refusal, exact participation/occurrence
+traces, stable views under reversed graph iteration, read-only CLI and reopen.
+The integrated run compares full and maintained views after every admission
+and the existing shipment explanation at the selected three checkpoints.
+Final test evidence belongs in `VALIDATION.md`; no broad correctness claim
+follows from this focused check.
+
+Remaining comparison boundaries: full directly-follows behavior under missing
+times, warehouse enrichment, delay measurements and the chapter's executable
+analysis have not been reproduced here. These are later Shop work, not inferred
+Core defects. No external source-checking mechanism has been added.

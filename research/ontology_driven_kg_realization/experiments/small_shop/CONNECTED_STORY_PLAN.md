@@ -6,7 +6,8 @@ The ontology-led history choice is selected in `connected_story/MODEL.md`.
 Connected Table 1 population and a bounded read-only payment explanation are
 implemented. The reader preserves the source's stated reason for O2's delay,
 shows invoice clearing at accepted import checkpoints and returns unknown for
-unprovided account completeness. Per-object domain ordering and a broader
+unprovided account completeness. Read-only per-object printed-coordinate views
+are now implemented; complete domain chronology and a broader
 shipment-eligibility claim remain separate. See
 [`connected_story/SHIPMENT_EXPLANATION.md`](connected_story/SHIPMENT_EXPLANATION.md).
 
@@ -95,9 +96,9 @@ remain separately labeled extensions, not additional observations from the chapt
 | Payment linked to two existing invoices | Connected ownership/clearing joins and bounded shipment explanation | Complete balances are not supplied; eligibility remains unknown. |
 | Supplier and invoice corrections | B's replacement and I2's update occurrence are in the connected history | I2's changed field/value is absent, preserved as a gap. |
 | Event with several participating objects | All 21 selected occurrences and their participation links are connected | Per-object read-side ordering remains next. |
-| Per-object event order | Not a shipped Event-to-Event relation capability | Specify and test a read-side ordering rule; request Core support only for a demonstrated missing public capability. |
+| Per-object event order | Read-only printed-coordinate groups, shared events and unplaced dates | No complete domain chronology or Event-to-Event graph capability is claimed. |
 | Later sources and richer schema | [Fresh import](fresh_import/README.md), [partial shipments](partial_shipments/README.md) | Prove their effect on the connected interpretation, not merely that more rows admit. |
-| Checks and replay | [Shipment rule](shipment_policy/README.md), public trace and maintained projection | Exercise them at the same connected checkpoints under one declared policy selection. |
+| Checks and replay | Connected source/payment checks, public trace and maintained projection | Retain matching full/maintained read results; full account eligibility is not supplied. |
 
 ### Deliverable 1: a source-complete boundary for the selected story
 
@@ -255,7 +256,7 @@ with the following tested obligations, not claim historical priority.
 | Govern an admissible change | Executed checks, selected policy, atomic admission | Invalid candidate refuses without accepted-state mutation; valid candidate succeeds | Existing structural and selected-rule examples; no general epistemic-verification claim |
 | Preserve changing knowledge | Explicit state replacement and transaction history | Earlier and current answers both reconstruct; missing values remain missing | Executed B correction and invoice occurrence in the connected story |
 | Evolve the representation | Additive contract revision | Add first-class shipment structure without erasing older records or reinterpretation by stealth | Existing synthetic sibling; activity-to-entity migration not established |
-| Reconstruct rather than trust a saved graph | Full replay, maintained projection, source trace | The same selected answers and evidence survive disposal/reopen and incremental advancement | Existing pieces; one combined receipt required |
+| Reconstruct rather than trust a saved graph | Full replay, maintained projection, source trace | The same selected answers and evidence survive disposal/reopen and incremental advancement | The object-reader integration exercises all 21 admissions; exact gate in connected_story/VALIDATION.md |
 | Demonstrate reuse rather than just an interface | Two deliberately different Shop input adapters for equivalent controlled information | Same semantic records, different honest source provenance | Later bounded experiment; not proof of universal replaceability |
 
 The actual contribution claim is about the composition and its observed behavior.

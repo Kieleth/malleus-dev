@@ -33,7 +33,25 @@ def test_separate_objects_share_one_occurrence(subject, executed):
     _, replay = executed
     report = subject.read_timelines(replay)
     assert len(report["events"]) == 21
-    assert len(report["objects"]) == 18
+    assert set(report["objects"]) == {
+        "actor:R1",
+        "actor:R2",
+        "actor:R3",
+        "actor:R4",
+        "actor:R5",
+        "order:O1",
+        "order:O2",
+        "supplier-order:A",
+        "supplier-order:B",
+        "item:X1",
+        "item:X2",
+        "item:X3",
+        "item:Y1",
+        "item:Y2",
+        "invoice:I1",
+        "invoice:I2",
+        "payment:P1",
+    }
     assert report["objects"]["invoice:I2"]["printed_sequence"] == [
         ["e5"],
         ["e9"],
@@ -186,6 +204,10 @@ def test_maintained_views_match_full_replay_after_each_real_admission(
     subject, tmp_path, monkeypatch
 ):
     path = tmp_path / "history.jsonl"
+    from research.ontology_driven_kg_realization.experiments.small_shop.connected_story import (
+        shipment_explanation,
+    )
+
     original = api.admit_structural_change
     reader, observations = None, []
 
@@ -200,6 +222,10 @@ def test_maintained_views_match_full_replay_after_each_real_admission(
             expected_event_count=full.ledger_event_count,
         )
         assert subject.read_timelines(maintained) == subject.read_timelines(full)
+        if len(full.change_sets) in (17, 19, 21):
+            assert shipment_explanation.explain_shipments(
+                maintained
+            ) == shipment_explanation.explain_shipments(full)
         observations.append(len(full.graph.query("ShopOccurrence")))
         return result
 
@@ -207,3 +233,42 @@ def test_maintained_views_match_full_replay_after_each_real_admission(
     replay = run.run_story(path)
     assert observations == list(range(1, 22))
     assert len(subject.read_timelines(replay)["events"]) == 21
+    prior = json.loads((run.HERE / "run_receipt.json").read_bytes())
+    assert run.digest(path.read_bytes()) == prior["ledger_sha256"]
+
+
+def test_no_fallback_for_substituted_retained_source(subject, executed, monkeypatch):
+    path, replay = executed
+    before = path.read_bytes()
+    original = type(replay).retained_bytes
+
+    def read(self, identifier):
+        if identifier == run.SOURCE_ID:
+            return b"{}"
+        return original(self, identifier)
+
+    monkeypatch.setattr(type(replay), "retained_bytes", read)
+    with pytest.raises(ValueError, match="exact retained Shop table"):
+        subject.read_timelines(replay)
+    assert path.read_bytes() == before
+
+
+def test_committed_receipt_matches_fresh_source_history(subject, executed):
+    path, replay = executed
+    receipt = json.loads((run.HERE / "timeline_receipt.json").read_bytes())
+    report = subject.read_timelines(replay)
+    assert receipt["history_sha256"] == run.digest(path.read_bytes())
+    assert receipt["history_head"] == replay.ledger_head
+    assert receipt["history_receipt"] == replay.receipt.identity
+    assert receipt["report_sha256"] == run.digest(run.canonical(report))
+    assert receipt["reader_sha256"] == report["reader"]["implementation_sha256"]
+    assert receipt["spec_sha256"] == report["reader"]["spec_sha256"]
+    assert receipt["event_count"] == len(report["events"])
+    assert receipt["object_count"] == len(report["objects"])
+    assert receipt["unplaced_events"] == sorted(
+        {
+            identifier
+            for lane in report["objects"].values()
+            for identifier in lane["unplaced_events"]
+        }
+    )

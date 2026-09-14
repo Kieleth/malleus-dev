@@ -34,6 +34,39 @@ No source, ontology, population, historical receipt or Core file changes.
 No new Event-to-Event graph relation, generic ordering framework, source repair,
 shipment authorization, external effect, package work, push or release.
 
+## Read the result
+
+The reader references one registry of 21 occurrences from 17 object views:
+2 orders, 2 supplier orders, 5 physical units, 2 invoices, 1 payment and 5
+actors. State versions are not additional enduring objects.
+
+I2's printed sequence is creation (`e5`), update (`e9`), clearing (`e30`). That
+same `e30` is referenced by I1 and P1. B has placement, update, receipt and its
+two unpacking occurrences. A keeps its receipt (`e6`) and one unpacking (`e8`)
+unplaced, never repaired with B's dates.
+
+O1 references I1, P1, X1, X2, Y1, A and B; O2 references I2, P1, X3, Y2, A and
+B. Each also has its own direct order view. These are object references, not
+another merged sequence. Every occurrence and each object's participation
+links expose public trace witnesses.
+
+Use the existing declared repository environment. If the connected history
+already exists, only run the second command. The first requires a new path:
+
+```bash
+PYTHONPATH=src:. .venv/bin/python -m research.ontology_driven_kg_realization.experiments.small_shop.connected_story.run /tmp/shop-connected-history.jsonl
+PYTHONPATH=src:. .venv/bin/python -m research.ontology_driven_kg_realization.experiments.small_shop.connected_story.object_timelines /tmp/shop-connected-history.jsonl
+```
+
+In Python, reopen with public `KnowledgeChangeHistory.reopen(path).replay()`,
+then call this Shop module's `read_timelines(replay)`. Inspect
+`report["objects"]["invoice:I2"]["printed_sequence"]` or
+`report["order_views"]["O2"]["objects"]`.
+
+This is a Shop research reader using public Core APIs, not a new installed Core
+command. `timeline_receipt.json` binds its output and read specification to the
+existing history. It is not a new semantic transition or protocol record.
+
 ## TDD proof
 
 Tests first: exact object membership and printed sequences, one shared clearing,
@@ -45,6 +78,11 @@ a claim that arbitrary admission permutations are valid.
 
 Initial RED execution: 12 errors, all `ModuleNotFoundError` for the absent
 `object_timelines` reader. No existing runner was changed to manufacture RED.
+The first implementation run passed 11 cases and exposed a mistaken test count
+of 18 objects. The retained identifier columns enumerate 17; the test now names
+that entire independent set. A subsequent test-only receipt lookup was
+corrected to the existing `ledger_sha256` key. Neither correction changes
+population or accepted state.
 
 The source accounting and expected object paths are authored in tests, not read
 by the producer or the new reader. Synthetic controls do not enter the trusted

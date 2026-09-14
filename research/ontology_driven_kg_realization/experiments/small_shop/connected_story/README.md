@@ -92,6 +92,30 @@ remain outside this first source boundary. Four context excerpts explain the
 shared-customer scope, the quantity correction and the payment condition; they
 do not constitute a transcript of the entire chapter.
 
+## Per-object views
+
+The [object reader](OBJECT_TIMELINES.md) connects the story without flattening
+every related event into one order sequence. I2 shows creation, update and
+clearing; that clearing is the same occurrence referenced by I1 and P1. Orders
+reference their invoices, payment, packed units and supplier orders. All 17
+enduring objects have their own views, including actors.
+
+Ordering uses declared printed-time coordinates, with ties grouped and unusable
+dates unplaced. It creates no calendar instants or elapsed durations, and it
+does not use ledger position to repair the source. The chapter is trusted input
+for this experiment; checking external source truth is not a gate here.
+
+Read the same saved history without changing it:
+
+```bash
+PYTHONPATH=src:. .venv/bin/python -m research.ontology_driven_kg_realization.experiments.small_shop.connected_story.object_timelines /tmp/shop-connected-history.jsonl
+```
+
+The old producer and shipment receipts stay unchanged. The new
+[reader receipt](timeline_receipt.json) records its separate output. Next is
+more chapter data and a matched comparison of supported results, not a new Core
+mechanism or an invented complete account balance.
+
 ## Results and decisions
 
 - Source-boundary RED: `9268617e`, missing inventory implementation. The first

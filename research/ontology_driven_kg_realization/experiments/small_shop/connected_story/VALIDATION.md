@@ -190,3 +190,46 @@ seconds, with the same whole-Shop plus transition selector. This includes all
 Ruff lint, formatting and diff checks pass; the isolated checkout remains clean.
 The later commit only appends this result. Source/history inputs and the earlier
 run receipt remain byte-identical, and no Core path changed.
+
+## Per-object reader successor, 2026-09-14
+
+RED `03fd5bcb` records 12 missing-reader errors and the approved source-trust
+assumption. The implementation introduces only a Shop read specification and
+reader over existing public APIs. It does not modify source, ontology, mapper,
+admission configuration or earlier receipts.
+
+Focused command in the declared repository environment:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop/connected_story/test_object_timelines.py
+```
+
+Result: **14 passed, zero skips**, 93.26 seconds. An initial test incorrectly
+counted 18 objects; exact enumeration of the retained columns gives 17. The
+test now names the entire independent inventory. Another test initially used
+`history_sha256` to read the existing receipt's `ledger_sha256`; its corrected
+lookup verifies the same frozen history bytes. No runtime bypass was involved.
+
+The final tests execute two from-empty connected histories. One checks the
+reader, source witnesses, committed receipt, exact reopen and actual read-only
+CLI. The other opens a maintained reader before the first domain admission and
+compares it to full replay after each of the 21 admissions. The existing
+shipment explanation also agrees at the e28, e30 and final checkpoints. This
+closes the earlier final-checkpoint-only limitation for these selected reads,
+not for arbitrary readers or arbitrary admission permutations.
+
+The original history digest remains
+`sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe`.
+The new read-report digest is
+`sha256:afc5072a5f8cd1e5988874d3c2d1d5423f5af25f34f23c90eb07508fb81254b6`.
+The exact binding is in [timeline_receipt.json](timeline_receipt.json).
+
+The 21 occurrences are referenced from 17 enduring-object views. e30 stays one
+occurrence shared by I1, I2 and P1. e6 and e8 stay unplaced, with their original
+printed strings. Ties are unordered groups. The report states its relative
+printed-coordinate convention and makes no calendar, duration or causal claim.
+Supplier A and B remain separate views; no flattened supplier history is built.
+
+Scoped Ruff lint/format and diff checks pass. No Core, packaging, release,
+external execution or full-repository gate is claimed. The isolated combined
+Shop regression result is recorded below after the implementation is frozen.
