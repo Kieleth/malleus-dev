@@ -10,6 +10,14 @@ unprovided account completeness. Per-object domain ordering and a broader
 shipment-eligibility claim remain separate. See
 [`connected_story/SHIPMENT_EXPLANATION.md`](connected_story/SHIPMENT_EXPLANATION.md).
 
+Current continuation, 2026-09-14: the chapter is trusted input for this
+experiment; its recorded correction is accepted, not held pending external
+truth verification. Finish the source-bounded reconstruction and per-object
+views first, then add more chapter data and compare matching results with the
+published example. Trust does not create missing amounts or repair dates.
+The current TDD scope is in
+[`connected_story/OBJECT_TIMELINES.md`](connected_story/OBJECT_TIMELINES.md).
+
 This task owns the Shop example as a Malleus adopter. It does not own Core,
 the paper task, Robotics, or Semantic Re-entry. This is one Shop planning
 document, not another Core program, governance ledger, or protocol specification.
@@ -83,10 +91,10 @@ remain separately labeled extensions, not additional observations from the chapt
 | Original obligation | Current evidence | Missing from the connected story |
 |---|---|---|
 | Ontology without invented instances | Compiler and baseline fixtures | Reuse, do not rebuild. |
-| Order and physical unit | [Default admission](default_admission/README.md) | Extend coverage beyond the selected order/unit pair. |
-| Payment linked to two existing invoices | Same default run | Connect invoice ownership, settlement and the relevant shipment conditions. Payment settlement itself is not missing. |
-| Supplier and invoice corrections | Supplier replacement passes; [charter](CHARTER.md) explicitly leaves the invoice half open | Represent the invoice-update occurrence without inventing its unknown changed value. |
-| Event with several participating objects | [Object-event fixture](../../fixtures/small_shop_fulfilment_object_event_v1/README.md) | Integrate occurrences with the rest of the chosen history semantics. |
+| Order and physical unit | Connected run contains both orders and all five named units | Completed for the selected table. |
+| Payment linked to two existing invoices | Connected ownership/clearing joins and bounded shipment explanation | Complete balances are not supplied; eligibility remains unknown. |
+| Supplier and invoice corrections | B's replacement and I2's update occurrence are in the connected history | I2's changed field/value is absent, preserved as a gap. |
+| Event with several participating objects | All 21 selected occurrences and their participation links are connected | Per-object read-side ordering remains next. |
 | Per-object event order | Not a shipped Event-to-Event relation capability | Specify and test a read-side ordering rule; request Core support only for a demonstrated missing public capability. |
 | Later sources and richer schema | [Fresh import](fresh_import/README.md), [partial shipments](partial_shipments/README.md) | Prove their effect on the connected interpretation, not merely that more rows admit. |
 | Checks and replay | [Shipment rule](shipment_policy/README.md), public trace and maintained projection | Exercise them at the same connected checkpoints under one declared policy selection. |
@@ -243,9 +251,9 @@ with the following tested obligations, not claim historical priority.
 | Proposed added guarantee | Mechanism to reuse | Distinguishing Shop observation | Current maturity |
 |---|---|---|---|
 | Explicit meaning before population | Compiled ontology and identified profile/mapping | Schema alone creates no orders; an unsupported declaration refuses | Existing Core capability; reuse in deliverables 2 and 3 |
-| Explain how a fact entered knowledge | Retained sources, field derivations, KCS and trace | An answer reaches its exact row and mapping, including the older corrected record | Existing capability; connected coverage still to prove |
+| Explain how a fact entered knowledge | Retained sources, field derivations, KCS and trace | An answer reaches its exact row and mapping, including the older corrected record | Executed for all historical records in the connected run |
 | Govern an admissible change | Executed checks, selected policy, atomic admission | Invalid candidate refuses without accepted-state mutation; valid candidate succeeds | Existing structural and selected-rule examples; no general epistemic-verification claim |
-| Preserve changing knowledge | Explicit state replacement and transaction history | Earlier and current answers both reconstruct; missing values remain missing | Existing supplier proof; invoice occurrence and joined story pending |
+| Preserve changing knowledge | Explicit state replacement and transaction history | Earlier and current answers both reconstruct; missing values remain missing | Executed B correction and invoice occurrence in the connected story |
 | Evolve the representation | Additive contract revision | Add first-class shipment structure without erasing older records or reinterpretation by stealth | Existing synthetic sibling; activity-to-entity migration not established |
 | Reconstruct rather than trust a saved graph | Full replay, maintained projection, source trace | The same selected answers and evidence survive disposal/reopen and incremental advancement | Existing pieces; one combined receipt required |
 | Demonstrate reuse rather than just an interface | Two deliberately different Shop input adapters for equivalent controlled information | Same semantic records, different honest source provenance | Later bounded experiment; not proof of universal replaceability |
@@ -360,3 +368,11 @@ population, not chosen opportunistically to make a test pass.
   Context remains retained evidence. Next is the declared customer/payment
   explanation and its incomplete-evidence controls; no unpaid balance, shipment
   eligibility, authorization or domain order is inferred by this run.
+- 2026-09-14: Luis selected the retained chapter as trusted input, accepted its
+  correction, and approved finishing the honest connected reconstruction before
+  adding more chapter data. The comparison with the chapter remains the purpose,
+  not merely passing compiler tests. External self-checking is later work.
+  Shipment explanation is complete at `82b33967`; a fresh connected-story gate
+  at main `6c738959` passed 60 tests with no Shop edits. Start the per-object
+  reader in RED, keep source and existing history bytes unchanged, and leave
+  Paper, Robotics and Core ownership untouched.
