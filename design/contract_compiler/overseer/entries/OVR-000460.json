@@ -1,0 +1,126 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000460",
+  "ledger": "overseer",
+  "sequence": 460,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:05405021e3635fbeb30ce127eb1721372ebe9243bc180d0479b23777e87acf21",
+  "recorded_at": "2026-09-15T19:29:00Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "interpretation-review-coverage",
+    "type": "DOCUMENT"
+  },
+  "summary": "Implement optional read-only interpretation review coverage with exact declared boundaries and no accepted-state mutation.",
+  "why": "Luis approved the bounded checker after guidance-only candidate 6ad22223. Runtime RED ebfe3752 lacked the module; GREEN 4d0fa42c passes forty behavioral and input cases. Delivery RED bd39615a and GREEN 55c3e388 connect the actual installed guidance and public documentation surface. The focused selector passes 154 with one absent-private-doctrine skip. Explicit profile data owns closed shapes and review outcome requirements. Missing and stale review refuse completion; current unresolved review preserves the knowledge gap, and a correction remains pending admission. A real retained history test proves the checker changes neither ledger bytes nor accepted state. This is declared accounting, not truth, dependency discovery, authenticated review or model compliance. No ontology, selected admission policy, consumer pin or release changes. Local isolated governance only; integration must reconcile against the eventual shared head. The incoming Shop graph-rule requirement remains a separate queued design task.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:709092f5eaf8709baea5cb7f35764c9d3e45915c61a29260f4d915f73882ec08",
+        "after_digest": "sha256:dfffc66f7e343f42b7803699924d0a6e47cde24ceb8f3dc3a1fec0b7f5d8c46d"
+      },
+      {
+        "path": "design/INTERPRETATION_REVIEW_COVERAGE.md",
+        "change": "CREATED",
+        "after_digest": "sha256:1742e028c73cde38848bf4ff8c8d3dfe1219e5c1f043eb170aa30d4f832c8559"
+      },
+      {
+        "path": "docs/INTERPRETATION_REVIEW.md",
+        "change": "CREATED",
+        "after_digest": "sha256:112235affb4717cfc96a49e57edb6000423e4663f1f7c4e16eb091e38f31b442"
+      },
+      {
+        "path": "docs/conf.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:5f0b336b6f78214b47acfbda40209fa8b508be83a818dba71a9a0b9c22d7a1b6",
+        "after_digest": "sha256:ab0e6a5dd24ef0741e8a69dc8916f0d52a4b56c1c15744685ff025384eb91ab6"
+      },
+      {
+        "path": "docs/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6868f0671d42ac123b1cc32cc617199fa76ee102b69cb7fa31506e937191c0d7",
+        "after_digest": "sha256:7457c4a72503cffd945c68c53c503644e3b3630e4ff733ef7112dd43a4d9fc19"
+      },
+      {
+        "path": "docs/reference/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:39b4bb11b00a347833e74fc56d8f2fbc70935c58167a93bc0584a527092cb677",
+        "after_digest": "sha256:661b47dacd62cf874a4b73835ab43e7f0888b4c4f309379401874cc8dc3c3adf"
+      },
+      {
+        "path": "pyproject.toml",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d81efef650a96de7dce0a5ea3c58296754f695f8d1720e4ac6ba95a6b62c54e6",
+        "after_digest": "sha256:385d8a816e5931c3014d1b5e6c281b4ae73260a03b37b1a97b11becd9c0d91d1"
+      },
+      {
+        "path": "src/malleus/acquisition.py",
+        "change": "CREATED",
+        "after_digest": "sha256:427dc5ed1b55068c2221d5dcf11c4d8b6afd691599c046e291b9b2934df7a7cb"
+      },
+      {
+        "path": "src/malleus/profiles/interpretation-review.json",
+        "change": "CREATED",
+        "after_digest": "sha256:103a9db808606db36712f596b13fc6d789e47bd612e22901bf6198382ff968bf"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_adopter_completion_boundary.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:704e526f68040fe3dbf121a144ab4ef161bd1c5b2c444c1574ebe7b8e35a39e8",
+        "after_digest": "sha256:6c632b94a4e9280bbef51c2d4d50db358edea3bb4e61b1ae3bde7ac6c8ca3102"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_review_coverage.py",
+        "change": "CREATED",
+        "after_digest": "sha256:c78ffc2d8da3bdad02d0f1db8f0075db1190a7c073fbed92f5d6a0f32d87754a"
+      },
+      {
+        "path": "tests/test_docs.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:cdac0b4afe5ebe5402989cd69363400aeb7f337da26134e9af90ffba04bd2fb1",
+        "after_digest": "sha256:0e2d42c75459af2ee8a07e4d6379daad63b85e2d1102c41d6140b2584e36cff6"
+      },
+      {
+        "path": "handover/2026-09-15-core-review-coverage.md",
+        "change": "CREATED",
+        "after_digest": "sha256:eaf642654f96d2a7b537fdd5834a876bf5d2323ebc28f5dec69b2b27e34605cd"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "ebfe37522d8889ef9f25e3a202e00b0fe9a21a3a"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "4d0fa42cf9c1adae1540a5e111a5072e52fc1a3e"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "bd39615ae4c4fe407db8935527807ca55eb8e15a"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "55c3e3888891ddbacf10ac08ddf5d8c1a8b649cb"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:10b38112f30afc8dc92909780161fb8e5d805a1873c4dc4fbcdb3643dcf846d7"
+}
