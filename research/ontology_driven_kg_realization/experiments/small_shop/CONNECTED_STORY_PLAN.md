@@ -402,3 +402,12 @@ population, not chosen opportunistically to make a test pass.
   journal. No Core change or request was required. The next comparison should
   examine source-relative unit/queue ordering, keeping unsupported elapsed-time
   and causal claims explicit. This does not introduce a new research ledger.
+- 2026-09-14: Luis requested documentation of the completed warehouse milestone
+  and asked Overlord to coordinate a possible Malleus release across sessions.
+  The [milestone explanation and evidence](connected_story/warehouse/README.md#what-this-milestone-demonstrates)
+  separate the reusable Core mechanisms from Shop's authored vocabulary,
+  mapping and importer. Shop's clean gate is 344 passes, zero skips, at
+  executable `557adf6f`; documentation completion is `ef97018f`. The result and
+  release-assessment request were delivered to Overlord. Package version,
+  publication scope and release gates remain an owner-coordinated decision,
+  not an inferred authorization to publish or rebind downstream experiments.

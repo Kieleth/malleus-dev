@@ -82,6 +82,27 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q -p no:c
 
 ## Relation to the chapter and remaining work
 
+### What this milestone demonstrates
+
+We already had a story about orders, units, invoices and payments. Another
+source then supplied warehouse observations. We connected it without replacing
+the old story or building a separate graph:
+
+- **Shared identity:** the warehouse's X1 is the existing inventory unit X1.
+- **Recorded model growth:** three new activity values enter through an explicit
+  schema revision, preserving the earlier schema and history.
+- **Better explanations:** X1 gains its intermediate warehouse steps; Y1 and Y2
+  reveal a reversal between unpacking order and scanning order.
+- **Inspectable evidence:** each added property points to its source row and
+  field, with source bytes and mapping retained.
+- **Reconstruction:** reopening the ledger produces the same graph and answers;
+  the earlier payment explanation and B quantity correction remain intact.
+
+Shop supplied vocabulary, mapping and importer code. Core supplied the existing
+compiler, admission and replay mechanisms without modification. This is a
+bounded demonstration of a reusable protocol, not automatic interpretation of
+arbitrary sources or proof that the source is true.
+
 Section 6.1 adds these same warehouse events to existing units. We now reproduce
 that source-to-unit extension and its per-unit displayed paths. Malleus adds a
 recorded schema change, exact source retention, checked change admission,
@@ -93,6 +114,24 @@ Elapsed-time, FIFO completeness, causal explanations and counterfactual delay
 need their own declared evidence/time boundaries. Synthetic partial-shipment
 data remains a separate future extension. There is no external warehouse,
 shipment authorization, action execution, new Core feature or release claim.
+
+### Evidence and publication status
+
+Executable GREEN is `557adf6f38e591fe22cb163fabc43e2be54c037e`, tree
+`19b5e3856e29807253f6df20a48c9017cd4ff1b6`. Its clean detached checkout passed
+344 Shop and transition-admission tests with zero skips, including all 12
+warehouse cases. The exact command and result are in the
+[validation journal](../VALIDATION.md); [receipt.json](receipt.json) binds the
+reconstructed history and read report. Documentation completion is recorded at
+`ef97018f1426d58febb185352e5b3156f211b8b8`.
+
+On September 14, Luis requested milestone documentation and a cross-session
+release assessment. Shop recommends publishing this as an evidence-backed
+research milestone. Overlord coordinates project documentation and the release
+recommendation; Core owns package changes and release verification. A new
+package version, tag and publication are not selected by this Shop record.
+The 344-test result is not a full Core or package-release gate. Existing Paper,
+Robotics, Re-entry and Code experiment pins must not move implicitly.
 
 ## Attribution
 
