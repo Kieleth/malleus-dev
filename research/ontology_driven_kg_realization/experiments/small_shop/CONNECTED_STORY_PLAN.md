@@ -266,17 +266,21 @@ No inspected comparison here establishes that other systems lack these propertie
 A head-to-head empirical comparison with the chapter's implementation would
 require an exact baseline, identical scope and its own measurement contract.
 
-### Later milestones, not prerequisites for the first connected run
+### TODO after the first connected run
 
-1. **Warehouse enrichment:** add the chapter's later source layer, recompute
-   affected per-object views, and inspect how the explanation changes. Only then
-   attempt its richer delay analysis, with explicit time and ordering semantics.
-2. **Representation growth:** connect the existing synthetic partial-shipment
+- [x] **Warehouse enrichment:** the chapter's Figure 14 rows now extend the same
+  history and per-object views. The original history stays an exact prefix.
+- [ ] **Warehouse comparison, active:** compare Unpack-to-Scan, Scan-to-Store
+  and Store-to-Retrieve ordering with section 6.2. Use all five declared units,
+  distinguish observed reversals from uncomparable pairs, and preserve ties,
+  missing observations and unusable dates. This is a read-only Shop report,
+  not new Event-to-Event graph edges or a performance/causality engine.
+- [ ] **Representation growth:** connect the existing synthetic partial-shipment
    and duplicate-assignment proofs to the maintained story. Preserve their
    synthetic status and separate policy selection; no silent policy migration.
-3. **Adapter replacement:** use a second controlled source representation and
+- [ ] **Adapter replacement:** use a second controlled source representation and
    compare the declared semantic output while retaining different source identity.
-4. **Action consumption:** hand the read-only eligibility/evidence boundary to
+- [ ] **Action consumption:** hand the read-only eligibility/evidence boundary to
    an action or Re-entry consumer. Authorization, grants, execution, independent
    observation and new knowledge remain separate. Re-entry owns its strategy
    experiments; this task does not reproduce them.
@@ -411,3 +415,9 @@ population, not chosen opportunistically to make a test pass.
   release-assessment request were delivered to Overlord. Package version,
   publication scope and release gates remain an owner-coordinated decision,
   not an inferred authorization to publish or rebind downstream experiments.
+- 2026-09-14: Luis selected the warehouse comparison for execution and asked
+  that representation growth, adapter replacement and action consumption stay
+  on TODO. The comparison reuses existing graph reads and the declared printed
+  coordinate ordering. No source, schema, population, prior receipt or Core
+  implementation changes are authorized by this read-side slice. Chapter
+  claims are compared with generated results, never supplied to the importer.
