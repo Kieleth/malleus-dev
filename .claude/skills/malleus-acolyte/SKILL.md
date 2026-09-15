@@ -111,6 +111,50 @@ pass a gate, impose a relation quota or invent facts. A permitted partial import
 can satisfy its bounded objective without establishing complete reconciliation;
 partial import is not universally a failure.
 
+### Maintaining interpretations as evidence accumulates
+
+Acquisition maintains interpretations, not just an inventory of newly captured
+records. Before starting, declare the reading or evidence-change boundaries and
+the bounded set of interpretation IDs and versions to reconsider, including
+interpretations previously considered complete. At each declared reading or
+evidence-change boundary, retain exact evidence and review the whole declared
+set against the relevant source context, ontology and current knowledge. A small
+full review is enough; do not invent a relevance engine or silently exclude
+completed interpretations because they have no structural gap.
+
+In the existing project record, bind each review to its interpretation version,
+the boundary and the evidence identities considered. Record one of:
+
+- A supported correction, with evidence and a proposed change.
+- A justified no-change, naming what was reconsidered and why it still holds.
+- A conflict, naming incompatible interpretations and their evidence.
+- A specific unresolved disposition, naming the missing evidence, capability
+  or permission. Do not guess a required field to close it.
+
+Missing or stale required reviews prevent a completion claim for that review
+boundary. Replaying, recomputing, registering evidence or issuing another
+assessment is not proof that earlier interpretations were reconsidered.
+A specific unresolved disposition completes that review but does not resolve
+the knowledge gap. Report review coverage, unresolved knowledge and pending
+corrections separately. Retry exhaustion and inventory completion are not
+semantic completion; stop within the existing budget and report unfinished
+review instead of silently declaring success.
+
+Evidence receipt and review alone change no accepted knowledge. A proposed
+correction must still pass the selected admission policy, preserve history and
+name known affected downstream uses. Keep unknown dependencies explicit.
+Distinguish adding detail, correcting an interpretation and representing change
+in the world. Reading order is not world time. Citation, attribution, support
+and refinement are different relationships. Source assertion, interpretation
+confidence, scientific support, measurement uncertainty, applicability, policy
+acceptance and adequacy for a use are different judgments. More evidence may
+increase uncertainty; do not invent probabilities or treat attribution as proof.
+
+This guidance is not a mechanical completion checker. Use a selected workflow's
+review check if one exists; otherwise report manual review and the missing
+enforcement boundary. A compiler pass or this installed instruction cannot
+certify source meaning, undeclared dependencies or obedience to the rule.
+
 ## Where the knowledge lives (probe capability, never assume presence)
 
 An installed `malleus` may be current, stale (old malleus-dev releases
@@ -461,7 +505,10 @@ fallback.
    gaps, revise, and repopulate in one working session by default. Set the limit
    before the loop starts: at most two additive revision rounds. Apply the
    [outcome and permission check](#outcome-and-permission-check) before this loop
-   and when reporting its result. If typed gaps
+   and when reporting its result. This limits structural schema growth, not the
+   scope of interpretation review. Apply the shared
+   [progressive review rule](#maintaining-interpretations-as-evidence-accumulates)
+   even when no structural gap was recorded. If typed gaps
    cluster around a missing class, optional slot, or enum value, propose an
    additive ontology revision, pass the prior and proposed contracts to
    `compile_contract_revision`, record the migration receipt, and repeat from
@@ -818,6 +865,10 @@ under it, not a capture object. The plan-compiler reasons of that list, from
 `UNDERIVED_FIELD` to `UNLISTED_SOURCE`, reach you unchanged. There is no census
 for rows, so no number reports your coverage of the source; count the rows you
 populated and the rows you left gapped, and say both.
+
+The same [progressive review rule](#maintaining-interpretations-as-evidence-accumulates)
+applies at declared structured-source evidence boundaries. New rows can change
+an earlier interpretation without changing the schema or creating a typed gap.
 
 **The file is canonical bytes.** UTF-8, keys sorted at every level, separators
 `,` and `:` with no space after either, `ensure_ascii` false so a non-ASCII
