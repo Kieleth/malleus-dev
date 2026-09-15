@@ -438,3 +438,27 @@ Scoped Ruff lint/format and diff checks pass. The clean whole-Shop gate at the
 frozen implementation is appended below after execution. This is a local
 conformance extension, not a new chapter event, delivery/effect integration,
 whole-import transaction, full Core/package gate or release.
+
+Isolated whole-Shop gate at GREEN
+`b255adf151cfb98a7cac61fc3fa697ef00c7f149`, tree
+`f95172bbb81af5201be8fbf80c40c6a924bbb844`, from a clean detached local clone:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q --tb=short -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop tests/contract_compiler/pareto/test_transition_admission.py
+```
+
+Result: **370 passed, zero skips**, 615.19 seconds. The 12 new cases are
+included, not additional. The full run reconstructs the source-bearing chapter
+history, its warehouse successor and the synthetic shipment extension. The
+new history bytes and receipt JSON data reproduce. Earlier source, warehouse,
+ordering and separate-policy evidence remain unchanged and their tests pass.
+
+The exact checkout stays clean after the tests. Scoped Ruff lint/format and
+diff checks pass. PROJECT grounding resolves all six direct-root declarations,
+including the three new relations, against schema source
+`sha256:cacec7c4c9c3f35fe90510d480210fb2e2b4622c46a2d6c261f024afc4bd26cb`.
+The four changed Markdown documents parse and all 40 local link targets exist.
+The aggregate RED/GREEN cut touches ten Shop paths only. This final successor
+appends validation and links it from the walkthrough; no executable or receipt
+bytes change. No Core mutation, package work, remote push, release or consumer
+rebind was performed.

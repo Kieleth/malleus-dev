@@ -112,6 +112,11 @@ commands. Exact test results and frozen commits belong to the chronological
 [validation journal](../VALIDATION.md). The
 [adopter self-check](MALLEUS_INQUISITION.md) names the schema and claim limits.
 
+Frozen GREEN: `b255adf151cfb98a7cac61fc3fa697ef00c7f149`. Focused integration:
+12 passes, zero skips. The clean detached whole-Shop plus transition-rule
+regression passes 370 tests, zero skips; these include the 12 focused cases.
+The clean run reproduces the history bytes and receipt JSON data.
+
 No delivery, stock reservation, source-truth verification, complete business
 policy, interrupted-import resume, or whole-import rollback is claimed. This
 is a repository-local conformance fixture using public Core APIs, not a new
