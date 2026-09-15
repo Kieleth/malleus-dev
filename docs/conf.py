@@ -45,6 +45,7 @@ exclude_patterns = []
 include_patterns = [
     "index.md",
     "ADOPTION_GUIDE.md",
+    "INTERPRETATION_REVIEW.md",
     "ARCHITECTURE.md",
     "ASSENT_PLAN.md",
     "ASSENT_PROTOCOL.md",

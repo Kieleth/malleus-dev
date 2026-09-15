@@ -1,5 +1,9 @@
 # Current public API reference
 
+The optional `malleus.acquisition` review-coverage API is documented separately
+in [Reconsidering interpretations](../INTERPRETATION_REVIEW.md). It checks an
+explicit review set without judging source truth or changing accepted knowledge.
+
 This page exercises Sphinx autodoc and autosummary against the public package
 root, migration module, narrow compiler facade, and pack checkers. It
 does not promote private compiler stages or CLI implementation modules.

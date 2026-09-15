@@ -150,10 +150,19 @@ confidence, scientific support, measurement uncertainty, applicability, policy
 acceptance and adequacy for a use are different judgments. More evidence may
 increase uncertainty; do not invent probabilities or treat attribution as proof.
 
-This guidance is not a mechanical completion checker. Use a selected workflow's
-review check if one exists; otherwise report manual review and the missing
-enforcement boundary. A compiler pass or this installed instruction cannot
-certify source meaning, undeclared dependencies or obedience to the rule.
+This guidance is not a mechanical completion checker. For the optional declared-
+set profile, call `malleus.acquisition.check_review_coverage` with exact
+`boundary_bytes` and the selected `review_bytes`. The same module exposes
+`REVIEW_COVERAGE_PROFILE` as JSON bytes containing the closed input fields and
+outcome requirements. An empty review tuple returns the normalized boundary
+identity to bind before authoring reviews; it does not complete a nonempty set.
+Call `result.require_complete()` before reporting that boundary reviewed.
+Keep its missing/stale IDs, unresolved/conflict reviews and pending corrections
+separate. This does not judge the rationale or resolve the knowledge gap.
+The caller declares the actual boundary; the checker does not discover new
+evidence or register reviews. If that selected capability is unavailable, report
+the missing enforcement rather than substituting a compiler pass or silently
+claiming a manually reviewed result was mechanically checked.
 
 ## Where the knowledge lives (probe capability, never assume presence)
 

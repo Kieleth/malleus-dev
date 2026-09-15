@@ -116,13 +116,14 @@ def test_installed_guidance_names_the_real_optional_review_check(tmp_path):
     import inspect
     import malleus.acquisition as acquisition
 
-    assert inquisitor(
-        ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
-    ) == 0
+    assert (
+        inquisitor(["install-skills", "--agent", "codex", "--project", str(tmp_path)])
+        == 0
+    )
     text = (tmp_path / ".codex/skills/malleus-acolyte/SKILL.md").read_text()
-    section = text.split(
-        "### Maintaining interpretations as evidence accumulates", 1
-    )[1].split("\n## ", 1)[0]
+    section = text.split("### Maintaining interpretations as evidence accumulates", 1)[
+        1
+    ].split("\n## ", 1)[0]
     assert "malleus.acquisition.check_review_coverage" in section
     for argument in inspect.signature(acquisition.check_review_coverage).parameters:
         assert f"`{argument}`" in section

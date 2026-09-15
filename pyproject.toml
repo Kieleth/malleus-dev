@@ -181,6 +181,7 @@ include = [
     "/tests/test_valid_time.py",
     "/tests/test_prolog_verifier.py",
     "/docs/ADOPTION_GUIDE.md",
+    "/docs/INTERPRETATION_REVIEW.md",
     "/docs/ARCHITECTURE.md",
     "/docs/ASSENT_PLAN.md",
     "/docs/ASSENT_PROTOCOL.md",
@@ -218,6 +219,7 @@ core-metadata-version = "2.4"
 "prolog/cyp450_logic.yaml" = "share/malleus/prolog/cyp450_logic.yaml"
 "prolog/cyp450_rules.pl" = "share/malleus/prolog/cyp450_rules.pl"
 "docs/ADOPTION_GUIDE.md" = "share/malleus/docs/ADOPTION_GUIDE.md"
+"docs/INTERPRETATION_REVIEW.md" = "share/malleus/docs/INTERPRETATION_REVIEW.md"
 "docs/ARCHITECTURE.md" = "share/malleus/docs/ARCHITECTURE.md"
 "docs/ASSENT_PLAN.md" = "share/malleus/docs/ASSENT_PLAN.md"
 "docs/ASSENT_PROTOCOL.md" = "share/malleus/docs/ASSENT_PROTOCOL.md"
