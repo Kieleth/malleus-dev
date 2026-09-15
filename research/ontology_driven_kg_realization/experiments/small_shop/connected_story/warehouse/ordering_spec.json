@@ -1,0 +1,11 @@
+{
+  "id": "shop-warehouse-ordering-v1",
+  "unit_type": "InventoryUnit",
+  "participation_role": "ITEM",
+  "units": ["item:X1", "item:X2", "item:X3", "item:Y1", "item:Y2"],
+  "queues": [
+    {"entry": "UNPACK", "exit": "SCAN"},
+    {"entry": "SCAN", "exit": "STORE"},
+    {"entry": "STORE", "exit": "RETRIEVE"}
+  ]
+}

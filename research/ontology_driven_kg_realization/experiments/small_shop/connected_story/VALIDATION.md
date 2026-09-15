@@ -325,3 +325,40 @@ checkout remains clean. The aggregate cut changes 13 Shop paths only. The final
 documentation successor appends this result and spells the printed date format
 explicitly; it changes no executable, source, schema or receipt bytes. No Core,
 dependency, package, remote push or release change was performed.
+
+## Warehouse ordering comparison, 2026-09-14
+
+Luis selected a bounded comparison with section 6.2 of the chapter. The
+remaining three extensions are TODO in the existing Shop plan. This piece
+adds only a read-side report and its selected-unit/stage specification; the
+warehouse history, sources, schema, mapping and previous receipts stay exact.
+
+RED `8c50e8717ad4c72be10a9ffeac8ec02a5ae20203` changes the plan and adds
+`warehouse/test_ordering.py`. All 14 tests fail with the missing ordering
+module, in 0.55 seconds. The minimal implementation reuses the existing
+printed-coordinate ordering and public replay/source trace.
+
+Focused GREEN command:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q --tb=short -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop/connected_story/warehouse/test_ordering.py
+```
+
+Result: **14 passed, zero skips**, 95.85 seconds. Eleven cases distinguish
+ordering behavior over controlled views, including reversed order, ties,
+unusable times, repeated stages, missing units and observations, backward
+stage order and iteration-order independence. Three cases rebuild the real
+history, inspect every compared observation's source/unit witnesses, and
+compare full reopen, maintained replay and the read-only CLI. Every read
+preserves exact ledger bytes. The committed new report receipt reproduces.
+
+Across five selected units and ten pairs per queue: Unpack-to-Scan has five
+preserved pairs, one reversal and four undetermined; Scan-to-Store and
+Store-to-Retrieve each have six preserved and four undetermined. All three
+have partial coverage. The Y1/Y2 reversal is reproducible. The X3 unpack time
+and absent Y1 Store/Retrieve remain explicit limits. No full FIFO, elapsed
+duration, causal explanation or counterfactual result is claimed.
+
+Scoped Ruff lint/format and diff checks pass. The isolated whole-Shop gate
+at the frozen implementation is recorded below when complete. This is not a
+Core, package, independent human interpretation or publication gate.

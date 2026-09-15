@@ -270,11 +270,13 @@ require an exact baseline, identical scope and its own measurement contract.
 
 - [x] **Warehouse enrichment:** the chapter's Figure 14 rows now extend the same
   history and per-object views. The original history stays an exact prefix.
-- [ ] **Warehouse comparison, active:** compare Unpack-to-Scan, Scan-to-Store
-  and Store-to-Retrieve ordering with section 6.2. Use all five declared units,
-  distinguish observed reversals from uncomparable pairs, and preserve ties,
-  missing observations and unusable dates. This is a read-only Shop report,
-  not new Event-to-Event graph edges or a performance/causality engine.
+- [x] **Warehouse ordering comparison:** the
+  [read-only comparison](connected_story/warehouse/ORDERING_COMPARISON.md)
+  reproduces the Y1/Y2 reversal across Unpack-to-Scan. Scan-to-Store and
+  Store-to-Retrieve have no reversal among comparable observations. All five
+  units remain in each comparison; missing observations and unusable dates
+  keep four of ten pairs undetermined per stage pair. Complete FIFO,
+  elapsed-time and causal claims are not demonstrated.
 - [ ] **Representation growth:** connect the existing synthetic partial-shipment
    and duplicate-assignment proofs to the maintained story. Preserve their
    synthetic status and separate policy selection; no silent policy migration.
@@ -421,3 +423,12 @@ population, not chosen opportunistically to make a test pass.
   coordinate ordering. No source, schema, population, prior receipt or Core
   implementation changes are authorized by this read-side slice. Chapter
   claims are compared with generated results, never supplied to the importer.
+- 2026-09-14: Ordering RED `8c50e871` has 14 missing-module errors. The
+  implemented reader passes all 14 tests against synthetic counterexamples
+  and a fresh source-bearing history. It confirms Y1/Y2 reversal, keeps X3's
+  unplaceable unpack time unchanged, and does not hide Y1's missing warehouse
+  stages. A new read-report receipt binds the existing history, both sources,
+  the selected comparison and reader bytes. Prior receipts remain unchanged.
+  The exact clean whole-Shop result is appended to the
+  [validation journal](connected_story/VALIDATION.md). The three TODOs above
+  remain separate work; none is implemented or activated by this comparison.

@@ -109,11 +109,14 @@ recorded schema change, exact source retention, checked change admission,
 preserved earlier history, and reconstruction from that history. These are
 separate guarantees from process discovery or performance analysis.
 
-Next compare narrowly defined ordering and queue observations with the chapter.
-Elapsed-time, FIFO completeness, causal explanations and counterfactual delay
-need their own declared evidence/time boundaries. Synthetic partial-shipment
-data remains a separate future extension. There is no external warehouse,
-shipment authorization, action execution, new Core feature or release claim.
+The [ordering comparison](ORDERING_COMPARISON.md) now tests three stage pairs
+against section 6.2. It reproduces the Y1/Y2 reversal and explicitly retains the
+uncomparable pairs. No reversal among the remaining observations is not proof
+of a complete first-in, first-out queue. Elapsed-time, causal explanations and
+counterfactual delay need their own declared evidence/time boundaries.
+Synthetic partial-shipment data remains a separate future extension. There is
+no external warehouse, shipment authorization, action execution, new Core
+feature or release claim.
 
 ### Evidence and publication status
 

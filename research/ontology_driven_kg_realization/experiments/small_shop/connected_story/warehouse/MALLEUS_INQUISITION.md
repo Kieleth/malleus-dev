@@ -32,3 +32,22 @@ This is not a Core, paper or package audit.
 The executable test runs the schema inspector with absolute root/import paths
 and checks its exact success verdict. Final command receipts are recorded in
 the parent [validation journal](../VALIDATION.md).
+
+## Read-side ordering comparison
+
+The acolyte skill was reloaded before this continuation. Its scope boundary
+keeps the comparison in Shop: existing source, schema, history and Core stay
+unchanged. A separate JSON specification selects units and stage pairs but
+contains no expected answers. Eleven controlled test cases distinguish the
+read rule; three integration cases exercise the actual history and trace.
+
+All five units remain visible in the denominator. Missing or repeated
+observations, unusable times, ties and non-forward stage pairs cannot become
+proof of order. The result establishes one recorded reversal, not complete
+FIFO behavior or a cause of delay. Every selected occurrence and unit link
+carries the existing public source derivations. Reopen and maintained replay
+agree, and reads preserve all ledger bytes. No new graph, authority, generic
+inference engine or protocol API is introduced.
+
+This is an implementation self-check, not an independent review. Exact
+commands and immutable regression evidence belong to the validation journal.
