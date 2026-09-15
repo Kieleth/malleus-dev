@@ -20,6 +20,11 @@ The per-object reader is complete for the retained Table 1 boundary. The current
 extension adds Figure 14's 13 warehouse observations to that same history,
 without replacing the earlier bytes. See
 [`connected_story/warehouse/README.md`](connected_story/warehouse/README.md).
+The source-bounded ordering comparison is complete. The next additive
+[synthetic shipment extension](connected_story/partial_shipments/README.md)
+now gives one separate order two tracked shipments in that history. This is
+recorded assignment under the unchanged policy, not additional chapter data
+or integrated duplicate-assignment enforcement.
 
 This task owns the Shop example as a Malleus adopter. It does not own Core,
 the paper task, Robotics, or Semantic Re-entry. This is one Shop planning
@@ -99,7 +104,7 @@ remain separately labeled extensions, not additional observations from the chapt
 | Supplier and invoice corrections | B's replacement and I2's update occurrence are in the connected history | I2's changed field/value is absent, preserved as a gap. |
 | Event with several participating objects | Table 1 occurrences retain shared links; Figure 14 adds unit-local observations | Per-object printed-coordinate views work; no complete domain chronology is claimed. |
 | Per-object event order | Read-only printed-coordinate groups, shared events and unplaced dates | No complete domain chronology or Event-to-Event graph capability is claimed. |
-| Later sources and richer schema | [Warehouse extension](connected_story/warehouse/README.md) adds three activity values and 13 events in the same history | Compare the chapter's queue/ordering observations next; synthetic partial shipments remain separate. |
+| Later sources and richer schema | Warehouse events and their bounded ordering comparison; synthetic shipment objects now extend the same history | Synthetic and chapter cohorts remain distinct. Same-history duplicate-assignment policy selection is not available. |
 | Checks and replay | Connected source/payment checks, public trace and maintained projection | Retain matching full/maintained read results; full account eligibility is not supplied. |
 
 ### Deliverable 1: a source-complete boundary for the selected story
@@ -257,7 +262,7 @@ with the following tested obligations, not claim historical priority.
 | Explain how a fact entered knowledge | Retained sources, field derivations, KCS and trace | An answer reaches its exact row and mapping, including the older corrected record | Executed for all historical records in the connected run |
 | Govern an admissible change | Executed checks, selected policy, atomic admission | Invalid candidate refuses without accepted-state mutation; valid candidate succeeds | Existing structural and selected-rule examples; no general epistemic-verification claim |
 | Preserve changing knowledge | Explicit state replacement and transaction history | Earlier and current answers both reconstruct; missing values remain missing | Executed B correction and invoice occurrence in the connected story |
-| Evolve the representation | Additive contract revision | Add first-class shipment structure without erasing older records or reinterpretation by stealth | Existing synthetic sibling; activity-to-entity migration not established |
+| Evolve the representation | Additive contract revision | Add first-class shipment structure without erasing older records or reinterpretation by stealth | Executed as a distinct synthetic cohort in the connected history; no chapter activity-to-entity migration |
 | Reconstruct rather than trust a saved graph | Full replay, maintained projection, source trace | The same selected answers and evidence survive disposal/reopen and incremental advancement | The object-reader integration exercises all 21 admissions; exact gate in connected_story/VALIDATION.md |
 | Demonstrate reuse rather than just an interface | Two deliberately different Shop input adapters for equivalent controlled information | Same semantic records, different honest source provenance | Later bounded experiment; not proof of universal replaceability |
 
@@ -277,9 +282,14 @@ require an exact baseline, identical scope and its own measurement contract.
   units remain in each comparison; missing observations and unusable dates
   keep four of ten pairs undetermined per stage pair. Complete FIFO,
   elapsed-time and causal claims are not demonstrated.
-- [ ] **Representation growth:** connect the existing synthetic partial-shipment
-   and duplicate-assignment proofs to the maintained story. Preserve their
-   synthetic status and separate policy selection; no silent policy migration.
+- [x] **Structural representation growth:** the separately labelled synthetic
+   order and two tracked shipments now extend the connected history. The
+   earlier query returns two, one, then zero unassigned units. This preserves
+   the chapter prefix, records and admission policy.
+- [ ] **Stronger same-history shipment policy:** duplicate-assignment enforcement
+   remains proven only in the existing separate policy fixture. Core has no
+   delivered same-history policy-evolution seam. Keep this as a future
+   dependency, not a hidden policy migration or a new Core implementation here.
 - [ ] **Adapter replacement:** use a second controlled source representation and
    compare the declared semantic output while retaining different source identity.
 - [ ] **Action consumption:** hand the read-only eligibility/evidence boundary to
@@ -457,3 +467,13 @@ population, not chosen opportunistically to make a test pass.
   separate proof. The [schema-first cut](connected_story/partial_shipments/README.md)
   names the exact additions, reused synthetic inputs and TDD observations.
   No Core implementation, consumer rebind or publication is authorized here.
+- 2026-09-14: Structural integration RED `6118257d` records 12 expected
+  missing-runner errors. GREEN's focused integration passes all 12 cases,
+  including exact prefix/record/policy preservation, all three shipment
+  checkpoints, maintained/full replay, field traces, structural refusals,
+  unchanged chapter explanation/ordering and repeated CLI output. One
+  isolated duplicate-assignment control succeeds under the current policy,
+  mechanically bounding the claim. The result has 37 changes and two schema
+  revisions, with 11 new synthetic records. Exact evidence and the clean
+  whole-Shop successor gate are in [VALIDATION.md](connected_story/VALIDATION.md).
+  Adapter replacement and action consumption stay TODO; neither starts here.

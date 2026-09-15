@@ -383,3 +383,58 @@ link targets exist. RED plus GREEN changes nine Shop paths only. No Core,
 dependency, old source, schema, history producer or prior receipt changed.
 This final journal successor changes documentation only. No remote push,
 release, upstream request or downstream experiment rebind was performed.
+
+## Connected synthetic partial shipments, 2026-09-14
+
+Luis approved the structural-only cut after the public policy-change probe
+refused. Core relayed that approval and confirmed same-history admission-policy
+evolution is not delivered. This slice changes only Shop artifacts. It leaves
+the separate duplicate-assignment proof, chapter source bytes, previous
+receipts and Core implementation untouched.
+
+RED `6118257d` records 12 missing-runner errors in 0.68 seconds. The first-error
+reproduction identifies this new Shop module as the missing dependency. GREEN
+adds one bounded source mapper and public-API runner; it directly reuses the
+earlier shipment query and independent expected results.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q --tb=short -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop/connected_story/partial_shipments/test_connected_shipments.py
+```
+
+Result: **12 passed, zero skips**, 170.40 seconds. The module fixture builds
+the whole connected story and warehouse from empty, adds an ontology revision,
+and admits the order followed by its two shipments. Maintained and full views
+match after each admission. An independent CLI append from the same warehouse
+prefix reproduces the new history bytes and receipt, and read-only reopen
+reproduces every checkpoint and field witness without modifying the history.
+
+The exact result is:
+
+- Three new changes containing five entities and six relations. The full
+  history has 37 changes, two ontology revisions, 216 protocol events and 144
+  historical records.
+- The original 1,646,996-byte warehouse history is an exact prefix; every
+  earlier historical record and graph node is unchanged. All 34 chapter
+  occurrences remain. Earlier shipment and warehouse-ordering answers retain
+  their meaning.
+- Two, one, then zero unassigned units for SYN-PS-ORDER, with SYN-TRACK-1 and
+  SYN-TRACK-2 retained independently. Every new property and endpoint has a
+  source-field witness. No domain time is inferred.
+- Missing endpoints and missing tracking values refuse before preparation
+  changes the ledger. Changed source digests and a wrong baseline refuse
+  before revision or retention. An isolated duplicate-assignment control
+  deliberately admits under the unchanged structural policy, proving that
+  business-rule enforcement must not be claimed here.
+
+History SHA-256:
+`b3250849cf048d3c492ce74263e980e5265ee7962a56ebada3ab793e54cbfa53`.
+Report SHA-256:
+`df3ca88c4cc9e5221b98f4a40f7b1903c055b8e4dce6d5f8eecb9e2a4eb9e8c2`.
+The complete coordinates are in
+[partial_shipments/receipt.json](partial_shipments/receipt.json).
+
+The schema inspector grants its root-profile seal; PROJECT grounding passes.
+Scoped Ruff lint/format and diff checks pass. The clean whole-Shop gate at the
+frozen implementation is appended below after execution. This is a local
+conformance extension, not a new chapter event, delivery/effect integration,
+whole-import transaction, full Core/package gate or release.

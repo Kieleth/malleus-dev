@@ -1,0 +1,47 @@
+{
+  "baseline_history_sha256": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06",
+  "baseline_prefix_preserved": true,
+  "changes": 37,
+  "checkpoints": {
+    "after_first_shipment": {
+      "order_id": "SYN-PS-ORDER",
+      "ordered_units": ["SYN-PS-X1", "SYN-PS-X2"],
+      "remaining_units": ["SYN-PS-X2"],
+      "shipments": [
+        {"shipment_id": "SYN-S1", "tracking_id": "SYN-TRACK-1", "units": ["SYN-PS-X1"]}
+      ]
+    },
+    "after_order": {
+      "order_id": "SYN-PS-ORDER",
+      "ordered_units": ["SYN-PS-X1", "SYN-PS-X2"],
+      "remaining_units": ["SYN-PS-X1", "SYN-PS-X2"],
+      "shipments": []
+    },
+    "after_second_shipment": {
+      "order_id": "SYN-PS-ORDER",
+      "ordered_units": ["SYN-PS-X1", "SYN-PS-X2"],
+      "remaining_units": [],
+      "shipments": [
+        {"shipment_id": "SYN-S1", "tracking_id": "SYN-TRACK-1", "units": ["SYN-PS-X1"]},
+        {"shipment_id": "SYN-S2", "tracking_id": "SYN-TRACK-2", "units": ["SYN-PS-X2"]}
+      ]
+    }
+  },
+  "contract_identity": "sha256:0673d8390e83603a084070b2aa0c238db9fd063110562db2e24854f2ecec4b21",
+  "contract_revisions": 2,
+  "duplicate_assignment_rule": "NOT_SELECTED",
+  "graph_sha256": "sha256:57e3839c5836214ebee14c1271937c7c134ad51fc905c2530b316f0bca815a20",
+  "historical_records": 144,
+  "history_bytes": 2306379,
+  "history_head": "sha256:82765267a566d309128ea36d463d2cdb371e673b917a750babf5b076b8938255",
+  "history_sha256": "sha256:b3250849cf048d3c492ce74263e980e5265ee7962a56ebada3ab793e54cbfa53",
+  "id": "connected-shop-synthetic-shipments-v1",
+  "kind": "SYNTHETIC_CONFORMANCE_EXTENSION",
+  "protocol_events": 216,
+  "replay_receipt": "sha256:69b21f6c01457d672c386d57e87efd0e9e36d03ad7ab6df66810d0f0378d8b8c",
+  "report_sha256": "sha256:df3ca88c4cc9e5221b98f4a40f7b1903c055b8e4dce6d5f8eecb9e2a4eb9e8c2",
+  "sources": {
+    "order": "sha256:37ec83df6379abf49afd3e9e35bc90973a4f0337313fd24c02184be3b2baf9b2",
+    "shipments": "sha256:450d88fea9b7ab5ded02cdd3e39a2f315dee1495d9711680e0c0f8250cb7ef01"
+  }
+}
