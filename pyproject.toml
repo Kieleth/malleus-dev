@@ -73,6 +73,7 @@ Issues = "https://github.com/kieleth/malleus-dev/issues"
 # ignored by the build.
 include = [
     "/src/malleus/__init__.py",
+    "/src/malleus/acquisition.py",
     "/src/malleus/compiler.py",
     "/src/malleus/compiler_cli.py",
     "/src/malleus/_contract_binder.py",
