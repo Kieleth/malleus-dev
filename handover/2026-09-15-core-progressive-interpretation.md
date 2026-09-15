@@ -8,6 +8,10 @@ is to reconsider earlier interpretations as evidence accumulates, including
 interpretations previously marked complete. This candidate starts from
 `18015352e2eb5bffbb58125c95de40eba0f4c992` in an isolated clone. It does not
 modify the shared checkout, release or replay candidates, or consumer pins.
+The inspected Overlord handoff has SHA-256
+`78988cb5bffcfc644e1256b2344a4e889d8dea6a5a6a107ec39d368e75eea884`.
+It remains an untracked input in the shared checkout, not an implicitly
+published research packet. Domain-specific examples were not copied into skills.
 
 Role: `REFERENCE_IMPLEMENTATION` guidance for an adopter-selected acquisition
 workflow. Distribution checks are `CONFORMANCE_FIXTURE` evidence, not evidence
@@ -46,6 +50,10 @@ At the base commit:
 - `src/malleus/_contract_pipeline/document.py` accounts for supplied captures
   and gaps. It does not choose earlier interpretations for reconsideration.
   Replay and trace recover recorded state and provenance, not a review decision.
+- `_validate_completed_assessment` in `assent.py` checks assessment outcome and
+  payload consistency for a proposal. `KnowledgeHistoryProjection._require_complete`
+  in `knowledge.py` checks that recorded changes were applied and action
+  transactions finished. Neither declares interpretation-review coverage.
 - `design/MALLEUS_INTELLECTUAL_SUBSTRATE.md`, section 4.3, identifies
   dependency-closed revision and evidence-triggered revalidation as missing
   general mechanisms. That remains design intent.
@@ -65,7 +73,9 @@ ledger or require every interpretation to become an Assent ProtocolRecord.
 
 The smallest proposed input contract contains:
 
-- A declared evidence boundary and its exact evidence identities.
+- A declared evidence boundary and its exact evidence identities, ontology
+  version and selected knowledge position. Any declared dependency references
+  are pinned as context, not discovered by the checker.
 - The bounded set of interpretation IDs and versions to reconsider, including
   completed ones. For the first cut, review the whole declared set. No relevance
   engine, dependency discovery, or scheduler is needed.
@@ -111,4 +121,50 @@ completion guarantee is proposed.
 
 ## Execution record
 
-Pending RED and GREEN delivery evidence.
+RED: `9a35e9d3`. The completion-boundary selector returned **2 failed, 2 passed**.
+The new installed rule and its acquisition routes were absent. The existing
+delivery check and unresolved/no-change accounting test already passed. These
+are instruction-delivery failures, not failures of a semantic evaluator.
+
+GREEN: `7c39e8d4cdc7fb527bcebc580a7a42dcc4cfe393`, tree
+`0880c80c9e750c9651e6174a13ce6e9b3dc94a20`. It changes exactly two skills:
+
+- `.claude/skills/malleus-acolyte/SKILL.md` owns the rule once, inside the
+  outcome/permission section. Both document and structured-source acquisition
+  link to it. The ontology-growth rule no longer appears to exclude review of
+  otherwise structurally complete interpretations.
+- `.claude/skills/malleus-dev/SKILL.md` routes development to that rule and
+  explicitly separates distribution from behavioral enforcement.
+
+The two new tests in
+`tests/contract_compiler/pareto/test_adopter_completion_boundary.py` invoke the
+real Codex project installer, compare installed Acolyte bytes, check the review
+guidance, and resolve navigation from the installed development and acquisition
+paths. This report is the fourth non-generated changed file.
+
+Validation at GREEN: completion, capture accounting and existing Assent review
+tests passed **25 tests**. Inquisitor passed **107 tests, one skip**. The skip is
+the optional private doctrine absent from the clean clone. Both skill-creator
+quick validators, changed-test Ruff/format and diff checks passed.
+The combined command below reproduced **132 passed, one skip** at the committed
+GREEN, without changing any file in the clean clone.
+
+Commands, run from the isolated clone using the declared project environment:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q -ra --tb=short -p no:cacheprovider tests/contract_compiler/pareto/test_adopter_completion_boundary.py tests/contract_compiler/pareto/test_capture_coverage_boundary.py tests/test_protocol.py::TestLeanReviewProtocol tests/test_inquisition.py
+/Users/luis/Projects/malleus-dev/.venv/bin/python /Users/luis/.codex/skills/.system/skill-creator/scripts/quick_validate.py .claude/skills/malleus-acolyte
+/Users/luis/Projects/malleus-dev/.venv/bin/python /Users/luis/.codex/skills/.system/skill-creator/scripts/quick_validate.py .claude/skills/malleus-dev
+```
+
+No runtime, ontology, selected policy, capture grammar or package configuration
+changed. No model trial or new behavioral completion check ran. Existing Assent
+review tests provide regression evidence for that separate mechanism, not a
+claim that it now enforces progressive interpretation.
+
+The candidate's local governance follows its base at OVR-000458. It does not
+reserve shared ledger numbers. If another candidate lands first, integration
+must reconcile this document revision against the then-current head rather than
+copy a conflicting local entry. Main, the release candidate and the replay
+candidate remain untouched. No integration, global skill refresh, push or
+consumer rebind is included.
