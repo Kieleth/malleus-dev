@@ -112,6 +112,27 @@ def test_installed_acquisition_routes_share_one_review_rule(tmp_path):
     assert anchor in headings
 
 
+def test_installed_guidance_names_the_real_optional_review_check(tmp_path):
+    import inspect
+    import malleus.acquisition as acquisition
+
+    assert inquisitor(
+        ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
+    ) == 0
+    text = (tmp_path / ".codex/skills/malleus-acolyte/SKILL.md").read_text()
+    section = text.split(
+        "### Maintaining interpretations as evidence accumulates", 1
+    )[1].split("\n## ", 1)[0]
+    assert "malleus.acquisition.check_review_coverage" in section
+    for argument in inspect.signature(acquisition.check_review_coverage).parameters:
+        assert f"`{argument}`" in section
+    assert "`result.require_complete()`" in section
+    assert callable(acquisition.ReviewCoverage.require_complete)
+    assert "REVIEW_COVERAGE_PROFILE" in section
+    assert isinstance(acquisition.REVIEW_COVERAGE_PROFILE, bytes)
+    assert "This does not judge the rationale" in section
+
+
 def test_complete_block_inventory_can_still_be_an_unresolved_no_change_plan():
     # Task permissions are adopter input, not something this compiler checks.
     # This literal reason records the obstacle; it is not a new decision schema.

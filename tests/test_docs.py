@@ -2191,11 +2191,13 @@ def test_public_guide_submodule_imports_are_exactly_allowlisted() -> None:
     assert PUBLIC_GUIDE_MODULE_IMPORTS == {
         "malleus.compiler",
         "malleus.inquisition",
+        "malleus.acquisition",
     }
     for source in (
         "from malleus.compiler import compile_linkml_contract",
         "from malleus.inquisition import validate_pack_conformance",
         "from malleus.inquisition import validate_pack_grounding",
+        "from malleus.acquisition import check_review_coverage",
     ):
         assert _forbidden_example_operations(ast.parse(source)) == []
 
