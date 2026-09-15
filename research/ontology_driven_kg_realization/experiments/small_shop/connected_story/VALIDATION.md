@@ -362,3 +362,24 @@ duration, causal explanation or counterfactual result is claimed.
 Scoped Ruff lint/format and diff checks pass. The isolated whole-Shop gate
 at the frozen implementation is recorded below when complete. This is not a
 Core, package, independent human interpretation or publication gate.
+
+Isolated final gate at GREEN
+`63c0a6d55eee006ea2a308509e11ab13f777ffe3`, tree
+`c3515e470404188de87c921aab0dba439edec123`, from a clean detached local clone:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q --tb=short -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop tests/contract_compiler/pareto/test_transition_admission.py
+```
+
+Result: **358 passed, zero skips**, 448.48 seconds. The 14 new ordering tests
+are included, not additional. The fresh warehouse history and its old receipt
+reproduce, along with the new ordering receipt. The latter binds report
+`sha256:e1fe03b8de758292f36b4c81612a8a95432b8b735d711bf5849849a94db7f047`
+to the unchanged 193-event history and exact reader/source bytes.
+
+The detached checkout remains clean. Scoped Ruff lint/format and aggregate
+diff checks pass. All five changed Markdown documents parse and their 32 local
+link targets exist. RED plus GREEN changes nine Shop paths only. No Core,
+dependency, old source, schema, history producer or prior receipt changed.
+This final journal successor changes documentation only. No remote push,
+release, upstream request or downstream experiment rebind was performed.
