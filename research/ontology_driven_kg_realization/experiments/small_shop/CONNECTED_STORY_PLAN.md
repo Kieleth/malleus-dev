@@ -432,3 +432,28 @@ population, not chosen opportunistically to make a test pass.
   The exact clean whole-Shop result is appended to the
   [validation journal](connected_story/VALIDATION.md). The three TODOs above
   remain separate work; none is implemented or activated by this comparison.
+- 2026-09-14: On resuming representation growth, the adopter review found
+  that the older synthetic fixture and the connected story use different
+  ontology surfaces and admission policies. The old mapper writes
+  `order_number`/`product_code` on objects; the connected model uses enduring
+  `source_identifier` objects and separate recorded quantity states. Its
+  shipment extension must preserve those existing definitions, not import
+  the older schema wholesale. The duplicate-assignment policy was selected
+  in a fresh history, not installed in the connected one.
+  A public read-only probe at `c35b4a6e` kept the validated ontology unchanged
+  and changed only the selected required-check policy. Contract revision
+  refused `INCOMPATIBLE_CONTRACT: domain revision changes the normative
+  protocol profile`; all warehouse history bytes remained unchanged. Core
+  received a capability inquiry, with no implementation or release change
+  requested. The proposed lean cut is additive synthetic shipment structure
+  under the current policy, with stricter duplicate-assignment enforcement
+  kept separate. This cut awaits Luis's choice; no schema, code or history
+  was changed during this investigation.
+- 2026-09-14: Core relayed Luis's approval of the structural-only integration.
+  Its read-only code review confirms no public same-history admission-policy
+  evolution seam; Core did not rerun the Shop probe or change the release.
+  Proceed with additive synthetic shipment structure under the current
+  connected policy. Keep duplicate-assignment enforcement in its existing
+  separate proof. The [schema-first cut](connected_story/partial_shipments/README.md)
+  names the exact additions, reused synthetic inputs and TDD observations.
+  No Core implementation, consumer rebind or publication is authorized here.

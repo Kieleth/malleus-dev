@@ -1,0 +1,24 @@
+{
+  "id": "connected-shop-synthetic-shipments-v1",
+  "kind": "SYNTHETIC_CONFORMANCE_EXTENSION",
+  "baseline_history_sha256": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06",
+  "baseline_history_bytes": 1646996,
+  "sources": {
+    "order": {
+      "path": "../../partial_shipments/order.jsonl",
+      "source_id": "source:connected-shop:synthetic-order",
+      "sha256": "sha256:37ec83df6379abf49afd3e9e35bc90973a4f0337313fd24c02184be3b2baf9b2"
+    },
+    "shipments": {
+      "path": "../../partial_shipments/shipments.jsonl",
+      "source_id": "source:connected-shop:synthetic-shipments",
+      "sha256": "sha256:450d88fea9b7ab5ded02cdd3e39a2f315dee1495d9711680e0c0f8250cb7ef01"
+    }
+  },
+  "limits": [
+    "The retained chapter observations and synthetic cohort coexist in one history, not one claimed real-world episode.",
+    "The existing synthetic source declares the new order, units and tracking IDs; no chapter object is reassigned.",
+    "Structural admission remains selected; the separate duplicate-assignment policy is not installed.",
+    "Each admission is atomic. Whole-import rollback and interrupted-import resume are not implemented."
+  ]
+}

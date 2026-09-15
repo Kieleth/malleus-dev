@@ -1,0 +1,30 @@
+{
+  "adapter": {"adapter_id": "connected-shop-synthetic-shipments", "version": "1"},
+  "kind": "SYNTHETIC_CONFORMANCE_EXTENSION",
+  "history_profile_id": "shop-connected-recorded-state-v1",
+  "plan_grammar": "malleus.population-plan/private-v0",
+  "valid_time": {"kind": "NONE_STATED", "value": null},
+  "order_type": "SalesOrder",
+  "unit_type": "InventoryUnit",
+  "shipment_type": "Shipment",
+  "identifier_slot": "source_identifier",
+  "unit_product_slot": "product_code",
+  "tracking_slot": "tracking_id",
+  "relations": {
+    "contains": {"type": "OrderContainsUnit", "value": "ORDER_CONTAINS_UNIT"},
+    "has_shipment": {"type": "OrderHasShipment", "value": "ORDER_HAS_SHIPMENT"},
+    "ships_unit": {"type": "ShipmentContainsUnit", "value": "SHIPMENT_CONTAINS_UNIT"}
+  },
+  "steps": {
+    "order": {"source": "order", "row": 0, "record_field": "order_number", "checkpoint": "after_order"},
+    "shipment-1": {"source": "shipments", "row": 0, "record_field": "shipment_id", "checkpoint": "after_first_shipment"},
+    "shipment-2": {"source": "shipments", "row": 1, "record_field": "shipment_id", "checkpoint": "after_second_shipment"}
+  },
+  "step_order": ["order", "shipment-1", "shipment-2"],
+  "identity_rule": "Copy source order, unit and shipment identifiers. Relation IDs join the relation role and both IDs with colons. No synthetic identifier aliases a chapter object.",
+  "transformation": "Copy values unchanged. Fixed relation kinds are selected by source associations; their locators name the association field, not literal enum text.",
+  "locator_convention": "row:N:field, zero-based JSONL row; unit_ids[i] selects one unit.",
+  "admission": "UNCHANGED_CONNECTED_STRUCTURAL_POLICY",
+  "duplicate_assignment_rule": "NOT_SELECTED",
+  "query_scope": "Recorded order units minus units assigned through its shipments. No delivery, stock allocation, source truth, or duplicate-assignment enforcement claim."
+}
