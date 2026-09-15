@@ -16,8 +16,9 @@ Unpack e10       Scan e12       Store e13       Retrieve e22       Pack e27
 
 X1's earlier receipt event e6 still has the source's unusable `00-01` date. It
 remains visible but unplaced, not repaired to make the path look complete.
-Printed month/day/time is the existing display convention, not a derived year,
-timezone, elapsed duration or proof of complete directly-follows adjacency.
+The source prints `DD-MM HH:MM`. Ordering those coordinates is the existing
+display convention, not a derived year, timezone, elapsed duration or proof of
+complete directly-follows adjacency.
 
 Another useful observation is now testable from the same graph: Y1 was unpacked
 at 10:45 and Y2 at 11:00 on 07-05, but Y2 was scanned at 13:00 and Y1 at 15:00.

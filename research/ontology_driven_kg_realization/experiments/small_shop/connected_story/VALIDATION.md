@@ -308,3 +308,20 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q --tb=sh
 Result: **12 passed, zero skips**, 92.33 seconds. Scoped Ruff lint, formatting
 and diff checks pass. The isolated whole-Shop gate is recorded below after the
 implementation is frozen. No full-Core or packaging gate is claimed.
+
+Isolated whole-Shop gate at GREEN
+`557adf6f38e591fe22cb163fabc43e2be54c037e`, tree
+`19b5e3856e29807253f6df20a48c9017cd4ff1b6`, from a clean detached local clone:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q --tb=short -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop tests/contract_compiler/pareto/test_transition_admission.py
+```
+
+Result: **344 passed, zero skips**, 354.15 seconds. This includes the 12
+warehouse cases, not an additional 12. Its fresh run reproduces the committed
+receipt exactly, including the source-bearing ledger and JSON read report.
+Scoped Ruff lint, formatting and aggregate diff checks pass. The detached
+checkout remains clean. The aggregate cut changes 13 Shop paths only. The final
+documentation successor appends this result and spells the printed date format
+explicitly; it changes no executable, source, schema or receipt bytes. No Core,
+dependency, package, remote push or release change was performed.
