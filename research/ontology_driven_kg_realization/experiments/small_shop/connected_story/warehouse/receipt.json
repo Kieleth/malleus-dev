@@ -1,0 +1,17 @@
+{
+  "baseline_history_sha256": "sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe",
+  "baseline_prefix_preserved": true,
+  "changes": 34,
+  "contract_identity": "sha256:b036955ef7bf6921490b9377f4f27a42177f17c74604641866af25a27b2250f1",
+  "contract_revisions": 1,
+  "graph_sha256": "sha256:e5f36981355616d27a3346ee228f6314b6614881162057261e5bfec242f6e5dc",
+  "historical_records": 133,
+  "history_bytes": 1646996,
+  "history_head": "sha256:2a3030dac01555bfe606a1456cb3f7e745171a3b847bf060f54f880bab7f7197",
+  "history_sha256": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06",
+  "id": "shop-warehouse-extension-v1",
+  "protocol_events": 193,
+  "replay_receipt": "sha256:d625f6483b530869cb1abc1ad58123784bc5c0f29e6ddc14ab5624d12ea0c8a8",
+  "report_sha256": "sha256:52f2141be794b9d9b1a5db06013cc50cffd7bb282227bb34f6ff713286638cc3",
+  "warehouse_source_sha256": "sha256:136607d935df30f3beb090d73e791da906348110023edf5bd557eba60676f62b"
+}

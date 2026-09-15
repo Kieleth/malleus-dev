@@ -1,0 +1,35 @@
+{
+  "boundary_id": "shop-connected-figure14-v1",
+  "baseline_history_sha256": "sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe",
+  "source": {
+    "author": "Dirk Fahland",
+    "title": "Process Mining over Multiple Behavioral Dimensions with Event Knowledge Graphs",
+    "year": 2022,
+    "doi": "10.1007/978-3-031-08848-3_9",
+    "figure_url": "https://link.springer.com/chapter/10.1007/978-3-031-08848-3_9/figures/14",
+    "image_url": "https://media.springernature.com/full/springer-static/image/chp%3A10.1007%2F978-3-031-08848-3_9/MediaObjects/509987_1_En_9_Fig14_HTML.png",
+    "license": "CC-BY-4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "inspected_on": "2026-09-14",
+    "changes": "Original publisher PNG unchanged. Manually transcribed four columns to JSONL; headers renamed and each Item cell wrapped in a one-element array. Printed event IDs, activities and times unchanged."
+  },
+  "artifacts": {
+    "sources/figure-14.png": "sha256:df4c4ff47d999ae32e674022c11cc319f92ac698a940595e3c336654e6a509ba",
+    "sources/figure-14.jsonl": "sha256:136607d935df30f3beb090d73e791da906348110023edf5bd557eba60676f62b"
+  },
+  "selected_event_ids": ["e12", "e13", "e14", "e15", "e16", "e17", "e22", "e23", "e24", "e25", "e26", "e31", "e32"],
+  "required_fields": ["event_id", "activity", "time_text", "item_ids"],
+  "field_dispositions": {
+    "event_id": {"source_field": "event_id", "column": "EventID", "disposition": "EVENT_IDENTIFIER"},
+    "activity": {"source_field": "activity", "column": "Activity", "disposition": "ENUM_ACTIVITY"},
+    "time_text": {"source_field": "time_text", "column": "Time", "disposition": "RETAINED_PRINTED_TIME"},
+    "item_ids": {"source_field": "item_ids", "column": "Item", "disposition": "EXISTING_UNIT_PARTICIPATION"}
+  },
+  "limits": [
+    "No actor, warehouse machine, location or order column is supplied. None is inferred.",
+    "No year or timezone is supplied. NONE_STATED remains the history's domain-time boundary; printed coordinates serve only the existing display convention.",
+    "e31 and e32 mean Retrieve in Figure 14. Table 1 e33 and e34 remain Pack Shipment and Ship. No cross-figure renumbering.",
+    "No missing Store or Retrieve event for Y1 is manufactured.",
+    "Existing Table 1 dates and correction are preserved. No duration, FIFO, causal or performance claim is made."
+  ]
+}

@@ -116,6 +116,16 @@ The old producer and shipment receipts stay unchanged. The new
 more chapter data and a matched comparison of supported results, not a new Core
 mechanism or an invented complete account balance.
 
+## Warehouse observations in the same history
+
+[The warehouse extension](warehouse/README.md) retains Figure 14 and appends its
+13 events after one additive schema revision. X1 now has scan, store and
+retrieve observations between unpacking and packing. Y2 is scanned before Y1
+despite being unpacked later. These are read from the same replayed graph, not
+assembled as a separate answer table. No missing actor, warehouse step or
+calendar coordinate is filled in. The original source history and its receipts
+stay unchanged; the extension has its own receipt.
+
 ## Results and decisions
 
 - Source-boundary RED: `9268617e`, missing inventory implementation. The first

@@ -248,3 +248,63 @@ boundary touches nine Shop files only. Core, ontology, dependencies, original
 source and mapping, producer, original history receipt and earlier shipment
 receipt remain byte-identical. This is not a full Core or installed-package
 gate. No push or release was performed.
+
+## Warehouse source extension, 2026-09-14
+
+The accepted continuation adds Figure 14 of the same chapter, not invented
+warehouse data. The unchanged publisher PNG and a manually inspected JSONL
+transcription retain 13 occurrences and 52 nonempty fields. Attribution,
+CC BY 4.0 licensing, source URLs and exact digests are in
+[warehouse/source_boundary.json](warehouse/source_boundary.json). Digests prove
+byte identity, not transcription truth; no independent human audit is claimed.
+
+RED `3aa8f7f48ee3f22103b8470e318584b3113e03a9` has 10 missing-module errors.
+Before that recorded RED, a test import mistakenly used pytest's empty package
+name; it was corrected to the existing Shop module's package. The later test
+commit `567acda404ff94cc11dc885902801e4774467468` adds an actual schema-inspector
+and read-only command-line check. Against the working implementation that check
+exposed Python tuple paths versus JSON array paths. The runtime now emits lists
+in the report, and the same check prevents representation drift. This second
+failure was observed in the working tree, not an immutable missing-code RED.
+
+The schema introduces only three activity values, SCAN, STORE and RETRIEVE.
+One public contract revision and 13 checked changes extend the original ledger.
+All 895,257 baseline bytes remain its exact prefix; all earlier graph and
+record-history entries remain unchanged. The result has 34 occurrences, 75
+participations, 17 enduring objects, 34 domain changes and 193 protocol events.
+Every new property traces to its retained row and field. No new actor, machine,
+unit, order, year or timezone is supplied by this source or inferred here.
+
+The final from-empty CLI run contains 1,646,996 bytes at
+`sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06`.
+Its read report is
+`sha256:52f2141be794b9d9b1a5db06013cc50cffd7bb282227bb34f6ff713286638cc3`.
+The full machine-readable coordinates are in
+[warehouse/receipt.json](warehouse/receipt.json).
+
+Tests distinguish unknown units and extra fields, require exact prefix
+preservation, refuse a repeated append before writing, inspect source witnesses,
+exercise the actual public schema command and read-only CLI, and compare reopen
+with maintained replay. A maintained reader opened before the schema revision
+is refreshed after the 13 new changes and agrees with full replay. This is not
+an after-every-new-row refresh claim. The original payment explanation must
+remain unchanged except for its history checkpoint.
+
+X1 now has observed Scan, Store and Retrieve steps between Unpack and Pack. Y2
+is scanned before Y1 although it was unpacked later. Those paths support the
+next bounded comparison with the chapter. Missing Y1 warehouse steps, unusable
+old dates, amounts and invoice correction values stay missing. No elapsed-time,
+complete FIFO, causal delay, real warehouse execution or source-truth claim is
+made. Each change is atomic; whole-import rollback and interrupted-import
+resume are not implemented. Core, dependencies and earlier receipts are
+unchanged.
+
+Focused command in the declared repository environment:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. .venv/bin/python -m pytest -q --tb=short -p no:cacheprovider research/ontology_driven_kg_realization/experiments/small_shop/connected_story/warehouse/test_warehouse.py
+```
+
+Result: **12 passed, zero skips**, 92.33 seconds. Scoped Ruff lint, formatting
+and diff checks pass. The isolated whole-Shop gate is recorded below after the
+implementation is frozen. No full-Core or packaging gate is claimed.

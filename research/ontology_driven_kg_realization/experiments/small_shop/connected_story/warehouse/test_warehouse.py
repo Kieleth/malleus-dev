@@ -14,6 +14,7 @@ import malleus.compiler as api
 from research.ontology_driven_kg_realization.experiments.small_shop.connected_story import (
     object_timelines,
     run,
+    shipment_explanation,
 )
 
 
@@ -191,6 +192,15 @@ def test_every_new_field_traces_to_exact_figure_rows(subject, executed):
         replay.retained_bytes(subject.SOURCE_ID)
         == (subject.HERE / "sources/figure-14.jsonl").read_bytes()
     )
+
+
+def test_payment_explanation_keeps_its_meaning_on_the_extended_history(executed):
+    _, _, before, after = executed
+    old = shipment_explanation.explain_shipments(before)
+    new = shipment_explanation.explain_shipments(after)
+    assert {key: value for key, value in new.items() if key != "checkpoint"} == {
+        key: value for key, value in old.items() if key != "checkpoint"
+    }
 
 
 def test_unknown_unit_or_extra_field_is_not_silently_populated(subject, executed):

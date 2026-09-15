@@ -1,0 +1,11 @@
+{
+  "adapter": {"adapter_id": "shop-figure14-row-adapter", "version": "1"},
+  "history_profile_id": "shop-connected-recorded-state-v1",
+  "activities": {"Scan": "SCAN", "Store": "STORE", "Retrieve": "RETRIEVE"},
+  "event_type": "ShopOccurrence",
+  "item_type": "InventoryUnit",
+  "item_prefix": "item",
+  "participation_type": "ShopParticipation",
+  "participation_role": "ITEM",
+  "valid_time": {"kind": "NONE_STATED", "value": null}
+}

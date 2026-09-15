@@ -16,8 +16,10 @@ experiment; its recorded correction is accepted, not held pending external
 truth verification. Finish the source-bounded reconstruction and per-object
 views first, then add more chapter data and compare matching results with the
 published example. Trust does not create missing amounts or repair dates.
-The current TDD scope is in
-[`connected_story/OBJECT_TIMELINES.md`](connected_story/OBJECT_TIMELINES.md).
+The per-object reader is complete for the retained Table 1 boundary. The current
+extension adds Figure 14's 13 warehouse observations to that same history,
+without replacing the earlier bytes. See
+[`connected_story/warehouse/README.md`](connected_story/warehouse/README.md).
 
 This task owns the Shop example as a Malleus adopter. It does not own Core,
 the paper task, Robotics, or Semantic Re-entry. This is one Shop planning
@@ -95,9 +97,9 @@ remain separately labeled extensions, not additional observations from the chapt
 | Order and physical unit | Connected run contains both orders and all five named units | Completed for the selected table. |
 | Payment linked to two existing invoices | Connected ownership/clearing joins and bounded shipment explanation | Complete balances are not supplied; eligibility remains unknown. |
 | Supplier and invoice corrections | B's replacement and I2's update occurrence are in the connected history | I2's changed field/value is absent, preserved as a gap. |
-| Event with several participating objects | All 21 selected occurrences and their participation links are connected | Per-object read-side ordering remains next. |
+| Event with several participating objects | Table 1 occurrences retain shared links; Figure 14 adds unit-local observations | Per-object printed-coordinate views work; no complete domain chronology is claimed. |
 | Per-object event order | Read-only printed-coordinate groups, shared events and unplaced dates | No complete domain chronology or Event-to-Event graph capability is claimed. |
-| Later sources and richer schema | [Fresh import](fresh_import/README.md), [partial shipments](partial_shipments/README.md) | Prove their effect on the connected interpretation, not merely that more rows admit. |
+| Later sources and richer schema | [Warehouse extension](connected_story/warehouse/README.md) adds three activity values and 13 events in the same history | Compare the chapter's queue/ordering observations next; synthetic partial shipments remain separate. |
 | Checks and replay | Connected source/payment checks, public trace and maintained projection | Retain matching full/maintained read results; full account eligibility is not supplied. |
 
 ### Deliverable 1: a source-complete boundary for the selected story
@@ -389,3 +391,14 @@ population, not chosen opportunistically to make a test pass.
   convention, declare the additive Shop vocabulary before code, and test how
   the extra observations change unit views. Keep chapter reproduction and
   Malleus protocol guarantees separate in the comparison.
+- 2026-09-14: Figure 14 is now retained as the unchanged publisher PNG and a
+  visually checked 13-row, 52-field transcription. RED `3aa8f7f4` specifies
+  the same-history warehouse extension. The schema adds only SCAN, STORE and
+  RETRIEVE to the existing activity enum. The importer appends a recorded
+  contract revision and 13 ordinary changes using public Core APIs. New unit
+  views reach the added observations; no new actor, machine or physical-unit
+  identity is inferred. The original history is preserved as an exact prefix.
+  Reproduction and regression results are in the chronological validation
+  journal. No Core change or request was required. The next comparison should
+  examine source-relative unit/queue ordering, keeping unsupported elapsed-time
+  and causal claims explicit. This does not introduce a new research ledger.
