@@ -1759,3 +1759,99 @@ def test_direct_records_equal_governed_replay(
     direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
 
     assert admitted.graph.export_records() == direct.export_records()
+
+
+def _property_free_plan(partial_identity: str) -> dict[str, object]:
+    """One entity with no property, no endpoint and, by default, no derivation.
+
+    This is the shape fault-injection-01 admitted as
+    ``RECORD_WITH_NO_SOURCE_NO_FIELDS``: ``UNDERIVED_FIELD`` iterates a
+    record's ``properties`` keys and the two relation endpoints, and a record
+    that has neither has nothing required of it.
+    """
+
+    plan = _plan(partial_identity)
+    plan["records"] = {
+        "entities": [{"type": "BareObject", "id": "bare-1", "properties": {}}],
+        "relations": [],
+    }
+    plan["derivations"] = []
+    return plan
+
+
+def test_population_plan_refuses_a_record_with_no_derivation_at_all() -> None:
+    population = _population()
+    compiled, partial = _self_link_contract()
+    plan = _property_free_plan(partial.identity)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.UNDERIVED_RECORD
+    )
+    assert refusal.value.detail == (
+        "records carry no derivation: bare-1; "
+        "every record needs at least one derivation naming a source it came "
+        "from, and a record with no properties and no endpoints is not exempt"
+    )
+
+
+def test_population_plan_reports_every_underived_record_at_once() -> None:
+    population = _population()
+    compiled, partial = _self_link_contract()
+    plan = _property_free_plan(partial.identity)
+    records = plan["records"]
+    assert isinstance(records, dict)
+    entities = records["entities"]
+    assert isinstance(entities, list)
+    entities.append({"type": "BareObject", "id": "bare-2", "properties": {}})
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.detail.startswith(
+        "records carry no derivation: bare-1, bare-2; "
+    )
+
+
+def test_population_plan_admits_a_property_free_record_that_derives_its_type() -> None:
+    """The check is satisfiable without inventing a property.
+
+    ``UNDERIVED_FIELD`` still requires no derivation for ``type`` or ``id``.
+    A record with nothing else to point at may name the source its type came
+    from, which is the explicit way out rather than an exemption.
+    """
+
+    population = _population()
+    compiled, partial = _self_link_contract()
+    plan = _property_free_plan(partial.identity)
+    plan["derivations"] = [
+        {
+            "record_id": "bare-1",
+            "path": ["type"],
+            "source_id": "source-generic",
+            "locator": "row:0:kind",
+        }
+    ]
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(operation.record_id for operation in result.operations) == ("bare-1",)
+
+
+def test_population_plan_still_admits_every_derived_record(contract_pair) -> None:
+    """Positive control: the honest neutral plan is untouched by the check."""
+
+    population = _population()
+    _, partial = contract_pair
+
+    result = _compile(_plan(partial.identity), contract_pair)
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "left-1",
+        "link:left-1:right-1",
+        "right-1",
+    )
