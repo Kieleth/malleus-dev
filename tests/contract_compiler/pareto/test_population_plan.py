@@ -1855,3 +1855,192 @@ def test_population_plan_still_admits_every_derived_record(contract_pair) -> Non
         "link:left-1:right-1",
         "right-1",
     )
+
+
+_ASSERTED_SOURCE = b"""\
+id: https://example.malleus.dev/asserted
+name: asserted
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  asserted: https://example.malleus.dev/asserted/
+imports:
+  - linkml:types
+  - malleus
+slots:
+  label:
+    range: string
+  assertion_locator:
+    range: string
+  statement_sha256:
+    range: string
+classes:
+  AssertedObject:
+    is_a: Entity
+    slots:
+      - label
+      - assertion_locator
+      - statement_sha256
+    slot_usage:
+      label:
+        required: true
+  PlainObject:
+    is_a: Entity
+    slots:
+      - label
+    slot_usage:
+      label:
+        required: true
+"""
+_STATEMENT_DIGEST = "sha256:" + "a" * 64
+
+
+def _asserted_contract():
+    """A contract whose `AssertedObject` declares the two source-binding slots.
+
+    `PlainObject` declares neither, so the same plan carries one record the
+    binding rules reach and one they do not.
+    """
+
+    compiled = _compile_binding(
+        _binding(
+            {
+                "asserted": _ASSERTED_SOURCE,
+                "malleus": (ROOT / "ontology/malleus.yaml").read_bytes(),
+                "linkml:types": _trusted_types(),
+            },
+            "asserted",
+        )
+    )
+    partial = _effective(
+        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
+    )
+    return compiled, partial
+
+
+def _asserted_plan(
+    partial_identity: str,
+    *,
+    profile: str = "source-assertion",
+    cited_locator: str | None = "asr:001",
+    statement_digest: str | None = _STATEMENT_DIGEST,
+    digest_locator: str = "asr:001",
+) -> dict[str, object]:
+    """One `AssertedObject` and one `PlainObject` under a chosen profile."""
+
+    population = _population()
+    plan = _plan(partial_identity)
+    if profile == "source-assertion":
+        plan["history_profile"] = {
+            "profile_id": population.SOURCE_ASSERTION_PROFILE.profile_id,
+            "sha256": population.SOURCE_ASSERTION_PROFILE.identity,
+        }
+    properties: dict[str, object] = {"label": "one"}
+    if cited_locator is not None:
+        properties["assertion_locator"] = cited_locator
+    if statement_digest is not None:
+        properties["statement_sha256"] = statement_digest
+    plan["records"] = {
+        "entities": [
+            {"type": "AssertedObject", "id": "asserted-1", "properties": properties},
+            {"type": "PlainObject", "id": "plain-1", "properties": {"label": "two"}},
+        ],
+        "relations": [],
+    }
+    derivations = [
+        {
+            "record_id": "asserted-1",
+            "path": ["properties", "label"],
+            "source_id": "source-generic",
+            "locator": "asr:001",
+        },
+        {
+            "record_id": "plain-1",
+            "path": ["properties", "label"],
+            "source_id": "source-generic",
+            "locator": "asr:001",
+        },
+    ]
+    if cited_locator is not None:
+        derivations.append(
+            {
+                "record_id": "asserted-1",
+                "path": ["properties", "assertion_locator"],
+                "source_id": "source-generic",
+                "locator": "asr:001",
+            }
+        )
+    if statement_digest is not None:
+        derivations.append(
+            {
+                "record_id": "asserted-1",
+                "path": ["properties", "statement_sha256"],
+                "source_id": "source-generic",
+                "locator": digest_locator,
+            }
+        )
+    plan["derivations"] = derivations
+    return plan
+
+
+def test_population_plan_refuses_a_cited_locator_no_derivation_of_that_record_names() -> (
+    None
+):
+    """`among` means the locator of one of this record's own derivations.
+
+    fault-injection-01's `LOCATOR_REPOINTED_COHERENT_DIGEST` moved a record's
+    locator and digest together and left its formalizations behind. The digest
+    binding was satisfied by construction and admission accepted the record;
+    only a post-admission comparison of the export against the trace saw it.
+    """
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, cited_locator="asr:002")
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED
+    )
+    assert refusal.value.detail == (
+        "records cite an assertion they are not derived from: "
+        "asserted-1 cites asr:002, derived from asr:001; "
+        "a record's assertion_locator must be the locator of one of that "
+        "record's own derivations"
+    )
+
+
+def test_population_plan_admits_a_cited_locator_one_own_derivation_names() -> None:
+    """Positive control, and the pin on `at least one` rather than `all`."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, digest_locator="asr:003")
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
+    )
+
+
+def test_population_plan_reads_the_cited_locator_under_any_profile() -> None:
+    """The check follows the slot, not the selected domain-history profile."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(
+        partial.identity, profile="state-version", cited_locator="asr:002"
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED
+    )
