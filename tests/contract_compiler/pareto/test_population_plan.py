@@ -2044,3 +2044,112 @@ def test_population_plan_reads_the_cited_locator_under_any_profile() -> None:
     assert refusal.value.reason is (
         population.PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED
     )
+
+
+def test_population_plan_refuses_an_assertion_record_that_binds_no_source() -> None:
+    """Source binding is mandatory under the source-assertion profile.
+
+    fault-injection-01 recorded the slots as optional and run-23's producer as
+    having set them on 236 of 440 records by choice. A producer that omitted
+    them was admitted with provenance coverage zero and no refusal.
+    """
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(
+        partial.identity, cited_locator=None, statement_digest=None
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.SOURCE_BINDING_REQUIRED
+    )
+    assert refusal.value.detail == (
+        "records do not bind the assertion behind them: "
+        "asserted-1 of type AssertedObject does not set assertion_locator, "
+        "statement_sha256; "
+        "under the source-assertion profile a record whose type declares "
+        "assertion_locator must set assertion_locator and statement_sha256"
+    )
+
+
+def test_population_plan_names_the_one_source_binding_slot_that_is_absent() -> None:
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, statement_digest=None)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.SOURCE_BINDING_REQUIRED
+    )
+    assert refusal.value.detail.startswith(
+        "records do not bind the assertion behind them: "
+        "asserted-1 of type AssertedObject does not set statement_sha256; "
+    )
+
+
+def test_population_plan_binds_no_source_on_a_type_that_declares_no_locator() -> None:
+    """`PlainObject` declares neither slot, so the rule never reaches it."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(
+        partial.identity, cited_locator=None, statement_digest=None
+    )
+    records = plan["records"]
+    assert isinstance(records, dict)
+    entities = records["entities"]
+    assert isinstance(entities, list)
+    del entities[0]
+    plan["derivations"] = [
+        derivation
+        for derivation in plan["derivations"]
+        if derivation["record_id"] == "plain-1"
+    ]
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(operation.record_id for operation in result.operations) == ("plain-1",)
+
+
+def test_population_plan_requires_source_binding_only_under_that_profile() -> None:
+    """Positive control on the profile boundary, not only on the slot."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(
+        partial.identity,
+        profile="state-version",
+        cited_locator=None,
+        statement_digest=None,
+    )
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
+    )
+
+
+def test_population_plan_admits_a_bound_assertion_record_under_the_profile() -> None:
+    """Positive control: a record that binds both slots still admits."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity)
+    assert plan["history_profile"]["profile_id"] == "source-assertion"
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
+    )
