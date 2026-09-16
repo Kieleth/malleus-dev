@@ -375,7 +375,9 @@ malleus_violation(
 def _quoted_registry(tmp_path):
     schema = tmp_path / "quoted.yaml"
     schema.write_text(_QUOTED_SCHEMA, encoding="utf-8")
-    return OntologyRegistry(schema, import_map={"malleus": ROOT / "ontology" / "malleus.yaml"})
+    return OntologyRegistry(
+        schema, import_map={"malleus": ROOT / "ontology" / "malleus.yaml"}
+    )
 
 
 def _quoted_verifier(tmp_path, registry):
@@ -383,7 +385,7 @@ def _quoted_verifier(tmp_path, registry):
     rules_path.write_text(_VALUE_RULE, encoding="utf-8")
     contract = tmp_path / "logic.yaml"
     contract.write_text(
-        f'''schema_version: "1"
+        f"""schema_version: "1"
 contract_id: quoted-contract
 contract_version: "1"
 ontology_hash: sha256:{registry.content_hash()}
@@ -394,7 +396,7 @@ rules_file: rules.pl
 rule_ids:
   - VALUE_SUPPORTED_BY_CITED_TEXT
 timeout_seconds: 10
-''',
+""",
         encoding="utf-8",
     )
     return PrologVerifier(LogicContract.load(contract))
@@ -432,11 +434,14 @@ def test_a_rule_refuses_a_value_absent_from_the_text_the_record_cites(tmp_path):
     registry = _quoted_registry(tmp_path)
     verifier = _quoted_verifier(tmp_path, registry)
     graph = KnowledgeGraph(registry)
-    staged = stage_subgraph(graph, [
-        ProposedOperation.entity(
-            "Measurement", "measurement-1", {"analyte": "FAULT-A-01-SYNTHETIC"}
-        )
-    ])
+    staged = stage_subgraph(
+        graph,
+        [
+            ProposedOperation.entity(
+                "Measurement", "measurement-1", {"analyte": "FAULT-A-01-SYNTHETIC"}
+            )
+        ],
+    )
 
     result = verifier.verify_candidate_subgraph(
         staged,
@@ -460,11 +465,14 @@ def test_the_same_rule_admits_a_value_its_cited_text_contains(tmp_path):
     registry = _quoted_registry(tmp_path)
     verifier = _quoted_verifier(tmp_path, registry)
     graph = KnowledgeGraph(registry)
-    staged = stage_subgraph(graph, [
-        ProposedOperation.entity(
-            "Measurement", "measurement-1", {"analyte": "carbon dioxide"}
-        )
-    ])
+    staged = stage_subgraph(
+        graph,
+        [
+            ProposedOperation.entity(
+                "Measurement", "measurement-1", {"analyte": "carbon dioxide"}
+            )
+        ],
+    )
 
     result = verifier.verify_candidate_subgraph(
         staged,

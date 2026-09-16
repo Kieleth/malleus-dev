@@ -2056,9 +2056,7 @@ def test_population_plan_refuses_an_assertion_record_that_binds_no_source() -> N
 
     population = _population()
     compiled, partial = _asserted_contract()
-    plan = _asserted_plan(
-        partial.identity, cited_locator=None, statement_digest=None
-    )
+    plan = _asserted_plan(partial.identity, cited_locator=None, statement_digest=None)
 
     with pytest.raises(population.PopulationPlanRefusal) as refusal:
         _compile(plan, (compiled, partial))
@@ -2097,9 +2095,7 @@ def test_population_plan_binds_no_source_on_a_type_that_declares_no_locator() ->
 
     population = _population()
     compiled, partial = _asserted_contract()
-    plan = _asserted_plan(
-        partial.identity, cited_locator=None, statement_digest=None
-    )
+    plan = _asserted_plan(partial.identity, cited_locator=None, statement_digest=None)
     records = plan["records"]
     assert isinstance(records, dict)
     entities = records["entities"]
