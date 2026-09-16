@@ -176,6 +176,7 @@ class PopulationPlanRefusalReason(str, Enum):
     SUPERSESSION_TYPE_MISMATCH = "SUPERSESSION_TYPE_MISMATCH"
     SUPERSESSION_VALID_TIME_MISMATCH = "SUPERSESSION_VALID_TIME_MISMATCH"
     UNDERIVED_FIELD = "UNDERIVED_FIELD"
+    UNDERIVED_RECORD = "UNDERIVED_RECORD"
     UNKNOWN_ORIGIN = "UNKNOWN_ORIGIN"
     UNKNOWN_FAMILY = "UNKNOWN_FAMILY"
     UNKNOWN_GAP_KIND = "UNKNOWN_GAP_KIND"
@@ -1366,6 +1367,17 @@ def compile_population_plan(
             )
             + "; every properties key and both relation endpoints need a "
             "derivation, type and id do not",
+        )
+
+    sourceless = sorted(set(by_id) - {record_id for record_id, _ in derived})
+    if sourceless:
+        raise _refuse(
+            PopulationPlanRefusalReason.UNDERIVED_RECORD,
+            "records carry no derivation: "
+            + ", ".join(sourceless)
+            + "; every record needs at least one derivation naming a source "
+            "it came from, and a record with no properties and no endpoints "
+            "is not exempt",
         )
 
     gaps = _array(
