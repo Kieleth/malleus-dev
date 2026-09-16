@@ -51,6 +51,8 @@ _GRAMMAR = "malleus.population-plan/private-v0"
 _DIGEST_PREFIX = "sha256:"
 _SUBJECT_SLOT = "subject"
 _LOCATOR_SLOT = "assertion_locator"
+_STATEMENT_DIGEST_SLOT = "statement_sha256"
+_SOURCE_BINDING_SLOTS = (_LOCATOR_SLOT, _STATEMENT_DIGEST_SLOT)
 _HEX = frozenset("0123456789abcdef")
 _ROOT_FIELDS = frozenset(
     {
@@ -173,6 +175,7 @@ class PopulationPlanRefusalReason(str, Enum):
     MALFORMED_RETENTION_EVENT = "MALFORMED_RETENTION_EVENT"
     MALFORMED_SUPERSESSION = "MALFORMED_SUPERSESSION"
     RECORDS_NOT_REHYDRATABLE = "RECORDS_NOT_REHYDRATABLE"
+    SOURCE_BINDING_REQUIRED = "SOURCE_BINDING_REQUIRED"
     SOURCES_REQUIRED = "SOURCES_REQUIRED"
     SUPERSESSION_FORK = "SUPERSESSION_FORK"
     SUPERSESSION_TYPE_MISMATCH = "SUPERSESSION_TYPE_MISMATCH"
@@ -381,6 +384,23 @@ class PopulationRecordTrace:
     derivations: tuple[Mapping[str, object], ...]
     sources: tuple[KnowledgeRetainedInput, ...]
     evidence: tuple[KnowledgeRetainedInput, ...]
+
+
+def _declares_slot(contract_view: object, type_name: str, slot: str) -> bool:
+    """Whether the bound contract declares ``slot`` on ``type_name``.
+
+    Which types may carry a slot is a contract question, so the reader asks
+    the compiled contract and nothing else. Without one it knows no such
+    declaration, and an unknown type or an ambiguous slot name is not a
+    declaration either.
+    """
+
+    if contract_view is None:
+        return False
+    try:
+        return contract_view.get_slot_constraint(type_name, slot) is not None
+    except (AttributeError, KeyError, ValueError):
+        return False
 
 
 def _object(
@@ -1405,6 +1425,41 @@ def compile_population_plan(
             + "; a record's assertion_locator must be the locator of one of "
             "that record's own derivations",
         )
+
+    if (
+        profile_id == SOURCE_ASSERTION_PROFILE.profile_id
+        and profile["sha256"] == SOURCE_ASSERTION_PROFILE.identity
+    ):
+        unbound: list[tuple[str, str, tuple[str, ...]]] = []
+        for record_id in sorted(by_id):
+            record = by_id[record_id]
+            record_type = record.get("type")
+            if not isinstance(record_type, str) or not _declares_slot(
+                contract_view, record_type, _LOCATOR_SLOT
+            ):
+                continue
+            properties = record["properties"]
+            assert isinstance(properties, dict)
+            missing = tuple(
+                slot
+                for slot in _SOURCE_BINDING_SLOTS
+                if not isinstance(properties.get(slot), str) or not properties[slot]
+            )
+            if missing:
+                unbound.append((record_id, record_type, missing))
+        if unbound:
+            raise _refuse(
+                PopulationPlanRefusalReason.SOURCE_BINDING_REQUIRED,
+                "records do not bind the assertion behind them: "
+                + "; ".join(
+                    f"{record_id} of type {record_type} does not set "
+                    + ", ".join(missing)
+                    for record_id, record_type, missing in unbound
+                )
+                + "; under the source-assertion profile a record whose type "
+                "declares assertion_locator must set assertion_locator and "
+                "statement_sha256",
+            )
 
     gaps = _array(
         root["gaps"],
