@@ -14,6 +14,7 @@ from malleus._contract_pipeline.population import (
     SOURCE_ASSERTION_PROFILE,
     _GAP_KINDS,
     _GRAMMAR as _POPULATION_PLAN_GRAMMAR,
+    _LOCATOR_SLOT,
 )
 
 
@@ -40,7 +41,6 @@ _ASSERTION_FIELDS = {
 }
 _ASSERTION_TIME_FIELDS = {"assertion_time", "domain_time"}
 EVALUATIVE_SLOT_MIXIN = "Evaluative"
-_LOCATOR_SLOT = "assertion_locator"
 _EVALUATING_MODALITY_EXCLUDED = "HYPOTHESISED"
 _RELATION_FAMILY = "relations"
 _CENSUS_TOP_HUBS = 5

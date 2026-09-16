@@ -50,6 +50,7 @@ __all__ = (
 _GRAMMAR = "malleus.population-plan/private-v0"
 _DIGEST_PREFIX = "sha256:"
 _SUBJECT_SLOT = "subject"
+_LOCATOR_SLOT = "assertion_locator"
 _HEX = frozenset("0123456789abcdef")
 _ROOT_FIELDS = frozenset(
     {
@@ -163,6 +164,7 @@ class PopulationPlanRefusalReason(str, Enum):
     FAMILY_NOT_ADMITTED = "FAMILY_NOT_ADMITTED"
     FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
     IDENTITY_MISMATCH = "IDENTITY_MISMATCH"
+    LOCATOR_NOT_DERIVED = "LOCATOR_NOT_DERIVED"
     LOCATOR_NOT_RESOLVABLE = "LOCATOR_NOT_RESOLVABLE"
     MALFORMED_EVIDENCE_REFERENCE = "MALFORMED_EVIDENCE_REFERENCE"
     MALFORMED_IDENTITY = "MALFORMED_IDENTITY"
@@ -1281,6 +1283,7 @@ def compile_population_plan(
             )
 
     derived: set[tuple[str, tuple[str, ...]]] = set()
+    locators_by_record: dict[str, set[str]] = {}
     locator_sites: list[tuple[str, str, str]] = []
     derivations = _array(
         root["derivations"],
@@ -1347,6 +1350,7 @@ def compile_population_plan(
             (f"derivation {record_id}:{list(path)}", source_id, locator)
         )
         derived.add((record_id, path))
+        locators_by_record.setdefault(record_id, set()).add(locator)
 
     underived: list[tuple[str, tuple[str, ...]]] = []
     for record_id, record in by_id.items():
@@ -1378,6 +1382,28 @@ def compile_population_plan(
             + "; every record needs at least one derivation naming a source "
             "it came from, and a record with no properties and no endpoints "
             "is not exempt",
+        )
+
+    undeclared_citations: list[tuple[str, str, tuple[str, ...]]] = []
+    for record_id in sorted(by_id):
+        properties = by_id[record_id]["properties"]
+        assert isinstance(properties, dict)
+        cited = properties.get(_LOCATOR_SLOT)
+        if not isinstance(cited, str) or not cited:
+            continue
+        own = tuple(sorted(locators_by_record.get(record_id, set())))
+        if cited not in own:
+            undeclared_citations.append((record_id, cited, own))
+    if undeclared_citations:
+        raise _refuse(
+            PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED,
+            "records cite an assertion they are not derived from: "
+            + "; ".join(
+                f"{record_id} cites {cited}, derived from {', '.join(own)}"
+                for record_id, cited, own in undeclared_citations
+            )
+            + "; a record's assertion_locator must be the locator of one of "
+            "that record's own derivations",
         )
 
     gaps = _array(
