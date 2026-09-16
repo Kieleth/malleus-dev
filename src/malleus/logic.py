@@ -35,7 +35,7 @@ CONTRACT_FIELDS = {
     "rule_ids",
     "timeout_seconds",
 }
-FACT_PREDICATES = {
+_STRUCTURAL_FACT_PREDICATES = {
     "m_ontology_hash": 1,
     "m_type": 1,
     "m_mixin": 1,
@@ -47,14 +47,43 @@ FACT_PREDICATES = {
     "m_list": 3,
     "m_list_item": 5,
 }
-FACT_CONTRACT_VERSION = "2"
+PROVENANCE_FACT_PREDICATES = {
+    "m_derivation": 4,
+    "m_source_text": 3,
+}
+FACT_PREDICATES_BY_VERSION = {
+    "2": dict(_STRUCTURAL_FACT_PREDICATES),
+    "3": {**_STRUCTURAL_FACT_PREDICATES, **PROVENANCE_FACT_PREDICATES},
+}
+SUPPORTED_FACT_CONTRACT_VERSIONS = ("2", "3")
+FACT_CONTRACT_VERSION = "3"
+FACT_PREDICATES = FACT_PREDICATES_BY_VERSION[FACT_CONTRACT_VERSION]
+_PATH_SEPARATOR = "/"
 
 
-def fact_declarations() -> str:
-    """Declare the complete input vocabulary, including predicates with no facts."""
+def _fact_predicates(fact_contract_version: str) -> dict[str, int]:
+    """The exact vocabulary a contract at this declared version may read."""
+    try:
+        return FACT_PREDICATES_BY_VERSION[fact_contract_version]
+    except (KeyError, TypeError) as error:
+        raise LogicError(
+            f"Unsupported logic fact_contract_version '{fact_contract_version}'"
+        ) from error
+
+
+def fact_declarations(
+    fact_contract_version: str = FACT_CONTRACT_VERSION,
+) -> str:
+    """Declare the complete input vocabulary, including predicates with no facts.
+
+    A contract declares the version it was written against, and it receives
+    that version's vocabulary and no other. A version-2 rule file therefore
+    never sees the provenance predicates declared, so a rule that reaches for
+    one fails loudly instead of matching an empty relation.
+    """
     return "\n".join(
         f":- dynamic {predicate}/{arity}."
-        for predicate, arity in sorted(FACT_PREDICATES.items())
+        for predicate, arity in sorted(_fact_predicates(fact_contract_version).items())
     )
 
 
@@ -203,7 +232,7 @@ class LogicContract:
             raise LogicError(
                 f"Unsupported logic contract schema_version '{document['schema_version']}'"
             )
-        if document["fact_contract_version"] != FACT_CONTRACT_VERSION:
+        if document["fact_contract_version"] not in SUPPORTED_FACT_CONTRACT_VERSIONS:
             raise LogicError(
                 "Unsupported logic fact_contract_version "
                 f"'{document['fact_contract_version']}'"
@@ -268,12 +297,82 @@ class LogicContract:
 
 
 @dataclass(frozen=True)
+class RecordDerivation:
+    """One record field and the exact source locator it was derived from.
+
+    ``path`` is the field path inside the record as the population plan
+    records it, so ``("properties", "analyte")`` for a property and
+    ``("source_id",)`` for a relation endpoint. It is emitted joined by
+    ``/``, and a step carrying that separator is refused rather than made
+    ambiguous.
+    """
+
+    record_id: str
+    path: tuple[str, ...]
+    source_id: str
+    locator: str
+
+    def __post_init__(self) -> None:
+        _nonblank(self.record_id, "derivation record_id")
+        _nonblank(self.source_id, "derivation source_id")
+        _nonblank(self.locator, "derivation locator")
+        if not isinstance(self.path, tuple) or not self.path:
+            raise LogicError("derivation path must be a nonempty tuple")
+        for step in self.path:
+            _nonblank(step, "derivation path step")
+            if _PATH_SEPARATOR in step:
+                raise LogicError(
+                    f"derivation path step must not contain '{_PATH_SEPARATOR}': {step}"
+                )
+
+    @property
+    def joined_path(self) -> str:
+        return _PATH_SEPARATOR.join(self.path)
+
+
+@dataclass(frozen=True)
+class RetainedSourceText:
+    """The retained text one locator of one source resolves to."""
+
+    source_id: str
+    locator: str
+    text: str
+
+    def __post_init__(self) -> None:
+        _nonblank(self.source_id, "source text source_id")
+        _nonblank(self.locator, "source text locator")
+        if not isinstance(self.text, str):
+            raise LogicError("source text must be a string")
+
+
+@dataclass(frozen=True)
+class GraphProvenance:
+    """Derivations and retained source text a check may read as facts.
+
+    The caller supplies these for the candidate change set it is checking and,
+    where the accepted history retains them, for the context graphs it passed.
+    The compiler emits them as facts and reads nothing back: it opens no
+    history and resolves no locator itself.
+    """
+
+    derivations: tuple[RecordDerivation, ...] = ()
+    source_texts: tuple[RetainedSourceText, ...] = ()
+
+    def __post_init__(self) -> None:
+        if any(not isinstance(item, RecordDerivation) for item in self.derivations):
+            raise LogicError("every derivation must be a RecordDerivation")
+        if any(not isinstance(item, RetainedSourceText) for item in self.source_texts):
+            raise LogicError("every source text must be a RetainedSourceText")
+
+
+@dataclass(frozen=True)
 class CompiledFacts:
     ontology_hash: str
     state_digests: tuple[str, ...]
     record_ids: tuple[str, ...]
     facts: tuple[str, ...]
     facts_hash: str
+    fact_contract_version: str = FACT_CONTRACT_VERSION
 
 
 class GraphFactCompiler:
@@ -281,11 +380,28 @@ class GraphFactCompiler:
 
     contract_version = FACT_CONTRACT_VERSION
 
-    def compile(self, *graphs: KnowledgeGraph) -> CompiledFacts:
+    def __init__(self, fact_contract_version: str = FACT_CONTRACT_VERSION) -> None:
+        _fact_predicates(fact_contract_version)
+        self.fact_contract_version = fact_contract_version
+
+    def compile(
+        self,
+        *graphs: KnowledgeGraph,
+        provenance: GraphProvenance | None = None,
+    ) -> CompiledFacts:
         if not graphs:
             raise LogicError("At least one KnowledgeGraph is required")
         if any(not isinstance(graph, KnowledgeGraph) for graph in graphs):
             raise TypeError("All compiler inputs must be KnowledgeGraph values")
+        if provenance is not None and not isinstance(provenance, GraphProvenance):
+            raise TypeError("provenance must be a GraphProvenance value")
+        if provenance is not None and "m_derivation" not in _fact_predicates(
+            self.fact_contract_version
+        ):
+            raise LogicError(
+                "Provenance facts are not declared by fact contract version "
+                f"{self.fact_contract_version}"
+            )
         ontology_hashes = {f"sha256:{graph.registry.content_hash()}" for graph in graphs}
         if len(ontology_hashes) != 1:
             raise LogicError("Cannot compile graphs with different ontologies")
@@ -346,6 +462,9 @@ class GraphFactCompiler:
                 }
             facts.update(_property_facts(record_id, properties))
 
+        if provenance is not None:
+            facts.update(_provenance_facts(provenance, set(records)))
+
         ordered = tuple(sorted(facts))
         return CompiledFacts(
             ontology_hash=ontology_hash,
@@ -353,6 +472,7 @@ class GraphFactCompiler:
             record_ids=tuple(sorted(records)),
             facts=ordered,
             facts_hash=content_digest(list(ordered)),
+            fact_contract_version=self.fact_contract_version,
         )
 
     @staticmethod
@@ -567,6 +687,49 @@ def logic_monitor_failure_records(
             "ruleset_hash": ruleset_record_hash,
         },
     )
+
+
+def _provenance_facts(provenance: GraphProvenance, record_ids: set[str]) -> set[str]:
+    """Emit one fact per derivation and per retained locator text.
+
+    A derivation naming a record the compiled graphs do not carry is refused
+    rather than dropped: the caller and the compiler would otherwise disagree
+    about which records the check saw. Two different texts for one locator
+    are refused for the same reason.
+    """
+
+    facts: set[str] = set()
+    for derivation in provenance.derivations:
+        if derivation.record_id not in record_ids:
+            raise LogicError(
+                f"Derivation names unknown graph record '{derivation.record_id}'"
+            )
+        facts.add(
+            _fact(
+                "m_derivation",
+                derivation.record_id,
+                derivation.joined_path,
+                derivation.source_id,
+                derivation.locator,
+            )
+        )
+    texts: dict[tuple[str, str], str] = {}
+    for retained in provenance.source_texts:
+        key = (retained.source_id, retained.locator)
+        if texts.setdefault(key, retained.text) != retained.text:
+            raise LogicError(
+                "Retained provenance carries two texts for one locator: "
+                f"{retained.source_id} {retained.locator}"
+            )
+        facts.add(
+            _fact(
+                "m_source_text",
+                retained.source_id,
+                retained.locator,
+                retained.text,
+            )
+        )
+    return facts
 
 
 def _property_facts(owner_id: str, properties: Mapping[str, Any]) -> set[str]:

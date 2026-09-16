@@ -306,7 +306,11 @@ m_relation(RecordId, ConcreteType, SourceId, TargetId).
 m_property(RecordId, PropertyName, ScalarKind, Value).
 m_list(RecordId, PropertyName, Length).
 m_list_item(RecordId, PropertyName, Index, ScalarKind, Value).
+m_derivation(RecordId, FieldPath, SourceId, Locator).
+m_source_text(SourceId, Locator, Text).
 ```
+
+The last two are the fact-contract version 3 addition. `FieldPath` is the field path inside the record joined by `/`, so `properties/analyte` for a property and `source_id` for a relation endpoint. They are emitted only from an explicit `GraphProvenance` the caller passes to the compiler or to `PrologVerifier.verify_candidate_subgraph`, carrying the derivations of the candidate change set and, where the accepted history retains them, of the context. The compiler opens no history and resolves no locator itself. A contract declaring version 2 keeps the ten predicates above, receives no declaration for the two new ones, and refuses supplied provenance instead of dropping it.
 
 The compiler does not infer domain predicate names. CYP450, security, and toy ontologies use the same facts. A trusted domain rule program reads those facts and exposes a fixed interface:
 
