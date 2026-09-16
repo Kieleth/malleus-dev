@@ -809,6 +809,13 @@ restated.
   locator too.
 - `DIGEST_MISMATCH`: that digest is the digest of the located assertion's own
   statement bytes.
+- `LOCATOR_NOT_DERIVED`: a record's `assertion_locator` is the locator of one
+  of that record's own derivations, so the sentence it cites is a sentence
+  that formalizes it and not a neighbour with a matching digest.
+- `SOURCE_BINDING_REQUIRED`: under the source-assertion profile, a record
+  whose type declares `assertion_locator` sets both `assertion_locator` and
+  `statement_sha256`. Neither slot is optional there any more, so a record of
+  such a type that binds no assertion is refused rather than counted.
 - `FIELDS_NOT_CLOSED`: every capture object carries exactly its closed field
   set, no extra key and none missing.
 - `MALFORMED_CAPTURE`: the file is JSON data in the shapes above, with
@@ -818,6 +825,9 @@ restated.
   bytes exactly as supplied.
 - `UNDERIVED_FIELD`: every key under a record's `properties`, and both
   endpoints of every relation, is named by a formalization target.
+- `UNDERIVED_RECORD`: every record carries at least one derivation, including
+  a record with no property and no endpoint, of which the previous rule
+  requires nothing.
 - `RECORDS_NOT_REHYDRATABLE`: every field of every record is a slot the
   accepted population surface declares for its type, every enum value one the
   surface lists, every required slot present.
