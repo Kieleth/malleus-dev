@@ -1404,32 +1404,38 @@ def compile_population_plan(
             "is not exempt",
         )
 
-    undeclared_citations: list[tuple[str, str, tuple[str, ...]]] = []
-    for record_id in sorted(by_id):
-        properties = by_id[record_id]["properties"]
-        assert isinstance(properties, dict)
-        cited = properties.get(_LOCATOR_SLOT)
-        if not isinstance(cited, str) or not cited:
-            continue
-        own = tuple(sorted(locators_by_record.get(record_id, set())))
-        if cited not in own:
-            undeclared_citations.append((record_id, cited, own))
-    if undeclared_citations:
-        raise _refuse(
-            PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED,
-            "records cite an assertion they are not derived from: "
-            + "; ".join(
-                f"{record_id} cites {cited}, derived from {', '.join(own)}"
-                for record_id, cited, own in undeclared_citations
-            )
-            + "; a record's assertion_locator must be the locator of one of "
-            "that record's own derivations",
-        )
-
-    if (
+    # Both remaining checks read `assertion_locator`, whose semantics are the
+    # source-assertion profile's. Under any other profile the slot means what
+    # the adopter says it means, so neither check applies. One gate, read once,
+    # rather than the same comparison written twice.
+    source_asserted = (
         profile_id == SOURCE_ASSERTION_PROFILE.profile_id
         and profile["sha256"] == SOURCE_ASSERTION_PROFILE.identity
-    ):
+    )
+
+    if source_asserted:
+        undeclared_citations: list[tuple[str, str, tuple[str, ...]]] = []
+        for record_id in sorted(by_id):
+            properties = by_id[record_id]["properties"]
+            assert isinstance(properties, dict)
+            cited = properties.get(_LOCATOR_SLOT)
+            if not isinstance(cited, str) or not cited:
+                continue
+            own = tuple(sorted(locators_by_record.get(record_id, set())))
+            if cited not in own:
+                undeclared_citations.append((record_id, cited, own))
+        if undeclared_citations:
+            raise _refuse(
+                PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED,
+                "records cite an assertion they are not derived from: "
+                + "; ".join(
+                    f"{record_id} cites {cited}, derived from {', '.join(own)}"
+                    for record_id, cited, own in undeclared_citations
+                )
+                + "; a record's assertion_locator must be the locator of one "
+                "of that record's own derivations",
+            )
+
         unbound: list[tuple[str, str, tuple[str, ...]]] = []
         for record_id in sorted(by_id):
             record = by_id[record_id]
