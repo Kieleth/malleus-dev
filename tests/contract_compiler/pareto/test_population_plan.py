@@ -2029,8 +2029,23 @@ def test_population_plan_admits_a_cited_locator_one_own_derivation_names() -> No
     )
 
 
-def test_population_plan_reads_the_cited_locator_under_any_profile() -> None:
-    """The check follows the slot, not the selected domain-history profile."""
+def test_population_plan_reads_the_cited_locator_only_under_that_profile() -> None:
+    """Outside the source-assertion profile the slot's meaning is the adopter's.
+
+    E-0420. The citation-consistency rule was specified from the document path
+    alone, where a locator names an assertion and a derivation names that same
+    assertion, so string equality was the whole comparison. The first
+    structurally different consumer refused it: S1, under the adopter profile
+    `shop-authored-payment-context-v1`, cites a passage by its id
+    (`intro-1-customer`) while its derivations name the packet cells that
+    carry that id (`row:0:passage_id`, `row:0:text`). Both are honest and the
+    strings cannot match, because under an adopter profile `assertion_locator`
+    means what the adopter says it means.
+
+    The rule now lives where its semantics are fixed, beside the source
+    binding of change 3. Run-23's `b2-01` fault is still caught there, by
+    `test_population_plan_refuses_a_cited_locator_no_derivation_of_that_record_names`.
+    """
 
     population = _population()
     compiled, partial = _asserted_contract()
@@ -2038,11 +2053,12 @@ def test_population_plan_reads_the_cited_locator_under_any_profile() -> None:
         partial.identity, profile="state-version", cited_locator="asr:002"
     )
 
-    with pytest.raises(population.PopulationPlanRefusal) as refusal:
-        _compile(plan, (compiled, partial))
+    result = _compile(plan, (compiled, partial))
 
-    assert refusal.value.reason is (
-        population.PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
     )
 
 
