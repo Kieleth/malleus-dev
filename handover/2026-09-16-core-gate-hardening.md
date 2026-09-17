@@ -701,3 +701,9 @@ the draft validates as a complete entry. It is not a hash of anything.
 `tests/test_logic.py` and `tests/test_prolog_verifier.py` are untouched by this
 change and are absent from the block for that reason, not because the ledger
 declines to track them.
+
+## Sealing note for OVR-000462, 2026-09-17
+
+`entries/OVR-000462.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment
+and this file's digest filled in.

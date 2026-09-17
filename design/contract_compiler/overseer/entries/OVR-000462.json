@@ -1,0 +1,62 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000462",
+  "ledger": "overseer",
+  "sequence": 462,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:75680a3517071c1cf314290d4fa2b83a7174ecb14883c8596e948947f1f0d93c",
+  "recorded_at": "2026-09-17T01:55:26Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-gate-hardening",
+    "type": "DOCUMENT"
+  },
+  "summary": "Scope the citation-consistency refusal to the source-assertion profile after its first structurally different consumer refused it.",
+  "why": "E-0420. OVR-000461 recorded LOCATOR_NOT_DERIVED as following the assertion_locator slot under any domain-history profile. That rule was specified from the document path alone, where a locator names an assertion and a derivation names that same assertion, so string equality was the whole comparison. S1, the first structurally different consumer, was refused at stage B under the adopter profile shop-authored-payment-context-v1: it cites a passage by its id, intro-1-customer, while its derivations name the cells row:0:passage_id and row:0:text whose content is that id. Both are honest and the strings cannot match. Under an adopter profile the slot's semantics are the adopter's, so the rule now applies only under the shipped source-assertion profile, gated on the same profile_id and sha256 SOURCE_BINDING_REQUIRED uses, one gate read once. Run-23's b2-01 fault stays caught there. RED 4e998d85 refused the state-version plan that must compile; GREEN f4687092 compiles it and keeps the source-assertion refusal. No other refusal, profile, ontology or consumer pin changed. This narrows a refusal, it does not widen one. Local governance only; an integrator reconciles against the shared head.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "src/malleus/_contract_pipeline/population.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:07ffd475176dac25bde26ddad740288918d82e93697b907f91b5b60d6397bec5",
+        "after_digest": "sha256:16d73c588fc29412044c5cebe9c6f43f5733f221c73133a759c1bf57ae769411"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_population_plan.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:4285af76878476b1700427e4aff8bbed8a7e9af7ab0633fee9f70fe4f9fae756",
+        "after_digest": "sha256:4819623b8d72d4836b3e24a759e1ee1fa06926c07b35aad7b4ad7ebce53e7877"
+      },
+      {
+        "path": "handover/2026-09-16-core-gate-hardening.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:1d634eff5c9be14fd0d55c4c112cf5b4f8b6d6fb72ab7ec2603b7ea76f033976",
+        "after_digest": "sha256:da37a75addabce13e973cc9d10ff10e31bbe1f90ea55a633ecff6242d2a4a50b"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "4e998d85cae22791cee6515e856bcc32e0d83712"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "f4687092ba3b283bd54ec6dafbd69f19db04fe0a"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:4f9d572b9c1d775919bca52e273ccaca8c11821a3859152dea62e0169490966b"
+}
