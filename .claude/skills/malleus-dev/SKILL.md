@@ -91,6 +91,45 @@ research finding:
    claim and requires a deliberately different implementation to pass the same
    conformance suite.
 
+## Choose an adopter rule
+
+An adopter rule is a `PolicyProgram` check that runs at admission over the
+compiled facts. It is `ADOPTER_CHOICE`. Choosing one wrongly cost two
+measurement cycles on 2026-09-16: "every value must appear in the sentence it
+cites" refused 145 of 294 honest Shop derivations and 216 of 236 honest
+document records, because it was designed from the fault it should catch and
+never read against the records it would govern. Before proposing any rule:
+
+1. `CENSUS_FIRST`: Run the rule as a read-only query over every honest
+   population it would govern, on at least two consumers with different
+   shapes, before any Prolog, test, or gate. Bring the refusal count and the
+   mechanism of every refusal. A proposal without this table is not a
+   proposal.
+2. `TYPED_COMPARISON`: Compare like with like. A numeric slot compares against
+   numbers parsed from text (digits, number words, plus-or-minus and range
+   forms), never against a spelling: `991.0` is `991`. A string slot compares
+   after the reading's declared extraction normalisation (ligatures, spaced
+   digits and subscripts, hyphenation), declared once per reading, never per
+   rule.
+3. `DECLARED_DISTINCTIONS_ONLY`: A rule reads only what the compiled ontology
+   declares. If it needs a distinction the ontology lacks (a value copied from
+   the source, tallied from it, or authored by the producer, such as a record's
+   `name`), the rule is out of reach. Record the Core requirement; do not
+   approximate it with a slot list.
+4. `EVERY_REFUSAL_EXPLAINED`: The acceptance gate is that every refusal on an
+   honest population is classified as a rule defect or a graph defect, with
+   rule defects at zero. Zero refusals is required only on dimensions the
+   review protocol already verified. A rule that finds graph defects in an
+   honest population is a result, not a failure.
+5. `SAMPLE_BEFORE_RELOCATING`: When a rule fails on one consumer, read the
+   other consumer's records before moving the rule there.
+6. `MEASURE_WHAT_CAN_BE_MEASURED`: Before recommending a rerun or a gate, read
+   what the catalogue holds that the rule could catch.
+
+Worked case, with mechanisms per refusal in each `RESULTS.md`:
+`research/ontology_driven_kg_realization/experiments/small_shop/content_rules`
+(Shop) and `paper-v4/experiment-v4/content-rules-doc-01` (document).
+
 ## Architectural law
 
 Build Malleus as small, replaceable stages connected by versioned artifact

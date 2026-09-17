@@ -425,7 +425,10 @@ fallback.
    structural application. It does not establish source truth, domain adequacy,
    or epistemic correctness. A project that needs stronger acceptance supplies
    its own identified policy and check implementations through the lower-level
-   public primitives.
+   public primitives. Before writing any such check, read
+   [Choose an adopter rule](../malleus-dev/SKILL.md#choose-an-adopter-rule):
+   census first, typed comparison, declared distinctions only, every refusal
+   explained.
 
    Retain the source and evidence bytes the plan names before it names them,
    with `history.append_anchors(...)` or `malleus-compiler retain`; an
