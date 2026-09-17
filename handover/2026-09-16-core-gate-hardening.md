@@ -572,3 +572,132 @@ above in two mechanical ways the ledger schema required: `why` is shortened
 to the 1,200-character limit with the same substance, and the ten commit
 references carry full hashes. Sealed by the operator with the ledger tool's
 own hash, render and check.
+
+---
+
+# Addendum, E-0420: the citation rule was an adapter from one case
+
+This section is append-only. It supersedes two claims in **Change 2** above
+rather than editing them, the way the ledger supersedes a block rather than
+rewriting it. The superseded claims are the paragraph beginning "Second
+decision, also pinned by a test: the check follows the slot, not the profile",
+and the test name `test_population_plan_reads_the_cited_locator_under_any_profile`,
+which no longer exists. Everything else in Change 2 still holds.
+
+## What refused, and why it was right to refuse
+
+The finish-the-pin step at `c78b6b38` ran S1, the Shop's progressive
+interpretation, under its own adopter profile
+`shop-authored-payment-context-v1`. Stage B refused it with
+`LOCATOR_NOT_DERIVED`. The record cites a passage by its id,
+`intro-1-customer`, while its derivations name the packet cells that carry
+that id, `row:0:passage_id` and `row:0:text`. Core compares locator strings,
+so the two can never match. The refused run is preserved at
+`private/shop-progressive-01/gate-evidence/c78b6b38-s1-fresh/`; its
+`packets/stage-b/context.jsonl` is where the passage ids and their cells are
+visible side by side.
+
+Nothing in that plan is dishonest. The derivations point at exactly the bytes
+the value came from, and the citation points at the passage the adopter's
+profile says a record cites. Both are correct under their own semantics.
+
+The defect is in the rule, not in S1. `LOCATOR_NOT_DERIVED` was specified from
+the document path alone, where a locator names an assertion and a derivation
+names that same assertion, so string equality is the whole comparison. That is
+one consumer's shape written as though it were the protocol's. The first
+structurally different consumer refused it, which is the failure mode the
+project already has a rule against: a contract written from one case is that
+case's adapter, and it must be labelled as one or generalized before it ships.
+
+## The change
+
+Luis ruled the rule is scoped to the source-assertion profile, where the
+`assertion_locator` slot's semantics are fixed, the same place **Change 3**
+already lives. Under any other profile the slot means what the adopter says it
+means and Core makes no comparison.
+
+One gate serves both checks. `compile_population_plan` computes
+`source_asserted` once, from the plan's declared `profile_id` and `sha256`
+against the shipped `SOURCE_ASSERTION_PROFILE`, and both
+`LOCATOR_NOT_DERIVED` and `SOURCE_BINDING_REQUIRED` sit inside it. The same
+comparison is not written twice.
+
+Run-23's `b2-01` fault lives under the source-assertion profile and is still
+caught, by
+`test_population_plan_refuses_a_cited_locator_no_derivation_of_that_record_names`.
+This narrows a refusal. It widens none.
+
+- RED `4e998d85cae22791cee6515e856bcc32e0d83712`: one failure. A plan under
+  the state-version profile whose record cites `asr:002` while its derivations
+  cite `asr:001` was refused `LOCATOR_NOT_DERIVED` where it must compile. The
+  two source-assertion tests passed throughout and are the control.
+- GREEN `f4687092ba3b283bd54ec6dafbd69f19db04fe0a`:
+  `tests/contract_compiler/pareto/test_population_plan.py` passes 99.
+- The replaced test is now
+  `test_population_plan_reads_the_cited_locator_only_under_that_profile`,
+  named for what it asserts, carrying E-0420 and this reason in its docstring.
+
+## The block this needs, drafted and not sealed
+
+Sealing is the overseer's act and is not done here. The draft below is
+schema-valid: it was checked with `jsonschema` against
+`design/contract_compiler/overseer/ledger.schema.json` before being written
+down, with `recorded_at` and this file's `after_digest` replaced by
+schema-shaped stand-ins for the check only. `why` is 1,198 characters against
+the 1,200 limit. The sealer fills `recorded_at` with the sealing moment, takes
+`after_digest` for this file once it is final, and computes `entry_hash` with
+`python scripts/contract_compiler_ledger.py hash` before binding it in
+`head.json` and running `render` then `check`.
+
+```json
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000462",
+  "ledger": "overseer",
+  "sequence": 462,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:75680a3517071c1cf314290d4fa2b83a7174ecb14883c8596e948947f1f0d93c",
+  "recorded_at": "<sealing moment, UTC>",
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "subject": {"id": "core-gate-hardening", "type": "DOCUMENT"},
+  "summary": "Scope the citation-consistency refusal to the source-assertion profile after its first structurally different consumer refused it.",
+  "why": "E-0420. OVR-000461 recorded LOCATOR_NOT_DERIVED as following the assertion_locator slot under any domain-history profile. That rule was specified from the document path alone, where a locator names an assertion and a derivation names that same assertion, so string equality was the whole comparison. S1, the first structurally different consumer, was refused at stage B under the adopter profile shop-authored-payment-context-v1: it cites a passage by its id, intro-1-customer, while its derivations name the cells row:0:passage_id and row:0:text whose content is that id. Both are honest and the strings cannot match. Under an adopter profile the slot's semantics are the adopter's, so the rule now applies only under the shipped source-assertion profile, gated on the same profile_id and sha256 SOURCE_BINDING_REQUIRED uses, one gate read once. Run-23's b2-01 fault stays caught there. RED 4e998d85 refused the state-version plan that must compile; GREEN f4687092 compiles it and keeps the source-assertion refusal. No other refusal, profile, ontology or consumer pin changed. This narrows a refusal, it does not widen one. Local governance only; an integrator reconciles against the shared head.",
+  "data": {
+    "affected_ids": ["CC-R11"],
+    "documents": [
+      {
+        "path": "src/malleus/_contract_pipeline/population.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:07ffd475176dac25bde26ddad740288918d82e93697b907f91b5b60d6397bec5",
+        "after_digest": "sha256:16d73c588fc29412044c5cebe9c6f43f5733f221c73133a759c1bf57ae769411"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_population_plan.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:4285af76878476b1700427e4aff8bbed8a7e9af7ab0633fee9f70fe4f9fae756",
+        "after_digest": "sha256:4819623b8d72d4836b3e24a759e1ee1fa06926c07b35aad7b4ad7ebce53e7877"
+      },
+      {
+        "path": "handover/2026-09-16-core-gate-hardening.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:1d634eff5c9be14fd0d55c4c112cf5b4f8b6d6fb72ab7ec2603b7ea76f033976",
+        "after_digest": "<digest of this file once final>"
+      }
+    ]
+  },
+  "references": [
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "4e998d85cae22791cee6515e856bcc32e0d83712"},
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "f4687092ba3b283bd54ec6dafbd69f19db04fe0a"},
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"}
+  ],
+  "entry_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}
+```
+
+The `entry_hash` above is a placeholder of the right shape, present only so
+the draft validates as a complete entry. It is not a hash of anything.
+
+`src/malleus/logic.py`, `prolog_verifier.py`, `__init__.py`,
+`tests/test_logic.py` and `tests/test_prolog_verifier.py` are untouched by this
+change and are absent from the block for that reason, not because the ledger
+declines to track them.
