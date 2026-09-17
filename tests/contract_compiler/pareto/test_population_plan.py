@@ -1759,3 +1759,409 @@ def test_direct_records_equal_governed_replay(
     direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
 
     assert admitted.graph.export_records() == direct.export_records()
+
+
+def _property_free_plan(partial_identity: str) -> dict[str, object]:
+    """One entity with no property, no endpoint and, by default, no derivation.
+
+    This is the shape fault-injection-01 admitted as
+    ``RECORD_WITH_NO_SOURCE_NO_FIELDS``: ``UNDERIVED_FIELD`` iterates a
+    record's ``properties`` keys and the two relation endpoints, and a record
+    that has neither has nothing required of it.
+    """
+
+    plan = _plan(partial_identity)
+    plan["records"] = {
+        "entities": [{"type": "BareObject", "id": "bare-1", "properties": {}}],
+        "relations": [],
+    }
+    plan["derivations"] = []
+    return plan
+
+
+def test_population_plan_refuses_a_record_with_no_derivation_at_all() -> None:
+    population = _population()
+    compiled, partial = _self_link_contract()
+    plan = _property_free_plan(partial.identity)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.UNDERIVED_RECORD
+    )
+    assert refusal.value.detail == (
+        "records carry no derivation: bare-1; "
+        "every record needs at least one derivation naming a source it came "
+        "from, and a record with no properties and no endpoints is not exempt"
+    )
+
+
+def test_population_plan_reports_every_underived_record_at_once() -> None:
+    population = _population()
+    compiled, partial = _self_link_contract()
+    plan = _property_free_plan(partial.identity)
+    records = plan["records"]
+    assert isinstance(records, dict)
+    entities = records["entities"]
+    assert isinstance(entities, list)
+    entities.append({"type": "BareObject", "id": "bare-2", "properties": {}})
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.detail.startswith(
+        "records carry no derivation: bare-1, bare-2; "
+    )
+
+
+def test_population_plan_admits_a_property_free_record_that_derives_its_type() -> None:
+    """The check is satisfiable without inventing a property.
+
+    ``UNDERIVED_FIELD`` still requires no derivation for ``type`` or ``id``.
+    A record with nothing else to point at may name the source its type came
+    from, which is the explicit way out rather than an exemption.
+    """
+
+    population = _population()
+    compiled, partial = _self_link_contract()
+    plan = _property_free_plan(partial.identity)
+    plan["derivations"] = [
+        {
+            "record_id": "bare-1",
+            "path": ["type"],
+            "source_id": "source-generic",
+            "locator": "row:0:kind",
+        }
+    ]
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(operation.record_id for operation in result.operations) == ("bare-1",)
+
+
+def test_population_plan_still_admits_every_derived_record(contract_pair) -> None:
+    """Positive control: the honest neutral plan is untouched by the check."""
+
+    population = _population()
+    _, partial = contract_pair
+
+    result = _compile(_plan(partial.identity), contract_pair)
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "left-1",
+        "link:left-1:right-1",
+        "right-1",
+    )
+
+
+_ASSERTED_SOURCE = b"""\
+id: https://example.malleus.dev/asserted
+name: asserted
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  asserted: https://example.malleus.dev/asserted/
+imports:
+  - linkml:types
+  - malleus
+slots:
+  label:
+    range: string
+  assertion_locator:
+    range: string
+  statement_sha256:
+    range: string
+classes:
+  AssertedObject:
+    is_a: Entity
+    slots:
+      - label
+      - assertion_locator
+      - statement_sha256
+    slot_usage:
+      label:
+        required: true
+  PlainObject:
+    is_a: Entity
+    slots:
+      - label
+    slot_usage:
+      label:
+        required: true
+"""
+_STATEMENT_DIGEST = "sha256:" + "a" * 64
+
+
+def _asserted_contract():
+    """A contract whose `AssertedObject` declares the two source-binding slots.
+
+    `PlainObject` declares neither, so the same plan carries one record the
+    binding rules reach and one they do not.
+    """
+
+    compiled = _compile_binding(
+        _binding(
+            {
+                "asserted": _ASSERTED_SOURCE,
+                "malleus": (ROOT / "ontology/malleus.yaml").read_bytes(),
+                "linkml:types": _trusted_types(),
+            },
+            "asserted",
+        )
+    )
+    partial = _effective(
+        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
+    )
+    return compiled, partial
+
+
+def _asserted_plan(
+    partial_identity: str,
+    *,
+    profile: str = "source-assertion",
+    cited_locator: str | None = "asr:001",
+    statement_digest: str | None = _STATEMENT_DIGEST,
+    digest_locator: str = "asr:001",
+) -> dict[str, object]:
+    """One `AssertedObject` and one `PlainObject` under a chosen profile."""
+
+    population = _population()
+    plan = _plan(partial_identity)
+    if profile == "source-assertion":
+        plan["history_profile"] = {
+            "profile_id": population.SOURCE_ASSERTION_PROFILE.profile_id,
+            "sha256": population.SOURCE_ASSERTION_PROFILE.identity,
+        }
+    properties: dict[str, object] = {"label": "one"}
+    if cited_locator is not None:
+        properties["assertion_locator"] = cited_locator
+    if statement_digest is not None:
+        properties["statement_sha256"] = statement_digest
+    plan["records"] = {
+        "entities": [
+            {"type": "AssertedObject", "id": "asserted-1", "properties": properties},
+            {"type": "PlainObject", "id": "plain-1", "properties": {"label": "two"}},
+        ],
+        "relations": [],
+    }
+    derivations = [
+        {
+            "record_id": "asserted-1",
+            "path": ["properties", "label"],
+            "source_id": "source-generic",
+            "locator": "asr:001",
+        },
+        {
+            "record_id": "plain-1",
+            "path": ["properties", "label"],
+            "source_id": "source-generic",
+            "locator": "asr:001",
+        },
+    ]
+    if cited_locator is not None:
+        derivations.append(
+            {
+                "record_id": "asserted-1",
+                "path": ["properties", "assertion_locator"],
+                "source_id": "source-generic",
+                "locator": "asr:001",
+            }
+        )
+    if statement_digest is not None:
+        derivations.append(
+            {
+                "record_id": "asserted-1",
+                "path": ["properties", "statement_sha256"],
+                "source_id": "source-generic",
+                "locator": digest_locator,
+            }
+        )
+    plan["derivations"] = derivations
+    return plan
+
+
+def test_population_plan_refuses_a_cited_locator_no_derivation_of_that_record_names() -> (
+    None
+):
+    """`among` means the locator of one of this record's own derivations.
+
+    fault-injection-01's `LOCATOR_REPOINTED_COHERENT_DIGEST` moved a record's
+    locator and digest together and left its formalizations behind. The digest
+    binding was satisfied by construction and admission accepted the record;
+    only a post-admission comparison of the export against the trace saw it.
+    """
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, cited_locator="asr:002")
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED
+    )
+    assert refusal.value.detail == (
+        "records cite an assertion they are not derived from: "
+        "asserted-1 cites asr:002, derived from asr:001; "
+        "a record's assertion_locator must be the locator of one of that "
+        "record's own derivations"
+    )
+
+
+def test_population_plan_admits_a_cited_locator_one_own_derivation_names() -> None:
+    """Positive control, and the pin on `at least one` rather than `all`."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, digest_locator="asr:003")
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
+    )
+
+
+def test_population_plan_reads_the_cited_locator_only_under_that_profile() -> None:
+    """Outside the source-assertion profile the slot's meaning is the adopter's.
+
+    E-0420. The citation-consistency rule was specified from the document path
+    alone, where a locator names an assertion and a derivation names that same
+    assertion, so string equality was the whole comparison. The first
+    structurally different consumer refused it: S1, under the adopter profile
+    `shop-authored-payment-context-v1`, cites a passage by its id
+    (`intro-1-customer`) while its derivations name the packet cells that
+    carry that id (`row:0:passage_id`, `row:0:text`). Both are honest and the
+    strings cannot match, because under an adopter profile `assertion_locator`
+    means what the adopter says it means.
+
+    The rule now lives where its semantics are fixed, beside the source
+    binding of change 3. Run-23's `b2-01` fault is still caught there, by
+    `test_population_plan_refuses_a_cited_locator_no_derivation_of_that_record_names`.
+    """
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(
+        partial.identity, profile="state-version", cited_locator="asr:002"
+    )
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
+    )
+
+
+def test_population_plan_refuses_an_assertion_record_that_binds_no_source() -> None:
+    """Source binding is mandatory under the source-assertion profile.
+
+    fault-injection-01 recorded the slots as optional and run-23's producer as
+    having set them on 236 of 440 records by choice. A producer that omitted
+    them was admitted with provenance coverage zero and no refusal.
+    """
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, cited_locator=None, statement_digest=None)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.SOURCE_BINDING_REQUIRED
+    )
+    assert refusal.value.detail == (
+        "records do not bind the assertion behind them: "
+        "asserted-1 of type AssertedObject does not set assertion_locator, "
+        "statement_sha256; "
+        "under the source-assertion profile a record whose type declares "
+        "assertion_locator must set assertion_locator and statement_sha256"
+    )
+
+
+def test_population_plan_names_the_one_source_binding_slot_that_is_absent() -> None:
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, statement_digest=None)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.SOURCE_BINDING_REQUIRED
+    )
+    assert refusal.value.detail.startswith(
+        "records do not bind the assertion behind them: "
+        "asserted-1 of type AssertedObject does not set statement_sha256; "
+    )
+
+
+def test_population_plan_binds_no_source_on_a_type_that_declares_no_locator() -> None:
+    """`PlainObject` declares neither slot, so the rule never reaches it."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity, cited_locator=None, statement_digest=None)
+    records = plan["records"]
+    assert isinstance(records, dict)
+    entities = records["entities"]
+    assert isinstance(entities, list)
+    del entities[0]
+    plan["derivations"] = [
+        derivation
+        for derivation in plan["derivations"]
+        if derivation["record_id"] == "plain-1"
+    ]
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(operation.record_id for operation in result.operations) == ("plain-1",)
+
+
+def test_population_plan_requires_source_binding_only_under_that_profile() -> None:
+    """Positive control on the profile boundary, not only on the slot."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(
+        partial.identity,
+        profile="state-version",
+        cited_locator=None,
+        statement_digest=None,
+    )
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
+    )
+
+
+def test_population_plan_admits_a_bound_assertion_record_under_the_profile() -> None:
+    """Positive control: a record that binds both slots still admits."""
+
+    population = _population()
+    compiled, partial = _asserted_contract()
+    plan = _asserted_plan(partial.identity)
+    assert plan["history_profile"]["profile_id"] == "source-assertion"
+
+    result = _compile(plan, (compiled, partial))
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    assert tuple(sorted(operation.record_id for operation in result.operations)) == (
+        "asserted-1",
+        "plain-1",
+    )

@@ -81,7 +81,11 @@ PUBLIC_GUIDE_ROOT_IMPORTS = (
     "bundled_ontology_path",
     "stage_subgraph",
 )
-PUBLIC_GUIDE_MODULE_IMPORTS = {"malleus.compiler", "malleus.inquisition"}
+PUBLIC_GUIDE_MODULE_IMPORTS = {
+    "malleus.compiler",
+    "malleus.inquisition",
+    "malleus.acquisition",
+}
 PUBLIC_IMPORT_TARGETS = {"malleus", "malleus.OntologyRegistry"}
 PROTOCOL_BOUNDARY_ROLES = (
     "PROTOCOL_INVARIANT",
@@ -99,6 +103,7 @@ STATIC_EXAMPLE_POLICY_LIMITATION = (
 )
 PUBLIC_GUIDES = {
     "ADOPTION_GUIDE.md",
+    "INTERPRETATION_REVIEW.md",
     "ARCHITECTURE.md",
     "ASSENT_PLAN.md",
     "ASSENT_PROTOCOL.md",
@@ -258,6 +263,10 @@ INTERNAL_METAMODEL_IDENTITY_ROWS = (
 APPROVED_REFERENCE_PATH = DOCS / "reference" / "index.md"
 APPROVED_REFERENCE_SOURCE = (
     "# Current public API reference\n"
+    "\n"
+    "The optional `malleus.acquisition` review-coverage API is documented separately\n"
+    "in [Reconsidering interpretations](../INTERPRETATION_REVIEW.md). It checks an\n"
+    "explicit review set without judging source truth or changing accepted knowledge.\n"
     "\n"
     "This page exercises Sphinx autodoc and autosummary against the public package\n"
     "root, migration module, narrow compiler facade, and pack checkers. It\n"
@@ -2191,11 +2200,13 @@ def test_public_guide_submodule_imports_are_exactly_allowlisted() -> None:
     assert PUBLIC_GUIDE_MODULE_IMPORTS == {
         "malleus.compiler",
         "malleus.inquisition",
+        "malleus.acquisition",
     }
     for source in (
         "from malleus.compiler import compile_linkml_contract",
         "from malleus.inquisition import validate_pack_conformance",
         "from malleus.inquisition import validate_pack_grounding",
+        "from malleus.acquisition import check_review_coverage",
     ):
         assert _forbidden_example_operations(ast.parse(source)) == []
 
@@ -2714,8 +2725,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     assert milestone_link in normalized_readme
     assert (
         "Public here means a supported import path and installed command in "
-        "Malleus 0.14.0, not a stable wire format."
-        in normalized_readme
+        "Malleus 0.14.0, not a stable wire format." in normalized_readme
     )
     for current_readme_claim in (
         "warehouse record plus a separate inventory lookup",

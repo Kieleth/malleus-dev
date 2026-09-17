@@ -14,6 +14,9 @@ from malleus._contract_pipeline.population import (
     SOURCE_ASSERTION_PROFILE,
     _GAP_KINDS,
     _GRAMMAR as _POPULATION_PLAN_GRAMMAR,
+    _LOCATOR_SLOT,
+    _STATEMENT_DIGEST_SLOT,
+    _declares_slot,
 )
 
 
@@ -40,11 +43,9 @@ _ASSERTION_FIELDS = {
 }
 _ASSERTION_TIME_FIELDS = {"assertion_time", "domain_time"}
 EVALUATIVE_SLOT_MIXIN = "Evaluative"
-_LOCATOR_SLOT = "assertion_locator"
 _EVALUATING_MODALITY_EXCLUDED = "HYPOTHESISED"
 _RELATION_FAMILY = "relations"
 _CENSUS_TOP_HUBS = 5
-_STATEMENT_DIGEST_SLOT = "statement_sha256"
 _SUBJECT_SLOT = "subject"
 _NAME_SLOT = "name"
 _TAGS_SLOT = "tags"
@@ -440,17 +441,11 @@ def _slot_bearing_types(
     exactly as it knows no evaluative slot, and the coverage axis stays empty.
     """
 
-    if contract_view is None:
-        return frozenset()
-    bearing: set[str] = set()
-    for type_name in types:
-        try:
-            slots = contract_view.effective_slots(type_name)
-        except (KeyError, ValueError):
-            continue
-        if slot in slots:
-            bearing.add(type_name)
-    return frozenset(bearing)
+    return frozenset(
+        type_name
+        for type_name in types
+        if _declares_slot(contract_view, type_name, slot)
+    )
 
 
 def _provenance_census(
@@ -464,9 +459,11 @@ def _provenance_census(
     ``by_type`` carries one entry per type present in the records that the
     compiled contract declares as carrying ``assertion_locator``, each with
     ``total``, ``with_locator`` and ``with_digest``; the top-level counts are
-    those summed. Both slots stay optional, so a capture that sets neither is
-    admitted and the digest check has nothing to run on. The number is what
-    makes that silence visible at admission rather than at review.
+    those summed. The adapter still counts rather than refuses: it is the plan
+    compiler that refuses an unbound record of such a type under the
+    source-assertion profile, so under that profile the axis reports a
+    complete coverage or the plan never compiles, and under another profile
+    the number remains the only reading of what a producer bound.
     """
 
     by_type: dict[str, dict[str, int]] = {}

@@ -1,0 +1,48 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000459",
+  "ledger": "overseer",
+  "sequence": 459,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:acda9f71ce6b92034b832e75486e383d3a231d582af8aff7980cf46ab07e3007",
+  "recorded_at": "2026-09-15T18:29:30Z",
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "subject": {"id": "progressive-interpretation-guidance", "type": "DOCUMENT"},
+  "summary": "Deliver shared evidence-boundary interpretation review guidance and propose, without creating, the missing completion check.",
+  "why": "Luis approved maintaining interpretations as evidence accumulates. Core keeps the rule once in Acolyte, routes document and structured acquisition plus development guidance to it, and distinguishes missing or stale review from unresolved knowledge. Previously completed interpretations remain reviewable. Evidence receipt and review alone change no accepted knowledge. RED 9a35e9d3 produced two installed-delivery failures and two existing passes; GREEN 7c39e8d4 changed exactly two skills. The combined installed/capture/Assent-review/Inquisitor selector passes 132 with one absent-private-doctrine skip. Skill validators, Ruff, formatting and diff checks pass. Existing runtime has no acquisition review-set completion contract; the report proposes the smallest read-only placement and unexecuted acceptance cases. Instruction checks do not establish behavioral enforcement, source truth or model compliance. This isolated candidate follows base 18015352 and does not reserve shared ledger numbers, alter release/replay candidates, integrate, push, publish or rebind consumers.",
+  "data": {
+    "affected_ids": ["CC-R11"],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a7508dee74b0b1e9e1dde8ce021e6a509408e13165081093e6497b8d9f127deb",
+        "after_digest": "sha256:709092f5eaf8709baea5cb7f35764c9d3e45915c61a29260f4d915f73882ec08"
+      },
+      {
+        "path": ".claude/skills/malleus-dev/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:30ee132553f4eb42943161f858457bf6f6050d93793cd1255b1cc5006eecc96f",
+        "after_digest": "sha256:09cd92fec20f5c365fff5a8b537b31e1642c9043ba424fe26e099c3433d5ea96"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_adopter_completion_boundary.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:482f2e787f8ec2dba8ffc49d75ba7271c1f053476f13dda53a4b316ac515a5ef",
+        "after_digest": "sha256:704e526f68040fe3dbf121a144ab4ef161bd1c5b2c444c1574ebe7b8e35a39e8"
+      },
+      {
+        "path": "handover/2026-09-15-core-progressive-interpretation.md",
+        "change": "CREATED",
+        "after_digest": "sha256:5d499765e92bda647a1c68a8615bfb52a0e64bb46e720afaf263bf63291ef483"
+      }
+    ]
+  },
+  "references": [
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "9a35e9d3795a72f0842936aa13076ae1d5693e10"},
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "7c39e8d4cdc7fb527bcebc580a7a42dcc4cfe393"},
+    {"relation": "EVIDENCES", "type": "COMMIT", "target": "fac062c671d159d3130770a9489337b7f9692109"},
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"}
+  ],
+  "entry_hash": "sha256:05405021e3635fbeb30ce127eb1721372ebe9243bc180d0479b23777e87acf21"
+}

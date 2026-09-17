@@ -111,6 +111,59 @@ pass a gate, impose a relation quota or invent facts. A permitted partial import
 can satisfy its bounded objective without establishing complete reconciliation;
 partial import is not universally a failure.
 
+### Maintaining interpretations as evidence accumulates
+
+Acquisition maintains interpretations, not just an inventory of newly captured
+records. Before starting, declare the reading or evidence-change boundaries and
+the bounded set of interpretation IDs and versions to reconsider, including
+interpretations previously considered complete. At each declared reading or
+evidence-change boundary, retain exact evidence and review the whole declared
+set against the relevant source context, ontology and current knowledge. A small
+full review is enough; do not invent a relevance engine or silently exclude
+completed interpretations because they have no structural gap.
+
+In the existing project record, bind each review to its interpretation version,
+the boundary and the evidence identities considered. Record one of:
+
+- A supported correction, with evidence and a proposed change.
+- A justified no-change, naming what was reconsidered and why it still holds.
+- A conflict, naming incompatible interpretations and their evidence.
+- A specific unresolved disposition, naming the missing evidence, capability
+  or permission. Do not guess a required field to close it.
+
+Missing or stale required reviews prevent a completion claim for that review
+boundary. Replaying, recomputing, registering evidence or issuing another
+assessment is not proof that earlier interpretations were reconsidered.
+A specific unresolved disposition completes that review but does not resolve
+the knowledge gap. Report review coverage, unresolved knowledge and pending
+corrections separately. Retry exhaustion and inventory completion are not
+semantic completion; stop within the existing budget and report unfinished
+review instead of silently declaring success.
+
+Evidence receipt and review alone change no accepted knowledge. A proposed
+correction must still pass the selected admission policy, preserve history and
+name known affected downstream uses. Keep unknown dependencies explicit.
+Distinguish adding detail, correcting an interpretation and representing change
+in the world. Reading order is not world time. Citation, attribution, support
+and refinement are different relationships. Source assertion, interpretation
+confidence, scientific support, measurement uncertainty, applicability, policy
+acceptance and adequacy for a use are different judgments. More evidence may
+increase uncertainty; do not invent probabilities or treat attribution as proof.
+
+This guidance is not a mechanical completion checker. For the optional declared-
+set profile, call `malleus.acquisition.check_review_coverage` with exact
+`boundary_bytes` and the selected `review_bytes`. The same module exposes
+`REVIEW_COVERAGE_PROFILE` as JSON bytes containing the closed input fields and
+outcome requirements. An empty review tuple returns the normalized boundary
+identity to bind before authoring reviews; it does not complete a nonempty set.
+Call `result.require_complete()` before reporting that boundary reviewed.
+Keep its missing/stale IDs, unresolved/conflict reviews and pending corrections
+separate. This does not judge the rationale or resolve the knowledge gap.
+The caller declares the actual boundary; the checker does not discover new
+evidence or register reviews. If that selected capability is unavailable, report
+the missing enforcement rather than substituting a compiler pass or silently
+claiming a manually reviewed result was mechanically checked.
+
 ## Where the knowledge lives (probe capability, never assume presence)
 
 An installed `malleus` may be current, stale (old malleus-dev releases
@@ -464,7 +517,10 @@ fallback.
    gaps, revise, and repopulate in one working session by default. Set the limit
    before the loop starts: at most two additive revision rounds. Apply the
    [outcome and permission check](#outcome-and-permission-check) before this loop
-   and when reporting its result. If typed gaps
+   and when reporting its result. This limits structural schema growth, not the
+   scope of interpretation review. Apply the shared
+   [progressive review rule](#maintaining-interpretations-as-evidence-accumulates)
+   even when no structural gap was recorded. If typed gaps
    cluster around a missing class, optional slot, or enum value, propose an
    additive ontology revision, pass the prior and proposed contracts to
    `compile_contract_revision`, record the migration receipt, and repeat from
@@ -756,6 +812,13 @@ restated.
   locator too.
 - `DIGEST_MISMATCH`: that digest is the digest of the located assertion's own
   statement bytes.
+- `LOCATOR_NOT_DERIVED`: a record's `assertion_locator` is the locator of one
+  of that record's own derivations, so the sentence it cites is a sentence
+  that formalizes it and not a neighbour with a matching digest.
+- `SOURCE_BINDING_REQUIRED`: under the source-assertion profile, a record
+  whose type declares `assertion_locator` sets both `assertion_locator` and
+  `statement_sha256`. Neither slot is optional there any more, so a record of
+  such a type that binds no assertion is refused rather than counted.
 - `FIELDS_NOT_CLOSED`: every capture object carries exactly its closed field
   set, no extra key and none missing.
 - `MALFORMED_CAPTURE`: the file is JSON data in the shapes above, with
@@ -765,6 +828,9 @@ restated.
   bytes exactly as supplied.
 - `UNDERIVED_FIELD`: every key under a record's `properties`, and both
   endpoints of every relation, is named by a formalization target.
+- `UNDERIVED_RECORD`: every record carries at least one derivation, including
+  a record with no property and no endpoint, of which the previous rule
+  requires nothing.
 - `RECORDS_NOT_REHYDRATABLE`: every field of every record is a slot the
   accepted population surface declares for its type, every enum value one the
   surface lists, every required slot present.
@@ -821,6 +887,10 @@ under it, not a capture object. The plan-compiler reasons of that list, from
 `UNDERIVED_FIELD` to `UNLISTED_SOURCE`, reach you unchanged. There is no census
 for rows, so no number reports your coverage of the source; count the rows you
 populated and the rows you left gapped, and say both.
+
+The same [progressive review rule](#maintaining-interpretations-as-evidence-accumulates)
+applies at declared structured-source evidence boundaries. New rows can change
+an earlier interpretation without changing the schema or creating a typed gap.
 
 **The file is canonical bytes.** UTF-8, keys sorted at every level, separators
 `,` and `:` with no space after either, `ensure_ascii` false so a non-ASCII

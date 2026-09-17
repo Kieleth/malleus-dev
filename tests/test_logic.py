@@ -8,12 +8,18 @@ import pytest
 from malleus.kg import KnowledgeGraph
 from malleus.logic import (
     GraphFactCompiler,
+    GraphProvenance,
     LogicCheckResult,
     LogicContract,
     LogicError,
     LogicExecutionError,
+    RecordDerivation,
+    RetainedSourceText,
     Violation,
+    FACT_CONTRACT_VERSION,
     FACT_PREDICATES,
+    FACT_PREDICATES_BY_VERSION,
+    SUPPORTED_FACT_CONTRACT_VERSIONS,
     fact_declarations,
     logic_monitor_failure_records,
 )
@@ -452,3 +458,162 @@ def test_execution_failure_builds_unknown_assessment_without_completed_check():
     assert assessment["monitor_failure_id"] == failure["id"]
     assert failure["logic_contract_id"] == "logic-contract:1"
     assert assessment["logic_contract_record_hash"] == "sha256:" + "5" * 64
+
+
+_VERSION_TWO_PREDICATES = {
+    "m_ontology_hash": 1,
+    "m_type": 1,
+    "m_mixin": 1,
+    "m_subtype": 2,
+    "m_has_mixin": 2,
+    "m_record": 3,
+    "m_relation": 4,
+    "m_property": 4,
+    "m_list": 3,
+    "m_list_item": 5,
+}
+
+
+def _drug_graph():
+    graph = KnowledgeGraph(OntologyRegistry(CYP450_SCHEMA))
+    graph.create_entity("Drug", "drug-1", {"name": "Fluconazole"})
+    return graph
+
+
+def _drug_provenance():
+    return GraphProvenance(
+        derivations=(
+            RecordDerivation(
+                record_id="drug-1",
+                path=("properties", "name"),
+                source_id="source:list",
+                locator="row:0:name",
+            ),
+        ),
+        source_texts=(
+            RetainedSourceText(
+                source_id="source:list",
+                locator="row:0:name",
+                text="Fluconazole 150 mg",
+            ),
+        ),
+    )
+
+
+def test_fact_contract_version_three_adds_provenance_and_keeps_version_two():
+    assert FACT_CONTRACT_VERSION == "3"
+    assert SUPPORTED_FACT_CONTRACT_VERSIONS == ("2", "3")
+    assert set(FACT_PREDICATES_BY_VERSION) == {"2", "3"}
+    assert FACT_PREDICATES_BY_VERSION["2"] == _VERSION_TWO_PREDICATES
+    assert FACT_PREDICATES_BY_VERSION["3"] == {
+        **_VERSION_TWO_PREDICATES,
+        "m_derivation": 4,
+        "m_source_text": 3,
+    }
+    assert FACT_PREDICATES == FACT_PREDICATES_BY_VERSION["3"]
+
+
+def test_fact_declarations_follow_the_declared_contract_version():
+    version_two = set(fact_declarations("2").splitlines())
+    version_three = set(fact_declarations("3").splitlines())
+
+    assert ":- dynamic m_derivation/4." not in version_two
+    assert ":- dynamic m_source_text/3." not in version_two
+    assert version_two < version_three
+    assert version_three - version_two == {
+        ":- dynamic m_derivation/4.",
+        ":- dynamic m_source_text/3.",
+    }
+    with pytest.raises(LogicError, match="fact_contract_version"):
+        fact_declarations("99")
+
+
+def test_compiler_emits_a_records_derivation_and_the_text_its_locator_resolves_to():
+    compiled = GraphFactCompiler(fact_contract_version="3").compile(
+        _drug_graph(), provenance=_drug_provenance()
+    )
+
+    assert compiled.fact_contract_version == "3"
+    assert (
+        "m_derivation('drug-1', 'properties/name', 'source:list', 'row:0:name')"
+        in compiled.facts
+    )
+    assert (
+        "m_source_text('source:list', 'row:0:name', 'Fluconazole 150 mg')"
+        in compiled.facts
+    )
+
+
+def test_compiler_at_version_three_without_provenance_emits_no_provenance_fact():
+    compiled = GraphFactCompiler(fact_contract_version="3").compile(_drug_graph())
+
+    assert compiled.fact_contract_version == "3"
+    assert not [fact for fact in compiled.facts if fact.startswith("m_derivation")]
+    assert not [fact for fact in compiled.facts if fact.startswith("m_source_text")]
+
+
+def test_compiler_at_version_two_compiles_exactly_the_earlier_vocabulary():
+    """The migration answer for a contract already pinned at version 2."""
+
+    compiled = GraphFactCompiler(fact_contract_version="2").compile(_drug_graph())
+
+    assert compiled.fact_contract_version == "2"
+    assert {fact.split("(", 1)[0] for fact in compiled.facts} <= set(
+        _VERSION_TWO_PREDICATES
+    )
+
+
+def test_compiler_refuses_provenance_under_the_earlier_fact_contract():
+    """A version-2 rule cannot read these facts, so dropping them would lie."""
+
+    with pytest.raises(LogicError, match="fact contract version 2"):
+        GraphFactCompiler(fact_contract_version="2").compile(
+            _drug_graph(), provenance=_drug_provenance()
+        )
+
+
+def test_compiler_refuses_an_unsupported_fact_contract_version():
+    with pytest.raises(LogicError, match="fact_contract_version"):
+        GraphFactCompiler(fact_contract_version="99")
+
+
+def test_compiler_refuses_a_derivation_for_a_record_the_graph_does_not_carry():
+    provenance = GraphProvenance(
+        derivations=(
+            RecordDerivation(
+                record_id="drug-absent",
+                path=("properties", "name"),
+                source_id="source:list",
+                locator="row:0:name",
+            ),
+        ),
+        source_texts=(),
+    )
+    with pytest.raises(LogicError, match="unknown graph record"):
+        GraphFactCompiler(fact_contract_version="3").compile(
+            _drug_graph(), provenance=provenance
+        )
+
+
+def test_compiler_refuses_a_path_step_that_would_hide_the_join_separator():
+    with pytest.raises(LogicError, match="path step"):
+        RecordDerivation(
+            record_id="drug-1",
+            path=("properties", "name/extra"),
+            source_id="source:list",
+            locator="row:0:name",
+        )
+
+
+def test_compiler_refuses_two_texts_for_one_retained_locator():
+    provenance = GraphProvenance(
+        derivations=(),
+        source_texts=(
+            RetainedSourceText("source:list", "row:0:name", "Fluconazole"),
+            RetainedSourceText("source:list", "row:0:name", "Ketoconazole"),
+        ),
+    )
+    with pytest.raises(LogicError, match="two texts"):
+        GraphFactCompiler(fact_contract_version="3").compile(
+            _drug_graph(), provenance=provenance
+        )

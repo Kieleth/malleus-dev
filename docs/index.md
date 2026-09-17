@@ -634,6 +634,7 @@ See the [technical compiler notes](contract_compiler/index.md) and
 :maxdepth: 2
 
 ADOPTION_GUIDE
+INTERPRETATION_REVIEW
 SMALL_SHOP_WALKTHROUGH
 ARCHITECTURE
 ASSENT_PLAN

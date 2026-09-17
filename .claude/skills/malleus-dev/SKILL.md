@@ -62,6 +62,10 @@ Before dispatching bounded capture, reconciliation or repair, read the shared
 Check the promised outcome against permitted changes and feedback before
 launching, not only when reviewing the result. A finished attempt need not mean
 the wider objective is complete.
+For evidence-driven acquisition and its completion report, route to the shared
+[progressive review rule](../malleus-acolyte/SKILL.md#maintaining-interpretations-as-evidence-accumulates).
+Keep instruction delivery separate from behavioral enforcement; do not claim a
+missing completion check exists because the installed skill names the rule.
 
 ## Research-to-core promotion gate
 

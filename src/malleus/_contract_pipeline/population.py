@@ -50,6 +50,9 @@ __all__ = (
 _GRAMMAR = "malleus.population-plan/private-v0"
 _DIGEST_PREFIX = "sha256:"
 _SUBJECT_SLOT = "subject"
+_LOCATOR_SLOT = "assertion_locator"
+_STATEMENT_DIGEST_SLOT = "statement_sha256"
+_SOURCE_BINDING_SLOTS = (_LOCATOR_SLOT, _STATEMENT_DIGEST_SLOT)
 _HEX = frozenset("0123456789abcdef")
 _ROOT_FIELDS = frozenset(
     {
@@ -163,6 +166,7 @@ class PopulationPlanRefusalReason(str, Enum):
     FAMILY_NOT_ADMITTED = "FAMILY_NOT_ADMITTED"
     FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
     IDENTITY_MISMATCH = "IDENTITY_MISMATCH"
+    LOCATOR_NOT_DERIVED = "LOCATOR_NOT_DERIVED"
     LOCATOR_NOT_RESOLVABLE = "LOCATOR_NOT_RESOLVABLE"
     MALFORMED_EVIDENCE_REFERENCE = "MALFORMED_EVIDENCE_REFERENCE"
     MALFORMED_IDENTITY = "MALFORMED_IDENTITY"
@@ -171,11 +175,13 @@ class PopulationPlanRefusalReason(str, Enum):
     MALFORMED_RETENTION_EVENT = "MALFORMED_RETENTION_EVENT"
     MALFORMED_SUPERSESSION = "MALFORMED_SUPERSESSION"
     RECORDS_NOT_REHYDRATABLE = "RECORDS_NOT_REHYDRATABLE"
+    SOURCE_BINDING_REQUIRED = "SOURCE_BINDING_REQUIRED"
     SOURCES_REQUIRED = "SOURCES_REQUIRED"
     SUPERSESSION_FORK = "SUPERSESSION_FORK"
     SUPERSESSION_TYPE_MISMATCH = "SUPERSESSION_TYPE_MISMATCH"
     SUPERSESSION_VALID_TIME_MISMATCH = "SUPERSESSION_VALID_TIME_MISMATCH"
     UNDERIVED_FIELD = "UNDERIVED_FIELD"
+    UNDERIVED_RECORD = "UNDERIVED_RECORD"
     UNKNOWN_ORIGIN = "UNKNOWN_ORIGIN"
     UNKNOWN_FAMILY = "UNKNOWN_FAMILY"
     UNKNOWN_GAP_KIND = "UNKNOWN_GAP_KIND"
@@ -378,6 +384,23 @@ class PopulationRecordTrace:
     derivations: tuple[Mapping[str, object], ...]
     sources: tuple[KnowledgeRetainedInput, ...]
     evidence: tuple[KnowledgeRetainedInput, ...]
+
+
+def _declares_slot(contract_view: object, type_name: str, slot: str) -> bool:
+    """Whether the bound contract declares ``slot`` on ``type_name``.
+
+    Which types may carry a slot is a contract question, so the reader asks
+    the compiled contract and nothing else. Without one it knows no such
+    declaration, and an unknown type or an ambiguous slot name is not a
+    declaration either.
+    """
+
+    if contract_view is None:
+        return False
+    try:
+        return contract_view.get_slot_constraint(type_name, slot) is not None
+    except (AttributeError, KeyError, ValueError):
+        return False
 
 
 def _object(
@@ -1280,6 +1303,7 @@ def compile_population_plan(
             )
 
     derived: set[tuple[str, tuple[str, ...]]] = set()
+    locators_by_record: dict[str, set[str]] = {}
     locator_sites: list[tuple[str, str, str]] = []
     derivations = _array(
         root["derivations"],
@@ -1346,6 +1370,7 @@ def compile_population_plan(
             (f"derivation {record_id}:{list(path)}", source_id, locator)
         )
         derived.add((record_id, path))
+        locators_by_record.setdefault(record_id, set()).add(locator)
 
     underived: list[tuple[str, tuple[str, ...]]] = []
     for record_id, record in by_id.items():
@@ -1367,6 +1392,80 @@ def compile_population_plan(
             + "; every properties key and both relation endpoints need a "
             "derivation, type and id do not",
         )
+
+    sourceless = sorted(set(by_id) - {record_id for record_id, _ in derived})
+    if sourceless:
+        raise _refuse(
+            PopulationPlanRefusalReason.UNDERIVED_RECORD,
+            "records carry no derivation: "
+            + ", ".join(sourceless)
+            + "; every record needs at least one derivation naming a source "
+            "it came from, and a record with no properties and no endpoints "
+            "is not exempt",
+        )
+
+    # Both remaining checks read `assertion_locator`, whose semantics are the
+    # source-assertion profile's. Under any other profile the slot means what
+    # the adopter says it means, so neither check applies. One gate, read once,
+    # rather than the same comparison written twice.
+    source_asserted = (
+        profile_id == SOURCE_ASSERTION_PROFILE.profile_id
+        and profile["sha256"] == SOURCE_ASSERTION_PROFILE.identity
+    )
+
+    if source_asserted:
+        undeclared_citations: list[tuple[str, str, tuple[str, ...]]] = []
+        for record_id in sorted(by_id):
+            properties = by_id[record_id]["properties"]
+            assert isinstance(properties, dict)
+            cited = properties.get(_LOCATOR_SLOT)
+            if not isinstance(cited, str) or not cited:
+                continue
+            own = tuple(sorted(locators_by_record.get(record_id, set())))
+            if cited not in own:
+                undeclared_citations.append((record_id, cited, own))
+        if undeclared_citations:
+            raise _refuse(
+                PopulationPlanRefusalReason.LOCATOR_NOT_DERIVED,
+                "records cite an assertion they are not derived from: "
+                + "; ".join(
+                    f"{record_id} cites {cited}, derived from {', '.join(own)}"
+                    for record_id, cited, own in undeclared_citations
+                )
+                + "; a record's assertion_locator must be the locator of one "
+                "of that record's own derivations",
+            )
+
+        unbound: list[tuple[str, str, tuple[str, ...]]] = []
+        for record_id in sorted(by_id):
+            record = by_id[record_id]
+            record_type = record.get("type")
+            if not isinstance(record_type, str) or not _declares_slot(
+                contract_view, record_type, _LOCATOR_SLOT
+            ):
+                continue
+            properties = record["properties"]
+            assert isinstance(properties, dict)
+            missing = tuple(
+                slot
+                for slot in _SOURCE_BINDING_SLOTS
+                if not isinstance(properties.get(slot), str) or not properties[slot]
+            )
+            if missing:
+                unbound.append((record_id, record_type, missing))
+        if unbound:
+            raise _refuse(
+                PopulationPlanRefusalReason.SOURCE_BINDING_REQUIRED,
+                "records do not bind the assertion behind them: "
+                + "; ".join(
+                    f"{record_id} of type {record_type} does not set "
+                    + ", ".join(missing)
+                    for record_id, record_type, missing in unbound
+                )
+                + "; under the source-assertion profile a record whose type "
+                "declares assertion_locator must set assertion_locator and "
+                "statement_sha256",
+            )
 
     gaps = _array(
         root["gaps"],

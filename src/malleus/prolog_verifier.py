@@ -11,6 +11,7 @@ from pathlib import Path
 from malleus.kg import KnowledgeGraph
 from malleus.logic import (
     GraphFactCompiler,
+    GraphProvenance,
     LogicContract,
     LogicError,
     LogicExecutionError,
@@ -52,7 +53,9 @@ class PrologVerifier:
             raise TypeError("PrologVerifier requires a LogicContract")
         contract.validate_integrity()
         self.contract = contract
-        self._compiler = GraphFactCompiler()
+        self._compiler = GraphFactCompiler(
+            fact_contract_version=contract.fact_contract_version
+        )
 
     @classmethod
     def from_contract(cls, path: str) -> "PrologVerifier":
@@ -62,13 +65,21 @@ class PrologVerifier:
         self,
         candidate: CandidateSubgraph,
         *context: KnowledgeGraph,
+        provenance: GraphProvenance | None = None,
     ) -> LogicCheckResult:
-        """Enumerate all declared violations over context plus the candidate."""
+        """Enumerate all declared violations over context plus the candidate.
+
+        ``provenance`` carries the derivations and retained source text the
+        caller has for this candidate change set and for the context it
+        passed. The contract's declared fact-contract version decides whether
+        a rule may read them; a contract at version 2 refuses them rather
+        than compiling a graph the rule cannot see behind.
+        """
         self.contract.validate_integrity()
         if not isinstance(candidate, CandidateSubgraph):
             raise TypeError("candidate must be a CandidateSubgraph")
         overlay = candidate.overlay()
-        compiled = self._compiler.compile(*context, overlay)
+        compiled = self._compiler.compile(*context, overlay, provenance=provenance)
         if compiled.ontology_hash != candidate.ontology_hash:
             raise LogicError("Compiled facts and candidate use different ontologies")
         # The contract is pinned and loaded from a document, so its hash is a
@@ -122,7 +133,7 @@ class PrologVerifier:
             raise LogicExecutionError("SWI-Prolog executable 'swipl' is not available")
         program = (
             ":- set_prolog_flag(character_escapes, true).\n"
-            + fact_declarations()
+            + fact_declarations(self.contract.fact_contract_version)
             + "\n"
             + "\n".join(f"{fact}." for fact in facts)
             + "\n"

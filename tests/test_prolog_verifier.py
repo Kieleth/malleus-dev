@@ -12,7 +12,15 @@ pytestmark = pytest.mark.skipif(
 )
 
 from malleus.kg import KnowledgeGraph
-from malleus.logic import LogicContract, LogicError, LogicExecutionError, Violation
+from malleus.logic import (
+    GraphProvenance,
+    LogicContract,
+    LogicError,
+    LogicExecutionError,
+    RecordDerivation,
+    RetainedSourceText,
+    Violation,
+)
 from malleus.ontology import OntologyRegistry
 from malleus.prolog_verifier import PrologVerifier
 from malleus.staging import ProposedOperation, StagingError, stage_subgraph
@@ -335,3 +343,168 @@ malleus_violation(_, _, _) :- fail.
         )
         result = PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(staged)
         assert result.outcome == "SATISFIED"
+
+
+_QUOTED_SCHEMA = """id: https://example.org/quoted
+name: quoted
+version: 1.0.0
+imports:
+  - malleus
+classes:
+  Measurement:
+    is_a: Entity
+    slots:
+      - analyte
+slots:
+  analyte:
+    range: string
+    required: true
+"""
+_VALUE_RULE = """malleus_rule('VALUE_SUPPORTED_BY_CITED_TEXT').
+malleus_violation(
+    'VALUE_SUPPORTED_BY_CITED_TEXT', 'VALUE_NOT_IN_CITED_TEXT', [RecordId]
+) :-
+    m_property(RecordId, Name, string, Value),
+    atomic_list_concat([properties, Name], '/', Path),
+    m_derivation(RecordId, Path, SourceId, Locator),
+    m_source_text(SourceId, Locator, Text),
+    \\+ sub_atom(Text, _, _, _, Value).
+"""
+
+
+def _quoted_registry(tmp_path):
+    schema = tmp_path / "quoted.yaml"
+    schema.write_text(_QUOTED_SCHEMA, encoding="utf-8")
+    return OntologyRegistry(
+        schema, import_map={"malleus": ROOT / "ontology" / "malleus.yaml"}
+    )
+
+
+def _quoted_verifier(tmp_path, registry):
+    rules_path = tmp_path / "rules.pl"
+    rules_path.write_text(_VALUE_RULE, encoding="utf-8")
+    contract = tmp_path / "logic.yaml"
+    contract.write_text(
+        f"""schema_version: "1"
+contract_id: quoted-contract
+contract_version: "1"
+ontology_hash: sha256:{registry.content_hash()}
+fact_contract_version: "3"
+ruleset_id: quoted-rules
+ruleset_version: "1"
+rules_file: rules.pl
+rule_ids:
+  - VALUE_SUPPORTED_BY_CITED_TEXT
+timeout_seconds: 10
+""",
+        encoding="utf-8",
+    )
+    return PrologVerifier(LogicContract.load(contract))
+
+
+def _quoted_provenance(text: str):
+    return GraphProvenance(
+        derivations=(
+            RecordDerivation(
+                record_id="measurement-1",
+                path=("properties", "analyte"),
+                source_id="source:reading",
+                locator="assertion:129",
+            ),
+        ),
+        source_texts=(
+            RetainedSourceText(
+                source_id="source:reading",
+                locator="assertion:129",
+                text=text,
+            ),
+        ),
+    )
+
+
+def test_a_rule_refuses_a_value_absent_from_the_text_the_record_cites(tmp_path):
+    """The extension's whole point: a rule reads what a value claims to come from.
+
+    fault-injection-01's gap 1 is that nothing on the admission path reads a
+    property value against the sentence behind it. The fact contract could not
+    express the comparison because no predicate carried a derivation, a
+    locator or retained text. This rule reads both and refuses.
+    """
+
+    registry = _quoted_registry(tmp_path)
+    verifier = _quoted_verifier(tmp_path, registry)
+    graph = KnowledgeGraph(registry)
+    staged = stage_subgraph(
+        graph,
+        [
+            ProposedOperation.entity(
+                "Measurement", "measurement-1", {"analyte": "FAULT-A-01-SYNTHETIC"}
+            )
+        ],
+    )
+
+    result = verifier.verify_candidate_subgraph(
+        staged,
+        provenance=_quoted_provenance("carbon dioxide was measured at 410 ppm"),
+    )
+
+    assert result.outcome == "VIOLATED"
+    assert result.fact_contract_version == "3"
+    assert result.violations == (
+        Violation(
+            "VALUE_SUPPORTED_BY_CITED_TEXT",
+            "VALUE_NOT_IN_CITED_TEXT",
+            ("measurement-1",),
+        ),
+    )
+
+
+def test_the_same_rule_admits_a_value_its_cited_text_contains(tmp_path):
+    """Positive control: an honest transcription still passes the same rule."""
+
+    registry = _quoted_registry(tmp_path)
+    verifier = _quoted_verifier(tmp_path, registry)
+    graph = KnowledgeGraph(registry)
+    staged = stage_subgraph(
+        graph,
+        [
+            ProposedOperation.entity(
+                "Measurement", "measurement-1", {"analyte": "carbon dioxide"}
+            )
+        ],
+    )
+
+    result = verifier.verify_candidate_subgraph(
+        staged,
+        provenance=_quoted_provenance("carbon dioxide was measured at 410 ppm"),
+    )
+
+    assert result.outcome == "SATISFIED"
+    assert result.violations == ()
+
+
+def test_a_version_two_contract_refuses_provenance_instead_of_dropping_it(
+    graph, verifier
+):
+    """The pinned Shop and shipment-policy contracts still compile unchanged.
+
+    They declare version 2, so they keep the ten-predicate vocabulary; passing
+    provenance to one of them is a caller error, not a silent omission.
+    """
+
+    assert verifier.contract.fact_contract_version == "2"
+    with pytest.raises(LogicError, match="fact contract version 2"):
+        verifier.verify_candidate_subgraph(
+            candidate(graph),
+            provenance=GraphProvenance(
+                derivations=(
+                    RecordDerivation(
+                        record_id="drug-1",
+                        path=("properties", "name"),
+                        source_id="source:list",
+                        locator="row:0:name",
+                    ),
+                ),
+                source_texts=(),
+            ),
+        )

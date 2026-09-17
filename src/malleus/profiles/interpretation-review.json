@@ -1,0 +1,55 @@
+{
+  "schema": "malleus.interpretation-review-profile/private-v0",
+  "grammars": {
+    "boundary": "malleus.interpretation-review-boundary/private-v0",
+    "review": "malleus.interpretation-review/private-v0",
+    "receipt": "malleus.review-coverage/private-v0"
+  },
+  "objects": {
+    "reference": {"id": "text", "sha256": "digest"},
+    "boundary": {
+      "schema": "text",
+      "id": "text",
+      "evidence": "refs+",
+      "ontology": "reference?",
+      "knowledge": "reference?",
+      "dependencies": "refs",
+      "interpretations": "refs+"
+    },
+    "review": {
+      "schema": "text",
+      "id": "text",
+      "boundary_identity": "digest",
+      "interpretation": "reference",
+      "outcome": "text",
+      "rationale": "text",
+      "supporting_references": "refs+",
+      "proposed_change": "reference?",
+      "open_issue": "text?",
+      "affected_uses": "refs"
+    }
+  },
+  "outcomes": {
+    "CORRECTION": {
+      "requires": ["proposed_change"],
+      "forbids": ["open_issue"],
+      "group": "pending_corrections"
+    },
+    "NO_CHANGE": {
+      "requires": [],
+      "forbids": ["proposed_change", "open_issue"],
+      "group": "unchanged"
+    },
+    "CONFLICT": {
+      "requires": ["open_issue"],
+      "forbids": ["proposed_change"],
+      "group": "conflicts"
+    },
+    "UNRESOLVED": {
+      "requires": ["open_issue"],
+      "forbids": ["proposed_change"],
+      "group": "unresolved"
+    }
+  },
+  "claim": "Coverage of one explicit interpretation set at one declared evidence boundary, not source truth, resolved knowledge, authenticated review, or discovered dependency completeness."
+}
