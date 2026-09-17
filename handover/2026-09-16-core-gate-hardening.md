@@ -1,12 +1,17 @@
-# Core gate hardening: four leaks closed, one governance gate not passed
+# Core gate hardening: four leaks closed, one ledger block sealed
 
 Four changes that fault-injection-01 and the Shop rule layer showed open are
-implemented in this isolated Core candidate, each RED before GREEN. The
-default test suite does **not** pass: 24 tests fail for one reason, the
-overseer ledger has no `DOCUMENT_REVISION` block for the five documents this
-work changes, and writing that block is authority this session was not given.
-The entry text is at the end of this file. Nothing else fails, and the Shop
-consumers reproduce every committed receipt byte for byte.
+implemented in this isolated Core candidate, each RED before GREEN. Before the
+ledger block was sealed the default suite failed 24 tests for one reason: the
+overseer ledger had no `DOCUMENT_REVISION` block for the five tracked
+documents this work changes. Luis authorized sealing it on 2026-09-16 through
+the Overlord session, so `OVR-000461` is appended here, `head.json` re-pinned
+and `status.md` re-rendered by Core's own sealer. Nothing else failed, and the
+Shop consumers reproduce every committed receipt byte for byte.
+
+A sealed document cannot record the consequences of its own digest. The
+entry's `entry_hash`, the re-pinned head and the post-seal suite counts are in
+the sealing commit and in the session report, not in this file.
 
 ## Change 1: a record must carry at least one derivation
 
@@ -427,7 +432,7 @@ was changed.
 - Cross-language parity of the extended fact contract is not established, and
   no second interpreter consumed it.
 
-## The governance gate this work does not pass
+## The governance gate, and the block that closes it
 
 `scripts/contract_compiler_ledger.py` records, per path, the latest
 `after_digest` any `DOCUMENT_REVISION` block declared, and `_validate_semantics`
@@ -559,3 +564,11 @@ ledger should start tracking them.
   the decision is its owner's.
 - The paper's populations, the release and replay candidates, and the live
   consumers were not re-run.
+
+## Sealing note, 2026-09-16
+
+The sealed entry in `entries/OVR-000461.json` differs from the draft block
+above in two mechanical ways the ledger schema required: `why` is shortened
+to the 1,200-character limit with the same substance, and the ten commit
+references carry full hashes. Sealed by the operator with the ledger tool's
+own hash, render and check.

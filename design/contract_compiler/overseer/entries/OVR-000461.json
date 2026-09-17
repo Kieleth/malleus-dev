@@ -1,0 +1,119 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000461",
+  "ledger": "overseer",
+  "sequence": 461,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:10b38112f30afc8dc92909780161fb8e5d805a1873c4dc4fbcdb3643dcf846d7",
+  "recorded_at": "2026-09-16T23:57:59Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-gate-hardening",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close four admission leaks the fault-injection control and the Shop rule layer recorded, and extend the Prolog fact contract to version 3 with provenance predicates.",
+  "why": "Luis decided the four changes. Every record needs at least one derivation (UNDERIVED_RECORD); a cited assertion_locator must be the locator of one of the record's own derivations (LOCATOR_NOT_DERIVED); assertion_locator and statement_sha256 are mandatory under the source-assertion profile for types that declare them (SOURCE_BINDING_REQUIRED); fact contract version 3 adds m_derivation/4 and m_source_text/3, version 2 stays supported by declaration, so no pinned consumer contract changes. Four RED commits preceded four GREEN commits: three behavioural DID NOT RAISE failures and one missing-symbol collection error. One Prolog rule test on a synthetic ontology refuses a value absent from its cited text and admits one present. The connected Shop chain reproduces its three committed receipts byte for byte and the honest content_rules population admits with zero refusals; its synthetic empty candidate is now refused by Core before its own rule and needs an owner decision, recorded in the handover. Structural admission and a fact vocabulary, not semantic verification; Core produces no provenance itself. Local isolated governance; an integrator reconciles against the shared head.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:dfffc66f7e343f42b7803699924d0a6e47cde24ceb8f3dc3a1fec0b7f5d8c46d",
+        "after_digest": "sha256:f0f24ed896c1433c1d56fceaa00ada291a7acc44b840f5283b0a328eba5841ba"
+      },
+      {
+        "path": "docs/ARCHITECTURE.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e6a8336cd2165c1507ed493839871fe7de58bc9474020039657d1429aac7a763",
+        "after_digest": "sha256:0981f7989651aa6c6cf8cd5da720c35c6e7f10c43ad717b7228fd5ae8865f37b"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/document.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:0d3922344de2245310e6255e4c7e703d36be8669f44a755a1f0af4c6b642885b",
+        "after_digest": "sha256:0f5463bca8578ec9e7db3bb7d892bc5f4195e6e084411e556b375c9ce09b649d"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/population.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:5a501a7c416b8414dbfcbe4d83f761ea0c148030b0b80f4b50c4047e650b747a",
+        "after_digest": "sha256:07ffd475176dac25bde26ddad740288918d82e93697b907f91b5b60d6397bec5"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_population_plan.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:b541f0aa6e8fb406faacc0e1b45507b7076524dc74694ea83191075e4ef27e3d",
+        "after_digest": "sha256:4285af76878476b1700427e4aff8bbed8a7e9af7ab0633fee9f70fe4f9fae756"
+      },
+      {
+        "path": "handover/2026-09-16-core-gate-hardening.md",
+        "change": "CREATED",
+        "after_digest": "sha256:1d634eff5c9be14fd0d55c4c112cf5b4f8b6d6fb72ab7ec2603b7ea76f033976"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "8271a71a79d522c6acd7d7475612771871fc744c"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "ff3e99a492be3384e23832ca93580de3aefb3833"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "2f4ffabd16bc2a42eb295d04b6d5a2cd2115b52e"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "3f05226f0f0ffa8a24414f1580e6f738ef4057b6"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "8b47d7cd3d4782c948a9908717d3968fc4c2e5cb"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "a9a00b58d243e234d2f7bd6fe4a8909af2e097d5"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "d6bb53f1645c7cb293a0de53fffe50aaa631b18b"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "30c738f178e4cc183d1300a1a87f13df25537b5b"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "22145d31aa3a89dd3a7d4f0240fa4457af6b2276"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "35942b6010481705538e95b9c1572fb6a8c6777e"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:75680a3517071c1cf314290d4fa2b83a7174ecb14883c8596e948947f1f0d93c"
+}
