@@ -121,6 +121,7 @@ Every refusal below leaves the ledger byte-identical; each test asserts that.
 | check moved, not declared | `INCOMPATIBLE_CONTRACT` | `domain revision changes check contract <id> without declaring its re-binding` |
 | declared, nothing needs it | `INCOMPATIBLE_CONTRACT` | `revision declares a re-binding of <id> that no policy requires` |
 | re-pinned elsewhere | `INCOMPATIBLE_CONTRACT` | `check contract <id> does not rebind ontology_hash to the target ontology` |
+| re-pin with no ontology change | `INCOMPATIBLE_CONTRACT` | `check contract <id> does not pin the current ontology in exactly one changed field` |
 | anything the field walk misses | `INCOMPATIBLE_CONTRACT` | `domain revision changes the normative protocol profile beyond the declared re-binding` |
 | descriptor does not hash right | `IDENTITY_MISMATCH` | `declared check contract <id> does not hash to the identity the <current\|target> policy requires` |
 | re-binding under the superseded policy | `MALFORMED_REVISION` | `unknown contract revision kind: REBIND_CHECK_CONTRACT` |
@@ -190,8 +191,10 @@ ontology's content hash, which is the shape that created the dead end.
   with `test_contract_revision.py` and `test_small_shop_contract_revision.py`,
   24.
 - `2bbfad891aa2ad9d0d059eaa07469a665b44917f` adds
-  `test_a_profile_change_the_field_walk_cannot_see_still_refuses`, so the module
-  collects 15.
+  `test_a_profile_change_the_field_walk_cannot_see_still_refuses`, and
+  `158d5d8c` adds `test_a_re_pin_without_an_ontology_change_cannot_be_expressed`
+  after correcting a claim these documents made from reading rather than from
+  running. The module collects 16.
 
 The positive path, `test_a_revision_carries_the_re_pinned_check_contract_and_
 later_checks_run`, admits one `SupplierOrderState` after the revision using the
@@ -408,7 +411,14 @@ draft validates as a complete entry. It is not a hash of anything.
   > verdict still refuse.
 
 - The census was not re-run and nothing under
-  `private/shop-progressive-01/` was written. It was read only.
+  `private/shop-progressive-01/` was written. It was read only. Each census
+  workspace pins its own Core through its runner's runtime export, so it will
+  not see this branch until that export is rebuilt. Note also that
+  `tools/census.py` declares no re-binding: against new Core its
+  `test_a_repinned_rule_layer_refuses_and_writes_nothing` still passes, and
+  correctly so. Rerunning the census as a capability check means teaching
+  `census.revise` to pass `check_contract_descriptors` built from the loaded
+  `LogicContract`'s ten semantic fields.
 - The D0 runner's fixed retained rule ID was not changed; it is adopter code.
 - Nothing outside this worktree was modified, nothing was pushed, no branch was
   reset and nothing was stashed or deleted.
