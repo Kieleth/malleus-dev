@@ -263,15 +263,24 @@ Every failure is accounted for, counted rather than sampled.
   `tests/test_contract_compiler_integration.py` and three in `tests/test_docs.py`,
   the same three Sphinx builders that call the same validation. Sealing the
   block below removes all 24.
-- **3 are pre-existing on `main`** and this candidate did not cause them:
+- **3 are frozen-evidence failures this candidate did not cause**:
   `tests/contract_compiler/pareto/test_fresh_shop_import.py::test_fresh_import_replays_and_traces_after_complete_shop`
-  and the two in
-  `research/.../small_shop/public_population/test_run.py`, each
+  and the two in `research/.../small_shop/public_population/test_run.py`, each
   `AssertionError: Output bytes differ: <group>/evidence.json` from
-  `evidence_assertions.py:47`. They were reproduced by running those exact
-  tests in this tree against `d867c3ab`'s `src/` on the import path: 3 failed,
-  1 passed, with identical messages. Whoever owns that frozen evidence has a
-  successor to record; it is not this candidate's to overwrite.
+  `evidence_assertions.py:47`. The controlled comparison: the same three tests
+  run in this same worktree, once with this candidate's `src/` on the import
+  path and once with `d867c3ab`'s own `src/` extracted beside it, give **3
+  failed, 12 passed** both times with identical messages. Core is not the
+  variable.
+
+  One thing about them is unexplained and is stated rather than smoothed over.
+  A `git archive` of `d867c3ab` unpacked as its own tree passes them. So the
+  discrepancy depends on something about this checkout rather than on Core, and
+  what that is was not found. The produced `fresh_import/evidence.json` differs
+  from the committed one in exactly three values, `ledger_head`,
+  `ledger_sha256` and `receipt_identity`, so the produced history really does
+  differ; it is not a formatting or timestamp artifact. That belongs to whoever
+  owns the frozen Shop evidence, and this candidate did not overwrite it.
 
 The three skips are the two `tests/test_ontology.py` LinkML-CLI resolver skips
 and the absent private paper-program doctrine, the same three the previous
