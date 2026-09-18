@@ -336,8 +336,12 @@ moved: a different protocol machine program, a different set of bound policies,
 a changed policy identifier, changed outcome verdicts, changed precedence, an
 added or removed required check, a check whose identity moved without a declared
 re-binding, or a declared re-binding no policy requires. Changed rule bytes show
-up as a second differing field and refuse with that field named. A revision that
-re-pins without changing the ontology still refuses as adding no semantic fact.
+up as a second differing field and refuse with that field named. A re-pin with
+no ontology change cannot be expressed: the one field that may move must move
+from the current ontology's content hash to the target's, so when the ontology
+stands still no field can differ, and a check contract that bumps its own
+version instead is refused as not pinning the current ontology in exactly one
+changed field.
 
 After the revision, later change sets bind the new profile and earlier change
 sets and their recorded check receipts keep the identities they were accepted

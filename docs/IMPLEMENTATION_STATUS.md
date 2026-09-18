@@ -156,9 +156,10 @@ names the policy it was compiled under and Core runs that exact one, which is
 how a ledger written earlier keeps replaying. **This is still not policy
 migration.** Core executes no rule and produces no check outcome; it compares
 declared identities. Nothing here admits a new check, retires one, changes what
-a verdict means, or migrates a policy whose rules actually changed. A revision
-that only re-pins, with no ontology change, still refuses as adding no semantic
-fact.
+a verdict means, or migrates a policy whose rules actually changed. A re-pin
+with no ontology change cannot be expressed at all: the one field that may move
+must move from the current ontology's content hash to the target's, and when
+those are the same value no field can differ.
 
 An explicitly selected private-v1 protocol machine can now bind a retained
 history profile to a pure replacement-type rule. `REQUIRE_TYPES_IN_ROLE` uses

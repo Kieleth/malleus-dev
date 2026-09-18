@@ -767,6 +767,64 @@ def test_a_profile_change_the_field_walk_cannot_see_still_refuses(
     assert history.path.read_bytes() == before
 
 
+def test_a_re_pin_without_an_ontology_change_cannot_be_expressed(
+    tmp_path: Path,
+) -> None:
+    """Only the ontology binding may move, so it must have somewhere to move to.
+
+    A check contract that bumps its own version while the ontology stands still
+    is not a re-binding; it is a different check, and a revision cannot smuggle
+    one in.
+    """
+
+    history, base, partial, _, logic, _ = _history(tmp_path)
+    bumped = tmp_path / "rules-bumped"
+    bumped.mkdir()
+    (bumped / "rules.pl").write_bytes(RULES)
+    (bumped / "logic.yaml").write_text(
+        (tmp_path / "rules-base" / "logic.yaml")
+        .read_text(encoding="utf-8")
+        .replace("contract_version: '1'", "contract_version: '2'"),
+        encoding="utf-8",
+    )
+    contract = LogicContract.load(bumped / "logic.yaml")
+    assert contract.ontology_hash == logic.ontology_hash
+    replay = history.replay()
+    target_partial = compiler.compose_partial_effective_contract(
+        validated_fact_set_sha256=base.artifact.validated_fact_set_sha256,
+        normative_profile=_profile(_policy(((CHECK_ID, contract.contract_hash),))),
+    )
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.ContractRevisionRefusal) as refusal:
+        compiler.compile_contract_revision(
+            revision_id="revision:shop:re-pin-only",
+            base_ledger_head=replay.ledger_head,
+            base_ledger_event_count=replay.ledger_event_count,
+            base_acceptance_head=replay.acceptance_head,
+            base_materialization_head=replay.materialization_head,
+            base_accepted_state_digest=replay.graph.state_digest(),
+            current_validated_contract_bytes=replay.contract_view.artifact_bytes,
+            current_partial_contract_bytes=partial.canonical_bytes,
+            target_validated_contract_bytes=base.artifact.artifact_bytes,
+            target_partial_contract_bytes=target_partial.canonical_bytes,
+            reason="re-pin with no ontology change",
+            issued_at=TRANSACTION_TIME,
+            check_contract_descriptors={
+                CHECK_ID: (_descriptor(logic), _descriptor(contract))
+            },
+        )
+
+    assert refusal.value.reason is (
+        compiler.ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT
+    )
+    assert refusal.value.detail == (
+        f"check contract {CHECK_ID} does not pin the current ontology in exactly "
+        "one changed field"
+    )
+    assert history.path.read_bytes() == before
+
+
 def test_the_revision_policy_declares_the_new_change_kind() -> None:
     assert compiler.CONTRACT_REVISION_POLICY.change_kinds == (
         "ADD_CLASS",
