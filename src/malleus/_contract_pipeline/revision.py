@@ -444,8 +444,15 @@ def _changes(value: object) -> tuple[ContractRevisionChange, ...]:
 
 
 def _descriptor(value: object, label: str) -> tuple[bytes, dict[str, object]]:
-    """A check contract's exact field mapping, canonical and content-addressed."""
+    """A check contract's exact field mapping, canonical and content-addressed.
 
+    A caller may hand any mapping; the wire always decodes to a ``dict``. Both
+    canonicalize to the same bytes, which is the only thing the identity
+    depends on.
+    """
+
+    if isinstance(value, Mapping) and not isinstance(value, dict):
+        value = dict(value)
     mapping = _object(value, label)
     if not mapping or not all(isinstance(key, str) and key for key in mapping):
         raise ValueError(f"{label} must name at least one field")
