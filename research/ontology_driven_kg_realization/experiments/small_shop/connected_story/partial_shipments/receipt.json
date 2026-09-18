@@ -1,5 +1,5 @@
 {
-  "baseline_history_sha256": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06",
+  "baseline_history_sha256": "sha256:32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333",
   "baseline_prefix_preserved": true,
   "changes": 37,
   "checkpoints": {
@@ -33,12 +33,12 @@
   "graph_sha256": "sha256:57e3839c5836214ebee14c1271937c7c134ad51fc905c2530b316f0bca815a20",
   "historical_records": 144,
   "history_bytes": 2306379,
-  "history_head": "sha256:82765267a566d309128ea36d463d2cdb371e673b917a750babf5b076b8938255",
-  "history_sha256": "sha256:b3250849cf048d3c492ce74263e980e5265ee7962a56ebada3ab793e54cbfa53",
+  "history_head": "sha256:0b042ba3597bbed98ac402862e837ae918f5bdc457681dad27d954e178462e46",
+  "history_sha256": "sha256:15c7c1eff28ff59496fd937de19181f649e9c8c9c4c1e895cf56252f434bd204",
   "id": "connected-shop-synthetic-shipments-v1",
   "kind": "SYNTHETIC_CONFORMANCE_EXTENSION",
   "protocol_events": 216,
-  "replay_receipt": "sha256:69b21f6c01457d672c386d57e87efd0e9e36d03ad7ab6df66810d0f0378d8b8c",
+  "replay_receipt": "sha256:0d47daffa9b70599dcd65aa3611e10e2f970984dd73d426d14cc9da7a08e9364",
   "report_sha256": "sha256:df3ca88c4cc9e5221b98f4a40f7b1903c055b8e4dce6d5f8eecb9e2a4eb9e8c2",
   "sources": {
     "order": "sha256:37ec83df6379abf49afd3e9e35bc90973a4f0337313fd24c02184be3b2baf9b2",

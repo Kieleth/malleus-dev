@@ -7,11 +7,11 @@
   "graph_sha256": "sha256:e5f36981355616d27a3346ee228f6314b6614881162057261e5bfec242f6e5dc",
   "historical_records": 133,
   "history_bytes": 1646996,
-  "history_head": "sha256:2a3030dac01555bfe606a1456cb3f7e745171a3b847bf060f54f880bab7f7197",
-  "history_sha256": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06",
+  "history_head": "sha256:72ffab712ae6f68c49bae143cc2633315ef9f8d4152cf6c543c62986481d86cf",
+  "history_sha256": "sha256:32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333",
   "id": "shop-warehouse-extension-v1",
   "protocol_events": 193,
-  "replay_receipt": "sha256:d625f6483b530869cb1abc1ad58123784bc5c0f29e6ddc14ab5624d12ea0c8a8",
-  "report_sha256": "sha256:52f2141be794b9d9b1a5db06013cc50cffd7bb282227bb34f6ff713286638cc3",
+  "replay_receipt": "sha256:454c9cdbde7d21be06f2e49232104bc53e1bb0dffe02c5bc715ed20cfe25848d",
+  "report_sha256": "sha256:f41d9ae1d87ea21f23d8a75c680095d19b179cd67c9d4e576b0e888816b0940e",
   "warehouse_source_sha256": "sha256:136607d935df30f3beb090d73e791da906348110023edf5bd557eba60676f62b"
 }

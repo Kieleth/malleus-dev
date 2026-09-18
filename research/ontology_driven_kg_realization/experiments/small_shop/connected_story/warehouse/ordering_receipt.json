@@ -2,10 +2,10 @@
   "binding": {
     "event_count": 193,
     "graph_sha256": "sha256:e5f36981355616d27a3346ee228f6314b6614881162057261e5bfec242f6e5dc",
-    "history_head": "sha256:2a3030dac01555bfe606a1456cb3f7e745171a3b847bf060f54f880bab7f7197",
+    "history_head": "sha256:72ffab712ae6f68c49bae143cc2633315ef9f8d4152cf6c543c62986481d86cf",
     "implementation_sha256": "sha256:f2bf7aa922679dd6c82ed3bf5d11308652b0c963a784ddb919334515141f17c7",
     "object_reader_sha256": "sha256:81049667ee9a28c0440a47a75accf34e3c9e5238c25440011730a6f41e736bc5",
-    "replay_receipt": "sha256:d625f6483b530869cb1abc1ad58123784bc5c0f29e6ddc14ab5624d12ea0c8a8",
+    "replay_receipt": "sha256:454c9cdbde7d21be06f2e49232104bc53e1bb0dffe02c5bc715ed20cfe25848d",
     "sources": {
       "source:connected-shop:figure-14": "sha256:136607d935df30f3beb090d73e791da906348110023edf5bd557eba60676f62b",
       "source:connected-shop:table-1": "sha256:37fab6c52bcc05e5fca08be67ef779fa27bfa8c960ccdee0f341e70166c8907c"
@@ -32,5 +32,5 @@
     }
   },
   "id": "shop-warehouse-ordering-v1",
-  "report_sha256": "sha256:e1fe03b8de758292f36b4c81612a8a95432b8b735d711bf5849849a94db7f047"
+  "report_sha256": "sha256:1694c1b708b9daadc3ac966a09ac54fe99649b18391f5340fc91eeb810034518"
 }

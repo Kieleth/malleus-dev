@@ -1,7 +1,7 @@
 {
   "id": "connected-shop-synthetic-shipments-v1",
   "kind": "SYNTHETIC_CONFORMANCE_EXTENSION",
-  "baseline_history_sha256": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06",
+  "baseline_history_sha256": "sha256:32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333",
   "baseline_history_bytes": 1646996,
   "sources": {
     "order": {
