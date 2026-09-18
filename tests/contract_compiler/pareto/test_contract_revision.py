@@ -241,11 +241,13 @@ def test_revision_policy_keeps_import_in_grammar_but_refuses_it() -> None:
         "ADD_ENUM_VALUE",
         "ADD_IMPORT",
         "ADD_SLOT",
+        "REBIND_CHECK_CONTRACT",
     )
     assert policy.admitted_change_kinds == (
         "ADD_CLASS",
         "ADD_ENUM_VALUE",
         "ADD_SLOT",
+        "REBIND_CHECK_CONTRACT",
     )
     assert policy.refused_change_kinds == ("ADD_IMPORT",)
 

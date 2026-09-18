@@ -101,12 +101,16 @@ from malleus._contract_pipeline.population import (
 )
 from malleus._contract_pipeline.revision import (
     CONTRACT_REVISION_POLICY,
+    SUPPORTED_CONTRACT_REVISION_POLICIES,
+    CheckContractRebinding,
     ContractRevision,
     ContractRevisionChange,
     ContractRevisionPolicy,
+    ContractRevisionRebinding,
     ContractRevisionRefusal,
     ContractRevisionRefusalReason,
     compile_contract_revision,
+    contract_revision_policy,
 )
 from malleus._contract_source import (
     CollaboratorRefusal,
@@ -638,10 +642,13 @@ __all__ = (
     "BindingRefusal",
     "BindingRefusalReason",
     "CONTRACT_REVISION_POLICY",
+    "SUPPORTED_CONTRACT_REVISION_POLICIES",
+    "CheckContractRebinding",
     "ContractView",
     "ContractRevision",
     "ContractRevisionChange",
     "ContractRevisionPolicy",
+    "ContractRevisionRebinding",
     "ContractRevisionRefusal",
     "ContractRevisionRefusalReason",
     "DomainHistoryProfile",
@@ -703,6 +710,7 @@ __all__ = (
     "admit_structural_change",
     "compile_linkml_contract",
     "compile_contract_revision",
+    "contract_revision_policy",
     "compile_population_plan",
     "compose_normative_profile",
     "compose_change_set",

@@ -249,7 +249,7 @@ def _admit_new_class(history, partial, policy, occurrence: str):
     change = history.compose_change_set(
         change_set_id=f"change:rebind:{occurrence}",
         source_record_ids=("source:supplier-order-history",),
-        evidence_record_ids=(),
+        evidence_record_ids=("artifact:ret010-mapping",),
         operations=(
             compiler.KnowledgeOperation(
                 ordinal=0,
@@ -410,8 +410,16 @@ def test_a_revision_carries_the_re_pinned_check_contract_and_later_checks_run(
         for item in rebinding.checks
     ) == ((CHECK_ID, logic.contract_hash, repinned.contract_hash),)
     assert rebinding.checks[0].rebound_field == "ontology_hash"
-    assert rebinding.checks[0].unchanged_fields_digest == (
-        rebinding.checks[0].unchanged_fields_digest
+    assert rebinding.checks[0].from_check_contract == _descriptor(logic)
+    assert rebinding.checks[0].to_check_contract == _descriptor(repinned)
+    assert rebinding.checks[0].unchanged_fields_digest == _digest(
+        _canonical(
+            {
+                key: value
+                for key, value in _descriptor(logic).items()
+                if key != "ontology_hash"
+            }
+        )
     )
     assert (
         "REBIND_CHECK_CONTRACT",
@@ -482,10 +490,10 @@ def test_the_earlier_check_receipts_keep_the_identity_they_were_recorded_under(
         if record.record_type == "CheckRecord"
     )
     assert after == before
-    assert {record.data["check_contract_identity"] for record in after} == {
+    assert {record.fields["check_contract_identity"] for record in after} == {
         logic.contract_hash
     }
-    assert {record.data["outcome"] for record in after} == {"SATISFIED"}
+    assert {record.fields["outcome"] for record in after} == {"SATISFIED"}
     assert reopened.required_checks[POLICY_REF] == (
         (CHECK_ID, repinned.contract_hash),
     )
@@ -706,6 +714,61 @@ def test_a_declared_rebinding_no_policy_asks_for_refuses(tmp_path: Path) -> None
     )
     assert refusal.value.detail == (
         f"revision declares a re-binding of {CHECK_ID} that no policy requires"
+    )
+    assert history.path.read_bytes() == before
+
+
+def test_a_profile_change_the_field_walk_cannot_see_still_refuses(
+    tmp_path: Path,
+) -> None:
+    """Undoing the declared re-binding must reproduce the current profile.
+
+    A policy names its identifier under a key of the adopter's choosing. Two
+    policies can therefore carry the same identifier under different keys, so
+    the field-by-field comparison sees nothing while the bytes differ. The
+    closing byte comparison is what refuses it; the field walk exists to name
+    what moved, not to be the authority.
+    """
+
+    history, _, partial, _, logic, _ = _history(tmp_path)
+    target, repinned = _target(tmp_path)
+    renamed = compiler.PolicyProgram.from_bytes(
+        _canonical(
+            {
+                "grammar": "malleus.policy-program/private-v0",
+                "outcome_verdicts": {
+                    "SATISFIED": "ACCEPT",
+                    "UNKNOWN": "DEFER",
+                    "VIOLATED": "REJECT",
+                },
+                "name": "shop-content-rule-policy",
+                "precedence": ["REJECT", "DEFER", "ACCEPT"],
+                "required_checks": [
+                    {
+                        "check_contract_id": CHECK_ID,
+                        "check_contract_identity": repinned.contract_hash,
+                    }
+                ],
+            }
+        )
+    )
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.ContractRevisionRefusal) as refusal:
+        _revise(
+            history,
+            target,
+            partial,
+            _profile(renamed),
+            descriptors={CHECK_ID: (_descriptor(logic), _descriptor(repinned))},
+        )
+
+    assert refusal.value.reason is (
+        compiler.ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT
+    )
+    assert refusal.value.detail == (
+        "domain revision changes the normative protocol profile beyond the "
+        "declared re-binding"
     )
     assert history.path.read_bytes() == before
 

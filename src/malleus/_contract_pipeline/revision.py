@@ -8,7 +8,12 @@ from hashlib import sha256
 import json
 from typing import Mapping
 
-from malleus._contract_pipeline.machine import PartialEffectiveContract
+from malleus._contract_pipeline.machine import (
+    NormativeAdmissionProfile,
+    PartialEffectiveContract,
+    PolicyProgram,
+    compose_normative_profile,
+)
 from malleus._contract_pipeline.model import FACT_NAMESPACE, RDF_TYPE, canonical_json
 from malleus._contract_pipeline.view import (
     ContractView,
@@ -19,7 +24,8 @@ from malleus.migration import MigrationError, MigrationReceipt, TOTAL
 
 _POLICY_GRAMMAR = "malleus.contract-revision-policy/private-v0"
 _REVISION_GRAMMAR = "malleus.contract-revision/private-v0"
-_KINDS = ("ADD_CLASS", "ADD_ENUM_VALUE", "ADD_IMPORT", "ADD_SLOT")
+_REBIND = "REBIND_CHECK_CONTRACT"
+_KINDS = ("ADD_CLASS", "ADD_ENUM_VALUE", "ADD_IMPORT", "ADD_SLOT", _REBIND)
 _CLASS = FACT_NAMESPACE + "Class"
 _SLOT = FACT_NAMESPACE + "Slot"
 _SLOT_USE = FACT_NAMESPACE + "SlotUse"
@@ -164,26 +170,112 @@ class ContractRevisionPolicy:
             ) from error
 
 
-_POLICY_DECISIONS = (
+_SUPERSEDED_POLICY_DECISIONS = (
     ("ADD_CLASS", "ADMIT"),
     ("ADD_ENUM_VALUE", "ADMIT"),
     ("ADD_IMPORT", "REFUSE"),
     ("ADD_SLOT", "ADMIT"),
 )
-_POLICY_BYTES = canonical_json(
-    {
-        "change_kinds": [
-            {"kind": kind, "outcome": outcome} for kind, outcome in _POLICY_DECISIONS
-        ],
-        "grammar": _POLICY_GRAMMAR,
-    }
+_POLICY_DECISIONS = _SUPERSEDED_POLICY_DECISIONS + ((_REBIND, "ADMIT"),)
+
+
+def _revision_policy(
+    decisions: tuple[tuple[str, str], ...],
+) -> ContractRevisionPolicy:
+    source = canonical_json(
+        {
+            "change_kinds": [
+                {"kind": kind, "outcome": outcome} for kind, outcome in decisions
+            ],
+            "grammar": _POLICY_GRAMMAR,
+        }
+    )
+    return ContractRevisionPolicy(
+        source, _digest(source), _POLICY_GRAMMAR, decisions
+    )
+
+
+CONTRACT_REVISION_POLICY = _revision_policy(_POLICY_DECISIONS)
+#: Declaring a new change kind moves the revision policy's own digest, and a
+#: recorded revision names the exact policy it was compiled under. Both are
+#: therefore executable: a revision declares one, and Core runs that one for it.
+#: Nothing selects a policy implicitly; new revisions bind
+#: ``CONTRACT_REVISION_POLICY``.
+SUPPORTED_CONTRACT_REVISION_POLICIES = (
+    _revision_policy(_SUPERSEDED_POLICY_DECISIONS),
+    CONTRACT_REVISION_POLICY,
 )
-CONTRACT_REVISION_POLICY = ContractRevisionPolicy(
-    _POLICY_BYTES,
-    _digest(_POLICY_BYTES),
-    _POLICY_GRAMMAR,
-    _POLICY_DECISIONS,
-)
+
+
+def contract_revision_policy(identity: str) -> ContractRevisionPolicy:
+    """The declared revision policy with this identity, or a typed refusal."""
+
+    for policy in SUPPORTED_CONTRACT_REVISION_POLICIES:
+        if policy.identity == identity:
+            return policy
+    raise _refuse(
+        ContractRevisionRefusalReason.POLICY_REFUSAL,
+        "contract revision does not use a supported revision policy",
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class CheckContractRebinding:
+    """One required check contract re-pinned to the revision's target ontology.
+
+    ``from_check_contract`` and ``to_check_contract`` are the exact field
+    mappings whose canonical digests are the two identities the current and
+    target policies require. ``rebound_field`` is the single field that moved,
+    and it moved from the current ontology's content hash to the target's.
+    Everything else is identical, which is what ``unchanged_fields_digest``
+    records in one value: the check's rule bytes, its rule IDs, its timeout and
+    its versions cannot have moved.
+    """
+
+    check_contract_id: str
+    from_identity: str
+    to_identity: str
+    from_check_contract_bytes: bytes
+    to_check_contract_bytes: bytes
+    rebound_field: str
+    unchanged_fields_digest: str
+
+    @property
+    def from_check_contract(self) -> dict[str, object]:
+        return json.loads(self.from_check_contract_bytes)
+
+    @property
+    def to_check_contract(self) -> dict[str, object]:
+        return json.loads(self.to_check_contract_bytes)
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "check_contract_id": self.check_contract_id,
+            "from_check_contract": self.from_check_contract,
+            "from_check_contract_identity": self.from_identity,
+            "rebound_field": self.rebound_field,
+            "to_check_contract": self.to_check_contract,
+            "to_check_contract_identity": self.to_identity,
+            "unchanged_fields_digest": self.unchanged_fields_digest,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class ContractRevisionRebinding:
+    """The complete declared re-binding this revision carries."""
+
+    from_normative_profile_identity: str
+    to_normative_profile_identity: str
+    checks: tuple[CheckContractRebinding, ...]
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "checks": [check.as_dict() for check in self.checks],
+            "from_normative_profile_identity": (
+                self.from_normative_profile_identity
+            ),
+            "to_normative_profile_identity": self.to_normative_profile_identity,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -202,6 +294,7 @@ class ContractRevision:
     policy_identity: str
     changes: tuple[ContractRevisionChange, ...]
     migration_receipt: MigrationReceipt
+    check_rebinding: ContractRevisionRebinding | None = None
 
     @property
     def from_validated_fact_set_sha256(self) -> str:
@@ -223,7 +316,7 @@ class ContractRevision:
     def from_bytes(cls, source: bytes) -> ContractRevision:
         data = _decode(source)
         try:
-            if set(data) != {
+            required = {
                 "base",
                 "changes",
                 "from_contract_identity",
@@ -232,7 +325,11 @@ class ContractRevision:
                 "policy_identity",
                 "revision_id",
                 "target",
-            }:
+            }
+            # A revision recorded before check re-binding existed carries no
+            # such field at all, so the optional key is the whole compatibility
+            # story for an older ledger.
+            if set(data) - {"check_rebinding"} != required:
                 raise ValueError("contract revision fields are not closed")
             if data["grammar"] != _REVISION_GRAMMAR:
                 raise ValueError("contract revision grammar is unsupported")
@@ -276,6 +373,23 @@ class ContractRevision:
             policy_identity = _required_digest(
                 data["policy_identity"], "revision policy identity"
             )
+            rebinding = (
+                _rebinding(data["check_rebinding"])
+                if "check_rebinding" in data
+                else None
+            )
+            declared = {
+                change.subject for change in changes if change.kind == _REBIND
+            }
+            carried = (
+                {check.check_contract_id for check in rebinding.checks}
+                if rebinding is not None
+                else set()
+            )
+            if declared != carried:
+                raise ValueError(
+                    "contract revision re-binding changes and declaration disagree"
+                )
             return cls(
                 source,
                 _digest(source),
@@ -297,6 +411,7 @@ class ContractRevision:
                 policy_identity,
                 changes,
                 receipt,
+                rebinding,
             )
         except ContractRevisionRefusal:
             raise
@@ -332,6 +447,340 @@ def _changes(value: object) -> tuple[ContractRevisionChange, ...]:
     if changes != ordered:
         raise ValueError("contract revision changes must be sorted and unique")
     return tuple(changes)
+
+
+def _descriptor(value: object, label: str) -> tuple[bytes, dict[str, object]]:
+    """A check contract's exact field mapping, canonical and content-addressed."""
+
+    mapping = _object(value, label)
+    if not mapping or not all(isinstance(key, str) and key for key in mapping):
+        raise ValueError(f"{label} must name at least one field")
+    return canonical_json(mapping), mapping
+
+
+def _rebound_field(
+    check_contract_id: str,
+    before: Mapping[str, object],
+    after: Mapping[str, object],
+    *,
+    current_ontology_hash: str,
+    target_ontology_hash: str,
+) -> str:
+    """The single field that may move, and the proof that nothing else did."""
+
+    if set(before) != set(after):
+        moved = ", ".join(sorted(set(before) ^ set(after)))
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            f"check contract {check_contract_id} adds or removes fields: {moved}",
+            change_kind=_REBIND,
+        )
+    differing = sorted(key for key in before if before[key] != after[key])
+    rebound = [key for key in differing if before[key] == current_ontology_hash]
+    if len(rebound) != 1:
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            f"check contract {check_contract_id} does not pin the current ontology "
+            "in exactly one changed field",
+            change_kind=_REBIND,
+        )
+    field = rebound[0]
+    if after[field] != target_ontology_hash:
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            f"check contract {check_contract_id} does not rebind {field} to the "
+            "target ontology",
+            change_kind=_REBIND,
+        )
+    other = [key for key in differing if key != field]
+    if other:
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            f"check contract {check_contract_id} changes fields beyond its "
+            f"ontology binding: {', '.join(other)}",
+            change_kind=_REBIND,
+        )
+    return field
+
+
+def _unchanged_digest(mapping: Mapping[str, object], field: str) -> str:
+    return _digest(
+        canonical_json({key: value for key, value in mapping.items() if key != field})
+    )
+
+
+def _rebinding(value: object) -> ContractRevisionRebinding:
+    """Read one recorded re-binding back, recomputing every declared identity."""
+
+    data = _object(value, "contract revision re-binding")
+    if set(data) != {
+        "checks",
+        "from_normative_profile_identity",
+        "to_normative_profile_identity",
+    }:
+        raise ValueError("contract revision re-binding is not closed")
+    raw_checks = data["checks"]
+    if not isinstance(raw_checks, list) or not raw_checks:
+        raise ValueError("contract revision re-binding declares no check")
+    checks: list[CheckContractRebinding] = []
+    for raw in raw_checks:
+        item = _object(raw, "contract revision re-bound check")
+        if set(item) != {
+            "check_contract_id",
+            "from_check_contract",
+            "from_check_contract_identity",
+            "rebound_field",
+            "to_check_contract",
+            "to_check_contract_identity",
+            "unchanged_fields_digest",
+        }:
+            raise ValueError("contract revision re-bound check is not closed")
+        before_bytes, before = _descriptor(
+            item["from_check_contract"], "re-bound check contract"
+        )
+        after_bytes, after = _descriptor(
+            item["to_check_contract"], "re-bound check contract"
+        )
+        from_identity = _required_digest(
+            item["from_check_contract_identity"], "re-bound check identity"
+        )
+        to_identity = _required_digest(
+            item["to_check_contract_identity"], "re-bound check identity"
+        )
+        field = _required_text(item["rebound_field"], "re-bound check field")
+        if _digest(before_bytes) != from_identity or _digest(after_bytes) != to_identity:
+            raise ValueError("re-bound check contract does not hash to its identity")
+        if (
+            field not in before
+            or before[field] == after[field]
+            or any(
+                before[key] != after[key] for key in before if key != field
+            )
+            or set(before) != set(after)
+        ):
+            raise ValueError("re-bound check contract changed more than one field")
+        if item["unchanged_fields_digest"] != _unchanged_digest(before, field):
+            raise ValueError("re-bound check contract unchanged-field proof is wrong")
+        checks.append(
+            CheckContractRebinding(
+                _required_text(item["check_contract_id"], "re-bound check ID"),
+                from_identity,
+                to_identity,
+                before_bytes,
+                after_bytes,
+                field,
+                item["unchanged_fields_digest"],
+            )
+        )
+    ordered = sorted(checks, key=lambda check: check.check_contract_id)
+    if checks != ordered or len({check.check_contract_id for check in checks}) != len(
+        checks
+    ):
+        raise ValueError("re-bound checks must be sorted and unique")
+    return ContractRevisionRebinding(
+        _required_digest(
+            data["from_normative_profile_identity"], "source profile identity"
+        ),
+        _required_digest(
+            data["to_normative_profile_identity"], "target profile identity"
+        ),
+        tuple(checks),
+    )
+
+
+def _moved_checks(
+    current: NormativeAdmissionProfile, target: NormativeAdmissionProfile
+) -> dict[str, tuple[str, str]]:
+    """Every required check whose identity moved, once the rest is proven equal.
+
+    Anything else the profile changed refuses here, named, before a revision
+    exists. This is the whole of "the policy is otherwise unchanged".
+    """
+
+    if (
+        current.protocol_machine_program.identity
+        != target.protocol_machine_program.identity
+    ):
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            "domain revision changes the protocol machine program",
+        )
+    before_policies = dict(current.policy_programs)
+    after_policies = dict(target.policy_programs)
+    if set(before_policies) != set(after_policies):
+        moved = ", ".join(sorted(set(before_policies) ^ set(after_policies)))
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            f"domain revision changes the bound policy programs: {moved}",
+        )
+    answer: dict[str, tuple[str, str]] = {}
+    for reference in sorted(before_policies):
+        before, after = before_policies[reference], after_policies[reference]
+        name = before.identifier
+        if name != after.identifier:
+            raise _refuse(
+                ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                f"domain revision changes the identifier of policy {name}",
+            )
+        if dict(before.outcome_verdicts) != dict(after.outcome_verdicts):
+            raise _refuse(
+                ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                f"domain revision changes the outcome verdicts of policy {name}",
+            )
+        if before.precedence != after.precedence:
+            raise _refuse(
+                ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                f"domain revision changes the verdict precedence of policy {name}",
+            )
+        required_before = dict(before.required_checks)
+        required_after = dict(after.required_checks)
+        if set(required_before) != set(required_after):
+            moved = ", ".join(sorted(set(required_before) ^ set(required_after)))
+            raise _refuse(
+                ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                f"domain revision changes the required checks of policy {name}: "
+                f"{moved}",
+            )
+        for check_id in sorted(required_before):
+            pair = (required_before[check_id], required_after[check_id])
+            if pair[0] == pair[1]:
+                continue
+            if answer.get(check_id, pair) != pair:
+                raise _refuse(
+                    ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                    f"domain revision rebinds check contract {check_id} to two "
+                    "different identities",
+                    change_kind=_REBIND,
+                )
+            answer[check_id] = pair
+    return answer
+
+
+def _restored_profile(
+    target: NormativeAdmissionProfile, moved: Mapping[str, tuple[str, str]]
+) -> NormativeAdmissionProfile:
+    """The target profile with the re-bound check identities put back.
+
+    Undoing exactly the declared re-binding must reproduce the current profile
+    byte for byte. That comparison, not the field-by-field walk above, is what
+    establishes that nothing else moved; the walk exists to name what did.
+    """
+
+    policies: dict[str, PolicyProgram] = {}
+    for reference, program in target.policy_programs:
+        data = json.loads(program.canonical_bytes)
+        for check in data["required_checks"]:
+            values = dict(check)
+            names = [value for value in values.values() if not _is_digest(value)]
+            for key, value in values.items():
+                if (
+                    len(names) == 1
+                    and names[0] in moved
+                    and value == moved[names[0]][1]
+                ):
+                    check[key] = moved[names[0]][0]
+        policies[reference] = PolicyProgram.from_bytes(canonical_json(data))
+    return compose_normative_profile(
+        protocol_machine_program=target.protocol_machine_program,
+        policy_programs=policies,
+        capability_refs=(),
+    )
+
+
+def _compile_rebinding(
+    current: PartialEffectiveContract,
+    target: PartialEffectiveContract,
+    descriptors: Mapping[str, tuple[Mapping[str, object], Mapping[str, object]]],
+    *,
+    current_ontology_hash: str,
+    target_ontology_hash: str,
+) -> ContractRevisionRebinding | None:
+    """Derive the declared re-binding, or refuse naming what else moved."""
+
+    if not isinstance(descriptors, Mapping):
+        raise ValueError("check contract descriptors must be a mapping")
+    if current.normative_profile == target.normative_profile:
+        if descriptors:
+            name = sorted(descriptors)[0]
+            raise _refuse(
+                ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                f"revision declares a re-binding of {name} that no policy requires",
+                change_kind=_REBIND,
+            )
+        return None
+    if not descriptors:
+        raise ValueError("domain revision changes the normative protocol profile")
+    moved = _moved_checks(current.normative_profile, target.normative_profile)
+    for name in sorted(set(descriptors) - set(moved)):
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            f"revision declares a re-binding of {name} that no policy requires",
+            change_kind=_REBIND,
+        )
+    for name in sorted(set(moved) - set(descriptors)):
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            f"domain revision changes check contract {name} without declaring its "
+            "re-binding",
+            change_kind=_REBIND,
+        )
+    if (
+        _restored_profile(target.normative_profile, moved).identity
+        != current.normative_profile.identity
+    ):
+        raise _refuse(
+            ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+            "domain revision changes the normative protocol profile beyond the "
+            "declared re-binding",
+        )
+    checks: list[CheckContractRebinding] = []
+    for name in sorted(moved):
+        supplied = descriptors[name]
+        if not isinstance(supplied, tuple) or len(supplied) != 2:
+            raise ValueError(
+                "a check contract descriptor is the pair before the revision and "
+                "after it"
+            )
+        before_bytes, before = _descriptor(supplied[0], "check contract descriptor")
+        after_bytes, after = _descriptor(supplied[1], "check contract descriptor")
+        from_identity, to_identity = moved[name]
+        if _digest(before_bytes) != from_identity:
+            raise _refuse(
+                ContractRevisionRefusalReason.IDENTITY_MISMATCH,
+                f"declared check contract {name} does not hash to the identity the "
+                "current policy requires",
+                change_kind=_REBIND,
+            )
+        if _digest(after_bytes) != to_identity:
+            raise _refuse(
+                ContractRevisionRefusalReason.IDENTITY_MISMATCH,
+                f"declared check contract {name} does not hash to the identity the "
+                "target policy requires",
+                change_kind=_REBIND,
+            )
+        field = _rebound_field(
+            name,
+            before,
+            after,
+            current_ontology_hash=current_ontology_hash,
+            target_ontology_hash=target_ontology_hash,
+        )
+        checks.append(
+            CheckContractRebinding(
+                name,
+                from_identity,
+                to_identity,
+                before_bytes,
+                after_bytes,
+                field,
+                _unchanged_digest(before, field),
+            )
+        )
+    return ContractRevisionRebinding(
+        current.normative_profile.identity,
+        target.normative_profile.identity,
+        tuple(checks),
+    )
 
 
 def _artifact(source: bytes) -> tuple[ContractView, dict[str, object]]:
@@ -494,8 +943,20 @@ def compile_contract_revision(
     reason: str,
     issued_at: str,
     previous_migration_receipt: str | None = None,
+    check_contract_descriptors: Mapping[
+        str, tuple[Mapping[str, object], Mapping[str, object]]
+    ]
+    | None = None,
+    policy: ContractRevisionPolicy = CONTRACT_REVISION_POLICY,
 ) -> ContractRevision:
-    """Compile one additive domain-contract revision from exact artifacts."""
+    """Compile one additive domain-contract revision from exact artifacts.
+
+    ``check_contract_descriptors`` maps a required check contract's ID to the
+    pair of exact field mappings before and after the revision. Supplying one
+    declares that the revision re-pins that check to the target ontology, and
+    Core admits it only when nothing but the ontology binding inside it moved.
+    Every other change to the selected policy still refuses.
+    """
 
     try:
         current_view, current_payload = _artifact(current_validated_contract_bytes)
@@ -513,13 +974,31 @@ def compile_contract_revision(
             != target_partial.validated_fact_set_sha256
         ):
             raise ValueError("validated and partial contract artifacts disagree")
-        if current_partial.normative_profile != target_partial.normative_profile:
-            raise ValueError("domain revision changes the normative protocol profile")
+        rebinding = _compile_rebinding(
+            current_partial,
+            target_partial,
+            check_contract_descriptors or {},
+            current_ontology_hash="sha256:" + current_view.content_hash(),
+            target_ontology_hash="sha256:" + target_view.content_hash(),
+        )
         changes = _derive_changes(
             current_validated_contract_bytes, target_validated_contract_bytes
         )
+        if rebinding is not None:
+            changes = tuple(
+                sorted(
+                    changes
+                    + tuple(
+                        ContractRevisionChange(
+                            _REBIND, check.check_contract_id, check.to_identity
+                        )
+                        for check in rebinding.checks
+                    ),
+                    key=lambda item: (item.kind, item.subject, item.value or ""),
+                )
+            )
         for change in changes:
-            if CONTRACT_REVISION_POLICY.outcome(change.kind) != "ADMIT":
+            if policy.outcome(change.kind) != "ADMIT":
                 raise _refuse(
                     ContractRevisionRefusalReason.POLICY_REFUSAL,
                     f"contract revision policy refuses {change.kind}",
@@ -538,9 +1017,13 @@ def compile_contract_revision(
         )
         if type(base_ledger_event_count) is not int or base_ledger_event_count < 0:
             raise ValueError("base ledger event count must be nonnegative")
+        payload: dict[str, object] = {}
+        if rebinding is not None:
+            payload["check_rebinding"] = rebinding.as_dict()
         return ContractRevision.from_bytes(
             canonical_json(
                 {
+                    **payload,
                     "base": {
                         "acceptance_head": _required_head(
                             base_acceptance_head, "base acceptance head"
@@ -560,7 +1043,7 @@ def compile_contract_revision(
                     "from_contract_identity": current_partial.identity,
                     "grammar": _REVISION_GRAMMAR,
                     "migration_receipt": receipt.as_dict(),
-                    "policy_identity": CONTRACT_REVISION_POLICY.identity,
+                    "policy_identity": policy.identity,
                     "revision_id": _required_text(revision_id, "revision ID"),
                     "target": {
                         "partial_contract": json.loads(target_partial.canonical_bytes),
@@ -582,10 +1065,14 @@ def compile_contract_revision(
 
 __all__ = (
     "CONTRACT_REVISION_POLICY",
+    "SUPPORTED_CONTRACT_REVISION_POLICIES",
+    "CheckContractRebinding",
     "ContractRevision",
     "ContractRevisionChange",
     "ContractRevisionPolicy",
+    "ContractRevisionRebinding",
     "ContractRevisionRefusal",
     "ContractRevisionRefusalReason",
     "compile_contract_revision",
+    "contract_revision_policy",
 )
