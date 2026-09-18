@@ -471,10 +471,11 @@ Two judgments the sealer owns, not this session:
 ```
 
 The `entry_hash` above is a placeholder of the right shape, present only so the
-draft validates as a complete entry. It is not a hash of anything. The commit
-that finalizes this file is absent from the reference list for the same reason
-its `after_digest` is a placeholder: a file cannot name the commit that writes
-it. The sealer adds it alongside the sealing commit.
+draft validates as a complete entry. It is not a hash of anything. The documentation
+commits that finalize this file are absent from the reference list for the same
+reason its `after_digest` is a placeholder: a file cannot name the commits that
+write it. `git log --reverse d867c3ab..HEAD` on the branch lists every commit;
+the sealer adds the missing ones alongside the sealing commit.
 
 ## What was not done
 
