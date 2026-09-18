@@ -26,11 +26,11 @@ from malleus._contract_pipeline.view import (
     load_validated_contract_artifact,
 )
 from malleus._contract_pipeline.revision import (
-    CONTRACT_REVISION_POLICY,
     ContractRevision,
     ContractRevisionRefusal,
     ContractRevisionRefusalReason,
     compile_contract_revision,
+    contract_revision_policy,
 )
 from malleus._contract_pipeline.protocol_runtime import (
     PROGRAM_EVENT,
@@ -772,6 +772,24 @@ class KnowledgeHistoryReplay:
             raise KeyError(f"unknown retained record: {record_id}") from error
 
     @property
+    def required_checks(self) -> Mapping[str, tuple[tuple[str, str], ...]]:
+        """The check contracts the current selection requires, by policy reference.
+
+        A runner reads this instead of a retained ID it chose once: after a
+        revision carried a re-binding, the identity here is the re-pinned one
+        and the contract the runner must load is the one that hashes to it.
+        """
+
+        return MappingProxyType(
+            {
+                reference: policy.required_checks
+                for reference, policy in (
+                    self.partial_contract.normative_profile.policy_programs
+                )
+            }
+        )
+
+    @property
     def record_history(self) -> Mapping[str, KnowledgeRecordHistory]:
         return MappingProxyType(dict(self._record_history))
 
@@ -1470,6 +1488,10 @@ class KnowledgeChangeHistory:
         target_partial_contract_bytes: bytes,
         reason: str,
         issued_at: str,
+        check_contract_descriptors: Mapping[
+            str, tuple[Mapping[str, object], Mapping[str, object]]
+        ]
+        | None = None,
     ) -> ContractRevision:
         """Compile one additive revision against the exact current history."""
 
@@ -1480,6 +1502,7 @@ class KnowledgeChangeHistory:
             else None
         )
         return compile_contract_revision(
+            check_contract_descriptors=check_contract_descriptors,
             revision_id=revision_id,
             base_ledger_head=replay.ledger_head,
             base_ledger_event_count=replay.ledger_event_count,
@@ -1819,11 +1842,11 @@ class KnowledgeChangeHistory:
                         ContractRevisionRefusalReason.STALE_BASE,
                         "contract revision does not start at the active contract",
                     )
-                if revision.policy_identity != CONTRACT_REVISION_POLICY.identity:
-                    raise ContractRevisionRefusal(
-                        ContractRevisionRefusalReason.POLICY_REFUSAL,
-                        "contract revision does not use the active revision policy",
-                    )
+                # The revision names the policy it was compiled under and Core
+                # executes that exact one, so a revision recorded before a
+                # change kind existed keeps replaying under the policy it
+                # declared.
+                revision_policy = contract_revision_policy(revision.policy_identity)
                 previous_receipt = (
                     revisions[-1].migration_receipt.digest if revisions else None
                 )
@@ -1841,6 +1864,18 @@ class KnowledgeChangeHistory:
                         "contract revision cannot cross a pending knowledge change",
                     )
                 rebuilt = compile_contract_revision(
+                    check_contract_descriptors=(
+                        {
+                            check.check_contract_id: (
+                                check.from_check_contract,
+                                check.to_check_contract,
+                            )
+                            for check in revision.check_rebinding.checks
+                        }
+                        if revision.check_rebinding is not None
+                        else None
+                    ),
+                    policy=revision_policy,
                     revision_id=revision.revision_id,
                     base_ledger_head=revision.base_ledger_head,
                     base_ledger_event_count=revision.base_ledger_event_count,

@@ -281,6 +281,15 @@ loads the old contract, reaches that event, validates the accepted graph under
 the new contract, and continues. Later knowledge changes name the new contract
 identity. Earlier records and change sets remain in the same ledger.
 
+One thing is declared rather than derived, because it cannot be read off the
+ontology: passing `check_contract_descriptors` re-pins the selected policy's
+required check contracts to the target ontology, recorded as
+`REBIND_CHECK_CONTRACT`. That is not a trusted label either. Core recomputes
+both declared check contract identities against what the current and target
+policies require, allows exactly one field inside them to move, and requires it
+to move from the current ontology's content hash to the target's. Changed rule
+bytes, an added or removed check, or a changed verdict refuse.
+
 This is an additive revision path, not a general migration engine. It does not
 rewrite old records, change the protocol machine, admit new imports, or decide
 how an adopter should model domain history.
