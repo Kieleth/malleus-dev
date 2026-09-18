@@ -405,3 +405,67 @@ ROADMAP.md is added to the documents as MODIFIED (recorded ffe6c96e… at OVR-00
 `entries/OVR-000463.json` was sealed by the operator with the ledger tool's own
 hash, render and check from the draft block above, with the sealing moment
 and this file's digest filled in.
+
+## OVR-000465 draft, the re-binding row
+
+One row added to CAPABILITIES.md for the capability sealed at OVR-000464; commit 140967b3.
+
+```json
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "ledger": "overseer",
+  "entry_type": "DOCUMENT_REVISION",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-capability-declaration",
+    "type": "DOCUMENT"
+  },
+  "entry_id": "OVR-000465",
+  "sequence": 465,
+  "previous_entry_hash": "sha256:11c298ac75902c458692e899f12399a4589e951a2585cad2dc375419c3b8f68f",
+  "recorded_at": "<sealing moment, UTC>",
+  "summary": "Declare the check-contract re-binding capability (OVR-000464) in the skills' capability declaration.",
+  "why": "Luis's rule of 2026-09-17: consumers use a Core capability in full before declaring a gap, and the declaration in .claude/skills/malleus-dev/references/CAPABILITIES.md is where they read what exists. OVR-000464 landed check-contract re-binding across an additive ontology revision (REBIND_CHECK_CONTRACT, check_contract_descriptors on compose_contract_revision, KnowledgeHistoryReplay.required_checks, SUPPORTED_CONTRACT_REVISION_POLICIES) after the declaration was sealed at OVR-000463, so the declaration lacked the one capability the Shop's staged run needs next. This entry records the single added row; the guard test tests/test_capability_declaration.py passes (11) and no other file moves. Paper ledger E-0462.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:dcc483be27ca5d563d9b722eb727d36b3d12a852fc675a1d3c11cc61a5820cfb",
+        "after_digest": "sha256:6b58a63c45cd80bba1855b50a68dccb3ff1d960d619e15722f4d4afc2678b49d"
+      },
+      {
+        "path": "handover/2026-09-17-core-capability-declaration.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:57335b3737adfeb350ed81f1cbd792b8b9d02e1b67fa92701113b187122af4e8",
+        "after_digest": "<digest of this file once final>"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "140967b3875ec7494e992163b4ff2cdd2715990a"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}
+```
+
+## Sealing note for OVR-000465, 2026-09-18
+
+`entries/OVR-000465.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment
+and this file's digest filled in.
