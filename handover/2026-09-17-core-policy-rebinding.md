@@ -244,13 +244,54 @@ reference.
   was not re-run; it is read-only evidence here.
 - Cross-language parity of the extended revision grammar is not established.
 
+## Core's default test suite
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. python -m pytest -q -ra -p no:cacheprovider
+```
+
+At `bda2e408` with `docs/index.md` already updated: **27 failed, 3486 passed,
+3 skipped** in 13:19. Collection is 3,516, which is 3,500 at `d867c3ab` plus
+this candidate's 16 and nothing else.
+
+Every failure is accounted for, counted rather than sampled.
+
+- **24 are the governance gate**, and all 24 reach the same first mismatch:
+  `LedgerValidationError: OVR-000453: latest document digest mismatch for
+  docs/contract_compiler/index.md`. That string appears exactly 24 times in the
+  run. They are seven in `tests/test_contract_compiler_ledger.py`, fourteen in
+  `tests/test_contract_compiler_integration.py` and three in `tests/test_docs.py`,
+  the same three Sphinx builders that call the same validation. Sealing the
+  block below removes all 24.
+- **3 are pre-existing on `main`** and this candidate did not cause them:
+  `tests/contract_compiler/pareto/test_fresh_shop_import.py::test_fresh_import_replays_and_traces_after_complete_shop`
+  and the two in
+  `research/.../small_shop/public_population/test_run.py`, each
+  `AssertionError: Output bytes differ: <group>/evidence.json` from
+  `evidence_assertions.py:47`. They were reproduced by running those exact
+  tests in this tree against `d867c3ab`'s `src/` on the import path: 3 failed,
+  1 passed, with identical messages. Whoever owns that frozen evidence has a
+  successor to record; it is not this candidate's to overwrite.
+
+The three skips are the two `tests/test_ontology.py` LinkML-CLI resolver skips
+and the absent private paper-program doctrine, the same three the previous
+Core report names.
+
+## Ruff
+
+`ruff 0.11.9`, the pinned version. `ruff check` and `ruff format --check` both
+pass on every changed Python file. All three files had zero format drift at
+`d867c3ab` and have zero now, so this candidate introduced none. Two findings
+its own first draft introduced, an unused `ROOT` import and an unused
+`before_receipts` local, were removed in `2bbfad89` rather than left.
+
 ## The governance gate, and the block that closes it
 
 `scripts/contract_compiler_ledger.py` records, per path, the latest
 `after_digest` any `DOCUMENT_REVISION` block declared, and `_validate_semantics`
-then requires every one of those paths to hash to that value today. Seven of the
+then requires every one of those paths to hash to that value today. Eight of the
 files this work changes are among them, so `check` fails, every caller of
-`load_ledger` fails, and the tests that call it fail with them. The fix is one
+`load_ledger` fails, and the 24 tests that call it fail with them. The fix is one
 appended block, `head.json` re-pinned and `status.md` re-rendered. That is an
 overseer act; this session was not given that authority and did not take it.
 
@@ -275,6 +316,10 @@ Two judgments the sealer owns, not this session:
   head only, which is `OVR-000462` at
   `sha256:4f9d572b…0966b`. An integrator must reconcile against the
   then-current shared head rather than copy a conflicting number.
+- `tests/contract_compiler/pareto/test_check_contract_rebinding.py` is listed
+  `CREATED` because the file is genuinely new. No prior block records it, so
+  `check` does not require it today; listing it starts the ledger tracking it.
+  Leaving it out is also defensible and is the sealer's call.
 
 ```json
 {
@@ -310,13 +355,19 @@ Two judgments the sealer owns, not this session:
         "path": "docs/IMPLEMENTATION_STATUS.md",
         "change": "MODIFIED",
         "before_digest": "sha256:0487eb3fa4814afbba9672e8ea939cb2e747ac7156d6f1f8f3337f5b87f63bca",
-        "after_digest": "sha256:e83229f865d4638b48b53a66df99c58f47c73a949173b15d2d0bc4ae2b8572cf"
+        "after_digest": "sha256:e697253ee05eb4ed9bf96b62802195bd7f260b132a877eb571207a8bbbd7e680"
       },
       {
         "path": "docs/contract_compiler/index.md",
         "change": "MODIFIED",
         "before_digest": "sha256:2d56b96be1367412881409d0461b7406f21414f5cd50954b408163d40573c9ec",
-        "after_digest": "sha256:2f65e055163b50dfcb120ca8e8967384ee4f6a6e7d6d8d7dbc9518b09dd424f7"
+        "after_digest": "sha256:e74485f203b8f0859f50b9e097740afadf0aa049ce51e73f31a74041417f2232"
+      },
+      {
+        "path": "docs/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:7457c4a72503cffd945c68c53c503644e3b3630e4ff733ef7112dd43a4d9fc19",
+        "after_digest": "sha256:c87b021e2e1a28e54bf7e7bf086a7598577aa3c218d9574f65b6f52d2556ddd5"
       },
       {
         "path": "handover/2026-09-17-core-policy-rebinding.md",
@@ -333,7 +384,7 @@ Two judgments the sealer owns, not this session:
         "path": "src/malleus/_contract_pipeline/revision.py",
         "change": "MODIFIED",
         "before_digest": "sha256:3e2148df0b3e69ba78eaa1e6f185bebfc5aa51d0cd3bbfbf88606213c90214c2",
-        "after_digest": "sha256:03cb4458de7b0a0f631c0121c0f000b97f17854655d294f88606b21f9e0907cb"
+        "after_digest": "sha256:e3bc83a7800ef0bb7157af0941cfd0484dfce5a743db24476650ada11f6d5332"
       },
       {
         "path": "src/malleus/compiler.py",
@@ -344,7 +395,7 @@ Two judgments the sealer owns, not this session:
       {
         "path": "tests/contract_compiler/pareto/test_check_contract_rebinding.py",
         "change": "CREATED",
-        "after_digest": "sha256:61fb6569c57e88b00eb9957114cf74a53060eb987c588044bace460254886c13"
+        "after_digest": "sha256:b124b9c161b57a3e933c37e555784892f3d45dabc3baca913501976e54894503"
       },
       {
         "path": "tests/contract_compiler/pareto/test_contract_revision.py",
@@ -379,6 +430,21 @@ Two judgments the sealer owns, not this session:
       "relation": "EVIDENCES",
       "type": "COMMIT",
       "target": "2bbfad891aa2ad9d0d059eaa07469a665b44917f"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "158d5d8c331d8a2d78c2c62676b6cd4454d1a54d"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "bda2e408b2bad859603d6ca4a3d132a18e74ef3a"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "8bb13ea6a4d201d0f14d72908e776b99b7746eb6"
     },
     {
       "relation": "AFFECTS",
