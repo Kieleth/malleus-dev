@@ -350,7 +350,7 @@ Notes the sealer owns, not this session:
     {
       "relation": "EVIDENCES",
       "type": "COMMIT",
-      "target": "d867c3abf31420607da02070b45d0852d3f81227"
+      "target": "990a24aec7a2b54d6fc16ae2ebd9faf730249e83"
     },
     {
       "relation": "AFFECTS",
@@ -399,3 +399,9 @@ Both are in the declaration as `not implemented`, and neither is in
 ## Sealer's addition, 2026-09-17
 
 ROADMAP.md is added to the documents as MODIFIED (recorded ffe6c96e… at OVR-000365, on disk 891c9529…). The change is section E, "From the paper front, 2026-09-17", written by the paper Overlord on Luis's ruling (paper ledger E-0439): three after-publication items, research-level content rules bubbling up to Core, a formula-ontology-KG submodule, and the per-slot source relation. It is recorded here so that one entry covers every pin this checkout breaks.
+
+## Sealing note for OVR-000463, 2026-09-18
+
+`entries/OVR-000463.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment
+and this file's digest filled in.

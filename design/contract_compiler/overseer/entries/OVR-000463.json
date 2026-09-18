@@ -1,0 +1,142 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000463",
+  "ledger": "overseer",
+  "sequence": 463,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:4f9d572b9c1d775919bca52e273ccaca8c11821a3859152dea62e0169490966b",
+  "recorded_at": "2026-09-18T05:41:33Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-capability-declaration",
+    "type": "DOCUMENT"
+  },
+  "summary": "Declare Core's shipped capability surface to the skills, make the gap-kind and review-boundary-identity vocabularies public, and record the review-coverage checker the status document omitted.",
+  "why": "Luis: \"That core has capabilities we're not using in shop is just plainly wrong, we work on core so that we can use them.\" Three workarounds on 2026-09-17 each hid a shipped capability: a staged run planned a TYPE_ABSENT gap while additive contract revision already runs on a live Shop history; a launched producer searched for the six gap kinds, which lived in a private frozenset; three archived reviews were refused because a review's boundary_identity had no named route. CAPABILITIES.md declares 45 capabilities with entry points and status, referenced from the three skills with the rule: meet a limitation by using the capability in full before declaring a gap. tests/test_capability_declaration.py holds it honest against malleus.IMPLEMENTATION_STATUS IDs and the status headings: RED 10, GREEN 11. POPULATION_GAP_KINDS and review_boundary_identity expose existing vocabulary, and both refusals now name their permitted values or route. No admitted value, refusal reason, profile, ontology or pin changes. The status document gains the review-coverage checker omitted since 25f94cbf and loses a helper name no module defines. Local governance only; reconcile against the shared head.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:f0f24ed896c1433c1d56fceaa00ada291a7acc44b840f5283b0a328eba5841ba",
+        "after_digest": "sha256:5b050ba92c9849d9377b51a82c01e67ed2549a6e3ec9b4f9967a8113c573a1d4"
+      },
+      {
+        "path": ".claude/skills/malleus-dev/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:09cd92fec20f5c365fff5a8b537b31e1642c9043ba424fe26e099c3433d5ea96",
+        "after_digest": "sha256:67197a1c5d1ad9b2f1c7c66fa200ba8afe07d825eea77cd10f4fbb3ac3a987b2"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e52e4edf2dd7de4cd8584e0ba049dd2379963360e68d6a3fa96272950b6bf73e",
+        "after_digest": "sha256:afae9a902ee11b94b1049a6f5fa21e95f75a3e49c1016f27228097552b0c71d8"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:0487eb3fa4814afbba9672e8ea939cb2e747ac7156d6f1f8f3337f5b87f63bca",
+        "after_digest": "sha256:0998e707949bfb4f2482ad957619b2f1bb16bc2c7f985adbc6bf5399b5d2ec70"
+      },
+      {
+        "path": "pyproject.toml",
+        "change": "MODIFIED",
+        "before_digest": "sha256:385d8a816e5931c3014d1b5e6c281b4ae73260a03b37b1a97b11becd9c0d91d1",
+        "after_digest": "sha256:6d78a1a76564bb487b26f9bfe97e60b0b6706a002d1056e97dabbaf5037a997f"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/document.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:0f5463bca8578ec9e7db3bb7d892bc5f4195e6e084411e556b375c9ce09b649d",
+        "after_digest": "sha256:02159c937eaddeafeb3d4e20594b569a81f10e53c630f6b0957e6574df227f6d"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/population.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:16d73c588fc29412044c5cebe9c6f43f5733f221c73133a759c1bf57ae769411",
+        "after_digest": "sha256:65813f59732134a7dda63ebd3e207509874278ded5594a8d62ade1cf4c5ea128"
+      },
+      {
+        "path": "src/malleus/acquisition.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:427dc5ed1b55068c2221d5dcf11c4d8b6afd691599c046e291b9b2934df7a7cb",
+        "after_digest": "sha256:9d2c4b68c98e398fc0ce6367d0e7c7834e14e9b9cf012d5336b25e153040e127"
+      },
+      {
+        "path": "src/malleus/compiler.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:93c7b6ea6cc117da2c63322c1ed79fd5299d6a94767fc61bf52ac1b8ea53da63",
+        "after_digest": "sha256:59087977064c36050a6c9189804e5798e3a3bea5eb00d3ad53dfee0ca382f095"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:7421dd426a6bab3e81951330fceacf66319635946148840689b2c45aba2e9003",
+        "after_digest": "sha256:26d1f654cc4e461619a7b31ff24060d22ef6393c9e19868e4ad5b0d95d9c8a79"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_population_plan.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:4819623b8d72d4836b3e24a759e1ee1fa06926c07b35aad7b4ad7ebce53e7877",
+        "after_digest": "sha256:1a663a98ccc5a93269e408faf6d69e4f55c3985e74609f3067f5c60a62e0a310"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_review_coverage.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c78ffc2d8da3bdad02d0f1db8f0075db1190a7c073fbed92f5d6a0f32d87754a",
+        "after_digest": "sha256:87d18028d83dd7388d6e2000bdba6360ccc994239e4687421a41dceef300ba88"
+      },
+      {
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md",
+        "change": "CREATED",
+        "after_digest": "sha256:dcc483be27ca5d563d9b722eb727d36b3d12a852fc675a1d3c11cc61a5820cfb"
+      },
+      {
+        "path": ".claude/skills/malleus-paper/SKILL.md",
+        "change": "CREATED",
+        "after_digest": "sha256:5c43070ad7c170df78013cc7932fa8e410d3683c58d18e1c57dd1f31d49b2b5a"
+      },
+      {
+        "path": ".claude/skills/malleus-paper/agents/openai.yaml",
+        "change": "CREATED",
+        "after_digest": "sha256:e53501b7b24764b2e85bb8950eed1728a3f8eed45380926c33a208f38f15b209"
+      },
+      {
+        "path": "tests/test_capability_declaration.py",
+        "change": "CREATED",
+        "after_digest": "sha256:20a8f71dc89a695455ae31f01418660f3de38470325025032e4cbb2a86efc8b4"
+      },
+      {
+        "path": "handover/2026-09-17-core-capability-declaration.md",
+        "change": "CREATED",
+        "after_digest": "sha256:57335b3737adfeb350ed81f1cbd792b8b9d02e1b67fa92701113b187122af4e8"
+      },
+      {
+        "path": "ROADMAP.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:ffe6c96e01f4aeee55ab8bc6bad8ffe76142747feceafa3a4bb38b729aa3fa17",
+        "after_digest": "sha256:891c9529a77a0cd999c55e42f63ab9f3ce39fa46c46be63024dd6f7af01733aa"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "990a24aec7a2b54d6fc16ae2ebd9faf730249e83"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:044e08c8a68fda40bb3c75fb7b248ff256cbae403c42f535f3d61e14caaf8e59"
+}
