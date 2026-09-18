@@ -191,6 +191,42 @@ public registry and graph APIs. The playbook adds no compiler command, grammar,
 or runtime capability. It documents how a fresh adopter uses the public
 boundaries already listed above.
 
+The six permitted typed gap kinds are now public as
+`malleus.compiler.POPULATION_GAP_KINDS`, a sorted tuple over the same closed
+set the plan compiler and the document adapter refuse against. Both
+`UNKNOWN_GAP_KIND` refusals name every permitted kind in their detail. This
+exposes an existing vocabulary and changes no admitted value: a plan or capture
+accepted before is accepted now, and a producer no longer has to read private
+code or search for the set.
+
+## Declared interpretation-review coverage
+
+The optional, experimental `malleus.acquisition` module checks that every
+interpretation declared at an evidence boundary carries a current review.
+`check_review_coverage(boundary_bytes=..., review_bytes=...)` returns an
+immutable `ReviewCoverage` receipt reporting missing, stale, unresolved and
+conflicting reviews separately; `require_complete()` refuses an incomplete
+declared boundary. `REVIEW_COVERAGE_PROFILE` publishes the closed input shapes
+and outcome rules as canonical bytes, with `REVIEW_COVERAGE_PROFILE_IDENTITY`
+identifying them. `review_boundary_identity(boundary_bytes=...)` returns the
+normalized boundary identity every review must carry in `boundary_identity`;
+it is the digest of the normalized boundary, never the boundary's own `id`,
+and the refusal for a wrong value names this accessor. That function is a named
+route to an identity the checker already computed, not a new computation.
+
+This checker reads no source, fetches no locator, authenticates no reviewer,
+judges no rationale, reaches no graph and writes no ledger. It reports declared
+review coverage; it does not resolve the knowledge gap, discover new evidence,
+or register reviews. A caller supplying an obsolete boundary obtains coverage
+relative to that obsolete declaration. It is separate from Assent review
+records, from compiler admission and from replay, and existing callers do not
+acquire this requirement. The grammars are experimental `private-v0`, not a
+stable wire. See `docs/INTERPRETATION_REVIEW.md`.
+
+This paragraph records capability that shipped with the interpretation-review
+work bound in commit `25f94cbf` and was omitted from this document and from
+`CHANGELOG.md` at the time. It declares no new stage and no version change.
+
 ## Experimental finite-program action history
 
 An explicitly selected finite-program attachment to `KnowledgeChangeHistory`
@@ -258,7 +294,7 @@ declared. Exact tests, packaged replay and consumer calls are recorded in
 Stage 8a records what the caller declared about the bytes and makes that
 declaration immutable and attributable. It does not read the bytes: a digest
 and length describing no file are accepted and replay.
-`source_artifact_fields_from_bytes` derives the declared fields when a caller
+`malleus.source_artifact_fields` derives the declared fields when a caller
 does supply bytes, but the ledger cannot prove that helper was used. It does
 not authenticate the source, establish its truth, verify that a quotation
 occurs within it, or notice that it changed. Those are separate checks, and the

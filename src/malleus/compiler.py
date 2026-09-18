@@ -84,6 +84,7 @@ from malleus._contract_pipeline.machine import (
 from malleus._contract_pipeline.population import (
     DomainHistoryProfile,
     OBJECT_EVENT_PROFILE,
+    POPULATION_GAP_KINDS,
     PopulationBaseState,
     PopulationPlanCompilation,
     PopulationPlanRefusal,
@@ -677,6 +678,7 @@ __all__ = (
     "MachineState",
     "NormativeAdmissionProfile",
     "OBJECT_EVENT_PROFILE",
+    "POPULATION_GAP_KINDS",
     "PartialEffectiveContract",
     "PolicyProgram",
     "PopulationBaseState",

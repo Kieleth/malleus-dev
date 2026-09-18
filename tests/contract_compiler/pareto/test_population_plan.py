@@ -71,6 +71,7 @@ P2_SYMBOLS = frozenset(
     {
         "DomainHistoryProfile",
         "OBJECT_EVENT_PROFILE",
+        "POPULATION_GAP_KINDS",
         "PopulationPreparation",
         "SOURCE_ASSERTION_PROFILE",
         "STATE_VERSION_PROFILE",
@@ -599,6 +600,46 @@ def test_population_plan_refuses_pinned_rule(
     assert refusal.value.reason is getattr(
         population.PopulationPlanRefusalReason, reason
     )
+
+
+def test_the_permitted_gap_kinds_are_public_and_complete() -> None:
+    """A producer must reach the vocabulary without reading private code.
+
+    On 2026-09-17 a launched producer probed about 5,700 values for the six
+    permitted kinds because they lived only in this module's private
+    ``_GAP_KINDS`` set, and the runner that carried it imported that private
+    name. The public tuple is the same set, sorted, on the public facade.
+    """
+    population = _population()
+    compiler = importlib.import_module("malleus.compiler")
+
+    assert compiler.POPULATION_GAP_KINDS == tuple(sorted(population._GAP_KINDS))
+    assert compiler.POPULATION_GAP_KINDS == (
+        "AGGREGATE_ONLY",
+        "INTERVAL_NOT_EXPRESSIBLE",
+        "MODALITY_NOT_EXPRESSIBLE",
+        "RELATION_ABSENT",
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+        "TYPE_ABSENT",
+    )
+
+
+def test_an_unknown_gap_kind_refusal_names_every_permitted_kind(
+    contract_pair,
+) -> None:
+    """A refusal that names no permitted value is one the producer cannot act on."""
+    population = _population()
+    _, partial = contract_pair
+    plan = _plan(partial.identity)
+    _mutate(plan, "gap-kind")
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, contract_pair)
+
+    detail = refusal.value.detail
+    assert "SHRUG" in detail
+    for kind in sorted(population._GAP_KINDS):
+        assert kind in detail, f"refusal does not name the permitted kind {kind}"
 
 
 def test_population_plan_reports_every_underived_field_at_once(

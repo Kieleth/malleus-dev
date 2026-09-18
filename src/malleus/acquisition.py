@@ -94,6 +94,12 @@ REVIEW_COVERAGE_PROFILE = _canonical(_PROFILE)
 REVIEW_COVERAGE_PROFILE_IDENTITY = _identity(_PROFILE)
 
 
+_BOUNDARY_IDENTITY_ROUTE = (
+    "; it is the boundary's identity digest, never its id: read it from "
+    "malleus.acquisition.review_boundary_identity(boundary_bytes=...)"
+)
+
+
 def _object(value, kind, where):
     fields = _PROFILE["objects"][kind]
     if type(value) is not dict or set(value) != set(fields):
@@ -114,7 +120,10 @@ def _typed(value, kind, where):
             and len(value) == 71
             and all(char in "0123456789abcdef" for char in value[7:])
         ):
-            raise _malformed(f"{where}: lowercase SHA-256 identity required")
+            route = (
+                _BOUNDARY_IDENTITY_ROUTE if where.endswith("boundary_identity") else ""
+            )
+            raise _malformed(f"{where}: lowercase SHA-256 identity required{route}")
         return value
     if kind in {"refs", "refs+"}:
         if type(value) is not list or (kind == "refs+" and not value):
@@ -291,6 +300,23 @@ def check_review_coverage(
     )
 
 
+def review_boundary_identity(*, boundary_bytes: bytes) -> str:
+    """Return the identity every review of this boundary must carry.
+
+    A review's ``boundary_identity`` is the digest of the normalized boundary,
+    never the boundary's own ``id``. Authoring a review requires the digest
+    first, so this names the route that was previously reachable only by calling
+    ``check_review_coverage`` with an empty review tuple and reading the receipt.
+
+    It normalizes and refuses exactly as the checker does, reads no source and
+    writes nothing. An obsolete boundary yields that obsolete boundary's
+    identity; it does not detect later evidence.
+    """
+    return check_review_coverage(
+        boundary_bytes=boundary_bytes, review_bytes=()
+    ).boundary_identity
+
+
 __all__ = [
     "REVIEW_COVERAGE_PROFILE",
     "REVIEW_COVERAGE_PROFILE_IDENTITY",
@@ -298,4 +324,5 @@ __all__ = [
     "ReviewCoverageRefusal",
     "ReviewCoverageRefusalReason",
     "check_review_coverage",
+    "review_boundary_identity",
 ]

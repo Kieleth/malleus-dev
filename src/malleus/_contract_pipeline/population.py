@@ -34,6 +34,7 @@ from malleus.kg import KnowledgeGraph, RECORD_FAMILIES
 
 __all__ = (
     "DomainHistoryProfile",
+    "POPULATION_GAP_KINDS",
     "PopulationBaseState",
     "PopulationPlanCompilation",
     "PopulationPlanRefusal",
@@ -148,6 +149,13 @@ _GAP_KINDS = frozenset(
         "TYPE_ABSENT",
     }
 )
+POPULATION_GAP_KINDS = tuple(sorted(_GAP_KINDS))
+"""Every typed gap kind a population plan or a document capture may declare.
+
+A producer reads this instead of the private set: it is the same vocabulary,
+sorted, and it is what ``UNKNOWN_GAP_KIND`` refuses against.
+"""
+_PERMITTED_GAP_KINDS = "; permitted kinds: " + ", ".join(POPULATION_GAP_KINDS)
 
 
 class PopulationPlanStatus(str, Enum):
@@ -1492,7 +1500,7 @@ def compile_population_plan(
         if kind not in _GAP_KINDS:
             raise _refuse(
                 PopulationPlanRefusalReason.UNKNOWN_GAP_KIND,
-                f"unknown gap kind: {kind}",
+                f"unknown gap kind: {kind}{_PERMITTED_GAP_KINDS}",
             )
         source_id = _text(
             gap["source_id"],

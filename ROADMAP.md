@@ -959,3 +959,55 @@ Open before this is designed, and none of it is an Obsidian question:
 - Whether an Obsidian vault is a projection generated from the ledger, an
   ingest source that produces candidates, or both in one loop. Both in one loop
   needs a conflict rule before a single file is written.
+
+## E. From the paper front, 2026-09-17
+
+Three items Luis ruled onto the roadmap on 2026-09-17 while the paper's
+document-path rule layer was being chosen (paper ledger E-0432 to E-0439). All
+three are "get by with elegance now, build properly after publication, unless
+progress becomes really hard without them", and all three are reportable as
+future work in the paper.
+
+### E1. Research-level content rules bubble up to Core
+
+The four rules adopted for the marine paper's path (no two current records give
+different values for the same quantity of the same subject, a hypothesis not
+counting against a statement; an interval's lower bound not above its upper and
+uncertainties and counts not negative; a number a record carries is among the
+numbers parsed from the sentence it cites; a formula a record carries appears
+in the sentence it cites after the reading's declared normalisation) are not
+marine-paper rules. They are rules for any scientific paper captured through
+this domain's ontology. Luis: "these are scientific paper/research level rules
+that should apply to this domain/ontology ... they should bubble up and being
+able to be reused by other projects (Core) eventually." Today they live as an
+adopter PolicyProgram on one path with the census
+(`paper-v4/experiment-v4/rule-census-01`) as their oracle. To promote: a second
+shaped consumer (CENSUS_FIRST in the malleus-dev skill), a profile that declares
+which slots the rules read from the ontology's own ranges, and the source
+relation of E3 for the string rules. Review after publication.
+
+### E2. A formula-ontology-KG submodule
+
+The formula rule matches a formula's characters against a sentence. Luis: "we
+need a formula-ontology-KG (sub)module that allows any project to capture them,
+there's a dependency graph that can be captured in formulas, each component can
+be expressed in a graph, and each node/edge can be/must be expressed by the
+ontology." A chemical formula, a ratio, an equation is a small graph whose
+nodes (species, quantities, operators) and edges (composition, dependency) the
+ontology should declare, so that a record carries the graph and the check
+compares graphs, not strings, and so that a formula's components become
+first-class knowledge other records can cite. Get-by now: string comparison
+after the declared text-layer normalisation, with the known permissiveness that
+digits attached to letters are read as numbers. After publication.
+
+### E3. A per-slot source relation
+
+The compiled ontology does not say whether a slot's value is copied from the
+source (a number, a unit, a formula), tallied from it (a count) or authored by
+the producer (a record's name, a category). Every "value must be in the source"
+rule needs that distinction and none can be specified without it; the first
+attempt refused 216 of 236 honest records (paper ledger E-0426, E-0430) for
+that reason. A slot-level declaration, in the ontology and carried through the
+compiled contract and the fact contract, is the Core requirement. Luis agreed
+it on 2026-09-17 (E-0430). It also sets the order of work: E1's string rules and
+E2 both stand on it.

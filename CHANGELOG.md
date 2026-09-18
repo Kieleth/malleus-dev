@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `malleus.compiler.POPULATION_GAP_KINDS`, the six permitted typed gap
+  kinds as a sorted public tuple, and made both `UNKNOWN_GAP_KIND` refusals
+  name every permitted kind. The closed set and every admission outcome are
+  unchanged; the vocabulary was previously reachable only through a private
+  module or the installed adopter skill.
+- Added `malleus.acquisition.review_boundary_identity(boundary_bytes=...)`,
+  which returns the normalized boundary identity a review must carry in
+  `boundary_identity`, and made the refusal for a wrong value name that route.
+  This is the identity `check_review_coverage` already computed, not a new one.
+- Added `.claude/skills/malleus-dev/references/CAPABILITIES.md`, a declaration
+  of Core's shipped capabilities with their public entry points and status,
+  referenced from the `malleus-dev`, `malleus-acolyte` and `malleus-paper`
+  skills, and guarded by `tests/test_capability_declaration.py`: every entry
+  point it names must import, and every capability ID in
+  `malleus.IMPLEMENTATION_STATUS` must appear in it.
+- Packaged the `malleus-paper` skill and its `agents/openai.yaml` alongside the
+  other shipped skills.
+
+### Fixed
+
+- Documented the optional `malleus.acquisition` interpretation-review coverage
+  checker in `docs/IMPLEMENTATION_STATUS.md`. It shipped with the work bound in
+  commit `25f94cbf` and was absent from the status document and from this file.
+  No stage, version or runtime behaviour changes.
+- Corrected `docs/IMPLEMENTATION_STATUS.md`, which named a Stage 8a helper
+  `source_artifact_fields_from_bytes`. The shipped name is
+  `malleus.source_artifact_fields`.
+
 ## [0.14.0] - 2026-09-08
 
 This release brings the compiler-to-history-to-graph path into the package.

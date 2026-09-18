@@ -189,6 +189,22 @@ def test_document_adapter_refuses_each_semantic_boundary(
     assert refusal.value.reason is getattr(api.DocumentAssertionRefusalReason, reason)
 
 
+def test_an_unknown_gap_kind_refusal_names_every_permitted_kind() -> None:
+    """A capture producer reads the permitted kinds off the refusal, not off code."""
+    api = _api()
+    population = import_module("malleus._contract_pipeline.population")
+    reading, capture, _, _ = _inputs()
+    capture["assertions"][1]["gaps"][0]["kind"] = "SHRUG"
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        _adapt(reading=reading, capture=capture)
+
+    detail = refusal.value.detail
+    assert "SHRUG" in detail
+    for kind in sorted(population._GAP_KINDS):
+        assert kind in detail, f"refusal does not name the permitted kind {kind}"
+
+
 def test_document_adapter_reports_every_locator_defect_in_one_refusal() -> None:
     """Paraphrases and phantom blocks are one refusal, not one return each.
 

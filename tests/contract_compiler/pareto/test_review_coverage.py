@@ -341,3 +341,32 @@ def test_evidence_and_review_leave_real_accepted_history_unchanged(
     assert canonical(reopened.graph.export_records()) == graph_bytes
     assert reopened.acceptance_head == before.acceptance_head
     assert reopened.materialization_head == before.materialization_head
+
+
+def test_the_boundary_identity_is_reachable_without_a_dummy_coverage_call(
+    api, boundary
+):
+    """A producer needs the digest before it can author one review.
+
+    On 2026-09-17 three archived reviews of a launched stage carried the
+    boundary's ``id`` because the packet gave them no digest and the only route
+    to one was calling the coverage checker with an empty review tuple, which
+    nobody preparing the run knew. The accessor is that route, named.
+    """
+    computed = api.review_boundary_identity(boundary_bytes=canonical(boundary))
+
+    assert computed == identity(boundary)
+    assert computed == check(api, boundary).boundary_identity
+
+
+def test_a_boundary_identity_refusal_says_where_the_digest_comes_from(api, boundary):
+    """A refusal that names no route is one the producer cannot act on."""
+    wrong = review(boundary, "interpretation:open")
+    wrong["boundary_identity"] = boundary["id"]
+
+    with pytest.raises(api.ReviewCoverageRefusal) as caught:
+        check(api, boundary, [wrong])
+
+    assert caught.value.reason is api.ReviewCoverageRefusalReason.MALFORMED_INPUT
+    assert "lowercase SHA-256 identity required" in caught.value.detail
+    assert "review_boundary_identity" in caught.value.detail

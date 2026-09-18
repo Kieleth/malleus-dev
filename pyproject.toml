@@ -145,6 +145,9 @@ include = [
     "/.claude/skills/malleus-dev/SKILL.md",
     "/.claude/skills/malleus-dev/agents/openai.yaml",
     "/.claude/skills/malleus-dev/references/UNIX_DESIGN_DOCTRINE.md",
+    "/.claude/skills/malleus-dev/references/CAPABILITIES.md",
+    "/.claude/skills/malleus-paper/SKILL.md",
+    "/.claude/skills/malleus-paper/agents/openai.yaml",
     "/.claude/skills/malleus-recon/SKILL.md",
     "/.claude/skills/malleus-recon/agents/openai.yaml",
     "/tests/test_inquisition.py",
@@ -236,6 +239,9 @@ core-metadata-version = "2.4"
 ".claude/skills/malleus-dev/SKILL.md" = "share/malleus/skills/malleus-dev/SKILL.md"
 ".claude/skills/malleus-dev/agents/openai.yaml" = "share/malleus/skills/malleus-dev/agents/openai.yaml"
 ".claude/skills/malleus-dev/references/UNIX_DESIGN_DOCTRINE.md" = "share/malleus/skills/malleus-dev/references/UNIX_DESIGN_DOCTRINE.md"
+".claude/skills/malleus-dev/references/CAPABILITIES.md" = "share/malleus/skills/malleus-dev/references/CAPABILITIES.md"
+".claude/skills/malleus-paper/SKILL.md" = "share/malleus/skills/malleus-paper/SKILL.md"
+".claude/skills/malleus-paper/agents/openai.yaml" = "share/malleus/skills/malleus-paper/agents/openai.yaml"
 ".claude/skills/malleus-inquisitor/SKILL.md" = "share/malleus/skills/malleus-inquisitor/SKILL.md"
 ".claude/skills/malleus-inquisitor/agents/openai.yaml" = "share/malleus/skills/malleus-inquisitor/agents/openai.yaml"
 ".claude/skills/malleus-recon/SKILL.md" = "share/malleus/skills/malleus-recon/SKILL.md"

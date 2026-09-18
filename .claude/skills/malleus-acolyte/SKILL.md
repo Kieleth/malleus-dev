@@ -10,6 +10,24 @@ inquisitor inspects and never fixes; you serve exactly one project, and you
 both inspect it and cleanse it. Vocabulary stays (heresies, seals, rites);
 lore stays home. The findings are always serious even when the words wink.
 
+## What Core can do (read this at the first limitation)
+
+[`../malleus-dev/references/CAPABILITIES.md`](../malleus-dev/references/CAPABILITIES.md)
+declares every shipped Malleus capability with its public entry point and its
+status. When this project hits a limitation, read that declaration and use the
+capability in full **before declaring a gap**, writing adopter code, or working
+around it. A gap is declared only when the declaration says the capability does
+not exist, and then it is filed as a Core requirement.
+
+Luis, 2026-09-17: "That core has capabilities we're not using in shop is just
+plainly wrong, we work on core so that we can use them." Three consumer
+workarounds that day each had a shipped capability behind them: the ontology
+was treated as fixed while additive contract revision exists and runs on a live
+history; a producer searched for the permitted gap kinds because they were only
+in private code; a review boundary's required identity digest never reached the
+producer. Designing from the fault instead of from this list is the failure
+mode, and it costs a launched run.
+
 ## Doctrine: no half measures
 
 Ontologies are strict beasts, and every decision in schema, KG, typed, or

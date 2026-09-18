@@ -9,6 +9,23 @@ Work on the library and protocol, not on one adopter. Route adopter-side
 schema and graph work to `malleus-acolyte`, repository audits to
 `malleus-inquisitor`, and literature forensics to `malleus-recon`.
 
+## What Core can do
+
+[`references/CAPABILITIES.md`](references/CAPABILITIES.md) is the declaration of
+Core's shipped capabilities, each with its public entry point and its status.
+Read it whenever a limitation is encountered, in this repository or in any
+consumer project, and use the capability in full **before declaring a gap**,
+writing adopter code, or working around it. A gap is declared only when the
+declaration says the capability does not exist, and then it is filed as a Core
+requirement.
+
+Luis, 2026-09-17: "That core has capabilities we're not using in shop is just
+plainly wrong, we work on core so that we can use them." That day a staged run
+planned to accept an ontology gap while additive contract revision was shipped
+and exercised, a producer probed about 5,700 values for a vocabulary that lived
+in a private set, and a checker's required boundary identity reached nobody
+preparing the run. None of the three was a missing capability.
+
 In the Malleus checkout, read `docs/IMPLEMENTATION_STATUS.md` before capability
 claims and `docs/PRINCIPLES.md` before architectural changes. For any new
 boundary, adapter, plugin, artifact, or public API, also read the complete

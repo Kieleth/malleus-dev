@@ -1,0 +1,4 @@
+interface:
+  display_name: "Malleus Paper"
+  short_description: "Run and judge Malleus paper cells and results"
+  default_prompt: "Use $malleus-paper to prepare, run, or assess a Malleus paper cell and decide what its result means for the manuscript."

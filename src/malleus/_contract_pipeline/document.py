@@ -14,6 +14,7 @@ from malleus._contract_pipeline.population import (
     SOURCE_ASSERTION_PROFILE,
     _GAP_KINDS,
     _GRAMMAR as _POPULATION_PLAN_GRAMMAR,
+    _PERMITTED_GAP_KINDS,
     _LOCATOR_SLOT,
     _STATEMENT_DIGEST_SLOT,
     _declares_slot,
@@ -1264,7 +1265,7 @@ def _append_gaps(
         if kind not in _GAP_KINDS:
             raise _fail(
                 DocumentAssertionRefusalReason.UNKNOWN_GAP_KIND,
-                f"unsupported assertion gap kind: {kind}",
+                f"unsupported assertion gap kind: {kind}{_PERMITTED_GAP_KINDS}",
             )
         output.append(
             {
