@@ -130,6 +130,36 @@ arbitrary projection programs from them. Contract revision is additive only;
 it is not a general ontology migration or import-admission mechanism. See
 `contract_compiler/index.md`.
 
+An additive revision can now carry the rule layer with it. A policy whose
+required check contract pins the compiled ontology inside its own digest used
+to make ontology growth impossible for that adopter: re-pinning the same rule
+bytes moved the check identity, the policy and the normative profile, and the
+revision refused `INCOMPATIBLE_CONTRACT`, while keeping the old pin left the
+check unable to execute against the revised graph. A revision may now declare
+the re-binding of the selected policy's required check contracts under the new
+`REBIND_CHECK_CONTRACT` change kind. Core admits it only when the declared
+before and after field mappings hash to the identities the current and target
+policies require, and only one field differs, moving from the current
+ontology's content hash to the target's. Every other field, the check's rule
+bytes included, must be identical, and the recorded event carries both check
+identities, both normative profile identities, the field that moved and the
+digest of everything that did not. Changed rule bytes, an added or removed
+required check, a changed verdict mapping or precedence, a changed policy
+identifier or machine program still refuse with a typed reason naming what
+moved. Earlier change sets and their check receipts keep the identities they
+were recorded under; later change sets bind the new profile.
+`KnowledgeHistoryReplay.required_checks` is what a runner reads to load the
+current check contract instead of an identifier it chose once. Declaring the
+new kind moves the revision policy's own digest, so both policies stay
+executable by declaration in `SUPPORTED_CONTRACT_REVISION_POLICIES`: a revision
+names the policy it was compiled under and Core runs that exact one, which is
+how a ledger written earlier keeps replaying. **This is still not policy
+migration.** Core executes no rule and produces no check outcome; it compares
+declared identities. Nothing here admits a new check, retires one, changes what
+a verdict means, or migrates a policy whose rules actually changed. A revision
+that only re-pins, with no ontology change, still refuses as adding no semantic
+fact.
+
 An explicitly selected private-v1 protocol machine can now bind a retained
 history profile to a pure replacement-type rule. `REQUIRE_TYPES_IN_ROLE` uses
 the selected role and explicit exact/subtype matching, rather than treating

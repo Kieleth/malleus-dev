@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- An additive contract revision can now carry the re-binding of the selected
+  policy's required check contracts to the target ontology, under the new
+  `REBIND_CHECK_CONTRACT` change kind. Pass
+  `check_contract_descriptors={check_id: (before_fields, after_fields)}` to
+  `KnowledgeChangeHistory.compose_contract_revision` or
+  `compile_contract_revision`. Core recomputes both identities, requires exactly
+  one field to differ, and requires it to move from the current ontology's
+  content hash to the target's; everything else, the check's rule bytes
+  included, must be identical. The recorded event carries both check
+  identities, both normative profile identities, the field that moved and the
+  digest of every field that did not. This closes the dead end where a policy
+  whose check pins the ontology made ontology growth impossible for that
+  adopter. It is not policy migration: Core runs no rule and produces no check
+  outcome.
+- `KnowledgeHistoryReplay.required_checks` exposes the check contracts the
+  current selection requires, by policy reference, so a runner loads the
+  contract the history names instead of an identifier it chose once.
+- `SUPPORTED_CONTRACT_REVISION_POLICIES` and `contract_revision_policy` are
+  public. Declaring the new change kind moves the revision policy's digest, and
+  a recorded revision names the policy it was compiled under, so Core executes
+  that exact policy and a revision recorded before this change replays
+  unchanged.
+
+### Changed
+
+- `CONTRACT_REVISION_POLICY.identity` moved because its declared change kinds
+  now include `REBIND_CHECK_CONTRACT`. New revisions bind the new policy. No
+  recorded revision needs rewriting; the superseded policy stays executable.
+
 ## [0.14.0] - 2026-09-08
 
 This release brings the compiler-to-history-to-graph path into the package.

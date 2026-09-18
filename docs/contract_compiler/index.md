@@ -297,6 +297,63 @@ revision intentionally validates the complete graph under the new contract.
 Ledger writes and admission retain their existing full verification path;
 projection timings must not be reported as persistence timings.
 
+## Carrying a pinned check contract across a revision
+
+A `PolicyProgram` names its required checks by identity. When a check contract
+pins the compiled ontology inside its own digest, as a Prolog `LogicContract`
+does, growing the ontology moves that identity, the policy and the normative
+profile, and `compile_contract_revision` refuses
+`INCOMPATIBLE_CONTRACT: domain revision changes the normative protocol profile`.
+Keeping the old pin leaves the check unable to execute against the revised
+graph. Both refusals are right alone; together they closed the path.
+
+A revision may now declare the re-binding, as part of the same revision:
+
+```python
+revision = history.compose_contract_revision(
+    revision_id="revision:shop:0.1.0-to-0.2.0",
+    target_validated_contract_bytes=target.artifact.artifact_bytes,
+    target_partial_contract_bytes=target_partial.canonical_bytes,
+    reason="add the state vocabulary and re-pin the rule layer",
+    issued_at="2026-09-03T00:00:00Z",
+    check_contract_descriptors={
+        "shop-content-rules": (before_fields, after_fields),
+    },
+)
+```
+
+`before_fields` and `after_fields` are the exact field mappings whose canonical
+digests are the check contract identities the current and target policies
+require. Core recomputes both, requires exactly one field to differ, and
+requires that field to move from the current ontology's content hash to the
+target's. Everything else, the check's rule bytes included, must be identical.
+The revision carries a `REBIND_CHECK_CONTRACT` change, and its recorded event
+carries both check identities, both normative profile identities, the field that
+moved, and the digest of every field that did not.
+
+Anything else the profile changed refuses before a revision exists, naming what
+moved: a different protocol machine program, a different set of bound policies,
+a changed policy identifier, changed outcome verdicts, changed precedence, an
+added or removed required check, a check whose identity moved without a declared
+re-binding, or a declared re-binding no policy requires. Changed rule bytes show
+up as a second differing field and refuse with that field named. A revision that
+re-pins without changing the ontology still refuses as adding no semantic fact.
+
+After the revision, later change sets bind the new profile and earlier change
+sets and their recorded check receipts keep the identities they were accepted
+under. `KnowledgeHistoryReplay.required_checks` maps each policy reference to
+the check contracts the current selection requires, which is what a runner reads
+to decide which contract to load, rather than an identifier it chose once.
+
+Declaring a change kind moves the revision policy's own digest, and a recorded
+revision names the policy it was compiled under.
+`SUPPORTED_CONTRACT_REVISION_POLICIES` therefore holds both, and Core executes
+the exact one a revision declares, so a revision recorded before this change
+replays unchanged. New revisions bind `CONTRACT_REVISION_POLICY`, and a revision
+that declares the superseded policy while carrying a re-binding refuses as an
+unknown change kind. This is not policy migration: Core runs no rule and
+produces no check outcome.
+
 ## Read-only change-set composition
 
 The Small Shop population and correction proofs repeated one mechanical step:
