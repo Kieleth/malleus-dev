@@ -447,6 +447,11 @@ Two judgments the sealer owns, not this session:
       "target": "8bb13ea6a4d201d0f14d72908e776b99b7746eb6"
     },
     {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "c70e97ce8b64e09e1d43e8421ab52a0bd60cc67b"
+    },
+    {
       "relation": "AFFECTS",
       "type": "WORKSTREAM",
       "target": "CC-R11"
@@ -457,7 +462,10 @@ Two judgments the sealer owns, not this session:
 ```
 
 The `entry_hash` above is a placeholder of the right shape, present only so the
-draft validates as a complete entry. It is not a hash of anything.
+draft validates as a complete entry. It is not a hash of anything. The commit
+that finalizes this file is absent from the reference list for the same reason
+its `after_digest` is a placeholder: a file cannot name the commit that writes
+it. The sealer adds it alongside the sealing commit.
 
 ## What was not done
 
