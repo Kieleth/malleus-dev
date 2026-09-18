@@ -521,3 +521,73 @@ Renumbered from the provisional OVR-000463 to OVR-000464 after the capability-de
 `entries/OVR-000464.json` was sealed by the operator with the ledger tool's own
 hash, render and check from the draft block above, with the sealing moment
 and this file's digest filled in.
+
+## OVR-000466 draft, the Small Shop successor evidence generation
+
+The revision policy identity this change moved forced a successor Small Shop evidence generation (commit 620f3b2b); the two pinned files are recorded here.
+
+```json
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "ledger": "overseer",
+  "entry_type": "DOCUMENT_REVISION",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-capability-declaration",
+    "type": "DOCUMENT"
+  },
+  "entry_id": "OVR-000466",
+  "sequence": 466,
+  "previous_entry_hash": "sha256:fc623656b78d635b55740b538f16dcaca56715e25e8905c5d0a71137f99470c1",
+  "recorded_at": "<sealing moment, UTC>",
+  "summary": "Record the Small Shop successor evidence generation forced by the revision policy identity moving at OVR-000464.",
+  "why": "OVR-000464 declared a fifth contract-revision change kind, REBIND_CHECK_CONTRACT, and the revision policy is content-addressed over its declared kinds, so CONTRACT_REVISION_POLICY.identity moved from 05b68805 to e129b6e8 and every recompiled revision records the new one. The Small Shop's frozen evidence and its connected-story warehouse boundary were cut against the old identity and refused to reproduce (three evidence tests and the fourteen paper calibration tests behind them). Per the ruling that Core is not frozen for its own sake, a successor generation evidence_2026_09_17_policy_rebinding regenerates the five scenarios at 5cc211a6, keeps the 2026-09-08 generation pinned, retargets CURRENT, and re-freezes the chain's boundary and three receipts with the superseded values recorded; only ledger coordinates moved, no domain value. Two pinned files change: evidence_assertions.py and test_current_evidence.py (historical_outputs 20 to 30). small_shop plus fresh import: 371 passed. Lesson recorded: a moved content-addressed policy digest moves every frozen artifact that records a ledger coordinate, and the check is regenerating the family, not grepping. Paper ledger E-0464, E-0466.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_assertions.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d60bdfb87f386e0a142ae29bef26ac3e28fd4763b5052043f025a524fd738fcd",
+        "after_digest": "sha256:0d04ddd11d2de303b7502a4e3287627d6eafa2d81e4c78cca213b1b699b3bfc1"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/test_current_evidence.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:0f1edd1be8ab09c74cdcf9c95cabbb958e30801eaacad2b977ddc575ea02f397",
+        "after_digest": "sha256:258d7d77b09248d6315e102fa4a14871b531f24f9951712024c102b010211d06"
+      },
+      {
+        "path": "handover/2026-09-17-core-policy-rebinding.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:05c81ccc98350011f875a309a55be4006c0a922ab39a2885c439a0e047724db2",
+        "after_digest": "<digest of this file once final>"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "620f3b2b9e7a523589c24b81e351c569d88970f1"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}
+```
+
+## Sealing note for OVR-000466, 2026-09-18
+
+`entries/OVR-000466.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment
+and this file's digest filled in.
