@@ -1,0 +1,142 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "entry_id": "OVR-000464",
+  "ledger": "overseer",
+  "sequence": 464,
+  "entry_type": "DOCUMENT_REVISION",
+  "previous_entry_hash": "sha256:044e08c8a68fda40bb3c75fb7b248ff256cbae403c42f535f3d61e14caaf8e59",
+  "recorded_at": "2026-09-18T05:47:46Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "core-policy-rebinding",
+    "type": "DOCUMENT"
+  },
+  "summary": "Let an additive contract revision carry the re-binding of the selected policy's required check contracts to the target ontology.",
+  "why": "E-0458. A policy whose required check contract pins the compiled ontology inside its own digest made ontology growth impossible for that adopter: re-pinning the same rule bytes moved the check identity, the policy and the normative profile, so the revision refused INCOMPATIBLE_CONTRACT, and keeping the old pin left the check unable to execute against the revised graph. Luis ruled the fix is a declared recorded act, not a loophole. A revision may now carry check_contract_descriptors under the new REBIND_CHECK_CONTRACT kind. Core recomputes both declared identities, requires exactly one field to differ and to move from the current ontology's content hash to the target's, and requires undoing the re-binding to reproduce the current profile byte for byte. Changed rule bytes, an added or removed check, a changed verdict, precedence, identifier or machine program each refuse naming what moved. Earlier check receipts keep their recorded identities. Declaring a kind moved the revision policy's digest, so both stay executable by declaration and every recorded revision still replays. RED b01a165a 12 failed 2 passed; GREEN bb3dd754. Core runs no rule: not policy migration.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "CHANGELOG.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:afae9a902ee11b94b1049a6f5fa21e95f75a3e49c1016f27228097552b0c71d8",
+        "after_digest": "sha256:9c216950a24b79a26db18fe22a926fdab3aa7acbc3188b6247260ac7a037a241"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:0998e707949bfb4f2482ad957619b2f1bb16bc2c7f985adbc6bf5399b5d2ec70",
+        "after_digest": "sha256:7711f7ff8d3d1fb4cbe3ebc8c448cd1281529f82e85add0245f7a499459a2caa"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:2d56b96be1367412881409d0461b7406f21414f5cd50954b408163d40573c9ec",
+        "after_digest": "sha256:e74485f203b8f0859f50b9e097740afadf0aa049ce51e73f31a74041417f2232"
+      },
+      {
+        "path": "docs/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:7457c4a72503cffd945c68c53c503644e3b3630e4ff733ef7112dd43a4d9fc19",
+        "after_digest": "sha256:c87b021e2e1a28e54bf7e7bf086a7598577aa3c218d9574f65b6f52d2556ddd5"
+      },
+      {
+        "path": "handover/2026-09-17-core-policy-rebinding.md",
+        "change": "CREATED",
+        "after_digest": "sha256:05c81ccc98350011f875a309a55be4006c0a922ab39a2885c439a0e047724db2"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d4ac8be73cde6a3058c854c6c20c8a40afd76874706886c5b7e5c1b4bf81cd68",
+        "after_digest": "sha256:15b3991fb349d72007f4742bc9bd060453d640f92fbb70f1abd880b1adc1f960"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/revision.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3e2148df0b3e69ba78eaa1e6f185bebfc5aa51d0cd3bbfbf88606213c90214c2",
+        "after_digest": "sha256:e3bc83a7800ef0bb7157af0941cfd0484dfce5a743db24476650ada11f6d5332"
+      },
+      {
+        "path": "src/malleus/compiler.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:59087977064c36050a6c9189804e5798e3a3bea5eb00d3ad53dfee0ca382f095",
+        "after_digest": "sha256:0da568741f94ecb3582a38f0b1a39eca9e3e7927f9bbe22218fda9667c415145"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_check_contract_rebinding.py",
+        "change": "CREATED",
+        "after_digest": "sha256:b124b9c161b57a3e933c37e555784892f3d45dabc3baca913501976e54894503"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_contract_revision.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:7a4fe8f20c667785ba2bae2391a89e81015dcfcdb669309d15bbe27b5c33b48a",
+        "after_digest": "sha256:b79a7799841581683f788bbc726a5b33195c9d0de3d1073d1f598f784edf1c20"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "0becb6936534a5151001fd7bb551edbc4c1aefba"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "7b86516d74744832bd2ac2b1538e05826e296637"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "b01a165aafe6501be8f60a22a89113a020f83e76"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "bb3dd75400e7756b40e84c33b435f8b3f344a154"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "77cbf024a441ef1c3bb3e0ab95f595a8868bd215"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "2bbfad891aa2ad9d0d059eaa07469a665b44917f"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "158d5d8c331d8a2d78c2c62676b6cd4454d1a54d"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "bda2e408b2bad859603d6ca4a3d132a18e74ef3a"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "8bb13ea6a4d201d0f14d72908e776b99b7746eb6"
+    },
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "c70e97ce8b64e09e1d43e8421ab52a0bd60cc67b"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:11c298ac75902c458692e899f12399a4589e951a2585cad2dc375419c3b8f68f"
+}

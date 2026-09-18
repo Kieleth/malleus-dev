@@ -333,11 +333,11 @@ Two judgments the sealer owns, not this session:
 ```json
 {
   "schema": "malleus.contract-compiler.ledger-entry/v1",
-  "entry_id": "OVR-000463",
+  "entry_id": "OVR-000464",
   "ledger": "overseer",
-  "sequence": 463,
+  "sequence": 464,
   "entry_type": "DOCUMENT_REVISION",
-  "previous_entry_hash": "sha256:4f9d572b9c1d775919bca52e273ccaca8c11821a3859152dea62e0169490966b",
+  "previous_entry_hash": "sha256:044e08c8a68fda40bb3c75fb7b248ff256cbae403c42f535f3d61e14caaf8e59",
   "recorded_at": "<sealing moment, UTC>",
   "actor": {
     "id": "overseer",
@@ -357,14 +357,14 @@ Two judgments the sealer owns, not this session:
       {
         "path": "CHANGELOG.md",
         "change": "MODIFIED",
-        "before_digest": "sha256:e52e4edf2dd7de4cd8584e0ba049dd2379963360e68d6a3fa96272950b6bf73e",
-        "after_digest": "sha256:4701b9a0e910544d1efb3de45f0fc81d7f4ff00a3730d53b29c0046b2eb97c53"
+        "before_digest": "sha256:afae9a902ee11b94b1049a6f5fa21e95f75a3e49c1016f27228097552b0c71d8",
+        "after_digest": "sha256:9c216950a24b79a26db18fe22a926fdab3aa7acbc3188b6247260ac7a037a241"
       },
       {
         "path": "docs/IMPLEMENTATION_STATUS.md",
         "change": "MODIFIED",
-        "before_digest": "sha256:0487eb3fa4814afbba9672e8ea939cb2e747ac7156d6f1f8f3337f5b87f63bca",
-        "after_digest": "sha256:e697253ee05eb4ed9bf96b62802195bd7f260b132a877eb571207a8bbbd7e680"
+        "before_digest": "sha256:0998e707949bfb4f2482ad957619b2f1bb16bc2c7f985adbc6bf5399b5d2ec70",
+        "after_digest": "sha256:7711f7ff8d3d1fb4cbe3ebc8c448cd1281529f82e85add0245f7a499459a2caa"
       },
       {
         "path": "docs/contract_compiler/index.md",
@@ -398,8 +398,8 @@ Two judgments the sealer owns, not this session:
       {
         "path": "src/malleus/compiler.py",
         "change": "MODIFIED",
-        "before_digest": "sha256:93c7b6ea6cc117da2c63322c1ed79fd5299d6a94767fc61bf52ac1b8ea53da63",
-        "after_digest": "sha256:2f91d42f1818db6f1f2ec9e9cc3cff7ceafc21c3e739db73af63d4b08af7bd7e"
+        "before_digest": "sha256:59087977064c36050a6c9189804e5798e3a3bea5eb00d3ad53dfee0ca382f095",
+        "after_digest": "sha256:0da568741f94ecb3582a38f0b1a39eca9e3e7927f9bbe22218fda9667c415145"
       },
       {
         "path": "tests/contract_compiler/pareto/test_check_contract_rebinding.py",
@@ -415,6 +415,11 @@ Two judgments the sealer owns, not this session:
     ]
   },
   "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "0becb6936534a5151001fd7bb551edbc4c1aefba"
+    },
     {
       "relation": "EVIDENCES",
       "type": "COMMIT",
@@ -506,3 +511,13 @@ the sealer adds the missing ones alongside the sealing commit.
 - The D0 runner's fixed retained rule ID was not changed; it is adopter code.
 - Nothing outside this worktree was modified, nothing was pushed, no branch was
   reset and nothing was stashed or deleted.
+
+## Sealer's addition, 2026-09-17
+
+Renumbered from the provisional OVR-000463 to OVR-000464 after the capability-declaration entry took 463 (head 044e08c8…). Before-digests updated to the ledger's latest recorded values and after-digests recomputed from main at the merge commit 0becb693 for: CHANGELOG.md before e52e4edf2dd7->afae9a902ee1; CHANGELOG.md after 4701b9a0e910->9c216950a24b; docs/IMPLEMENTATION_STATUS.md before 0487eb3fa481->0998e707949b; docs/IMPLEMENTATION_STATUS.md after e697253ee05e->7711f7ff8d3d; src/malleus/compiler.py before 93c7b6ea6cc1->59087977064c; src/malleus/compiler.py after 2f91d42f1818->0da568741f94.
+
+## Sealing note for OVR-000464, 2026-09-18
+
+`entries/OVR-000464.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment
+and this file's digest filled in.
