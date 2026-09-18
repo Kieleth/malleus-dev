@@ -26,7 +26,6 @@ from malleus._contract_pipeline.view import (
     load_validated_contract_artifact,
 )
 from malleus._contract_pipeline.revision import (
-    CONTRACT_REVISION_POLICY,
     ContractRevision,
     ContractRevisionRefusal,
     ContractRevisionRefusalReason,

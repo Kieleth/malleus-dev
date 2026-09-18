@@ -190,9 +190,7 @@ def _revision_policy(
             "grammar": _POLICY_GRAMMAR,
         }
     )
-    return ContractRevisionPolicy(
-        source, _digest(source), _POLICY_GRAMMAR, decisions
-    )
+    return ContractRevisionPolicy(source, _digest(source), _POLICY_GRAMMAR, decisions)
 
 
 CONTRACT_REVISION_POLICY = _revision_policy(_POLICY_DECISIONS)
@@ -271,9 +269,7 @@ class ContractRevisionRebinding:
     def as_dict(self) -> dict[str, object]:
         return {
             "checks": [check.as_dict() for check in self.checks],
-            "from_normative_profile_identity": (
-                self.from_normative_profile_identity
-            ),
+            "from_normative_profile_identity": (self.from_normative_profile_identity),
             "to_normative_profile_identity": self.to_normative_profile_identity,
         }
 
@@ -378,9 +374,7 @@ class ContractRevision:
                 if "check_rebinding" in data
                 else None
             )
-            declared = {
-                change.subject for change in changes if change.kind == _REBIND
-            }
+            declared = {change.subject for change in changes if change.kind == _REBIND}
             carried = (
                 {check.check_contract_id for check in rebinding.checks}
                 if rebinding is not None
@@ -548,14 +542,15 @@ def _rebinding(value: object) -> ContractRevisionRebinding:
             item["to_check_contract_identity"], "re-bound check identity"
         )
         field = _required_text(item["rebound_field"], "re-bound check field")
-        if _digest(before_bytes) != from_identity or _digest(after_bytes) != to_identity:
+        if (
+            _digest(before_bytes) != from_identity
+            or _digest(after_bytes) != to_identity
+        ):
             raise ValueError("re-bound check contract does not hash to its identity")
         if (
             field not in before
             or before[field] == after[field]
-            or any(
-                before[key] != after[key] for key in before if key != field
-            )
+            or any(before[key] != after[key] for key in before if key != field)
             or set(before) != set(after)
         ):
             raise ValueError("re-bound check contract changed more than one field")

@@ -28,7 +28,6 @@ from malleus.prolog_verifier import PrologVerifier
 from malleus.staging import ProposedOperation, stage_subgraph
 
 from tests.contract_compiler.pareto.test_public_compiler import (
-    ROOT,
     SHOP_BASE,
     SHOP_FIXTURE,
     SHOP_RUNTIME,
@@ -380,7 +379,6 @@ def test_a_revision_carries_the_re_pinned_check_contract_and_later_checks_run(
     history, base, partial, policy, logic, accepted = _history(tmp_path)
     target, repinned = _target(tmp_path)
     repinned_policy = _policy(((CHECK_ID, repinned.contract_hash),))
-    before_receipts = history.replay().machine_state.records
 
     revision, target_partial = _revise(
         history,
@@ -434,9 +432,7 @@ def test_a_revision_carries_the_re_pinned_check_contract_and_later_checks_run(
 
     assert reopened.contract_revisions == (revision,)
     assert reopened.partial_contract.identity == target_partial.identity
-    assert reopened.required_checks[POLICY_REF] == (
-        (CHECK_ID, repinned.contract_hash),
-    )
+    assert reopened.required_checks[POLICY_REF] == ((CHECK_ID, repinned.contract_hash),)
     assert tuple(item.contract_identity for item in reopened.change_sets) == (
         accepted.contract_identity,
         target_partial.identity,
@@ -494,9 +490,7 @@ def test_the_earlier_check_receipts_keep_the_identity_they_were_recorded_under(
         logic.contract_hash
     }
     assert {record.fields["outcome"] for record in after} == {"SATISFIED"}
-    assert reopened.required_checks[POLICY_REF] == (
-        (CHECK_ID, repinned.contract_hash),
-    )
+    assert reopened.required_checks[POLICY_REF] == ((CHECK_ID, repinned.contract_hash),)
 
 
 @pytest.mark.skipif(
@@ -526,9 +520,9 @@ def test_after_the_revision_the_history_names_the_contract_a_runner_must_load(
     selected = dict(reopened.required_checks[POLICY_REF])[CHECK_ID]
     assert selected == repinned.contract_hash
     assert selected != logic.contract_hash
-    loaded = {
-        contract.contract_hash: contract for contract in (logic, repinned)
-    }[selected]
+    loaded = {contract.contract_hash: contract for contract in (logic, repinned)}[
+        selected
+    ]
     result = PrologVerifier(loaded).verify_candidate_subgraph(
         _candidate(reopened.graph, "e7")
     )
@@ -840,9 +834,10 @@ def test_both_revision_policies_stay_supported_so_recorded_revisions_replay(
     assert revision.policy_identity == superseded.identity
     assert reopened.contract_revisions == (revision,)
     assert revision.check_rebinding is None
-    assert reopened.required_checks[POLICY_REF] == partial.normative_profile.policy(
-        POLICY_REF
-    ).required_checks
+    assert (
+        reopened.required_checks[POLICY_REF]
+        == partial.normative_profile.policy(POLICY_REF).required_checks
+    )
 
 
 def test_the_superseded_policy_cannot_carry_a_re_binding(tmp_path: Path) -> None:
