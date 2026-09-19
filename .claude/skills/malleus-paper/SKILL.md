@@ -6,9 +6,10 @@ description: The paper front of the Malleus project. Use for any work under pape
 # The Malleus paper front
 
 Read `.claude/skills/malleus-dev/SKILL.md` first; its rules bind here,
-including "Choose an adopter rule". Then read `paper-v4/AGENTS.md`, the
-governing directive at the top of `paper-v4/paper-master-plan.md`, the resume
-handover it names, and the last entries of `paper-v4/paper-ledger.md`.
+including "Rules and the ontology" and "Choose an adopter rule". Then read
+`paper-v4/AGENTS.md`, the governing directive at the top of
+`paper-v4/paper-master-plan.md`, the resume handover it names, and the last
+entries of `paper-v4/paper-ledger.md`.
 Historical entries and handovers are evidence, not current authorization.
 
 ## What Core can do
@@ -109,6 +110,21 @@ run is paid once, so the preparation gate closes before the launch, never after.
 - A launch packet names the interpreter and the Core the runner imports, and
   the runner refuses a wrong Core. A procedure that says `python` names
   nothing.
+- Before a launch, read the exact bytes the producer will receive: the
+  isolation message, the procedure, every instruction that names a file. A dry
+  run returning `DRY_RUN` says the inputs check out, not that the text is true.
+  On 2026-09-18 a stage-keyed message generator served the third boundary's
+  producer the second boundary's body, wrong stage, wrong predecessor, wrong
+  history, and a procedure told it to export over its own input; both were in
+  the bytes a paid run would have consumed, and both were caught by reading the
+  printed prompt and the generator's code (E-0470).
+- An instruction may only name what the addressee can reach. A producer session
+  is fresh by design and exposure forbids it any other stage's workspace, so
+  "as before", or a filename from an earlier stage, names something it cannot
+  open. State the shape you want where you ask for it, every time. The third
+  boundary's `status.json` came back with no status token because two
+  procedures said "as before" about a shape only the first had ever stated
+  (2026-09-18, E-0477).
 - A launched workspace is precious. The first action after a producer reports
   is a read-only archive of its work with a digest manifest, outside the reach
   of any builder. No builder, freeze step or test fixture may delete or rewrite
@@ -118,8 +134,22 @@ run is paid once, so the preparation gate closes before the launch, never after.
   transcript held its authored files and the runner pins transaction time.
   Guard the work, not only the record of the work, and read a builder's code
   before calling its guard sufficient.
+- The authority for what a producer was given is its launch receipt, never what
+  the builder would write today. Hold every launched file to its receipt's
+  digest in a test, and keep the two questions in two tests: the generator's
+  output checked against the generator, the launched record checked against its
+  receipt. On 2026-09-18 the first stage's harness procedure was found drifted
+  to the builder's later text, and a vocabulary test had been passing only
+  because of the drift: it read the mutable copy and reported a property of the
+  builder as a property of the record (E-0471, E-0473).
 - Every new version of the review protocol is exercised by one full graph cell
-  before the paper claims it.
+  before the paper claims it, and every sentence in it is read against the next
+  boundary, not only the current one. A note states the rule and never an
+  instance: v3.4's explanatory note counted the obligations of the boundary it
+  was written for, and then went to an assessor judging five. The rule it
+  illustrated was right and the validator enforced the tally, so nothing
+  refused; the dispatch had to carry the correction by hand (2026-09-18,
+  E-0477).
 
 ## Pins, records, leaks
 
@@ -139,6 +169,15 @@ run is paid once, so the preparation gate closes before the launch, never after.
   pin it, and a pinned group must import its export in process, not only in
   subprocesses. An export under `private/` is for experiment runtimes, not
   for the gate's pin.
+- A review record binds the digest of the protocol it was graded under. That is
+  what makes the grading checkable, and it is also what strands the record the
+  first time the protocol is corrected. So every protocol version lists, in its
+  own bytes, the digests of the files it replaces, and states that a record may
+  bind the governing digest or any digest in that list; the validator reads the
+  list from the protocol, never from a constant in code. Accepting an older
+  binding is not a re-grade: no judgement and no count is touched. Without the
+  list, one protocol for every stage means refusing every record written before
+  today (2026-09-18, E-0472, E-0474).
 - The paper ledger and the master plan are written only by the Overlord. Check
   the next free entry for other writers. An entry carries the result with its
   counts and Luis's rulings in his words.

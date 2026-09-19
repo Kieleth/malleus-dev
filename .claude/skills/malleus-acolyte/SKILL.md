@@ -545,7 +545,13 @@ fallback.
    the retained source. Reach for a pack before a new root concept. Do not
    silently narrow or delete a definition that already has instances. A stricter
    deployment may split stages between sessions that exchange only retained
-   ledger artifacts.
+   ledger artifacts. A revision that re-binds the check contract records an
+   identity; it does not retain bytes. Pass the re-pinned descriptors to
+   `KnowledgeChangeHistory.compose_contract_revision` as
+   `check_contract_descriptors=...`, retain that contract in the same act, and
+   load it back through the history's own selector before the act returns;
+   otherwise `KnowledgeHistoryReplay.required_checks` names a contract the
+   history does not hold and the next admission refuses.
 10. **Stop honestly.** Stop when another addition would require invention.
     Preserve incomplete captures, gaps, and typed refusals as results. Do not add
     a fallback mapper, hand-built accepted state, or query-shaped vocabulary to

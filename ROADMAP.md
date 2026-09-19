@@ -1011,3 +1011,90 @@ that reason. A slot-level declaration, in the ontology and carried through the
 compiled contract and the fact contract, is the Core requirement. Luis agreed
 it on 2026-09-17 (E-0430). It also sets the order of work: E1's string rules and
 E2 both stand on it.
+
+## F. From the Shop reconsideration experiment, 2026-09-19
+
+Five items Luis ruled onto the roadmap on 2026-09-19 after reading the third
+Shop round end to end with every actor named (paper ledger E-0486). F1 is
+built now, before any further model run; F4 starts with research now; the rest
+are investigated after publication unless progress becomes hard without them.
+
+### F1. Compile, check, admit as one Core operation (build now)
+
+Landed 2026-09-19 on main `a68d11c9`: `malleus.compiler.check_and_admit_population_plan`
+(RED first; the measured fact: Core refused a missing check event and admitted a
+fabricated SATISFIED one). Overseer entry pending. Consumers not yet migrated.
+Residual decision: `admit` and `admit_with_anchors` still read a caller-supplied
+outcome. Details in `handover/2026-09-19-core-atomic-admission.md`.
+
+Today an adopter's runner compiles a population plan, runs the PolicyProgram's
+Prolog check itself, writes a check receipt, and only then calls
+`admit_with_anchors` with three protocol events. Core refuses a VIOLATED verdict
+and a wrong contract identity, but the sequence and the running of the rules
+live in adopter code (a 700-line runner in the Shop experiment) that every
+adopter rewrites, and what Core does when an adopter never runs the check is
+unverified. Luis: "this is part of the malleus protocol and should be enforced
+by it." One Core operation: plan bytes in, compiled and checked against the
+contract the history currently requires, admitted atomically or refused with a
+typed reason, nothing written on refusal; the adopter skill teaches the call.
+RED first: a test that admits without a check and shows what Core does today.
+
+### F2. A declared gap is a trigger, not a note
+
+A producer that declares `TYPE_ABSENT` or `RELATION_ABSENT` records an artifact
+nobody consumes. The second Shop round declared a customer `TYPE_ABSENT`; the
+ontology never grew for it, because growth was chosen by a person from a design
+written before the gap existed. Luis: "a declared gap should've triggered the
+ontology growth." Investigate: a gap of a declared kind produces a revision
+proposal (class or relation, anchored to the gap's source and locator) that the
+ontology's owner accepts or refuses as a recorded act, and the runner reports
+open gaps against open proposals.
+
+### F3. Impact of an ontology revision, not a full redo
+
+An additive revision today is proven by replaying the whole graph byte for byte
+and re-binding the whole rule layer. Luis: "we should be able to detect what
+possible things might be affected by the change, checking dependencies using
+ontology and KG and just modify/check those as needed." Investigate: from the
+compiled diff (which classes, slots, ranges moved) derive the affected records,
+rules, queries and projections through the ontology's own dependency graph and
+the KG, and check exactly those.
+
+### F4. Rules inside the ontology and the semantic ledger (research now)
+
+The rule layer is a YAML contract naming a Prolog file and the hash of the
+ontology it was written against. Luis: "if rules live outside the
+ontology+semantic-ledger+KG then it gets more and more complicated to
+integrate ... the vision is that an extended ontology, maybe ... instances of
+things rather than generic definitions or even in PROV-O we could define these
+rules within-system, not as external ones, but we might have to support both."
+Research first, on our own design record and the literature (LinkML rules and
+classification rules, SHACL rules and SPARQL constraints, OWL axioms, Datalog
+over RDF, PROV-O), then options with trade-offs. This has surfaced before; the
+findings must say where and what was decided then.
+
+### F5. Rules follow the ontology automatically when they can
+
+Re-pinning a rulebook to a grown ontology is a declared change kind today
+(`REBIND_CHECK_CONTRACT`), decided by a person. Luis: "a versioned ontology
+evolving where rules automagically get converted as changes in the ontology
+happen, automagically detecting that changes in the ontology can produce the
+same rules." Investigate, with F3 and F4: when the compiled diff touches no
+class, slot or range a rule reads, the re-binding is derived and recorded
+without a decision; when it does, the rule is flagged with what it reads that
+moved.
+
+### F6. Stale reader measurement in the historic-wire script (Core defect, found 2026-09-19)
+
+`scripts/contract_compiler_historic_wire.py` hard-codes a digest for
+`src/malleus/recon/store.py` recorded on 2026-08-26 (261efb0f); the module
+changed on 2026-09-03 (9a7fafc9) and the measurement was never re-recorded.
+Result: 17 tests fail on a clean main at ff1c6931 with "Current reader source
+differs at src/malleus/recon/store.py; record a fresh measurement" (7 in
+test_contract_compiler_divergence.py, 6 in test_contract_compiler_historic_wire.py,
+4 in test_contract_compiler_duplicate_scan.py). Reproducer:
+`.venv/bin/python -m pytest -q tests/test_contract_compiler_divergence.py
+tests/test_contract_compiler_historic_wire.py tests/test_contract_compiler_duplicate_scan.py`.
+Not caused by F1. Fix: record a fresh measurement, and make the recording a
+test-time derivation or a guarded artifact so a module change cannot silently
+strand it.
