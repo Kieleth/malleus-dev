@@ -1,0 +1,68 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "ledger": "overseer",
+  "entry_type": "DOCUMENT_REVISION",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "skills-in-sync-2026-09-19",
+    "type": "DOCUMENT"
+  },
+  "entry_id": "OVR-000467",
+  "sequence": 467,
+  "previous_entry_hash": "sha256:0eb70a735e843fe9d22bf3032e3efe8be49deea4cc6c8b7678449461f89aaa7b",
+  "recorded_at": "2026-09-19T23:53:11Z",
+  "summary": "Record the skill and ROADMAP edits of 2026-09-18 and 2026-09-19 so the governed documents match the tree again.",
+  "why": "The three skills are governed documents under this ledger, and their working-tree bytes had moved from the digests recorded at OVR-000463 without an entry, which blocked every later seal at render (2026-09-19). This entry records the edits made on 2026-09-18 and 2026-09-19 under the paper Overlord session: malleus-dev gains 'Rules and the ontology' (E-0488, E-0489), the 29 applied proposals of the skill review (E-0490 to E-0492) and the F1 landing sentences (E-0493); malleus-paper carries the 2026-09-18 launch-packet lessons and the protocol supersession rule (E-0483); malleus-acolyte step 9 carries the re-binding step (E-0492). ROADMAP.md gains section F, items F1 to F6, from the Shop reconsideration experiment. The review handover holding this block is created. Commit 3b8d49f4 carries the document bytes; the agent manifest and the rules findings file in that commit are not governed and are not listed.",
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-dev/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:67197a1c5d1ad9b2f1c7c66fa200ba8afe07d825eea77cd10f4fbb3ac3a987b2",
+        "after_digest": "sha256:a135c1634771ed2a81d1562cbee8b092c51f254f5224f14fed21622bf5abfbb5"
+      },
+      {
+        "path": ".claude/skills/malleus-paper/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:5c43070ad7c170df78013cc7932fa8e410d3683c58d18e1c57dd1f31d49b2b5a",
+        "after_digest": "sha256:4ebd7fd961ac13be6e0f0f498135689551cf81771a6dfc96198d41a2ee928b5b"
+      },
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:5b050ba92c9849d9377b51a82c01e67ed2549a6e3ec9b4f9967a8113c573a1d4",
+        "after_digest": "sha256:4e457d697a79e091f5b86be39b736e678f511f145ee0bc3c1b8062c6c040a9fb"
+      },
+      {
+        "path": "ROADMAP.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:891c9529a77a0cd999c55e42f63ab9f3ce39fa46c46be63024dd6f7af01733aa",
+        "after_digest": "sha256:ac3e4f66eea1f700ae144b33886314b416c877ea4847450ec70e7090c6733867"
+      },
+      {
+        "path": "handover/2026-09-19-malleus-dev-skill-review.md",
+        "change": "CREATED",
+        "after_digest": "sha256:4b5f73bad84b6727b1e8503106a44578f8831acb1661c6735c52bedd6774dcc8"
+      }
+    ]
+  },
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "3b8d49f41690702de0f9cbaa8a666fd638474090"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "entry_hash": "sha256:4d7f769d98eed70ff434f3b779e34e0247ed9f0d6a7bd10ee15388cbe501a608"
+}

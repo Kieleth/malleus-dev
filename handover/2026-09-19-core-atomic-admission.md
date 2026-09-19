@@ -210,7 +210,7 @@ The draft entry is the last section of this file, validated in check mode
 against the schema, the hash chain and the document history, and left unsealed.
 The Overlord seals it.
 
-## OVR-000467 draft, unsealed
+## OVR-000468 draft, unsealed (renumbered from 467 by the sealer, 2026-09-19: the skills entry OVR-000467 landed first)
 
 The Overlord seals. This block lives here, not in
 `design/contract_compiler/overseer/entries/`, because that directory holds
@@ -270,6 +270,11 @@ commit reference is full 40-hex.
         "path": "docs/contract_compiler/index.md"
       },
       {
+        "after_digest": "<digest of this file once final>",
+        "change": "CREATED",
+        "path": "handover/2026-09-19-core-atomic-admission.md"
+      },
+      {
         "after_digest": "sha256:a590d79b3ca5a055127fc337995192a34309aa2f4511cd8338e1284aeb7b1117",
         "before_digest": "sha256:6d78a1a76564bb487b26f9bfe97e60b0b6706a002d1056e97dabbaf5037a997f",
         "change": "MODIFIED",
@@ -305,12 +310,11 @@ commit reference is full 40-hex.
       }
     ]
   },
-  "entry_hash": "sha256:1e1133e14c130d09bede826816faf9e66db35870a3b69f1f68dd1b66f37ae073",
-  "entry_id": "OVR-000467",
+  "entry_id": "OVR-000468",
   "entry_type": "DOCUMENT_REVISION",
   "ledger": "overseer",
-  "previous_entry_hash": "sha256:0eb70a735e843fe9d22bf3032e3efe8be49deea4cc6c8b7678449461f89aaa7b",
-  "recorded_at": "2026-09-19T12:00:00Z",
+  "previous_entry_hash": "<previous entry hash>",
+  "recorded_at": "<sealing moment, UTC>",
   "references": [
     {
       "relation": "EVIDENCES",
@@ -324,7 +328,7 @@ commit reference is full 40-hex.
     }
   ],
   "schema": "malleus.contract-compiler.ledger-entry/v1",
-  "sequence": 467,
+  "sequence": 468,
   "subject": {
     "id": "core-atomic-admission",
     "type": "DOCUMENT"
@@ -333,3 +337,9 @@ commit reference is full 40-hex.
   "why": "ROADMAP F1 (E-0486, E-0488): compile, check and admit become one Core operation, enforced by the protocol, not rewritten by every adopter. RED first, as F1 required. On a history with a Prolog policy installed, an admission carrying no CHECK_RECORDED refuses PROTOCOL_REFUSAL 'machine event refused: MISSING_REQUIRED_CHECK' and writes nothing; a fabricated CHECK_RECORDED with outcome SATISFIED is accepted with no engine run. Core checked the event set's shape and read the verdict off it. check_and_admit_population_plan takes plan bytes, compiles against the required contract, resolves the required check from required_checks, loads the retained bytes reproducing it, runs it over the would-be state, and appends plan, gaps, change set, receipt and three events. No parameter carries an outcome. PopulationAdmissionRefusal names COMPILE, CHECK or ADMIT; the first two write no byte. Absorbed from two consumers of different shape, the Shop runner and the document path, fixing two defects both carried. 18 tests: 16 failed at ff1c6931, 18 pass now; suite 3512 passed, 24 failed, all this block's digest guard. Residual: admit_with_anchors stays public, so the fabricated path remains reachable."
 }
 ```
+
+## Sealing note for OVR-000468, 2026-09-19
+
+`entries/OVR-000468.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash and this file's digest filled in.
