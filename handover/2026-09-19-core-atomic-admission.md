@@ -195,10 +195,10 @@ Read F1 there.
   reports the same nine pre-existing findings as `ff1c6931`, none in the new
   files.
 - Full default suite at `ff1c6931` before the change: 3518 passed, 3 skipped,
-  0 failed. After the change: 3511 passed, 3 skipped, 24 failed. The arithmetic
-  closes: 3518 + 17 new = 3535 = 3511 + 24; the eighteenth test arrived after that run.
+  0 failed. After the change: 3512 passed, 3 skipped, 24 failed. The arithmetic
+  closes: 3518 + 18 new = 3536 = 3512 + 24.
 - All 24 failures have one cause, the governance digest guard:
-  `LedgerValidationError: latest document digest mismatch for pyproject.toml`.
+  `OVR-000463: latest document digest mismatch for pyproject.toml`.
   Seven in `test_contract_compiler_ledger.py`, fourteen in
   `test_contract_compiler_integration.py`, three in `test_docs.py` where the
   strict Sphinx build runs the same validation and the test asserts its return
@@ -206,6 +206,130 @@ Read F1 there.
   governed document, so the ledger's recorded digest for each is stale until
   OVR-000467 is sealed. Nothing else fails.
 
-The draft entry is `design/contract_compiler/overseer/entries/OVR-000467.json`,
-validated in check mode against the schema and the document history, left
-unsealed. The Overlord seals it.
+The draft entry is the last section of this file, validated in check mode
+against the schema, the hash chain and the document history, and left unsealed.
+The Overlord seals it.
+
+## OVR-000467 draft, unsealed
+
+The Overlord seals. This block lives here, not in
+`design/contract_compiler/overseer/entries/`, because that directory holds
+sealed entries only: an unsealed file there makes `load_ledger` refuse
+`head entry_count is 466, found 467 entry files`, which costs five test
+failures beyond the digest guard.
+
+Two things the sealer settles, both the same ones OVR-000464 needed. The entry
+number and `previous_entry_hash` are correct against this worktree's head,
+`OVR-000466` at
+`sha256:0eb70a735e843fe9d22bf3032e3efe8be49deea4cc6c8b7678449461f89aaa7b`; if
+another block lands first, renumber and rechain, which changes `entry_hash`.
+And this handover is deliberately absent from `documents`: its own digest
+cannot be recorded inside itself. Add it at seal time with the sealed digest,
+or leave it out, but do not record a value computed before this block existed.
+
+Validated in check mode without sealing: `entry_hash` reproduces from the
+ledger tool's own `entry_hash()`, `previous_entry_hash` equals the recorded
+head, and `load_ledger` over a scratch copy of the overseer directory with the
+head anchor advanced passes the whole validation against this working tree,
+467 entries, head `OVR-000467`. `why` is 1198 of 1200 characters and every
+commit reference is full 40-hex.
+
+```json
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:95460b0cbdfe8f1f4556a646095fdfa6f6f57ce4948f194e69456f2ae1eccac3",
+        "before_digest": "sha256:6b58a63c45cd80bba1855b50a68dccb3ff1d960d619e15722f4d4afc2678b49d",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
+      {
+        "after_digest": "sha256:f9d435fd79a5d577504b57f482fde41c2776ddf1e8c6dfb5f7b404b1d29fef48",
+        "before_digest": "sha256:9c216950a24b79a26db18fe22a926fdab3aa7acbc3188b6247260ac7a037a241",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:9418e7dd42122c9c5e9164243b010b80e58e244dfb1d65c1efd35ead118aaf98",
+        "before_digest": "sha256:7711f7ff8d3d1fb4cbe3ebc8c448cd1281529f82e85add0245f7a499459a2caa",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:18722eac7d88e67cfc7ce569f5a296c38c729fc5a6d017d3d20e76d492a6b8bd",
+        "before_digest": "sha256:e74485f203b8f0859f50b9e097740afadf0aa049ce51e73f31a74041417f2232",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:a590d79b3ca5a055127fc337995192a34309aa2f4511cd8338e1284aeb7b1117",
+        "before_digest": "sha256:6d78a1a76564bb487b26f9bfe97e60b0b6706a002d1056e97dabbaf5037a997f",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:b77ffdc57b3dcbb060d02e688336647b1c01c00cb3ab4e5bea9fdd09f849ad19",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/admission.py"
+      },
+      {
+        "after_digest": "sha256:5a0f32e40fe3f988a3cf6008e2a9ce32de93fd840af5da31c3699eae8a6a5b0b",
+        "before_digest": "sha256:65813f59732134a7dda63ebd3e207509874278ded5594a8d62ade1cf4c5ea128",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:b1e5d92e495455682f82cb765f2a001e253f21898da6028d1dbc79ac0058f892",
+        "before_digest": "sha256:0da568741f94ecb3582a38f0b1a39eca9e3e7927f9bbe22218fda9667c415145",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:822c39a468be0b76c612ca306bd8e7db23514c72a73484e488ac05d8a9a88e12",
+        "before_digest": "sha256:c6bff2ec648743c54a5f1d5cbb242d8f71b13c332d08d1840ebfa994653858b3",
+        "change": "MODIFIED",
+        "path": "src/malleus/logic.py"
+      },
+      {
+        "after_digest": "sha256:2d28b7bf983d4987f03062f6b29dcb9ce02f4272b5aef7b7f78d5d68dc7206c6",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_atomic_population_admission.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:1e1133e14c130d09bede826816faf9e66db35870a3b69f1f68dd1b66f37ae073",
+  "entry_id": "OVR-000467",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0eb70a735e843fe9d22bf3032e3efe8be49deea4cc6c8b7678449461f89aaa7b",
+  "recorded_at": "2026-09-19T12:00:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "605cf5197b3961833d5ea122e7706e30c62ed85a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 467,
+  "subject": {
+    "id": "core-atomic-admission",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record one Core operation that compiles, checks and admits a population plan, and the measured hole it closes.",
+  "why": "ROADMAP F1 (E-0486, E-0488): compile, check and admit become one Core operation, enforced by the protocol, not rewritten by every adopter. RED first, as F1 required. On a history with a Prolog policy installed, an admission carrying no CHECK_RECORDED refuses PROTOCOL_REFUSAL 'machine event refused: MISSING_REQUIRED_CHECK' and writes nothing; a fabricated CHECK_RECORDED with outcome SATISFIED is accepted with no engine run. Core checked the event set's shape and read the verdict off it. check_and_admit_population_plan takes plan bytes, compiles against the required contract, resolves the required check from required_checks, loads the retained bytes reproducing it, runs it over the would-be state, and appends plan, gaps, change set, receipt and three events. No parameter carries an outcome. PopulationAdmissionRefusal names COMPILE, CHECK or ADMIT; the first two write no byte. Absorbed from two consumers of different shape, the Shop runner and the document path, fixing two defects both carried. 18 tests: 16 failed at ff1c6931, 18 pass now; suite 3512 passed, 24 failed, all this block's digest guard. Residual: admit_with_anchors stays public, so the fabricated path remains reachable."
+}
+```
