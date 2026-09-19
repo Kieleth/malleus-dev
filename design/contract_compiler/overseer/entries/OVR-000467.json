@@ -44,7 +44,7 @@
         "path": "pyproject.toml"
       },
       {
-        "after_digest": "sha256:c883a37ac869fa7be04fadf952b1b2adf7e2d61554db60eed60f3327e6d1927b",
+        "after_digest": "sha256:b77ffdc57b3dcbb060d02e688336647b1c01c00cb3ab4e5bea9fdd09f849ad19",
         "change": "CREATED",
         "path": "src/malleus/_contract_pipeline/admission.py"
       },
@@ -73,7 +73,7 @@
       }
     ]
   },
-  "entry_hash": "sha256:728770bcd9cfc5cab1e1d78a140faf5a5412c16b6f692af4c9ccc26acb86d12b",
+  "entry_hash": "sha256:e48a56df378a27a609e8c9f5761ada1739295a72677402ef06373de8006ae61d",
   "entry_id": "OVR-000467",
   "entry_type": "DOCUMENT_REVISION",
   "ledger": "overseer",

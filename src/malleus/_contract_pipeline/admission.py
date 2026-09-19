@@ -180,7 +180,15 @@ def _selected_check_contract(
     retained = {
         member.record_id: bytes(member.content) for member in replay.retained_inputs
     }
-    for descriptor_id in sorted(retained):
+    # A descriptor declares both of these, so the scan stays linear in a history
+    # that retains one plan per admitted change rather than quadratic in it.
+    descriptors = [
+        record_id
+        for record_id in sorted(retained)
+        if b"contract_id" in retained[record_id]
+        and b"rules_file" in retained[record_id]
+    ]
+    for descriptor_id in descriptors:
         for rules_id in sorted(retained):
             if rules_id == descriptor_id:
                 continue
@@ -306,10 +314,7 @@ def _receipt_bytes(
 
     return _canonical(
         {
-            "check": {
-                **json.loads(json.dumps(asdict(check), default=list)),
-                "outcome": check.outcome,
-            },
+            "check": {**asdict(check), "outcome": check.outcome},
             "knowledge_change_set_identity": change.identity,
             "population_plan_identity": plan_identity,
         }
