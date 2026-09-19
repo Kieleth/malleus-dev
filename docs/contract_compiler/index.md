@@ -358,6 +358,67 @@ that declares the superseded policy while carrying a re-binding refuses as an
 unknown change kind. This is not policy migration: Core runs no rule and
 produces no check outcome.
 
+## One operation from a plan to an admitted change
+
+An adopter used to write the whole sequence: compile the plan, find the check
+contract the history requires, run it, build a receipt, and call
+`admit_with_anchors` with three protocol events. Two shipped consumers wrote
+the same four hundred lines with different mistakes in them, and what Core did
+when a producer skipped the check had never been measured. Measured now, on a
+history with a policy installed: an admission carrying no `CHECK_RECORDED`
+event refuses `PROTOCOL_REFUSAL: machine event refused: MISSING_REQUIRED_CHECK`
+and writes nothing, and an admission carrying a `CHECK_RECORDED` whose
+`outcome` is the string `SATISFIED` is accepted with no engine run. The machine
+requires the receipt to exist and reads the outcome off it.
+
+`check_and_admit_population_plan` is the checked way in:
+
+```python
+admitted = compiler.check_and_admit_population_plan(
+    history=history,
+    plan_bytes=plan_bytes,
+    history_profile=compiler.STATE_VERSION_PROFILE,
+    transaction_time="2026-09-03T00:00:00Z",
+    actor_id="actor:producer",
+)
+```
+
+It compiles `plan_bytes` against the contract the history currently requires,
+reads the required check from `required_checks`, loads the retained descriptor
+and rule bytes that reproduce that identity through `LogicContract.from_bytes`,
+runs it over the accepted graph with this change's retirements removed and its
+operations staged, and on `SATISFIED` appends the retained plan, its gaps, the
+profile artifact, the change set, the check receipt and the three protocol
+events. The outcome written is the engine's, because no parameter carries one.
+
+Which engine runs is not a call-site choice. A `LogicContract` names no engine
+and closes its fields, so a retained check contract of that shape is a Prolog
+contract and `PrologVerifier` runs it. Whether a rule may read provenance is
+also the contract's declaration: a fact contract that declares no
+`m_derivation` gets none, and supplying `retained_source_texts` against such a
+contract refuses rather than dropping them in silence. Core resolves no locator
+into text itself; the plan's own derivations become facts, the sentences behind
+them stay a caller input.
+
+`PopulationAdmissionRefusal` names the stage. `COMPILE` covers an unknown
+class, a missing derivation, an unknown gap kind and a plan that is not JSON.
+`CHECK` covers `CHECK_CONTRACT_NOT_RETAINED`, a policy requiring other than one
+check, a provenance mismatch, an engine failure, and `CONTENT_RULE_VIOLATED`
+with the violated rule IDs and the witness records. `ADMIT` covers what the
+ledger and the protocol machine refuse. Both earlier stages run before the
+first append, so their refusals write no byte; an `ADMIT` refusal may leave the
+retention batch that necessarily precedes it, because a change set binds ledger
+coordinates that exist only once that batch is appended. Nothing is admitted
+either way, and every refusal reports `ledger_unchanged`.
+
+What this does not do. `admit` and `admit_with_anchors` remain public and still
+read a caller-supplied outcome, so the fabricated receipt above is still
+reachable by a caller who builds the events by hand. The operation requires
+exactly one required check whose contract the history retains; a history whose
+required check is Core's own structural check keeps using
+`admit_structural_change`. Plan authoring stays outside: a document capture
+still reaches these bytes through `adapt_document_assertions`.
+
 ## Read-only change-set composition
 
 The Small Shop population and correction proofs repeated one mechanical step:

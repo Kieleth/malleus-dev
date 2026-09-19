@@ -230,6 +230,36 @@ exposes an existing vocabulary and changes no admitted value: a plan or capture
 accepted before is accepted now, and a producer no longer has to read private
 code or search for the set.
 
+`malleus.compiler.check_and_admit_population_plan` makes compilation, the
+policy's check and admission one operation. It takes the history, the plan
+bytes as a producer wrote them, the bound domain-history profile, the actor and
+the transaction time. It compiles the plan against the contract the history
+currently requires, reads that history's required check contract from
+`KnowledgeHistoryReplay.required_checks`, loads the retained descriptor and
+rule bytes that reproduce that identity, runs the check over the state the
+change would produce, and on `SATISFIED` appends the retained plan, its gaps,
+the profile artifact, the change set, the check receipt and `CHANGE_PROPOSED`,
+`CHECK_RECORDED` and `VERDICT_RECORDED`. The caller supplies no outcome, and
+`PopulationAdmissionRefusal` names the stage, `COMPILE`, `CHECK` or `ADMIT`,
+with the violated rule IDs and witness records of a content-rule refusal.
+`LogicContract.from_bytes` loads a pinned contract from the exact descriptor
+and rule bytes a ledger retains, so no reader writes them back to a directory
+to reconstruct one.
+
+What this establishes and what it does not. A `COMPILE` or `CHECK` refusal
+writes no byte, so a violated plan no longer leaves its retained artifact
+behind. An `ADMIT` refusal may leave the retention batch that necessarily
+precedes it, because a change set binds ledger coordinates that exist only
+after that batch is appended; nothing is admitted either way and every refusal
+reports `ledger_unchanged`. `admit` and `admit_with_anchors` stay public and
+still read a caller-supplied outcome off a `CHECK_RECORDED` event, so this
+operation is the checked way in, not yet the only one. The operation requires
+exactly one required check whose contract the history retains as a
+`LogicContract`; a history whose required check is Core's own structural check
+keeps using `admit_structural_change`. Core resolves no locator into text:
+retained source sentences remain a typed caller input, refused when the check
+contract's declared fact contract cannot read them.
+
 ## Declared interpretation-review coverage
 
 The optional, experimental `malleus.acquisition` module checks that every

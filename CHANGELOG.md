@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `malleus.compiler.check_and_admit_population_plan`, which makes
+  compilation, the selected policy's check and admission one operation. It
+  takes the history, the producer's plan bytes, the bound domain-history
+  profile, the actor and the transaction time; it compiles the plan against the
+  contract the history currently requires, loads the retained check contract
+  that reproduces the identity in `required_checks`, runs it over the state the
+  change would produce, and on `SATISFIED` appends the retained plan, its gaps,
+  the profile artifact, the change set, the check receipt and `CHANGE_PROPOSED`,
+  `CHECK_RECORDED` and `VERDICT_RECORDED`. No parameter carries a check
+  outcome, so the outcome recorded is the engine's. `PopulationAdmissionRefusal`
+  names the stage, `COMPILE`, `CHECK` or `ADMIT`, and carries the violated rule
+  IDs and witness records of a content-rule refusal. A `COMPILE` or `CHECK`
+  refusal writes no byte; an `ADMIT` refusal may leave the retention batch that
+  necessarily precedes the change set, and every refusal reports
+  `ledger_unchanged`. What Core does today without the operation is now
+  measured and pinned: an admission carrying no `CHECK_RECORDED` refuses
+  `MISSING_REQUIRED_CHECK`, and one carrying a fabricated `SATISFIED` is
+  accepted with no engine run. `admit` and `admit_with_anchors` stay public and
+  still read a caller-supplied outcome, so this is the checked way in, not yet
+  the only one.
+- Added `malleus.compiler.PopulationAdmission`,
+  `malleus.compiler.PopulationAdmissionRefusal`,
+  `malleus.compiler.PopulationAdmissionStage` and
+  `malleus.compiler.REQUIRED_CHECK_POLICY_REFERENCE`.
+- Added `malleus.logic.LogicContract.from_bytes(descriptor_bytes, rules_bytes)`,
+  which loads a pinned check contract from the exact bytes a ledger retains.
+  `LogicContract.load` now reads its two files and delegates to it. A reader
+  holding retained bytes no longer writes them back to a directory to
+  reconstruct the contract, which is what both shipped runners did.
 - Added `malleus.compiler.POPULATION_GAP_KINDS`, the six permitted typed gap
   kinds as a sorted public tuple, and made both `UNKNOWN_GAP_KIND` refusals
   name every permitted kind. The closed set and every admission outcome are

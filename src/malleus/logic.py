@@ -123,6 +123,20 @@ class LogicExecutionError(LogicError):
     """The logic monitor did not complete and must not report a clean result."""
 
 
+def _declared_rules_file(descriptor_bytes: bytes, label: str) -> str:
+    """The rules file one descriptor names, read before the full validation."""
+
+    try:
+        document = yaml.load(descriptor_bytes.decode("utf-8"), Loader=UniqueKeyLoader)
+    except (UnicodeError, yaml.YAMLError, OntologyError) as error:
+        raise LogicError(f"Cannot load logic contract '{label}': {error}") from error
+    if not isinstance(document, dict) or not isinstance(
+        document.get("rules_file"), str
+    ):
+        raise LogicError(f"logic contract '{label}' names no rules_file")
+    return document["rules_file"]
+
+
 @dataclass(frozen=True)
 class LogicContract:
     schema_version: str
@@ -213,9 +227,47 @@ class LogicContract:
     def load(cls, path: str | Path) -> "LogicContract":
         source_path = Path(path)
         try:
-            document = yaml.load(source_path.read_text(encoding="utf-8"), Loader=UniqueKeyLoader)
-        except (OSError, UnicodeError, yaml.YAMLError, OntologyError) as error:
-            raise LogicError(f"Cannot load logic contract '{source_path}': {error}") from error
+            descriptor_bytes = source_path.read_bytes()
+        except OSError as error:
+            raise LogicError(
+                f"Cannot load logic contract '{source_path}': {error}"
+            ) from error
+        rules_file = _declared_rules_file(descriptor_bytes, str(source_path))
+        rules_path = source_path.parent / rules_file
+        try:
+            rules_bytes = rules_path.read_bytes()
+        except OSError as error:
+            raise LogicError(f"Cannot load rules file '{rules_path}': {error}") from error
+        return cls.from_bytes(
+            descriptor_bytes, rules_bytes, rules_path=rules_path.resolve()
+        )
+
+    @classmethod
+    def from_bytes(
+        cls,
+        descriptor_bytes: bytes,
+        rules_bytes: bytes,
+        *,
+        rules_path: Path | None = None,
+    ) -> "LogicContract":
+        """Load one pinned contract from the exact descriptor and rule bytes.
+
+        ``load`` reads those bytes from two files. A ledger retains them as
+        two records, so a reader that holds retained bytes reconstructs the
+        same contract here instead of writing them back to a directory to
+        call ``load``. ``rules_path`` is reporting only and never enters the
+        contract digest; without it the descriptor's own ``rules_file`` name
+        stands in.
+        """
+
+        if type(descriptor_bytes) is not bytes or type(rules_bytes) is not bytes:
+            raise LogicError("logic contract descriptor and rules must be exact bytes")
+        try:
+            document = yaml.load(
+                descriptor_bytes.decode("utf-8"), Loader=UniqueKeyLoader
+            )
+        except (UnicodeError, yaml.YAMLError, OntologyError) as error:
+            raise LogicError(f"Cannot load logic contract: {error}") from error
         _exact_fields(document, CONTRACT_FIELDS, "logic contract")
         for name in (
             "schema_version",
@@ -256,14 +308,14 @@ class LogicContract:
         ):
             raise LogicError("logic contract timeout_seconds must be a positive integer")
 
-        rules_path = source_path.parent / document["rules_file"]
         try:
-            rules_bytes = rules_path.read_bytes()
             rules_source = rules_bytes.decode("utf-8")
-        except (OSError, UnicodeError) as error:
-            raise LogicError(f"Cannot load rules file '{rules_path}': {error}") from error
+        except UnicodeError as error:
+            raise LogicError(f"Cannot read the rules file: {error}") from error
         if not rules_source.strip():
             raise LogicError("rules file must not be empty")
+        if rules_path is None:
+            rules_path = Path(document["rules_file"])
         ruleset_hash = "sha256:" + hashlib.sha256(rules_bytes).hexdigest()
         canonical_rule_ids = tuple(sorted(rule_ids))
         contract = cls(
@@ -274,7 +326,7 @@ class LogicContract:
             fact_contract_version=document["fact_contract_version"],
             ruleset_id=document["ruleset_id"],
             ruleset_version=document["ruleset_version"],
-            rules_path=rules_path.resolve(),
+            rules_path=rules_path,
             rules_source=rules_source,
             rule_ids=canonical_rule_ids,
             timeout_seconds=timeout_seconds,
