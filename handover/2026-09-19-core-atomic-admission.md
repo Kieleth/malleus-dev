@@ -148,7 +148,9 @@ into tuples and the ontology validator accepts only `list` for a multivalued
 slot, so any multivalued property would refuse at the check. Core already knew:
 `tests/contract_compiler/pareto/test_repository_guards.py::test_staged_writes_thaw_the_frozen_change_set_properties`
 guards the same mistake inside `knowledge.py`. The operation uses
-`_staged_properties`.
+`_staged_properties`, and
+`test_the_staged_check_writes_thaw_the_compiled_operations_properties` pins
+that one call site by AST so the shallow copy cannot come back.
 
 **A violated plan left its bytes in the ledger.** Both runners call
 `prepare_population_change`, which appends the retained plan, gaps and profile,
@@ -185,16 +187,16 @@ Read F1 there.
 ## Evidence
 
 - `tests/contract_compiler/pareto/test_atomic_population_admission.py`,
-  17 tests. Against a pristine tree at `ff1c6931` with only this file added:
-  15 failed, 2 passed, and the 2 that pass are exactly the two step-1
-  measurement tests. With the change: 17 passed.
+  18 tests. Against a pristine tree at `ff1c6931` with only this file added:
+  16 failed, 2 passed, and the 2 that pass are exactly the two step-1
+  measurement tests. With the change: 18 passed.
 - CI quality command (`ruff check` over `scripts/`, `tests/contract_compiler`,
   `src/malleus`): all checks passed. Repository-wide `ruff check src tests`
   reports the same nine pre-existing findings as `ff1c6931`, none in the new
   files.
 - Full default suite at `ff1c6931` before the change: 3518 passed, 3 skipped,
   0 failed. After the change: 3511 passed, 3 skipped, 24 failed. The arithmetic
-  closes: 3518 + 17 new = 3535 = 3511 + 24.
+  closes: 3518 + 17 new = 3535 = 3511 + 24; the eighteenth test arrived after that run.
 - All 24 failures have one cause, the governance digest guard:
   `LedgerValidationError: latest document digest mismatch for pyproject.toml`.
   Seven in `test_contract_compiler_ledger.py`, fourteen in

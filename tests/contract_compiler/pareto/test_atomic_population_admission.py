@@ -746,6 +746,44 @@ def test_source_text_against_a_contract_that_cannot_read_it_refuses(
     assert history_path(history).read_bytes() == ledger_before
 
 
+def test_the_staged_check_writes_thaw_the_compiled_operations_properties() -> None:
+    """The defect both shipped runners carry, guarded at its one Core site.
+
+    A compiled operation freezes list values into tuples and the ontology
+    validator accepts only ``list`` for a multivalued slot, so
+    ``dict(operation.properties)`` refuses every multivalued property at the
+    check. Both `runner.py` and `admit.py` do exactly that. This pins the Core
+    site to `_staged_properties`, the same thaw
+    `test_repository_guards.py::test_staged_writes_thaw_the_frozen_change_set_properties`
+    pins inside `knowledge.py`.
+    """
+
+    import ast
+
+    source = Path(
+        __import__("malleus._contract_pipeline.admission", fromlist=["x"]).__file__
+    )
+    tree = ast.parse(source.read_text(encoding="utf-8"), filename=str(source))
+    writes = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "ProposedOperation"
+    ]
+
+    assert len(writes) == 1, "the staged check-write site moved"
+    properties = [
+        keyword.value for keyword in writes[0].keywords if keyword.arg == "properties"
+    ]
+    assert len(properties) == 1
+    assert (
+        isinstance(properties[0], ast.Call)
+        and isinstance(properties[0].func, ast.Name)
+        and properties[0].func.id == "_staged_properties"
+    ), "staged check writes must thaw the compiled operation's properties"
+
+
 def test_the_operation_is_declared_on_the_public_facade() -> None:
     assert {
         "PopulationAdmission",

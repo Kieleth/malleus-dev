@@ -33,7 +33,7 @@
         "path": "docs/contract_compiler/index.md"
       },
       {
-        "after_digest": "sha256:51c21558c9160615e435cfa07c4800750b23fe22f26338a84bae500a830dfe62",
+        "after_digest": "sha256:4a89cddd244e0bb5a4ab996d71d8dcd4e1d83b73ee867450a7c5ce36b40d57e3",
         "change": "CREATED",
         "path": "handover/2026-09-19-core-atomic-admission.md"
       },
@@ -67,13 +67,13 @@
         "path": "src/malleus/logic.py"
       },
       {
-        "after_digest": "sha256:fa4209b209bbf348be025c002a887b1df9b8ad0ccb5d44924a61986b22f43406",
+        "after_digest": "sha256:2d28b7bf983d4987f03062f6b29dcb9ce02f4272b5aef7b7f78d5d68dc7206c6",
         "change": "CREATED",
         "path": "tests/contract_compiler/pareto/test_atomic_population_admission.py"
       }
     ]
   },
-  "entry_hash": "sha256:0d8214aaa1f32ef0a2df386fd791a7a3327f19ec911f5b89181aea201c121b73",
+  "entry_hash": "sha256:728770bcd9cfc5cab1e1d78a140faf5a5412c16b6f692af4c9ccc26acb86d12b",
   "entry_id": "OVR-000467",
   "entry_type": "DOCUMENT_REVISION",
   "ledger": "overseer",
@@ -98,5 +98,5 @@
     "type": "DOCUMENT"
   },
   "summary": "Record one Core operation that compiles, checks and admits a population plan, and the measured hole it closes.",
-  "why": "ROADMAP F1 (E-0486, E-0488): compile, check and admit become one Core operation, enforced by the protocol, not rewritten by every adopter. RED first, as F1 required. On a history with a Prolog policy installed, an admission carrying no CHECK_RECORDED refuses PROTOCOL_REFUSAL 'machine event refused: MISSING_REQUIRED_CHECK' and writes nothing; a fabricated CHECK_RECORDED with outcome SATISFIED is accepted with no engine run. Core checked the event set's shape and read the verdict off it. check_and_admit_population_plan takes plan bytes, compiles against the required contract, resolves the required check from required_checks, loads the retained bytes reproducing it, runs it over the would-be state, and appends plan, gaps, change set, receipt and three events. No parameter carries an outcome. PopulationAdmissionRefusal names COMPILE, CHECK or ADMIT; the first two write no byte. Absorbed from two consumers of different shape, the Shop runner and the document path, fixing two defects both carried. 17 tests: 15 failed at ff1c6931, 17 pass now; suite 3511 passed, 24 failed, all this block's digest guard. Residual: admit_with_anchors stays public, so the fabricated path remains reachable."
+  "why": "ROADMAP F1 (E-0486, E-0488): compile, check and admit become one Core operation, enforced by the protocol, not rewritten by every adopter. RED first, as F1 required. On a history with a Prolog policy installed, an admission carrying no CHECK_RECORDED refuses PROTOCOL_REFUSAL 'machine event refused: MISSING_REQUIRED_CHECK' and writes nothing; a fabricated CHECK_RECORDED with outcome SATISFIED is accepted with no engine run. Core checked the event set's shape and read the verdict off it. check_and_admit_population_plan takes plan bytes, compiles against the required contract, resolves the required check from required_checks, loads the retained bytes reproducing it, runs it over the would-be state, and appends plan, gaps, change set, receipt and three events. No parameter carries an outcome. PopulationAdmissionRefusal names COMPILE, CHECK or ADMIT; the first two write no byte. Absorbed from two consumers of different shape, the Shop runner and the document path, fixing two defects both carried. 18 tests: 16 failed at ff1c6931, 18 pass now; suite 3511 passed, 24 failed, all this block's digest guard. Residual: admit_with_anchors stays public, so the fabricated path remains reachable."
 }
