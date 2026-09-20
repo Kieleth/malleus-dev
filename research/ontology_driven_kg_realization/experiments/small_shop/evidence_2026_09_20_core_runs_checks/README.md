@@ -87,6 +87,20 @@ four preceding generations, which remain untouched. The recorded
 `changed_paths`, `changed_values` and `changed_keys` describe this transition
 only.
 
-`connected_story_chain` is carried forward unchanged from the preceding
-generation. The connected story's own re-freeze, which the structural fold of
-commit `7c3237f0` moved, has not been cut and is not part of this generation.
+`connected_story_chain` records the connected story's own re-freeze, which the
+structural fold of commit `7c3237f0` forced. The bundle's identity is inside the
+partial effective contract every structural change set binds, so this time the
+move starts at the Table 1 baseline itself rather than at the warehouse stage:
+33 values across 8 files, each a ledger digest, head, replay receipt, contract
+identity, byte count or a report digest embedding one. The key is inert, as
+before. `assert_current_evidence` does not read it, and the superseded pairs it
+held from the 2026-09-17 revision-policy move stay in that generation's
+`binding.json`.
+
+What did not move is the point of the re-cut. Measured against a `git archive`
+of `85f0ed54`, the exported graph and the complete record history are
+byte-identical at all three stages, and so are the Table 1 account, the
+partial-shipments report and every ordering count and witness. The warehouse and
+timeline reports differ in their binding coordinates and nowhere else. The three
+graph state digests are unchanged: `sha256:4a890bb0…`, `sha256:e5f36981…` and
+`sha256:57e3839c…`.

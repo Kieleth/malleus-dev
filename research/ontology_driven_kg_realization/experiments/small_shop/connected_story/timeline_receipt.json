@@ -1,9 +1,9 @@
 {
   "purpose": "SHOP_READ_RECEIPT_NOT_A_PROTOCOL_RECORD",
-  "history_sha256": "sha256:1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe",
-  "history_head": "sha256:0f33125b77cccce4885aad303f2dace0d0ad46503f88025107715921541a5b7a",
-  "history_receipt": "sha256:78e211ddffccbe800a44b21b48c24fe546c877caccde721c60be2bd88e54a13c",
-  "report_sha256": "sha256:afc5072a5f8cd1e5988874d3c2d1d5423f5af25f34f23c90eb07508fb81254b6",
+  "history_sha256": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3",
+  "history_head": "sha256:9e0cff50f34fcdb8888b0f6d2d4ebbfcc832fc485876f85871bc7b633216cd4a",
+  "history_receipt": "sha256:cf0fe19f0263e9945ffc6ad4337208df86e5c353f9263bcb054fd9c7923feee2",
+  "report_sha256": "sha256:4aa0b4e7d28f7ec0ee4f49fa1cd9928aaaa8822d7c3d6af6f07cad0b5b359933",
   "spec_sha256": "sha256:3b082441f2723cef2ab1ded9c4751bcf98cf2eba0b5999745d95337dea586549",
   "reader_sha256": "sha256:81049667ee9a28c0440a47a75accf34e3c9e5238c25440011730a6f41e736bc5",
   "event_count": 21,
