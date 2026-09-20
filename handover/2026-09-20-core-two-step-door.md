@@ -483,10 +483,28 @@ calibration files were not edited.
 - `research/.../small_shop/connected_story` plus `content_rules`: **130 passed**.
 - `tests/contract_compiler`, `research/methodology_gedanken_e2e/tests` and
   `research/.../small_shop/object_event`: see the final measurement below.
+- `tests/contract_compiler`, `research/methodology_gedanken_e2e/tests` and
+  `research/.../small_shop/object_event` in one selection: **1336 passed**, 0
+  failed, 529s.
+- The full default suite, `pytest -q -p no:cacheprovider tests -rf`: **24
+  failed, 3637 passed, 3 skipped**, 838s. Every one of the 24 is a governance
+  digest guard, by path: `tests/test_contract_compiler_integration.py` 14,
+  `tests/test_contract_compiler_ledger.py` 7, `tests/test_docs.py` 3, the last
+  three through the strict Sphinx build, which runs the same validator. The
+  validator stops at the first mismatch, so only one path is ever named; it now
+  names `OVR-000460: latest document digest mismatch for tests/test_docs.py`.
 - Ruff over `src tests research/.../small_shop scripts`: the same nine findings
   as `85f0ed54` and no more. The branch had acquired a tenth, `F841` on a dead
   `before = history.replay()` at `test_knowledge_change_history.py:1485` from
   the migration; it was removed.
+
+**What remains after sealing, stated honestly.** Not zero. The 24 digest
+mismatches clear: the scratch run below validates all 475 entries against this
+tree once the chain is inserted. What does not clear is the deleted-document
+refusal, `OVR-000352: revised document does not exist`, which no entry can
+answer and which the validator only reaches once the digests are current. The
+expected residue after sealing is therefore one refusal, not none, until the
+deletion is decided.
 
 **The four documents are written.** `CHANGELOG.md` (the `check_and_admit_change_set`
 entry under Added, the closed door and the fold under Changed, and the stale
