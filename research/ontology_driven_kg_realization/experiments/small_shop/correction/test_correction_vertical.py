@@ -38,6 +38,10 @@ POLICY = HERE / "policy.json"
 RUN_PROGRAM = HERE / "run.json"
 MAPPING = HERE / "mapping.json"
 CHECKS = HERE / "checks"
+VERIFICATION_GRAMMAR = (
+    b'"grammar":"malleus.small-shop.source-mapping-verification/private-v0"'
+)
+DECLARATION = HERE / "source-mapping-declaration.json"
 ORACLE = FIXTURE / "oracle/shop-supplier-order-correction.json"
 
 
@@ -61,12 +65,24 @@ def _digest(path: Path) -> str:
     return "sha256:" + sha256(path.read_bytes()).hexdigest()
 
 
+def _digest_bytes(content: bytes) -> str:
+    return "sha256:" + sha256(content).hexdigest()
+
+
 def test_program_policy_machine_and_checks_are_closed_canonical_data() -> None:
+    """One required check contract, and one research-local declaration beside it.
+
+    The policy required two private-grammar contracts until 2026-09-20,
+    source-mapping-conformance at sha256:d98a2616... and
+    structural-conformance at sha256:47e59912..., and this program ran both
+    and wrote their outcomes. It now requires the one CORE_BUILTIN document
+    Core runs.
+    """
     paths = (
         MACHINE,
         POLICY,
         RUN_PROGRAM,
-        CHECKS / "source-mapping-conformance.json",
+        DECLARATION,
         CHECKS / "structural-conformance.json",
     )
     values = {path: _load(path) for path in paths}
@@ -79,20 +95,22 @@ def test_program_policy_machine_and_checks_are_closed_canonical_data() -> None:
     assert policy["grammar"] == "malleus.policy-program/private-v0"
     assert program["grammar"] == "malleus.small-shop.correction-run/private-v0"
     assert [item["check_contract_identity"] for item in policy["required_checks"]] == [
-        _digest(CHECKS / "source-mapping-conformance.json"),
-        _digest(CHECKS / "structural-conformance.json"),
+        _digest(CHECKS / "structural-conformance.json")
     ]
-    assert {path.name for path in CHECKS.iterdir()} == {
-        "source-mapping-conformance.json",
-        "structural-conformance.json",
-    }
+    assert {path.name for path in CHECKS.iterdir()} == {"structural-conformance.json"}
+    assert values[CHECKS / "structural-conformance.json"]["grammar"] == (
+        "malleus.check-contract/v1"
+    )
+    assert values[DECLARATION]["grammar"] == (
+        "malleus.small-shop.source-mapping-declaration/private-v0"
+    )
+    # Core names a receipt after the change and the check it ran, so the
+    # CHECK_RECORDED reference by receipt_identity, which held only while this
+    # program anchored each receipt under its own digest, is gone.
     check_instructions = machine["events"]["CHECK_RECORDED"]["instructions"]
-    assert {
-        "event_field": "receipt_identity",
-        "opcode": "REQUIRE_REFERENCED_RECORD",
-        "record_type": "ArtifactRecord",
-        "refusal": "UNKNOWN_REFERENCE",
-    } in check_instructions
+    assert not any(
+        item.get("event_field") == "receipt_identity" for item in check_instructions
+    )
     assert "small-shop" not in MACHINE.read_text().lower()
     assert "supplier" not in MACHINE.read_text().lower()
     assert "small-shop" not in POLICY.read_text().lower()
@@ -147,9 +165,16 @@ def test_source_to_log_to_current_and_historical_graph(tmp_path: Path) -> None:
     assert later.valid_to is None
 
 
-def test_real_check_receipts_are_retained_and_bound_to_protocol_records(
+def test_core_check_receipts_are_retained_and_bound_to_protocol_records(
     tmp_path: Path,
 ) -> None:
+    """Three check records now, one per change, and every one is Core's.
+
+    There were six: two per change, because this program ran two checks and
+    wrote both outcomes. The source-mapping recompute is still here and still
+    retained, as this program's own verification record under its own grammar,
+    and no check record names it.
+    """
     result = run_correction(tmp_path / "proof")
     replay = result.replay
     retained = {item.record_id: item for item in replay.retained_inputs}
@@ -158,23 +183,44 @@ def test_real_check_receipts_are_retained_and_bound_to_protocol_records(
         for record in replay.machine_state.records
         if record.record_type == "CheckRecord"
     ]
-    assert len(checks) == 6
+    assert len(checks) == 3
 
     for check in checks:
-        identity = check.fields["receipt_identity"]
-        artifact = retained[identity]
+        assert check.fields["check_contract_id"] == "structural-conformance"
+        assert check.fields["outcome"] == "SATISFIED"
+        artifact = next(
+            item
+            for item in retained.values()
+            if item.identity == check.fields["receipt_identity"]
+        )
         receipt = json.loads(artifact.content)
         assert artifact.role == "RETAINED_EVIDENCE"
-        assert artifact.identity == identity
+        assert artifact.record_id.startswith("receipt:")
+        assert artifact.record_id.endswith(":structural-conformance")
         assert _canonical(receipt) == artifact.content
-        assert receipt["outcome"] == check.fields["outcome"] == "SATISFIED"
-        assert receipt["check_contract_id"] == check.fields["check_contract_id"]
-        assert receipt["check_contract_identity"] == (
+        assert receipt["check"]["outcome"] == "SATISFIED"
+        assert receipt["check"]["executor_kind"] == "CORE_BUILTIN"
+        assert receipt["check"]["check_contract_identity"] == (
             check.fields["check_contract_identity"]
         )
-        assert receipt["change"]["contract_identity"] == (
+
+    verifications = [
+        json.loads(item.content)
+        for item in retained.values()
+        if item.content.startswith(b'{"base":')
+    ]
+    assert len(verifications) == 3
+    for record in verifications:
+        assert record["grammar"] == (
+            "malleus.small-shop.source-mapping-verification/private-v0"
+        )
+        assert record["verification_id"] == "source-mapping-conformance"
+        assert record["change"]["contract_identity"] == (
             replay.partial_contract.identity
         )
+    assert {check.fields["receipt_identity"] for check in checks}.isdisjoint(
+        {_canonical(record) and _digest_bytes(_canonical(record)) for record in verifications}
+    )
     assert retained["artifact:small-shop-proof:check-entrypoint"].media_type == (
         "text/x-python"
     )
@@ -319,34 +365,81 @@ def test_tampered_source_refuses_before_history_creation(tmp_path: Path) -> None
     assert not (output / "history.jsonl").exists()
 
 
-def test_tampered_check_contract_refuses_before_history_creation(
+def test_tampered_declaration_refuses_before_history_creation(
     tmp_path: Path,
 ) -> None:
-    checks = tmp_path / "checks"
-    shutil.copytree(CHECKS, checks)
-    contract = checks / "source-mapping-conformance.json"
-    contract.write_bytes(contract.read_bytes().replace(b"CONFORMS", b"DIFFERS"))
+    """The declaration pins the entrypoint, and the policy pins the contract.
+
+    This mutation moves the declaration's own digest, which nothing pins any
+    more, so what catches it is the entrypoint pin it carries.
+    """
+    declaration = tmp_path / "source-mapping-declaration.json"
+    declaration.write_bytes(
+        DECLARATION.read_bytes().replace(b"CONFORMS", b"DIFFERS").replace(
+            _digest(Path(correction_module.__file__)).encode(),
+            ("sha256:" + "0" * 64).encode(),
+        )
+    )
     output = tmp_path / "proof"
 
     with pytest.raises(CorrectionRefusal) as refusal:
-        run_correction(output, checks_root=checks)
+        run_correction(output, declaration_path=declaration)
 
     assert refusal.value.reason is CorrectionRefusalReason.CONFIGURATION_IDENTITY_MISMATCH
     assert not (output / "history.jsonl").exists()
 
 
 @pytest.mark.parametrize("mutation", ["EXTRA_FIELD", "WRONG_GRAMMAR"])
+def test_declaration_shape_is_closed_for_fresh_and_replay_paths(
+    tmp_path: Path, mutation: str
+) -> None:
+    declaration_path = tmp_path / "source-mapping-declaration.json"
+    declaration = _load(DECLARATION)
+    if mutation == "EXTRA_FIELD":
+        declaration["unexpected"] = True
+    else:
+        declaration["grammar"] = "malleus.check-contract/unsupported"
+    changed = _canonical(declaration)
+    declaration_path.write_bytes(changed)
+    output = tmp_path / "proof"
+
+    with pytest.raises(CorrectionRefusal) as fresh:
+        run_correction(output, declaration_path=declaration_path)
+
+    assert fresh.value.reason is CorrectionRefusalReason.MALFORMED_CONFIGURATION
+    assert not (output / "history.jsonl").exists()
+
+    with pytest.raises(CorrectionRefusal) as replay:
+        correction_module._source_mapping_declaration(
+            changed,
+            entrypoint_id="artifact:small-shop-proof:check-entrypoint",
+            entrypoint_identity=_digest(Path(correction_module.__file__)),
+            shape_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+            identity_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+        )
+
+    assert replay.value.reason is CorrectionRefusalReason.INCOMPATIBLE_HISTORY
+
+
+@pytest.mark.parametrize("mutation", ["EXTRA_FIELD", "WRONG_GRAMMAR", "WRONG_EXECUTOR"])
 def test_check_contract_shape_is_closed_for_fresh_and_replay_paths(
     tmp_path: Path, mutation: str
 ) -> None:
+    """The check contract is Core's to run, so this program hands it over exact."""
     checks = tmp_path / "checks"
     shutil.copytree(CHECKS, checks)
-    contract_path = checks / "source-mapping-conformance.json"
+    contract_path = checks / "structural-conformance.json"
     contract = _load(contract_path)
     if mutation == "EXTRA_FIELD":
         contract["unexpected"] = True
+    elif mutation == "WRONG_GRAMMAR":
+        contract["grammar"] = "malleus.check-contract/private-v0"
     else:
-        contract["grammar"] = "malleus.check-contract/unsupported"
+        contract["executor"] = {
+            "builtin_id": "malleus.core.absent-builtin",
+            "builtin_version": "1",
+            "kind": "CORE_BUILTIN",
+        }
     changed = _canonical(contract)
     contract_path.write_bytes(changed)
     output = tmp_path / "proof"
@@ -358,12 +451,8 @@ def test_check_contract_shape_is_closed_for_fresh_and_replay_paths(
     assert not (output / "history.jsonl").exists()
 
     with pytest.raises(CorrectionRefusal) as replay:
-        correction_module._check_contract(
-            changed,
-            entrypoint_id="artifact:small-shop-proof:check-entrypoint",
-            entrypoint_identity=_digest(Path(correction_module.__file__)),
-            shape_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-            identity_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+        correction_module._check_contract_document(
+            changed, reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY
         )
 
     assert replay.value.reason is CorrectionRefusalReason.INCOMPATIBLE_HISTORY
@@ -374,8 +463,7 @@ def _assert_bootstrap_only(output: Path) -> None:
     assert replay.change_sets == ()
     assert replay.graph.node_count == replay.graph.edge_count == 0
     assert all(
-        b'"grammar":"malleus.check-receipt/private-v0"' not in item.content
-        for item in replay.retained_inputs
+        VERIFICATION_GRAMMAR not in item.content for item in replay.retained_inputs
     )
 
 
@@ -385,26 +473,26 @@ def _assert_first_correction_not_admitted(output: Path) -> None:
         "change:RET-010:genesis"
     ]
     assert replay.graph.get_node("supplier-order-state:B:e4") is None
+    # One verification record for the admitted baseline, where there were two
+    # receipts: the structural one is Core's now and is named, not digested.
     assert sum(
         item.content.startswith(b'{"base":')
-        and b'"grammar":"malleus.check-receipt/private-v0"' in item.content
+        and VERIFICATION_GRAMMAR in item.content
         for item in replay.retained_inputs
-    ) == 2
+    ) == 1
 
 
-def test_receipt_content_mismatch_cannot_become_a_protocol_check(
+def test_verification_with_a_wrong_id_refuses_atomically(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    execute = correction_module._check_receipts
+    execute = correction_module._verification_record_bytes
 
     def mismatch(*args, **kwargs):
-        receipts = list(execute(*args, **kwargs))
-        receipt = json.loads(receipts[0])
-        receipt["check_contract_id"] = "different-check"
-        receipts[0] = _canonical(receipt)
-        return tuple(receipts)
+        record = json.loads(execute(*args, **kwargs))
+        record["verification_id"] = "different-verification"
+        return _canonical(record)
 
-    monkeypatch.setattr(correction_module, "_check_receipts", mismatch)
+    monkeypatch.setattr(correction_module, "_verification_record_bytes", mismatch)
     output = tmp_path / "proof"
 
     with pytest.raises(CorrectionRefusal) as refusal:
@@ -414,19 +502,17 @@ def test_receipt_content_mismatch_cannot_become_a_protocol_check(
     _assert_bootstrap_only(output)
 
 
-def test_receipt_with_extra_field_refuses_atomically(
+def test_verification_with_extra_field_refuses_atomically(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    execute = correction_module._check_receipts
+    execute = correction_module._verification_record_bytes
 
     def extra_field(*args, **kwargs):
-        receipts = list(execute(*args, **kwargs))
-        receipt = json.loads(receipts[0])
-        receipt["unexpected"] = True
-        receipts[0] = _canonical(receipt)
-        return tuple(receipts)
+        record = json.loads(execute(*args, **kwargs))
+        record["unexpected"] = True
+        return _canonical(record)
 
-    monkeypatch.setattr(correction_module, "_check_receipts", extra_field)
+    monkeypatch.setattr(correction_module, "_verification_record_bytes", extra_field)
     output = tmp_path / "proof"
 
     with pytest.raises(CorrectionRefusal) as refusal:
@@ -436,13 +522,13 @@ def test_receipt_with_extra_field_refuses_atomically(
     _assert_bootstrap_only(output)
 
 
-def test_receipt_with_source_artifact_role_refuses_atomically(
+def test_verification_with_source_artifact_role_refuses_atomically(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     anchor = correction_module._artifact_anchor
 
     def wrong_role(*, record_id, content, role, media_type="application/json"):
-        if b'"grammar":"malleus.check-receipt/private-v0"' in content:
+        if VERIFICATION_GRAMMAR in content:
             role = "SOURCE_ARTIFACT"
         return anchor(
             record_id=record_id,
@@ -462,27 +548,25 @@ def test_receipt_with_source_artifact_role_refuses_atomically(
 
 
 @pytest.mark.parametrize("claim", ["BASE", "CHANGE", "RESULT"])
-def test_false_receipt_semantics_preserve_every_bootstrap_byte(
+def test_false_verification_semantics_preserve_every_bootstrap_byte(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, claim: str
 ) -> None:
-    execute = correction_module._check_receipts
+    execute = correction_module._verification_record_bytes
     output = tmp_path / "proof"
     before: dict[str, bytes] = {}
 
     def false_claim(*args, **kwargs):
         before["ledger"] = (output / "history.jsonl").read_bytes()
-        receipts = list(execute(*args, **kwargs))
-        receipt = json.loads(receipts[0])
+        record = json.loads(execute(*args, **kwargs))
         if claim == "BASE":
-            receipt["base"]["accepted_state_digest"] = "sha256:" + "0" * 64
+            record["base"]["accepted_state_digest"] = "sha256:" + "0" * 64
         elif claim == "CHANGE":
-            receipt["change"]["contract_identity"] = "sha256:" + "0" * 64
+            record["change"]["contract_identity"] = "sha256:" + "0" * 64
         else:
-            receipt["result"]["mapping_sha256"] = "sha256:" + "0" * 64
-        receipts[0] = _canonical(receipt)
-        return tuple(receipts)
+            record["result"]["mapping_sha256"] = "sha256:" + "0" * 64
+        return _canonical(record)
 
-    monkeypatch.setattr(correction_module, "_check_receipts", false_claim)
+    monkeypatch.setattr(correction_module, "_verification_record_bytes", false_claim)
 
     with pytest.raises(CorrectionRefusal) as refusal:
         run_correction(output)

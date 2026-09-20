@@ -1,9 +1,34 @@
 """Run the bounded Small Shop source-to-history-to-graph correction proof.
 
 This module is a private research adapter. Domain choices live in the retained
-fixture, mapping, run program, ontology, machine, policy, and check contracts.
+fixture, mapping, run program, ontology, machine, policy, and check contract.
 The Python code verifies and executes those declarations. The proof retains this
 entrypoint's bytes, not the full imported Core, RET-010, or Python closure.
+
+Two verifications happen per stage and they are not the same kind of thing.
+
+Core runs the one check the policy requires, ``structural-conformance``, a
+``malleus.check-contract/v1`` ``CORE_BUILTIN`` document at
+``sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9``
+naming ``malleus.core.operations-apply-atomically``.
+``check_and_admit_change_set`` resolves it against what this history retains,
+runs it over the state the change would produce, mints its receipt and writes
+``CHANGE_PROPOSED``, ``CHECK_RECORDED`` and ``VERDICT_RECORDED``. This program
+states no outcome and writes no protocol event.
+
+The source-mapping recompute is this program's own. It runs before admission
+under ``source-mapping-declaration.json``, which pins the exact bytes of this
+file, and its result is retained as evidence in the same batch as the change.
+**Core does not vouch for it.** Until 2026-09-20 the policy required it as a
+check contract in a private grammar, ``source-mapping-conformance`` at
+``sha256:d98a2616...``, whose executor was this file, so this program ran its
+own program and wrote ``outcome: SATISFIED`` into a ``CHECK_RECORDED`` event.
+The old ``structural-conformance`` contract, ``sha256:47e59912...``, was the
+same arrangement over Core's own primitive. What the recompute establishes is
+unchanged and ``_validate_replay`` still proves it from ledger bytes alone; it
+also recomputes Core's structural receipt rather than trusting it. What
+changed is that the recompute no longer presents itself as a check the
+protocol accepted.
 """
 
 from __future__ import annotations
@@ -39,13 +64,16 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeSet,
     KnowledgeHistoryReplay,
 )
+from malleus._contract_pipeline.admission import (
+    PopulationAdmissionRefusal,
+    check_and_admit_change_set,
+)
 from malleus._contract_pipeline.machine import (
     PartialEffectiveContract,
     PolicyProgram,
     ProtocolMachineProgram,
     compose_normative_profile,
     compose_partial_effective_contract,
-    execute_event,
 )
 from malleus._contract_source import (
     CollaboratorRefusal,
@@ -71,10 +99,13 @@ _MACHINE = _HERE / "machine.json"
 _POLICY = _HERE / "policy.json"
 _PROGRAM = _HERE / "run.json"
 _CHECKS = _HERE / "checks"
+_DECLARATION = _HERE / "source-mapping-declaration.json"
 _CONTRACT_KIND = "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0"
 _CHANGE_GRAMMAR = "malleus.knowledge-change-set/private-v0"
-_CHECK_GRAMMAR = "malleus.check-contract/private-v0"
-_RECEIPT_GRAMMAR = "malleus.check-receipt/private-v0"
+_DECLARATION_GRAMMAR = "malleus.small-shop.source-mapping-declaration/private-v0"
+_RECORD_GRAMMAR = "malleus.small-shop.source-mapping-verification/private-v0"
+_CHECK_CONTRACT_GRAMMAR = "malleus.check-contract/v1"
+_CHECK_CONTRACT_ID = "structural-conformance"
 _RUN_GRAMMAR = "malleus.small-shop.correction-run/private-v0"
 _CORRECTION_MAPPING_GRAMMAR = (
     "malleus.small-shop.supplier-order-correction-mapping/private-v0"
@@ -263,8 +294,8 @@ def _validate_program(program: dict[str, object]) -> Mapping[str, object]:
         "partial_contract",
         "policy",
         "run_program",
-        "source_mapping_check",
-        "structural_check",
+        "check_contract",
+        "source_mapping_declaration",
         "validated_contract",
     }
     if set(artifact_ids) != expected_artifacts:
@@ -329,10 +360,7 @@ def _validate_program(program: dict[str, object]) -> Mapping[str, object]:
         stage = _object(raw_stage, "run stage")
         if set(stage) != {
             "change_set_id",
-            "decision_id",
             "mapping_change",
-            "proposal_id",
-            "receipt_id_prefix",
             "transaction_time",
         }:
             raise _refuse(
@@ -340,15 +368,7 @@ def _validate_program(program: dict[str, object]) -> Mapping[str, object]:
                 "run stage fields are not closed",
             )
         selectors.append(stage["mapping_change"])
-        identities.extend(
-            _text(stage[key], f"stage {key}")
-            for key in (
-                "change_set_id",
-                "decision_id",
-                "proposal_id",
-                "receipt_id_prefix",
-            )
-        )
+        identities.append(_text(stage["change_set_id"], "stage change_set_id"))
         _text(stage.get("transaction_time"), "stage transaction time")
     if selectors != ["BASELINE", 0, 1] or len(identities) != len(set(identities)):
         raise _refuse(
@@ -395,7 +415,9 @@ class _Configuration:
     machine: ProtocolMachineProgram
     policy_bytes: bytes
     policy: PolicyProgram
-    check_contracts: tuple[tuple[bytes, Mapping[str, object]], ...]
+    check_contract_bytes: bytes
+    declaration_bytes: bytes
+    declaration: Mapping[str, object]
     baseline: Ret010Vertical
     correction: _SourceBundle
     compilation: ValidatedContractCompilation
@@ -412,7 +434,13 @@ class CorrectionRun:
 
 
 @dataclass(frozen=True, slots=True)
-class _CheckReceipt:
+class _VerificationRecord:
+    """This program's own source-mapping result, retained as evidence.
+
+    It is not a check record. The one check this history's policy requires is
+    Core's structural builtin, which Core resolves, runs and receipts itself.
+    """
+
     canonical_bytes: bytes
     identity: str
     data: Mapping[str, object]
@@ -424,7 +452,7 @@ class _SourceMappingVerification:
     result: Mapping[str, object]
 
 
-def _check_contract(
+def _source_mapping_declaration(
     source: bytes,
     *,
     entrypoint_id: str,
@@ -432,86 +460,109 @@ def _check_contract(
     shape_reason: CorrectionRefusalReason,
     identity_reason: CorrectionRefusalReason,
 ) -> Mapping[str, object]:
-    """Parse one exact check contract for both fresh and replay paths."""
+    """The research-local declaration of the source-mapping recompute.
+
+    It is not a check contract and Core does not run it. It pins the exact
+    entrypoint bytes that perform the recompute, which is the guarantee the
+    private check-contract grammar carried before Core ran every check.
+    """
     try:
-        data = _json(source, "check contract", canonical=True)
-        if set(data) != {
-            "algorithm",
-            "check_contract_id",
-            "executor",
-            "grammar",
-            "outcomes",
-        }:
-            raise ValueError("check contract fields are not closed")
-        if data.get("grammar") != _CHECK_GRAMMAR:
-            raise ValueError("check contract grammar is unsupported")
-        _text(data.get("algorithm"), "check algorithm")
-        _text(data.get("check_contract_id"), "check contract ID")
-        if data.get("outcomes") != ["SATISFIED", "VIOLATED"]:
-            raise ValueError("check contract outcomes are unsupported")
-        binding = _object(data.get("executor"), "check entrypoint binding")
+        data = _json(source, "source-mapping declaration", canonical=True)
+        if set(data) != {"algorithm", "executor", "grammar", "verification_id"}:
+            raise ValueError("declaration fields are not closed")
+        if data.get("grammar") != _DECLARATION_GRAMMAR:
+            raise ValueError("declaration grammar is unsupported")
+        _text(data.get("algorithm"), "declaration algorithm")
+        _text(data.get("verification_id"), "declaration verification ID")
+        binding = _object(data.get("executor"), "declaration entrypoint binding")
         if set(binding) != {"artifact_id", "sha256"}:
-            raise ValueError("check entrypoint binding fields are not closed")
+            raise ValueError("declaration entrypoint fields are not closed")
     except CorrectionRefusal as error:
         raise _refuse(
-            shape_reason, f"invalid check contract: {error.detail}"
+            shape_reason, f"invalid source-mapping declaration: {error.detail}"
         ) from error
     except ValueError as error:
-        raise _refuse(shape_reason, f"invalid check contract: {error}") from error
+        raise _refuse(
+            shape_reason, f"invalid source-mapping declaration: {error}"
+        ) from error
     if binding != {
         "artifact_id": entrypoint_id,
         "sha256": entrypoint_identity,
     }:
         raise _refuse(
             identity_reason,
-            "check contract does not pin the exact entrypoint bytes",
+            "source-mapping declaration does not pin the exact entrypoint bytes",
         )
     return MappingProxyType(data)
 
 
-def _check_receipt(
+def _check_contract_document(
+    source: bytes, *, reason: CorrectionRefusalReason
+) -> Mapping[str, object]:
+    """The one check contract this history requires, which Core parses and runs."""
+    try:
+        data = _json(source, "check contract", canonical=True)
+        if set(data) != {"check_contract_id", "executor", "grammar", "outcomes"}:
+            raise ValueError("check contract fields are not closed")
+        if data.get("grammar") != _CHECK_CONTRACT_GRAMMAR:
+            raise ValueError("check contract grammar is unsupported")
+        if data.get("check_contract_id") != _CHECK_CONTRACT_ID:
+            raise ValueError("check contract names a different check")
+        if data.get("outcomes") != ["SATISFIED", "VIOLATED"]:
+            raise ValueError("check contract outcomes are unsupported")
+        if _object(data.get("executor"), "check executor") != {
+            "builtin_id": "malleus.core.operations-apply-atomically",
+            "builtin_version": "1",
+            "kind": "CORE_BUILTIN",
+        }:
+            raise ValueError("check contract names an executor Core does not ship")
+    except CorrectionRefusal as error:
+        raise _refuse(reason, f"invalid check contract: {error.detail}") from error
+    except ValueError as error:
+        raise _refuse(reason, f"invalid check contract: {error}") from error
+    return MappingProxyType(data)
+
+
+def _verification(
     source: bytes,
     *,
     retained_role: str,
     reason: CorrectionRefusalReason,
-) -> _CheckReceipt:
-    """Parse one exact receipt under the same rules before admission and replay."""
+) -> _VerificationRecord:
+    """Parse one exact verification record, before admission and at replay."""
     if retained_role != "RETAINED_EVIDENCE":
-        raise _refuse(reason, "check receipt must be retained evidence")
+        raise _refuse(reason, "verification record must be retained evidence")
     try:
-        data = _json(source, "check receipt", canonical=True)
+        data = _json(source, "verification record", canonical=True)
         if set(data) != {
             "base",
             "change",
-            "check_contract_id",
-            "check_contract_identity",
+            "declaration_identity",
             "grammar",
-            "outcome",
             "result",
+            "verification_id",
         }:
-            raise ValueError("receipt root fields are not closed")
-        if data.get("grammar") != _RECEIPT_GRAMMAR:
-            raise ValueError("receipt grammar is unsupported")
-        _text(data.get("check_contract_id"), "receipt check contract ID")
-        if not _is_digest(data.get("check_contract_identity")):
-            raise ValueError("receipt check contract identity is invalid")
-        if data.get("outcome") not in {"SATISFIED", "VIOLATED"}:
-            raise ValueError("receipt outcome is unsupported")
+            raise ValueError("verification root fields are not closed")
+        if data.get("grammar") != _RECORD_GRAMMAR:
+            raise ValueError("verification grammar is unsupported")
+        _text(data.get("verification_id"), "verification ID")
+        if not _is_digest(data.get("declaration_identity")):
+            raise ValueError("verification declaration identity is invalid")
 
-        base = _object(data.get("base"), "receipt base")
+        base = _object(data.get("base"), "verification base")
         if set(base) != {
             "acceptance_head",
             "accepted_state_digest",
             "materialization_head",
         }:
-            raise ValueError("receipt base fields are not closed")
+            raise ValueError("verification base fields are not closed")
         for key in ("acceptance_head", "materialization_head"):
             if base.get(key) != "GENESIS" and not _is_digest(base.get(key)):
-                raise ValueError(f"receipt base {key} is invalid")
+                raise ValueError(f"verification base {key} is invalid")
         if not _is_digest(base.get("accepted_state_digest")):
-            raise ValueError("receipt base state identity is invalid")
+            raise ValueError("verification base state identity is invalid")
 
-        change = _object(data.get("change"), "receipt change")
+        change = _object(data.get("change"), "verification change")
         if set(change) != {
             "change_set_id",
             "contract_identity",
@@ -520,60 +571,56 @@ def _check_receipt(
             "supersedes",
             "valid_time",
         }:
-            raise ValueError("receipt change fields are not closed")
-        _text(change.get("change_set_id"), "receipt change ID")
+            raise ValueError("verification change fields are not closed")
+        _text(change.get("change_set_id"), "verification change ID")
         if not _is_digest(change.get("contract_identity")):
-            raise ValueError("receipt contract identity is invalid")
-        operations = _array(change.get("operations"), "receipt operations")
+            raise ValueError("verification contract identity is invalid")
+        operations = _array(change.get("operations"), "verification operations")
         if not operations or not all(isinstance(item, Mapping) for item in operations):
-            raise ValueError("receipt operations must be nonempty objects")
-        sources = _array(change.get("sources"), "receipt sources")
+            raise ValueError("verification operations must be nonempty objects")
+        sources = _array(change.get("sources"), "verification sources")
         source_ids = []
         for raw_source in sources:
-            item = _object(raw_source, "receipt source")
+            item = _object(raw_source, "verification source")
             if set(item) != {"sha256", "source_id"}:
-                raise ValueError("receipt source fields are not closed")
-            source_ids.append(_text(item.get("source_id"), "receipt source ID"))
+                raise ValueError("verification source fields are not closed")
+            source_ids.append(_text(item.get("source_id"), "verification source ID"))
             if not _is_digest(item.get("sha256")):
-                raise ValueError("receipt source identity is invalid")
+                raise ValueError("verification source identity is invalid")
         if not sources or len(source_ids) != len(set(source_ids)):
-            raise ValueError("receipt source closure must be nonempty and unique")
+            raise ValueError("verification source closure must be nonempty and unique")
         supersedes = tuple(
-            _text(item, "receipt supersession ID")
-            for item in _array(change.get("supersedes"), "receipt supersedes")
+            _text(item, "verification supersession ID")
+            for item in _array(change.get("supersedes"), "verification supersedes")
         )
         if len(supersedes) != len(set(supersedes)):
-            raise ValueError("receipt supersession IDs must be unique")
-        valid_time = _object(change.get("valid_time"), "receipt valid time")
+            raise ValueError("verification supersession IDs must be unique")
+        valid_time = _object(change.get("valid_time"), "verification valid time")
         if set(valid_time) != {"kind", "value"} or valid_time.get("kind") not in {
             "INSTANT",
             "ORDER_ONLY",
         }:
-            raise ValueError("receipt valid-time fields are invalid")
-        _text(valid_time.get("value"), "receipt valid-time value")
+            raise ValueError("verification valid-time fields are invalid")
+        _text(valid_time.get("value"), "verification valid-time value")
 
-        result = _object(data.get("result"), "receipt result")
-        if set(result) == {
+        result = _object(data.get("result"), "verification result")
+        if set(result) != {
             "mapping_sha256",
             "selected_record_sha256",
             "verified_operation_count",
         }:
-            count = result.get("verified_operation_count")
-            if not isinstance(count, int) or isinstance(count, bool) or count < 1:
-                raise ValueError("receipt verified-operation count is invalid")
-            for key in ("mapping_sha256", "selected_record_sha256"):
-                if not _is_digest(result.get(key)):
-                    raise ValueError(f"receipt {key} is invalid")
-        elif set(result) == {"result_state_digest"}:
-            if not _is_digest(result.get("result_state_digest")):
-                raise ValueError("receipt result-state identity is invalid")
-        else:
-            raise ValueError("receipt result fields are not closed")
+            raise ValueError("verification result fields are not closed")
+        count = result.get("verified_operation_count")
+        if not isinstance(count, int) or isinstance(count, bool) or count < 1:
+            raise ValueError("verified-operation count is invalid")
+        for key in ("mapping_sha256", "selected_record_sha256"):
+            if not _is_digest(result.get(key)):
+                raise ValueError(f"verification {key} is invalid")
     except CorrectionRefusal as error:
-        raise _refuse(reason, f"invalid check receipt: {error.detail}") from error
+        raise _refuse(reason, f"invalid verification record: {error.detail}") from error
     except ValueError as error:
-        raise _refuse(reason, f"invalid check receipt: {error}") from error
-    return _CheckReceipt(source, _digest(source), MappingProxyType(data))
+        raise _refuse(reason, f"invalid verification record: {error}") from error
+    return _VerificationRecord(source, _digest(source), MappingProxyType(data))
 
 
 class _ExactResolver:
@@ -857,6 +904,7 @@ def _load_configuration(
     correction_mapping: Path | None,
     entrypoint_bytes: bytes,
     checks_root: Path,
+    declaration_path: Path,
 ) -> _Configuration:
     program_bytes = _read(program_path, "run program")
     program = _validate_program(
@@ -878,36 +926,25 @@ def _load_configuration(
         ),
         "check entrypoint artifact ID",
     )
-    check_paths = (
-        checks_root / "source-mapping-conformance.json",
-        checks_root / "structural-conformance.json",
+    check_contract_bytes = _read(
+        checks_root / "structural-conformance.json", "check contract"
     )
-    check_contracts = tuple(
-        (
-            source := _read(path, f"check contract {path.name}"),
-            _check_contract(
-                source,
-                entrypoint_id=entrypoint_id,
-                entrypoint_identity=_digest(entrypoint_bytes),
-                shape_reason=CorrectionRefusalReason.MALFORMED_CONFIGURATION,
-                identity_reason=(
-                    CorrectionRefusalReason.CONFIGURATION_IDENTITY_MISMATCH
-                ),
-            ),
-        )
-        for path in check_paths
+    _check_contract_document(
+        check_contract_bytes,
+        reason=CorrectionRefusalReason.MALFORMED_CONFIGURATION,
     )
-    declared_checks = tuple(
-        (
-            _text(contract.get("check_contract_id"), "check contract ID"),
-            _digest(source),
-        )
-        for source, contract in check_contracts
+    declaration_bytes = _read(declaration_path, "source-mapping declaration")
+    declaration = _source_mapping_declaration(
+        declaration_bytes,
+        entrypoint_id=entrypoint_id,
+        entrypoint_identity=_digest(entrypoint_bytes),
+        shape_reason=CorrectionRefusalReason.MALFORMED_CONFIGURATION,
+        identity_reason=CorrectionRefusalReason.CONFIGURATION_IDENTITY_MISMATCH,
     )
-    if declared_checks != policy.required_checks:
+    if policy.required_checks != ((_CHECK_CONTRACT_ID, _digest(check_contract_bytes)),):
         raise _refuse(
             CorrectionRefusalReason.CONFIGURATION_IDENTITY_MISMATCH,
-            "policy does not pin the exact check contracts",
+            "policy does not pin the exact check contract",
         )
     baseline_config = _object(program.get("baseline"), "baseline configuration")
     baseline_fixture = _PROJECT / _text(
@@ -967,7 +1004,9 @@ def _load_configuration(
         machine=machine,
         policy_bytes=policy_bytes,
         policy=policy,
-        check_contracts=check_contracts,
+        check_contract_bytes=check_contract_bytes,
+        declaration_bytes=declaration_bytes,
+        declaration=declaration,
         baseline=baseline,
         correction=correction,
         compilation=compilation,
@@ -1036,10 +1075,6 @@ def _artifact_ids(configuration: _Configuration) -> Mapping[str, object]:
 
 def _bootstrap(history: KnowledgeChangeHistory, config: _Configuration) -> None:
     ids = _artifact_ids(config)
-    check_by_id = {
-        contract["check_contract_id"]: source
-        for source, contract in config.check_contracts
-    }
     artifacts = (
         (
             _text(ids.get("validated_contract"), "validated contract artifact ID"),
@@ -1097,16 +1132,16 @@ def _bootstrap(history: KnowledgeChangeHistory, config: _Configuration) -> None:
         ),
         (
             _text(
-                ids.get("source_mapping_check"),
-                "source-mapping check artifact ID",
+                ids.get("source_mapping_declaration"),
+                "source-mapping declaration artifact ID",
             ),
-            check_by_id["source-mapping-conformance"],
+            config.declaration_bytes,
             "RETAINED_EVIDENCE",
             "application/json",
         ),
         (
-            _text(ids.get("structural_check"), "structural check artifact ID"),
-            check_by_id["structural-conformance"],
+            _text(ids.get("check_contract"), "check contract artifact ID"),
+            config.check_contract_bytes,
             "RETAINED_EVIDENCE",
             "application/json",
         ),
@@ -1158,9 +1193,6 @@ class _Stage:
     sources: tuple[tuple[str, str], ...]
     supersedes: tuple[str, ...]
     valid_time: Mapping[str, object]
-    proposal_id: str
-    receipt_id_prefix: str
-    decision_id: str
     transaction_time: str
     mapping_artifact_id: str
 
@@ -1257,11 +1289,6 @@ def _stages(config: _Configuration) -> tuple[_Stage, ...]:
                 sources=sources,
                 supersedes=supersedes,
                 valid_time=valid_time,
-                proposal_id=_text(stage.get("proposal_id"), "proposal ID"),
-                receipt_id_prefix=_text(
-                    stage.get("receipt_id_prefix"), "receipt ID prefix"
-                ),
-                decision_id=_text(stage.get("decision_id"), "decision ID"),
                 transaction_time=_text(
                     stage.get("transaction_time"), "stage transaction time"
                 ),
@@ -1281,10 +1308,10 @@ def _base_evidence(config: _Configuration, stage: _Stage) -> tuple[str, ...]:
         _text(ids.get("machine"), "machine artifact ID"),
         _text(ids.get("policy"), "policy artifact ID"),
         _text(
-            ids.get("source_mapping_check"),
-            "source-mapping check artifact ID",
+            ids.get("source_mapping_declaration"),
+            "source-mapping declaration artifact ID",
         ),
-        _text(ids.get("structural_check"), "structural check artifact ID"),
+        _text(ids.get("check_contract"), "check contract artifact ID"),
     )
 
 
@@ -1333,97 +1360,37 @@ def _change_set(
         ) from error
 
 
-def _check_receipts(
+def _verification_record_bytes(
     config: _Configuration,
     replay: KnowledgeHistoryReplay,
     change: KnowledgeChangeSet,
-) -> tuple[bytes, ...]:
-    receipts = []
-    for source, contract in config.check_contracts:
-        algorithm = _text(contract.get("algorithm"), "check algorithm")
-        receipts.append(
-            _canonical(
-                {
-                    "base": _plain(_receipt_base(change)),
-                    "change": _plain(_change_claim(change)),
-                    "check_contract_id": contract["check_contract_id"],
-                    "check_contract_identity": _digest(source),
-                    "grammar": _RECEIPT_GRAMMAR,
-                    "outcome": "SATISFIED",
-                    "result": _plain(
-                        _expected_check_result(
-                            replay,
-                            config.program,
-                            change,
-                            algorithm,
-                            reason=CorrectionRefusalReason.CHECK_FAILED,
-                        )
-                    ),
-                }
-            )
-        )
-    return tuple(receipts)
+) -> bytes:
+    """This stage's source-mapping recompute, as bytes to retain as evidence.
 
-
-def _protocol_events(
-    config: _Configuration,
-    stage: _Stage,
-    change: KnowledgeChangeSet,
-    machine_state_identity: str,
-    receipts: tuple[_CheckReceipt, ...],
-) -> tuple[bytes, ...]:
-    events = [
-        _event(
-            "CHANGE_PROPOSED",
-            {
-                "expected_machine_state_identity": machine_state_identity,
-                "knowledge_change_set_identity": change.identity,
-                "policy_id": config.policy.identifier,
-                "policy_identity": config.policy.identity,
-                "proposal_id": stage.proposal_id,
-            },
-        )
-    ]
-    if len(receipts) != len(config.check_contracts):
-        raise _refuse(
-            CorrectionRefusalReason.MALFORMED_CONFIGURATION,
-            "each required check needs one receipt",
-        )
-    for receipt, (contract_bytes, contract) in zip(
-        receipts, config.check_contracts, strict=True
-    ):
-        check_id = _text(contract.get("check_contract_id"), "check contract ID")
-        outcome = _text(receipt.data.get("outcome"), "executed check outcome")
-        if (
-            receipt.data.get("check_contract_id") != check_id
-            or receipt.data.get("check_contract_identity") != _digest(contract_bytes)
-            or outcome not in contract.get("outcomes", ())
-        ):
-            raise _refuse(
-                CorrectionRefusalReason.CHECK_FAILED,
-                "executed receipt differs from its check contract",
-            )
-        events.append(
-            _event(
-                "CHECK_RECORDED",
-                {
-                    "check_contract_id": check_id,
-                    "check_contract_identity": _digest(contract_bytes),
-                    "outcome": outcome,
-                    "policy_identity": config.policy.identity,
-                    "proposal_id": stage.proposal_id,
-                    "receipt_id": stage.receipt_id_prefix + check_id,
-                    "receipt_identity": receipt.identity,
-                },
-            )
-        )
-    events.append(
-        _event(
-            "VERDICT_RECORDED",
-            {"decision_id": stage.decision_id, "proposal_id": stage.proposal_id},
-        )
+    Core does not vouch for it. It states which retained source record the
+    declared mapping selected for this change and how many operations that
+    covered, under this program's own grammar, pinned to the declaration that
+    pins the entrypoint.
+    """
+    return _canonical(
+        {
+            "base": _plain(_receipt_base(change)),
+            "change": _plain(_change_claim(change)),
+            "declaration_identity": _digest(config.declaration_bytes),
+            "grammar": _RECORD_GRAMMAR,
+            "result": _plain(
+                _verify_source_mapping(
+                    replay,
+                    config.program,
+                    change,
+                    reason=CorrectionRefusalReason.CHECK_FAILED,
+                ).result
+            ),
+            "verification_id": _text(
+                config.declaration.get("verification_id"), "verification ID"
+            ),
+        }
     )
-    return tuple(events)
 
 
 def _admit_stage(
@@ -1431,62 +1398,49 @@ def _admit_stage(
     config: _Configuration,
     stage: _Stage,
 ) -> KnowledgeHistoryReplay:
+    """Recompute the source mapping, then hand Core the change set it checks.
+
+    The recompute runs before admission and its record is retained in the same
+    batch. The policy's one required check is the structural builtin: Core
+    resolves it against the retained contract document, runs it over the state
+    the change would produce, mints its own receipt and writes
+    ``CHANGE_PROPOSED``, ``CHECK_RECORDED`` and ``VERDICT_RECORDED``. This
+    program states no outcome and writes no protocol event.
+    """
     before = history.replay()
     preliminary = _change_set(config, before, stage, _base_evidence(config, stage))
-    receipt_bytes = _check_receipts(config, before, preliminary)
-    receipt_anchors = tuple(
-        _artifact_anchor(
-            record_id=_digest(receipt), content=receipt, role="RETAINED_EVIDENCE"
-        )
-        for receipt in receipt_bytes
+    record_bytes = _verification_record_bytes(config, before, preliminary)
+    record_anchor = _artifact_anchor(
+        record_id=_digest(record_bytes),
+        content=record_bytes,
+        role="RETAINED_EVIDENCE",
     )
-    receipts = tuple(
-        _check_receipt(
-            anchor.retained_bytes,
-            retained_role=anchor.role,
+    _verify_verification_semantics(
+        _verification(
+            record_anchor.retained_bytes,
+            retained_role=record_anchor.role,
             reason=CorrectionRefusalReason.CHECK_FAILED,
-        )
-        for anchor in receipt_anchors
+        ),
+        replay=before,
+        program=config.program,
+        change=preliminary,
+        declaration=config.declaration,
+        declaration_identity=_digest(config.declaration_bytes),
+        reason=CorrectionRefusalReason.CHECK_FAILED,
     )
-    for receipt, (contract_bytes, contract) in zip(
-        receipts, config.check_contracts, strict=True
-    ):
-        _verify_receipt_semantics(
-            receipt,
-            replay=before,
-            program=config.program,
-            change=preliminary,
-            contract=contract,
-            contract_identity=_digest(contract_bytes),
-            reason=CorrectionRefusalReason.CHECK_FAILED,
-        )
     try:
-        machine_state = before.machine_state
-        for anchor in receipt_anchors:
-            preview = execute_event(
-                config.effective_contract,
-                machine_state,
-                anchor.machine_event,
-            )
-            if preview.receipt.outcome != "APPLIED":
-                raise _refuse(
-                    CorrectionRefusalReason.CHECK_FAILED,
-                    "check receipt artifact cannot enter the declared machine",
-                )
-            machine_state = preview.state
-        return history.admit_with_anchors(
-            anchors=receipt_anchors,
+        return check_and_admit_change_set(
+            history=history,
             change_set=preliminary,
-            machine_events=_protocol_events(
-                config,
-                stage,
-                preliminary,
-                machine_state.identity,
-                receipts,
-            ),
             transaction_time=stage.transaction_time,
             actor_id=_text(config.program.get("actor_id"), "actor ID"),
-        )
+            anchors=(record_anchor,),
+        ).replay
+    except PopulationAdmissionRefusal as error:
+        raise _refuse(
+            CorrectionRefusalReason.CHECK_FAILED,
+            f"stage refused at {error.stage.value}: {error.reason}: {error.detail}",
+        ) from error
     except KnowledgeChangeRefusal as error:
         raise _refuse(
             CorrectionRefusalReason.CHECK_FAILED,
@@ -1557,38 +1511,83 @@ def _expected_check_result(
     return MappingProxyType({"result_state_digest": projected.state_digest()})
 
 
-def _verify_receipt_semantics(
-    receipt: _CheckReceipt,
+def _verify_verification_semantics(
+    record: _VerificationRecord,
     *,
     replay: KnowledgeHistoryReplay,
     program: Mapping[str, object],
     change: KnowledgeChangeSet,
-    contract: Mapping[str, object],
-    contract_identity: str,
+    declaration: Mapping[str, object],
+    declaration_identity: str,
     reason: CorrectionRefusalReason,
 ) -> None:
-    algorithm = _text(contract.get("algorithm"), "check algorithm")
     expected = {
         "base": _plain(_receipt_base(change)),
         "change": _plain(_change_claim(change)),
-        "check_contract_id": _text(
-            contract.get("check_contract_id"), "check contract ID"
-        ),
-        "check_contract_identity": contract_identity,
-        "grammar": _RECEIPT_GRAMMAR,
-        "outcome": "SATISFIED",
+        "declaration_identity": declaration_identity,
+        "grammar": _RECORD_GRAMMAR,
         "result": _plain(
             _expected_check_result(
                 replay,
                 program,
                 change,
-                algorithm,
+                _text(declaration.get("algorithm"), "declaration algorithm"),
                 reason=reason,
             )
         ),
+        "verification_id": _text(
+            declaration.get("verification_id"), "verification ID"
+        ),
     }
-    if receipt.data != expected:
-        raise _refuse(reason, "check receipt differs from recomputed semantics")
+    if record.data != expected:
+        raise _refuse(reason, "verification record differs from recomputed semantics")
+
+
+def _verify_core_receipt(
+    source: bytes,
+    *,
+    replay: KnowledgeHistoryReplay,
+    program: Mapping[str, object],
+    change: KnowledgeChangeSet,
+    check_contract_identity: str,
+    outcome: str,
+    reason: CorrectionRefusalReason,
+) -> None:
+    """Core's own receipt for the structural check, recomputed here.
+
+    Core mints these and this program reads them. Its ``result_state_digest``
+    is the state the operations produce, which this program recomputes from
+    the accepted history rather than trusting the stored value.
+    """
+    data = _json(source, "core check receipt", canonical=True)
+    if set(data) != {"check", "knowledge_change_set_identity"}:
+        raise _refuse(reason, "core check receipt fields are not closed")
+    check = _object(data.get("check"), "core check")
+    expected_result = _expected_check_result(
+        replay,
+        program,
+        change,
+        "OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE",
+        reason=reason,
+    )
+    if (
+        data.get("knowledge_change_set_identity") != change.identity
+        or set(check)
+        != {
+            "check_contract_id",
+            "check_contract_identity",
+            "executor_kind",
+            "outcome",
+            "result",
+        }
+        or check.get("check_contract_id") != _CHECK_CONTRACT_ID
+        or check.get("check_contract_identity") != check_contract_identity
+        or check.get("executor_kind") != "CORE_BUILTIN"
+        or check.get("outcome") != outcome
+        or _plain(_object(check.get("result"), "core check result"))
+        != _plain(expected_result)
+    ):
+        raise _refuse(reason, "core check receipt differs from recomputed semantics")
 
 
 def _validate_replay(
@@ -1629,28 +1628,37 @@ def _validate_replay(
             CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
             "active check entrypoint differs from retained bytes",
         )
-    check_contracts: dict[str, Mapping[str, object]] = {}
-    for key in ("source_mapping_check", "structural_check"):
-        contract_id = _text(artifact_ids.get(key), f"{key} artifact ID")
-        artifact = retained.get(contract_id)
+    retained_documents = {}
+    for key, label in (
+        ("source_mapping_declaration", "source-mapping declaration"),
+        ("check_contract", "check contract"),
+    ):
+        record_id = _text(artifact_ids.get(key), f"{key} artifact ID")
+        artifact = retained.get(record_id)
         if artifact is None:
             raise _refuse(
                 CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-                f"history lacks retained check contract: {contract_id}",
+                f"history lacks retained {label}: {record_id}",
             )
         if artifact.role != "RETAINED_EVIDENCE":
             raise _refuse(
                 CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-                "check contract must be retained evidence",
+                f"{label} must be retained evidence",
             )
-        contract = _check_contract(
-            artifact.content,
-            entrypoint_id=entrypoint_id,
-            entrypoint_identity=entrypoint.identity,
-            shape_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-            identity_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-        )
-        check_contracts[artifact.identity] = contract
+        retained_documents[key] = artifact
+    declaration = _source_mapping_declaration(
+        retained_documents["source_mapping_declaration"].content,
+        entrypoint_id=entrypoint_id,
+        entrypoint_identity=entrypoint.identity,
+        shape_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+        identity_reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+    )
+    declaration_identity = retained_documents["source_mapping_declaration"].identity
+    _check_contract_document(
+        retained_documents["check_contract"].content,
+        reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+    )
+    check_contract_identity = retained_documents["check_contract"].identity
     stages = _array(program.get("stages"), "retained run stages")
     expected_change_ids = []
     for raw_stage in stages:
@@ -1674,28 +1682,16 @@ def _validate_replay(
         for record in replay.machine_state.records
         if record.record_type == "CheckRecord"
     ]
-    if len(checks) != 2 * len(replay.change_sets):
+    # One check record per change, not two: the source-mapping recompute is no
+    # longer a policy check, and Core writes one record for the one check the
+    # policy requires.
+    if len(checks) != len(replay.change_sets):
         raise _refuse(
             CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
             "history lacks the exact required check receipts",
         )
     for check in checks:
-        receipt_id = check.fields.get("receipt_identity")
-        artifact = retained.get(receipt_id)
-        if artifact is None or artifact.identity != receipt_id:
-            raise _refuse(
-                CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-                "protocol check does not reference retained receipt bytes",
-            )
-        parsed_receipt = _check_receipt(
-            artifact.content,
-            retained_role=artifact.role,
-            reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-        )
-        receipt = parsed_receipt.data
-        contract_identity = check.fields.get("check_contract_identity")
-        contract = check_contracts.get(contract_identity)
-        if contract is None or not isinstance(contract_identity, str):
+        if check.fields.get("check_contract_identity") != check_contract_identity:
             raise _refuse(
                 CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
                 "protocol check lacks its retained contract",
@@ -1714,25 +1710,64 @@ def _validate_replay(
                 CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
                 "check receipt lacks its accepted change",
             )
-        _verify_receipt_semantics(
-            parsed_receipt,
-            replay=replay,
-            program=program,
-            change=change,
-            contract=contract,
-            contract_identity=contract_identity,
-            reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+        receipt = retained.get(
+            f"receipt:{change.change_set_id}:{_CHECK_CONTRACT_ID}"
         )
-        if (
-            receipt.get("outcome") != check.fields.get("outcome")
-            or receipt.get("check_contract_id")
-            != check.fields.get("check_contract_id")
-            or receipt.get("check_contract_identity") != contract_identity
+        if receipt is None or receipt.identity != check.fields.get(
+            "receipt_identity"
         ):
             raise _refuse(
                 CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
-                "retained receipt content differs from its protocol record",
+                "protocol check does not reference retained receipt bytes",
             )
+        _verify_core_receipt(
+            receipt.content,
+            replay=replay,
+            program=program,
+            change=change,
+            check_contract_identity=check_contract_identity,
+            outcome=_text(check.fields.get("outcome"), "check outcome"),
+            reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+        )
+        expected_record = _canonical(
+            {
+                "base": _plain(_receipt_base(change)),
+                "change": _plain(_change_claim(change)),
+                "declaration_identity": declaration_identity,
+                "grammar": _RECORD_GRAMMAR,
+                "result": _plain(
+                    _verify_source_mapping(
+                        replay,
+                        program,
+                        change,
+                        reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+                    ).result
+                ),
+                "verification_id": _text(
+                    declaration.get("verification_id"), "verification ID"
+                ),
+            }
+        )
+        stored = retained.get(_digest(expected_record))
+        if stored is None or stored.content != expected_record:
+            raise _refuse(
+                CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+                "source-mapping verification does not recompute: "
+                + change.change_set_id,
+            )
+        _verify_verification_semantics(
+            _verification(
+                stored.content,
+                retained_role=stored.role,
+                reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+            ),
+            replay=replay,
+            program=program,
+            change=change,
+            declaration=declaration,
+            declaration_identity=declaration_identity,
+            reason=CorrectionRefusalReason.INCOMPATIBLE_HISTORY,
+        )
     return program
 
 
@@ -2208,6 +2243,7 @@ def run_correction(
     correction_mapping: Path | None = None,
     entrypoint_path: Path | None = None,
     checks_root: Path = _CHECKS,
+    declaration_path: Path = _DECLARATION,
     program_path: Path = _PROGRAM,
 ) -> CorrectionRun:
     """Create or reopen the exact bounded proof and derive its three views."""
@@ -2221,6 +2257,7 @@ def run_correction(
     active_entrypoint = Path(entrypoint_path) if entrypoint_path else Path(__file__)
     entrypoint_bytes = _read(active_entrypoint, "active check entrypoint")
     checks_root = Path(checks_root)
+    declaration_path = Path(declaration_path)
     program_path = Path(program_path)
     history_path = output / "history.jsonl"
     if output.is_symlink() or history_path.is_symlink():
@@ -2245,6 +2282,7 @@ def run_correction(
         correction_mapping=correction_mapping,
         entrypoint_bytes=entrypoint_bytes,
         checks_root=checks_root,
+        declaration_path=declaration_path,
     )
     _refuse_output_symlinks(output, config.program)
     output.mkdir(parents=True, exist_ok=True)
