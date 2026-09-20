@@ -333,7 +333,7 @@ superseded `pareto/mapping.json` digest `sha256:4e8851c5…`. So are
 binding pins as historical outputs in their own right. The only regenerated
 outputs are the five scenarios of the new generation.
 
-### Where the line is now
+### Where the line was after the migrations, 2026-09-20
 
 Measured on this tree, with `PYTHONPATH=$PWD/src:$PWD` exported for every
 command, which is still the trap that decides whether a subprocess measures
@@ -376,61 +376,158 @@ this branch or main.
   test passes on this tree unprobed. It is an artefact of the instrument, not a
   finding.
 
-**Not green, and not this step's work.**
+**Not green at that point, and answered below.** Seven items were open: the
+connected-story re-freeze, `document_paper/document_run.py`, the read-only
+Appendix B run, the full default suite, the four documents, `OVR-000472`, and
+`admit_structural_change` writing its own check record. Items 1, 3, 4, 5 and 6
+landed in the final pass recorded in the next section. Item 2 stands as the
+earlier agent left it: `document_paper/document_run.py:280` is still a
+caller-authored admission and nothing in the repository exercises it, because
+its `_history_binding` at `test_graph_recipe_change_set.py:177` declares
+`malleus.knowledge-history-binding/private-v0` where Core requires `private-v1`,
+so every test that needs a history errors at setup; `research/.../document_paper`
+reads **7 failed, 150 passed, 7 errors** at `85f0ed54`, at `f52863c0` and here,
+the same three numbers, and the path is not in `testpaths`. Item 7 stands too:
+`admit_structural_change` still writes its own `CHECK_RECORDED` from the folded
+bundle without invoking the builtin its contract names, and that is what
+`default_admission`, `partial_shipments` and `fresh_import` admit through.
 
-1. **The connected-story re-freeze** (brief step 7, and the previous list's
-   item 4). Not started, deliberately: its chain ends in Appendix B, which is
-   `paper-v4/` and off limits to this agent. It is the whole of what is red in
-   `research/.../small_shop`: 22 errors at fixture setup in
-   `connected_story/warehouse/` (12) and `connected_story/partial_shipments/`
-   (10), and 5 failures in `connected_story/test_connected_run.py` (1),
-   `test_object_timelines.py` (2), `test_shipment_explanation.py` (1) and
-   `content_rules/test_content_rules.py` (1, the control that reproduces the
-   frozen connected receipt). The cause is one identity: the structural fold
-   at `7c3237f0` moved `STRUCTURAL_HISTORY_BUNDLE`, so the story's partial
-   contract moved and its ledger with it. Measured:
-   `connected_story/run_receipt.json` pins `ledger_sha256: sha256:1c989c55…`
-   and a fresh run produces `sha256:dcd140c5…`. Files to re-cut, in order:
-   `connected_story/run_receipt.json`, `timeline_receipt.json`,
-   `shipment_explanation_receipt.json`, then the four the ledger at E-0467
-   names, `connected_story/partial_shipments/input_boundary.json`,
-   `connected_story/warehouse/receipt.json`,
-   `connected_story/warehouse/ordering_receipt.json`,
-   `connected_story/partial_shipments/receipt.json`. Appendix B's
-   `32798a67…` and `15c7c1ef…` move with them.
-2. **`document_paper/document_run.py:280` is still a caller-authored
-   admission, and nothing in the repository exercises it.** This is not a
-   regression and it is not the door: `research/.../document_paper` reads
-   **7 failed, 150 passed, 7 errors** at `85f0ed54`, at `f52863c0` and on this
-   tree, the same three numbers, and the cause is a stale fixture. Its
-   `_history_binding` at `test_graph_recipe_change_set.py:177` declares
-   `malleus.knowledge-history-binding/private-v0` where Core requires
-   `private-v1`, so every test that needs a history errors at setup before
-   reaching any admission. The path is not in `testpaths`. Migrating
-   `document_run.py` without first repairing that fixture would be a change
-   nothing can measure, so it was not made.
-3. **The read-only Appendix B run** (`paper-v4/test_shop_connected_calibration.py`,
-   `paper-v4/test_shop_calibration.py`). Not re-run here. Its 14 errors at
-   `f52863c0` were the connected-story chain of item 1, and the one
-   `test_shop_calibration.py` failure was `shipment_policy` hitting the closed
-   door, which is now migrated. Expect the second to pass and the first to
-   stay red until item 1 lands.
-4. **The full default suite.** Not re-run here; `tests/contract_compiler` was
-   measured alone, and it is 1302 of the roughly 3658 the whole suite collects.
-5. **The four documents.** Untouched, as the brief directed. The exact places
-   are unchanged: `.claude/skills/malleus-dev/references/CAPABILITIES.md` lines
-   39, 40 and 51 plus a new row for `check_and_admit_change_set` and
-   `ChangeSetAdmission`; `docs/contract_compiler/index.md` line 455, "What this
-   does not do."; `docs/IMPLEMENTATION_STATUS.md` line 255; `CHANGELOG.md`
-   Unreleased; and the skill's "What was built for F1" residual sentence,
-   which the Overlord batches into the seal per E-0504.
-6. **`OVR-000472`.** Not drafted. `previous_entry_hash` is
-   `sha256:7cb9e624476d13a78ed15a5d5d89f219414cb536f3738eda7a91a94f1de984fd`.
-7. **`admit_structural_change` still writes its own `CHECK_RECORDED`** from the
-   folded bundle without invoking the builtin its contract names. Unchanged
-   from the earlier record, still a named residual, and it is what
-   `default_admission`, `partial_shipments` and `fresh_import` admit through.
+### Where the line is now, after the final Core pass
 
+**The connected-story re-freeze landed.** The chain rebuilds from the Table 1
+baseline. `warehouse/source_boundary.json` was the eighth file, beyond the seven
+the previous list named: it carries the baseline gate `append_warehouse` reads,
+and it had to move first or nothing downstream could run. 34 values across 8
+files, in chain order:
+
+| file | value | before | after |
+|---|---|---|---|
+| `connected_story/run_receipt.json` | `ledger_sha256` | `1c989c55…` | `dcd140c5…` |
+| | `ledger_head` | `0f33125b…` | `9e0cff50…` |
+| | `replay_receipt` | `78e211dd…` | `cf0fe19f…` |
+| | `partial_contract` | `4dacf4d7…` | `9d3d4638…` |
+| | `ledger_bytes` | 895257 | 895097 |
+| `connected_story/timeline_receipt.json` | `history_sha256`, `history_head`, `history_receipt` | as above | as above |
+| | `report_sha256` | `afc5072a…` | `4aa0b4e7…` |
+| `connected_story/shipment_explanation_receipt.json` | `history_sha256`, `history_head`, `history_receipt` | as above | as above |
+| | `reports[0].report_sha256` | `d6bb4fcf…` | `39f4bcf2…` |
+| | `reports[1].report_sha256` | `bf9bb368…` | `4f40b25d…` |
+| | `reports[2].report_sha256` | `458f7084…` | `9bd0c8f0…` |
+| `connected_story/warehouse/source_boundary.json` | `baseline_history_sha256` | `1c989c55…` | `dcd140c5…` |
+| `connected_story/warehouse/receipt.json` | `baseline_history_sha256` | `1c989c55…` | `dcd140c5…` |
+| | `history_sha256` | `32798a67…` | `0f2cf039…` |
+| | `history_head` | `72ffab71…` | `25d8eab4…` |
+| | `replay_receipt` | `454c9cdb…` | `0de13200…` |
+| | `contract_identity` | `b036955e…` | `c746b60f…` |
+| | `report_sha256` | `f41d9ae1…` | `6290a5c9…` |
+| | `history_bytes` | 1646996 | 1646836 |
+| `connected_story/warehouse/ordering_receipt.json` | `binding.history_head` | `72ffab71…` | `25d8eab4…` |
+| | `binding.replay_receipt` | `454c9cdb…` | `0de13200…` |
+| | `report_sha256` | `1694c1b7…` | `6c1a1f28…` |
+| `connected_story/partial_shipments/input_boundary.json` | `baseline_history_sha256` | `32798a67…` | `0f2cf039…` |
+| | `baseline_history_bytes` | 1646996 | 1646836 |
+| `connected_story/partial_shipments/receipt.json` | `baseline_history_sha256` | `32798a67…` | `0f2cf039…` |
+| | `history_sha256` | `15c7c1ef…` | `09995500…` |
+| | `history_head` | `0b042ba3…` | `e6491e4e…` |
+| | `replay_receipt` | `0d47daff…` | `23fc1bb1…` |
+| | `contract_identity` | `0673d839…` | `58fafe28…` |
+| | `history_bytes` | 2306379 | 2306219 |
+
+**One value did not move and was nearly re-cut by a wrong derivation.**
+`run_receipt.json`'s `contract_facts` is `compile_shop().artifact.facts_sha256`,
+the compiled ontology facts, not `replay.partial_contract.validated_fact_set_sha256`.
+The two differ (`fb0c0903…` against `e82f3569…`), and the second was checked
+against a `git archive` of `85f0ed54` before it was written, which is what
+caught it. `history_profile` and `machine_program` did not move either.
+
+**The exported graphs and every domain record are byte-identical**, measured by
+running the whole chain on a `git archive` of `85f0ed54` and on this tree and
+diffing the dumps. Identical at all three stages: `graph.export_records()`, the
+complete `record_history`, the Table 1 account, the partial-shipments report.
+The three graph state digests are unchanged, `4a890bb0…`, `e5f36981…` and
+`57e3839c…`, and so are the three `graph_sha256` values in the shipment
+explanation. The warehouse report and the timeline report differ in their
+binding coordinates and in nothing else; every ordering count and witness is
+equal. The archive run reproduced all three frozen ledger digests exactly,
+which is what established the harness before any value was written.
+
+**Appendix B, computed and not edited.** `paper-v4/` was not touched. Three
+digests print there, not two: the Table 1 ledger also moves this time, because
+the fold reaches one stage further up than the revision-policy move of E-0467.
+
+| Appendix B value | before | after |
+|---|---|---|
+| Table 1 ledger | `1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe` | `dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3` |
+| warehouse ledger | `32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333` | `0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b` |
+| synthetic ledger | `15c7c1eff28ff59496fd937de19181f649e9c8c9c4c1e895cf56252f434bd204` | `099955003f3274aea590edf1578520540033321cfb3cabcf9aa6b3dff36063bb` |
+
+`paper-v4/test_shop_connected_calibration.py` and
+`paper-v4/test_shop_calibration.py`, run read-only on this tree with the
+measurement rule: **6 failed, 10 passed**, 130s. The chain fixture builds, so
+the fourteen setup errors are gone. Every failure is a paper-side number, and
+the paper agent needs all of them:
+`test_ledger_digests_in_the_appendix_match_a_fresh_run` on the three digests
+above; `test_table_1_stage_row_matches_a_fresh_run` on `bytes` 895257 to 895097;
+`test_warehouse_stage_row_matches_a_fresh_run` on `baseline_bytes` 895257 to
+895097 and `history_bytes` 1646996 to 1646836;
+`test_shipment_stage_row_matches_a_fresh_run` on `baseline_bytes` 1646996 to
+1646836; and both shipment-policy exhibit tests on `event_count` **32 to 31**,
+which is not the re-freeze but the migration, because Core now writes one
+receipt and one check record where the runner wrote its own pair. The two
+calibration files were not edited.
+
+**Suites, with `PYTHONPATH=$PWD/src:$PWD` exported for every command.**
+
+- `research/.../small_shop`, the whole path: **362 passed**, 0 failed, 0 errors,
+  678s. It was 5 failed, 335 passed, 22 errors.
+- `research/.../small_shop/connected_story` plus `content_rules`: **130 passed**.
+- `tests/contract_compiler`, `research/methodology_gedanken_e2e/tests` and
+  `research/.../small_shop/object_event`: see the final measurement below.
+- Ruff over `src tests research/.../small_shop scripts`: the same nine findings
+  as `85f0ed54` and no more. The branch had acquired a tenth, `F841` on a dead
+  `before = history.replay()` at `test_knowledge_change_history.py:1485` from
+  the migration; it was removed.
+
+**The four documents are written.** `CHANGELOG.md` (the `check_and_admit_change_set`
+entry under Added, the closed door and the fold under Changed, and the stale
+sentence in the `check_and_admit_population_plan` entry corrected),
+`docs/IMPLEMENTATION_STATUS.md`, `docs/contract_compiler/index.md` and
+`.claude/skills/malleus-dev/references/CAPABILITIES.md`, which gains the
+`check_and_admit_change_set` row and has its governed-history, one-call,
+refusal, builtin-registry and re-binding rows corrected. Two research READMEs
+owed a sentence and got it: `content_rules` and `shipment_policy` both said the
+runner runs Prolog and submits the result, and Core does both now.
+`public_population` already recorded the removal of `retained-source-integrity`;
+`partial_shipments`, `default_admission` and `fresh_import` owed nothing, and
+`showcase`, `correction`, `object_event` and `pareto` have no README. The
+skill's own "What was built for F1" residual sentence is the Overlord's, per
+E-0504, and was not touched.
+
+**Two findings for the Overlord, both about the seal, neither fixable here.**
+
+1. **The branch deletes two governed documents and the overseer ledger has no
+   vocabulary for that.** `correction/checks/source-mapping-conformance.json`
+   (recorded by OVR-000352, deleted at `7bef2db3`) and
+   `showcase/checks/source-mapping-conformance.json` (recorded by OVR-000359,
+   deleted at `4a0d6340`) no longer exist. `documentChange.change` is closed to
+   `CREATED`, `MODIFIED`, `REPLACED`, and `_validate_semantics` ends by
+   requiring every path in `document_history` to be a file on disk, so `check`
+   refuses with "OVR-000352: revised document does not exist" whatever
+   `OVR-000472` records. No entry can clear it. The options are a schema change
+   adding a deletion kind, a `CORRECTION` superseding the two recording entries,
+   which would also un-record every other document those entries carried, or
+   restoring the two files as dead artifacts. That is a decision, not a fix.
+2. **One entry cannot hold this branch.** `documentRevisionData.documents` has
+   `maxItems: 20` and the branch changes 62 governed documents. The draft below
+   is therefore a chain of four, `OVR-000472` to `OVR-000475`, split by sorted
+   path with 16, 16, 16 and 14 documents. The split is mechanical and means
+   nothing: the reason, the evidence commits and the subject are `OVR-000472`'s,
+   and the other three say so. Each successor's `previous_entry_hash` is a
+   placeholder because it is the predecessor's `entry_hash`, which only exists
+   once the sealing moment is fixed. That is a third placeholder kind beyond the
+   two the brief allowed, and it is unavoidable for a chain.
+
+**The full default suite.** Reported in the final measurement section below.
 ### Measured at `980cb609`
 
 `PYTHONPATH=$PWD/src:$PWD pytest tests/contract_compiler`: **20 failed, 1282
@@ -715,3 +812,660 @@ errors above are.
 - `4a0d6340` the showcase stops presenting its own recompute as a check
 - `7bef2db3` correction: Core runs the one check, the recompute stays research
 - `934ef948` the successor Shop evidence generation for Core-run checks
+
+## The overseer entry: `OVR-000472` to `OVR-000475`
+
+How the document set was computed, mechanically:
+
+1. Every path any sealed `DOCUMENT_REVISION` entry has ever recorded, with its
+   latest `after_digest`: 721 paths, read from
+   `design/contract_compiler/overseer/entries/OVR-*.json`.
+2. Everything the branch changed, `git diff --name-only 85f0ed54..HEAD`: 94
+   paths.
+3. The intersection, minus the two paths that no longer exist, minus any whose
+   current bytes already equal the recorded digest: **60 MODIFIED**.
+4. Plus two CREATED: `handover/2026-09-20-core-two-step-door.md`, which the
+   brief names, and `tests/contract_compiler/pareto/test_change_set_admission.py`,
+   by the precedent `OVR-000471` set when it recorded
+   `test_check_contract_executor.py` the same way. **62 documents.**
+
+Nothing else qualified. `pyproject.toml` did not change on this branch, its
+`include` list declares no new file, and its `testpaths` names
+`tests/contract_compiler` as a directory rather than the new module. Every
+`before_digest` below was checked against the bytes at `85f0ed54` as well as
+against the ledger's own latest recorded digest: all 60 agree, so the two
+readings of "the committed bytes at 85f0ed54" are the same bytes.
+
+The two deleted documents are the finding above and are not in the set,
+because no `change` value can express a deletion.
+
+All four blocks validate against
+`design/contract_compiler/overseer/ledger.schema.json` with
+`Draft202012Validator` and a `FormatChecker`, substituting
+`sha256:0000...0000` for `entry_hash`, for the placeholdered digests and for the
+placeholdered previous hashes: **4 of 4 valid, 0 errors**. `why` is 1158
+characters in `OVR-000472` and 338 in each successor, under the 1200 cap;
+`summary` is 169, under 240.
+
+
+### `OVR-000472`
+
+```json
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:428abf6449b7f55864e8e8b7cef44dfd23cf808ea738fec997be344c25377240",
+        "before_digest": "sha256:224b8278cbb6974f9c3d577cf71446d689f4f1ec4f95883aecb27f67eab3f10e",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
+      {
+        "after_digest": "sha256:43281298c485a1a00e0606595488c53b61a7febabaa9366f13f1b329be297903",
+        "before_digest": "sha256:f637cbba30d0363d068a8e700c400d1e947301d22495f07eccf4bc90678efe49",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:09feedab1dac003c5ec959ef0367f603070e3c544a5346b9a678320cb5b4d137",
+        "before_digest": "sha256:ce786f210433a04b914690ea4fc272f16e5431530fdc98e556b137154e0e3665",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:a8ff630e712d695f5567505907541b51ec41dbdb84238291635cebc146367797",
+        "before_digest": "sha256:006bdea4921ade62c58e1fc51b2043b8ef1855a71530c1c485e6d1e7135bb581",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "<digest of this file once final>",
+        "change": "CREATED",
+        "path": "handover/2026-09-20-core-two-step-door.md"
+      },
+      {
+        "after_digest": "sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9",
+        "before_digest": "sha256:47e59912feaa8584c52a3b3914754b61a0cd5caad6724cef7a910c19c8673fde",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/structural-conformance.json"
+      },
+      {
+        "after_digest": "sha256:66913e1e39bec010c600543f756318dbc53f9ae3ce1767cdf08eb41e8fef29b8",
+        "before_digest": "sha256:825c8d998ec311c93426dd7b787fff732eec09b7a9e0805fdfc2f7b215faf375",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/machine.json"
+      },
+      {
+        "after_digest": "sha256:724f16702697e591504c819395a6b1877d85283ba13c1830edb29dec94ba3be9",
+        "before_digest": "sha256:57972777e8132ecd4c0430da659c92312e89a80f36779722276e804b4b92850f",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/policy.json"
+      },
+      {
+        "after_digest": "sha256:2554fbd5998c008c14af1a23d98ebbe4cd62f1f7c119b9eb897dd62ddd1eafaa",
+        "before_digest": "sha256:414db35b85dd0931be75e27e80001046a8f457dda332425c9f42d244cd0bd160",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.json"
+      },
+      {
+        "after_digest": "sha256:9e04076f0181886c53e3ecfc003dfa1881c3c5af033146feb086cec0202c7fb8",
+        "before_digest": "sha256:29902a7e7249efcad89637a0c3bea5cb6a2b17adeed85b4abf2bfcaf29114dbe",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.py"
+      },
+      {
+        "after_digest": "sha256:023b0e0026aff92e9d3c1cf5273ec7d1e8b4c3dd5b2cbdc5d122bb8266a9d4f9",
+        "before_digest": "sha256:63f6068125e89aff5a594f88cca6971f215c4b6635f428bbb4d073a75d31781f",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py"
+      },
+      {
+        "after_digest": "sha256:81a690dcdc15b32465abcb676973116cf24c9ff4a7baa48f0b4c8e62d0d68726",
+        "before_digest": "sha256:0d04ddd11d2de303b7502a4e3287627d6eafa2d81e4c78cca213b1b699b3bfc1",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_assertions.py"
+      },
+      {
+        "after_digest": "sha256:7b56b161e1c6ed68d4f52a24346fa1f4905c92eedf2fabafa4a95adc31dea0a9",
+        "before_digest": "sha256:e0b3541ee706250b78a49ee1b2b784b95993c3e2464425a1f24b67fe85a95023",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/run.py"
+      },
+      {
+        "after_digest": "sha256:ba4291a2423d78de1951ab4378f4d4b4ea4b296b0a9ecf28df8aba059eca131e",
+        "before_digest": "sha256:4e8851c5b9ded2d9165e2e1c14e70b24b12d4a52e356a94032be60e068614dce",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json"
+      },
+      {
+        "after_digest": "sha256:433f2f9b2da4fa7d5e8740e05eb724b9e852fed051f4e78727570b3e5f265e5f",
+        "before_digest": "sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json"
+      },
+      {
+        "after_digest": "sha256:1c5a75283a3bc74f4a67d471e1d5e63ed05ff5cfc6578efb145d3c4cfed29612",
+        "before_digest": "sha256:b8c558b9dc2ca63f274bbae0b46231d7322719421db29bbf6729dbc68e12cc07",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000472",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7cb9e624476d13a78ed15a5d5d89f219414cb536f3738eda7a91a94f1de984fd",
+  "recorded_at": "<sealing moment, UTC>",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 472,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 1 of 4.",
+  "why": "Decision D (paper ledger E-0502 to E-0507), step 2 of two. Core runs every check itself, so the public door closes. admit and admit_with_anchors refuse a caller-supplied CHECK_RECORDED or VERDICT_RECORDED with CALLER_SUPPLIED_CHECK_EVENT before any append; VERDICT_RECORDED too, because SELECT_POLICY_VERDICT derives the verdict from the check records. Measured wider than the brief expected: PolicyProgram.from_bytes refuses an empty required_checks and terminal acceptance needs the binding's VERDICT_RECORDED, so the two methods admit nothing under any shipped binding. check_and_admit_change_set is the third Core-authored entry point, for a caller that composed its own operations; neither entry point takes an outcome. Core's structural check is now a malleus.check-contract/v1 CORE_BUILTIN document, moving STRUCTURAL_HISTORY_BUNDLE 0ef377d9 to 8a994ed0 and every frozen coordinate cut against it, the connected story included. Nine research programs stopped writing their own outcomes; three check contracts whose executor was the adopter's own program or nothing were removed. Every exported graph and domain record stays byte-identical to 85f0ed54."
+}
+```
+
+### `OVR-000473`
+
+```json
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:58cff5c5f31f42a7096698fcf922c66d6e6025192971e8298ca1356e759cf4a6",
+        "before_digest": "sha256:af7c61c2520db1f8c252274a7cf0432dcad07fa171fccd18458b87cbf63a69df",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py"
+      },
+      {
+        "after_digest": "sha256:c535035780d8a684ab7ee96a68cb28b4b80af295f3907f775c0d26e4637e3e46",
+        "before_digest": "sha256:e10ecca01bcb24c91305793ce7338edcc858d5e01a092a127d779b778b160f52",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md"
+      },
+      {
+        "after_digest": "sha256:25162819510ffb6ec29906131326cfdade031420597910d8ce12fb87d7ae5a8f",
+        "before_digest": "sha256:db96e3d8d50728ce4da7a08b31f8c6d91e3b17814b749b28e29794a579903232",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/invoice-base.json"
+      },
+      {
+        "after_digest": "sha256:c5360838a5937ab6f3ee29f1158d2cf3449b9737e7277fdee2b19f894421fcd7",
+        "before_digest": "sha256:089cfe786641ab4872bdfb80ec0e463076594c7da57724db053a3e63a7a24e7c",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/payment-e30.json"
+      },
+      {
+        "after_digest": "sha256:8d17eabd1e70750d571fb544723ef2a9757e2822ce35ad6c4b4a8e50e271f6f9",
+        "before_digest": "sha256:3fbf7b59199ac58de24b2924a484e900d43a117dbb6cc262fd636c1dfa8d0f2a",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/ret010.json"
+      },
+      {
+        "after_digest": "sha256:14305547560d6ec0b48b552be85f0ac4b2bb7061d6edfcd8172ab148793afbd0",
+        "before_digest": "sha256:f41275c76212e39523a5f330f7feb2d675e2a9b4e052c8a8cca9b3c25267a78f",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e4.json"
+      },
+      {
+        "after_digest": "sha256:1e9bf84f703730f92eccb1734ccb954e72a040fd451022eef8cc5e19f6ba729d",
+        "before_digest": "sha256:2ffa3b1a8364788b22ade0632ce88a972228f403a6a6c34f7a30f208bf6d8cdd",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json"
+      },
+      {
+        "after_digest": "sha256:f45b7d2fb234372dec9908986569dbff5874592b4f2a5d9ee95bb71c18322e0e",
+        "before_digest": "sha256:165983419a12c2c637b66b01029035083fd51caa331e39e8c3725d66370e7756",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/run.py"
+      },
+      {
+        "after_digest": "sha256:4cb7703175fe18390f68df73d2bb5eb342786213beb72bb0f311f92666027808",
+        "before_digest": "sha256:5768694ad8e086afeb66026f16130cbc8bc7c6b58bc01e77e9aa03942f8c23d2",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/README.md"
+      },
+      {
+        "after_digest": "sha256:f1d14f37497829e2871471a3e2413213ba0b34ae55e38413d7e50080568cb415",
+        "before_digest": "sha256:bbcba6b52ffc4df1094612b5400ad0db2e1ab169c5ceb2a69f2230a25527f44d",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/run.py"
+      },
+      {
+        "after_digest": "sha256:e858f4119da735f1b70e6dcb718145430c88c5ee94d4361c5ff4a1c4b212c494",
+        "before_digest": "sha256:e4e2ff056a5972ee5e0ee2653ed2565df499de8c52c507b26aed92e43b251fac",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/test_shipment_policy.py"
+      },
+      {
+        "after_digest": "sha256:83faaae9cc3fe648fc2618686adad15fe7fcfad1ef69c965ae53790f48424921",
+        "before_digest": "sha256:2d964b7b73efd9ce72a409aadfceb64a03c1d1d74f16ae3601eb09ace61affec",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence.py"
+      },
+      {
+        "after_digest": "sha256:c72450aa97c8e7f248bd6494a297c7076deb38a24d4eb977319898927afdb254",
+        "before_digest": "sha256:efa0ac20a3f6dbdad67c210ade3b3c4571ac8296463735fd29eb81d0852d32ed",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/policy.json"
+      },
+      {
+        "after_digest": "sha256:1f5ff1bb7958fdaea30ab826e40a47896facc0f3f071b98f723c016f4cce48d2",
+        "before_digest": "sha256:4e7f04f4ce2a7db1cf0f6dbc93572cd191f475736886e4fb789273e91f0cbb53",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/query.py"
+      },
+      {
+        "after_digest": "sha256:bc6306762ff331bb106536e71bba37644b70d7e0cc618698f16b661d00d3f449",
+        "before_digest": "sha256:7096c3f82e3f96aa7e1efa6f11a120bb2b3a6c441520d66589408fd8895885c6",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.json"
+      },
+      {
+        "after_digest": "sha256:5845af3c2dfb46a997c5014034a5539596b899109b4d2e24558a240d567dff34",
+        "before_digest": "sha256:588ab3766625c184992860730fe33bc0ca17550b555fb9635d973e7a77d09244",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000473",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "<entry_hash of OVR-000472 once recorded>",
+  "recorded_at": "<sealing moment, UTC>",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 473,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 2 of 4.",
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 62 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+}
+```
+
+### `OVR-000474`
+
+```json
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:343c23c4c5aa8c107f15e7a0da6bf236b250c578da73d699b762250bae65ae73",
+        "before_digest": "sha256:1767f6e65c49faa3a4da3be504f992ab29a13e925b20a3915b9c0ce2d7a76f3e",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py"
+      },
+      {
+        "after_digest": "sha256:85778d6b396239aafa8587a06c78d2d74747d2526d57b7f277045862bab29ada",
+        "before_digest": "sha256:aee752c22d399983de648b6376a88c37405306f36cee20528234c88300bcb303",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_query.py"
+      },
+      {
+        "after_digest": "sha256:064695217ce8b50743c688eb7ed9ad884078cfc45a08be8dcf743aa7f6fad728",
+        "before_digest": "sha256:f2ea7c2cee679262349864557b22a317ca788494946271c0cfdb874bd0340b33",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_run.py"
+      },
+      {
+        "after_digest": "sha256:83f5a3e0cd75c273013b64b8a552cc4d165c79085b1d3562f8b3f00742c22a83",
+        "before_digest": "sha256:258d7d77b09248d6315e102fa4a14871b531f24f9951712024c102b010211d06",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/test_current_evidence.py"
+      },
+      {
+        "after_digest": "sha256:c36e4a93be5d14a8fcdcaad2bfc19f8f85acb25d18eecd895269b642cb667af9",
+        "before_digest": "sha256:fad3a9c6e136e2b9711c07e6c8163f27a9bc4be5502531614a944e622afe644d",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/input/population/ret-040.json"
+      },
+      {
+        "after_digest": "sha256:7a69d144f6259802f310a0a112cd53055e07bf91f8a37ef04c06251eedc2704c",
+        "before_digest": "sha256:6459c6ebb6d85e3e9be9b2273608137b74fc196519f55210d663f30f993d2113",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:df52f876665c96923e97dd3c5dd8f2f49f51cf7659651240b31d30ba31fc1729",
+        "before_digest": "sha256:415d7175da82381ef24536c9b9acc237b5d5121f16c18944d8d15cc6679c3a0f",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/admission.py"
+      },
+      {
+        "after_digest": "sha256:0d4fa887438300337891684bb7e4d0c63d561d2cb99de5655b635498ac5f801c",
+        "before_digest": "sha256:15b3991fb349d72007f4742bc9bd060453d640f92fbb70f1abd880b1adc1f960",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:5fc3a0253da35bb37c10379c54ad0b4cafcad8593e922f49c07c7cae4d880b5e",
+        "before_digest": "sha256:9d856b6c28a68de43ea23a199f5bef36bf3a26b996fb58ce8360919f091ffb12",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:d69971668aa0f002849166f3a90abf39d546b35631abce649492aabc0769f67d",
+        "before_digest": "sha256:daa2cc88009b281ae5343497ced2fceea77417ba77b115cf854554d617e1aee9",
+        "change": "MODIFIED",
+        "path": "src/malleus/profiles/structural-admission-check.json"
+      },
+      {
+        "after_digest": "sha256:1ed8dea5dd6461a7a2e513a70556f7a5a0ce988a543528ec0348426c30421252",
+        "before_digest": "sha256:4e0acca2c15b78f66d3994e77d4f9e878ed4cc69047ede08a8aa9b455aa71546",
+        "change": "MODIFIED",
+        "path": "src/malleus/profiles/structural-admission-policy.json"
+      },
+      {
+        "after_digest": "sha256:62c5e36611c20c3cd9e65834ba184e8bd17877f07e35b2b998ed0c520f73fad6",
+        "before_digest": "sha256:5f309d574731a3fe2d19910c3ec9f971bb486483832926d2596eb7d448612f2d",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_atomic_population_admission.py"
+      },
+      {
+        "after_digest": "sha256:9ed4cbb9eac5478ea003ebf4000c644a85e14d013c24ca891ee3fa442d4fd637",
+        "before_digest": "sha256:b2858dd0259061ddc628e39a5f968c9c4063841b146487b4a51297a5f3870323",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_change_composition_context.py"
+      },
+      {
+        "after_digest": "sha256:76fe608db81bc05b163a76568ed932c3a4918d1cd0abfecb6cfd30bb5659300b",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_change_set_admission.py"
+      },
+      {
+        "after_digest": "sha256:d5c712de27dd405c7d947ca6d39607a4fed2580d505226c938c6facddeee0fb7",
+        "before_digest": "sha256:39907071b235908d40897bfe44e9578b6ebd0964e64a153517474986f424a338",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_check_contract_executor.py"
+      },
+      {
+        "after_digest": "sha256:c0573d2c0ead48022a619b422f8a225ccfcb6b10bcd9f5bf1f06981ce2085ffe",
+        "before_digest": "sha256:b124b9c161b57a3e933c37e555784892f3d45dabc3baca913501976e54894503",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_check_contract_rebinding.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000474",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "<entry_hash of OVR-000473 once recorded>",
+  "recorded_at": "<sealing moment, UTC>",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 474,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 3 of 4.",
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 62 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+}
+```
+
+### `OVR-000475`
+
+```json
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:63210031c87e3b6fb101904d13250019c9ec0a1a133b4a19b15723539d7ff615",
+        "before_digest": "sha256:b79a7799841581683f788bbc726a5b33195c9d0de3d1073d1f598f784edf1c20",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_contract_revision.py"
+      },
+      {
+        "after_digest": "sha256:2ac45f3e2893df38086145edd88e24b1bc865c85a2b1c9bc7dc9c5003b3bcc88",
+        "before_digest": "sha256:1940c85af19b73d56f06ce8a6e9bd7fef2be9edf12133af4e70ffb823bd71f00",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_fixture_producer.py"
+      },
+      {
+        "after_digest": "sha256:cfdf1e5032acf87d43e92d29581f1bdc0b159dcb5ac2581c8c387637673a7fd8",
+        "before_digest": "sha256:6d0c9d791d5bb9a350ef28cf07c1424f8bf0b7382948102f8aff5dfef6bd6057",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_finite_protocol_history.py"
+      },
+      {
+        "after_digest": "sha256:d71ef53f7a1f3fa3c96e0225e04cc76f4abae33c222597c02dc8cafff43a5f86",
+        "before_digest": "sha256:70392d0b73093c1e970cf033f8794851f8a0ebfb9309928eee9496918bd21a50",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_governed_population.py"
+      },
+      {
+        "after_digest": "sha256:b2f1f373fa898a5d842178230c2c6c08d0d16e98b3bb87fff3a951e5b6c417e8",
+        "before_digest": "sha256:9771738d663490917d626ce2ff74910f717905c93cbcc9bf07b27bc8d3752973",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      },
+      {
+        "after_digest": "sha256:5d481487d9d5633d1e2def3b0916dd81883bb5cf44cde399e24119b4bee755dd",
+        "before_digest": "sha256:368b200e8cb23a214be8e84404b71aefd00bfa69a07209ae45cd1eb6d70f4853",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_maintained_projection.py"
+      },
+      {
+        "after_digest": "sha256:74f1da917de09b703a95ee37fd74c7db0ddeaab8edd0ad62fcde55b2d0ea8997",
+        "before_digest": "sha256:fc9ebe2b1010dd7496a6c2645c8110b5dae413921bbbc500e8184148e6086d28",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_object_event_population.py"
+      },
+      {
+        "after_digest": "sha256:a3a3dbb32fef15bf6ede09eb2528c7025825b230aaf2d9969445af91436f65d3",
+        "before_digest": "sha256:1a663a98ccc5a93269e408faf6d69e4f55c3985e74609f3067f5c60a62e0a310",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:a1ba73711077437a87e5bbe136391ee57ae2d98299d3052b639d25317c4f082c",
+        "before_digest": "sha256:8d6d727ce5a401372668d2fa408758d3aa9a4379b670a96e9b7f2924b560d04a",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_trace.py"
+      },
+      {
+        "after_digest": "sha256:e0330970ac35524becd34bae6f2a1471b6022aa089a8882dfc1e19def5d95903",
+        "before_digest": "sha256:c32317607d96863234d654ab8a19d4903a1d24f752b33dc0e97afe52c7b122e8",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_protocol_machine.py"
+      },
+      {
+        "after_digest": "sha256:7daa17585759d7f366c916f89a06e3fadace2caeadab59cc0bc8bb6bc70e8e7b",
+        "before_digest": "sha256:2224a1d5a98f6eabcc862f01cca097d4783a8929e98f123a6d558000d739c541",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py"
+      },
+      {
+        "after_digest": "sha256:3883c846e8a33dd57f9cd99a24219fdfd89488af23bd0801007de5b84b56500a",
+        "before_digest": "sha256:87d18028d83dd7388d6e2000bdba6360ccc994239e4687421a41dceef300ba88",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_review_coverage.py"
+      },
+      {
+        "after_digest": "sha256:cb4e0230457329fadaab87fa94c5d8965990b134a3b35c18a23b795a1324fd83",
+        "before_digest": "sha256:784c33c2ccce87048abeaf31aa99f4dc20898e9aa37e907d852c8d6f06c080e3",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_small_shop_contract_revision.py"
+      },
+      {
+        "after_digest": "sha256:f162f0ba007d19bf17279a7bdebf37ae3a0e5e1affe7f82ddda559763aa38899",
+        "before_digest": "sha256:ed2ec2deea36d2a9848e38a3dfde04f3cea5838a0a4fa6705b250f2c485d00a0",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_transition_admission.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000475",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "<entry_hash of OVR-000474 once recorded>",
+  "recorded_at": "<sealing moment, UTC>",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 475,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 4 of 4.",
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 62 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+}
+```
