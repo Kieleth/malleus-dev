@@ -336,3 +336,9 @@ Every `before_digest` was checked equal to the committed bytes at `d89a0c47`.
     "entry_hash": "sha256:586c34179206b57307506543e9cc2768c895a196cb54418379d7c0feefeb0363"
 }
 ```
+
+## Sealing note for OVR-000469, 2026-09-20
+
+`entries/OVR-000469.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.

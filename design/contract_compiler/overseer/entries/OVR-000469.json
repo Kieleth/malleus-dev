@@ -1,0 +1,151 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X01",
+      "CC-X02",
+      "CC-X04"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:e12d9a009e2528a7902b8b3d59d4cd53d60b400c7fd582ac50e7c15809ee2def",
+        "before_digest": "sha256:f9d435fd79a5d577504b57f482fde41c2776ddf1e8c6dfb5f7b404b1d29fef48",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:65bc88dd008a2567fd04307214c566713d38bee05b96ba394534673736c564e3",
+        "before_digest": "sha256:3070ad3c910451e022591545c664f12e838c585349cb3e06a54b2867cf893049",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json"
+      },
+      {
+        "after_digest": "sha256:83a5444a3dafda17bcbe5accca468e1562e20419997976bf6085eab3307d2448",
+        "before_digest": "sha256:25b90ac90da285b6c03aed904452a3e2b6ad5ec6a292d45acd488a9ffc281e88",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-X01-environment-contract-correction.json"
+      },
+      {
+        "after_digest": "sha256:656352f8e9dd08255237c5dbcf57d437cac91a6b4d4b6b3e3b342ca36b9b67e6",
+        "before_digest": "sha256:ee9b2f11438a15ad3d4243addd250b03afb0769f71fb2ff13b43d7c1d3b03ada",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/historic_wire/observations.json"
+      },
+      {
+        "after_digest": "sha256:9e0a535805e4fcd73986ec72f351875dc65bc0b6bd95ca00e502c42df8064092",
+        "before_digest": "sha256:cf8ae922d0a1b2efb83d7f99df374254882f9626608d3b96ae425f02737f8af9",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/observations.json"
+      },
+      {
+        "after_digest": "sha256:b1262ade29cb982e89bda5f662982c180890283b122184cb52b27b19345bb6db",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-X04-reader-remeasurement-r2.json"
+      },
+      {
+        "after_digest": "sha256:f85e979632fb68cc0a4f855f3135e08a46fe117ceac8d93da3f1b90a5df69de3",
+        "before_digest": "sha256:88a2f72949e6e3e7d0344c5edb888769ebc3f560260e5d54fa0e9273ba1ce2b6",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:2231d4d3d8cdb5e067e334840d32e5d28ca791e4e1f23acc8fde359ccb48036c",
+        "before_digest": "sha256:9418e7dd42122c9c5e9164243b010b80e58e244dfb1d65c1efd35ead118aaf98",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:fecbb2bde95dae21aa482cbb02fc68ca0f061be7e95760197db40099afe1b435",
+        "change": "CREATED",
+        "path": "handover/2026-09-19-core-reader-measurement.md"
+      },
+      {
+        "after_digest": "sha256:3f59e5956b9ba5efa7bbfdf5e1a78c507f717e6e2b5393245c4e686c1d1bcad9",
+        "before_digest": "sha256:a590d79b3ca5a055127fc337995192a34309aa2f4511cd8338e1284aeb7b1117",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:54bcae833f6727ff5da6a6c7d81af76df6ed73df29ca60e5798b57df27f9501f",
+        "before_digest": "sha256:546a5cd14326014c7eafae96002f050f990662c422c32a5494a5ce66648099be",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_duplicate_scan.py"
+      },
+      {
+        "after_digest": "sha256:0729f997f70d2b9531b8f0e0af34656975ed4947052aab8890ad168e2d5fbe37",
+        "before_digest": "sha256:fedce3245745292a7d733609130be7b73e1da8b5fb493f55f44f644f69eb33b6",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_historic_wire.py"
+      },
+      {
+        "after_digest": "sha256:ca22ef6dcdf8a8a79f1f93690a3a71a6b0d462a45f4c6e22f9bbdc455be73e58",
+        "before_digest": "sha256:83ae4082106bbfe5a43ab25380bdcd5bde3d1878d89d44e33526a34991e4540b",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:3c208bfa01dc391f2993cb0e48421881a824a1862fedbb1596031d0b4b5e0a64",
+        "before_digest": "sha256:bfe2265d667231b46aab94907bff4d00d80efb2844fb72387f38ab99ef0ee4dc",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_ci.py"
+      },
+      {
+        "after_digest": "sha256:c3e056e8ad540ee29f526916e587e9f2fc43d67beac348fac5a517512ef670ca",
+        "before_digest": "sha256:d24ec20734a992b5d84cdddad26529bdbb3745022c9c091adb7ef29d327148af",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_divergence.py"
+      },
+      {
+        "after_digest": "sha256:dc9d41731a96660458935a69b5dacc298ec1fab495ab4f46143871a2a15a9bdd",
+        "before_digest": "sha256:eb5bf674aab4550f661f7dbe5fe4d53a2a713ad540d788d95d72401a0102e01b",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_duplicate_scan.py"
+      },
+      {
+        "after_digest": "sha256:c7559040569fb97e489c69e84f0f3d01e12d5f99421cd4cad8cfd51ef4b31055",
+        "before_digest": "sha256:e95f589a22e1652b9a8643a3246efab3359a847db9286a703eabcf6861eb1843",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_historic_wire.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000469",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ac90aecc40c69a1d00aff8786d5da9f3a95c430adfe4c058c29a48491139c0e3",
+  "recorded_at": "2026-09-20T02:42:01Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "b6f709173adc892641102bb4f0087f15b2599357",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X01",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 469,
+  "subject": {
+    "id": "core-reader-measurement",
+    "type": "DOCUMENT"
+  },
+  "summary": "Re-record the CC-X01, CC-X02 and CC-X04 measurements of repository bytes, derive them from the bytes, and put every compiler measurement test inside the default gate.",
+  "why": "ROADMAP F6. 17 tests failed on clean main d89a0c47 from three stale measurements, not one. CC-X04 pinned ten reader digests recorded at 5e4ec73e; seven had changed by 851913c0 (2026-09-08). CC-X01 retained an OntologyRegistry digest one revision old. CC-X02 required exactly six packaged ontology modules while pyproject packaged ten. Why nothing noticed: pyproject testpaths omitted all three test files and the baseline-inventory one, so the default pytest run, which scripts/ci.py test and CI run, collected none of them. Governance was measured and rejected as the guard: kg.py, accepted.py, ledger.py and staging.py are already governed here and their pinned digests were stale anyway, because governance pins the file, not the measurement. The four files join testpaths and test_ci.py refuses any tests/test_contract_compiler_*.py outside it. Measurements became projections: historic_wire 'record' and ledger 'refresh-evidence'. CC-X04 also read ReconProject.ledger, private since 9a7fafc9, and now reads snapshot_verified. No observed outcome changed in CC-X01 or CC-X04. CC-X02 grew to 586 declarations in 10 modules with four further duplicate groups, a CC-D02 input, not a decision here.",
+  "entry_hash": "sha256:7ef42f58cc120fc908316c8522b0a88ce06a4d4ae8837ea7fee73e208b166c2f"
+}
