@@ -252,9 +252,35 @@ writes no byte, so a violated plan no longer leaves its retained artifact
 behind. An `ADMIT` refusal may leave the retention batch that necessarily
 precedes it, because a change set binds ledger coordinates that exist only
 after that batch is appended; nothing is admitted either way and every refusal
-reports `ledger_unchanged`. `admit` and `admit_with_anchors` stay public and
-still read a caller-supplied outcome off a `CHECK_RECORDED` event, so this
-operation is the checked way in, not yet the only one.
+reports `ledger_unchanged`.
+
+`malleus.compiler.check_and_admit_change_set` is the same operation for a
+caller that composed its own operations instead of compiling a plan. It takes
+the history, the change set, the transaction time, the actor and optional
+anchors, and returns `ChangeSetAdmission(replay, change_set, checks)`. After
+the operations exist, both entry points run the same check stage and the same
+admit stage, and no parameter of either takes an outcome. A composed change set
+carries no derivation, so a rule layer that may read provenance sees an empty
+provenance rather than an invented one.
+
+The two-step door is closed. `admit` and `admit_with_anchors` refuse a
+caller-supplied `CHECK_RECORDED` or `VERDICT_RECORDED` with
+`CALLER_SUPPLIED_CHECK_EVENT` before any append. `VERDICT_RECORDED` is refused
+as well because `SELECT_POLICY_VERDICT` derives the verdict from the check
+records, so a caller free to write the verdict can still decide the outcome by
+choosing which check records exist. The consequence is wider than closing one
+policy's path, and it is recorded as measured rather than as intended:
+`PolicyProgram.from_bytes` refuses an empty `required_checks`, so a history
+requiring no check cannot exist, and terminal acceptance of a change set needs
+the history binding's decision event, `VERDICT_RECORDED` in every binding
+shipped here. The two public methods therefore admit nothing, for anyone, under
+any shipped binding. Admission is through `check_and_admit_population_plan`,
+`check_and_admit_change_set` or `admit_structural_change`; all three append
+through the same private path and none of their ledger bytes moved from that
+routing. `append_protocol_events` is not a second door: it wraps every event as
+`FINITE_PROTOCOL_EVENT`, which reaches the protocol runtime and never the
+machine's proposal and decision handling. The two refused event types are read
+from the installed machine program's instructions, not named as literals.
 
 What the check-contract grammar establishes. `malleus.check-contract/v1` is the
 one check-contract document Core parses. Its `executor.kind` is closed to
@@ -287,9 +313,29 @@ machine declaring `receipt_identity` beside the other six is filled rather than
 refused `MALFORMED_EVENT` after its retention was appended; a declared field
 Core cannot state refuses `UNSUPPORTED_EVENT_FIELD` at `CHECK`. A history whose
 required check is Core's own structural check keeps using
-`admit_structural_change`, whose bytes are unchanged. Core resolves no locator
+`admit_structural_change`. Core resolves no locator
 into text: retained source sentences remain a typed caller input, refused when
 no required rule layer's declared fact contract can read them.
+
+Core's own structural check is now a document in that grammar rather than an
+exception to it. `profiles/structural-admission-check.json` is a
+`malleus.check-contract/v1` `CORE_BUILTIN` document naming
+`malleus.core.operations-apply-atomically` version `1`, and
+`structural-admission-policy.json` follows it. The identity that made the
+exception worth keeping is exactly what moved: the check contract
+`sha256:9901f512…` to `sha256:b923c279…`, the policy `sha256:012de44e…` to
+`sha256:c1d696f2…`, the normative profile `sha256:aca27bbf…` to
+`sha256:a39681c4…` and `STRUCTURAL_HISTORY_BUNDLE` `sha256:0ef377d9…` to
+`sha256:8a994ed0…`. Every structural history's bytes move with the bundle, so
+every frozen coordinate cut against it was re-cut in the same change. The v1
+grammar closes its fields to four, so the superseded document's `checks` and
+`non_claims` lists are gone from the artifact; the same statement stands in
+`StructuralHistoryBundle`'s docstring and in `docs/PRINCIPLES.md`, and nothing
+read the lists. What is not yet done: `admit_structural_change` still writes its
+own `CHECK_RECORDED` from the bundle rather than dispatching the builtin the
+folded contract names. What that record attests is what the admission path
+validates when it applies the change, so the attestation is not fabricated, but
+it is Core attesting its own primitive instead of running the declared executor.
 
 ## Declared interpretation-review coverage
 

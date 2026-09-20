@@ -190,19 +190,21 @@ retains the rule bytes in the bootstrap. It reuses the connected story's own
 compiled ontology, machine program, history profile, sources and row adapter
 unchanged; the plans are that adapter's, not this directory's.
 
-At each admission it re-reads the retained rule bytes, checks them against the
-loaded contract, checks that the history's policy names that exact contract
-identity, stages the change's exact operations over the retirement-adjusted
-accepted graph, and submits the real Prolog result to the policy. It never
-accepts a caller-supplied outcome. The rule identity is bound into every change
-through the policy inside the partial effective contract, which each plan's
-`contract_identity` names; the installed `CheckRecord` schema has no field for a
-receipt artifact, so the receipt is retained alongside under a matching ID rather
-than referenced from the check event.
+Each admission is one Core call, `check_and_admit_population_plan`. Core reads
+the check contract the history's policy requires, resolves it from the retained
+descriptor and rule bytes as a `PROLOG_RULES` contract, stages the change's
+exact operations over the retirement-adjusted accepted graph, runs
+`PrologVerifier` itself, mints the receipt and writes `CHANGE_PROPOSED`,
+`CHECK_RECORDED` and `VERDICT_RECORDED`. This program passes no outcome and can
+pass none: the parameter does not exist, and the public `admit` and
+`admit_with_anchors` refuse a caller-written check or verdict record outright.
+It used to do the four steps itself. The rule identity is bound into every
+change through the policy inside the partial effective contract, which each
+plan's `contract_identity` names.
 
 Reopen reads the retained history alone and does not rerun Prolog. It preserves
-an execution attestation, not independent proof that an engine ran. Caller
-authored machine events remain a trusted boundary; this is not an anti-forgery
+an execution attestation, not independent proof that an engine ran. This is not
+an anti-forgery
 mechanism or an untrusted-rule sandbox.
 
 ## Run

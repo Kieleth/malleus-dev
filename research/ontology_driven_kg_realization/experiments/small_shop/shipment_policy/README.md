@@ -35,10 +35,14 @@ actual outcome to ACCEPT, REJECT or DEFER. The existing generic
 verdict; this sibling does not add another interpreter.
 
 The runner compiles the Shop ontology and selects this policy in a **fresh**
-history. It retains the bootstrap, sources, mapping and rule bytes. Population
-preparation retains the plan. Admission stages the exact KCS operations over
-the current graph, runs the existing trusted Prolog checker, and submits its
-real result to the selected policy. It never accepts a caller-supplied outcome.
+history. It retains the bootstrap, sources, mapping and rule bytes. Then it
+hands Core the plan through `check_and_admit_population_plan` and stops:
+Core resolves the required check contract from the retained descriptor and rule
+bytes, stages the exact KCS operations over the current graph, runs
+`PrologVerifier` and records the engine's outcome. This runner passes no
+outcome and can pass none, because the parameter does not exist and the public
+`admit` and `admit_with_anchors` refuse a caller-written check or verdict
+record. It used to run the checker itself and submit the result.
 
 The atomic admission batch contains the KCS, check receipt, proposal, check and
 derived verdict. A rejected check leaves the exact pre-admission ledger and

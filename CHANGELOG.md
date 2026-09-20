@@ -93,9 +93,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ledger_unchanged`. What Core does today without the operation is now
   measured and pinned: an admission carrying no `CHECK_RECORDED` refuses
   `MISSING_REQUIRED_CHECK`, and one carrying a fabricated `SATISFIED` is
-  accepted with no engine run. `admit` and `admit_with_anchors` stay public and
-  still read a caller-supplied outcome, so this is the checked way in, not yet
-  the only one.
+  accepted with no engine run. That second measurement is what the closed door
+  below removed: `admit` and `admit_with_anchors` no longer read a
+  caller-supplied outcome.
+- Added `malleus.compiler.check_and_admit_change_set`, the same operation for a
+  caller that composed its own operations instead of compiling a population
+  plan. It takes the history, the change set, the transaction time, the actor
+  and optional anchors; it runs every check the selected policy requires over
+  the state the change would produce, then appends the caller's anchors, one
+  retained receipt per check, the change set, `CHANGE_PROPOSED`, one
+  `CHECK_RECORDED` per check and `VERDICT_RECORDED`; or it refuses with
+  `PopulationAdmissionRefusal` at `CHECK` or `ADMIT`. No parameter of either
+  entry point takes an outcome, and after the operations exist both run the same
+  check stage and the same admit stage. A composed change set carries no
+  derivation, so a rule layer that may read provenance sees an empty provenance
+  rather than an invented one. This is what every adopter composing its own
+  operations reached `admit_with_anchors` for, and the reason that door could
+  close for everyone. `malleus.compiler.ChangeSetAdmission` is public with it.
 - Added `malleus.compiler.PopulationAdmission`,
   `malleus.compiler.PopulationAdmissionRefusal`,
   `malleus.compiler.PopulationAdmissionStage` and
@@ -146,6 +160,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   unchanged.
 
 ### Changed
+
+- `KnowledgeChangeHistory.admit` and `admit_with_anchors` now refuse a
+  caller-supplied `CHECK_RECORDED` or `VERDICT_RECORDED` with
+  `KnowledgeChangeRefusalReason.CALLER_SUPPLIED_CHECK_EVENT`, before any append.
+  `VERDICT_RECORDED` is refused as well as `CHECK_RECORDED` because
+  `SELECT_POLICY_VERDICT` derives the verdict from the check records: a caller
+  free to write the verdict can still decide the outcome by choosing which check
+  records exist. The consequence is wider than closing one policy's path, and it
+  is recorded as measured rather than as intended. `PolicyProgram.from_bytes`
+  refuses an empty `required_checks`, so a history requiring no check cannot
+  exist, and terminal acceptance of a change set needs the history binding's
+  decision event, which is `VERDICT_RECORDED` in every binding shipped here.
+  After this change the two public methods admit nothing, for anyone, under any
+  shipped binding. Admission is through `check_and_admit_population_plan`,
+  `check_and_admit_change_set` or `admit_structural_change`; all three append
+  through the same private path and none of their ledger bytes moved from that
+  routing. `append_protocol_events` is not a second door: it wraps every event
+  as `FINITE_PROTOCOL_EVENT`, which reaches the protocol runtime and never the
+  machine's proposal and decision handling. The two refused event types are read
+  from the installed machine program's instructions rather than named as
+  literals, because the data owns that vocabulary.
+- `src/malleus/profiles/structural-admission-check.json` is now a
+  `malleus.check-contract/v1` `CORE_BUILTIN` document naming
+  `malleus.core.operations-apply-atomically` version `1`, and
+  `structural-admission-policy.json` follows it, so Core's own structural check
+  is no longer the one check outside the grammar Core parses. Four identities
+  moved with it: the check contract `sha256:9901f512…` to `sha256:b923c279…`,
+  the policy `sha256:012de44e…` to `sha256:c1d696f2…`, the normative profile
+  `sha256:aca27bbf…` to `sha256:a39681c4…` and `STRUCTURAL_HISTORY_BUNDLE`
+  `sha256:0ef377d9…` to `sha256:8a994ed0…`. Every structural history's bytes
+  move with the bundle, so every frozen coordinate cut against it was re-cut in
+  the same change. The v1 grammar closes its fields to four, so the superseded
+  document's `checks` and `non_claims` lists are gone from the artifact; the
+  same statement stands in `StructuralHistoryBundle`'s docstring and in
+  `docs/PRINCIPLES.md`, and nothing read the lists.
+  `_load_structural_history_bundle` derives the accepting outcome as the one
+  declared outcome the installed policy maps to the binding's accept verdict,
+  and refuses unless there is exactly one. `admit_structural_change` still
+  writes its own `CHECK_RECORDED` from the bundle rather than dispatching the
+  builtin the folded contract names; what that record attests is what the
+  admission path validates when it applies the change, so the attestation is not
+  fabricated, but it is Core attesting its own primitive and that stays open.
+- `_check_base` refuses at `CHECK` with `STRUCTURAL_REFUSAL` and the
+  application's own words where forming the base for a retirement a live
+  relation still names raised a bare `ValueError` out of
+  `KnowledgeGraph.from_records`, before any executor ran.
 
 - `malleus.compiler.check_and_admit_population_plan` now runs every check the
   selected policy requires, in the policy's own order, rather than refusing any

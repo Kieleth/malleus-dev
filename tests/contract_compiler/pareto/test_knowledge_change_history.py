@@ -1482,7 +1482,6 @@ def test_admit_with_anchors_commits_receipts_and_change_in_one_batch(
     tmp_path: Path,
 ) -> None:
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
-    before = history.replay()
     receipt = _evidence_anchor("receipt-evidence", b'{"outcome":"SATISFIED"}')
     change = _load_change(_base_payload(history, partial, source, evidence))
 

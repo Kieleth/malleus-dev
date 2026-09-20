@@ -426,6 +426,30 @@ change application and reports `result_state_digest`. Two adopter check
 contracts declare that algorithm, `OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE`,
 and both implement it by calling that same Core primitive.
 
+Core's own structural check is now inside the grammar rather than beside it.
+`profiles/structural-admission-check.json` is a `malleus.check-contract/v1`
+`CORE_BUILTIN` document naming that builtin, and
+`structural-admission-policy.json` follows it. It used to stay in its private
+`malleus.admission-check/private-v0` grammar because its digest is an identity
+every structural history retains, and moving it moves every structural history's
+bytes. That cost was paid deliberately: the check contract went from
+`sha256:9901f512…` to `sha256:b923c279…`, the policy from `sha256:012de44e…` to
+`sha256:c1d696f2…`, the normative profile from `sha256:aca27bbf…` to
+`sha256:a39681c4…` and `STRUCTURAL_HISTORY_BUNDLE` from `sha256:0ef377d9…` to
+`sha256:8a994ed0…`, and every frozen coordinate cut against the bundle was
+re-cut. The v1 grammar closes its fields to four, so the superseded document's
+`checks` and `non_claims` lists are gone from the artifact; the same statement
+stands in `StructuralHistoryBundle`'s docstring and in `docs/PRINCIPLES.md`, and
+nothing read the lists. `_load_structural_history_bundle` parses the document and
+derives the accepting outcome as the one declared outcome the installed policy
+maps to the binding's accept verdict, refusing unless there is exactly one.
+`admit_structural_change` still writes its own `CHECK_RECORDED` from the bundle
+rather than dispatching the builtin the folded contract names. What that record
+attests, that the operations apply atomically, is what the admission path
+validates when it applies the change, so the attestation is not fabricated; it is
+Core attesting its own primitive rather than running the declared executor, and
+that remains open.
+
 Each check writes its own `CHECK_RECORDED`, carrying exactly the fields the
 selected machine's `CheckRecord` declares as inputs. A machine that declares
 `receipt_identity` beside the other six gets it; one that does not never sees
@@ -452,18 +476,49 @@ retention batch that necessarily precedes it, because a change set binds ledger
 coordinates that exist only once that batch is appended. Nothing is admitted
 either way, and every refusal reports `ledger_unchanged`.
 
-What this does not do. `admit` and `admit_with_anchors` remain public and still
-read a caller-supplied outcome, so the fabricated receipt above is still
-reachable by a caller who builds the events by hand. A history whose required
-check is Core's own structural check keeps using `admit_structural_change`,
-whose ledger bytes are unchanged. Core's own
-`profiles/structural-admission-check.json` stays in its own
-`malleus.admission-check/private-v0` grammar for the same reason a pinned rule
-layer does: its digest is the identity `structural-admission-policy.json`
-requires and every structural history retains, so rewriting it under the new
-grammar would move that identity and refuse every history ever written under
-it. Plan authoring stays outside: a document capture still reaches these bytes
-through `adapt_document_assertions`.
+A caller that composes its own operations rather than compiling a population
+plan admits them through `check_and_admit_change_set`, the same operation
+without the compile stage:
+
+```python
+admitted = compiler.check_and_admit_change_set(
+    history=history,
+    change_set=change_set,
+    transaction_time="2026-09-03T00:00:00Z",
+    actor_id="actor:producer",
+    anchors=(),
+)
+```
+
+It returns `ChangeSetAdmission(replay, change_set, checks)` and refuses with
+`PopulationAdmissionRefusal` at `CHECK` or `ADMIT`. Everything after the
+operations exist is the same code: both entry points call one check stage and
+one admit stage, and no parameter of either takes an outcome. A composed change
+set carries no derivation, so a rule layer that may read provenance sees an
+empty provenance rather than an invented one.
+
+The door behind them is closed. `admit` and `admit_with_anchors` refuse a
+caller-supplied `CHECK_RECORDED` or `VERDICT_RECORDED` with
+`CALLER_SUPPLIED_CHECK_EVENT` before any append, so the fabricated receipt above
+is no longer reachable. `VERDICT_RECORDED` is refused as well as
+`CHECK_RECORDED` because `SELECT_POLICY_VERDICT` derives the verdict from the
+check records: a caller who may write the verdict can still decide the outcome
+by choosing which check records exist. The effect is wider than a
+policy-by-policy closure, and it is worth stating as the fact it is.
+`PolicyProgram.from_bytes` refuses an empty `required_checks`, so no history
+without a required check exists, and terminal acceptance of a change set needs
+the history binding's decision event, which is `VERDICT_RECORDED` in every
+binding shipped here. After this change the two public methods cannot admit
+anything, for anyone, under any shipped binding. The three Core-authored paths,
+`check_and_admit_population_plan`, `check_and_admit_change_set` and
+`admit_structural_change`, append through the same private path, and none of
+their ledger bytes moved from that routing. `append_protocol_events` is not a
+second door: it wraps every event as `FINITE_PROTOCOL_EVENT`, which reaches the
+protocol runtime and never the machine's proposal and decision handling.
+
+What this does not do. A history on Core's own structural check keeps using
+`admit_structural_change`. Plan authoring stays outside: a document capture
+still reaches these bytes through `adapt_document_assertions`.
 
 ## Read-only change-set composition
 
