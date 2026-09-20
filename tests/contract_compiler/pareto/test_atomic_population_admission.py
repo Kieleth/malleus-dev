@@ -14,6 +14,7 @@ when a producer admits under an installed policy without running the check.
 
 from __future__ import annotations
 
+import inspect
 import json
 from pathlib import Path
 
@@ -263,13 +264,25 @@ def _admit(history, plan_bytes, profile, **extra):
     )
 
 
-# --- step 1: what Core does today, measured ----------------------------------
+# --- the door: what the public admission surface does now --------------------
+#
+# These two were the step-1 measurement of the hole: an admission carrying no
+# check record refused, and one carrying a fabricated ``SATISFIED`` was
+# accepted with no engine run. Both premises are gone. The public door refuses
+# a caller-written check or verdict record before any append, so the events
+# those tests built can no longer be admitted at all, by anyone.
 
 
-def test_today_an_admission_with_no_check_event_refuses_under_an_installed_policy(
+def test_the_public_door_refuses_a_caller_written_verdict_record(
     tmp_path: Path,
 ) -> None:
-    """The absence of the required check record refuses, and writes nothing."""
+    """``CHANGE_PROPOSED`` plus a caller's verdict refuses before any append.
+
+    Where this used to reach the machine and refuse ``MISSING_REQUIRED_CHECK``,
+    the verdict record never gets that far: it is Core's to write, and the
+    machine derives it from the check records, so a caller who may write it
+    may still decide the outcome by choosing which checks exist.
+    """
 
     history, _, logic, policy = _shop_shaped(tmp_path)
     before = history.replay()
@@ -298,60 +311,160 @@ def test_today_an_admission_with_no_check_event_refuses_under_an_installed_polic
             actor_id=ACTOR,
         )
 
-    assert refusal.value.reason is compiler.KnowledgeChangeRefusalReason.PROTOCOL_REFUSAL
-    assert refusal.value.detail == "machine event refused: MISSING_REQUIRED_CHECK"
+    assert (
+        refusal.value.reason
+        is compiler.KnowledgeChangeRefusalReason.CALLER_SUPPLIED_CHECK_EVENT
+    )
+    assert "VERDICT_RECORDED" in refusal.value.detail
     assert history_path(history).read_bytes() == ledger_before
 
 
-def test_today_a_fabricated_check_outcome_is_admitted_with_no_engine_run(
+def test_a_proposal_alone_still_refuses_as_an_incomplete_admission(
     tmp_path: Path,
 ) -> None:
-    """The hole. Core reads the outcome off the event and runs nothing itself.
+    """The door refuses check and verdict records; it does not replace ``_admit``.
 
-    Both records state a different quantity for the same order and product, so
-    the installed contract's ``NO_CONFLICTING_QUANTITY`` would return VIOLATED.
-    Nothing runs it, and the ledger accepts ``SATISFIED``.
+    A batch carrying only ``CHANGE_PROPOSED`` passes the door, because nothing
+    in it is Core's to write, and then refuses ``INCOMPLETE_ADMISSION`` as it
+    always has: no terminal acceptance of the retained change set.
     """
 
     history, _, logic, policy = _shop_shaped(tmp_path)
     before = history.replay()
     change = _change(history)
+    ledger_before = history_path(history).read_bytes()
 
-    history.admit(
-        change_set=change,
-        machine_events=(
-            _event(
-                "CHANGE_PROPOSED",
-                expected_machine_state_identity=before.machine_state.identity,
-                knowledge_change_set_identity=change.identity,
-                policy_id=policy.identifier,
-                policy_identity=policy.identity,
-                proposal_id="proposal:fabricated",
+    with pytest.raises(compiler.KnowledgeChangeRefusal) as refusal:
+        history.admit(
+            change_set=change,
+            machine_events=(
+                _event(
+                    "CHANGE_PROPOSED",
+                    expected_machine_state_identity=before.machine_state.identity,
+                    knowledge_change_set_identity=change.identity,
+                    policy_id=policy.identifier,
+                    policy_identity=policy.identity,
+                    proposal_id="proposal:proposal-only",
+                ),
             ),
-            _event(
-                "CHECK_RECORDED",
-                check_contract_id=CHECK_ID,
-                check_contract_identity=logic.contract_hash,
-                outcome="SATISFIED",
-                policy_identity=policy.identity,
-                proposal_id="proposal:fabricated",
-                receipt_id="receipt:fabricated",
-            ),
-            _event(
-                "VERDICT_RECORDED",
-                decision_id="decision:fabricated",
-                proposal_id="proposal:fabricated",
-            ),
-        ),
-        transaction_time=TRANSACTION_TIME,
-        actor_id=ACTOR,
+            transaction_time=TRANSACTION_TIME,
+            actor_id=ACTOR,
+        )
+
+    assert (
+        refusal.value.reason
+        is compiler.KnowledgeChangeRefusalReason.INCOMPLETE_ADMISSION
     )
+    assert history_path(history).read_bytes() == ledger_before
 
-    after = history.replay()
-    assert len(after.change_sets) == 1
-    assert after.change_sets[0].identity == change.identity
-    retained = {member.record_id for member in after.retained_inputs}
-    assert "receipt:fabricated" not in retained
+
+def test_a_fabricated_check_outcome_can_no_longer_reach_the_ledger(
+    tmp_path: Path,
+) -> None:
+    """The hole, closed. The exact events that admitted a conflict now refuse.
+
+    Both records state a different quantity for the same order and product, so
+    the installed contract's ``NO_CONFLICTING_QUANTITY`` returns VIOLATED. The
+    caller's ``SATISFIED`` used to be read off the event and admitted. It is
+    now refused before any append, and nothing is written.
+    """
+
+    history, _, logic, policy = _shop_shaped(tmp_path)
+    before = history.replay()
+    change = _change(history)
+    ledger_before = history_path(history).read_bytes()
+
+    with pytest.raises(compiler.KnowledgeChangeRefusal) as refusal:
+        history.admit(
+            change_set=change,
+            machine_events=(
+                _event(
+                    "CHANGE_PROPOSED",
+                    expected_machine_state_identity=before.machine_state.identity,
+                    knowledge_change_set_identity=change.identity,
+                    policy_id=policy.identifier,
+                    policy_identity=policy.identity,
+                    proposal_id="proposal:fabricated",
+                ),
+                _event(
+                    "CHECK_RECORDED",
+                    check_contract_id=CHECK_ID,
+                    check_contract_identity=logic.contract_hash,
+                    outcome="SATISFIED",
+                    policy_identity=policy.identity,
+                    proposal_id="proposal:fabricated",
+                    receipt_id="receipt:fabricated",
+                ),
+                _event(
+                    "VERDICT_RECORDED",
+                    decision_id="decision:fabricated",
+                    proposal_id="proposal:fabricated",
+                ),
+            ),
+            transaction_time=TRANSACTION_TIME,
+            actor_id=ACTOR,
+        )
+
+    assert (
+        refusal.value.reason
+        is compiler.KnowledgeChangeRefusalReason.CALLER_SUPPLIED_CHECK_EVENT
+    )
+    assert "CHECK_RECORDED" in refusal.value.detail
+    assert history_path(history).read_bytes() == ledger_before
+    assert history.replay().change_sets == ()
+
+
+def test_no_public_callable_accepts_a_caller_check_outcome_under_a_policy() -> None:
+    """The facades expose no remaining way in that reads a caller's outcome.
+
+    ``malleus`` and ``malleus.compiler`` are the facades; ``malleus.population``
+    does not exist. Every public callable that appends a change set either
+    takes no machine events at all, in which case Core writes them, or is the
+    door itself, which refuses the two Core-authored types.
+    """
+
+    import malleus
+
+    reaching: dict[str, set[str]] = {}
+    for facade in (malleus, compiler):
+        for name in getattr(facade, "__all__", ()):
+            member = getattr(facade, name)
+            if not callable(member):
+                continue
+            try:
+                parameters = set(inspect.signature(member).parameters)
+            except (TypeError, ValueError):
+                continue
+            if {"change_set", "plan_bytes", "preparation"} & parameters:
+                reaching[name] = parameters
+
+    assert {
+        "admit_structural_change",
+        "check_and_admit_change_set",
+        "check_and_admit_population_plan",
+    } <= set(reaching)
+    for name, parameters in reaching.items():
+        assert "machine_events" not in parameters, name
+        assert not {
+            parameter
+            for parameter in parameters
+            if "outcome" in parameter or "verdict" in parameter
+        }, name
+
+    door = compiler.KnowledgeChangeHistory
+    public = {
+        name
+        for name in dir(door)
+        if not name.startswith("_")
+        and callable(getattr(door, name))
+        and "machine_events" in getattr(
+            inspect.signature(getattr(door, name)), "parameters", {}
+        )
+    }
+    assert public == {"admit", "admit_with_anchors"}
+    for name in sorted(public):
+        source = inspect.getsource(getattr(door, name))
+        assert "_refuse_caller_authored(machine_events)" in source
 
 
 def _change(history):

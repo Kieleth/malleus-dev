@@ -134,6 +134,7 @@ class KnowledgeChangeRefusalReason(Enum):
     NONCANONICAL_BINDING = auto()
     MALFORMED_HISTORY = auto()
     INCOMPLETE_ADMISSION = auto()
+    CALLER_SUPPLIED_CHECK_EVENT = auto()
     STALE_BASE = auto()
     UNRETAINED_INPUT = auto()
     UNKNOWN_SUPERSESSION = auto()
@@ -844,6 +845,53 @@ def _event_object(source: bytes) -> tuple[str, dict[str, object]]:
             "machine event type and payload are required",
         )
     return event_type, payload
+
+
+_CORE_AUTHORED_EVENTS = frozenset({"CHECK_RECORDED", "VERDICT_RECORDED"})
+"""The protocol events Core writes itself, and only after running the check.
+
+Core cannot tell a caller's check record from its own by reading it. The
+machine requires the contract identity to be one the policy names and the
+outcome to be one the policy maps, and neither of those runs anything, which
+is the hole ROADMAP F1 measured: a fabricated ``SATISFIED`` admitted a pair of
+records that violated the very rule the policy required. The discriminator
+that does exist is the call path, so that is where the door is drawn.
+``check_and_admit_population_plan`` and ``check_and_admit_change_set`` run the
+executors their policy names and append through ``_admit``; the public
+``admit`` and ``admit_with_anchors`` refuse these two event types outright.
+
+Refusing ``VERDICT_RECORDED`` as well as ``CHECK_RECORDED`` is not belt and
+braces. The verdict is what makes an admission terminal, and its own
+``SELECT_POLICY_VERDICT`` instruction derives the verdict from the check
+records, so a caller that may write it may still decide the outcome by
+choosing which check records exist.
+"""
+
+
+def _refuse_caller_authored(machine_events: object) -> None:
+    """Refuse a caller-written check or verdict record before any append.
+
+    Anything that is not a readable machine event is left to ``_admit``, which
+    has the typed refusal for a malformed batch. This gate answers one
+    question only: did the caller write an event that is Core's to write?
+    """
+
+    if not isinstance(machine_events, tuple):
+        return
+    for machine_event in machine_events:
+        if type(machine_event) is not bytes:
+            continue
+        try:
+            event_type, _ = _event_object(machine_event)
+        except KnowledgeChangeRefusal:
+            continue
+        if event_type in _CORE_AUTHORED_EVENTS:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.CALLER_SUPPLIED_CHECK_EVENT,
+                f"{event_type} is Core's to write once it has run the check; "
+                "admit through check_and_admit_change_set or "
+                "check_and_admit_population_plan",
+            )
 
 
 def _history_receipt(
@@ -1568,6 +1616,13 @@ class KnowledgeChangeHistory:
         transaction_time: str,
         actor_id: str,
     ) -> KnowledgeHistoryReplay:
+        """Append one change with machine events the caller wrote.
+
+        The check and verdict records are not among them any more. See
+        ``_CORE_AUTHORED_EVENTS``: a caller that supplies one supplies an
+        outcome Core did not produce, and this refuses before any append.
+        """
+        _refuse_caller_authored(machine_events)
         return self._admit(
             anchors=(),
             change_set=change_set,
@@ -1589,8 +1644,12 @@ class KnowledgeChangeHistory:
 
         The change-set event precedes these anchors, so every source and
         evidence member named by the change must already be retained. These
-        anchors support later protocol events, such as executed-check receipts.
+        anchors support later protocol events.
+
+        The check and verdict records are Core's, not the caller's, so this
+        refuses them the same way ``admit`` does.
         """
+        _refuse_caller_authored(machine_events)
         if not isinstance(anchors, tuple) or not anchors:
             raise _refuse(
                 KnowledgeChangeRefusalReason.MALFORMED_HISTORY,

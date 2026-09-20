@@ -14,7 +14,7 @@
   "required_checks": [
     {
       "check_contract_id": "malleus.structural-admission/v1",
-      "check_contract_identity": "sha256:9901f51284257e47e25af414f035104373d0dace037d8943c4b6f5c0126ae3de"
+      "check_contract_identity": "sha256:b923c279024e7a2cf18fab86b2e9e80e8f5afecbd8e7da83be437f2fba228f41"
     }
   ]
 }

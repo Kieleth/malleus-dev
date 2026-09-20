@@ -203,34 +203,32 @@ def _load_structural_history_bundle() -> StructuralHistoryBundle:
     policy_source, _ = _profile_resource("structural-admission-policy.json")
     binding_source, _ = _profile_resource("structural-history-binding.json")
     check_source, check = _profile_resource("structural-admission-check.json")
-    expected_check_fields = {
-        "check_contract_id",
-        "checks",
-        "executor",
-        "grammar",
-        "non_claims",
-        "success_outcome",
-    }
-    if set(check) != expected_check_fields:
-        raise RuntimeError("installed structural-admission check fields are not closed")
-    check_id = check["check_contract_id"]
-    success_outcome = check["success_outcome"]
-    if (
-        check["grammar"] != "malleus.admission-check/private-v0"
-        or not isinstance(check_id, str)
-        or not check_id
-        or not isinstance(success_outcome, str)
-        or not success_outcome
-    ):
-        raise RuntimeError("installed structural-admission check is malformed")
+    try:
+        contract = parse_check_contract(check_source)
+    except CheckContractError as error:
+        raise RuntimeError(
+            f"installed structural-admission check is malformed: {error}"
+        ) from error
+    if contract.executor_kind is not CheckExecutorKind.CORE_BUILTIN:
+        raise RuntimeError("structural admission runs a Core builtin, not an adopter")
+    check_id = contract.check_contract_id
     machine = ProtocolMachineProgram.from_bytes(machine_source)
     policy = PolicyProgram.from_bytes(policy_source)
     binding = KnowledgeChangeHistoryBinding.from_bytes(binding_source)
     check_identity = _digest(check_source)
     if policy.required_checks != ((check_id, check_identity),):
         raise RuntimeError("structural admission policy does not bind its exact check")
-    if success_outcome not in policy.outcome_verdicts:
-        raise RuntimeError("structural admission success outcome is not in policy")
+    # The accepting outcome is derived, never named twice: it is the one this
+    # contract declares that the installed policy maps to the binding's accept
+    # verdict. The folded v1 document has no place to restate it.
+    accepting = tuple(
+        outcome
+        for outcome in contract.outcomes
+        if policy.outcome_verdicts.get(outcome) == binding.data["accept_verdict"]
+    )
+    if len(accepting) != 1:
+        raise RuntimeError("structural admission has no single accepting outcome")
+    success_outcome = accepting[0]
     normative = compose_normative_profile(
         protocol_machine_program=machine,
         policy_programs={"required-check-verdict": policy},
@@ -523,7 +521,11 @@ def admit_structural_change(
             proposal_id=proposal_id,
         ),
     )
-    return history.admit(
+    # Core authored every one of these events from the structural bundle, so
+    # they append through the primitive. The public door refuses them, which
+    # is the whole point of it: a caller cannot reach this shape by hand.
+    return history._admit(
+        anchors=(),
         change_set=change,
         machine_events=events,
         transaction_time=transaction_time,
