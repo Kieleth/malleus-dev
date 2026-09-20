@@ -135,6 +135,163 @@ scope ("`admit_structural_change` unchanged") and is left as a named residual.
 
 ## What did not land, and exactly where the line is
 
+Rewritten 2026-09-20 by the agent that carried the migration, at commit
+`980cb609`. The section below it, "Measurements", is the earlier agent's
+measurement of the red branch and is kept as the record of that state.
+
+### What landed since
+
+**Core's own tests admit through the door.** Every caller-authored admission
+under `tests/contract_compiler/pareto` now calls
+`check_and_admit_change_set`, or `prepare_population_change` followed by it
+where the test's subject is the preparation surface. The fixture policy at
+`test_protocol_machine.py` requires two retained
+`malleus.check-contract/v1` `CORE_BUILTIN` documents, both naming
+`malleus.core.operations-apply-atomically` version `1`, built by
+`_check_contract_document` and retained by `_check_contract_anchors`. The
+identities that moved with it:
+
+| artifact | before | after |
+|---|---|---|
+| fixture check contract a | `sha256:aaa…` (no document) | `sha256:b8d7db85…` |
+| fixture check contract b | `sha256:bbb…` (no document) | `sha256:448fc87f…` |
+| fixture policy | `sha256:2d31a2fc…` | `sha256:ca7a4b54…` |
+| fixture partial contract, inspection-note | `sha256:0a9a02ce…` | `sha256:3a216cda…` |
+
+**The door reads its event types from the machine program.** `knowledge.py`
+named `CHECK_RECORDED` and `VERDICT_RECORDED` as literals, which
+`test_history_binding_is_canonical_and_data_owns_machine_vocabulary` forbids:
+the data owns that vocabulary. `_core_authored_events` now reads the installed
+program for the events whose instructions carry `REQUIRE_POLICY_CHECK_OUTPUT`
+or `SELECT_POLICY_VERDICT`.
+
+**`_check_base` refuses instead of crashing.** Forming the base for a
+retirement that a live relation still names raised a bare `ValueError` out of
+`KnowledgeGraph.from_records`, before any executor ran. It now refuses at
+`CHECK` with `STRUCTURAL_REFUSAL` and the application's own words.
+
+**Two conformance re-baselines, both additive.**
+`research/.../fixtures/inspection_note_execution_v4` is a new document
+execution; v2 and v3 are untouched and both are now digest-pinned by
+`test_previous_execution_remains_exact`. The historical inputs in
+`inspection_note_capture_v1` are untouched, which is why the two tests that
+compare the adapter output against the committed plan now compare modulo
+`contract_identity`, with the reason stated at the assertion.
+
+**RET-010 is migrated and its exported graph is byte-identical.**
+`pareto/policy.json` requires one check, `structural-conformance`, whose
+document is the new `pareto/checks/structural-conformance.json` at
+`sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9`.
+`retained-source-integrity` is gone: its identity matched no file and the
+program wrote `SATISFIED` from a literal in `mapping.json`. `ret010.py` lost
+its 71-line `_protocol_events` and calls `check_and_admit_change_set`.
+
+| artifact | before | after |
+|---|---|---|
+| pareto policy | `sha256:c0ec653f…` | `sha256:433f2f9b…` |
+| pareto mapping | `sha256:4e8851c5…` | `sha256:ba4291a2…` |
+| RET-010 exported graph | `b58f6447…` | `b58f6447…`, identical |
+| RET-010 accepted state digest | `sha256:4d7d44cc…` | `sha256:4d7d44cc…`, identical |
+
+### Where the line is now
+
+**A measurement trap that must be set up before anything else.** The venv's
+`malleus` is installed from `/Users/luis/Projects/malleus-dev/src`, the main
+checkout, not from a worktree. `pyproject.toml` sets `pythonpath = [".",
+"src"]`, which pytest applies to its own process and not to a subprocess. Every
+research test that runs a program through `subprocess.run` therefore measures
+**main's Core**, not the branch's, unless `PYTHONPATH` is exported. Run
+everything in this worktree as:
+
+```sh
+PYTHONPATH=$PWD/src:$PWD .venv/bin/python -m pytest ...
+```
+
+Without it, `test_vertical.py::test_reopen_module_command_and_fresh_genesis_are_deterministic`
+fails with an `ImportError` for `check_and_admit_change_set` that says nothing
+about this branch.
+
+1. **`public_population/run.py` and `object_event/run.py`** (brief step 5).
+   Both read `pareto/policy.json`, whose required check and identity moved, and
+   both still build hand-written protocol events:
+   `public_population/run.py:268` `_protocol_events`, called from `_admit_plan`
+   at `:327`; `object_event/run.py` imports that same function and admits at
+   `:163`. Each needs the same three edits RET-010 took: retain
+   `pareto/checks/structural-conformance.json` in `_bootstrap`, delete
+   `_protocol_events`, call `check_and_admit_change_set`. Then the committed
+   plans have to be re-cut, because two pinned values inside them moved:
+   - `contract_identity`, in every plan under
+     `public_population/plans/` and in
+     `fixtures/small_shop_fulfilment*/input/population/ret-040.json`;
+   - the evidence digest of `pareto/mapping.json`,
+     `sha256:4e8851c5…` to `sha256:ba4291a2…`, which
+     `public_population/plans/ret010.json` names as
+     `artifact:small-shop:baseline-mapping`.
+   The old mapping digest is also pinned in six evidence archives:
+   `public_population/evidence.json`,
+   `correction/evidence-role-v1/explanation.json`,
+   `evidence_2026_09_06/correction/explanation.json`,
+   `evidence_2026_09_08/{correction/explanation.json,public_population/evidence.json}`,
+   `evidence_2026_09_08_rule_check/{correction/explanation.json,public_population/evidence.json}`,
+   `evidence_2026_09_17_policy_rebinding/{correction/explanation.json,public_population/evidence.json}`.
+   The dated archives are frozen history and must not move; the current
+   generation is the one to re-cut. `test_evidence_archive.py`'s `HISTORICAL`
+   table decides which is which; read it before touching any of them.
+2. **The six other programs** the earlier table names, untouched:
+   `small_shop/content_rules/run.py:321`, `small_shop/correction/run.py:1477`,
+   `small_shop/shipment_policy/run.py:269`, `small_shop/showcase/run.py:1340`,
+   `small_shop/pareto/ret010.py` (done), `document_paper/document_run.py:280`.
+   The private-grammar check contracts under `correction/checks/` and
+   `showcase/` still have to become v1 policies requiring the structural
+   builtin, with each program's experiment-specific verification moved to a
+   research-local assertion and stated in its README as a check Core does not
+   vouch for.
+3. **Two programs the earlier table missed**, both reached by the Core suite
+   and both already red for the mapping digest above:
+   `small_shop/default_admission/run.py:146` and
+   `small_shop/partial_shipments/run.py:186`. Neither uses the public door:
+   both call `admit_structural_change`, so their only exposure is the moved
+   `pareto/mapping.json` digest their plans pin. `small_shop/fresh_import`
+   is the same shape at `:86`.
+4. **The connected-story Core-side re-freeze** (brief step 7). Not started.
+   Four files, twelve values, the E-0467 shape:
+   `connected_story/partial_shipments/input_boundary.json`,
+   `connected_story/warehouse/receipt.json`,
+   `connected_story/warehouse/ordering_receipt.json`,
+   `connected_story/partial_shipments/receipt.json`. Appendix B's
+   `32798a67…` and `15c7c1ef…` move with it.
+5. **Documentation and `OVR-000472`** (brief steps 8 and 9). Not started. The
+   exact places to correct are unchanged from the list below; add to them that
+   `CAPABILITIES.md` needs a row for `check_and_admit_change_set` and
+   `ChangeSetAdmission`, and that the one-call row must say the door is closed.
+   `previous_entry_hash` is
+   `sha256:7cb9e624476d13a78ed15a5d5d89f219414cb536f3738eda7a91a94f1de984fd`.
+
+### Measured at `980cb609`
+
+`PYTHONPATH=$PWD/src:$PWD pytest tests/contract_compiler`: **20 failed, 1282
+passed**, 142s. Every one of the 20 is downstream of an unmigrated research
+program, in four files: `test_default_shop_walkthrough.py` (1),
+`test_fresh_shop_import.py` (10), `test_maintained_projection.py` (2),
+`test_partial_shipments.py` (3), `test_small_shop_default_admission.py` (4).
+The two distinct causes are
+`IDENTITY_MISMATCH: evidence digest differs from retained bytes:
+artifact:small-shop:baseline-mapping` and a non-zero exit from a research
+program run as a subprocess. No test in `tests/contract_compiler/pareto` fails
+for the door any more.
+
+`pytest research/.../small_shop/pareto`: **28 passed**.
+`pytest research/.../small_shop/{object_event,public_population}`: **4 failed,
+2 passed**, all four `PopulationPlanRefusal: IDENTITY_MISMATCH: plan and
+partial effective contract disagree`.
+
+Ruff over `src tests research/.../small_shop/pareto`: the same nine
+pre-existing findings as `85f0ed54`, plus none. The E-0501 probe was not
+re-run: the count cannot be zero while the eight research programs still
+admit, and a full suite run for a number known to be non-zero buys nothing.
+
+### The earlier agent's list, kept for the parts still open
+
 Parts 4 through 9 of the brief. In order of what the next agent should do:
 
 1. **Core's own test admissions** (brief step 4). 134 caller-authored
@@ -367,4 +524,5 @@ errors above are.
 
 - `7c6e3f62` the third entry point and its 16 tests, additive, door still open
 - `7c3237f0` the door closed and the structural check folded, breaking
-- this handover
+- `bc7fdcbb`, `f6d83c2c`, `ac0dfe50` this handover and its measurements
+- `980cb609` Core's own tests admit through the door, and RET-010 with them
