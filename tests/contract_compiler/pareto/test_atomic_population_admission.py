@@ -440,7 +440,7 @@ def test_the_operation_admits_the_plan_its_gaps_the_change_receipt_and_three_eve
         "profile:state-version",
         "plan:ok",
         "plan:ok:gaps",
-        f"receipt:{admitted.change_set.change_set_id}",
+        f"receipt:{admitted.change_set.change_set_id}:{CHECK_ID}",
     } <= retained
     assert after.ledger_event_count == before.ledger_event_count + 8
     assert _digest(after.retained_bytes(admitted.receipt_id)) == admitted.receipt_identity

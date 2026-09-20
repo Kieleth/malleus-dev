@@ -14,10 +14,18 @@ ledger is the one the engine returned on the state the change would produce,
 because the caller supplies no outcome and there is no other way in.
 
 Which engine runs is not a call-site choice. The history's selected
-``PolicyProgram`` names the check contract by identity; the operation loads the
-retained bytes that hash to it. A ``LogicContract`` names no engine and closes
-its fields, so a retained check contract of that shape is a Prolog contract and
-``PrologVerifier`` runs it.
+``PolicyProgram`` names its required check contracts by identity, in its own
+order, and the operation runs every one of them through the closed executor
+set of ``malleus.check-contract/v1``: a retained Prolog rule layer under
+``PrologVerifier``, or a Core builtin from the registry in
+``check_contract.py``. A required check whose contract the history does not
+retain, or whose executor Core cannot run, refuses before the first append.
+
+Each check writes its own ``CHECK_RECORDED``, and its payload is exactly the
+fields the selected machine's ``CheckRecord`` declares as inputs. Core carries
+a superset of values and the machine's own declaration selects from it, so a
+machine that declares ``receipt_identity`` gets it and one that does not never
+sees it.
 
 Atomicity, stated exactly. A ``COMPILE`` or ``CHECK`` refusal writes no byte:
 both stages run before the first append. An ``ADMIT`` refusal may leave the
@@ -35,6 +43,16 @@ from hashlib import sha256
 import json
 from typing import Mapping
 
+from malleus._contract_pipeline.check_contract import (
+    CandidateChange,
+    CheckContract,
+    CheckContractError,
+    CheckExecutorKind,
+    CheckOutcome,
+    CheckRequest,
+    resolve_check_contract,
+    resolve_core_builtin,
+)
 from malleus._contract_pipeline.knowledge import (
     KnowledgeAnchorInput,
     KnowledgeChangeHistory,
@@ -106,12 +124,32 @@ class PopulationAdmissionRefusal(ValueError):
 
 
 @dataclass(frozen=True, slots=True)
+class AdmittedCheck:
+    """One required check Core ran, and the receipt it anchored for it."""
+
+    check_contract_id: str
+    check_contract_identity: str
+    executor_kind: CheckExecutorKind
+    outcome: str
+    receipt_id: str
+    receipt_identity: str
+    record_receipt_id: str
+    result: Mapping[str, object]
+    logic_result: LogicCheckResult | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class PopulationAdmission:
-    """One admitted plan, with the check Core ran to admit it."""
+    """One admitted plan, with every check Core ran to admit it.
+
+    ``checks`` holds them in the policy's own order. The singular fields name
+    the first of them, which is the whole story for a policy requiring one
+    check and the entry point to ``checks`` for a policy requiring more.
+    """
 
     replay: KnowledgeHistoryReplay
     change_set: KnowledgeChangeSet
-    check: LogicCheckResult
+    check: LogicCheckResult | None
     check_contract_id: str
     check_contract_identity: str
     plan_id: str
@@ -119,6 +157,7 @@ class PopulationAdmission:
     receipt_id: str
     receipt_identity: str
     gap_count: int
+    checks: tuple[AdmittedCheck, ...] = ()
 
 
 def _canonical(value: object) -> bytes:
@@ -156,60 +195,152 @@ def _refuse(
     )
 
 
-def _selected_check_contract(
+def _selected_check_contracts(
     replay: KnowledgeHistoryReplay,
-) -> tuple[LogicContract, str, str]:
-    """The check contract this history currently requires, from what it retains.
+) -> tuple[CheckContract, ...]:
+    """Every check this history currently requires, in the policy's own order.
 
-    The identity comes from ``required_checks``, never from a record ID a
+    The identities come from ``required_checks``, never from a record ID a
     producer chose once: an additive revision that re-binds the rule layer
-    moves the required identity and leaves the superseded contract retained
+    moves a required identity and leaves the superseded contract retained
     beside the new one.
+
+    A required check Core cannot reach refuses here, before the first append,
+    naming the contract rather than the count. The count is the policy's to
+    declare, and an operation that ran a strict subset of what the policy
+    requires would admit under a check nobody ran.
     """
 
     required = tuple(replay.required_checks.get(REQUIRED_CHECK_POLICY_REFERENCE, ()))
-    if len(required) != 1:
+    if not required:
         raise _refuse(
             PopulationAdmissionStage.CHECK,
-            "UNEXPECTED_REQUIRED_CHECKS",
-            f"policy {REQUIRED_CHECK_POLICY_REFERENCE} requires {len(required)} "
-            "check contracts; this operation runs exactly one",
+            "NO_REQUIRED_CHECK",
+            f"policy {REQUIRED_CHECK_POLICY_REFERENCE} requires no check contract; "
+            "this operation admits only what a check accepted",
             unchanged=True,
         )
-    contract_id, identity = required[0]
-    retained = {
-        member.record_id: bytes(member.content) for member in replay.retained_inputs
-    }
-    # A descriptor declares both of these, so the scan stays linear in a history
-    # that retains one plan per admitted change rather than quadratic in it.
-    descriptors = [
-        record_id
-        for record_id in sorted(retained)
-        if b"contract_id" in retained[record_id]
-        and b"rules_file" in retained[record_id]
-    ]
-    for descriptor_id in descriptors:
-        for rules_id in sorted(retained):
-            if rules_id == descriptor_id:
-                continue
-            try:
-                contract = LogicContract.from_bytes(
-                    retained[descriptor_id], retained[rules_id]
-                )
-            except LogicError:
-                continue
-            if (
-                contract.contract_id == contract_id
-                and contract.contract_hash == identity
-            ):
-                return contract, contract_id, identity
-    raise _refuse(
-        PopulationAdmissionStage.CHECK,
-        "CHECK_CONTRACT_NOT_RETAINED",
-        f"this history requires check contract {contract_id} at {identity} and "
-        "retains no descriptor and rules pair that reproduces it",
-        unchanged=True,
+    contracts = []
+    for contract_id, identity in required:
+        try:
+            contracts.append(resolve_check_contract(replay, contract_id, identity))
+        except CheckContractError as error:
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                error.reason,
+                error.detail,
+                unchanged=True,
+            ) from error
+    return tuple(contracts)
+
+
+def _run_check(
+    contract: CheckContract,
+    request: CheckRequest,
+    provenance: GraphProvenance | None,
+) -> CheckOutcome:
+    """Run one required check through the executor its own contract names."""
+
+    if contract.executor_kind is CheckExecutorKind.CORE_BUILTIN:
+        builtin = resolve_core_builtin(contract.builtin_id, contract.builtin_version)
+        return builtin(request)
+    checked = PrologVerifier(contract.pinned_logic_contract).verify_candidate_subgraph(
+        request.candidate_graph, provenance=provenance
     )
+    return CheckOutcome(
+        outcome=checked.outcome,
+        detail="; ".join(
+            f"{violation.rule_id} {violation.violation_code} on "
+            + ", ".join(violation.witness_record_ids)
+            for violation in checked.violations
+        ),
+        violated_rule_ids=checked.violated_rule_ids,
+        witness_record_ids=tuple(
+            sorted(
+                {
+                    record_id
+                    for violation in checked.violations
+                    for record_id in violation.witness_record_ids
+                }
+            )
+        ),
+        logic_result=checked,
+    )
+
+
+_SUPPORTED_EVENT_FIELDS = {
+    "CHANGE_PROPOSED": frozenset(
+        {
+            "expected_machine_state_identity",
+            "knowledge_change_set_identity",
+            "policy_id",
+            "policy_identity",
+            "proposal_id",
+        }
+    ),
+    "CHECK_RECORDED": frozenset(
+        {
+            "check_contract_id",
+            "check_contract_identity",
+            "outcome",
+            "policy_identity",
+            "proposal_id",
+            "receipt_id",
+            "receipt_identity",
+        }
+    ),
+    "VERDICT_RECORDED": frozenset({"decision_id", "proposal_id"}),
+}
+"""Every field Core can state for each protocol event it writes.
+
+The machine's own declaration selects from this, so a machine that declares
+``receipt_identity`` on its ``CheckRecord`` gets it and one that does not never
+sees it. A machine that declares a field outside this set refuses at CHECK,
+before the first append, instead of being handed a guess.
+"""
+
+
+def _declared_fields(
+    replay: KnowledgeHistoryReplay, event_type: str
+) -> tuple[str, ...]:
+    """The input fields the selected machine declares for one protocol event.
+
+    ``correction/machine.json`` declares seven ``CheckRecord`` input fields
+    where the shipped structural machine declares six, and an event carrying
+    the wrong set refuses ``MALFORMED_EVENT`` with the retention already
+    appended. Reading the declaration here moves that refusal before the first
+    byte.
+    """
+
+    program = replay.partial_contract.normative_profile.protocol_machine_program
+    try:
+        record_type = program.data["events"][event_type]["record_type"]
+        declared = tuple(program.data["record_schemas"][record_type]["input_fields"])
+    except (KeyError, TypeError) as error:
+        raise _refuse(
+            PopulationAdmissionStage.CHECK,
+            "UNDECLARED_PROTOCOL_EVENT",
+            f"the selected protocol machine declares no {event_type} event",
+            unchanged=True,
+        ) from error
+    unsupported = sorted(set(declared) - _SUPPORTED_EVENT_FIELDS[event_type])
+    if unsupported:
+        raise _refuse(
+            PopulationAdmissionStage.CHECK,
+            "UNSUPPORTED_EVENT_FIELD",
+            f"the selected protocol machine declares {event_type} fields Core "
+            "cannot state: " + ", ".join(unsupported),
+            unchanged=True,
+        )
+    return declared
+
+
+def _declared_event(
+    event_type: str, declared: tuple[str, ...], values: Mapping[str, object]
+) -> bytes:
+    """One protocol event carrying exactly the fields the machine declared."""
+
+    return _machine_event(event_type, **{name: values[name] for name in declared})
 
 
 def _check_base(
@@ -258,8 +389,14 @@ def _check_writes(
     ]
 
 
+def _declares_provenance(contract: LogicContract) -> bool:
+    return "m_derivation" in FACT_PREDICATES_BY_VERSION.get(
+        contract.fact_contract_version, {}
+    )
+
+
 def _provenance(
-    contract: LogicContract,
+    contracts: tuple[CheckContract, ...],
     plan: Mapping[str, object],
     source_texts: tuple[RetainedSourceText, ...],
 ) -> GraphProvenance | None:
@@ -267,21 +404,30 @@ def _provenance(
 
     Whether a rule may read them is the contract's declaration, not a call-site
     option: a fact contract that declares no ``m_derivation`` predicate gets no
-    provenance, and supplying source text against such a contract refuses
-    rather than being dropped in silence.
+    provenance, and supplying source text when no required rule layer can read
+    it refuses rather than being dropped in silence. A builtin reads the
+    candidate and the accepted state, never a sentence, so it is not consulted
+    here.
     """
 
-    declared = "m_derivation" in FACT_PREDICATES_BY_VERSION.get(
-        contract.fact_contract_version, {}
+    rule_layers = tuple(
+        contract.pinned_logic_contract
+        for contract in contracts
+        if contract.executor_kind is CheckExecutorKind.PROLOG_RULES
     )
-    if not declared:
+    if not any(_declares_provenance(logic) for logic in rule_layers):
         if source_texts:
+            named = rule_layers[0] if rule_layers else None
             raise _refuse(
                 PopulationAdmissionStage.CHECK,
                 "PROVENANCE_NOT_DECLARED",
-                f"check contract {contract.contract_id} declares fact contract "
-                f"{contract.fact_contract_version}, whose rules cannot read "
-                "retained source text",
+                (
+                    f"check contract {named.contract_id} declares fact contract "
+                    f"{named.fact_contract_version}, whose rules cannot read "
+                    "retained source text"
+                )
+                if named is not None
+                else "no required check runs rules that can read retained source text",
                 unchanged=True,
             )
         return None
@@ -308,16 +454,46 @@ def _provenance(
 
 
 def _receipt_bytes(
-    check: LogicCheckResult, change: KnowledgeChangeSet, plan_identity: str
+    contract: CheckContract,
+    outcome: CheckOutcome,
+    change: KnowledgeChangeSet,
+    plan_identity: str,
 ) -> bytes:
-    """The check receipt, stating its own verdict beside the engine's fields."""
+    """One check's receipt, stating the executor that produced its verdict."""
 
+    check: dict[str, object] = {}
+    if outcome.logic_result is not None:
+        check.update(asdict(outcome.logic_result))
+    check.update(
+        {
+            "check_contract_id": contract.check_contract_id,
+            "check_contract_identity": contract.identity,
+            "executor_kind": contract.executor_kind.value,
+            "outcome": outcome.outcome,
+        }
+    )
+    if outcome.result:
+        check["result"] = dict(outcome.result)
     return _canonical(
         {
-            "check": {**asdict(check), "outcome": check.outcome},
+            "check": check,
             "knowledge_change_set_identity": change.identity,
             "population_plan_identity": plan_identity,
         }
+    )
+
+
+def _receipt_ids(change_set_id: str, contract: CheckContract) -> tuple[str, str]:
+    """The retained receipt's ID and the ``CheckRecord`` ID, for one check.
+
+    Both name the change and the check. The single-check form they replace
+    named only the change, which cannot say which of two receipts is which,
+    and the machine refuses a repeated ``CheckRecord`` ID outright.
+    """
+
+    return (
+        f"receipt:{change_set_id}:{contract.check_contract_id}",
+        f"check:{change_set_id}:{contract.check_contract_id}",
     )
 
 
@@ -393,47 +569,66 @@ def check_and_admit_population_plan(
     canonical_plan = json.loads(compilation.canonical_plan_bytes)
     assert isinstance(canonical_plan, dict)
 
-    # --- CHECK: pure. The outcome is the engine's; no caller supplies one.
-    contract, check_contract_id, check_identity = _selected_check_contract(before)
-    provenance = _provenance(contract, canonical_plan, retained_source_texts)
-    try:
-        checked = PrologVerifier(contract).verify_candidate_subgraph(
-            stage_subgraph(_check_base(before, compilation), _check_writes(compilation)),
-            provenance=provenance,
-        )
-    except (LogicError, TypeError, ValueError) as error:
-        raise _refuse(
-            PopulationAdmissionStage.CHECK,
-            "CHECK_ENGINE_FAILED",
-            f"{type(error).__name__}: {error}",
-            unchanged=True,
-        ) from error
-    if checked.outcome != "SATISFIED":
-        witnesses = tuple(
-            sorted(
-                {
-                    record_id
-                    for violation in checked.violations
-                    for record_id in violation.witness_record_ids
-                }
+    # --- CHECK: pure. Every outcome is an engine's; no caller supplies one.
+    contracts = _selected_check_contracts(before)
+    declared = {
+        event_type: _declared_fields(before, event_type)
+        for event_type in ("CHANGE_PROPOSED", "CHECK_RECORDED", "VERDICT_RECORDED")
+    }
+    provenance = _provenance(contracts, canonical_plan, retained_source_texts)
+    request = CheckRequest(
+        replay=before,
+        candidate=CandidateChange(
+            change_set_id=f"change:{compilation.plan_id}",
+            operations=compilation.operations,
+            valid_time=compilation.valid_time,
+        ),
+        candidate_graph=stage_subgraph(
+            _check_base(before, compilation), _check_writes(compilation)
+        ),
+        provenance=provenance,
+    )
+    outcomes: list[CheckOutcome] = []
+    for contract in contracts:
+        try:
+            checked = _run_check(contract, request, provenance)
+        except CheckContractError as error:
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                error.reason,
+                error.detail,
+                unchanged=True,
+            ) from error
+        except (LogicError, TypeError, ValueError) as error:
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                "CHECK_ENGINE_FAILED",
+                f"{type(error).__name__}: {error}",
+                unchanged=True,
+            ) from error
+        if checked.outcome not in contract.outcomes:
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                "UNDECLARED_CHECK_OUTCOME",
+                f"check contract {contract.check_contract_id} declares "
+                + ", ".join(contract.outcomes)
+                + f" and its executor returned {checked.outcome}",
+                unchanged=True,
+                check=checked.logic_result,
             )
-        )
-        raise _refuse(
-            PopulationAdmissionStage.CHECK,
-            "CONTENT_RULE_VIOLATED",
-            f"{checked.outcome}: "
-            + "; ".join(
-                f"{violation.rule_id} {violation.violation_code} on "
-                + ", ".join(violation.witness_record_ids)
-                for violation in checked.violations
-            ),
-            unchanged=True,
-            check=checked,
-            witness_record_ids=witnesses,
-            violated_rule_ids=checked.violated_rule_ids,
-        )
+        if checked.outcome != "SATISFIED":
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                "CONTENT_RULE_VIOLATED",
+                f"{checked.outcome}: {checked.detail}",
+                unchanged=True,
+                check=checked.logic_result,
+                witness_record_ids=checked.witness_record_ids,
+                violated_rule_ids=checked.violated_rule_ids,
+            )
+        outcomes.append(checked)
 
-    # --- ADMIT: retention, then the change and its receipt in one batch.
+    # --- ADMIT: retention, then the change and every receipt in one batch.
     try:
         prepared = prepare_population_change(
             history=history,
@@ -447,62 +642,97 @@ def check_and_admit_population_plan(
         )
         change = prepared.change_set
         assert change is not None
-        receipt_bytes = _receipt_bytes(
-            checked, change, _digest(compilation.canonical_plan_bytes)
-        )
-        receipt_id = f"receipt:{change.change_set_id}"
-        receipt = KnowledgeAnchorInput(
-            machine_event=_machine_event(
-                "ARTIFACT_REGISTERED",
-                artifact_id=receipt_id,
-                artifact_identity=_digest(receipt_bytes),
-            ),
-            retained_bytes=receipt_bytes,
-            media_type="application/json",
-            role="RETAINED_EVIDENCE",
-        )
+        plan_identity = _digest(compilation.canonical_plan_bytes)
         retention = prepared.retention_replay
-        preview = execute_event(
-            retention.partial_contract, retention.machine_state, receipt.machine_event
-        )
-        if preview.receipt.outcome != "APPLIED":
-            raise _refuse(
-                PopulationAdmissionStage.ADMIT,
-                "RECEIPT_REFUSED",
-                "the check receipt cannot enter this history's protocol machine",
-                unchanged=_coordinates(history.replay()) == opening,
+        state = retention.machine_state
+        anchors: list[KnowledgeAnchorInput] = []
+        admitted_checks: list[AdmittedCheck] = []
+        for contract, checked in zip(contracts, outcomes, strict=True):
+            receipt_bytes = _receipt_bytes(contract, checked, change, plan_identity)
+            receipt_id, record_receipt_id = _receipt_ids(change.change_set_id, contract)
+            receipt = KnowledgeAnchorInput(
+                machine_event=_machine_event(
+                    "ARTIFACT_REGISTERED",
+                    artifact_id=receipt_id,
+                    artifact_identity=_digest(receipt_bytes),
+                ),
+                retained_bytes=receipt_bytes,
+                media_type="application/json",
+                role="RETAINED_EVIDENCE",
+            )
+            preview = execute_event(
+                retention.partial_contract, state, receipt.machine_event
+            )
+            if preview.receipt.outcome != "APPLIED":
+                raise _refuse(
+                    PopulationAdmissionStage.ADMIT,
+                    "RECEIPT_REFUSED",
+                    f"the receipt of check {contract.check_contract_id} cannot "
+                    "enter this history's protocol machine",
+                    unchanged=_coordinates(history.replay()) == opening,
+                )
+            state = preview.state
+            anchors.append(receipt)
+            admitted_checks.append(
+                AdmittedCheck(
+                    check_contract_id=contract.check_contract_id,
+                    check_contract_identity=contract.identity,
+                    executor_kind=contract.executor_kind,
+                    outcome=checked.outcome,
+                    receipt_id=receipt_id,
+                    receipt_identity=_digest(receipt_bytes),
+                    record_receipt_id=record_receipt_id,
+                    result=dict(checked.result),
+                    logic_result=checked.logic_result,
+                )
             )
         policy = retention.partial_contract.normative_profile.policy(
             REQUIRED_CHECK_POLICY_REFERENCE
         )
         proposal_id = f"proposal:{change.change_set_id}"
+        events = [
+            _declared_event(
+                "CHANGE_PROPOSED",
+                declared["CHANGE_PROPOSED"],
+                {
+                    "expected_machine_state_identity": state.identity,
+                    "knowledge_change_set_identity": change.identity,
+                    "policy_id": policy.identifier,
+                    "policy_identity": policy.identity,
+                    "proposal_id": proposal_id,
+                },
+            )
+        ]
+        events.extend(
+            _declared_event(
+                "CHECK_RECORDED",
+                declared["CHECK_RECORDED"],
+                {
+                    "check_contract_id": admitted.check_contract_id,
+                    "check_contract_identity": admitted.check_contract_identity,
+                    "outcome": admitted.outcome,
+                    "policy_identity": policy.identity,
+                    "proposal_id": proposal_id,
+                    "receipt_id": admitted.record_receipt_id,
+                    "receipt_identity": admitted.receipt_identity,
+                },
+            )
+            for admitted in admitted_checks
+        )
+        events.append(
+            _declared_event(
+                "VERDICT_RECORDED",
+                declared["VERDICT_RECORDED"],
+                {
+                    "decision_id": f"decision:{change.change_set_id}",
+                    "proposal_id": proposal_id,
+                },
+            )
+        )
         replay = history.admit_with_anchors(
-            anchors=(receipt,),
+            anchors=tuple(anchors),
             change_set=change,
-            machine_events=(
-                _machine_event(
-                    "CHANGE_PROPOSED",
-                    expected_machine_state_identity=preview.state.identity,
-                    knowledge_change_set_identity=change.identity,
-                    policy_id=policy.identifier,
-                    policy_identity=policy.identity,
-                    proposal_id=proposal_id,
-                ),
-                _machine_event(
-                    "CHECK_RECORDED",
-                    check_contract_id=check_contract_id,
-                    check_contract_identity=check_identity,
-                    outcome=checked.outcome,
-                    policy_identity=policy.identity,
-                    proposal_id=proposal_id,
-                    receipt_id=f"check:{change.change_set_id}",
-                ),
-                _machine_event(
-                    "VERDICT_RECORDED",
-                    decision_id=f"decision:{change.change_set_id}",
-                    proposal_id=proposal_id,
-                ),
-            ),
+            machine_events=tuple(events),
             transaction_time=transaction_time,
             actor_id=actor_id,
         )
@@ -515,20 +745,22 @@ def check_and_admit_population_plan(
             reason,
             error.detail,
             unchanged=_coordinates(history.replay()) == opening,
-            check=checked,
+            check=outcomes[0].logic_result,
         ) from error
 
     gaps = canonical_plan["gaps"]
     assert isinstance(gaps, list)
+    first = admitted_checks[0]
     return PopulationAdmission(
         replay=replay,
         change_set=change,
-        check=checked,
-        check_contract_id=check_contract_id,
-        check_contract_identity=check_identity,
+        check=first.logic_result,
+        check_contract_id=first.check_contract_id,
+        check_contract_identity=first.check_contract_identity,
         plan_id=compilation.plan_id,
-        plan_identity=_digest(compilation.canonical_plan_bytes),
-        receipt_id=receipt_id,
-        receipt_identity=_digest(receipt_bytes),
+        plan_identity=plan_identity,
+        receipt_id=first.receipt_id,
+        receipt_identity=first.receipt_identity,
         gap_count=len(gaps),
+        checks=tuple(admitted_checks),
     )

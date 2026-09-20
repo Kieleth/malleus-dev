@@ -234,12 +234,13 @@ code or search for the set.
 policy's check and admission one operation. It takes the history, the plan
 bytes as a producer wrote them, the bound domain-history profile, the actor and
 the transaction time. It compiles the plan against the contract the history
-currently requires, reads that history's required check contract from
-`KnowledgeHistoryReplay.required_checks`, loads the retained descriptor and
-rule bytes that reproduce that identity, runs the check over the state the
-change would produce, and on `SATISFIED` appends the retained plan, its gaps,
-the profile artifact, the change set, the check receipt and `CHANGE_PROPOSED`,
-`CHECK_RECORDED` and `VERDICT_RECORDED`. The caller supplies no outcome, and
+currently requires, reads every check that history's policy requires from
+`KnowledgeHistoryReplay.required_checks`, resolves each one through the
+`malleus.check-contract/v1` grammar, runs them in the policy's own order over
+the state the change would produce, and on `SATISFIED` appends the retained
+plan, its gaps, the profile artifact, the change set, one receipt per check and
+`CHANGE_PROPOSED`, one `CHECK_RECORDED` per check and `VERDICT_RECORDED`. The
+caller supplies no outcome, and
 `PopulationAdmissionRefusal` names the stage, `COMPILE`, `CHECK` or `ADMIT`,
 with the violated rule IDs and witness records of a content-rule refusal.
 `LogicContract.from_bytes` loads a pinned contract from the exact descriptor
@@ -253,12 +254,42 @@ precedes it, because a change set binds ledger coordinates that exist only
 after that batch is appended; nothing is admitted either way and every refusal
 reports `ledger_unchanged`. `admit` and `admit_with_anchors` stay public and
 still read a caller-supplied outcome off a `CHECK_RECORDED` event, so this
-operation is the checked way in, not yet the only one. The operation requires
-exactly one required check whose contract the history retains as a
-`LogicContract`; a history whose required check is Core's own structural check
-keeps using `admit_structural_change`. Core resolves no locator into text:
-retained source sentences remain a typed caller input, refused when the check
-contract's declared fact contract cannot read them.
+operation is the checked way in, not yet the only one.
+
+What the check-contract grammar establishes. `malleus.check-contract/v1` is the
+one check-contract document Core parses. Its `executor.kind` is closed to
+`PROLOG_RULES`, a retained rule layer referenced by the two records that carry
+it and run by `PrologVerifier` as before, and `CORE_BUILTIN`, a function named
+by id and version and resolved from `malleus.compiler.CORE_BUILTIN_CHECKS`. No
+adopter-program kind exists, because an executor named by artifact id and
+digest is the arbitrary-code escape hatch architectural law 12 forbids. A
+document naming a kind outside the set, or a builtin id the registry does not
+hold, refuses when it is read. The registry holds one builtin today,
+`malleus.core.operations-apply-atomically` version `1`, which applies the
+candidate's operations to the accepted state with Core's own `_apply_change`
+and reports the resulting state digest. It exists because two adopter check
+contracts declared that algorithm and implemented it by calling that same Core
+primitive.
+
+A bare retained `LogicContract` descriptor and rules pair still resolves as a
+`PROLOG_RULES` contract. That is the form every check pinned before this
+grammar existed carries, and wrapping one in a v1 document would mint a second
+identity for the same rules and move the policy identity, the normative
+profile, the partial effective contract and every coordinate frozen downstream
+of them. Nothing admitted before this change is admitted differently now.
+
+A required check the history does not retain refuses
+`CHECK_CONTRACT_NOT_RETAINED`; one whose executor Core cannot run refuses
+`UNRUNNABLE_REQUIRED_CHECK`. Both refuse before the first append. The operation
+no longer refuses a policy on its check count. Each `CHECK_RECORDED` carries
+exactly the fields the selected machine's `CheckRecord` declares as inputs, so a
+machine declaring `receipt_identity` beside the other six is filled rather than
+refused `MALFORMED_EVENT` after its retention was appended; a declared field
+Core cannot state refuses `UNSUPPORTED_EVENT_FIELD` at `CHECK`. A history whose
+required check is Core's own structural check keeps using
+`admit_structural_change`, whose bytes are unchanged. Core resolves no locator
+into text: retained source sentences remain a typed caller input, refused when
+no required rule layer's declared fact contract can read them.
 
 ## Declared interpretation-review coverage
 

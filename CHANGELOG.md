@@ -37,6 +37,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `malleus.check-contract/v1`, the one check-contract grammar Core parses,
+  and the closed executor set behind it. A check contract names its executor and
+  Core executes it: `PROLOG_RULES` references the two retained records carrying a
+  pinned rule layer and runs them under `PrologVerifier` in its own process, as
+  before; `CORE_BUILTIN` names a function Core ships, resolved from
+  `malleus.compiler.CORE_BUILTIN_CHECKS` by ID and version. There is no
+  adopter-program kind. An executor named by artifact ID and digest, which is
+  what the four live research check contracts use, is the arbitrary-code escape
+  hatch architectural law 12 forbids, and it leaves Core reading an outcome it
+  did not produce. A kind outside the set, or a builtin ID the registry does not
+  hold, refuses when the contract is read. The grammar references
+  `LogicContract`; it restates none of its closed fields, and a bare retained
+  descriptor and rules pair reproducing a required identity still resolves as a
+  `PROLOG_RULES` contract, so nothing pinned before this change moved.
+- Added the first Core check builtin, `malleus.core.operations-apply-atomically`
+  version `1`. It applies a candidate's operations to the accepted state through
+  Core's own change application and reports `result_state_digest`, or `VIOLATED`
+  with the refusal that stopped it. Two adopter check contracts declare that
+  algorithm, `OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE`, and both implement
+  it by calling that same Core primitive, so it was Core work already. The two
+  other adopter algorithms are not generic and did not become builtins:
+  `SOURCE_MAPPING_CONFORMS_TO_CHANGE_SET` reads a retained run program's
+  `artifact_ids.baseline_mapping`, `artifact_ids.correction_mapping`, per-stage
+  `mapping_change` selectors and `source_id_prefix` values, and
+  `RECOMPUTE_DECLARED_SOURCE_TO_CHANGE_SET` dispatches on a `RET010`,
+  `CORRECTION:` or settlement stage selector and parses fixture members by a
+  declared parser name. Both are experiment-specific artifact naming, not a
+  property of retained inputs, plan and change set.
 - Added `scripts/contract_compiler_historic_wire.py record`, which derives
   every CC-X04 reader digest from the tracked bytes, rewrites the pinned
   measurement and its observations in place, and names the commit that last
@@ -119,6 +147,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `malleus.compiler.check_and_admit_population_plan` now runs every check the
+  selected policy requires, in the policy's own order, rather than refusing any
+  policy that does not require exactly one. Each check gets its own retained
+  receipt and its own `CHECK_RECORDED`, and `PopulationAdmission.checks` reports
+  them in that order; the singular `check`, `check_contract_id`,
+  `check_contract_identity`, `receipt_id` and `receipt_identity` fields name the
+  first of them. `UNEXPECTED_REQUIRED_CHECKS` is gone. A required check the
+  history does not retain still refuses `CHECK_CONTRACT_NOT_RETAINED`; one whose
+  executor Core cannot run refuses `UNRUNNABLE_REQUIRED_CHECK`. Both refuse
+  before the first append.
+- Each `CHECK_RECORDED` the operation writes now carries exactly the fields the
+  selected protocol machine's `CheckRecord` declares as inputs, instead of a
+  fixed six. `correction/machine.json` declares seven, including
+  `receipt_identity`, and refused `MALFORMED_EVENT` after its retention batch had
+  already been appended. A declared field Core cannot state refuses
+  `UNSUPPORTED_EVENT_FIELD` at `CHECK`, with no byte written.
+- The retained receipt of a check is now `receipt:<change set>:<check contract>`
+  and its `CheckRecord` ID is `check:<change set>:<check contract>`. The forms
+  they replace named only the change, which cannot say which of two receipts is
+  which, and the protocol machine refuses a repeated `CheckRecord` ID outright.
+  Only `check_and_admit_population_plan` mints these; `admit_structural_change`
+  and its ledger bytes are unchanged.
 - `CONTRACT_REVISION_POLICY.identity` moved because its declared change kinds
   now include `REBIND_CHECK_CONTRACT`. New revisions bind the new policy. No
   recorded revision needs rewriting; the superseded policy stays executable.

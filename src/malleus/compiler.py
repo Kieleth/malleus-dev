@@ -39,10 +39,23 @@ from malleus._contract_pipeline import (
 )
 from malleus._contract_pipeline.admission import (
     REQUIRED_CHECK_POLICY_REFERENCE,
+    AdmittedCheck,
     PopulationAdmission,
     PopulationAdmissionRefusal,
     PopulationAdmissionStage,
     check_and_admit_population_plan,
+)
+from malleus._contract_pipeline.check_contract import (
+    CHECK_CONTRACT_GRAMMAR,
+    CLOSED_OUTCOMES,
+    CORE_BUILTIN_CHECKS,
+    OPERATIONS_APPLY_ATOMICALLY,
+    CheckContract,
+    CheckContractError,
+    CheckExecutorKind,
+    parse_check_contract,
+    resolve_check_contract,
+    resolve_core_builtin,
 )
 from malleus._contract_pipeline.document import (
     DOCUMENT_ASSERTION_ADAPTER,
@@ -689,5 +702,16 @@ __all__ = (
     "replay_events",
     "structural_source_anchors",
     "structural_evidence_anchor",
+    "AdmittedCheck",
+    "CHECK_CONTRACT_GRAMMAR",
+    "CLOSED_OUTCOMES",
+    "CORE_BUILTIN_CHECKS",
+    "CheckContract",
+    "CheckContractError",
+    "CheckExecutorKind",
+    "OPERATIONS_APPLY_ATOMICALLY",
+    "parse_check_contract",
+    "resolve_check_contract",
+    "resolve_core_builtin",
     "trace_population_record",
 )

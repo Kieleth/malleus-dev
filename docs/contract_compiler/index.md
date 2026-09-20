@@ -384,26 +384,67 @@ admitted = compiler.check_and_admit_population_plan(
 ```
 
 It compiles `plan_bytes` against the contract the history currently requires,
-reads the required check from `required_checks`, loads the retained descriptor
-and rule bytes that reproduce that identity through `LogicContract.from_bytes`,
-runs it over the accepted graph with this change's retirements removed and its
-operations staged, and on `SATISFIED` appends the retained plan, its gaps, the
-profile artifact, the change set, the check receipt and the three protocol
-events. The outcome written is the engine's, because no parameter carries one.
+reads every check the policy requires from `required_checks`, resolves each one
+from what the history retains, runs them in the policy's own order over the
+accepted graph with this change's retirements removed and its operations
+staged, and on `SATISFIED` appends the retained plan, its gaps, the profile
+artifact, the change set, one receipt per check and the protocol events. The
+outcomes written are the engines', because no parameter carries one.
 
-Which engine runs is not a call-site choice. A `LogicContract` names no engine
-and closes its fields, so a retained check contract of that shape is a Prolog
-contract and `PrologVerifier` runs it. Whether a rule may read provenance is
-also the contract's declaration: a fact contract that declares no
-`m_derivation` gets none, and supplying `retained_source_texts` against such a
-contract refuses rather than dropping them in silence. Core resolves no locator
+Which engine runs is not a call-site choice; it is the check contract's own
+declaration. `malleus.check-contract/v1` is the one check-contract grammar Core
+parses, and its `executor.kind` is closed:
+
+```json
+{"check_contract_id": "malleus.core.structural-conformance",
+ "executor": {"builtin_id": "malleus.core.operations-apply-atomically",
+              "builtin_version": "1", "kind": "CORE_BUILTIN"},
+ "grammar": "malleus.check-contract/v1",
+ "outcomes": ["SATISFIED", "VIOLATED"]}
+```
+
+`PROLOG_RULES` names the two retained records that carry a pinned rule layer
+and runs them under `PrologVerifier` in its own process, exactly as before;
+`CORE_BUILTIN` names a function Core ships, resolved from
+`malleus.compiler.CORE_BUILTIN_CHECKS`. There is no adopter-program kind: an
+executor named by artifact id and digest is the arbitrary-code escape hatch
+architectural law 12 forbids, and Core would be reading an outcome it did not
+produce. `outcomes` is a nonempty ordered subset of `SATISFIED`, `UNKNOWN`,
+`VIOLATED`, and an executor returning anything else refuses
+`UNDECLARED_CHECK_OUTCOME`.
+
+The grammar does not reopen `LogicContract`. A `PROLOG_RULES` executor
+references a descriptor record and a rules record; it restates no ontology
+hash, no rule id and no rule bytes, so the pin has one home. A bare retained
+descriptor and rules pair reproducing the required identity also resolves as a
+`PROLOG_RULES` contract, which is the form every live Prolog check is already
+pinned in.
+
+One builtin ships: `malleus.core.operations-apply-atomically` version `1`. It
+applies the candidate's operations to the accepted state through Core's own
+change application and reports `result_state_digest`. Two adopter check
+contracts declare that algorithm, `OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE`,
+and both implement it by calling that same Core primitive.
+
+Each check writes its own `CHECK_RECORDED`, carrying exactly the fields the
+selected machine's `CheckRecord` declares as inputs. A machine that declares
+`receipt_identity` beside the other six gets it; one that does not never sees
+it. A declared field Core cannot state refuses `UNSUPPORTED_EVENT_FIELD` before
+the first append rather than being handed a guess.
+
+Whether a rule may read provenance is also the contract's declaration: a fact
+contract that declares no `m_derivation` gets none, and supplying
+`retained_source_texts` against such a contract refuses rather than dropping
+them in silence. Core resolves no locator
 into text itself; the plan's own derivations become facts, the sentences behind
 them stay a caller input.
 
 `PopulationAdmissionRefusal` names the stage. `COMPILE` covers an unknown
 class, a missing derivation, an unknown gap kind and a plan that is not JSON.
-`CHECK` covers `CHECK_CONTRACT_NOT_RETAINED`, a policy requiring other than one
-check, a provenance mismatch, an engine failure, and `CONTENT_RULE_VIOLATED`
+`CHECK` covers `CHECK_CONTRACT_NOT_RETAINED`, `UNRUNNABLE_REQUIRED_CHECK` for
+an executor Core cannot run, `UNSUPPORTED_EVENT_FIELD`,
+`UNDECLARED_CHECK_OUTCOME`, a provenance mismatch, an engine failure, and
+`CONTENT_RULE_VIOLATED`
 with the violated rule IDs and the witness records. `ADMIT` covers what the
 ledger and the protocol machine refuse. Both earlier stages run before the
 first append, so their refusals write no byte; an `ADMIT` refusal may leave the
@@ -413,11 +454,16 @@ either way, and every refusal reports `ledger_unchanged`.
 
 What this does not do. `admit` and `admit_with_anchors` remain public and still
 read a caller-supplied outcome, so the fabricated receipt above is still
-reachable by a caller who builds the events by hand. The operation requires
-exactly one required check whose contract the history retains; a history whose
-required check is Core's own structural check keeps using
-`admit_structural_change`. Plan authoring stays outside: a document capture
-still reaches these bytes through `adapt_document_assertions`.
+reachable by a caller who builds the events by hand. A history whose required
+check is Core's own structural check keeps using `admit_structural_change`,
+whose ledger bytes are unchanged. Core's own
+`profiles/structural-admission-check.json` stays in its own
+`malleus.admission-check/private-v0` grammar for the same reason a pinned rule
+layer does: its digest is the identity `structural-admission-policy.json`
+requires and every structural history retains, so rewriting it under the new
+grammar would move that identity and refuse every history ever written under
+it. Plan authoring stays outside: a document capture still reaches these bytes
+through `adapt_document_assertions`.
 
 ## Read-only change-set composition
 
