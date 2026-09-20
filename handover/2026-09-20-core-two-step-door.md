@@ -136,8 +136,10 @@ scope ("`admit_structural_change` unchanged") and is left as a named residual.
 ## What did not land, and exactly where the line is
 
 Rewritten 2026-09-20 by the agent that carried the migration, at commit
-`980cb609`. The section below it, "Measurements", is the earlier agent's
-measurement of the red branch and is kept as the record of that state.
+`980cb609`, and rewritten again the same day by the agent that finished the
+nine research programs. "Measured at `980cb609`" and "Measurements" below are
+the two earlier measurements of the red branch and are kept as the record of
+those states.
 
 ### What landed since
 
@@ -193,79 +195,241 @@ its 71-line `_protocol_events` and calls `check_and_admit_change_set`.
 | RET-010 exported graph | `b58f6447…` | `b58f6447…`, identical |
 | RET-010 accepted state digest | `sha256:4d7d44cc…` | `sha256:4d7d44cc…`, identical |
 
-### Where the line is now
+### What landed on 2026-09-20, after `f52863c0`
 
-**A measurement trap that must be set up before anything else.** The venv's
-`malleus` is installed from `/Users/luis/Projects/malleus-dev/src`, the main
-checkout, not from a worktree. `pyproject.toml` sets `pythonpath = [".",
-"src"]`, which pytest applies to its own process and not to a subprocess. Every
-research test that runs a program through `subprocess.run` therefore measures
-**main's Core**, not the branch's, unless `PYTHONPATH` is exported. Run
-everything in this worktree as:
+**Every research program that wrote its own check outcome is migrated.** Nine
+programs were touched. Six of them held the door open; three only pinned a
+value that moved.
 
-```sh
-PYTHONPATH=$PWD/src:$PWD .venv/bin/python -m pytest ...
+| program | before | after |
+|---|---|---|
+| `public_population/run.py` | `admit` with a hand-written `_protocol_events` | `check_and_admit_change_set` |
+| `object_event/run.py` | imported that `_protocol_events` | `check_and_admit_change_set` |
+| `content_rules/run.py` | `admit_with_anchors`, own `PrologVerifier` call | `check_and_admit_population_plan` |
+| `shipment_policy/run.py` | `admit_with_anchors`, own `PrologVerifier` call | `check_and_admit_population_plan` |
+| `showcase/run.py` | `admit_with_anchors`, own private-grammar check | `check_and_admit_change_set` with its recompute as an anchor |
+| `correction/run.py` | `admit_with_anchors`, two private-grammar checks | `check_and_admit_change_set` with its recompute as an anchor |
+| `default_admission/run.py` | `admit_structural_change`, unchanged | plans re-cut |
+| `partial_shipments/run.py` | `admit_structural_change`, unchanged | plans re-cut |
+| `fresh_import/run.py` | `admit_structural_change`, unchanged | plans re-cut |
+
+`_protocol_events` is gone from `public_population`, `correction` and
+`showcase`. No research program writes `CHANGE_PROPOSED`, `CHECK_RECORDED` or
+`VERDICT_RECORDED` any more, and none states an outcome.
+
+**Three check contracts were removed, and the reason is the same for all
+three: their executor was the adopter's own program, or nothing at all.**
+
+- `retained-source-integrity` at `sha256:8208a293…` matched no file in the
+  repository. The pareto programs wrote `SATISFIED` for it from a literal.
+  Recorded in `public_population/README.md`, as the brief directed.
+- `source-mapping-conformance` at `sha256:d98a2616…` (correction) and
+  `sha256:ad5de0ee…` (showcase) named the run program as its executor.
+- `structural-conformance` at `sha256:47e59912…` (correction) named it over
+  Core's own primitive.
+
+Every migrated policy now requires one contract,
+`sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9`, the
+`malleus.check-contract/v1` `CORE_BUILTIN` document naming
+`malleus.core.operations-apply-atomically` version `1`, except
+`content_rules` and `shipment_policy`, which keep their retained Prolog
+contracts and resolve as `PROLOG_RULES` through the descriptor and rules pair
+they already retain.
+
+**The two experiment-specific verifications were kept, as research-local
+evidence.** `correction`'s source-mapping conformance and `showcase`'s
+recompute-declared-source both still run, before admission, and both still
+retain their result in the same batch as the change. They are declared under
+`malleus.small-shop.source-mapping-declaration/private-v0`, which still pins
+the exact entrypoint bytes, and their records under
+`malleus.small-shop.source-mapping-verification/private-v0`. Each program's
+module docstring states in full that Core does not vouch for them.
+`correction/_validate_replay` verifies more than before, not less: it
+recomputes the source mapping from ledger bytes as it always did, and it now
+also recomputes the `result_state_digest` in Core's own structural receipt
+rather than trusting the stored value.
+
+**One adopter machine had to change, and it is worth naming.**
+`correction/machine.json`, which `correction`, `showcase` and
+`shipment_policy` all select, declared on `CHECK_RECORDED`:
+
+```json
+{"event_field": "receipt_identity", "opcode": "REQUIRE_REFERENCED_RECORD",
+ "record_type": "ArtifactRecord", "refusal": "UNKNOWN_REFERENCE"}
 ```
 
-Without it, `test_vertical.py::test_reopen_module_command_and_fresh_genesis_are_deterministic`
-fails with an `ImportError` for `check_and_admit_change_set` that says nothing
-about this branch.
+That held only because each program anchored its receipt under the receipt's
+own digest as the artifact id. Core names a receipt
+`receipt:<change-set-id>:<check-contract-id>` and puts the digest in
+`receipt_identity`, so the reference resolved to nothing and every admission
+refused `UNKNOWN_REFERENCE`. The instruction is removed; the field stays. What
+it encoded is now Core's own invariant: `_admit_checked` appends the receipt in
+the same batch as the change, unconditionally. `sha256:825c8d99…` to
+`sha256:66913e1e…`.
 
-1. **`public_population/run.py` and `object_event/run.py`** (brief step 5).
-   Both read `pareto/policy.json`, whose required check and identity moved, and
-   both still build hand-written protocol events:
-   `public_population/run.py:268` `_protocol_events`, called from `_admit_plan`
-   at `:327`; `object_event/run.py` imports that same function and admits at
-   `:163`. Each needs the same three edits RET-010 took: retain
-   `pareto/checks/structural-conformance.json` in `_bootstrap`, delete
-   `_protocol_events`, call `check_and_admit_change_set`. Then the committed
-   plans have to be re-cut, because two pinned values inside them moved:
-   - `contract_identity`, in every plan under
-     `public_population/plans/` and in
-     `fixtures/small_shop_fulfilment*/input/population/ret-040.json`;
-   - the evidence digest of `pareto/mapping.json`,
-     `sha256:4e8851c5…` to `sha256:ba4291a2…`, which
-     `public_population/plans/ret010.json` names as
-     `artifact:small-shop:baseline-mapping`.
-   The old mapping digest is also pinned in six evidence archives:
-   `public_population/evidence.json`,
-   `correction/evidence-role-v1/explanation.json`,
-   `evidence_2026_09_06/correction/explanation.json`,
-   `evidence_2026_09_08/{correction/explanation.json,public_population/evidence.json}`,
-   `evidence_2026_09_08_rule_check/{correction/explanation.json,public_population/evidence.json}`,
-   `evidence_2026_09_17_policy_rebinding/{correction/explanation.json,public_population/evidence.json}`.
-   The dated archives are frozen history and must not move; the current
-   generation is the one to re-cut. `test_evidence_archive.py`'s `HISTORICAL`
-   table decides which is which; read it before touching any of them.
-2. **The six other programs** the earlier table names, untouched:
-   `small_shop/content_rules/run.py:321`, `small_shop/correction/run.py:1477`,
-   `small_shop/shipment_policy/run.py:269`, `small_shop/showcase/run.py:1340`,
-   `small_shop/pareto/ret010.py` (done), `document_paper/document_run.py:280`.
-   The private-grammar check contracts under `correction/checks/` and
-   `showcase/` still have to become v1 policies requiring the structural
-   builtin, with each program's experiment-specific verification moved to a
-   research-local assertion and stated in its README as a check Core does not
-   vouch for.
-3. **Two programs the earlier table missed**, both reached by the Core suite
-   and both already red for the mapping digest above:
-   `small_shop/default_admission/run.py:146` and
-   `small_shop/partial_shipments/run.py:186`. Neither uses the public door:
-   both call `admit_structural_change`, so their only exposure is the moved
-   `pareto/mapping.json` digest their plans pin. `small_shop/fresh_import`
-   is the same shape at `:86`.
-4. **The connected-story Core-side re-freeze** (brief step 7). Not started.
-   Four files, twelve values, the E-0467 shape:
-   `connected_story/partial_shipments/input_boundary.json`,
+**Every exported graph is byte-identical.** Measured against the committed
+`evidence_2026_09_17_policy_rebinding` generation, which is the byte comparison
+`assert_current_evidence` performs:
+
+| program | exported graph | result |
+|---|---|---|
+| RET-010 | `b58f6447…` | identical (measured at `980cb609`) |
+| public population | `/graph` and `graph_state_digest` in `evidence.json` | identical, 0 differing paths under `/graph` |
+| correction | `graph.json` | identical, 0 changed paths |
+| showcase | `graph.json` | identical, 0 changed paths |
+| content rules | `graph` in the run report | identical to the connected story's own `export_records()` |
+| shipment policy | `shipments` view and `query_relations` | identical |
+
+**A successor evidence generation was cut**:
+`evidence_2026_09_20_core_runs_checks`, with `evidence_assertions.CURRENT`
+retargeted to it and all four preceding generations pinned, forty outputs where
+the previous binding pinned thirty. Its `README.md` carries the whole
+transition. Two kinds of non-digest change had to be declared in `binding.json`
+because the successor guard refused them, and refusing them was right until
+they were stated:
+
+- ledger event counts, which move because Core retains one receipt per check:
+  public population 48 to 49, object event 14 to 15, showcase 74 to 80, and
+  correction 58 to 55, which falls because two check records and two receipts
+  per change became one of each plus its own verification record;
+- one field name and one list length: `showcase/explanation.json` renames
+  `source_mapping_receipts` to `source_mapping_verifications`, and
+  `correction/explanation.json`'s `/checks` goes from six entries to three.
+
+`test_current_evidence`'s successor guard reads `changed_values` and
+`changed_keys` for those and still refuses any undeclared non-digest change,
+any undeclared key set and any undeclared list length.
+
+**Identities that moved**, old to new, beyond the three above:
+
+| artifact | before | after |
+|---|---|---|
+| base partial contract, public population | `sha256:ed170fd1…` | `sha256:c8133173…` |
+| target partial contract, public population | `sha256:0e1f03bc…` | `sha256:1bbd6aa1…` |
+| object-event partial contract | `sha256:90c8bc3e…` | `sha256:d4ce6354…` |
+| object-event fixture manifest entry | `sha256:fad3a9c6…` | `sha256:c36e4a93…` |
+| correction policy | `sha256:57972777…` | `sha256:724f1670…` |
+| correction run program | `sha256:414db35b…` | `sha256:2554fbd5…` |
+| showcase policy | `sha256:efa0ac20…` | `sha256:c72450aa…` |
+| showcase run program | `sha256:7096c3f8…` | `sha256:bc630676…` |
+| showcase partial contract | `sha256:0c43eac9…` | `sha256:2c2b49ad…` |
+
+Every plan under `public_population/plans/` was re-cut for the two partial
+contracts, and `ret010.json` for the moved `pareto/mapping.json` evidence
+digest. `fixtures/small_shop_fulfilment_object_event_v1/input/population/ret-040.json`
+and its manifest were re-cut for the object-event contract. The stage
+declarations in `correction/run.json` and `showcase/run.json` lost
+`proposal_id`, `decision_id` and `receipt_id` (`receipt_id_prefix` in
+correction): Core names the proposal, the decision and every receipt.
+
+**Frozen evidence that was not touched, and why.** The `HISTORICAL` table in
+`test_evidence_archive.py` decides. `correction/evidence-role-v1/*`,
+`object_event/evidence.json`, `showcase/evidence/*` and every dated archive
+(`evidence_2026_09_06`, `evidence_2026_09_08`,
+`evidence_2026_09_08_rule_check`, `evidence_2026_09_17_policy_rebinding`) are
+frozen history and were left byte-identical, including the six that pin the
+superseded `pareto/mapping.json` digest `sha256:4e8851c5…`. So are
+`public_population/evidence.json` and `fresh_import/evidence.json`, which the
+binding pins as historical outputs in their own right. The only regenerated
+outputs are the five scenarios of the new generation.
+
+### Where the line is now
+
+Measured on this tree, with `PYTHONPATH=$PWD/src:$PWD` exported for every
+command, which is still the trap that decides whether a subprocess measures
+this branch or main.
+
+**Green.**
+
+- `pytest tests/contract_compiler`: **1302 passed, 0 failed**, 540s. Zero
+  governance digest guards among them: the governance validator lives in
+  `tests/test_contract_compiler_integration.py`, `test_contract_compiler_ledger.py`
+  and `test_docs.py`, outside this path, and those 24 failures are the allowed
+  residue that sealing `OVR-000472` clears.
+- `pytest research/methodology_gedanken_e2e/tests`: **31 passed**.
+- `pytest research/.../small_shop/object_event`: **3 passed**.
+- `pytest research/.../small_shop`, excluding `connected_story`: every program
+  green. The whole path reads 5 failed, 335 passed, 22 errors, and every one
+  of the 27 is in `connected_story`, below.
+- **The door probe reads four sites, all of them Core's own tests of the
+  door.** The probe wraps `KnowledgeChangeHistory.admit` and
+  `admit_with_anchors`, and records every call that carries a `CHECK_RECORDED`
+  or `VERDICT_RECORDED` event while the history's selected policy requires at
+  least one check contract. Run over `tests/contract_compiler`,
+  `research/.../small_shop` and `research/methodology_gedanken_e2e`, it names
+  exactly these, and no research program:
+
+  1. `tests/contract_compiler/pareto/test_atomic_population_admission.py::test_a_fabricated_check_outcome_can_no_longer_reach_the_ledger`
+     (`checks=1 prolog=True via=admit events=CHECK_RECORDED,VERDICT_RECORDED`)
+  2. `tests/contract_compiler/pareto/test_atomic_population_admission.py::test_the_public_door_refuses_a_caller_written_verdict_record`
+     (`checks=1 prolog=True via=admit events=VERDICT_RECORDED`)
+  3. `tests/contract_compiler/pareto/test_knowledge_change_history.py::test_refused_change_never_changes_ledger_or_replayed_graph[rejected]`
+     (`checks=2 prolog=False via=admit events=CHECK_RECORDED,VERDICT_RECORDED`)
+  4. `tests/contract_compiler/pareto/test_knowledge_change_history.py::test_refused_change_never_changes_ledger_or_replayed_graph[unregistered]`
+     (`checks=2 prolog=False via=admit events=CHECK_RECORDED,VERDICT_RECORDED`)
+
+  All four are tests that assert the door refuses. The probed run reports one
+  failure not present without it,
+  `test_no_public_callable_accepts_a_caller_check_outcome_under_a_policy`: that
+  test reads `inspect.signature` of every public method for a `machine_events`
+  parameter, and the probe's `(self, *args, **kwargs)` wrapper hides it. The
+  test passes on this tree unprobed. It is an artefact of the instrument, not a
+  finding.
+
+**Not green, and not this step's work.**
+
+1. **The connected-story re-freeze** (brief step 7, and the previous list's
+   item 4). Not started, deliberately: its chain ends in Appendix B, which is
+   `paper-v4/` and off limits to this agent. It is the whole of what is red in
+   `research/.../small_shop`: 22 errors at fixture setup in
+   `connected_story/warehouse/` (12) and `connected_story/partial_shipments/`
+   (10), and 5 failures in `connected_story/test_connected_run.py` (1),
+   `test_object_timelines.py` (2), `test_shipment_explanation.py` (1) and
+   `content_rules/test_content_rules.py` (1, the control that reproduces the
+   frozen connected receipt). The cause is one identity: the structural fold
+   at `7c3237f0` moved `STRUCTURAL_HISTORY_BUNDLE`, so the story's partial
+   contract moved and its ledger with it. Measured:
+   `connected_story/run_receipt.json` pins `ledger_sha256: sha256:1c989c55…`
+   and a fresh run produces `sha256:dcd140c5…`. Files to re-cut, in order:
+   `connected_story/run_receipt.json`, `timeline_receipt.json`,
+   `shipment_explanation_receipt.json`, then the four the ledger at E-0467
+   names, `connected_story/partial_shipments/input_boundary.json`,
    `connected_story/warehouse/receipt.json`,
    `connected_story/warehouse/ordering_receipt.json`,
    `connected_story/partial_shipments/receipt.json`. Appendix B's
-   `32798a67…` and `15c7c1ef…` move with it.
-5. **Documentation and `OVR-000472`** (brief steps 8 and 9). Not started. The
-   exact places to correct are unchanged from the list below; add to them that
-   `CAPABILITIES.md` needs a row for `check_and_admit_change_set` and
-   `ChangeSetAdmission`, and that the one-call row must say the door is closed.
-   `previous_entry_hash` is
+   `32798a67…` and `15c7c1ef…` move with them.
+2. **`document_paper/document_run.py:280` is still a caller-authored
+   admission, and nothing in the repository exercises it.** This is not a
+   regression and it is not the door: `research/.../document_paper` reads
+   **7 failed, 150 passed, 7 errors** at `85f0ed54`, at `f52863c0` and on this
+   tree, the same three numbers, and the cause is a stale fixture. Its
+   `_history_binding` at `test_graph_recipe_change_set.py:177` declares
+   `malleus.knowledge-history-binding/private-v0` where Core requires
+   `private-v1`, so every test that needs a history errors at setup before
+   reaching any admission. The path is not in `testpaths`. Migrating
+   `document_run.py` without first repairing that fixture would be a change
+   nothing can measure, so it was not made.
+3. **The read-only Appendix B run** (`paper-v4/test_shop_connected_calibration.py`,
+   `paper-v4/test_shop_calibration.py`). Not re-run here. Its 14 errors at
+   `f52863c0` were the connected-story chain of item 1, and the one
+   `test_shop_calibration.py` failure was `shipment_policy` hitting the closed
+   door, which is now migrated. Expect the second to pass and the first to
+   stay red until item 1 lands.
+4. **The full default suite.** Not re-run here; `tests/contract_compiler` was
+   measured alone, and it is 1302 of the roughly 3658 the whole suite collects.
+5. **The four documents.** Untouched, as the brief directed. The exact places
+   are unchanged: `.claude/skills/malleus-dev/references/CAPABILITIES.md` lines
+   39, 40 and 51 plus a new row for `check_and_admit_change_set` and
+   `ChangeSetAdmission`; `docs/contract_compiler/index.md` line 455, "What this
+   does not do."; `docs/IMPLEMENTATION_STATUS.md` line 255; `CHANGELOG.md`
+   Unreleased; and the skill's "What was built for F1" residual sentence,
+   which the Overlord batches into the seal per E-0504.
+6. **`OVR-000472`.** Not drafted. `previous_entry_hash` is
    `sha256:7cb9e624476d13a78ed15a5d5d89f219414cb536f3738eda7a91a94f1de984fd`.
+7. **`admit_structural_change` still writes its own `CHECK_RECORDED`** from the
+   folded bundle without invoking the builtin its contract names. Unchanged
+   from the earlier record, still a named residual, and it is what
+   `default_admission`, `partial_shipments` and `fresh_import` admit through.
 
 ### Measured at `980cb609`
 
@@ -307,7 +471,10 @@ One probe artifact, so the next reader does not chase it:
 under the probe and passes without it. It reads `inspect.getsource` of
 `admit`, and the probe has replaced it with its own wrapper.
 
-### The earlier agent's list, kept for the parts still open
+### The earlier agent's list, kept as the record of what it found
+
+Superseded by "Where the line is now" above. Its items 1, 2 and 3 all landed;
+its items 4 and 5 are items 1, 5 and 6 there.
 
 Parts 4 through 9 of the brief. In order of what the next agent should do:
 
@@ -543,3 +710,8 @@ errors above are.
 - `7c3237f0` the door closed and the structural check folded, breaking
 - `bc7fdcbb`, `f6d83c2c`, `ac0dfe50` this handover and its measurements
 - `980cb609` Core's own tests admit through the door, and RET-010 with them
+- `f52863c0` the door probe measured at 19
+- `127c3f67` four research programs stop writing their own check outcomes
+- `4a0d6340` the showcase stops presenting its own recompute as a check
+- `7bef2db3` correction: Core runs the one check, the recompute stays research
+- `934ef948` the successor Shop evidence generation for Core-run checks
