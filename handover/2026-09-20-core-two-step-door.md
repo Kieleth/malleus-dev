@@ -498,13 +498,12 @@ calibration files were not edited.
   `before = history.replay()` at `test_knowledge_change_history.py:1485` from
   the migration; it was removed.
 
-**What remains after sealing, stated honestly.** Not zero. The 24 digest
-mismatches clear: the scratch run below validates all 475 entries against this
-tree once the chain is inserted. What does not clear is the deleted-document
-refusal, `OVR-000352: revised document does not exist`, which no entry can
-answer and which the validator only reaches once the digests are current. The
-expected residue after sealing is therefore one refusal, not none, until the
-deletion is decided.
+**What remains after sealing, stated honestly.** Zero, now that the deletion has
+a word. The governance digest mismatches clear when the chain is sealed, and the
+deleted-document refusal, `OVR-000352: revised document does not exist`, is
+answered by the two `REMOVED` records the chain carries. The scratch run below
+validates all 475 entries against this tree, with the two deleted files absent,
+which is the state the branch actually holds.
 
 **The four documents are written.** `CHANGELOG.md` (the `check_and_admit_change_set`
 entry under Added, the closed door and the fold under Changed, and the stale
@@ -517,33 +516,57 @@ owed a sentence and got it: `content_rules` and `shipment_policy` both said the
 runner runs Prolog and submits the result, and Core does both now.
 `public_population` already recorded the removal of `retained-source-integrity`;
 `partial_shipments`, `default_admission` and `fresh_import` owed nothing, and
-`showcase`, `correction`, `object_event` and `pareto` have no README. The
-skill's own "What was built for F1" residual sentence is the Overlord's, per
-E-0504, and was not touched.
+`showcase`, `correction`, `object_event` and `pareto` have no README.
 
-**Two findings for the Overlord, both about the seal, neither fixable here.**
+**Three governed passages that lagged decision D now state what the code does**,
+at commit `6214e2bc`. `.claude/skills/malleus-dev/SKILL.md`, "Rules and the
+ontology", said the two-step path remains public and that Prolog is the only
+admissible implementation because the contract names no engine; a check contract
+does name its executor, `PROLOG_RULES` or `CORE_BUILTIN`, and the closed set is
+the reason. The same file's "What was built for F1" said neither consumer is
+migrated and the door is open. `ROADMAP.md` F1 carried the same residual. Each
+claim was read against the code before it was rewritten: the executor kinds and
+the builtin registry in `check_contract.py`, `CALLER_SUPPLIED_CHECK_EVENT` in
+`knowledge.py`, `CHECK_CONTRACT_NOT_RETAINED` and `UNRUNNABLE_REQUIRED_CHECK` in
+`check_contract.py`, the empty-policy message at `machine.py:627`, and all three
+still-two-step paths, which still call `admit` or `admit_with_anchors` with
+caller-built events.
 
-1. **The branch deletes two governed documents and the overseer ledger has no
+**Finding (a), the deleted documents, is answered by a grammar change.**
+
+1. **The branch deletes two governed documents and the overseer ledger had no
    vocabulary for that.** `correction/checks/source-mapping-conformance.json`
    (recorded by OVR-000352, deleted at `7bef2db3`) and
    `showcase/checks/source-mapping-conformance.json` (recorded by OVR-000359,
-   deleted at `4a0d6340`) no longer exist. `documentChange.change` is closed to
-   `CREATED`, `MODIFIED`, `REPLACED`, and `_validate_semantics` ends by
+   deleted at `4a0d6340`) no longer exist. `documentChange.change` was closed to
+   `CREATED`, `MODIFIED`, `REPLACED`, and `_validate_semantics` ended by
    requiring every path in `document_history` to be a file on disk, so `check`
-   refuses with "OVR-000352: revised document does not exist" whatever
-   `OVR-000472` records. No entry can clear it. The options are a schema change
-   adding a deletion kind, a `CORRECTION` superseding the two recording entries,
-   which would also un-record every other document those entries carried, or
-   restoring the two files as dead artifacts. That is a decision, not a fix.
+   refused with "OVR-000352: revised document does not exist" whatever
+   `OVR-000472` recorded. Luis ruled on 2026-09-20 (paper ledger E-0508): the
+   grammar gains a deletion kind. Restoring the files and superseding the two
+   recording entries were both refused. `REMOVED` landed at commit `623f5c4d`,
+   RED first. It carries `before_digest`, the ledger's latest recorded digest for
+   the path, and no `after_digest`; the other three kinds still require one, so
+   all 471 sealed entries validate unchanged and the schema identity stays
+   `malleus.contract-compiler.ledger-entry/v1`. The validator refuses a removal
+   of a path the ledger never recorded, a `before_digest` that does not match the
+   prior revision, and a removed path that is still a file; a removed path leaves
+   `document_history`, so the final walk no longer holds it, and a later
+   `CREATED` of the same path is accepted. `REPLACED` was not a candidate: its
+   one use, `handover/2026-08-24-contract-compiler-overseer.md` in `OVR-000007`,
+   records a file whose whole content was replaced and which still exists.
+   `render` and `hash` are unchanged, because the bounded projection in
+   `status.md` names no document path and no change kind.
 2. **One entry cannot hold this branch.** `documentRevisionData.documents` has
-   `maxItems: 20` and the branch changes 62 governed documents. The draft below
+   `maxItems: 20` and the chain covers 71 governed documents. The draft below
    is therefore a chain of four, `OVR-000472` to `OVR-000475`, split by sorted
-   path with 16, 16, 16 and 14 documents. The split is mechanical and means
+   path with 20, 20, 20 and 11 documents. The split is mechanical and means
    nothing: the reason, the evidence commits and the subject are `OVR-000472`'s,
-   and the other three say so. Each successor's `previous_entry_hash` is a
-   placeholder because it is the predecessor's `entry_hash`, which only exists
-   once the sealing moment is fixed. That is a third placeholder kind beyond the
-   two the brief allowed, and it is unavoidable for a chain.
+   and the other three say so. Each successor's `previous_entry_hash` is the
+   literal `<previous entry hash>`, because it is the predecessor's `entry_hash`,
+   which only exists once the sealing moment is fixed. That is a third
+   placeholder kind beyond the two the brief allowed, and it is unavoidable for
+   a chain.
 
 **The full default suite.** Reported in the final measurement section below.
 ### Measured at `980cb609`
@@ -830,49 +853,73 @@ errors above are.
 - `4a0d6340` the showcase stops presenting its own recompute as a check
 - `7bef2db3` correction: Core runs the one check, the recompute stays research
 - `934ef948` the successor Shop evidence generation for Core-run checks
+- `623f5c4d` the overseer ledger gains `REMOVED`, RED first
+- `6214e2bc` three governed passages catch up with decision D
 
 ## The overseer entry: `OVR-000472` to `OVR-000475`
 
 How the document set was computed, mechanically:
 
-1. Every path any sealed `DOCUMENT_REVISION` entry has ever recorded, with its
-   latest `after_digest`: 721 paths, read from
-   `design/contract_compiler/overseer/entries/OVR-*.json`.
-2. Everything the branch changed, `git diff --name-only 85f0ed54..HEAD`: 95
+1. Every path an active sealed `DOCUMENT_REVISION` entry records, with its
+   latest `after_digest`: 720 paths, read from
+   `design/contract_compiler/overseer/entries/OVR-*.json`. 721 paths have been
+   recorded at some point; one lives only in a superseded entry, which the
+   validator does not hold.
+2. Everything the branch changed, `git diff --name-only 85f0ed54..HEAD`: 101
    paths.
-3. The intersection, minus the two paths that no longer exist, minus any whose
-   current bytes already equal the recorded digest: **61 MODIFIED**.
+3. The intersection: **67 MODIFIED and 2 REMOVED**. Nothing in it already stood
+   at its recorded digest.
 4. Plus two CREATED: `handover/2026-09-20-core-two-step-door.md`, which the
    brief names, and `tests/contract_compiler/pareto/test_change_set_admission.py`,
    by the precedent `OVR-000471` set when it recorded
-   `test_check_contract_executor.py` the same way. **63 documents.**
+   `test_check_contract_executor.py` the same way. **71 documents.**
 
 Nothing else qualified. `pyproject.toml` did not change on this branch, its
 `include` list declares no new file, and its `testpaths` names
 `tests/contract_compiler` as a directory rather than the new module. Every
 `before_digest` below was checked against the bytes at `85f0ed54` as well as
-against the ledger's own latest recorded digest: all 61 agree, so the two
-readings of "the committed bytes at 85f0ed54" are the same bytes.
+against the ledger's own latest recorded digest: all 67 agree, so the two
+readings of "the committed bytes at 85f0ed54" are the same bytes. The six
+documents this pass added to the set are
+`.claude/skills/malleus-dev/SKILL.md`, `ROADMAP.md`,
+`design/contract_compiler/overseer/README.md`,
+`design/contract_compiler/overseer/ledger.schema.json`,
+`scripts/contract_compiler_ledger.py` and
+`tests/test_contract_compiler_ledger.py`; `CHANGELOG.md` was already in it and
+its `after_digest` moved.
 
-The two deleted documents are the finding above and are not in the set,
-because no `change` value can express a deletion.
+The two deleted documents are recorded as `REMOVED`, the correction's check in
+`OVR-000472` and the showcase's in `OVR-000473`, each with `before_digest` the
+ledger's latest recorded digest for its path:
+`sha256:d98a26162b65c6f517788cc0cc5a0c1492f81918cc61d1674cfac06cc19c82a9` from
+`OVR-000352` and
+`sha256:ad5de0ee774298c12b641d7a15f1ef7fcab3adf693ad319bcc3e39959148734e` from
+`OVR-000359`. Neither path was revised after the entry that created it, so the
+creating entry's `after_digest` is the latest recorded digest.
 
 All four blocks validate against
 `design/contract_compiler/overseer/ledger.schema.json` with
 `Draft202012Validator` and a `FormatChecker`, substituting
-`sha256:0000...0000` for `entry_hash`, for the placeholdered digests and for the
-placeholdered previous hashes: **4 of 4 valid, 0 errors**. `why` is 1158
-characters in `OVR-000472` and 338 in each successor, under the 1200 cap;
-`summary` is 169, under 240.
+`sha256:0000...0000` for `entry_hash`, for the placeholdered digest and for the
+placeholdered previous hashes, and a real UTC timestamp for the placeholdered
+sealing moment: **4 of 4 valid, 0 errors**. The probe reads the fenced `json`
+blocks of this file and finds exactly four that parse as an object with an
+`entry_id`. `why` is 1197 characters in `OVR-000472` and 335 in each successor,
+under the 1200 cap; `summary` is 169, under 240.
 
 Proved end to end in a scratch copy of the repository, hardlinked so every
-governed document is the exact byte the branch holds, with the four entries
-inserted at real hashes and `head.json` advanced to 475. With the two deleted
-documents restored in the scratch only, `python scripts/contract_compiler_ledger.py
-render` then `check` reports **validated 475 entries**. Without them it refuses
-`OVR-000352: revised document does not exist`, which is the finding above and
-nothing to do with these entries. The real worktree was never written to.
+governed document is the exact byte the branch holds, **with the two deleted
+documents left deleted**, the four entries inserted at real hashes and
+`head.json` advanced to 475. `python scripts/contract_compiler_ledger.py render`
+then `check` reports, verbatim:
 
+```text
+validated 475 entries; head OVR-000475 sha256:8e539f72755ab50ae7fec82af4e134249eb1da532640e72e4d0adf31eb8e940f
+```
+
+The scratch run binds this file as it stood immediately before this paragraph
+was written; the entry records `<digest of this file once final>`, so sealing
+re-derives it. The real worktree was never written to.
 
 ### `OVR-000472`
 
@@ -888,16 +935,40 @@ nothing to do with these entries. The real worktree was never written to.
     ],
     "documents": [
       {
+        "after_digest": "sha256:b18e426e8e8bfb60217f2dde44cd641dd7b6f53aaf027a820ea20c6a3940d9ab",
+        "before_digest": "sha256:931a230b1f2723ff63f236490bb64ecfbf990289d9d20db2e585563e81d2c5c8",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/SKILL.md"
+      },
+      {
         "after_digest": "sha256:428abf6449b7f55864e8e8b7cef44dfd23cf808ea738fec997be344c25377240",
         "before_digest": "sha256:224b8278cbb6974f9c3d577cf71446d689f4f1ec4f95883aecb27f67eab3f10e",
         "change": "MODIFIED",
         "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
       },
       {
-        "after_digest": "sha256:43281298c485a1a00e0606595488c53b61a7febabaa9366f13f1b329be297903",
+        "after_digest": "sha256:71ee0e48be085c1e75af6658df40719c1b7b1cff933a11f6b731c9840bf696ee",
         "before_digest": "sha256:f637cbba30d0363d068a8e700c400d1e947301d22495f07eccf4bc90678efe49",
         "change": "MODIFIED",
         "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:52e1dc247a8d97535addb5c729f5e7f1d1e84a78fa0ecdfb61e5202ab4cecc83",
+        "before_digest": "sha256:e5c3841991c0c5a910a9d5d0b693551f17cb6142b1338febc5ab94867bf27ced",
+        "change": "MODIFIED",
+        "path": "ROADMAP.md"
+      },
+      {
+        "after_digest": "sha256:f3b88b9e8cf2e651b8c14b2a5f23e10a8cc534bc301c2531cacb0af02ce2b991",
+        "before_digest": "sha256:e2eae18a85d937a8759c8a910d9a4c2d17c9af6540c38fbfd54614334aa69f9a",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/overseer/README.md"
+      },
+      {
+        "after_digest": "sha256:a4b3e6441238cb30f5b189103fa4bea26100f6dba12efa482b3841792f393858",
+        "before_digest": "sha256:034cadaad32401e98e5ee5131461ae7f2e335f1a6a7d8289634219974cd25c07",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/overseer/ledger.schema.json"
       },
       {
         "after_digest": "sha256:09feedab1dac003c5ec959ef0367f603070e3c544a5346b9a678320cb5b4d137",
@@ -915,6 +986,11 @@ nothing to do with these entries. The real worktree was never written to.
         "after_digest": "<digest of this file once final>",
         "change": "CREATED",
         "path": "handover/2026-09-20-core-two-step-door.md"
+      },
+      {
+        "before_digest": "sha256:d98a26162b65c6f517788cc0cc5a0c1492f81918cc61d1674cfac06cc19c82a9",
+        "change": "REMOVED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/source-mapping-conformance.json"
       },
       {
         "after_digest": "sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9",
@@ -975,12 +1051,6 @@ nothing to do with these entries. The real worktree was never written to.
         "before_digest": "sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b",
         "change": "MODIFIED",
         "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json"
-      },
-      {
-        "after_digest": "sha256:1c5a75283a3bc74f4a67d471e1d5e63ed05ff5cfc6578efb145d3c4cfed29612",
-        "before_digest": "sha256:b8c558b9dc2ca63f274bbae0b46231d7322719421db29bbf6729dbc68e12cc07",
-        "change": "MODIFIED",
-        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py"
       }
     ]
   },
@@ -1016,6 +1086,16 @@ nothing to do with these entries. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "623f5c4d69f65dade0120914b1a5051d7d0ca41e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6214e2bc9326a83bb0aacc6eab9c56300dd3e049",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1028,7 +1108,7 @@ nothing to do with these entries. The real worktree was never written to.
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 1 of 4.",
-  "why": "Decision D (paper ledger E-0502 to E-0507), step 2 of two. Core runs every check itself, so the public door closes. admit and admit_with_anchors refuse a caller-supplied CHECK_RECORDED or VERDICT_RECORDED with CALLER_SUPPLIED_CHECK_EVENT before any append; VERDICT_RECORDED too, because SELECT_POLICY_VERDICT derives the verdict from the check records. Measured wider than the brief expected: PolicyProgram.from_bytes refuses an empty required_checks and terminal acceptance needs the binding's VERDICT_RECORDED, so the two methods admit nothing under any shipped binding. check_and_admit_change_set is the third Core-authored entry point, for a caller that composed its own operations; neither entry point takes an outcome. Core's structural check is now a malleus.check-contract/v1 CORE_BUILTIN document, moving STRUCTURAL_HISTORY_BUNDLE 0ef377d9 to 8a994ed0 and every frozen coordinate cut against it, the connected story included. Nine research programs stopped writing their own outcomes; three check contracts whose executor was the adopter's own program or nothing were removed. Every exported graph and domain record stays byte-identical to 85f0ed54."
+  "why": "Decision D (E-0502 to E-0508), step 2 of two. Core runs every check itself, so the public door closes. admit and admit_with_anchors refuse a caller-supplied CHECK_RECORDED or VERDICT_RECORDED with CALLER_SUPPLIED_CHECK_EVENT before any append, the verdict too because SELECT_POLICY_VERDICT derives it from the check records. PolicyProgram refuses an empty required_checks and acceptance needs the binding's VERDICT_RECORDED, so the two methods now admit nothing under any shipped binding. check_and_admit_change_set is the third Core-authored entry point, for a caller that composed its own operations; neither entry point takes an outcome. Core's structural check is now a malleus.check-contract/v1 CORE_BUILTIN document, moving STRUCTURAL_HISTORY_BUNDLE 0ef377d9 to 8a994ed0 and every coordinate cut against it. Nine research programs stopped writing their own outcomes, and three check contracts whose executor was their own program, or nothing, were removed. Two of the three were governed documents, so documentChange.change gains REMOVED: the ledger had no word for a deletion and refused whatever this entry recorded. Every exported graph and domain record stays byte-identical to 85f0ed54."
 }
 ```
 
@@ -1045,6 +1125,12 @@ nothing to do with these entries. The real worktree was never written to.
       "CC-R11"
     ],
     "documents": [
+      {
+        "after_digest": "sha256:1c5a75283a3bc74f4a67d471e1d5e63ed05ff5cfc6578efb145d3c4cfed29612",
+        "before_digest": "sha256:b8c558b9dc2ca63f274bbae0b46231d7322719421db29bbf6729dbc68e12cc07",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py"
+      },
       {
         "after_digest": "sha256:58cff5c5f31f42a7096698fcf922c66d6e6025192971e8298ca1356e759cf4a6",
         "before_digest": "sha256:af7c61c2520db1f8c252274a7cf0432dcad07fa171fccd18458b87cbf63a69df",
@@ -1112,6 +1198,11 @@ nothing to do with these entries. The real worktree was never written to.
         "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/test_shipment_policy.py"
       },
       {
+        "before_digest": "sha256:ad5de0ee774298c12b641d7a15f1ef7fcab3adf693ad319bcc3e39959148734e",
+        "change": "REMOVED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/checks/source-mapping-conformance.json"
+      },
+      {
         "after_digest": "sha256:83faaae9cc3fe648fc2618686adad15fe7fcfad1ef69c965ae53790f48424921",
         "before_digest": "sha256:2d964b7b73efd9ce72a409aadfceb64a03c1d1d74f16ae3601eb09ace61affec",
         "change": "MODIFIED",
@@ -1140,13 +1231,25 @@ nothing to do with these entries. The real worktree was never written to.
         "before_digest": "sha256:588ab3766625c184992860730fe33bc0ca17550b555fb9635d973e7a77d09244",
         "change": "MODIFIED",
         "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.py"
+      },
+      {
+        "after_digest": "sha256:343c23c4c5aa8c107f15e7a0da6bf236b250c578da73d699b762250bae65ae73",
+        "before_digest": "sha256:1767f6e65c49faa3a4da3be504f992ab29a13e925b20a3915b9c0ce2d7a76f3e",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py"
+      },
+      {
+        "after_digest": "sha256:85778d6b396239aafa8587a06c78d2d74747d2526d57b7f277045862bab29ada",
+        "before_digest": "sha256:aee752c22d399983de648b6376a88c37405306f36cee20528234c88300bcb303",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_query.py"
       }
     ]
   },
   "entry_id": "OVR-000473",
   "entry_type": "DOCUMENT_REVISION",
   "ledger": "overseer",
-  "previous_entry_hash": "<entry_hash of OVR-000472 once recorded>",
+  "previous_entry_hash": "<previous entry hash>",
   "recorded_at": "<sealing moment, UTC>",
   "references": [
     {
@@ -1175,6 +1278,16 @@ nothing to do with these entries. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "623f5c4d69f65dade0120914b1a5051d7d0ca41e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6214e2bc9326a83bb0aacc6eab9c56300dd3e049",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1187,7 +1300,7 @@ nothing to do with these entries. The real worktree was never written to.
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 2 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 63 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 71 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
 
@@ -1204,18 +1317,6 @@ nothing to do with these entries. The real worktree was never written to.
       "CC-R11"
     ],
     "documents": [
-      {
-        "after_digest": "sha256:343c23c4c5aa8c107f15e7a0da6bf236b250c578da73d699b762250bae65ae73",
-        "before_digest": "sha256:1767f6e65c49faa3a4da3be504f992ab29a13e925b20a3915b9c0ce2d7a76f3e",
-        "change": "MODIFIED",
-        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py"
-      },
-      {
-        "after_digest": "sha256:85778d6b396239aafa8587a06c78d2d74747d2526d57b7f277045862bab29ada",
-        "before_digest": "sha256:aee752c22d399983de648b6376a88c37405306f36cee20528234c88300bcb303",
-        "change": "MODIFIED",
-        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_query.py"
-      },
       {
         "after_digest": "sha256:064695217ce8b50743c688eb7ed9ad884078cfc45a08be8dcf743aa7f6fad728",
         "before_digest": "sha256:f2ea7c2cee679262349864557b22a317ca788494946271c0cfdb874bd0340b33",
@@ -1239,6 +1340,12 @@ nothing to do with these entries. The real worktree was never written to.
         "before_digest": "sha256:6459c6ebb6d85e3e9be9b2273608137b74fc196519f55210d663f30f993d2113",
         "change": "MODIFIED",
         "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:cb9f354c59c35fb5f269699a91720fdced343637eb56f91a8d2418c05ac898c8",
+        "before_digest": "sha256:ca22ef6dcdf8a8a79f1f93690a3a71a6b0d462a45f4c6e22f9bbdc455be73e58",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_ledger.py"
       },
       {
         "after_digest": "sha256:df52f876665c96923e97dd3c5dd8f2f49f51cf7659651240b31d30ba31fc1729",
@@ -1298,70 +1405,7 @@ nothing to do with these entries. The real worktree was never written to.
         "before_digest": "sha256:b124b9c161b57a3e933c37e555784892f3d45dabc3baca913501976e54894503",
         "change": "MODIFIED",
         "path": "tests/contract_compiler/pareto/test_check_contract_rebinding.py"
-      }
-    ]
-  },
-  "entry_id": "OVR-000474",
-  "entry_type": "DOCUMENT_REVISION",
-  "ledger": "overseer",
-  "previous_entry_hash": "<entry_hash of OVR-000473 once recorded>",
-  "recorded_at": "<sealing moment, UTC>",
-  "references": [
-    {
-      "relation": "EVIDENCES",
-      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
-      "type": "COMMIT"
-    },
-    {
-      "relation": "EVIDENCES",
-      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
-      "type": "COMMIT"
-    },
-    {
-      "relation": "EVIDENCES",
-      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
-      "type": "COMMIT"
-    },
-    {
-      "relation": "EVIDENCES",
-      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
-      "type": "COMMIT"
-    },
-    {
-      "relation": "EVIDENCES",
-      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
-      "type": "COMMIT"
-    },
-    {
-      "relation": "AFFECTS",
-      "target": "CC-R11",
-      "type": "WORKSTREAM"
-    }
-  ],
-  "schema": "malleus.contract-compiler.ledger-entry/v1",
-  "sequence": 474,
-  "subject": {
-    "id": "core-two-step-door",
-    "type": "DOCUMENT"
-  },
-  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 3 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 63 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
-}
-```
-
-### `OVR-000475`
-
-```json
-{
-  "actor": {
-    "id": "overseer",
-    "type": "OVERSEER"
-  },
-  "data": {
-    "affected_ids": [
-      "CC-R11"
-    ],
-    "documents": [
+      },
       {
         "after_digest": "sha256:63210031c87e3b6fb101904d13250019c9ec0a1a133b4a19b15723539d7ff615",
         "before_digest": "sha256:b79a7799841581683f788bbc726a5b33195c9d0de3d1073d1f598f784edf1c20",
@@ -1391,7 +1435,80 @@ nothing to do with these entries. The real worktree was never written to.
         "before_digest": "sha256:9771738d663490917d626ce2ff74910f717905c93cbcc9bf07b27bc8d3752973",
         "change": "MODIFIED",
         "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
-      },
+      }
+    ]
+  },
+  "entry_id": "OVR-000474",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "<previous entry hash>",
+  "recorded_at": "<sealing moment, UTC>",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "623f5c4d69f65dade0120914b1a5051d7d0ca41e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6214e2bc9326a83bb0aacc6eab9c56300dd3e049",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 474,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 3 of 4.",
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 71 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+}
+```
+
+### `OVR-000475`
+
+```json
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
       {
         "after_digest": "sha256:5d481487d9d5633d1e2def3b0916dd81883bb5cf44cde399e24119b4bee755dd",
         "before_digest": "sha256:368b200e8cb23a214be8e84404b71aefd00bfa69a07209ae45cd1eb6d70f4853",
@@ -1447,6 +1564,12 @@ nothing to do with these entries. The real worktree was never written to.
         "path": "tests/contract_compiler/pareto/test_transition_admission.py"
       },
       {
+        "after_digest": "sha256:07c3a052324e80d8271647aa5e9a504c6c3b670d1d595deafe01b92cf8067fb1",
+        "before_digest": "sha256:7640d767fb3fcc45db89bb12da7283b548cb5d81d6ad5a9724d7d80ef328e2a0",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
         "after_digest": "sha256:65f763f441da5886fd57e71cb8dcd3165d90e037c2af1d9f5ba7532ad3b3eff9",
         "before_digest": "sha256:0e2d42c75459af2ee8a07e4d6379daad63b85e2d1102c41d6140b2584e36cff6",
         "change": "MODIFIED",
@@ -1457,7 +1580,7 @@ nothing to do with these entries. The real worktree was never written to.
   "entry_id": "OVR-000475",
   "entry_type": "DOCUMENT_REVISION",
   "ledger": "overseer",
-  "previous_entry_hash": "<entry_hash of OVR-000474 once recorded>",
+  "previous_entry_hash": "<previous entry hash>",
   "recorded_at": "<sealing moment, UTC>",
   "references": [
     {
@@ -1486,6 +1609,16 @@ nothing to do with these entries. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "623f5c4d69f65dade0120914b1a5051d7d0ca41e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6214e2bc9326a83bb0aacc6eab9c56300dd3e049",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1498,6 +1631,6 @@ nothing to do with these entries. The real worktree was never written to.
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 4 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 63 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 71 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
