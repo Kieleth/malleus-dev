@@ -169,8 +169,10 @@ against the connected story's 121.
 | `VERDICT_RECORDED` | 21 | 21 |
 
 Every difference is a retention. Added, 23: one check receipt per admission
-(`receipt:change:plan:shop-connected:<event>`, 21 of them, each binding the change
-set identity, the plan identity and the full check result), plus
+(`receipt:change:plan:shop-connected:<event>:shop-content-rules`, 21 of them, each
+binding the change set identity, the plan identity and the full check result;
+Core names a receipt after the change set and the check contract, so the
+contract id is now part of it), plus
 `shop:content-rules:logic` and `shop:content-rules:rules`. Removed, 1:
 `malleus:structural-admission-check/v1`, Core's structural check contract, which
 this policy replaces.
