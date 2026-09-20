@@ -2706,7 +2706,12 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     )
     for check_path in (correction_root / "checks").glob("*.json"):
         check = json.loads(check_path.read_text(encoding="utf-8"))
-        assert check["executor"]["sha256"] == entrypoint_digest
+        # Core runs every required check now, so no contract here names the run
+        # program's own bytes as its executor. The v1 grammar has no field that
+        # could: `executor.kind` is closed to PROLOG_RULES and CORE_BUILTIN.
+        assert check["grammar"] == "malleus.check-contract/v1"
+        assert check["executor"]["kind"] == "CORE_BUILTIN"
+        assert entrypoint_digest not in json.dumps(check, sort_keys=True)
 
     assert "crosses every boundary" not in index
     assert "Three fixture checks" not in index
