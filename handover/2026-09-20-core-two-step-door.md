@@ -278,7 +278,10 @@ is the clean 3643 plus the 18 tests added here (16 in
 `test_change_set_admission.py`, and `test_atomic_population_admission.py` going
 from 18 to 20).
 
-The 143 failures and errors, by file and by cause:
+The 133 failures and 10 errors, by file and by cause. The suite run was taken
+with `-rf`, so the errors were not itemised in its summary; they were placed
+afterwards by re-running the module with `-rE`, which reports
+`3 passed, 10 errors in 228.99s`.
 
 | count | file | cause |
 |---|---|---|
@@ -293,6 +296,7 @@ The 143 failures and errors, by file and by cause:
 | 4 | `test_population_trace.py` | migration not done |
 | 2 | `test_change_composition_context.py` | migration not done |
 | 2 | `research/.../public_population/test_run.py` | migration not done |
+| 10 errors | `test_maintained_projection.py` | migration not done, at setup |
 | 1 each | `test_atomic_population_admission.py`, `test_contract_revision.py`, `test_finite_protocol_history.py`, `test_object_event_population.py`, `test_public_compiler.py`, `test_review_coverage.py`, `test_small_shop_contract_revision.py` | migration not done |
 | 1 each | `test_default_shop_walkthrough.py`, `test_document_assertion_time.py`, `test_document_fixture_producer.py`, `test_fresh_shop_import.py`, `test_partial_shipments.py` | the fold: a frozen identity moved |
 
@@ -309,7 +313,14 @@ Every other failure is a consequence this branch created and has not yet
 answered. The fold group is a frozen identity that moved, for example
 `test_default_shop_walkthrough.py` asserting the structural bundle identity
 `sha256:0ef377d9…` where the fold now produces `sha256:8a994ed0…`. The
-migration group is the closed door refusing a caller-written check record.
+migration group is the closed door refusing a caller-written check record. The
+ten errors are that same refusal one level up: every test in
+`test_maintained_projection.py` that takes the `sequence` fixture errors at
+setup, because the fixture calls `_admit_record_change`, the shared helper it
+imports from `test_knowledge_change_history.py`. The message is
+`CALLER_SUPPLIED_CHECK_EVENT: CHECK_RECORDED is Core's to write once it has run
+the check`, raised at `knowledge.py:889`. The module's other three tests pass.
+Migrating that one helper clears all ten.
 
 Ruff over `src tests`: the same nine pre-existing findings as `85f0ed54`
 (`tests/test_kg.py` E401 twice, `tests/test_logic.py` F401 twice,
@@ -349,7 +360,8 @@ missed, and a second full-suite run for a number that is not yet zero would
 have bought nothing: the migration has not started, so the count stands where
 E-0503 left it, 134 caller-authored admissions in 18 files, measured on the
 content this commit carries. What is different is that all 134 now refuse
-rather than admit, which is what the 109 non-governance failures above are.
+rather than admit, which is what the 109 non-governance failures and the 10
+errors above are.
 
 ## Commits
 
