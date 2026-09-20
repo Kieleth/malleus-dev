@@ -1,4 +1,27 @@
-"""Run the retained five-stage Small Shop source-to-ledger-to-graph proof."""
+"""Run the retained five-stage Small Shop source-to-ledger-to-graph proof.
+
+Two verifications happen per stage and they are not the same kind of thing.
+
+Core runs the one check the policy requires, ``structural-conformance``, a
+``malleus.check-contract/v1`` ``CORE_BUILTIN`` document at
+``sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9``
+naming ``malleus.core.operations-apply-atomically``. ``check_and_admit_change_set``
+resolves it against what this history retains, runs it, mints its receipt and
+writes ``CHANGE_PROPOSED``, ``CHECK_RECORDED`` and ``VERDICT_RECORDED``. This
+program states no outcome.
+
+The source-mapping recompute is this program's own. It runs before admission,
+under ``malleus.small-shop.source-mapping-declaration/private-v0``, which pins
+the exact bytes of this file, and its result is retained as evidence in the
+same batch as the change. **Core does not vouch for it.** It was a required
+check contract in a private grammar until 2026-09-20, which meant this program
+ran its own program and wrote ``outcome: SATISFIED`` into a ``CHECK_RECORDED``
+event; the policy required ``source-mapping-conformance`` at
+``sha256:ad5de0ee...`` and the document is gone. What the recompute establishes
+is unchanged and ``verify_source_mapping_records`` still proves it from ledger
+bytes alone; what changed is that it no longer presents itself as a check the
+protocol accepted.
+"""
 
 from __future__ import annotations
 
@@ -35,12 +58,15 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeOperation,
     KnowledgeValidTime,
 )
+from malleus._contract_pipeline.admission import (
+    PopulationAdmissionRefusal,
+    check_and_admit_change_set,
+)
 from malleus._contract_pipeline.machine import (
     PolicyProgram,
     ProtocolMachineProgram,
     compose_normative_profile,
     compose_partial_effective_contract,
-    execute_event,
 )
 from malleus._contract_source import (
     CollaboratorRefusal,
@@ -64,11 +90,12 @@ PROGRAM = HERE / "run.json"
 RUN_GRAMMAR = "malleus.small-shop.showcase-run/private-v0"
 SETTLEMENT_GRAMMAR = "malleus.small-shop.settlement-mapping/private-v0"
 CORRECTION_GRAMMAR = "malleus.small-shop.supplier-order-correction-mapping/private-v0"
-RECEIPT_GRAMMAR = "malleus.small-shop.source-mapping-receipt/private-v0"
-CHECK_GRAMMAR = "malleus.check-contract/private-v0"
-CHECK_ID = "source-mapping-conformance"
-CHECK_ALGORITHM = "RECOMPUTE_DECLARED_SOURCE_TO_CHANGE_SET"
-CHECK_OUTCOMES = ("SATISFIED", "VIOLATED")
+RECORD_GRAMMAR = "malleus.small-shop.source-mapping-verification/private-v0"
+VERIFICATION_GRAMMAR = "malleus.small-shop.source-mapping-declaration/private-v0"
+VERIFICATION_ID = "source-mapping-conformance"
+VERIFICATION_ALGORITHM = "RECOMPUTE_DECLARED_SOURCE_TO_CHANGE_SET"
+CHECK_CONTRACT_GRAMMAR = "malleus.check-contract/v1"
+CHECK_CONTRACT_ID = "structural-conformance"
 SELECTORS = (
     "RET010",
     "SETTLEMENT:0",
@@ -91,9 +118,6 @@ PROGRAM_FIELDS = {
 }
 STAGE_FIELDS = {
     "change_set_id",
-    "decision_id",
-    "proposal_id",
-    "receipt_id",
     "selector",
     "transaction_time",
 }
@@ -300,7 +324,7 @@ class PreparedShowcase:
     history: KnowledgeChangeHistory
     program: Mapping[str, object]
     policy: PolicyProgram
-    check: SourceMappingCheck
+    verification: SourceMappingVerification
     stages: tuple[Stage, ...]
 
 
@@ -312,13 +336,22 @@ class ShowcaseRun:
 
 
 @dataclass(frozen=True, slots=True)
-class VerifiedSourceMappingReceipt:
+class VerifiedSourceMapping:
+    """One stage's source-mapping verification, recomputed from retained bytes."""
+
     change_set_id: str
-    receipt_identity: str
+    record_identity: str
 
 
 @dataclass(frozen=True, slots=True)
-class SourceMappingCheck:
+class SourceMappingVerification:
+    """The research-local declaration of the source-mapping recompute.
+
+    This is not a check contract and Core does not run it. It pins the exact
+    entrypoint bytes that recompute the declared source selection, and the
+    record each stage writes from it is retained evidence, not a check record.
+    """
+
     identifier: str
     identity: str
     source: bytes
@@ -371,13 +404,7 @@ def validate_program(source: bytes) -> Mapping[str, object]:
                     ShowcaseRefusalReason.MALFORMED_CONFIGURATION,
                     f"stage {index} has the wrong fields",
                 )
-            for field in (
-                "change_set_id",
-                "decision_id",
-                "proposal_id",
-                "receipt_id",
-                "selector",
-            ):
+            for field in ("change_set_id", "selector"):
                 text(item.get(field), f"stage {index} {field}")
             transaction_time = aware_datetime(
                 text(item.get("transaction_time"), f"stage {index} transaction time"),
@@ -396,30 +423,55 @@ def validate_program(source: bytes) -> Mapping[str, object]:
     return MappingProxyType(value)
 
 
-def validate_check(
+def validate_verification(
     source: bytes, *, entrypoint_id: str, entrypoint_identity: str
-) -> SourceMappingCheck:
-    value = decode(source, "source-mapping check", require_canonical=True)
-    executor = obj(value.get("executor"), "check executor")
+) -> SourceMappingVerification:
+    value = decode(source, "source-mapping declaration", require_canonical=True)
+    executor = obj(value.get("executor"), "declaration executor")
     if (
-        set(value)
-        != {"algorithm", "check_contract_id", "executor", "grammar", "outcomes"}
+        set(value) != {"algorithm", "executor", "grammar", "verification_id"}
         or set(executor) != {"artifact_id", "sha256"}
-        or value.get("grammar") != CHECK_GRAMMAR
-        or value.get("check_contract_id") != CHECK_ID
-        or value.get("algorithm") != CHECK_ALGORITHM
-        or tuple(array(value.get("outcomes"), "check outcomes")) != CHECK_OUTCOMES
+        or value.get("grammar") != VERIFICATION_GRAMMAR
+        or value.get("verification_id") != VERIFICATION_ID
+        or value.get("algorithm") != VERIFICATION_ALGORITHM
         or executor != {"artifact_id": entrypoint_id, "sha256": entrypoint_identity}
     ):
         raise refuse(
             ShowcaseRefusalReason.MALFORMED_CONFIGURATION,
-            "unsupported source-mapping check contract",
+            "unsupported source-mapping declaration",
         )
-    return SourceMappingCheck(
-        text(value.get("check_contract_id"), "check contract ID"),
+    return SourceMappingVerification(
+        text(value.get("verification_id"), "verification ID"),
         digest(source),
         source,
     )
+
+
+def validate_check_contract(source: bytes) -> str:
+    """The v1 check contract this history retains, and the identity Core pins.
+
+    Core parses and runs it. The showcase only has to hand it over unaltered,
+    so this refuses anything that is not the exact ``CORE_BUILTIN`` document
+    the policy requires.
+    """
+    value = decode(source, "check contract", require_canonical=True)
+    executor = obj(value.get("executor"), "check executor")
+    if (
+        set(value) != {"check_contract_id", "executor", "grammar", "outcomes"}
+        or value.get("grammar") != CHECK_CONTRACT_GRAMMAR
+        or value.get("check_contract_id") != CHECK_CONTRACT_ID
+        or executor
+        != {
+            "builtin_id": "malleus.core.operations-apply-atomically",
+            "builtin_version": "1",
+            "kind": "CORE_BUILTIN",
+        }
+    ):
+        raise refuse(
+            ShowcaseRefusalReason.MALFORMED_CONFIGURATION,
+            "unsupported check contract",
+        )
+    return digest(source)
 
 
 def pinned(
@@ -1146,6 +1198,7 @@ def bootstrap(
     machine_bytes,
     policy_bytes,
     check_bytes,
+    verification_bytes,
     bundles,
 ):
     ids = obj(program.get("artifact_ids"), "artifact IDs")
@@ -1178,6 +1231,7 @@ def bootstrap(
         ("machine", machine_bytes, "application/json", "RETAINED_EVIDENCE"),
         ("policy", policy_bytes, "application/json", "RETAINED_EVIDENCE"),
         ("check_contract", check_bytes, "application/json", "RETAINED_EVIDENCE"),
+        ("source_mapping", verification_bytes, "application/json", "RETAINED_EVIDENCE"),
         (
             "baseline_mapping",
             bundles["baseline"].mapping_bytes,
@@ -1239,12 +1293,19 @@ def operation_data(item: KnowledgeOperation) -> dict[str, object]:
     }
 
 
-def receipt_bytes(
+def verification_record_bytes(
     stage: Stage,
     change: KnowledgeChangeSet,
-    check: SourceMappingCheck,
+    verification: SourceMappingVerification,
     provenance: tuple[Mapping[str, object], ...],
 ) -> bytes:
+    """One stage's source-mapping verification, as retained evidence.
+
+    It states which retained source records the declared mapping selected for
+    this change. It is the showcase's own assertion under its own grammar, it
+    is not a check record, and Core does not vouch for it: the one check the
+    policy requires is the structural builtin, which Core runs itself.
+    """
     claim = {
         "change_set_id": change.change_set_id,
         "change_set_identity": change.identity,
@@ -1255,10 +1316,9 @@ def receipt_bytes(
     return canonical(
         {
             **claim,
-            "check_contract_id": check.identifier,
-            "check_contract_identity": check.identity,
-            "grammar": RECEIPT_GRAMMAR,
-            "outcome": "SATISFIED",
+            "declaration_identity": verification.identity,
+            "grammar": RECORD_GRAMMAR,
+            "verification_id": verification.identifier,
             "verification_identity": digest(canonical(claim)),
         }
     )
@@ -1281,6 +1341,14 @@ def assert_change(stage: Stage, change: KnowledgeChangeSet) -> None:
 
 
 def _admit_stage(prepared: PreparedShowcase, stage: Stage) -> KnowledgeHistoryReplay:
+    """Verify the source mapping, then hand Core the change set it checks.
+
+    The recompute happens before admission and its result is retained as
+    evidence in the same batch. The policy's one required check is Core's
+    structural builtin; Core resolves it, runs it, mints its receipt and
+    writes ``CHANGE_PROPOSED``, ``CHECK_RECORDED`` and ``VERDICT_RECORDED``.
+    Nothing here states an outcome.
+    """
     try:
         provenance = verify_stage(stage)
         change = prepared.history.compose_change_set(
@@ -1292,60 +1360,29 @@ def _admit_stage(prepared: PreparedShowcase, stage: Stage) -> KnowledgeHistoryRe
             supersedes=stage.supersedes,
         )
         assert_change(stage, change)
-        receipt = receipt_bytes(stage, change, prepared.check, provenance)
-        receipt_identity = digest(receipt)
+        record = verification_record_bytes(
+            stage, change, prepared.verification, provenance
+        )
         anchor = artifact(
-            receipt_identity, receipt, "application/json", "RETAINED_EVIDENCE"
+            digest(record), record, "application/json", "RETAINED_EVIDENCE"
         )
-        before = prepared.history.replay()
-        preview = execute_event(
-            before.partial_contract, before.machine_state, anchor.machine_event
-        )
-        if preview.receipt.outcome != "APPLIED":
-            raise refuse(
-                ShowcaseRefusalReason.ADMISSION_FAILED, "receipt anchor refused"
-            )
         declaration = stage.declaration
-        events = (
-            event(
-                "CHANGE_PROPOSED",
-                {
-                    "expected_machine_state_identity": preview.state.identity,
-                    "knowledge_change_set_identity": change.identity,
-                    "policy_id": prepared.policy.identifier,
-                    "policy_identity": prepared.policy.identity,
-                    "proposal_id": declaration["proposal_id"],
-                },
-            ),
-            event(
-                "CHECK_RECORDED",
-                {
-                    "check_contract_id": prepared.check.identifier,
-                    "check_contract_identity": prepared.check.identity,
-                    "outcome": "SATISFIED",
-                    "policy_identity": prepared.policy.identity,
-                    "proposal_id": declaration["proposal_id"],
-                    "receipt_id": declaration["receipt_id"],
-                    "receipt_identity": receipt_identity,
-                },
-            ),
-            event(
-                "VERDICT_RECORDED",
-                {
-                    "decision_id": declaration["decision_id"],
-                    "proposal_id": declaration["proposal_id"],
-                },
-            ),
-        )
-        return prepared.history.admit_with_anchors(
-            anchors=(anchor,),
+        return check_and_admit_change_set(
+            history=prepared.history,
             change_set=change,
-            machine_events=events,
-            transaction_time=declaration["transaction_time"],
+            transaction_time=text(
+                declaration.get("transaction_time"), "stage transaction time"
+            ),
             actor_id=text(prepared.program.get("actor_id"), "actor ID"),
-        )
+            anchors=(anchor,),
+        ).replay
     except ShowcaseRefusal:
         raise
+    except PopulationAdmissionRefusal as error:
+        raise refuse(
+            ShowcaseRefusalReason.ADMISSION_FAILED,
+            f"stage refused at {error.stage.value}: {error.reason}: {error.detail}",
+        ) from error
     except KnowledgeChangeRefusal as error:
         raise refuse(
             ShowcaseRefusalReason.ADMISSION_FAILED, f"stage refused atomically: {error}"
@@ -1445,14 +1482,18 @@ def _prepare_showcase(
         "check",
         Path(check_contract) if check_contract else None,
     )
+    _, verification_bytes = pinned(
+        obj(inputs.get("source_mapping"), "source mapping"), "source mapping"
+    )
     entrypoint_id = text(ids.get("entrypoint"), "entrypoint ID")
-    check = validate_check(
-        check_bytes,
+    verification = validate_verification(
+        verification_bytes,
         entrypoint_id=entrypoint_id,
         entrypoint_identity=digest(read(Path(__file__), "entrypoint")),
     )
+    check_identity = validate_check_contract(check_bytes)
     policy = PolicyProgram.from_bytes(policy_bytes)
-    if policy.required_checks != ((check.identifier, check.identity),):
+    if policy.required_checks != ((CHECK_CONTRACT_ID, check_identity),):
         raise refuse(
             ShowcaseRefusalReason.IDENTITY_MISMATCH, "policy does not pin check"
         )
@@ -1491,14 +1532,15 @@ def _prepare_showcase(
         machine_bytes,
         policy_bytes,
         check_bytes,
+        verification_bytes,
         bundles,
     )
-    return PreparedShowcase(history, program, policy, check, stages)
+    return PreparedShowcase(history, program, policy, verification, stages)
 
 
 def retained_context(
     replay: KnowledgeHistoryReplay,
-) -> tuple[Mapping[str, object], SourceMappingCheck, tuple[Stage, ...]]:
+) -> tuple[Mapping[str, object], SourceMappingVerification, tuple[Stage, ...]]:
     retained = {item.record_id: item for item in replay.retained_inputs}
     programs = []
     for item in retained.values():
@@ -1523,26 +1565,34 @@ def retained_context(
         ),
     }
     try:
-        check_bytes = retained[text(ids.get("check_contract"), "check ID")].content
+        verification_bytes = retained[
+            text(ids.get("source_mapping"), "source-mapping ID")
+        ].content
         entrypoint = retained[text(ids.get("entrypoint"), "entrypoint ID")]
     except KeyError as error:
         raise refuse(
             ShowcaseRefusalReason.INCOMPATIBLE_HISTORY,
-            "history lacks check or entrypoint",
+            "history lacks the source-mapping declaration or the entrypoint",
         ) from error
-    check = validate_check(
-        check_bytes,
+    verification = validate_verification(
+        verification_bytes,
         entrypoint_id=entrypoint.record_id,
         entrypoint_identity=entrypoint.identity,
     )
-    return program, check, mapped_stages(program, bundles)
+    return program, verification, mapped_stages(program, bundles)
 
 
-def verify_source_mapping_receipts(
+def verify_source_mapping_records(
     replay: KnowledgeHistoryReplay,
-) -> tuple[VerifiedSourceMappingReceipt, ...]:
-    """Recompute all five receipts from exact ledger-retained bytes."""
-    _, check, stages = retained_context(replay)
+) -> tuple[VerifiedSourceMapping, ...]:
+    """Recompute all five verification records from exact ledger-retained bytes.
+
+    Each record is retained evidence this program wrote before admission. It
+    is not a check record and no ``CheckRecord`` names it: the check records
+    this history carries are Core's, one per change, for the structural
+    builtin the policy requires.
+    """
+    _, verification, stages = retained_context(replay)
     if tuple(change.change_set_id for change in replay.change_sets) != tuple(
         stage.change_set_id for stage in stages
     ):
@@ -1550,30 +1600,19 @@ def verify_source_mapping_receipts(
             ShowcaseRefusalReason.INCOMPATIBLE_HISTORY, "accepted change order differs"
         )
     retained = {item.record_id: item for item in replay.retained_inputs}
-    checks = {
-        record.fields["proposal_id"]: record
-        for record in replay.machine_state.records
-        if record.record_type == "CheckRecord"
-    }
     verified = []
     for stage, change in zip(stages, replay.change_sets, strict=True):
         provenance = verify_stage(stage)
         assert_change(stage, change)
-        expected = receipt_bytes(stage, change, check, provenance)
+        expected = verification_record_bytes(stage, change, verification, provenance)
         identity = digest(expected)
-        receipt = retained.get(identity)
-        check_record = checks.get(stage.declaration["proposal_id"])
-        if (
-            receipt is None
-            or receipt.content != expected
-            or check_record is None
-            or check_record.fields["receipt_identity"] != identity
-        ):
+        record = retained.get(identity)
+        if record is None or record.content != expected:
             raise refuse(
                 ShowcaseRefusalReason.INCOMPATIBLE_HISTORY,
-                f"receipt does not recompute: {stage.change_set_id}",
+                f"source mapping does not recompute: {stage.change_set_id}",
             )
-        verified.append(VerifiedSourceMappingReceipt(stage.change_set_id, identity))
+        verified.append(VerifiedSourceMapping(stage.change_set_id, identity))
     return tuple(verified)
 
 
@@ -1601,7 +1640,7 @@ def run_showcase(
     history_path = output / "history.jsonl"
     if history_path.exists():
         replay = KnowledgeChangeHistory.reopen(history_path).replay()
-        verify_source_mapping_receipts(replay)
+        verify_source_mapping_records(replay)
         return write_outputs(output, replay)
     prepared = _prepare_showcase(
         output,
@@ -1616,7 +1655,7 @@ def run_showcase(
     replay = prepared.history.replay()
     for stage in prepared.stages:
         replay = _admit_stage(prepared, stage)
-    verify_source_mapping_receipts(replay)
+    verify_source_mapping_records(replay)
     return write_outputs(output, replay)
 
 

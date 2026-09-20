@@ -1,0 +1,1 @@
+{"algorithm":"RECOMPUTE_DECLARED_SOURCE_TO_CHANGE_SET","executor":{"artifact_id":"artifact:small-shop-showcase:entrypoint","sha256":"sha256:5845af3c2dfb46a997c5014034a5539596b899109b4d2e24558a240d567dff34"},"grammar":"malleus.small-shop.source-mapping-declaration/private-v0","verification_id":"source-mapping-conformance"}

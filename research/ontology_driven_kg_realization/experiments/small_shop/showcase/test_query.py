@@ -350,13 +350,13 @@ def test_open_history_recomputes_retained_mapping_receipts(
 ) -> None:
     history_path, _ = proof
     verified = []
-    verifier = query_module.verify_source_mapping_receipts
+    verifier = query_module.verify_source_mapping_records
 
     def observe(replay):
         verified.append(replay)
         return verifier(replay)
 
-    monkeypatch.setattr(query_module, "verify_source_mapping_receipts", observe)
+    monkeypatch.setattr(query_module, "verify_source_mapping_records", observe)
 
     reopened = query_module.open_history(history_path)
 

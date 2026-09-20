@@ -39,7 +39,7 @@ from research.ontology_driven_kg_realization.experiments.small_shop.showcase.run
     retained_context,
     run_showcase,
     text,
-    verify_source_mapping_receipts,
+    verify_source_mapping_records,
 )
 
 
@@ -230,7 +230,7 @@ def _explanation(replay: KnowledgeHistoryReplay) -> bytes:
     current_count = len(array(graph["nodes"], "graph nodes")) + len(
         array(graph["relations"], "graph relations")
     )
-    receipts = verify_source_mapping_receipts(replay)
+    verifications = verify_source_mapping_records(replay)
     oracle_named_inputs = sorted(
         item.record_id
         for item in replay.retained_inputs
@@ -286,12 +286,12 @@ def _explanation(replay: KnowledgeHistoryReplay) -> bytes:
             "runtime_oracle_named_inputs": oracle_named_inputs,
             "schema": EXPLANATION_SCHEMA,
             "scope": "RESEARCH_LOCAL_NO_STABLE_API_OR_WIRE",
-            "source_mapping_receipts": [
+            "source_mapping_verifications": [
                 {
                     "change_set_id": item.change_set_id,
-                    "receipt_identity": item.receipt_identity,
+                    "record_identity": item.record_identity,
                 }
-                for item in receipts
+                for item in verifications
             ],
         }
     )

@@ -18,7 +18,7 @@ from research.ontology_driven_kg_realization.experiments.small_shop.showcase.run
     _admit_stage,
     _prepare_showcase,
     run_showcase,
-    verify_source_mapping_receipts,
+    verify_source_mapping_records,
 )
 
 
@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[5]
 HERE = Path(__file__).parent
 RUN = HERE / "run.json"
 MAPPING = HERE / "settlement-mapping.json"
-CHECK = HERE / "checks/source-mapping-conformance.json"
+CHECK = HERE / "checks/structural-conformance.json"
 POLICY = HERE / "policy.json"
 FIXTURE = (
     ROOT
@@ -228,28 +228,38 @@ def test_invoices_exist_before_the_fixed_two_invoice_payment(proof) -> None:
     assert payment_change.valid_time.value == "e30"
 
 
-def test_each_stage_has_one_recomputable_source_mapping_receipt(proof) -> None:
+def test_each_stage_has_one_recomputable_source_mapping_record(proof) -> None:
+    """The recompute is the showcase's own, and no check record names it.
+
+    The five ``CheckRecord`` entries are Core's, one per change, for the
+    structural builtin the policy requires. They used to carry the
+    ``receipt_identity`` of this program's own source-mapping receipt, which
+    is what made that receipt look like a check Core had run.
+    """
     _, result = proof
-    verified = verify_source_mapping_receipts(result.replay)
+    verified = verify_source_mapping_records(result.replay)
     assert [item.change_set_id for item in verified] == CHANGE_IDS
-    assert len({item.receipt_identity for item in verified}) == 5
+    assert len({item.record_identity for item in verified}) == 5
     checks = [
         record
         for record in result.replay.machine_state.records
         if record.record_type == "CheckRecord"
     ]
     assert len(checks) == 5
-    assert {record.fields["receipt_identity"] for record in checks} == {
-        item.receipt_identity for item in verified
+    assert {record.fields["check_contract_id"] for record in checks} == {
+        "structural-conformance"
     }
+    assert {record.fields["receipt_identity"] for record in checks}.isdisjoint(
+        {item.record_identity for item in verified}
+    )
     retained = {item.record_id: item for item in result.replay.retained_inputs}
-    first_receipt = json.loads(retained[verified[0].receipt_identity].content)
-    assert [item["member"] for item in first_receipt["selected_records"]] == [
+    first_record = json.loads(retained[verified[0].record_identity].content)
+    assert [item["member"] for item in first_record["selected_records"]] == [
         "ret010:input/sources/warehouse.jsonl",
         "ret010:input/sources/inventory-units.csv",
     ]
     assert (
-        len({item["record_sha256"] for item in first_receipt["selected_records"]}) == 2
+        len({item["record_sha256"] for item in first_record["selected_records"]}) == 2
     )
 
 
@@ -295,7 +305,7 @@ def test_ledger_only_reopen_needs_no_ambient_fixture_or_program(
     reopened = KnowledgeChangeHistory.reopen(copied).replay()
     assert reopened.receipt == result.replay.receipt
     assert reopened.graph.snapshot() == result.replay.graph.snapshot()
-    assert verify_source_mapping_receipts(reopened) == verify_source_mapping_receipts(
+    assert verify_source_mapping_records(reopened) == verify_source_mapping_records(
         result.replay
     )
 
@@ -338,23 +348,30 @@ def test_nonstandard_json_number_refuses_as_configuration_before_history(
 @pytest.mark.parametrize(
     ("mutation", "value"),
     [
-        ("MISSING_PROPOSAL_ID", None),
+        ("MISSING_CHANGE_SET_ID", None),
         ("EXTRA_FIELD", "unexpected"),
-        ("EMPTY_DECISION_ID", ""),
+        ("EMPTY_CHANGE_SET_ID", ""),
         ("BAD_TRANSACTION_TIME", 7),
     ],
 )
 def test_malformed_stage_declaration_refuses_before_bootstrap(
     tmp_path: Path, mutation: str, value: object
 ) -> None:
+    """A stage declares three fields now: Core names the proposal and decision.
+
+    ``proposal_id``, ``decision_id`` and ``receipt_id`` were this program's to
+    choose while it wrote the three protocol events. It writes none of them, so
+    the declaration no longer carries them and the mutations move to what is
+    left.
+    """
     program = _load(RUN)
     stage = program["stages"][0]
-    if mutation == "MISSING_PROPOSAL_ID":
-        stage.pop("proposal_id")
+    if mutation == "MISSING_CHANGE_SET_ID":
+        stage.pop("change_set_id")
     elif mutation == "EXTRA_FIELD":
         stage["unexpected"] = value
-    elif mutation == "EMPTY_DECISION_ID":
-        stage["decision_id"] = value
+    elif mutation == "EMPTY_CHANGE_SET_ID":
+        stage["change_set_id"] = value
     else:
         stage["transaction_time"] = value
     changed = tmp_path / "run.json"
@@ -419,17 +436,25 @@ def test_coherently_rehashed_selection_drift_refuses_before_history(
     assert not (output / "history.jsonl").exists()
 
 
-@pytest.mark.parametrize("mutation", ["ID", "ALGORITHM", "OUTCOMES"])
+@pytest.mark.parametrize("mutation", ["ID", "EXECUTOR", "GRAMMAR"])
 def test_coherently_rehashed_unsupported_check_contract_refuses_before_history(
     tmp_path: Path, mutation: str
 ) -> None:
+    """The check contract is Core's to run, so the showcase hands it over exact.
+
+    The three mutations are coherently rehashed everywhere they are pinned, so
+    nothing catches them but reading the document itself.
+    """
     check = _load(CHECK)
     if mutation == "ID":
         check["check_contract_id"] = "different-check"
-    elif mutation == "ALGORITHM":
-        check["algorithm"] = "TRUST_RECORDED_OUTCOME"
+    elif mutation == "EXECUTOR":
+        check["executor"] = {
+            "artifact_id": "artifact:small-shop-showcase:entrypoint",
+            "sha256": "sha256:" + "0" * 64,
+        }
     else:
-        check["outcomes"] = ["SATISFIED"]
+        check["grammar"] = "malleus.check-contract/private-v0"
     check_path = tmp_path / "check.json"
     _write_json(check_path, check)
 
@@ -446,7 +471,7 @@ def test_coherently_rehashed_unsupported_check_contract_refuses_before_history(
     _write_json(program_path, program)
     output = tmp_path / "proof"
 
-    with pytest.raises(ShowcaseRefusal, match="unsupported source-mapping check"):
+    with pytest.raises(ShowcaseRefusal, match="unsupported check contract"):
         run_showcase(
             output,
             program_path=program_path,

@@ -29,7 +29,7 @@ from research.ontology_driven_kg_realization.experiments.small_shop.showcase.que
 from research.ontology_driven_kg_realization.experiments.small_shop.showcase.run import (
     retained_context,
     run_showcase,
-    verify_source_mapping_receipts,
+    verify_source_mapping_records,
 )
 
 
@@ -163,14 +163,14 @@ def test_explanation_is_an_exact_projection_of_the_verified_replay(projection) -
         ]["ordered_quantity"]
         == 2
     )
-    assert explanation["source_mapping_receipts"] == [
+    assert explanation["source_mapping_verifications"] == [
         {
             "change_set_id": item.change_set_id,
-            "receipt_identity": item.receipt_identity,
+            "record_identity": item.record_identity,
         }
-        for item in verify_source_mapping_receipts(replay)
+        for item in verify_source_mapping_records(replay)
     ]
-    assert len(explanation["source_mapping_receipts"]) == 5
+    assert len(explanation["source_mapping_verifications"]) == 5
     assert explanation["run_program"] == {
         "decisions": program["decisions"],
         "identity": retained["artifact:small-shop-showcase:run-program"].identity,

@@ -22,7 +22,7 @@ from malleus._contract_pipeline.knowledge import (
 )
 from malleus.kg import KnowledgeGraph
 from research.ontology_driven_kg_realization.experiments.small_shop.showcase.run import (
-    verify_source_mapping_receipts,
+    verify_source_mapping_records,
 )
 
 
@@ -406,7 +406,7 @@ def execute_query(
 def open_history(path: str | Path) -> KnowledgeHistoryReplay:
     """Reopen Core history and recompute its retained Small Shop receipts."""
     replay = KnowledgeChangeHistory.reopen(path).replay()
-    verify_source_mapping_receipts(replay)
+    verify_source_mapping_records(replay)
     return replay
 
 
