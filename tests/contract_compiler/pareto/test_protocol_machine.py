@@ -35,10 +35,7 @@ PARTIAL_EFFECTIVE_CONTRACT_GRAMMAR = "malleus.partial-effective-contract/private
 VALIDATED_FACT_SET_SHA256 = "sha256:" + "1" * 64
 POLICY_ID = "fixture-required-check-policy"
 POLICY_REF = "required-check-verdict"
-CHECKS = (
-    ("check-contract-a", "sha256:" + "a" * 64),
-    ("check-contract-b", "sha256:" + "b" * 64),
-)
+CHECK_CONTRACT_IDS = ("check-contract-a", "check-contract-b")
 
 
 def _canonical(value: object) -> bytes:
@@ -53,6 +50,39 @@ def _canonical(value: object) -> bytes:
 
 def _digest(value: bytes) -> str:
     return "sha256:" + sha256(value).hexdigest()
+
+
+def _check_contract_document(check_contract_id: str) -> bytes:
+    """One ``malleus.check-contract/v1`` document naming a Core builtin.
+
+    The two fixture checks used to be identities no document reproduced,
+    ``sha256:aaa…`` and ``sha256:bbb…``. Core now runs every check its policy
+    requires, so a history under this policy must retain two contracts Core
+    can read and run. Both name the one shipped builtin; they differ by
+    ``check_contract_id``, so they differ by bytes and therefore by identity.
+    """
+
+    return _canonical(
+        {
+            "check_contract_id": check_contract_id,
+            "executor": {
+                "builtin_id": "malleus.core.operations-apply-atomically",
+                "builtin_version": "1",
+                "kind": "CORE_BUILTIN",
+            },
+            "grammar": "malleus.check-contract/v1",
+            "outcomes": ["SATISFIED", "VIOLATED"],
+        }
+    )
+
+
+CHECK_DOCUMENTS = tuple(
+    _check_contract_document(check_id) for check_id in CHECK_CONTRACT_IDS
+)
+CHECKS = tuple(
+    (check_id, _digest(document))
+    for check_id, document in zip(CHECK_CONTRACT_IDS, CHECK_DOCUMENTS, strict=True)
+)
 
 
 def _replace_exact(value: object, replacements: dict[str, str]) -> object:

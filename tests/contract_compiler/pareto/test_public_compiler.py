@@ -142,6 +142,11 @@ def _bootstrap(api, history, compiled, partial, source: bytes) -> None:
             "KNOWLEDGE_HISTORY_BINDING",
         ),
         ("artifact:supplier-order-source", source, "SOURCE_ARTIFACT"),
+        (
+            "artifact:ret010-check-contract:structural-conformance",
+            (SHOP_RUNTIME / "checks/structural-conformance.json").read_bytes(),
+            "RETAINED_EVIDENCE",
+        ),
     )
     for record_id, content, role in anchors:
         _anchor(
@@ -237,17 +242,13 @@ def _prepare_and_admit(api, history, partial, policy, source, occurrence: str):
         actor_id="actor:public-adopter",
     )
     assert prepared.change_set is not None
-    return history.admit(
+    assert policy.required_checks
+    return api.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            policy,
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            occurrence,
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:public-adopter",
-    )
+    ).replay
 
 
 def test_public_module_exposes_the_executable_pipeline_without_private_imports() -> (

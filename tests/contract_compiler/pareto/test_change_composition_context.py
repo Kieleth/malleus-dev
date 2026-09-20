@@ -13,7 +13,6 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _base_payload,
     _evidence_anchor,
     _load_change,
-    _protocol_events,
 )
 
 
@@ -190,11 +189,9 @@ def test_snapshot_candidate_crosses_unchanged_admission_reopen_and_query(anchore
     history, expected, arguments = anchored
     context = history.composition_context()
     candidate = api.compose_change_set(context=context, **arguments)
-    history.admit(
+    api.check_and_admit_change_set(
+        history=history,
         change_set=candidate,
-        machine_events=_protocol_events(
-            candidate, history.replay().machine_state.identity
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
     )
@@ -216,14 +213,13 @@ def test_evidence_append_is_stale_even_when_graph_is_unchanged(anchored):
     candidate = api.compose_change_set(context=context, **arguments)
     assert candidate == expected  # Pure composition does not secretly refresh.
     retained = history.path.read_bytes()
-    with pytest.raises(api.KnowledgeChangeRefusal) as error:
-        history.admit(
+    with pytest.raises(api.PopulationAdmissionRefusal) as error:
+        api.check_and_admit_change_set(
+            history=history,
             change_set=candidate,
-            machine_events=_protocol_events(
-                candidate, history.replay().machine_state.identity
-            ),
             transaction_time=TRANSACTION_TIME,
             actor_id="actor:test",
         )
-    assert error.value.reason is api.KnowledgeChangeRefusalReason.STALE_BASE
+    assert error.value.stage is api.PopulationAdmissionStage.ADMIT
+    assert error.value.reason == "STALE_BASE"
     assert history.path.read_bytes() == retained

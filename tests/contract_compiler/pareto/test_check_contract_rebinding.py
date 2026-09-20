@@ -37,7 +37,6 @@ from tests.contract_compiler.pareto.test_public_compiler import (
     _canonical,
     _digest,
     _event,
-    _protocol_events,
 )
 from tests.contract_compiler.pareto.test_small_shop_contract_revision import (
     BASE_INPUT,
@@ -203,8 +202,34 @@ def _history(tmp_path: Path):
         mapping_bytes,
         "RETAINED_EVIDENCE",
     )
+    _retain_rule_layer(history, tmp_path / "rules-base", "base")
     accepted = _admit_ret010(history, policy, mapping)
     return history, base, partial, policy, logic, accepted
+
+
+def _retain_rule_layer(history, directory: Path, suffix: str) -> None:
+    """Retain the descriptor and rule bytes the required check is pinned to.
+
+    Core resolves the required identity against what the history retains and
+    runs ``PrologVerifier`` over it. Before Core ran the check itself, this
+    history could name a rule layer it never held.
+    """
+
+    for name, record_id in (
+        ("logic.yaml", f"artifact:logic:{suffix}"),
+        ("rules.pl", f"artifact:rules:{suffix}"),
+    ):
+        content = (directory / name).read_bytes()
+        _anchor(
+            history,
+            _event(
+                "ARTIFACT_REGISTERED",
+                artifact_id=record_id,
+                artifact_identity=_digest(content),
+            ),
+            content,
+            "RETAINED_EVIDENCE",
+        )
 
 
 def _target(tmp_path: Path, *, rules: bytes = RULES):
@@ -244,7 +269,6 @@ def _revise(
 def _admit_new_class(history, partial, policy, occurrence: str):
     """Admit one record of the added class under the current required checks."""
 
-    before = history.replay()
     change = history.compose_change_set(
         change_set_id=f"change:rebind:{occurrence}",
         source_record_ids=("source:supplier-order-history",),
@@ -271,14 +295,12 @@ def _admit_new_class(history, partial, policy, occurrence: str):
         supersedes=(),
     )
     return (
-        history.admit(
+        compiler.check_and_admit_change_set(
+            history=history,
             change_set=change,
-            machine_events=_protocol_events(
-                policy, change, before.machine_state.identity, occurrence
-            ),
             transaction_time=TRANSACTION_TIME,
             actor_id="actor:public-adopter",
-        ),
+        ).replay,
         change,
     )
 
@@ -392,6 +414,10 @@ def test_a_revision_carries_the_re_pinned_check_contract_and_later_checks_run(
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:public-adopter",
     )
+    # A revision records the re-pinned identity; it does not retain bytes.
+    # Core runs the check now, so the adopter's own retention of the re-pinned
+    # rule layer is what the next admission needs.
+    _retain_rule_layer(history, tmp_path / "rules-target", "target")
     admitted, change = _admit_new_class(history, target_partial, repinned_policy, "e7")
     reopened = compiler.KnowledgeChangeHistory.reopen(history.path).replay()
 

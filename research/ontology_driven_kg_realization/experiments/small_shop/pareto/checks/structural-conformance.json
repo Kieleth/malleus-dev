@@ -1,0 +1,1 @@
+{"check_contract_id":"structural-conformance","executor":{"builtin_id":"malleus.core.operations-apply-atomically","builtin_version":"1","kind":"CORE_BUILTIN"},"grammar":"malleus.check-contract/v1","outcomes":["SATISFIED","VIOLATED"]}

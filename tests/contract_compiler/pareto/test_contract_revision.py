@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+import malleus.compiler as compiler
 from malleus.compiler import (
     KnowledgeChangeHistory,
     KnowledgeChangeHistoryBinding,
@@ -17,8 +18,8 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     TRANSACTION_TIME,
     _anchor,
     _binding_payload,
+    _check_contract_anchors,
     _digest,
-    _protocol_events,
 )
 from tests.contract_compiler.pareto.test_protocol_machine import (
     _canonical,
@@ -161,6 +162,8 @@ def _history(tmp_path: Path):
         ("source-artifact", source, "SOURCE_ARTIFACT"),
         ("evidence-revision", evidence, "RETAINED_EVIDENCE"),
     )
+    for event, retained, role in _check_contract_anchors():
+        _anchor(history, event, retained, role)
     for record_id, retained, role in anchors:
         _anchor(
             history,
@@ -193,9 +196,7 @@ def _admit(
     operations: tuple[KnowledgeOperation, ...],
     order: str,
     supersedes: tuple[str, ...] = (),
-    suffix: str,
 ):
-    before = history.replay()
     change = history.compose_change_set(
         change_set_id=change_set_id,
         source_record_ids=("source-revision",),
@@ -204,16 +205,12 @@ def _admit(
         valid_time=KnowledgeValidTime("ORDER_ONLY", order),
         supersedes=supersedes,
     )
-    replay = history.admit(
+    replay = compiler.check_and_admit_change_set(
+        history=history,
         change_set=change,
-        machine_events=_protocol_events(
-            change,
-            before.machine_state.identity,
-            identifier_suffix=suffix,
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     return change, replay
 
 
@@ -352,9 +349,7 @@ def test_one_history_replays_records_across_one_contract_revision(
                 depends_on=(),
             ),
         ),
-        order="event:1",
-        suffix="-v1",
-    )
+        order="event:1",    )
     revision, revised, revised_partial = _compose_revision(history, REVISED_SOURCE)
 
     after_revision = history.record_contract_revision(
@@ -387,9 +382,7 @@ def test_one_history_replays_records_across_one_contract_revision(
             ),
         ),
         order="event:2",
-        supersedes=(first.change_set_id,),
-        suffix="-v2",
-    )
+        supersedes=(first.change_set_id,),    )
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert isinstance(revision, revision_type)

@@ -34,21 +34,43 @@ def test_current_example_is_exact_and_preserves_historical_meaning(artifact_byte
     observed = json.loads(current)
 
     assert set(observed) == set(historical)
+    # Three more fields moved when Core began running the checks its policy
+    # names: the fixture policy requires two retained CORE_BUILTIN contracts
+    # instead of two identities no document reproduced, which moves the
+    # partial effective contract this change binds, and the history retains
+    # two more artifacts, which moves the ledger coordinates and the plan
+    # digest inside `evidence`.
     assert {key for key in observed if observed[key] != historical[key]} == {
-        "base_ledger_head"
+        "base_ledger_event_count",
+        "base_ledger_head",
+        "contract_identity",
+        "evidence",
     }
     assert historical["base_ledger_head"] == (
         "sha256:5f52eeecdc80479f6b3a0133fd0390d67f39733c12b88fe0c4946790b405c390"
     )
 
 
-def test_previous_execution_remains_exact():
-    previous = trace.EXAMPLES.with_name("inspection_note_execution_v2")
-    assert trace._digest((previous / "binding.json").read_bytes()) == (
-        "sha256:6ff7301fb0e3862f136159751ba6bf0993e894c99da9b080a873d62b99baa14a"
-    )
+@pytest.mark.parametrize(
+    ("execution", "binding_digest", "change_digest"),
+    [
+        (
+            "inspection_note_execution_v2",
+            "sha256:6ff7301fb0e3862f136159751ba6bf0993e894c99da9b080a873d62b99baa14a",
+            "sha256:059fb6a1843a91ffd931e3b79264a9d9a47c505e32718e8d6b027cd035ca8656",
+        ),
+        (
+            "inspection_note_execution_v3",
+            "sha256:c4703aaabdfe0fa2d9fafca4ac7581a6ba8cdf26a1e157625ea76a7a84ca5375",
+            "sha256:1e8908c58009d7790057939bb05fe5be2a667d59d9f55840ee060368217273d1",
+        ),
+    ],
+)
+def test_previous_execution_remains_exact(execution, binding_digest, change_digest):
+    previous = trace.EXAMPLES.with_name(execution)
+    assert trace._digest((previous / "binding.json").read_bytes()) == binding_digest
     assert trace._digest((previous / "document-change.json").read_bytes()) == (
-        "sha256:059fb6a1843a91ffd931e3b79264a9d9a47c505e32718e8d6b027cd035ca8656"
+        change_digest
     )
 
 
@@ -125,8 +147,15 @@ def test_reopened_document_preserves_all_records_and_retained_evidence(tmp_path)
         assert (
             capture.content == (trace.EXAMPLES / "document-capture.json").read_bytes()
         )
+        # The retained plan is the committed historical one apart from the
+        # contract identity this history binds, which moved with the fixture
+        # policy when Core began running the checks it requires.
+        historical = json.loads((trace.EXAMPLES / "document-plan.json").read_bytes())
         assert traced.population_plan_bytes == trace._canonical(
-            json.loads((trace.EXAMPLES / "document-plan.json").read_bytes())
+            {
+                **historical,
+                "contract_identity": replay.partial_contract.identity,
+            }
         )
         assert traced.change_set.valid_time == api.KnowledgeValidTime(
             "ORDER_ONLY", "capture:inspection-note"

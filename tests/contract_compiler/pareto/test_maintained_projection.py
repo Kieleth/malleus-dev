@@ -57,7 +57,7 @@ def sequence(tmp_path):
             order=f"order:{index}",
             supersedes_record_id="left:1" if index == 2 else None,
         )
-        _admit_record_change(history, change, suffix=f":{index}")
+        _admit_record_change(history, change)
         prefixes.append(history.path.read_bytes())
     return history, prefixes
 
@@ -98,7 +98,10 @@ def test_suffix_only_fold_and_new_records_only_with_defensive_reads(
         patch.setattr(api.KnowledgeChangeHistory, "replay", forbidden)
         actual = view.refresh(**coordinates(expected))
         assert created == ["left:1", "left:2"]
-        assert len(folded) == 8  # two proposals, four checks, two decisions
+        # Was 8 before Core ran the checks itself: two proposals, four
+        # check records, two decisions. Core now retains one receipt per
+        # check in the same batch, so two changes fold four more.
+        assert len(folded) == 12
         assert decoded == [prefixes[-1][len(prefixes[1]) :]]
         actual.graph.create_entity("LeftObject", "caller-only", {"label": "local"})
         folded.clear()

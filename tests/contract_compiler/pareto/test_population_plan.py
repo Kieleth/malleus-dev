@@ -13,6 +13,7 @@ import pytest
 
 import malleus
 from malleus import KnowledgeGraph
+import malleus.compiler as compiler
 from malleus._contract_pipeline.knowledge import KnowledgeOperation, KnowledgeValidTime
 from tests.contract_compiler.pareto.test_domain_history_profile import (
     STATE_VERSION_PROFILE_DATA,
@@ -24,7 +25,6 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _anchored_history,
     _event,
     _generic_compilation,
-    _protocol_events,
     _record_change,
 )
 from tests.contract_compiler.pareto.test_protocol_machine import (
@@ -253,7 +253,6 @@ def _admit_operations_at(
     valid_time: KnowledgeValidTime,
     supersedes: tuple[str, ...] = (),
 ):
-    before = history.replay()
     change = history.compose_change_set(
         change_set_id=change_set_id,
         source_record_ids=("source-generic",),
@@ -262,16 +261,12 @@ def _admit_operations_at(
         valid_time=valid_time,
         supersedes=supersedes,
     )
-    return history.admit(
+    return compiler.check_and_admit_change_set(
+        history=history,
         change_set=change,
-        machine_events=_protocol_events(
-            change,
-            before.machine_state.identity,
-            identifier_suffix=f":{change_set_id}",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
 
 
 def _remove_derivation(
@@ -1713,7 +1708,7 @@ def test_base_state_from_replay_exposes_current_endpoints_only(tmp_path: Path) -
         label="before",
         order="event-1",
     )
-    _admit_record_change(history, first, suffix="-version-1")
+    _admit_record_change(history, first)
     second = _record_change(
         history,
         partial,
@@ -1725,7 +1720,7 @@ def test_base_state_from_replay_exposes_current_endpoints_only(tmp_path: Path) -
         order="event-2",
         supersedes_record_id="left-version-1",
     )
-    replay = _admit_record_change(history, second, suffix="-version-2")
+    replay = _admit_record_change(history, second)
 
     base = population.PopulationBaseState.from_replay(replay)
     current = _plan(partial.identity)
@@ -1786,17 +1781,12 @@ def test_direct_records_equal_governed_replay(
         valid_time=result.valid_time,
         supersedes=result.supersedes,
     )
-    before = history.replay()
-    admitted = history.admit(
+    admitted = compiler.check_and_admit_change_set(
+        history=history,
         change_set=change,
-        machine_events=_protocol_events(
-            change,
-            before.machine_state.identity,
-            identifier_suffix="-population-plan",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
 
     assert admitted.graph.export_records() == direct.export_records()

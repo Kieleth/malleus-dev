@@ -111,8 +111,14 @@ def change(history, name, kind="State", *, prior=None, include_profile=True):
     )
 
 
-def events(history, candidate):
-    # Deliberately supplied SATISFIED attestations cannot override the pure guard.
+def hostile_events(history, candidate):
+    """Protocol events written by hand, for the forged-ledger test alone.
+
+    Nothing admits through these. The test below appends them straight to the
+    ledger to show that a valid hash chain cannot hide a forbidden transition
+    from replay, which is why they must still be constructible here.
+    """
+
     return fixtures._protocol_events(
         candidate,
         history.replay().machine_state.identity,
@@ -121,19 +127,27 @@ def events(history, candidate):
 
 
 def admit(history, candidate):
-    return history.admit(
+    """Admit through Core's own entry point, which runs the policy's checks.
+
+    The caller used to hand three protocol events in with SATISFIED written
+    into them. Core writes them now, after running both required builtins, so
+    the checks below really are satisfied when the transition guard refuses.
+    """
+
+    return api.check_and_admit_change_set(
+        history=history,
         change_set=candidate,
-        machine_events=events(history, candidate),
         transaction_time=fixtures.TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
 
 
 def assert_refused_unchanged(history, candidate, reason):
     before = history.path.read_bytes()
-    with pytest.raises(api.KnowledgeChangeRefusal) as caught:
+    with pytest.raises(api.PopulationAdmissionRefusal) as caught:
         admit(history, candidate)
-    assert caught.value.reason.name == reason
+    assert caught.value.stage is api.PopulationAdmissionStage.ADMIT
+    assert caught.value.reason == reason
     assert history.path.read_bytes() == before
     return caught.value
 
@@ -305,7 +319,7 @@ def test_valid_hash_chain_cannot_hide_forbidden_transition_from_replay(
                 "change_set_identity": candidate.identity,
             },
         },
-        *(json.loads(event) for event in events(history, candidate)),
+        *(json.loads(event) for event in hostile_events(history, candidate)),
     ]
     # Deliberately bypass the history writer while keeping the envelope chain valid.
     history._ledger.append_many(

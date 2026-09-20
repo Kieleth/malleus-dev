@@ -7,12 +7,13 @@ from pathlib import Path
 
 from malleus import KnowledgeGraph, OpStatus, ProposedOperation, stage_subgraph
 from malleus import compiler as api
+import malleus.compiler as compiler
 from tests.contract_compiler.pareto.test_knowledge_change_history import (
     TRANSACTION_TIME,
     _anchor,
     _binding_payload,
+    _check_contract_anchors,
     _event,
-    _protocol_events,
 )
 from tests.contract_compiler.pareto.test_protocol_machine import (
     _canonical,
@@ -237,6 +238,7 @@ def _history(tmp_path: Path, compiled):
             SOURCE_BYTES,
             "RETAINED_SOURCE",
         ),
+        *_check_contract_anchors(),
     )
     for event, content, role in anchors:
         _anchor(history, event, content, role)
@@ -288,16 +290,12 @@ def test_object_event_population_admits_reopens_replays_and_queries(
         "operation:plan:test-object-event:1",
     )
 
-    admitted = history.admit(
+    admitted = compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            identifier_suffix="-object-event",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     reopened = api.KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert reopened.receipt == admitted.receipt

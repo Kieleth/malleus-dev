@@ -10,11 +10,13 @@ from pathlib import Path
 
 import pytest
 
+import malleus.compiler as compiler
 from tests.contract_compiler.pareto.test_document_assertion_adapter import _inputs
 from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _admit_record_change,
     _anchored_history,
     _binding_payload,
+    _check_contract_anchors,
     _record_change,
 )
 from tests.contract_compiler.pareto.test_public_compiler import (
@@ -25,12 +27,10 @@ from tests.contract_compiler.pareto.test_public_compiler import (
     _compiled_shop,
     _event,
     _prepare_and_admit,
-    _protocol_events,
     _runtime,
 )
 from tests.contract_compiler.pareto.test_protocol_machine import (
     _effective,
-    _load_policy,
 )
 
 
@@ -39,7 +39,7 @@ EXAMPLES = (
     / "research/ontology_driven_kg_realization/fixtures"
     / "inspection_note_capture_v1"
 )
-CURRENT_DOCUMENT = EXAMPLES.with_name("inspection_note_execution_v3")
+CURRENT_DOCUMENT = EXAMPLES.with_name("inspection_note_execution_v4")
 SHOP_SOURCE = (
     ROOT
     / "research/ontology_driven_kg_realization/fixtures"
@@ -157,6 +157,8 @@ def _retain_document_inputs(history, compiled, partial, reading: bytes, capture:
         capture,
         "RETAINED_EVIDENCE",
     )
+    for event, content, role in _check_contract_anchors():
+        _anchor(history, event, content, role)
 
 
 def _document_replay(
@@ -188,7 +190,6 @@ def _document_replay(
             _canonical(_binding_payload())
         ),
     )
-    policy = _load_policy()
     reading, capture, plan, _ = _inputs()
     capture["assertions"][0]["modality"] = first_assertion_modality
     uses_committed_capture = first_assertion_modality == "STATED"
@@ -214,7 +215,16 @@ def _document_replay(
     if uses_committed_capture:
         assert reading_bytes == _canonical(reading)
         assert capture_bytes == _canonical(capture)
-        assert adapted.canonical_plan_bytes == _canonical(plan)
+        # The committed plan is a historical input and stays exact. Its
+        # `contract_identity` is the partial effective contract of the
+        # execution that produced it, and this history binds the current one:
+        # the fixture policy now requires two check contracts Core can run, so
+        # the policy identity, the normative profile and the partial contract
+        # all moved. Nothing else in the plan may differ.
+        assert adapted.canonical_plan_bytes == _canonical(
+            {**plan, "contract_identity": partial.identity}
+        )
+        assert plan["contract_identity"] != partial.identity
     plan = json.loads(adapted.canonical_plan_bytes)
     _retain_document_inputs(history, compiled, partial, reading_bytes, capture_bytes)
     gaps_id = f"{plan['plan_id']}:gaps"
@@ -249,17 +259,12 @@ def _document_replay(
         _assert_current_document_change(
             compiled.artifact.artifact_bytes, prepared.change_set.canonical_bytes
         )
-    history.admit(
+    compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            policy,
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            "inspection-note",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:public-adopter",
-    )
+    ).replay
     return history, api.KnowledgeChangeHistory.reopen(history.path).replay()
 
 
@@ -394,7 +399,7 @@ def test_trace_refuses_a_change_without_a_retained_population_plan(
         label="direct",
         order="e1",
     )
-    _admit_record_change(history, change, suffix="direct")
+    _admit_record_change(history, change)
     replay = history.replay()
     ledger_before = history.path.read_bytes()
 

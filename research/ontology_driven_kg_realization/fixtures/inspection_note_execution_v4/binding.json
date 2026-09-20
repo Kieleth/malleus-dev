@@ -1,0 +1,13 @@
+{
+    "producer": {
+        "id": "malleus.contract-pipeline/python-private-v0",
+        "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    },
+    "validated_contract_artifact_sha256": "sha256:710133aa61ae11fa2561f394625d05046494a2e4be77b5adb8b9e0d32000fb7a",
+    "historical_input_manifest_sha256": "sha256:229db892765e9005b1a3f5c767a102c13e28a9ba00c5fe989e7488c7f95774fc",
+    "document_change_sha256": "sha256:332f9994e192ec4bb60f2f84fe48af90f8e2edea2335468c24a5c69de1db3208",
+    "runtime_commit": "ac0dfe50795a246a8493a1e06c2456b4757db48b",
+    "historical_runtime_commit": "9ec32d40634c927f9c7c160e226152c3782f4c84",
+    "previous_execution_binding_sha256": "sha256:c4703aaabdfe0fa2d9fafca4ac7581a6ba8cdf26a1e157625ea76a7a84ca5375",
+    "previous_execution_change_sha256": "sha256:1e8908c58009d7790057939bb05fe5be2a667d59d9f55840ee060368217273d1"
+}

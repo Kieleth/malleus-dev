@@ -68,6 +68,7 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeAnchorInput,
     KnowledgeChangeHistory,
     KnowledgeChangeRefusal,
+    KnowledgeChangeRefusalReason,
     KnowledgeChangeSet,
     KnowledgeHistoryReplay,
     KnowledgeOperation,
@@ -389,7 +390,19 @@ def _check_base(
         family: [record for record in records if record["id"] not in retired]
         for family, records in replay.graph.export_records().items()
     }
-    return KnowledgeGraph.from_records(replay.graph.registry, kept)
+    try:
+        return KnowledgeGraph.from_records(replay.graph.registry, kept)
+    except ValueError as error:
+        # A retirement the accepted state cannot carry, such as an entity a
+        # live relation still names. ``_apply_change`` refuses the same case
+        # with the same words; refusing here keeps the check from crashing
+        # before any executor has run, and writes no byte either way.
+        raise _refuse(
+            PopulationAdmissionStage.CHECK,
+            KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL.name,
+            str(error),
+            unchanged=True,
+        ) from error
 
 
 def _check_writes(

@@ -464,7 +464,9 @@ def test_no_public_callable_accepts_a_caller_check_outcome_under_a_policy() -> N
     assert public == {"admit", "admit_with_anchors"}
     for name in sorted(public):
         source = inspect.getsource(getattr(door, name))
-        assert "_refuse_caller_authored(machine_events)" in source
+        assert "_refuse_caller_authored(self.partial_contract, machine_events)" in (
+            source
+        )
 
 
 def _change(history):

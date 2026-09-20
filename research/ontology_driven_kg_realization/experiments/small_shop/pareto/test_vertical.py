@@ -34,6 +34,7 @@ PARETO = Path(__file__).parent
 MACHINE = PARETO / "machine.json"
 POLICY = PARETO / "policy.json"
 MAPPING = PARETO / "mapping.json"
+CHECKS = PARETO / "checks"
 RESEARCH_RECEIPT = PARETO / "ret-010-research-receipt.json"
 ORACLE = FIXTURE / "oracle/ret-000-ret-010.json"
 FROZEN_SHA256 = {
@@ -136,9 +137,23 @@ def test_frozen_fixture_and_private_program_data_are_explicit() -> None:
     machine, policy, mapping = (artifacts[path] for path in (MACHINE, POLICY, MAPPING))
     assert machine["grammar"] == "malleus.protocol-machine/private-v0"
     assert machine["capabilities"] == []
+    # ``retained-source-integrity`` is gone. Its identity matched no file in
+    # the repository and this program ran no check at all: it wrote SATISFIED
+    # from a literal in mapping.json. What remains is one check Core runs,
+    # ``structural-conformance``, a CORE_BUILTIN naming
+    # malleus.core.operations-apply-atomically version 1.
     assert {item["check_contract_id"] for item in policy["required_checks"]} == {
-        "retained-source-integrity",
         "structural-conformance",
+    }
+    assert _load(CHECKS / "structural-conformance.json") == {
+        "check_contract_id": "structural-conformance",
+        "executor": {
+            "builtin_id": "malleus.core.operations-apply-atomically",
+            "builtin_version": "1",
+            "kind": "CORE_BUILTIN",
+        },
+        "grammar": "malleus.check-contract/v1",
+        "outcomes": ["SATISFIED", "VIOLATED"],
     }
     assert policy["outcome_verdicts"] == {
         "SATISFIED": "ACCEPT",
@@ -344,19 +359,25 @@ def test_recorded_research_receipt_stays_frozen_while_current_history_runs(
     event_types = tuple(
         json.loads(line)["event_type"] for line in ledger.read_bytes().splitlines()
     )
-    assert event_types[:4] == ("ARTIFACT_REGISTERED",) * 4
+    # Five retained bootstrap artifacts, not four: the fifth is the check
+    # contract document Core reads to run the check. One CHECK_RECORDED, not
+    # two: the policy required a second contract, retained-source-integrity,
+    # that no file in the repository reproduced and no code ever ran. The
+    # ARTIFACT_REGISTERED between the retained change set and CHANGE_PROPOSED
+    # is Core's own receipt for the check it ran.
+    assert event_types[:5] == ("ARTIFACT_REGISTERED",) * 5
     assert (
-        event_types[4:20]
+        event_types[5:21]
         == (
             "ARTIFACT_REGISTERED",
             "SOURCE_REGISTERED",
         )
         * 8
     )
-    assert event_types[20:] == (
+    assert event_types[21:] == (
         "KNOWLEDGE_CHANGE_SET_RETAINED",
+        "ARTIFACT_REGISTERED",
         "CHANGE_PROPOSED",
-        "CHECK_RECORDED",
         "CHECK_RECORDED",
         "VERDICT_RECORDED",
     )
@@ -559,21 +580,15 @@ def test_existing_ledger_reopens_without_fixture_or_program_files(
 
 def test_existing_ledger_must_be_the_exact_ret010_vertical(tmp_path: Path) -> None:
     from tests.contract_compiler.pareto.test_knowledge_change_history import (
+        _admit_record_change,
         _anchored_history,
         _base_payload,
         _load_change,
-        _protocol_events,
     )
 
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
-    before = history.replay()
     change_set = _load_change(_base_payload(history, partial, source, evidence))
-    history.admit(
-        change_set=change_set,
-        machine_events=_protocol_events(change_set, before.machine_state.identity),
-        transaction_time="2026-09-01T00:00:00Z",
-        actor_id="actor:test",
-    )
+    _admit_record_change(history, change_set)
     ledger_before = history.path.read_bytes()
 
     with pytest.raises(Ret010Refusal) as refusal:

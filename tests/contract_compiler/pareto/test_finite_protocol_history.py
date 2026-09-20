@@ -12,6 +12,7 @@ except ModuleNotFoundError:  # Python 3.10 uses the declared dev dependency.
 
 import pytest
 
+import malleus.compiler as compiler
 from malleus.compiler import KnowledgeChangeHistory
 from malleus.ledger import canonical_json, content_digest
 from research.action_history_contract_freeze.programs.test_executor import grant
@@ -24,7 +25,6 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _anchored_history,
     _evidence_anchor,
     _record_change,
-    _protocol_events,
 )
 
 
@@ -343,14 +343,12 @@ def test_protocol_transaction_and_later_kcs_share_the_verified_full_prefix(tmp_p
     )
     assert change.base_ledger_head == protocol.ledger_head
     assert change.base_ledger_event_count == protocol.ledger_event_count
-    accepted = history.admit(
+    accepted = compiler.check_and_admit_change_set(
+        history=history,
         change_set=change,
-        machine_events=_protocol_events(
-            change, protocol.machine_state.identity, identifier_suffix=":after-action"
-        ),
         transaction_time="2026-09-07T00:00:01Z",
         actor_id="actor:test",
-    )
+    ).replay
     assert accepted.graph.get_node("domain:after-action") is not None
     assert accepted.protocol_replay == protocol.protocol_replay
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()

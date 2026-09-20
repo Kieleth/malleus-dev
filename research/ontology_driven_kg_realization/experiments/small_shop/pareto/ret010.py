@@ -23,6 +23,10 @@ from malleus._contract_linkml_adapter import (
     LinkMLImportReader,
     adapt_linkml_closure,
 )
+from malleus._contract_pipeline.admission import (
+    PopulationAdmissionRefusal,
+    check_and_admit_change_set,
+)
 from malleus._contract_pipeline import (
     ArtifactRefusal,
     ElaborationRefusal,
@@ -277,6 +281,7 @@ class Ret010Vertical:
     effective_contract: PartialEffectiveContract
     history_binding: KnowledgeChangeHistoryBinding
     inputs: _VerifiedInputs
+    check_contracts: tuple[tuple[str, bytes], ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -863,12 +868,38 @@ def _configured_checks(mapping: Ret010Mapping) -> tuple[tuple[str, str], ...]:
     )
 
 
+def _check_contract_bytes(
+    mapping: Ret010Mapping, checks_root: Path
+) -> tuple[tuple[str, bytes], ...]:
+    """The check contract documents this policy requires, read from disk.
+
+    Core resolves a required check against what the history retains and runs
+    the executor the document names, so the vertical must carry the exact
+    bytes the configured identity was taken from. A document whose digest is
+    not the configured identity refuses here.
+    """
+
+    loaded = []
+    for check_id, identity in _configured_checks(mapping):
+        content = _read_required(
+            checks_root / f"{check_id}.json", label=f"check contract {check_id}"
+        )
+        if _digest(content) != identity:
+            raise _refuse(
+                Ret010RefusalReason.MALFORMED_CONFIGURATION,
+                f"check contract {check_id} does not reproduce {identity}",
+            )
+        loaded.append((check_id, content))
+    return tuple(loaded)
+
+
 def load_ret010_vertical(
     *,
     fixture_root: Path = _DEFAULT_FIXTURE,
     machine_path: Path = _HERE / "machine.json",
     policy_path: Path = _HERE / "policy.json",
     mapping_path: Path = _HERE / "mapping.json",
+    checks_root: Path = _HERE / "checks",
 ) -> Ret010Vertical:
     mapping = _load_mapping(mapping_path)
     verified = _verified_inputs(fixture_root, mapping)
@@ -906,6 +937,7 @@ def load_ret010_vertical(
         effective_contract=effective,
         history_binding=history_binding,
         inputs=verified,
+        check_contracts=_check_contract_bytes(mapping, checks_root),
     )
 
 
@@ -1008,6 +1040,16 @@ def _append_anchors(
             vertical.mapping.canonical_bytes,
             "application/json",
             _text(roles.get("mapping"), "mapping role"),
+        ),
+        *(
+            (
+                _text(artifact_ids.get("check_contract"), "check contract ID")
+                + f":{check_id}",
+                content,
+                "application/json",
+                _text(roles.get("check_contract"), "check contract role"),
+            )
+            for check_id, content in vertical.check_contracts
         ),
     )
     anchors = [
@@ -1115,77 +1157,6 @@ def _change_set(
         "valid_time": {"kind": "INSTANT", "value": vertical.inputs.valid_time},
     }
     return KnowledgeChangeSet.from_bytes(_canonical(payload))
-
-
-def _protocol_events(
-    vertical: Ret010Vertical,
-    change_set: KnowledgeChangeSet,
-    machine_state_identity: str,
-) -> tuple[bytes, ...]:
-    config = _object(vertical.mapping.data.get("protocol"), "protocol mapping")
-    proposal = _object(config.get("proposal"), "proposal mapping")
-    proposal_fields = _object(proposal.get("fields"), "proposal fields")
-    proposal_id = _text(proposal.get("proposal_id"), "proposal ID")
-    proposal_payload = {
-        _text(
-            proposal_fields.get("expected_state_identity"), "state field"
-        ): machine_state_identity,
-        _text(
-            proposal_fields.get("change_set_identity"), "change-set field"
-        ): change_set.identity,
-        _text(
-            proposal_fields.get("policy_id"), "policy ID field"
-        ): vertical.policy_program.identifier,
-        _text(
-            proposal_fields.get("policy_identity"), "policy identity field"
-        ): vertical.policy_program.identity,
-        _text(proposal_fields.get("proposal_id"), "proposal ID field"): proposal_id,
-    }
-    events = [
-        _event(
-            _text(proposal.get("event_type"), "proposal event type"), proposal_payload
-        )
-    ]
-    receipt = _object(config.get("receipt"), "receipt mapping")
-    receipt_fields = _object(receipt.get("fields"), "receipt fields")
-    for raw_check in _array(config.get("checks"), "configured checks"):
-        check = _object(raw_check, "configured check")
-        payload = {
-            _text(receipt_fields.get(key), f"receipt {key} field"): _text(
-                check.get(key), f"configured {key}"
-            )
-            for key in (
-                "check_contract_id",
-                "check_contract_identity",
-                "outcome",
-                "receipt_id",
-            )
-        }
-        payload[
-            _text(receipt_fields.get("policy_identity"), "receipt policy field")
-        ] = vertical.policy_program.identity
-        payload[_text(receipt_fields.get("proposal_id"), "receipt proposal field")] = (
-            proposal_id
-        )
-        events.append(
-            _event(_text(receipt.get("event_type"), "receipt event type"), payload)
-        )
-    decision = _object(config.get("decision"), "decision mapping")
-    decision_fields = _object(decision.get("fields"), "decision fields")
-    events.append(
-        _event(
-            _text(decision.get("event_type"), "decision event type"),
-            {
-                _text(decision_fields.get("decision_id"), "decision ID field"): _text(
-                    decision.get("decision_id"), "decision ID"
-                ),
-                _text(
-                    decision_fields.get("proposal_id"), "decision proposal field"
-                ): proposal_id,
-            },
-        )
-    )
-    return tuple(events)
 
 
 def _retained_mapping(
@@ -1424,25 +1395,23 @@ def run_ret010(
         contract_view=vertical.compilation.view,
         binding=vertical.history_binding,
     )
-    preflight_change = _change_set(vertical, history)
-    _protocol_events(
-        vertical,
-        preflight_change,
-        history.replay().machine_state.identity,
-    )
     _append_anchors(history, vertical)
-    before = history.replay()
     change_set = _change_set(vertical, history)
-    replay = history.admit(
-        change_set=change_set,
-        machine_events=_protocol_events(
-            vertical, change_set, before.machine_state.identity
-        ),
-        transaction_time=_text(
-            vertical.mapping.data.get("transaction_time"), "transaction time"
-        ),
-        actor_id=_text(vertical.mapping.data.get("actor_id"), "actor ID"),
-    )
+    try:
+        admitted = check_and_admit_change_set(
+            history=history,
+            change_set=change_set,
+            transaction_time=_text(
+                vertical.mapping.data.get("transaction_time"), "transaction time"
+            ),
+            actor_id=_text(vertical.mapping.data.get("actor_id"), "actor ID"),
+        )
+    except PopulationAdmissionRefusal as error:
+        raise _refuse(
+            Ret010RefusalReason.INCOMPATIBLE_HISTORY,
+            f"RET-010 {error.stage.value} refused: {error.reason}: {error.detail}",
+        ) from error
+    replay = admitted.replay
     return Ret010Run(
         receipt=replay.receipt,
         replay=replay,

@@ -19,7 +19,6 @@ from tests.contract_compiler.pareto.test_public_compiler import (
     _digest,
     _event,
     _prepare_and_admit,
-    _protocol_events,
     _runtime,
 )
 
@@ -101,7 +100,6 @@ def _admit_ret010(
     policy: compiler.PolicyProgram,
     mapping: dict[str, object],
 ) -> compiler.KnowledgeChangeSet:
-    before = history.replay()
     operations = tuple(_operation(raw) for raw in mapping["operations"])
     change = history.compose_change_set(
         change_set_id="change:RET-010:genesis",
@@ -111,17 +109,12 @@ def _admit_ret010(
         valid_time=compiler.KnowledgeValidTime("INSTANT", mapping["valid_time"]),
         supersedes=(),
     )
-    history.admit(
+    compiler.check_and_admit_change_set(
+        history=history,
         change_set=change,
-        machine_events=_protocol_events(
-            policy,
-            change,
-            before.machine_state.identity,
-            "ret010-revision-fixture",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:public-adopter",
-    )
+    ).replay
     return change
 
 

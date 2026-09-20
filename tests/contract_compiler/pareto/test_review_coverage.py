@@ -303,7 +303,7 @@ def test_evidence_and_review_leave_real_accepted_history_unchanged(
         label="original",
         order="seed",
     )
-    _admit_record_change(history, change, suffix="seed")
+    _admit_record_change(history, change)
     before = history.replay()
     graph_bytes = canonical(before.graph.export_records())
     boundary["ontology"] = {

@@ -14,6 +14,7 @@ from pathlib import Path
 import pytest
 
 import malleus._contract_pipeline.knowledge as knowledge_module
+import malleus.compiler as compiler
 from malleus._contract_pipeline.knowledge import (
     KnowledgeAnchorInput,
     KnowledgeChangeHistory,
@@ -27,6 +28,7 @@ from malleus._contract_pipeline.knowledge import (
 from malleus._contract_pipeline.machine import execute_event
 from malleus.ledger import GENESIS, JsonlLedger
 from tests.contract_compiler.pareto.test_protocol_machine import (
+    CHECK_DOCUMENTS,
     CHECKS,
     POLICY_ID,
     _canonical,
@@ -198,6 +200,30 @@ def _anchor(
     assert result.machine_receipt.outcome == "APPLIED"
 
 
+def _check_contract_anchors() -> tuple[tuple[bytes, bytes, str], ...]:
+    """The two check contracts the fixture policy requires, ready to retain.
+
+    Core runs every check its policy names, so a history under this policy
+    must hold a document Core can read for each one. Both name the shipped
+    ``malleus.core.operations-apply-atomically`` builtin.
+    """
+
+    return tuple(
+        (
+            _event(
+                "ARTIFACT_REGISTERED",
+                artifact_id=check_id,
+                artifact_identity=_digest(document),
+            ),
+            document,
+            "RETAINED_EVIDENCE",
+        )
+        for (check_id, _identity), document in zip(
+            CHECKS, CHECK_DOCUMENTS, strict=True
+        )
+    )
+
+
 def _anchored_history(
     tmp_path: Path,
     *,
@@ -268,6 +294,7 @@ def _anchored_history(
             evidence_bytes,
             "RETAINED_EVIDENCE",
         ),
+        *_check_contract_anchors(),
     )
     for event, retained, role in anchors:
         if role != omit_bootstrap_role:
@@ -309,14 +336,10 @@ def test_admission_requires_complete_jsonl_bootstrap(
     change_set = _load_change(_base_payload(history, partial, source, evidence))
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        history.admit(
-            change_set=change_set,
-            machine_events=_protocol_events(change_set, before.machine_state.identity),
-            transaction_time=TRANSACTION_TIME,
-            actor_id="actor:test",
-        )
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    refusal = _refused_admission(history, change_set)
+
+    assert refusal.stage is compiler.PopulationAdmissionStage.ADMIT
+    assert refusal.reason == "MALFORMED_HISTORY"
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == before.graph.snapshot()
 
@@ -498,23 +521,50 @@ def _record_change(
     return _load_change(payload)
 
 
-def _admit_record_change(
+def _admit_change(
     history: KnowledgeChangeHistory,
     change: KnowledgeChangeSet,
     *,
-    suffix: str,
+    anchors: tuple[KnowledgeAnchorInput, ...] = (),
+    transaction_time: str = TRANSACTION_TIME,
 ):
-    before = history.replay()
-    return history.admit(
+    """Admit one composed change through Core's own entry point.
+
+    The fixture policy requires two ``CORE_BUILTIN`` check contracts, both
+    retained by ``_anchored_history``, so Core runs both and writes the three
+    protocol events itself. No caller writes a ``CHECK_RECORDED`` here any
+    more: ``admit`` and ``admit_with_anchors`` refuse one.
+    """
+
+    return compiler.check_and_admit_change_set(
+        history=history,
         change_set=change,
-        machine_events=_protocol_events(
-            change,
-            before.machine_state.identity,
-            identifier_suffix=suffix,
-        ),
-        transaction_time=TRANSACTION_TIME,
+        transaction_time=transaction_time,
         actor_id="actor:test",
+        anchors=anchors,
     )
+
+
+def _admit_record_change(
+    history: KnowledgeChangeHistory,
+    change: KnowledgeChangeSet,
+):
+    """Admit one composed change and return the replay it produced.
+
+    This helper used to take a suffix that made the caller's protocol event
+    identifiers unique. Core mints them from the change set id now, so there
+    is nothing left to disambiguate.
+    """
+
+    return _admit_change(history, change).replay
+
+
+def _refused_admission(history: KnowledgeChangeHistory, change, **extra):
+    """The refusal Core raised, for a change it will not admit."""
+
+    with pytest.raises(compiler.PopulationAdmissionRefusal) as refusal:
+        _admit_change(history, change, **extra)
+    return refusal.value
 
 
 def test_change_set_is_closed_canonical_immutable_and_content_addressed(
@@ -788,17 +838,10 @@ def test_composed_change_goes_stale_after_an_intervening_event(
     before = history.replay()
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        history.admit(
-            change_set=composed,
-            machine_events=_protocol_events(
-                composed, before.machine_state.identity, identifier_suffix="-stale"
-            ),
-            transaction_time=TRANSACTION_TIME,
-            actor_id="actor:test",
-        )
+    refusal = _refused_admission(history, composed)
 
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.STALE_BASE
+    assert refusal.stage is compiler.PopulationAdmissionStage.ADMIT
+    assert refusal.reason == "STALE_BASE"
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == before.graph.snapshot()
 
@@ -807,15 +850,9 @@ def test_composed_change_admits_and_reopens_with_exact_parity(
     tmp_path: Path,
 ) -> None:
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
-    before = history.replay()
     composed = _compose(history, partial, source, evidence)
 
-    admitted = history.admit(
-        change_set=composed,
-        machine_events=_protocol_events(composed, before.machine_state.identity),
-        transaction_time=TRANSACTION_TIME,
-        actor_id="actor:test",
-    )
+    admitted = _admit_change(history, composed).replay
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert admitted.change_sets == (composed,)
@@ -838,7 +875,7 @@ def test_composer_binds_and_replays_a_superseding_second_change(
         label="before",
         order="event-1",
     )
-    _admit_record_change(history, first, suffix="-version-1")
+    _admit_record_change(history, first)
     base = history.replay()
     assert base.acceptance_head != GENESIS
     assert base.materialization_head != GENESIS
@@ -890,7 +927,7 @@ def test_composer_binds_and_replays_a_superseding_second_change(
     }
     assert second.canonical_bytes == _canonical(expected)
 
-    admitted = _admit_record_change(history, second, suffix="-version-2")
+    admitted = _admit_record_change(history, second)
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert admitted.change_sets == (first, second)
@@ -1013,16 +1050,9 @@ def test_unknown_missing_tampered_noncanonical_and_cycles_refuse(
     valid = _load_change(payload)
     forged = replace(valid, identity="sha256:" + "0" * 64)
     before = _ledger_bytes(history)
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        history.admit(
-            change_set=forged,
-            machine_events=_protocol_events(
-                valid, history.replay().machine_state.identity
-            ),
-            transaction_time=TRANSACTION_TIME,
-            actor_id="actor:test",
-        )
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.IDENTITY_MISMATCH
+    refusal = _refused_admission(history, forged)
+    assert refusal.stage is compiler.PopulationAdmissionStage.ADMIT
+    assert refusal.reason == "IDENTITY_MISMATCH"
     assert _ledger_bytes(history) == before
 
 
@@ -1034,27 +1064,27 @@ def test_genesis_change_is_retained_then_accepted_and_replayed_from_empty(
     assert before.graph.node_count == 0
     assert before.graph.edge_count == 0
     change_set = _load_change(_base_payload(history, partial, source, evidence))
-    events = _protocol_events(change_set, before.machine_state.identity)
 
-    admitted = history.admit(
-        change_set=change_set,
-        machine_events=events,
-        transaction_time=TRANSACTION_TIME,
-        actor_id="actor:test",
-    )
+    admitted = _admit_change(history, change_set).replay
 
     ledger = JsonlLedger(
         history.path,
         compiled.artifact.validated_fact_set_sha256,
     ).read()
-    assert [event["event_type"] for event in ledger[-5:]] == [
+    # Two ARTIFACT_REGISTERED entries sit between the retained change set and
+    # the protocol events: Core retains one receipt per check it ran, in the
+    # same batch. The caller used to write the three protocol events and no
+    # receipt at all.
+    assert [event["event_type"] for event in ledger[-7:]] == [
         "KNOWLEDGE_CHANGE_SET_RETAINED",
+        "ARTIFACT_REGISTERED",
+        "ARTIFACT_REGISTERED",
         "CHANGE_PROPOSED",
         "CHECK_RECORDED",
         "CHECK_RECORDED",
         "VERDICT_RECORDED",
     ]
-    assert ledger[-5]["payload"]["change_set_identity"] == change_set.identity
+    assert ledger[-7]["payload"]["change_set_identity"] == change_set.identity
     assert b64encode(change_set.canonical_bytes) in history.path.read_bytes()
     assert ledger[-4]["payload"]["knowledge_change_set_identity"] == (
         change_set.identity
@@ -1115,7 +1145,7 @@ def test_later_record_closes_prior_record_and_replay_answers_both_orders(
         label="before",
         order="event-1",
     )
-    first_replay = _admit_record_change(history, first, suffix="-version-1")
+    first_replay = _admit_record_change(history, first)
     second = _record_change(
         history,
         partial,
@@ -1128,7 +1158,7 @@ def test_later_record_closes_prior_record_and_replay_answers_both_orders(
         supersedes_record_id="left-version-1",
     )
 
-    current = _admit_record_change(history, second, suffix="-version-2")
+    current = _admit_record_change(history, second)
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert first_replay.graph.query("LeftObject") == [
@@ -1178,7 +1208,7 @@ def test_record_supersession_refuses_atomically(tmp_path: Path, failure: str) ->
         label="before",
         order="event-1",
     )
-    _admit_record_change(history, first, suffix="-version-1")
+    _admit_record_change(history, first)
     if failure == "fork":
         second = _record_change(
             history,
@@ -1191,7 +1221,7 @@ def test_record_supersession_refuses_atomically(tmp_path: Path, failure: str) ->
             order="event-2",
             supersedes_record_id="left-version-1",
         )
-        _admit_record_change(history, second, suffix="-version-2")
+        _admit_record_change(history, second)
 
     target = {
         "unknown": "left-absent",
@@ -1213,13 +1243,20 @@ def test_record_supersession_refuses_atomically(tmp_path: Path, failure: str) ->
     before = history.replay()
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        _admit_record_change(history, candidate, suffix="-version-3")
+    refusal = _refused_admission(history, candidate)
 
-    assert refusal.value.reason in {
-        KnowledgeChangeRefusalReason.UNKNOWN_SUPERSESSION,
-        KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
-    }
+    # The structural builtin the policy requires applies the operations to the
+    # accepted state, so the application's own refusal is now what the check
+    # reports and the reason travels in the detail.
+    assert refusal.stage is compiler.PopulationAdmissionStage.CHECK
+    assert refusal.reason == "CONTENT_RULE_VIOLATED"
+    assert any(
+        name in refusal.detail
+        for name in (
+            KnowledgeChangeRefusalReason.UNKNOWN_SUPERSESSION.name,
+            KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL.name,
+        )
+    )
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == before.graph.snapshot()
     assert history.replay().record_history == before.record_history
@@ -1244,7 +1281,7 @@ def test_instant_replacement_must_follow_prior_valid_time(
         order="2026-09-02T00:00:00Z",
         valid_time_kind="INSTANT",
     )
-    _admit_record_change(history, first, suffix="-version-1")
+    _admit_record_change(history, first)
     earlier = _record_change(
         history,
         partial,
@@ -1260,10 +1297,11 @@ def test_instant_replacement_must_follow_prior_valid_time(
     before = history.replay()
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        _admit_record_change(history, earlier, suffix="-version-2")
+    refusal = _refused_admission(history, earlier)
 
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
+    assert refusal.stage is compiler.PopulationAdmissionStage.CHECK
+    assert refusal.reason == "CONTENT_RULE_VIOLATED"
+    assert KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL.name in refusal.detail
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == before.graph.snapshot()
 
@@ -1294,7 +1332,7 @@ def test_record_replacement_cannot_mix_valid_time_kinds(
         order=initial_value,
         valid_time_kind=initial_kind,
     )
-    _admit_record_change(history, first, suffix="-version-1")
+    _admit_record_change(history, first)
     mixed = _record_change(
         history,
         partial,
@@ -1310,11 +1348,12 @@ def test_record_replacement_cannot_mix_valid_time_kinds(
     before = history.replay()
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        _admit_record_change(history, mixed, suffix="-version-2")
+    refusal = _refused_admission(history, mixed)
 
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
-    assert "valid-time kind differs" in refusal.value.detail
+    assert refusal.stage is compiler.PopulationAdmissionStage.CHECK
+    assert refusal.reason == "CONTENT_RULE_VIOLATED"
+    assert KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL.name in refusal.detail
+    assert "valid-time kind differs" in refusal.detail
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == before.graph.snapshot()
     assert history.replay().record_history == before.record_history
@@ -1332,7 +1371,7 @@ def test_record_supersession_cannot_change_record_type(tmp_path: Path) -> None:
         label="before",
         order="event-1",
     )
-    _admit_record_change(history, first, suffix="-version-1")
+    _admit_record_change(history, first)
     payload = _base_payload(history, partial, source, evidence)
     payload["change_set_id"] = "change-version-2"
     payload["operations"] = [
@@ -1352,10 +1391,11 @@ def test_record_supersession_cannot_change_record_type(tmp_path: Path) -> None:
     before = history.replay()
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        _admit_record_change(history, candidate, suffix="-version-2")
+    refusal = _refused_admission(history, candidate)
 
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
+    assert refusal.stage is compiler.PopulationAdmissionStage.CHECK
+    assert refusal.reason == "CONTENT_RULE_VIOLATED"
+    assert KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL.name in refusal.detail
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == before.graph.snapshot()
 
@@ -1363,13 +1403,7 @@ def test_record_supersession_cannot_change_record_type(tmp_path: Path) -> None:
 def test_entity_and_its_relation_can_be_replaced_together(tmp_path: Path) -> None:
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
     first = _load_change(_base_payload(history, partial, source, evidence))
-    before_first = history.replay()
-    history.admit(
-        change_set=first,
-        machine_events=_protocol_events(first, before_first.machine_state.identity),
-        transaction_time=TRANSACTION_TIME,
-        actor_id="actor:test",
-    )
+    _admit_change(history, first)
     payload = _base_payload(history, partial, source, evidence)
     payload["change_set_id"] = "change-generic-2"
     payload["operations"] = [
@@ -1402,7 +1436,7 @@ def test_entity_and_its_relation_can_be_replaced_together(tmp_path: Path) -> Non
     }
     replacement = _load_change(payload)
 
-    replay = _admit_record_change(history, replacement, suffix="-replacement")
+    replay = _admit_record_change(history, replacement)
 
     assert replay.graph.query("LeftObject") == [
         {"id": "left-2", "label": "left-2", "type": "LeftObject"}
@@ -1430,7 +1464,7 @@ def test_historical_graph_results_are_defensive_copies(tmp_path: Path) -> None:
         label="before",
         order="event-1",
     )
-    replay = _admit_record_change(history, first, suffix="-version-1")
+    replay = _admit_record_change(history, first)
     expected = replay.graph_at_change(first.change_set_id).snapshot()
 
     caller_copy = replay.graph_at_change(first.change_set_id)
@@ -1450,18 +1484,9 @@ def test_admit_with_anchors_commits_receipts_and_change_in_one_batch(
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
     before = history.replay()
     receipt = _evidence_anchor("receipt-evidence", b'{"outcome":"SATISFIED"}')
-    after_anchor = execute_event(
-        partial, before.machine_state, receipt.machine_event
-    ).state
     change = _load_change(_base_payload(history, partial, source, evidence))
 
-    replay = history.admit_with_anchors(
-        anchors=(receipt,),
-        change_set=change,
-        machine_events=_protocol_events(change, after_anchor.identity),
-        transaction_time=TRANSACTION_TIME,
-        actor_id="actor:test",
-    )
+    replay = _admit_change(history, change, anchors=(receipt,)).replay
 
     assert replay.change_sets == (change,)
     assert replay.retained_bytes("receipt-evidence") == receipt.retained_bytes
@@ -1500,14 +1525,8 @@ def test_entity_replacement_with_live_relation_refuses_atomically(
     tmp_path: Path,
 ) -> None:
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
-    before_first = history.replay()
     first = _load_change(_base_payload(history, partial, source, evidence))
-    history.admit(
-        change_set=first,
-        machine_events=_protocol_events(first, before_first.machine_state.identity),
-        transaction_time=TRANSACTION_TIME,
-        actor_id="actor:test",
-    )
+    _admit_change(history, first)
     replacement = _record_change(
         history,
         partial,
@@ -1523,11 +1542,15 @@ def test_entity_replacement_with_live_relation_refuses_atomically(
     before = history.replay()
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        _admit_record_change(history, replacement, suffix="-version-2")
+    refusal = _refused_admission(history, replacement)
 
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
-    assert "does not exist" in refusal.value.detail
+    # The base a check reads is the accepted graph with this change's
+    # retirements gone, and that base cannot be formed while a live relation
+    # names the retired entity. Core refuses there, in the application's own
+    # words, before any executor runs.
+    assert refusal.stage is compiler.PopulationAdmissionStage.CHECK
+    assert refusal.reason == KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL.name
+    assert "does not exist" in refusal.detail
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == before.graph.snapshot()
     assert history.replay().record_history == before.record_history
@@ -1576,24 +1599,25 @@ def test_persistence_envelope_refusals_are_typed_and_atomic(
 
     else:
         history, _, partial, _, source, evidence = _anchored_history(tmp_path)
-        before = history.replay()
         change_set = _load_change(_base_payload(history, partial, source, evidence))
 
         def invoke():
-            return history.admit(
-                change_set=change_set,
-                machine_events=_protocol_events(
-                    change_set, before.machine_state.identity
-                ),
-                transaction_time="not-a-time",
-                actor_id="actor:test",
-            )
+            return _admit_change(history, change_set, transaction_time="not-a-time")
 
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+    expected = (
+        KnowledgeChangeRefusal
+        if entrypoint == "anchor"
+        else compiler.PopulationAdmissionRefusal
+    )
+    with pytest.raises(expected) as refusal:
         invoke()
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    if entrypoint == "anchor":
+        assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    else:
+        assert refusal.value.stage is compiler.PopulationAdmissionStage.ADMIT
+        assert refusal.value.reason == "MALFORMED_HISTORY"
     assert _ledger_bytes(history) == ledger_before
 
 
@@ -1602,14 +1626,8 @@ def test_change_set_ids_are_unique_and_cannot_self_supersede(
     tmp_path: Path, self_supersedes: bool
 ) -> None:
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
-    before = history.replay()
     first = _load_change(_base_payload(history, partial, source, evidence))
-    history.admit(
-        change_set=first,
-        machine_events=_protocol_events(first, before.machine_state.identity),
-        transaction_time=TRANSACTION_TIME,
-        actor_id="actor:test",
-    )
+    _admit_change(history, first)
 
     before_second = history.replay()
     payload = _base_payload(history, partial, source, evidence)
@@ -1632,20 +1650,19 @@ def test_change_set_ids_are_unique_and_cannot_self_supersede(
 
     ledger_before = _ledger_bytes(history)
     graph_before = before_second.graph.snapshot()
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        history.admit(
-            change_set=second,
-            machine_events=_protocol_events(
-                second,
-                before_second.machine_state.identity,
-                identifier_suffix="-second",
-            ),
-            transaction_time=TRANSACTION_TIME,
-            actor_id="actor:test",
-        )
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.IDENTITY_MISMATCH
+    refusal = _refused_admission(history, second)
+    # The second change reuses the first change set ID, and Core mints its
+    # check receipts from that ID, so the collision now surfaces one layer
+    # earlier: the receipt of the first check cannot enter the machine twice.
+    # ``_admit`` still refuses IDENTITY_MISMATCH for a caller that reaches it.
+    assert refusal.stage is compiler.PopulationAdmissionStage.ADMIT
+    assert refusal.reason == "RECEIPT_REFUSED"
+    assert first.change_set_id in refusal.detail or "check" in refusal.detail
     assert _ledger_bytes(history) == ledger_before
     assert history.replay().graph.snapshot() == graph_before
+
+
+_CALLER_AUTHORED_FAILURES = frozenset({"rejected", "unregistered"})
 
 
 @pytest.mark.parametrize(
@@ -1761,13 +1778,25 @@ def test_refused_change_never_changes_ledger_or_replayed_graph(
 
     ledger_before = _ledger_bytes(history)
     graph_before = before.graph.snapshot()
-    with pytest.raises(KnowledgeChangeRefusal):
-        history.admit(
-            change_set=change_set,
-            machine_events=events,
-            transaction_time=TRANSACTION_TIME,
-            actor_id="actor:test",
+    if failure in _CALLER_AUTHORED_FAILURES:
+        # The premise of these two is a protocol event the caller wrote: a
+        # VIOLATED outcome no engine produced, and a proposal naming a change
+        # set identity the history never registered. Both are Core's to write
+        # now, so the door refuses them before any append.
+        with pytest.raises(KnowledgeChangeRefusal) as refused:
+            history.admit(
+                change_set=change_set,
+                machine_events=events,
+                transaction_time=TRANSACTION_TIME,
+                actor_id="actor:test",
+            )
+        assert (
+            refused.value.reason
+            is KnowledgeChangeRefusalReason.CALLER_SUPPLIED_CHECK_EVENT
         )
+    else:
+        refusal = _refused_admission(history, change_set)
+        assert refusal.ledger_unchanged
     after = history.replay()
     assert _ledger_bytes(history) == ledger_before
     assert after.graph.snapshot() == graph_before
@@ -1938,14 +1967,8 @@ def test_returned_graph_and_queries_are_disposable_replay_views(
     tmp_path: Path,
 ) -> None:
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
-    before = history.replay()
     change_set = _load_change(_base_payload(history, partial, source, evidence))
-    admitted = history.admit(
-        change_set=change_set,
-        machine_events=_protocol_events(change_set, before.machine_state.identity),
-        transaction_time=TRANSACTION_TIME,
-        actor_id="actor:test",
-    )
+    admitted = _admit_change(history, change_set).replay
     query = admitted.graph.query("LeftObject")
     query[0]["label"] = "mutated-query"
     extra = admitted.graph.create_entity(

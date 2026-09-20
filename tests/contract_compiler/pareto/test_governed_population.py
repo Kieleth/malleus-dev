@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from malleus import KnowledgeGraph
+import malleus.compiler as compiler
 from malleus._contract_pipeline import population
 from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeHistory,
@@ -20,11 +21,11 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     TRANSACTION_TIME,
     _anchor,
     _anchored_history,
+    _check_contract_anchors,
     _binding_payload,
     _event,
     _generic_compilation,
     _ledger_bytes,
-    _protocol_events,
     _record_change,
     _admit_record_change,
 )
@@ -276,6 +277,7 @@ def _custom_evidence_history(tmp_path: Path):
             "RETAINED_EVIDENCE",
         ),
     )
+    anchors = (*anchors, *_check_contract_anchors())
     for event, content, role in anchors:
         _anchor(history, event, content, role)
     return history, compiled, partial, _digest(source_bytes), _digest(evidence_bytes)
@@ -451,16 +453,12 @@ def test_prepared_neutral_change_admits_reopens_and_matches_direct_graph(
     )
     assert prepared.retention_replay.graph.snapshot() == before.graph.snapshot()
 
-    admitted = history.admit(
+    admitted = compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            identifier_suffix="-population-p2",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
     direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
 
@@ -508,16 +506,12 @@ def test_prepared_multivalued_property_admits_reopens_and_keeps_the_list(
     )
     assert tuple(operation.properties["affiliation"]) == ("alpha", "beta")
 
-    admitted = history.admit(
+    admitted = compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            identifier_suffix="-population-multivalued",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
     direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
 
@@ -642,16 +636,12 @@ def test_custom_evidence_retention_event_prepares_admits_and_reopens(
         actor_id="actor:test",
     )
     assert prepared.change_set is not None
-    admitted = history.admit(
+    admitted = compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            identifier_suffix="-custom-evidence-event",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
     direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
 
@@ -752,7 +742,7 @@ def test_duplicate_change_set_id_refuses_before_retaining_the_plan(
         label="legacy",
         order="legacy-1",
     )
-    _admit_record_change(history, legacy, suffix="-legacy-change-id")
+    _admit_record_change(history, legacy)
     plan = _plan(
         partial.identity,
         source_identity=source,
@@ -1177,7 +1167,7 @@ def test_no_domain_change_ignores_an_unused_change_set_id_collision(
         label="existing",
         order="existing-1",
     )
-    _admit_record_change(history, legacy, suffix="-gaps-only-change-id")
+    _admit_record_change(history, legacy)
     plan = _plan(
         partial.identity,
         source_identity=source,
@@ -1217,16 +1207,12 @@ def test_reused_historical_record_refuses_before_retaining_the_next_plan(
     )
     prepared = _prepare(history, first, NEUTRAL_PROFILE_DATA)
     assert prepared.change_set is not None
-    history.admit(
+    compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            identifier_suffix="-population-first",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     repeated = deepcopy(first)
     repeated["plan_id"] = "plan:neutral:2"
     ledger_before = _ledger_bytes(history)
@@ -1319,6 +1305,7 @@ def _shop_history(tmp_path: Path):
             "RETAINED_SOURCE",
         ),
     )
+    anchors = (*anchors, *_check_contract_anchors())
     for event, content, role in anchors:
         _anchor(
             history,
@@ -1409,16 +1396,12 @@ def test_small_shop_e4_e7_reopens_as_one_current_state_version(
     )
     prepared_e4 = _prepare(history, e4, STATE_VERSION_PROFILE_DATA)
     assert prepared_e4.change_set is not None
-    history.admit(
+    compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared_e4.change_set,
-        machine_events=_protocol_events(
-            prepared_e4.change_set,
-            prepared_e4.retention_replay.machine_state.identity,
-            identifier_suffix="-shop-e4",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     e4_id = "supplier-order-state:B:e4"
     e7 = _shop_plan(
         partial.identity,
@@ -1434,16 +1417,12 @@ def test_small_shop_e4_e7_reopens_as_one_current_state_version(
         include_profile=False,
     )
     assert prepared_e7.change_set is not None
-    admitted = history.admit(
+    admitted = compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared_e7.change_set,
-        machine_events=_protocol_events(
-            prepared_e7.change_set,
-            prepared_e7.retention_replay.machine_state.identity,
-            identifier_suffix="-shop-e7",
-        ),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
-    )
+    ).replay
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert admitted.graph.query("SupplierOrderState", supplier_order_id="B") == [
