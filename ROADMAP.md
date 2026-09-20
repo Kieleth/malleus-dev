@@ -1023,7 +1023,8 @@ are investigated after publication unless progress becomes hard without them.
 
 Landed 2026-09-19 on main `a68d11c9`: `malleus.compiler.check_and_admit_population_plan`
 (RED first; the measured fact: Core refused a missing check event and admitted a
-fabricated SATISFIED one). Overseer entry pending. Consumers not yet migrated.
+fabricated SATISFIED one). Sealed as OVR-000468. The Shop runner template is
+migrated (private, D0 addendum 19); the other two-step consumers are not.
 Residual decision: `admit` and `admit_with_anchors` still read a caller-supplied
 outcome. Details in `handover/2026-09-19-core-atomic-admission.md`.
 
@@ -1098,3 +1099,17 @@ tests/test_contract_compiler_historic_wire.py tests/test_contract_compiler_dupli
 Not caused by F1. Fix: record a fresh measurement, and make the recording a
 test-time derivation or a guarded artifact so a module change cannot silently
 strand it.
+
+Fixed 2026-09-19 (commit b6f70917, entry OVR-000469), and the attribution above
+was too narrow: three measurements were stale, not one. CC-X04's ten reader
+digests were hand-typed and seven of the ten had drifted, the reader set having
+last changed at 851913c0 (2026-09-08); CC-X01's divergence observations carried
+a stale registry digest; CC-X02's scanner demanded six packaged ontology
+modules where pyproject packages ten. Root cause of the class: the four
+measurement test files were outside `testpaths`, so the default suite and CI
+never collected them. Now: `historic_wire.py record` derives the digests from
+the tracked bytes; `ledger.py refresh-evidence` re-derives a report; the four
+files are in `testpaths` with a test refusing any compiler test outside it.
+Finding for CC-D02 from the widened scan: `packs/research.yaml` re-declares
+`Claim` and `Evidence` beside `domains/recon.yaml` and `ontology/assent.yaml`,
+and `claim_kind` and `unit` are declared twice, all with `adopts` absent.

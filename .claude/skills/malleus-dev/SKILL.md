@@ -207,7 +207,7 @@ re-binding derived instead of decided (E-0488).
 
 **What was built for F1.** ROADMAP F1 made compile, check and admit one Core
 operation, `malleus.compiler.check_and_admit_population_plan`, on main
-`a68d11c9` (2026-09-19; overseer entry to follow). A semantic ledger and plan
+`a68d11c9` (2026-09-19; overseer entry OVR-000468). A semantic ledger and plan
 bytes go in. Core compiles against the contract the ledger requires, loads the
 Prolog check contract the ledger retains and runs it, then appends the retained
 plan, gaps, change set, receipt and the three protocol events; or it refuses,
