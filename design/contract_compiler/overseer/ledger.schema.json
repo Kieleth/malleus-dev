@@ -283,6 +283,30 @@
               "before_digest"
             ]
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "change": {
+                "const": "REMOVED"
+              }
+            },
+            "required": [
+              "change"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "after_digest"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "after_digest"
+            ]
+          }
         }
       ],
       "properties": {
@@ -296,6 +320,7 @@
           "enum": [
             "CREATED",
             "MODIFIED",
+            "REMOVED",
             "REPLACED"
           ]
         },
@@ -307,8 +332,7 @@
       },
       "required": [
         "path",
-        "change",
-        "after_digest"
+        "change"
       ],
       "type": "object"
     },

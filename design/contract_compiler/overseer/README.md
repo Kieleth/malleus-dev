@@ -20,6 +20,17 @@ that points backward to the superseded entry; history is never edited in place.
 Correcting a decision also requires the operator. If the removed entry affects
 projected state, the correction requires a later typed replacement.
 
+A `DOCUMENT_REVISION` block records each governed document it touches under one
+of four change kinds. `CREATED` carries `after_digest` alone. `MODIFIED` and
+`REPLACED` carry `before_digest`, the ledger's latest recorded digest for that
+path, and `after_digest`; `REPLACED` says the whole content was replaced, and
+the file still exists. `REMOVED` says the file was deleted: it carries
+`before_digest` alone and no `after_digest`. A removal of a path the ledger
+never recorded, a `before_digest` that does not match the prior revision, or a
+removed path that is still a file in the repository fails closed. A removed
+path leaves the digest walk, so nothing holds it to bytes afterwards, and a
+later `CREATED` of the same path is accepted.
+
 Each entry hashes its canonical content except `entry_hash`. The grammar named
 `malleus-canonical-json-v1` uses UTF-8 JSON, Unicode text as written, sorted
 object keys, no insignificant whitespace, and no nonfinite numbers. The digest

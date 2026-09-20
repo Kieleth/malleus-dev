@@ -15,7 +15,7 @@ from urllib.parse import urlsplit
 
 import pytest
 import yaml
-from jsonschema import FormatChecker
+from jsonschema import Draft202012Validator, FormatChecker
 from markdown_it import MarkdownIt
 from rdflib import Graph, Literal, URIRef
 from rdflib.exceptions import ParserError
@@ -26,9 +26,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from scripts.contract_compiler_ledger import (  # noqa: E402
+    LedgerState,
     LedgerValidationError,
     _commit_has_durable_reference,
     _superseded_entries,
+    _validate_semantics,
     canonical_json,
     entry_hash,
     load_ledger,
@@ -6689,6 +6691,193 @@ def test_latest_document_revision_must_match_current_bytes(tmp_path: Path) -> No
 
     with pytest.raises(LedgerValidationError, match="latest document digest mismatch"):
         load_ledger(copied, repository=ROOT)
+
+
+def _ledger_validator() -> Draft202012Validator:
+    schema = json.loads((OVERSEER / "ledger.schema.json").read_text(encoding="utf-8"))
+    return Draft202012Validator(schema, format_checker=FormatChecker())
+
+
+def _sealed_document_entry() -> dict:
+    """The latest sealed DOCUMENT_REVISION block, used as a schema fixture."""
+    for path in sorted((OVERSEER / "entries").glob("*.json"), reverse=True):
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if value["entry_type"] == "DOCUMENT_REVISION":
+            return value
+    raise AssertionError("the overseer ledger records no document revision")
+
+
+def _synthetic_revision(entry_id: str, documents: list[dict]) -> dict:
+    return {
+        "data": {"affected_ids": [], "documents": documents},
+        "entry_id": entry_id,
+        "entry_type": "DOCUMENT_REVISION",
+        "recorded_at": "2026-09-20T00:00:00Z",
+        "references": [],
+        "subject": {"id": "synthetic-document", "type": "DOCUMENT"},
+        "summary": "Synthetic document revision.",
+    }
+
+
+def _run_semantics(entries: list[dict], repository: Path) -> None:
+    _validate_semantics(entries, set(), set(), "", repository)
+
+
+def _write_governed(repository: Path, relative: str, text: str) -> str:
+    path = repository / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_schema_binds_a_removed_document_to_its_prior_digest_alone() -> None:
+    validator = _ledger_validator()
+    entry = _sealed_document_entry()
+    removed = {
+        "before_digest": "sha256:" + "1" * 64,
+        "change": "REMOVED",
+        "path": "research/removed/check.json",
+    }
+
+    entry["data"]["documents"] = [removed]
+    assert list(validator.iter_errors(entry)) == []
+
+    entry["data"]["documents"] = [dict(removed, after_digest="sha256:" + "2" * 64)]
+    assert list(validator.iter_errors(entry))
+
+    without_before = {key: value for key, value in removed.items() if key != "before_digest"}
+    entry["data"]["documents"] = [without_before]
+    assert list(validator.iter_errors(entry))
+
+    entry["data"]["documents"] = [
+        {
+            "before_digest": "sha256:" + "1" * 64,
+            "change": "MODIFIED",
+            "path": "research/removed/check.json",
+        }
+    ]
+    assert list(validator.iter_errors(entry))
+
+
+def test_a_removed_document_releases_its_path_from_the_digest_walk(
+    tmp_path: Path,
+) -> None:
+    digest = _write_governed(tmp_path, "notes/check.json", "recorded bytes\n")
+    entries = [
+        _synthetic_revision(
+            "OVR-000001",
+            [{"after_digest": digest, "change": "CREATED", "path": "notes/check.json"}],
+        ),
+        _synthetic_revision(
+            "OVR-000002",
+            [{"before_digest": digest, "change": "REMOVED", "path": "notes/check.json"}],
+        ),
+    ]
+
+    with pytest.raises(LedgerValidationError, match="removed document still exists"):
+        _run_semantics(entries, tmp_path)
+
+    (tmp_path / "notes" / "check.json").unlink()
+    _run_semantics(entries, tmp_path)
+
+    with pytest.raises(LedgerValidationError, match="revised document does not exist"):
+        _run_semantics(entries[:1], tmp_path)
+
+
+def test_a_removed_document_must_be_recorded_and_must_match_its_prior_digest(
+    tmp_path: Path,
+) -> None:
+    digest = _write_governed(tmp_path, "notes/check.json", "recorded bytes\n")
+    (tmp_path / "notes" / "check.json").unlink()
+
+    never_recorded = [
+        _synthetic_revision(
+            "OVR-000001",
+            [{"before_digest": digest, "change": "REMOVED", "path": "notes/check.json"}],
+        )
+    ]
+    with pytest.raises(LedgerValidationError, match="removed document was never recorded"):
+        _run_semantics(never_recorded, tmp_path)
+
+    wrong_digest = [
+        _synthetic_revision(
+            "OVR-000001",
+            [{"after_digest": digest, "change": "CREATED", "path": "notes/check.json"}],
+        ),
+        _synthetic_revision(
+            "OVR-000002",
+            [
+                {
+                    "before_digest": "sha256:" + "0" * 64,
+                    "change": "REMOVED",
+                    "path": "notes/check.json",
+                }
+            ],
+        ),
+    ]
+    with pytest.raises(
+        LedgerValidationError, match="before_digest does not match prior revision"
+    ):
+        _run_semantics(wrong_digest, tmp_path)
+
+
+def test_a_removed_path_can_be_recorded_as_created_again(tmp_path: Path) -> None:
+    first = _write_governed(tmp_path, "notes/check.json", "first bytes\n")
+    (tmp_path / "notes" / "check.json").unlink()
+    second = _write_governed(tmp_path, "notes/check.json", "second bytes\n")
+    created_first = _synthetic_revision(
+        "OVR-000001",
+        [{"after_digest": first, "change": "CREATED", "path": "notes/check.json"}],
+    )
+    removed = _synthetic_revision(
+        "OVR-000002",
+        [{"before_digest": first, "change": "REMOVED", "path": "notes/check.json"}],
+    )
+    created_again = _synthetic_revision(
+        "OVR-000003",
+        [{"after_digest": second, "change": "CREATED", "path": "notes/check.json"}],
+    )
+
+    _run_semantics([created_first, removed, created_again], tmp_path)
+
+    with pytest.raises(
+        LedgerValidationError, match="previously recorded document cannot be CREATED"
+    ):
+        _run_semantics([created_first, created_again], tmp_path)
+
+
+def test_the_bounded_projection_carries_a_removal_block(tmp_path: Path) -> None:
+    entry = _synthetic_revision(
+        "OVR-000001",
+        [
+            {
+                "before_digest": "sha256:" + "1" * 64,
+                "change": "REMOVED",
+                "path": "notes/check.json",
+            }
+        ],
+    )
+    entry["summary"] = "Delete one governed check document."
+    state = LedgerState(
+        root=OVERSEER,
+        entries=(entry,),
+        head={
+            "entry_count": 1,
+            "head_entry_id": "OVR-000001",
+            "head_hash": "sha256:" + "0" * 64,
+        },
+    )
+
+    rendered = render_status(state)
+
+    assert (
+        "[Delete one governed check document.](entries/OVR-000001.json)" in rendered
+    )
+    # The projection is bounded to the head, accepted decisions, workstream state,
+    # blockers and the last ten blocks, so it names no document path and no change
+    # kind. See the overseer README, "Bounded projection".
+    assert "REMOVED" not in rendered
+    assert "notes/check.json" not in rendered
 
 
 def test_document_revision_path_cannot_escape_repository(tmp_path: Path) -> None:

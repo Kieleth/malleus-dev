@@ -496,6 +496,7 @@ def _validate_semantics(
     positions = {entry["entry_id"]: index for index, entry in enumerate(entries)}
     workstream_state: dict[str, str] = {}
     document_history: dict[str, tuple[str, str]] = {}
+    removed_documents: dict[str, str] = {}
 
     for entry in active:
         entry_type = entry["entry_type"]
@@ -620,6 +621,18 @@ def _validate_semantics(
                 seen_paths.add(relative)
                 _repository_path(repository, relative, context)
                 previous = document_history.get(relative)
+                if document["change"] == "REMOVED":
+                    if previous is None:
+                        raise LedgerValidationError(
+                            f"{context}: removed document was never recorded: {relative}"
+                        )
+                    if document["before_digest"] != previous[0]:
+                        raise LedgerValidationError(
+                            f"{context}: before_digest does not match prior revision for {relative}"
+                        )
+                    del document_history[relative]
+                    removed_documents[relative] = context
+                    continue
                 if previous is not None:
                     if document["change"] == "CREATED":
                         raise LedgerValidationError(
@@ -629,7 +642,14 @@ def _validate_semantics(
                         raise LedgerValidationError(
                             f"{context}: before_digest does not match prior revision for {relative}"
                         )
+                removed_documents.pop(relative, None)
                 document_history[relative] = (document["after_digest"], context)
+
+    for relative, context in removed_documents.items():
+        if _repository_path(repository, relative, context).exists():
+            raise LedgerValidationError(
+                f"{context}: removed document still exists: {relative}"
+            )
 
     for relative, (expected, context) in document_history.items():
         path = _repository_path(repository, relative, context)

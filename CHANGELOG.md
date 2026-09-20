@@ -37,6 +37,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `REMOVED` to the overseer ledger's `documentChange.change`, the fourth
+  document change kind, because the ledger recorded no way to say that a
+  governed document was deleted. A `REMOVED` record carries `before_digest`,
+  the ledger's latest recorded digest for that path, and carries no
+  `after_digest`; `CREATED`, `MODIFIED` and `REPLACED` still require one, so
+  every one of the 471 sealed entries validates unchanged and the schema
+  identity stays `malleus.contract-compiler.ledger-entry/v1`. The validator
+  refuses a removal of a path the ledger never recorded
+  ("removed document was never recorded"), a `before_digest` that does not
+  match the prior revision, and a removal whose path is still a file in the
+  repository ("removed document still exists"). A removed path leaves
+  `document_history`, so the final walk no longer holds it to a digest, and
+  recording it `CREATED` again is allowed. `REPLACED` is not a deletion: it
+  records a file whose whole content was replaced and which still exists. The
+  bounded projection in `status.md` names no document path and no change kind,
+  so `render` is unchanged.
 - Added `malleus.check-contract/v1`, the one check-contract grammar Core parses,
   and the closed executor set behind it. A check contract names its executor and
   Core executes it: `PROLOG_RULES` references the two retained records carrying a
