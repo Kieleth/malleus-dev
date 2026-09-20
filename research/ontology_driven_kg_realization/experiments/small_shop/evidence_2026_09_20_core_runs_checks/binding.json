@@ -39,6 +39,10 @@
         }
       },
       "connected_story/run_receipt.json": {
+        "/ledger_bytes": {
+          "current": 895097,
+          "superseded": 895257
+        },
         "/ledger_head": {
           "current": "sha256:9e0cff50f34fcdb8888b0f6d2d4ebbfcc832fc485876f85871bc7b633216cd4a",
           "superseded": "sha256:0f33125b77cccce4885aad303f2dace0d0ad46503f88025107715921541a5b7a"

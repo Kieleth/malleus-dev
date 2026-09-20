@@ -91,7 +91,7 @@ only.
 structural fold of commit `7c3237f0` forced. The bundle's identity is inside the
 partial effective contract every structural change set binds, so this time the
 move starts at the Table 1 baseline itself rather than at the warehouse stage:
-33 values across 8 files, each a ledger digest, head, replay receipt, contract
+34 values across 8 files, each a ledger digest, head, replay receipt, contract
 identity, byte count or a report digest embedding one. The key is inert, as
 before. `assert_current_evidence` does not read it, and the superseded pairs it
 held from the 2026-09-17 revision-policy move stay in that generation's
