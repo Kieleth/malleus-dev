@@ -40,9 +40,11 @@ from malleus._contract_pipeline import (
 from malleus._contract_pipeline.admission import (
     REQUIRED_CHECK_POLICY_REFERENCE,
     AdmittedCheck,
+    ChangeSetAdmission,
     PopulationAdmission,
     PopulationAdmissionRefusal,
     PopulationAdmissionStage,
+    check_and_admit_change_set,
     check_and_admit_population_plan,
 )
 from malleus._contract_pipeline.check_contract import (
@@ -686,6 +688,7 @@ __all__ = (
     "ValidatedContractCompilation",
     "adapt_document_assertions",
     "admit_structural_change",
+    "check_and_admit_change_set",
     "check_and_admit_population_plan",
     "compile_linkml_contract",
     "compile_contract_revision",
@@ -703,6 +706,7 @@ __all__ = (
     "structural_source_anchors",
     "structural_evidence_anchor",
     "AdmittedCheck",
+    "ChangeSetAdmission",
     "CHECK_CONTRACT_GRAMMAR",
     "CLOSED_OUTCOMES",
     "CORE_BUILTIN_CHECKS",

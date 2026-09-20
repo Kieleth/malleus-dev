@@ -1,4 +1,4 @@
-"""Compile, check and admit one population plan as one Core operation.
+"""Check and admit, as one Core operation, from a plan or from a change set.
 
 An adopter used to write this sequence itself: compile the plan, find the
 check contract the history requires, run it, build a receipt, and call
@@ -9,9 +9,20 @@ requires a ``CHECK_RECORDED`` event naming the required contract, and it reads
 the outcome string off that event, so a fabricated ``SATISFIED`` admitted with
 no engine run.
 
-``check_and_admit_population_plan`` closes that. The outcome written to the
-ledger is the one the engine returned on the state the change would produce,
-because the caller supplies no outcome and there is no other way in.
+``check_and_admit_population_plan`` closes that for a producer's plan bytes,
+and ``check_and_admit_change_set`` closes it for a change set the caller
+composed itself. The outcome written to the ledger is the one the engine
+returned on the state the change would produce, because neither entry point
+takes an outcome and, since ``admit`` and ``admit_with_anchors`` refuse a
+caller's ``CHECK_RECORDED`` and ``VERDICT_RECORDED``, there is no other way in.
+
+The two entry points differ only in where the operations come from. One
+compiles them out of plan bytes against the contract the history requires; the
+other is handed them already composed, which is the lower primitive and the
+shape every research consumer works in. Everything after that is one shared
+implementation: ``_check_stage`` resolves and runs every required check, and
+``_admit_checked`` retains one receipt each and appends the change with the
+three protocol events through ``_admit``.
 
 Which engine runs is not a call-site choice. The history's selected
 ``PolicyProgram`` names its required check contracts by identity, in its own
@@ -59,13 +70,14 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeRefusal,
     KnowledgeChangeSet,
     KnowledgeHistoryReplay,
+    KnowledgeOperation,
+    KnowledgeValidTime,
     _staged_properties,
 )
 from malleus._contract_pipeline.machine import execute_event
 from malleus._contract_pipeline.population import (
     DomainHistoryProfile,
     PopulationBaseState,
-    PopulationPlanCompilation,
     PopulationPlanRefusal,
     PopulationPlanRefusalReason,
     PopulationPlanStatus,
@@ -158,6 +170,20 @@ class PopulationAdmission:
     receipt_identity: str
     gap_count: int
     checks: tuple[AdmittedCheck, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class ChangeSetAdmission:
+    """One admitted change set, with every check Core ran to admit it.
+
+    ``checks`` holds them in the policy's own order. There are no plan fields
+    here, because no plan produced this change: the caller composed it, which
+    is the whole reason this result stands beside ``PopulationAdmission``.
+    """
+
+    replay: KnowledgeHistoryReplay
+    change_set: KnowledgeChangeSet
+    checks: tuple[AdmittedCheck, ...]
 
 
 def _canonical(value: object) -> bytes:
@@ -344,7 +370,7 @@ def _declared_event(
 
 
 def _check_base(
-    replay: KnowledgeHistoryReplay, compilation: PopulationPlanCompilation
+    replay: KnowledgeHistoryReplay, operations: tuple[KnowledgeOperation, ...]
 ) -> KnowledgeGraph:
     """The accepted graph this candidate applies to, with its retirements gone.
 
@@ -354,7 +380,7 @@ def _check_base(
 
     retired = {
         operation.supersedes_record_id
-        for operation in compilation.operations
+        for operation in operations
         if operation.supersedes_record_id is not None
     }
     if not retired:
@@ -367,13 +393,13 @@ def _check_base(
 
 
 def _check_writes(
-    compilation: PopulationPlanCompilation,
+    operations: tuple[KnowledgeOperation, ...],
 ) -> list[ProposedOperation]:
-    """The compiled operations as staged graph writes, with values thawed.
+    """The candidate's operations as staged graph writes, with values thawed.
 
-    A compiled operation freezes list values into tuples. The ontology
-    validator accepts only ``list`` for a multivalued slot, so a shallow copy
-    would refuse every multivalued property at the check.
+    A compiled or composed operation freezes list values into tuples. The
+    ontology validator accepts only ``list`` for a multivalued slot, so a
+    shallow copy would refuse every multivalued property at the check.
     """
 
     return [
@@ -385,7 +411,7 @@ def _check_writes(
             source_id=operation.source_id,
             target_id=operation.target_id,
         )
-        for operation in compilation.operations
+        for operation in operations
     ]
 
 
@@ -397,7 +423,7 @@ def _declares_provenance(contract: LogicContract) -> bool:
 
 def _provenance(
     contracts: tuple[CheckContract, ...],
-    plan: Mapping[str, object],
+    plan: Mapping[str, object] | None,
     source_texts: tuple[RetainedSourceText, ...],
 ) -> GraphProvenance | None:
     """The plan's own derivations and the caller's retained sentences.
@@ -408,6 +434,10 @@ def _provenance(
     it refuses rather than being dropped in silence. A builtin reads the
     candidate and the accepted state, never a sentence, so it is not consulted
     here.
+
+    A composed change set has no plan, so it declares no derivation and Core
+    invents none: a rule layer able to read provenance finds no derivation
+    fact rather than a guessed one.
     """
 
     rule_layers = tuple(
@@ -431,6 +461,8 @@ def _provenance(
                 unchanged=True,
             )
         return None
+    if plan is None:
+        return GraphProvenance(derivations=(), source_texts=source_texts)
     raw = plan["derivations"]
     assert isinstance(raw, list)
     try:
@@ -457,9 +489,13 @@ def _receipt_bytes(
     contract: CheckContract,
     outcome: CheckOutcome,
     change: KnowledgeChangeSet,
-    plan_identity: str,
+    plan_identity: str | None,
 ) -> bytes:
-    """One check's receipt, stating the executor that produced its verdict."""
+    """One check's receipt, stating the executor that produced its verdict.
+
+    ``plan_identity`` is absent for a change set the caller composed, which no
+    plan produced, and the receipt says so by naming none.
+    """
 
     check: dict[str, object] = {}
     if outcome.logic_result is not None:
@@ -474,13 +510,13 @@ def _receipt_bytes(
     )
     if outcome.result:
         check["result"] = dict(outcome.result)
-    return _canonical(
-        {
-            "check": check,
-            "knowledge_change_set_identity": change.identity,
-            "population_plan_identity": plan_identity,
-        }
-    )
+    body: dict[str, object] = {
+        "check": check,
+        "knowledge_change_set_identity": change.identity,
+    }
+    if plan_identity is not None:
+        body["population_plan_identity"] = plan_identity
+    return _canonical(body)
 
 
 def _receipt_ids(change_set_id: str, contract: CheckContract) -> tuple[str, str]:
@@ -495,6 +531,218 @@ def _receipt_ids(change_set_id: str, contract: CheckContract) -> tuple[str, str]
         f"receipt:{change_set_id}:{contract.check_contract_id}",
         f"check:{change_set_id}:{contract.check_contract_id}",
     )
+
+
+def _check_stage(
+    replay: KnowledgeHistoryReplay,
+    *,
+    change_set_id: str,
+    operations: tuple[KnowledgeOperation, ...],
+    valid_time: KnowledgeValidTime,
+    plan: Mapping[str, object] | None = None,
+    retained_source_texts: tuple[RetainedSourceText, ...] = (),
+) -> tuple[
+    tuple[CheckContract, ...],
+    Mapping[str, tuple[str, ...]],
+    tuple[CheckOutcome, ...],
+]:
+    """Run every check this history's policy requires, in the policy's order.
+
+    Both entry points share this, which is the point of it: the checks Core
+    runs cannot depend on whether the caller arrived with plan bytes or with a
+    change set it composed. It is pure. It resolves each required contract,
+    reads the fields the selected machine declares for the three protocol
+    events, and runs each executor over the state the candidate would produce.
+    Every refusal here leaves the ledger byte-identical, and nothing in the
+    signature carries an outcome.
+    """
+
+    contracts = _selected_check_contracts(replay)
+    declared = {
+        event_type: _declared_fields(replay, event_type)
+        for event_type in ("CHANGE_PROPOSED", "CHECK_RECORDED", "VERDICT_RECORDED")
+    }
+    provenance = _provenance(contracts, plan, retained_source_texts)
+    request = CheckRequest(
+        replay=replay,
+        candidate=CandidateChange(
+            change_set_id=change_set_id,
+            operations=operations,
+            valid_time=valid_time,
+        ),
+        candidate_graph=stage_subgraph(
+            _check_base(replay, operations), _check_writes(operations)
+        ),
+        provenance=provenance,
+    )
+    outcomes: list[CheckOutcome] = []
+    for contract in contracts:
+        try:
+            checked = _run_check(contract, request, provenance)
+        except CheckContractError as error:
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                error.reason,
+                error.detail,
+                unchanged=True,
+            ) from error
+        except (LogicError, TypeError, ValueError) as error:
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                "CHECK_ENGINE_FAILED",
+                f"{type(error).__name__}: {error}",
+                unchanged=True,
+            ) from error
+        if checked.outcome not in contract.outcomes:
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                "UNDECLARED_CHECK_OUTCOME",
+                f"check contract {contract.check_contract_id} declares "
+                + ", ".join(contract.outcomes)
+                + f" and its executor returned {checked.outcome}",
+                unchanged=True,
+                check=checked.logic_result,
+            )
+        if checked.outcome != "SATISFIED":
+            raise _refuse(
+                PopulationAdmissionStage.CHECK,
+                "CONTENT_RULE_VIOLATED",
+                f"{checked.outcome}: {checked.detail}",
+                unchanged=True,
+                check=checked.logic_result,
+                witness_record_ids=checked.witness_record_ids,
+                violated_rule_ids=checked.violated_rule_ids,
+            )
+        outcomes.append(checked)
+    return contracts, declared, tuple(outcomes)
+
+
+def _admit_checked(
+    *,
+    history: KnowledgeChangeHistory,
+    staged: KnowledgeHistoryReplay,
+    change: KnowledgeChangeSet,
+    contracts: tuple[CheckContract, ...],
+    outcomes: tuple[CheckOutcome, ...],
+    declared: Mapping[str, tuple[str, ...]],
+    plan_identity: str | None,
+    caller_anchors: tuple[KnowledgeAnchorInput, ...],
+    transaction_time: str,
+    actor_id: str,
+    opening: tuple[str, int],
+) -> tuple[KnowledgeHistoryReplay, tuple[AdmittedCheck, ...]]:
+    """Retain one receipt per check and append the change in one batch.
+
+    The machine state advances through every anchor of this batch in order,
+    the caller's retained inputs first and then Core's receipts, because
+    ``_admit`` puts the change event first and the anchors before the protocol
+    events. The three protocol events are Core's: no caller writes one, which
+    is exactly what the public ``admit`` door now refuses.
+    """
+
+    state = staged.machine_state
+    anchors: list[KnowledgeAnchorInput] = []
+    for anchor in caller_anchors:
+        preview = execute_event(staged.partial_contract, state, anchor.machine_event)
+        if preview.receipt.outcome != "APPLIED":
+            raise _refuse(
+                PopulationAdmissionStage.ADMIT,
+                "ANCHOR_REFUSED",
+                "a retained input of this batch cannot enter the history's "
+                f"protocol machine: {preview.receipt.refusal_code}",
+                unchanged=_coordinates(history.replay()) == opening,
+            )
+        state = preview.state
+        anchors.append(anchor)
+    admitted_checks: list[AdmittedCheck] = []
+    for contract, checked in zip(contracts, outcomes, strict=True):
+        receipt_bytes = _receipt_bytes(contract, checked, change, plan_identity)
+        receipt_id, record_receipt_id = _receipt_ids(change.change_set_id, contract)
+        receipt = KnowledgeAnchorInput(
+            machine_event=_machine_event(
+                "ARTIFACT_REGISTERED",
+                artifact_id=receipt_id,
+                artifact_identity=_digest(receipt_bytes),
+            ),
+            retained_bytes=receipt_bytes,
+            media_type="application/json",
+            role="RETAINED_EVIDENCE",
+        )
+        preview = execute_event(staged.partial_contract, state, receipt.machine_event)
+        if preview.receipt.outcome != "APPLIED":
+            raise _refuse(
+                PopulationAdmissionStage.ADMIT,
+                "RECEIPT_REFUSED",
+                f"the receipt of check {contract.check_contract_id} cannot "
+                "enter this history's protocol machine",
+                unchanged=_coordinates(history.replay()) == opening,
+            )
+        state = preview.state
+        anchors.append(receipt)
+        admitted_checks.append(
+            AdmittedCheck(
+                check_contract_id=contract.check_contract_id,
+                check_contract_identity=contract.identity,
+                executor_kind=contract.executor_kind,
+                outcome=checked.outcome,
+                receipt_id=receipt_id,
+                receipt_identity=_digest(receipt_bytes),
+                record_receipt_id=record_receipt_id,
+                result=dict(checked.result),
+                logic_result=checked.logic_result,
+            )
+        )
+    policy = staged.partial_contract.normative_profile.policy(
+        REQUIRED_CHECK_POLICY_REFERENCE
+    )
+    proposal_id = f"proposal:{change.change_set_id}"
+    events = [
+        _declared_event(
+            "CHANGE_PROPOSED",
+            declared["CHANGE_PROPOSED"],
+            {
+                "expected_machine_state_identity": state.identity,
+                "knowledge_change_set_identity": change.identity,
+                "policy_id": policy.identifier,
+                "policy_identity": policy.identity,
+                "proposal_id": proposal_id,
+            },
+        )
+    ]
+    events.extend(
+        _declared_event(
+            "CHECK_RECORDED",
+            declared["CHECK_RECORDED"],
+            {
+                "check_contract_id": admitted.check_contract_id,
+                "check_contract_identity": admitted.check_contract_identity,
+                "outcome": admitted.outcome,
+                "policy_identity": policy.identity,
+                "proposal_id": proposal_id,
+                "receipt_id": admitted.record_receipt_id,
+                "receipt_identity": admitted.receipt_identity,
+            },
+        )
+        for admitted in admitted_checks
+    )
+    events.append(
+        _declared_event(
+            "VERDICT_RECORDED",
+            declared["VERDICT_RECORDED"],
+            {
+                "decision_id": f"decision:{change.change_set_id}",
+                "proposal_id": proposal_id,
+            },
+        )
+    )
+    replay = history._admit(
+        anchors=tuple(anchors),
+        change_set=change,
+        machine_events=tuple(events),
+        transaction_time=transaction_time,
+        actor_id=actor_id,
+    )
+    return replay, tuple(admitted_checks)
 
 
 def check_and_admit_population_plan(
@@ -570,63 +818,14 @@ def check_and_admit_population_plan(
     assert isinstance(canonical_plan, dict)
 
     # --- CHECK: pure. Every outcome is an engine's; no caller supplies one.
-    contracts = _selected_check_contracts(before)
-    declared = {
-        event_type: _declared_fields(before, event_type)
-        for event_type in ("CHANGE_PROPOSED", "CHECK_RECORDED", "VERDICT_RECORDED")
-    }
-    provenance = _provenance(contracts, canonical_plan, retained_source_texts)
-    request = CheckRequest(
-        replay=before,
-        candidate=CandidateChange(
-            change_set_id=f"change:{compilation.plan_id}",
-            operations=compilation.operations,
-            valid_time=compilation.valid_time,
-        ),
-        candidate_graph=stage_subgraph(
-            _check_base(before, compilation), _check_writes(compilation)
-        ),
-        provenance=provenance,
+    contracts, declared, outcomes = _check_stage(
+        before,
+        change_set_id=f"change:{compilation.plan_id}",
+        operations=compilation.operations,
+        valid_time=compilation.valid_time,
+        plan=canonical_plan,
+        retained_source_texts=retained_source_texts,
     )
-    outcomes: list[CheckOutcome] = []
-    for contract in contracts:
-        try:
-            checked = _run_check(contract, request, provenance)
-        except CheckContractError as error:
-            raise _refuse(
-                PopulationAdmissionStage.CHECK,
-                error.reason,
-                error.detail,
-                unchanged=True,
-            ) from error
-        except (LogicError, TypeError, ValueError) as error:
-            raise _refuse(
-                PopulationAdmissionStage.CHECK,
-                "CHECK_ENGINE_FAILED",
-                f"{type(error).__name__}: {error}",
-                unchanged=True,
-            ) from error
-        if checked.outcome not in contract.outcomes:
-            raise _refuse(
-                PopulationAdmissionStage.CHECK,
-                "UNDECLARED_CHECK_OUTCOME",
-                f"check contract {contract.check_contract_id} declares "
-                + ", ".join(contract.outcomes)
-                + f" and its executor returned {checked.outcome}",
-                unchanged=True,
-                check=checked.logic_result,
-            )
-        if checked.outcome != "SATISFIED":
-            raise _refuse(
-                PopulationAdmissionStage.CHECK,
-                "CONTENT_RULE_VIOLATED",
-                f"{checked.outcome}: {checked.detail}",
-                unchanged=True,
-                check=checked.logic_result,
-                witness_record_ids=checked.witness_record_ids,
-                violated_rule_ids=checked.violated_rule_ids,
-            )
-        outcomes.append(checked)
 
     # --- ADMIT: retention, then the change and every receipt in one batch.
     try:
@@ -643,98 +842,18 @@ def check_and_admit_population_plan(
         change = prepared.change_set
         assert change is not None
         plan_identity = _digest(compilation.canonical_plan_bytes)
-        retention = prepared.retention_replay
-        state = retention.machine_state
-        anchors: list[KnowledgeAnchorInput] = []
-        admitted_checks: list[AdmittedCheck] = []
-        for contract, checked in zip(contracts, outcomes, strict=True):
-            receipt_bytes = _receipt_bytes(contract, checked, change, plan_identity)
-            receipt_id, record_receipt_id = _receipt_ids(change.change_set_id, contract)
-            receipt = KnowledgeAnchorInput(
-                machine_event=_machine_event(
-                    "ARTIFACT_REGISTERED",
-                    artifact_id=receipt_id,
-                    artifact_identity=_digest(receipt_bytes),
-                ),
-                retained_bytes=receipt_bytes,
-                media_type="application/json",
-                role="RETAINED_EVIDENCE",
-            )
-            preview = execute_event(
-                retention.partial_contract, state, receipt.machine_event
-            )
-            if preview.receipt.outcome != "APPLIED":
-                raise _refuse(
-                    PopulationAdmissionStage.ADMIT,
-                    "RECEIPT_REFUSED",
-                    f"the receipt of check {contract.check_contract_id} cannot "
-                    "enter this history's protocol machine",
-                    unchanged=_coordinates(history.replay()) == opening,
-                )
-            state = preview.state
-            anchors.append(receipt)
-            admitted_checks.append(
-                AdmittedCheck(
-                    check_contract_id=contract.check_contract_id,
-                    check_contract_identity=contract.identity,
-                    executor_kind=contract.executor_kind,
-                    outcome=checked.outcome,
-                    receipt_id=receipt_id,
-                    receipt_identity=_digest(receipt_bytes),
-                    record_receipt_id=record_receipt_id,
-                    result=dict(checked.result),
-                    logic_result=checked.logic_result,
-                )
-            )
-        policy = retention.partial_contract.normative_profile.policy(
-            REQUIRED_CHECK_POLICY_REFERENCE
-        )
-        proposal_id = f"proposal:{change.change_set_id}"
-        events = [
-            _declared_event(
-                "CHANGE_PROPOSED",
-                declared["CHANGE_PROPOSED"],
-                {
-                    "expected_machine_state_identity": state.identity,
-                    "knowledge_change_set_identity": change.identity,
-                    "policy_id": policy.identifier,
-                    "policy_identity": policy.identity,
-                    "proposal_id": proposal_id,
-                },
-            )
-        ]
-        events.extend(
-            _declared_event(
-                "CHECK_RECORDED",
-                declared["CHECK_RECORDED"],
-                {
-                    "check_contract_id": admitted.check_contract_id,
-                    "check_contract_identity": admitted.check_contract_identity,
-                    "outcome": admitted.outcome,
-                    "policy_identity": policy.identity,
-                    "proposal_id": proposal_id,
-                    "receipt_id": admitted.record_receipt_id,
-                    "receipt_identity": admitted.receipt_identity,
-                },
-            )
-            for admitted in admitted_checks
-        )
-        events.append(
-            _declared_event(
-                "VERDICT_RECORDED",
-                declared["VERDICT_RECORDED"],
-                {
-                    "decision_id": f"decision:{change.change_set_id}",
-                    "proposal_id": proposal_id,
-                },
-            )
-        )
-        replay = history.admit_with_anchors(
-            anchors=tuple(anchors),
-            change_set=change,
-            machine_events=tuple(events),
+        replay, admitted_checks = _admit_checked(
+            history=history,
+            staged=prepared.retention_replay,
+            change=change,
+            contracts=contracts,
+            outcomes=outcomes,
+            declared=declared,
+            plan_identity=plan_identity,
+            caller_anchors=(),
             transaction_time=transaction_time,
             actor_id=actor_id,
+            opening=opening,
         )
     except PopulationAdmissionRefusal:
         raise
@@ -763,4 +882,85 @@ def check_and_admit_population_plan(
         receipt_identity=first.receipt_identity,
         gap_count=len(gaps),
         checks=tuple(admitted_checks),
+    )
+
+
+def check_and_admit_change_set(
+    *,
+    history: KnowledgeChangeHistory,
+    change_set: KnowledgeChangeSet,
+    transaction_time: str,
+    actor_id: str,
+    anchors: tuple[KnowledgeAnchorInput, ...] = (),
+) -> ChangeSetAdmission:
+    """Check and admit one change set the caller composed, as one operation.
+
+    A caller that already has its operations, rather than a producer's plan
+    bytes, composes the change set through ``compose_change_set`` from a
+    verified read of this history. Everything after that is Core's: the
+    policy's required checks are resolved through
+    ``malleus.check-contract/v1``, run in the policy's own order over the state
+    the change would produce, retained one receipt each, and recorded in
+    ``CHANGE_PROPOSED``, one ``CHECK_RECORDED`` per check and
+    ``VERDICT_RECORDED``, each carrying exactly the fields the selected machine
+    declares. No parameter takes an outcome.
+
+    ``anchors`` are retained inputs this change needs in the same batch, such
+    as a source or evidence member the change set names. They are appended
+    ahead of Core's receipts and they cannot be protocol events: the check and
+    verdict records are Core's to write, which is what ``admit`` and
+    ``admit_with_anchors`` now refuse.
+
+    A ``CHECK`` refusal writes no byte. An ``ADMIT`` refusal admits nothing and
+    reports ``ledger_unchanged``.
+    """
+
+    if not isinstance(history, KnowledgeChangeHistory):
+        raise TypeError("history must be a KnowledgeChangeHistory")
+    if not isinstance(change_set, KnowledgeChangeSet):
+        raise TypeError("change_set must be a KnowledgeChangeSet")
+    if not isinstance(anchors, tuple) or any(
+        not isinstance(anchor, KnowledgeAnchorInput) for anchor in anchors
+    ):
+        raise TypeError("anchors must be a KnowledgeAnchorInput tuple")
+
+    before = history.replay()
+    opening = _coordinates(before)
+
+    # --- CHECK: pure. Every outcome is an engine's; no caller supplies one.
+    contracts, declared, outcomes = _check_stage(
+        before,
+        change_set_id=change_set.change_set_id,
+        operations=change_set.operations,
+        valid_time=change_set.valid_time,
+    )
+
+    # --- ADMIT: the caller's anchors, Core's receipts and the change, at once.
+    try:
+        replay, admitted_checks = _admit_checked(
+            history=history,
+            staged=before,
+            change=change_set,
+            contracts=contracts,
+            outcomes=outcomes,
+            declared=declared,
+            plan_identity=None,
+            caller_anchors=anchors,
+            transaction_time=transaction_time,
+            actor_id=actor_id,
+            opening=opening,
+        )
+    except PopulationAdmissionRefusal:
+        raise
+    except KnowledgeChangeRefusal as error:
+        reason = getattr(error.reason, "name", None) or str(error.reason)
+        raise _refuse(
+            PopulationAdmissionStage.ADMIT,
+            reason,
+            error.detail,
+            unchanged=_coordinates(history.replay()) == opening,
+            check=outcomes[0].logic_result,
+        ) from error
+    return ChangeSetAdmission(
+        replay=replay, change_set=change_set, checks=admitted_checks
     )

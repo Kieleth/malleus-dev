@@ -108,9 +108,22 @@ def _two_check_history(
     *,
     builtin_first: bool = True,
     machine: bytes | None = None,
+    builtin_only: bool = False,
+    retain_check_contract: bool = True,
+    check_contract_bytes: bytes | None = None,
 ):
-    """A Shop-shaped history whose policy requires a builtin and a rule layer."""
+    """A Shop-shaped history whose policy requires a builtin and a rule layer.
 
+    ``builtin_only`` drops the rule layer from the policy, which is the
+    cheapest real check a fixture can require: it needs no Prolog and no rule
+    bytes. ``retain_check_contract`` and ``check_contract_bytes`` are for the
+    two refusals a history can carry, a required contract it does not retain
+    and one whose executor Core does not ship.
+    """
+
+    contract_bytes = (
+        BUILTIN_CONTRACT if check_contract_bytes is None else check_contract_bytes
+    )
     compiled = _compile(REVISION_TARGET.read_bytes())
     logic = _logic_files(
         tmp_path / "rules",
@@ -118,9 +131,11 @@ def _two_check_history(
         QUANTITY_RULES,
         "2",
     )
+    builtin_check = (STRUCTURAL_CHECK_ID, _digest(contract_bytes))
     checks = (
-        (STRUCTURAL_CHECK_ID, BUILTIN_IDENTITY),
-        (CHECK_ID, logic.contract_hash),
+        (builtin_check,)
+        if builtin_only
+        else (builtin_check, (CHECK_ID, logic.contract_hash))
     )
     policy = _policy(checks if builtin_first else tuple(reversed(checks)))
     profile = compiler.compose_normative_profile(
@@ -143,29 +158,31 @@ def _two_check_history(
             _canonical(mapping["history_binding"])
         ),
     )
-    history.append_anchors(
-        anchors=(
-            _artifact(
-                "artifact:validated-contract",
-                compiled.artifact.artifact_bytes,
-                "VALIDATED_CONTRACT",
-            ),
-            _artifact(
-                "artifact:partial-contract",
-                partial.canonical_bytes,
-                "PARTIAL_EFFECTIVE_CONTRACT",
-            ),
-            _artifact(
-                "artifact:history-binding",
-                history.binding.canonical_bytes,
-                "KNOWLEDGE_HISTORY_BINDING",
-            ),
-            _artifact(
-                "artifact:logic", (tmp_path / "rules/logic.yaml").read_bytes(), None
-            ),
-            _artifact("artifact:rules", QUANTITY_RULES, None),
-            _artifact("artifact:structural-check", BUILTIN_CONTRACT, None),
+    anchors = [
+        _artifact(
+            "artifact:validated-contract",
+            compiled.artifact.artifact_bytes,
+            "VALIDATED_CONTRACT",
         ),
+        _artifact(
+            "artifact:partial-contract",
+            partial.canonical_bytes,
+            "PARTIAL_EFFECTIVE_CONTRACT",
+        ),
+        _artifact(
+            "artifact:history-binding",
+            history.binding.canonical_bytes,
+            "KNOWLEDGE_HISTORY_BINDING",
+        ),
+        _artifact(
+            "artifact:logic", (tmp_path / "rules/logic.yaml").read_bytes(), None
+        ),
+        _artifact("artifact:rules", QUANTITY_RULES, None),
+    ]
+    if retain_check_contract:
+        anchors.append(_artifact("artifact:structural-check", contract_bytes, None))
+    history.append_anchors(
+        anchors=tuple(anchors),
         transaction_time=TRANSACTION_TIME,
         actor_id=ACTOR,
     )
