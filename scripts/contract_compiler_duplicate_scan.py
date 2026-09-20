@@ -225,10 +225,8 @@ def discover_module_paths(pyproject_path: Path) -> list[Path]:
         ):
             continue
         relative_paths.append(relative)
-    if len(relative_paths) != 6:
-        raise DuplicateScanError(
-            f"Expected exactly six packaged ontology YAML modules, found {len(relative_paths)}"
-        )
+    if not relative_paths:
+        raise DuplicateScanError("pyproject.toml packages no ontology YAML module")
     if len(set(relative_paths)) != len(relative_paths):
         raise DuplicateScanError("Packaged ontology YAML module paths must be unique")
     return [pyproject_path.parent / relative for relative in sorted(relative_paths)]

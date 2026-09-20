@@ -1,0 +1,87 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 282,
+      "path": "conformance/contract_compiler/v0/historic_wire/project.json",
+      "sha256": "sha256:0808d77254479bfedc7b67790182644db22f71c29b90bd61f0356bb232deeb21"
+    },
+    {
+      "byte_length": 802,
+      "path": "conformance/contract_compiler/v0/historic_wire/recon-ledger.jsonl",
+      "sha256": "sha256:c3720e2031a51d9f27b22ef0cd4b19438858fa062423d97382b66e3e38ab264e"
+    },
+    {
+      "byte_length": 118,
+      "path": "conformance/contract_compiler/v0/historic_wire/graph-snapshot.json",
+      "sha256": "sha256:8b33574f3ce5fbd67450d414c5e10a4272e1f8abd647104ddd07f7c794b592a6"
+    },
+    {
+      "byte_length": 4073,
+      "path": "conformance/contract_compiler/v0/historic_wire/protocol-ledger.jsonl",
+      "sha256": "sha256:821565b78c3d3c8c744e03781eed8129a7e37a5033aaa97aa01e556d34b5469f"
+    },
+    {
+      "byte_length": 3272,
+      "path": "conformance/contract_compiler/v0/historic_wire/corpus.json",
+      "sha256": "sha256:57fdcf335e5dcdd06c0e99e732cb75e929fa4211e39fa82d41b11f2551900a35"
+    },
+    {
+      "byte_length": 5866,
+      "path": "conformance/contract_compiler/v0/historic_wire/observations.json",
+      "sha256": "sha256:656352f8e9dd08255237c5dbcf57d437cac91a6b4d4b6b3e3b342ca36b9b67e6"
+    },
+    {
+      "byte_length": 40634,
+      "path": "scripts/contract_compiler_historic_wire.py",
+      "sha256": "sha256:0729f997f70d2b9531b8f0e0af34656975ed4947052aab8890ad168e2d5fbe37"
+    },
+    {
+      "byte_length": 21048,
+      "path": "tests/test_contract_compiler_historic_wire.py",
+      "sha256": "sha256:c7559040569fb97e489c69e84f0f3d01e12d5f99421cd4cad8cfd51ef4b31055"
+    }
+  ],
+  "base_commit": "d89a0c4718654249ad678eaff62e7b1daba30b6f",
+  "checks": [
+    {
+      "check_id": "ccx04-reader-source-remeasurement",
+      "method": "Derive all ten reader implementation and ontology digests from the tracked bytes with the new 'record' action, which refuses when any reader source differs from HEAD, and name the commit that last touched the set.",
+      "observed": "Seven of the ten differed from the measurement recorded at commit 5e4ec73e2dd38ddfabfe62ae543719f6849a922e: recon/store.py, kg.py, accepted.py, ledger.py, ontology.py, migration.py and staging.py. assent.py, ontology/assent.yaml and ontology/domains/recon.yaml were unchanged. The set last changed at commit 851913c0ccecb1a3e5445a9abd89072d8f486c27 on 2026-09-08.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-reader-surface-repair",
+      "method": "Re-render the five subjects against the current reader and resolve every refusal through a public entry point rather than a private attribute.",
+      "observed": "ReconProject.ledger became private at commit 9a7fafc9 and the render raised AttributeError. The observation now reads ReconProject.snapshot_verified, the public surface that returns the same MigrationVerification fact, so no private attribute is read.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-fresh-raw-observations",
+      "method": "Render the five historic-wire subjects twice under the remeasured reader and compare their semantic outcomes with the retained prior observation.",
+      "observed": "The raw outcomes are unchanged: two Recon acceptances, one graph refusal, and two protocol artifacts not reached after the enclosing protocol-ledger refusal. Only the reader provenance block and the named Recon entry point changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-input-preservation",
+      "method": "Compare all four frozen input lengths and SHA-256 digests before and after the fresh measurement and retain the earlier CC-X04 evidence reports unchanged.",
+      "observed": "All four input files and corpus.json retain their exact prior bytes. CC-X04.json, CC-X04-completion.json and CC-X04-reader-remeasurement.json remain intact as historical evidence; this report supersedes the last of them forward-only.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-gate-membership",
+      "method": "Collect the default pytest selection and check that the CC-X04 test file is inside it.",
+      "observed": "tests/test_contract_compiler_historic_wire.py was absent from pyproject testpaths, so no gate collected it and the stale measurement stayed invisible. It is now listed, alongside the CC-X01, CC-X02 and baseline-inventory test files, and a test refuses any tests/test_contract_compiler_*.py outside testpaths.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is a fresh measurement of current reader behavior, not a compatibility decision, migration, reader implementation, or release claim.",
+    "The reader coordinate names the commit that last changed this exact ten-file source set. Current bytes are checked mechanically against that set before observation.",
+    "The same five raw outcomes persisted across the source changes. That observation does not claim future behavior will remain unchanged.",
+    "Any later change to one of the ten bound reader inputs requires another fresh forward-only measurement, now produced by the recorded command rather than by hand.",
+    "The record action needs git and a clean reader source set. The check and render actions need neither."
+  ],
+  "recorded_at": "2026-09-20T02:07:38Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X04"
+}

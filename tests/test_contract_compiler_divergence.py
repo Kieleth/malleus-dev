@@ -249,7 +249,7 @@ def test_historical_context_is_explicit_but_foreign_context_does_not_hide_semant
         },
         "pyyaml": {
             "distribution": "PyYAML",
-            "version": "6.0.2",
+            "version": "6.0.3",
         },
     }
 

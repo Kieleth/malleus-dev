@@ -18,22 +18,22 @@
     {
       "byte_length": 16260,
       "path": "tests/test_contract_compiler_divergence.py",
-      "sha256": "sha256:d24ec20734a992b5d84cdddad26529bdbb3745022c9c091adb7ef29d327148af"
+      "sha256": "sha256:c3e056e8ad540ee29f526916e587e9f2fc43d67beac348fac5a517512ef670ca"
     },
     {
-      "byte_length": 11346,
+      "byte_length": 14674,
       "path": "scripts/ci.py",
-      "sha256": "sha256:979cd3fac6a085055cd77bfa82399e799a0e337254c14700206ee86e8589d8cb"
+      "sha256": "sha256:41c7b8066b57ef6ea86f12dd3c97ac172443eae15fbca33515856f238f0890ff"
     },
     {
-      "byte_length": 6359,
+      "byte_length": 8741,
       "path": "tests/contract_compiler/test_ci.py",
-      "sha256": "sha256:5da0c1e83e71df18c050bc0770a029d71b2fd79673cc167ee32b0a13454f1ff8"
+      "sha256": "sha256:3c208bfa01dc391f2993cb0e48421881a824a1862fedbb1596031d0b4b5e0a64"
     },
     {
-      "byte_length": 9162,
+      "byte_length": 12017,
       "path": "pyproject.toml",
-      "sha256": "sha256:d40940c7ea1ca137a4626619d56db9fe35fad8f7d7e33eee84ce1dade3988fbb"
+      "sha256": "sha256:3f59e5956b9ba5efa7bbfdf5e1a78c507f717e6e2b5393245c4e686c1d1bcad9"
     },
     {
       "byte_length": 3074,

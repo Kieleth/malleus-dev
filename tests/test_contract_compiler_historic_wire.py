@@ -28,7 +28,7 @@ EVIDENCE = (
     / "contract_compiler"
     / "overseer"
     / "evidence"
-    / "CC-X04-reader-remeasurement.json"
+    / "CC-X04-reader-remeasurement-r2.json"
 )
 
 RELEASES = [
@@ -245,8 +245,11 @@ def test_current_reader_observations_are_raw_and_cover_every_subject():
         "reader",
         "observations",
     }
-    assert document["reader"]["commit"] == "5e4ec73e2dd38ddfabfe62ae543719f6849a922e"
-    assert document["reader"]["tree"] == "6d26e263431aeabc08926e465656e6bc3ea8761a"
+    reader = document["reader"]
+    assert reader == runner.READER
+    for coordinate in ("commit", "tree"):
+        assert len(reader[coordinate]) == 40
+        assert set(reader[coordinate]) <= set("0123456789abcdef")
     assert [item["subject_id"] for item in document["observations"]] == SUBJECTS
     for mapping in _walk(document):
         assert not FORBIDDEN_POLICY_KEYS & set(mapping)
@@ -259,7 +262,7 @@ def test_current_recon_reader_accepts_project_and_record_through_receipt():
     for subject_id in ("recon-project", "recon-record"):
         result = observations[subject_id]["end_to_end"]
         assert result["outcome"] == "ACCEPTED"
-        assert result["reader"] == "malleus.recon.store.ReconProject.snapshot"
+        assert result["reader"] == "malleus.recon.store.ReconProject.snapshot_verified"
         assert result["facts"]["verified_ontology_hashes"]
         assert result["facts"]["migration_receipt_count"] == 1
     assert observations["recon-project"]["end_to_end"]["facts"]["event_count"] == 1
@@ -494,6 +497,45 @@ def test_reader_provenance_refuses_redirected_recon_schema(monkeypatch, tmp_path
 
     with pytest.raises(runner.HistoricWireError, match="runtime ontology path differs"):
         runner._reader()
+
+
+def test_pinned_reader_measurement_is_a_projection_of_the_tracked_bytes():
+    # The class guard. A reader source cannot change without a gate noticing,
+    # because the pinned digest is never a hand-typed number: it is the file.
+    for item in runner.READER["implementations"]:
+        source = (ROOT / item["path"]).read_bytes()
+        assert item["sha256"] == "sha256:" + hashlib.sha256(source).hexdigest(), (
+            f"{item['path']} changed since the measurement was recorded; "
+            f"run: {runner.RECORD_COMMAND}"
+        )
+
+
+def test_record_rewrites_the_pinned_measurement_from_the_tracked_bytes(tmp_path):
+    script = tmp_path / "historic_wire_copy.py"
+    script.write_text(SCRIPT.read_text(encoding="utf-8"), encoding="utf-8")
+    observations = tmp_path / "observations.json"
+    original = deepcopy(runner.READER)
+    stale = "sha256:" + "0" * 64
+    try:
+        runner.READER["implementations"][0]["sha256"] = stale
+        recorded = runner.record_reader(script, observations)
+    finally:
+        runner.READER.clear()
+        runner.READER.update(deepcopy(original))
+
+    assert recorded == original
+    rewritten = script.read_text(encoding="utf-8")
+    assert stale not in rewritten
+    for item in original["implementations"]:
+        assert f'"sha256": "{item["sha256"]}",' in rewritten
+    assert observations.read_bytes() == OBSERVATIONS.read_bytes()
+
+
+def test_record_refuses_to_measure_an_uncommitted_reader_source(monkeypatch, tmp_path):
+    monkeypatch.setattr(runner, "_git", lambda *arguments: " M src/malleus/kg.py")
+
+    with pytest.raises(runner.HistoricWireError, match="commit them before recording"):
+        runner.record_reader(tmp_path / "copy.py", tmp_path / "observations.json")
 
 
 def test_fresh_observation_is_deterministic_and_does_not_rewrite_inputs():

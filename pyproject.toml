@@ -255,6 +255,10 @@ core-metadata-version = "2.4"
 pythonpath = [".", "src"]
 testpaths = [
     "tests/contract_compiler",
+    "tests/test_contract_compiler_baseline_inventory.py",
+    "tests/test_contract_compiler_divergence.py",
+    "tests/test_contract_compiler_duplicate_scan.py",
+    "tests/test_contract_compiler_historic_wire.py",
     "tests/test_contract_compiler_ledger.py",
     "tests/test_contract_compiler_integration.py",
     "tests/test_contract_compiler_environment.py",

@@ -10,6 +10,7 @@ import importlib
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 from typing import Any, Mapping
@@ -32,10 +33,12 @@ from malleus.staging import StagingError, stage_subgraph
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SCRIPT_PATH = Path(__file__).resolve()
 CORPUS = ROOT / "conformance" / "contract_compiler" / "v0" / "historic_wire"
 MANIFEST_PATH = CORPUS / "corpus.json"
 OBSERVATIONS_PATH = CORPUS / "observations.json"
 ASSENT_SCHEMA = ROOT / "ontology" / "assent.yaml"
+RECORD_COMMAND = "python scripts/contract_compiler_historic_wire.py record"
 
 RELEASES = [
     {
@@ -141,16 +144,16 @@ SUBJECTS = [
     },
 ]
 READER = {
-    "commit": "5e4ec73e2dd38ddfabfe62ae543719f6849a922e",
-    "tree": "6d26e263431aeabc08926e465656e6bc3ea8761a",
+    "commit": "851913c0ccecb1a3e5445a9abd89072d8f486c27",
+    "tree": "fb37f24e44dcc51b1b47edc0e5b76072448be103",
     "implementations": [
         {
             "path": "src/malleus/recon/store.py",
-            "sha256": "sha256:089021ce3134e010e61eebd1f23640e35f7416ffb70e93c89372f5563be84277",
+            "sha256": "sha256:2b5e427073e6cc4a67f3d57c97738faf4f630195fb6dcee22d3c45f48ae75f5a",
         },
         {
             "path": "src/malleus/kg.py",
-            "sha256": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316",
+            "sha256": "sha256:b7736007be2f21b9915b1b0b3b692d07dd7932dbc2634e78fd5e18db58b22a1e",
         },
         {
             "path": "src/malleus/assent.py",
@@ -158,23 +161,23 @@ READER = {
         },
         {
             "path": "src/malleus/accepted.py",
-            "sha256": "sha256:b249f866817f4e223ecf38c9a1b12ed1d50a5967debf6f218110ba7e4d1248a1",
+            "sha256": "sha256:c872112310caed657a30a7e0c0239cace924b24b1455502bdc3f0b145458dafb",
         },
         {
             "path": "src/malleus/ledger.py",
-            "sha256": "sha256:f9ef7a53f01ffba150240d8c0f8f3cbe1cfeba04ba216289df39a3e622eb3c7f",
+            "sha256": "sha256:a758d755989ea6828fc800db2a37d825b63bdf9895b362b6800d76160dcc045a",
         },
         {
             "path": "src/malleus/ontology.py",
-            "sha256": "sha256:665ce9e3ff881f541d00a29cd1ce6c7a0f6b9a96570eb3e48a72fcb141332fd8",
+            "sha256": "sha256:f7c3a573dbc1f38cfa3b22b0d26e32834f97a27c14cf3dd849296eb7c4ee18e5",
         },
         {
             "path": "src/malleus/migration.py",
-            "sha256": "sha256:10964c5328fc4c92a1a3a5fa29f5e62e1a12ed4aebf5a122f60d586866467f4c",
+            "sha256": "sha256:ea8f3c58c3beef3549b08b14ea527f1abf4fed2be75e61cace54c38be6b6dbd4",
         },
         {
             "path": "src/malleus/staging.py",
-            "sha256": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609",
+            "sha256": "sha256:f14b5f6aea208d8a8518ead869a3d9f78132c665e9d42ddea295a5b16b687b6b",
         },
         {
             "path": "ontology/assent.yaml",
@@ -468,7 +471,8 @@ def _reader() -> dict[str, Any]:
         actual = _digest_file(actual_path)
         if actual != item["sha256"]:
             raise HistoricWireError(
-                f"Current reader source differs at {item['path']}; record a fresh measurement"
+                f"Current reader source differs at {item['path']}; "
+                f"record a fresh measurement with: {RECORD_COMMAND}"
             )
     return deepcopy(READER)
 
@@ -499,21 +503,21 @@ def _recon_observations(
         shutil.copyfile(directory / "project.json", project_dir / "project.json")
         shutil.copyfile(directory / "recon-ledger.jsonl", project_dir / "ledger.jsonl")
         project = ReconProject(project_dir)
-        events, records = project.snapshot()
+        events, records, verification = project.snapshot_verified()
         common = {
             "current_ontology_hash": project.ontology_hash,
             "event_count": len(events),
             "migration_receipt_count": len(project.migrations.receipts),
             "record_count": len(records),
             "record_ids": sorted(records),
-            "verified_ontology_hashes": list(project.ledger.verified_ontology_hashes),
+            "verified_ontology_hashes": list(verification.verified_ontology_hashes),
         }
         project_result = {
             "subject_id": "recon-project",
             "input": _input_ref(corpus, "recon-project"),
             "end_to_end": {
                 "outcome": "ACCEPTED",
-                "reader": "malleus.recon.store.ReconProject.snapshot",
+                "reader": "malleus.recon.store.ReconProject.snapshot_verified",
                 "facts": common,
             },
             "intrinsic": {"outcome": "NOT_APPLICABLE"},
@@ -524,7 +528,7 @@ def _recon_observations(
             "input": _input_ref(corpus, "recon-ledger"),
             "end_to_end": {
                 "outcome": "ACCEPTED",
-                "reader": "malleus.recon.store.ReconProject.snapshot",
+                "reader": "malleus.recon.store.ReconProject.snapshot_verified",
                 "facts": {
                     **common,
                     "record_id": record.record["id"],
@@ -952,17 +956,107 @@ def check_observations(
         raise HistoricWireError("Fresh current-reader observations differ from retained bytes")
 
 
+def _git(*arguments: str) -> str:
+    try:
+        completed = subprocess.run(
+            ("git", *arguments),
+            cwd=ROOT,
+            capture_output=True,
+            check=False,
+            text=True,
+        )
+    except OSError as error:
+        raise HistoricWireError(f"Cannot run git to record the reader: {error}") from error
+    if completed.returncode != 0:
+        raise HistoricWireError(
+            f"git {' '.join(arguments)} failed: {completed.stderr.strip()}"
+        )
+    return completed.stdout.strip()
+
+
+def measure_reader() -> dict[str, Any]:
+    """Derive the reader measurement from the committed bytes it identifies."""
+    paths = [item["path"] for item in READER["implementations"]]
+    modified = sorted(line[3:] for line in _git("status", "--porcelain=v1", "--", *paths).splitlines())
+    if modified:
+        raise HistoricWireError(
+            "Reader sources differ from HEAD; commit them before recording: "
+            + ", ".join(modified)
+        )
+    commit = _git("log", "-1", "--format=%H", "HEAD", "--", *paths)
+    if not commit:
+        raise HistoricWireError("No commit in history touches the reader sources")
+    return {
+        "commit": commit,
+        "tree": _git("rev-parse", f"{commit}^{{tree}}"),
+        "implementations": [
+            {"path": path, "sha256": _digest_file(ROOT / path)} for path in paths
+        ],
+    }
+
+
+def _reader_block(reader: Mapping[str, Any]) -> str:
+    lines = [
+        "READER = {",
+        f'    "commit": "{reader["commit"]}",',
+        f'    "tree": "{reader["tree"]}",',
+        '    "implementations": [',
+    ]
+    for item in reader["implementations"]:
+        lines.append("        {")
+        lines.append(f'            "path": "{item["path"]}",')
+        lines.append(f'            "sha256": "{item["sha256"]}",')
+        lines.append("        },")
+    lines.extend(["    ],", "}", ""])
+    return "\n".join(lines)
+
+
+def record_reader(
+    script_path: Path = SCRIPT_PATH,
+    observations_path: Path = OBSERVATIONS_PATH,
+) -> dict[str, Any]:
+    """Rewrite the pinned reader measurement and its observations from the bytes."""
+    reader = measure_reader()
+    try:
+        source = script_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        raise HistoricWireError(f"Cannot read '{script_path}': {error}") from error
+    opening = "\nREADER = {\n"
+    start = source.find(opening)
+    if start < 0:
+        raise HistoricWireError(f"'{script_path}' has no READER measurement to record")
+    end = source.find("\n}\n", start + len(opening))
+    if end < 0:
+        raise HistoricWireError(f"'{script_path}' has an unterminated READER measurement")
+    updated = source[: start + 1] + _reader_block(reader) + source[end + len("\n}\n") :]
+    READER.clear()
+    READER.update(deepcopy(reader))
+    observations = canonical_json(render_observations())
+    try:
+        script_path.write_text(updated, encoding="utf-8")
+        observations_path.write_bytes(observations)
+    except OSError as error:
+        raise HistoricWireError(f"Cannot record the reader measurement: {error}") from error
+    return reader
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "action",
         nargs="?",
-        choices=("check", "render"),
+        choices=("check", "record", "render"),
         default="check",
     )
     arguments = parser.parse_args(argv)
     if arguments.action == "render":
         sys.stdout.buffer.write(canonical_json(render_observations()))
+    elif arguments.action == "record":
+        reader = record_reader()
+        print(
+            f"Recorded {len(reader['implementations'])} CC-X04 reader sources "
+            f"at commit {reader['commit']}"
+        )
     else:
         check_observations()
         print("CC-X04 retained observations match current readers")

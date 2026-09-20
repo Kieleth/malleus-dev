@@ -408,6 +408,13 @@ The package also ships Malleus Recon without advancing the core assent stage:
 - an immutable public `OntologyRegistry.source_closure()` with exact parsed
   bytes, canonical source locators, all authored import resolutions, and
   retained definition ownership;
+- `ReconProject.snapshot_verified()` as the public read returning the events,
+  the replayed records and the `MigrationVerification` carrying
+  `verified_ontology_hashes`, `grammar_ontology_hashes`,
+  `migrated_ontology_hashes` and the crossed receipts; `ReconProject.snapshot()`
+  returns the first two. The project's ledger is private, so a reader wanting
+  the verified identities takes them from the verification, not from the
+  ledger object;
 - strict manifest v3, manifest-last staged builds bound to the
   structural-capture profile, exact project bytes, complete ontology source and
   import closure, retained definition owners, derived term-map identity,

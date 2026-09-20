@@ -349,6 +349,23 @@ Work may run in parallel only where the dependency column permits it.
 These are measurements, not normative fixtures. They may proceed while
 decisions remain open.
 
+A measurement of repository bytes is re-recorded by its own tool, never by
+typing a digest. `scripts/contract_compiler_divergence.py --render`,
+`scripts/contract_compiler_duplicate_scan.py --write` and
+`scripts/contract_compiler_historic_wire.py record` each derive the whole
+measurement from the tracked files; `scripts/contract_compiler_ledger.py
+refresh-evidence <report>` does the same for a verification report's bound
+artifact digests. The CC-X04 reader measurement additionally names the commit
+that last changed its ten-file source set, and refuses to record while any of
+them differs from HEAD.
+
+Every `tests/test_contract_compiler_*.py` file belongs to the default pytest
+selection in `pyproject.toml`, which is what `scripts/ci.py test` runs. A
+measurement test outside that selection is a measurement nothing checks: CC-X01,
+CC-X02 and CC-X04 each went stale that way and stayed stale for weeks with their
+tests present and never collected. `tests/contract_compiler/test_ci.py` refuses
+any such file outside `testpaths`.
+
 ### Gate D: operator decisions
 
 | ID | Deliverable | Depends on | Completion evidence |

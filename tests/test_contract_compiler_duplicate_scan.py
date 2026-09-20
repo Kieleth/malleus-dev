@@ -72,9 +72,46 @@ MODULES = {
         "imports": ["linkml:types"],
         "declaration_counts": {"types": 1, "enums": 1, "slots": 26, "classes": 9},
     },
+    "ontology/packs/chronology.yaml": {
+        "id": "https://malleus.dev/schema/packs/chronology",
+        "name": "malleus_chronology",
+        "version": "0.1.0",
+        "imports": ["linkml:types", "malleus"],
+        "declaration_counts": {"types": 0, "enums": 1, "slots": 6, "classes": 3},
+    },
+    "ontology/packs/metrology.yaml": {
+        "id": "https://malleus.dev/schema/packs/metrology",
+        "name": "malleus_metrology",
+        "version": "0.3.0",
+        "imports": ["linkml:types", "malleus"],
+        "declaration_counts": {"types": 0, "enums": 3, "slots": 13, "classes": 4},
+    },
+    "ontology/packs/research.yaml": {
+        "id": "https://malleus.dev/schema/packs/research",
+        "name": "malleus_research",
+        "version": "0.5.0",
+        "imports": ["linkml:types", "malleus", "metrology", "chronology"],
+        "declaration_counts": {"types": 0, "enums": 4, "slots": 10, "classes": 13},
+    },
+    "ontology/profiles/object-event.yaml": {
+        "id": "https://malleus.dev/schema/profiles/object-event",
+        "name": "malleus_object_event",
+        "version": "0.1.0",
+        "imports": ["linkml:types", "malleus"],
+        "declaration_counts": {"types": 0, "enums": 0, "slots": 3, "classes": 1},
+    },
 }
 KINDS = ("types", "enums", "slots", "classes")
 EXPECTED_GROUPS = [
+    {
+        "kind": "slots",
+        "symbol": "claim_kind",
+        "occurrence_count": 2,
+        "occurrences": [
+            {"module_path": "ontology/domains/recon.yaml", "adopts": {"state": "ABSENT"}},
+            {"module_path": "ontology/packs/research.yaml", "adopts": {"state": "ABSENT"}},
+        ],
+    },
     {
         "kind": "slots",
         "symbol": "confidence",
@@ -110,6 +147,33 @@ EXPECTED_GROUPS = [
             {"module_path": "ontology/assent.yaml", "adopts": {"state": "VALUE", "value": True}},
             {"module_path": "ontology/domains/ocr.yaml", "adopts": {"state": "VALUE", "value": True}},
             {"module_path": "ontology/malleus.yaml", "adopts": {"state": "ABSENT"}},
+        ],
+    },
+    {
+        "kind": "slots",
+        "symbol": "unit",
+        "occurrence_count": 2,
+        "occurrences": [
+            {"module_path": "ontology/domains/ocr.yaml", "adopts": {"state": "ABSENT"}},
+            {"module_path": "ontology/packs/metrology.yaml", "adopts": {"state": "ABSENT"}},
+        ],
+    },
+    {
+        "kind": "classes",
+        "symbol": "Claim",
+        "occurrence_count": 2,
+        "occurrences": [
+            {"module_path": "ontology/domains/recon.yaml", "adopts": {"state": "ABSENT"}},
+            {"module_path": "ontology/packs/research.yaml", "adopts": {"state": "ABSENT"}},
+        ],
+    },
+    {
+        "kind": "classes",
+        "symbol": "Evidence",
+        "occurrence_count": 2,
+        "occurrences": [
+            {"module_path": "ontology/assent.yaml", "adopts": {"state": "ABSENT"}},
+            {"module_path": "ontology/packs/research.yaml", "adopts": {"state": "ABSENT"}},
         ],
     },
 ]
@@ -222,7 +286,7 @@ def test_scan_has_exact_packaged_modules_and_source_identities():
         }
 
 
-def test_all_525_declarations_are_raw_lossless_and_canonically_ordered():
+def test_all_586_declarations_are_raw_lossless_and_canonically_ordered():
     document = _read_json(SCAN)
     expected_raw = {}
     for relative in MODULES:
@@ -232,7 +296,7 @@ def test_all_525_declarations_are_raw_lossless_and_canonically_ordered():
                 expected_raw[(kind, symbol, relative)] = definition
 
     declarations = document["declarations"]
-    assert len(declarations) == len(expected_raw) == 525
+    assert len(declarations) == len(expected_raw) == 586
     assert [
         (KINDS.index(item["kind"]), item["symbol"], item["module"]["path"])
         for item in declarations
@@ -271,10 +335,10 @@ def test_duplicate_groups_are_complete_same_kind_observations_only():
     assert document["duplicate_groups"] == EXPECTED_GROUPS
     assert document["cross_kind_repeats"] == []
     assert document["summary"] == {
-        "module_count": 6,
-        "declaration_count": 525,
-        "duplicate_group_count": 4,
-        "duplicate_occurrence_count": 9,
+        "module_count": 10,
+        "declaration_count": 586,
+        "duplicate_group_count": 8,
+        "duplicate_occurrence_count": 17,
         "adopts_value_occurrence_count": 3,
         "cross_kind_repeat_count": 0,
     }

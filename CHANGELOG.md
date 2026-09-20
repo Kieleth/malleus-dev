@@ -7,7 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Re-recorded the three contract-compiler measurements of repository bytes,
+  which had gone stale, and removed the way they go stale silently. CC-X04
+  pinned digests for ten reader sources recorded at commit `5e4ec73e`; seven
+  had changed by commit `851913c0` (2026-09-08), so every render refused with
+  "Current reader source differs at src/malleus/recon/store.py". CC-X01
+  retained an `OntologyRegistry` digest one revision old. CC-X02 required
+  "exactly six packaged ontology YAML modules" while `pyproject.toml` packaged
+  ten. Seventeen tests failed on a clean tree for these three reasons. The
+  reason none of it was caught: `tests/test_contract_compiler_divergence.py`,
+  `tests/test_contract_compiler_duplicate_scan.py`,
+  `tests/test_contract_compiler_historic_wire.py` and
+  `tests/test_contract_compiler_baseline_inventory.py` were absent from
+  `testpaths`, so the default pytest run, which is what CI runs, collected
+  none of them. All four are now listed, and a test refuses any
+  `tests/test_contract_compiler_*.py` outside that selection.
+- Fixed the CC-X04 observation reading `ReconProject.ledger`, an attribute
+  that became private at commit `9a7fafc9`. It reads
+  `ReconProject.snapshot_verified` instead, the public surface returning the
+  same `MigrationVerification` fact. Every observed outcome is unchanged
+  across the re-measurement; only the reader binding and the named entry
+  point moved. The CC-X02 re-measurement adds the four packaged modules never
+  scanned before, taking the corpus from 525 declarations in 6 modules to 586
+  in 10, and reporting four further duplicate groups: the slots `claim_kind`
+  and `unit`, and the classes `Claim` and `Evidence`, each re-declared by a
+  pack beside an existing declaration.
+
 ### Added
+
+- Added `scripts/contract_compiler_historic_wire.py record`, which derives
+  every CC-X04 reader digest from the tracked bytes, rewrites the pinned
+  measurement and its observations in place, and names the commit that last
+  changed the reader source set. It refuses while any reader source differs
+  from HEAD, because a measurement of uncommitted bytes identifies nothing.
+  The refusal a stale measurement raises now names this command.
+- Added `scripts/contract_compiler_ledger.py refresh-evidence <report>`, the
+  counterpart to `verify-evidence`: it re-derives every bound artifact length
+  and digest in a verification report from the current bytes, so moving a
+  report forward never means typing a digest.
 
 - Added `malleus.compiler.check_and_admit_population_plan`, which makes
   compilation, the selected policy's check and admission one operation. It

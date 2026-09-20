@@ -193,6 +193,37 @@ def verify_evidence_snapshot(
     return report
 
 
+REFRESHABLE_REPORT_SCHEMAS = frozenset(
+    {
+        "malleus.contract-compiler.verification-report/v1",
+        "malleus.contract-compiler.evidence-correction/v1",
+    }
+)
+
+
+def refresh_evidence_snapshot(report_path: Path, repository: Path) -> dict[str, Any]:
+    """Re-derive every bound artifact length and digest from the current bytes.
+
+    A verification report names the bytes it was measured against. Re-typing
+    those numbers by hand is how a report goes stale without anyone noticing,
+    so the only supported way to move one forward is this projection.
+    """
+    repository = repository.resolve()
+    report = _read_json(report_path)
+    if report.get("schema") not in REFRESHABLE_REPORT_SCHEMAS:
+        raise LedgerValidationError(f"{report_path}: not an artifact-bearing report")
+    for artifact in report["artifacts"]:
+        context = f"{report_path} artifact {artifact['path']}"
+        path = _repository_path(repository, artifact["path"], context)
+        if not path.is_file():
+            raise LedgerValidationError(f"{context}: target does not exist")
+        source = path.read_bytes()
+        artifact["byte_length"] = len(source)
+        artifact["sha256"] = "sha256:" + hashlib.sha256(source).hexdigest()
+    _write_atomic(report_path, json.dumps(report, indent=2, sort_keys=True) + "\n")
+    return report
+
+
 def _parse_utc(value: str, context: str) -> datetime:
     if not value.endswith("Z"):
         raise LedgerValidationError(f"{context}: timestamp must use UTC Z form")
@@ -794,8 +825,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "command",
-        choices=("check", "render", "hash", "verify-evidence"),
-        help="validate, render, hash one draft, or verify evidence source bytes",
+        choices=("check", "render", "hash", "verify-evidence", "refresh-evidence"),
+        help=(
+            "validate, render, hash one draft, or verify or re-derive evidence "
+            "source bytes"
+        ),
     )
     parser.add_argument("path", nargs="?", type=Path)
     arguments = parser.parse_args(argv)
@@ -820,6 +854,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(
             f"verified {len(report['artifacts'])} artifacts and "
             f"{len(report['checks'])} recorded checks for {report['workstream_id']}"
+        )
+        return 0
+
+    if arguments.command == "refresh-evidence":
+        if arguments.path is None:
+            parser.error("refresh-evidence requires a report path")
+        repository = Path(__file__).resolve().parents[1]
+        report = refresh_evidence_snapshot(arguments.path, repository)
+        print(
+            f"recorded {len(report['artifacts'])} artifact digests for "
+            f"{report['workstream_id']}"
         )
         return 0
 

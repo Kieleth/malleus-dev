@@ -71,6 +71,21 @@ def test_default_pytest_collects_the_compiler_tests_without_a_duplicate_ci_stage
     ]["testpaths"]
 
 
+def test_every_compiler_measurement_test_is_inside_the_default_gate() -> None:
+    # A measurement test outside testpaths is a measurement nothing checks.
+    # CC-X01, CC-X02 and CC-X04 each went stale this way: the tests existed,
+    # no gate collected them, and the drift stayed invisible for weeks.
+    config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    testpaths = set(config["tool"]["pytest"]["ini_options"]["testpaths"])
+    present = {
+        f"tests/{path.name}"
+        for path in (ROOT / "tests").glob("test_contract_compiler_*.py")
+    }
+
+    assert present
+    assert present <= testpaths, sorted(present - testpaths)
+
+
 def test_test_and_docs_profiles_are_subsets_of_the_default_plan() -> None:
     all_names = {command.name for command in ci.plan("all")}
 
