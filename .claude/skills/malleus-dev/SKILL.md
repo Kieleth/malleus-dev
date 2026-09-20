@@ -134,10 +134,16 @@ a check the policy did not require, a wrong check identity and a violated
 verdict, and it accepted a `CHECK_RECORDED` event asserting SATISFIED that no
 engine had produced. That measured fact is what ROADMAP F1 was built against;
 since F1 landed, Core runs the check itself inside one operation, under "What
-was built for F1" below, and the two-step path remains public. Prolog is the
-only admissible check implementation, and the reason is mechanical, not a
-preference: the contract names no engine and closes its fields, so a second
-engine would need a contract field that does not exist. Read the two live rule
+was built for F1" below, and since decision D (2026-09-20) no public admission
+path reads a caller-supplied outcome. A check contract
+(`malleus.check-contract/v1`, `src/malleus/_contract_pipeline/check_contract.py`
+in the Malleus checkout) names its executor:
+`PROLOG_RULES`, an adopter's rules record and its descriptor, or
+`CORE_BUILTIN`, one of Core's closed set of primitives (today
+`malleus.core.operations-apply-atomically` v1). Prolog is the only admissible
+adopter-authored check implementation, and the reason is mechanical, not a
+preference: the executor kinds are closed, so a second engine would need a kind
+that does not exist. Read the two live rule
 layers before designing here, with their `logic.yaml` files:
 `private/shop-progressive-01/producer/workspace-stage-c/inputs/rules.pl`, local
 only because `private/` never enters git, and
@@ -217,11 +223,25 @@ takes an outcome. Built RED first, both measurements kept as tests on the
 untouched Core: an admission with no check event refuses
 `MISSING_REQUIRED_CHECK`, and a fabricated SATISFIED check event is admitted
 with no engine run. Its two consumers of different shape are the Shop runner
-and the document path; neither is migrated yet, so the Shop's own 700-line
-sequence still runs until the migration lands, and no model run happens before
-it. Residual, undecided: `admit` and `admit_with_anchors` stay public and read
-a caller-supplied outcome, so the two-step door is still open (E-0486, E-0488,
-`handover/2026-09-19-core-atomic-admission.md`).
+and the document path. The Shop runner is migrated (private, D0 addendum 19,
+exported graph byte-identical). Decision D (2026-09-20, OVR-000471 onward) then
+closed the two-step door: `admit` and `admit_with_anchors` refuse a
+caller-supplied `CHECK_RECORDED` or `VERDICT_RECORDED` with
+`CALLER_SUPPLIED_CHECK_EVENT`, a policy program with no required check does not
+load ("required checks must be nonempty and unique"), and a third Core-authored
+entry point, `malleus.compiler.check_and_admit_change_set`, runs the required
+checks over a caller-built change set for the callers that build change sets
+rather than plans. Core runs every check in policy order and writes the
+`CHECK_RECORDED` event itself; a check contract the ledger does not retain, or
+one Core cannot run, refuses `CHECK_CONTRACT_NOT_RETAINED` or
+`UNRUNNABLE_REQUIRED_CHECK`. The research programs and Core's own tests are
+migrated with every exported graph byte-identical. Still two-step and
+unexercised: `paper-v4/experiment-v4/content-rules-doc-01/run_policy.py`,
+`paper-v4/experiment-v4/content-rules-doc-02/admit.py` and
+`research/ontology_driven_kg_realization/experiments/document_paper/document_run.py`
+(E-0486 to E-0508; `handover/2026-09-19-core-atomic-admission.md`,
+`handover/2026-09-20-core-check-executor.md`,
+`handover/2026-09-20-core-two-step-door.md`).
 
 **What is excluded.** `EXPLICIT_EXCLUSION`: a second check engine, either
 SHACL-SPARQL or the SPARQL 1.2 Rule Language, as an alternative to Prolog.

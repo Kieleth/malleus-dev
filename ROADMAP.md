@@ -1024,9 +1024,16 @@ are investigated after publication unless progress becomes hard without them.
 Landed 2026-09-19 on main `a68d11c9`: `malleus.compiler.check_and_admit_population_plan`
 (RED first; the measured fact: Core refused a missing check event and admitted a
 fabricated SATISFIED one). Sealed as OVR-000468. The Shop runner template is
-migrated (private, D0 addendum 19); the other two-step consumers are not.
-Residual decision: `admit` and `admit_with_anchors` still read a caller-supplied
-outcome. Details in `handover/2026-09-19-core-atomic-admission.md`.
+migrated (private, D0 addendum 19). Decision D (2026-09-20) closed the residual:
+Core runs every check its contract names (`malleus.check-contract/v1`, sealed as
+OVR-000471), `admit` and `admit_with_anchors` refuse a caller-supplied check or
+verdict event, and `malleus.compiler.check_and_admit_change_set` is the
+Core-authored path for callers that build change sets; the research programs and
+Core's own tests are migrated with exported graphs byte-identical (OVR-000472
+onward). Still two-step and unexercised: two paper-side consumers under
+`paper-v4/experiment-v4/` and `document_paper/document_run.py`. Details in
+`handover/2026-09-19-core-atomic-admission.md` and
+`handover/2026-09-20-core-two-step-door.md`.
 
 Today an adopter's runner compiles a population plan, runs the PolicyProgram's
 Prolog check itself, writes a check receipt, and only then calls
