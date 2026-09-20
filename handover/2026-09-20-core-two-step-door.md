@@ -286,9 +286,26 @@ for the door any more.
 partial effective contract disagree`.
 
 Ruff over `src tests research/.../small_shop/pareto`: the same nine
-pre-existing findings as `85f0ed54`, plus none. The E-0501 probe was not
-re-run: the count cannot be zero while the eight research programs still
-admit, and a full suite run for a number known to be non-zero buys nothing.
+pre-existing findings as `85f0ed54`, plus none.
+
+The E-0501 probe, over `tests/contract_compiler`,
+`research/.../experiments/small_shop` and `research/methodology_gedanken_e2e`:
+**19 caller-authored admissions, down from 134**. Fifteen are the unmigrated
+programs, in `correction/test_correction_vertical.py` (9),
+`shipment_policy/test_shipment_policy.py` (4) and
+`content_rules/test_content_rules.py` (2). The other four are Core's, and all
+four are tests whose subject is the door refusing:
+`test_atomic_population_admission.py::test_a_fabricated_check_outcome_can_no_longer_reach_the_ledger`,
+`::test_the_public_door_refuses_a_caller_written_verdict_record`, and
+`test_knowledge_change_history.py::test_refused_change_never_changes_ledger_or_replayed_graph`
+at `[rejected]` and `[unregistered]`. The probe counts the call, not the
+outcome, so a zero reading would mean the door had no test at all. Read it as
+four expected and fifteen to go.
+
+One probe artifact, so the next reader does not chase it:
+`test_no_public_callable_accepts_a_caller_check_outcome_under_a_policy` fails
+under the probe and passes without it. It reads `inspect.getsource` of
+`admit`, and the probe has replaced it with its own wrapper.
 
 ### The earlier agent's list, kept for the parts still open
 
