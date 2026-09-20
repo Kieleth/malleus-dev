@@ -1,0 +1,114 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:224b8278cbb6974f9c3d577cf71446d689f4f1ec4f95883aecb27f67eab3f10e",
+        "before_digest": "sha256:95460b0cbdfe8f1f4556a646095fdfa6f6f57ce4948f194e69456f2ae1eccac3",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
+      {
+        "after_digest": "sha256:f637cbba30d0363d068a8e700c400d1e947301d22495f07eccf4bc90678efe49",
+        "before_digest": "sha256:e12d9a009e2528a7902b8b3d59d4cd53d60b400c7fd582ac50e7c15809ee2def",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:e30270a44e1305a355c27cf063ee99b4cd5112f4bb9bcfa74392315252f7e475",
+        "before_digest": "sha256:65bc88dd008a2567fd04307214c566713d38bee05b96ba394534673736c564e3",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json"
+      },
+      {
+        "after_digest": "sha256:c481094613e46a6d28882a332cc9bd5dc6a1816639c5fba98aa34125c26fbd9c",
+        "before_digest": "sha256:83a5444a3dafda17bcbe5accca468e1562e20419997976bf6085eab3307d2448",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-X01-environment-contract-correction.json"
+      },
+      {
+        "after_digest": "sha256:ce786f210433a04b914690ea4fc272f16e5431530fdc98e556b137154e0e3665",
+        "before_digest": "sha256:2231d4d3d8cdb5e067e334840d32e5d28ca791e4e1f23acc8fde359ccb48036c",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:006bdea4921ade62c58e1fc51b2043b8ef1855a71530c1c485e6d1e7135bb581",
+        "before_digest": "sha256:18722eac7d88e67cfc7ce569f5a296c38c729fc5a6d017d3d20e76d492a6b8bd",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:5d4f3db53e21e9f572150d28fd4b2d29b12e91c02d7373a5968125de435e07d5",
+        "change": "CREATED",
+        "path": "handover/2026-09-20-core-check-executor.md"
+      },
+      {
+        "after_digest": "sha256:037567e39af4eca01f8ff0560625075d053729f8311d5dce3bc9270b0f47a47d",
+        "before_digest": "sha256:3f59e5956b9ba5efa7bbfdf5e1a78c507f717e6e2b5393245c4e686c1d1bcad9",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:415d7175da82381ef24536c9b9acc237b5d5121f16c18944d8d15cc6679c3a0f",
+        "before_digest": "sha256:b77ffdc57b3dcbb060d02e688336647b1c01c00cb3ab4e5bea9fdd09f849ad19",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/admission.py"
+      },
+      {
+        "after_digest": "sha256:9b28134f2b29340340c6371217cffce73ddef946dbe861f629648a59373059ca",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/check_contract.py"
+      },
+      {
+        "after_digest": "sha256:9d856b6c28a68de43ea23a199f5bef36bf3a26b996fb58ce8360919f091ffb12",
+        "before_digest": "sha256:b1e5d92e495455682f82cb765f2a001e253f21898da6028d1dbc79ac0058f892",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:5f309d574731a3fe2d19910c3ec9f971bb486483832926d2596eb7d448612f2d",
+        "before_digest": "sha256:2d28b7bf983d4987f03062f6b29dcb9ce02f4272b5aef7b7f78d5d68dc7206c6",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_atomic_population_admission.py"
+      },
+      {
+        "after_digest": "sha256:39907071b235908d40897bfe44e9578b6ebd0964e64a153517474986f424a338",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_check_contract_executor.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000471",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c57f0f68aeed56810ceb5950b0cd4ad6ca3cf71d39abc19dcffe749e0a85e30b",
+  "recorded_at": "2026-09-20T06:26:51Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "b7324a755fc90d60d81f6c4a48346df8d8a64595",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 471,
+  "subject": {
+    "id": "core-check-executor",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record one check-contract grammar Core parses, its closed executor set, the first Core check builtin, and the one-call operation running every check the policy requires.",
+  "why": "Decision D (paper ledger E-0502), step 1 of two, additive. Core runs every check itself; adopters supply contracts and rules, never programs and never outcomes. malleus.check-contract/v1 is the one check-contract grammar Core parses, and executor.kind is closed. PROLOG_RULES references the retained records carrying a pinned rule layer and runs them under PrologVerifier as before; CORE_BUILTIN names a function Core ships, from a closed registry. No adopter-program kind: an executor named by artifact id and sha256, the shape the four live research contracts use, is the escape hatch architectural law 12 forbids. The grammar references LogicContract and restates none of its closed fields, and a retained descriptor and rules pair still resolves, so no pinned identity moved. One builtin ships, malleus.core.operations-apply-atomically/1, which two adopter contracts already implement by calling Core's own _apply_change. The operation now runs every required check in policy order, one receipt and one CHECK_RECORDED each, carrying the fields the selected machine declares; UNEXPECTED_REQUIRED_CHECKS is gone. Not done and reported: Core's 132 caller-authored test admissions.",
+  "entry_hash": "sha256:7cb9e624476d13a78ed15a5d5d89f219414cb536f3738eda7a91a94f1de984fd"
+}

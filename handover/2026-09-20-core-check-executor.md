@@ -428,3 +428,9 @@ computed inside itself; the sealer fills it with the sealed bytes.
   "why": "Decision D (paper ledger E-0502), step 1 of two, additive. Core runs every check itself; adopters supply contracts and rules, never programs and never outcomes. malleus.check-contract/v1 is the one check-contract grammar Core parses, and executor.kind is closed. PROLOG_RULES references the retained records carrying a pinned rule layer and runs them under PrologVerifier as before; CORE_BUILTIN names a function Core ships, from a closed registry. No adopter-program kind: an executor named by artifact id and sha256, the shape the four live research contracts use, is the escape hatch architectural law 12 forbids. The grammar references LogicContract and restates none of its closed fields, and a retained descriptor and rules pair still resolves, so no pinned identity moved. One builtin ships, malleus.core.operations-apply-atomically/1, which two adopter contracts already implement by calling Core's own _apply_change. The operation now runs every required check in policy order, one receipt and one CHECK_RECORDED each, carrying the fields the selected machine declares; UNEXPECTED_REQUIRED_CHECKS is gone. Not done and reported: Core's 132 caller-authored test admissions."
 }
 ```
+
+## Sealing note for OVR-000471, 2026-09-20
+
+`entries/OVR-000471.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.
