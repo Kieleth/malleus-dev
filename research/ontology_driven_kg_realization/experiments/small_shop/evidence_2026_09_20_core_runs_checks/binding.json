@@ -1,0 +1,531 @@
+{
+ "connected_story_chain": {
+  "baseline_history_bytes": 1646996,
+  "files": {
+   "connected_story/partial_shipments/input_boundary.json": {
+    "/baseline_history_sha256": {
+     "current": "sha256:32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333",
+     "superseded": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06"
+    }
+   },
+   "connected_story/partial_shipments/receipt.json": {
+    "/baseline_history_sha256": {
+     "current": "sha256:32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333",
+     "superseded": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06"
+    },
+    "/history_head": {
+     "current": "sha256:0b042ba3597bbed98ac402862e837ae918f5bdc457681dad27d954e178462e46",
+     "superseded": "sha256:82765267a566d309128ea36d463d2cdb371e673b917a750babf5b076b8938255"
+    },
+    "/history_sha256": {
+     "current": "sha256:15c7c1eff28ff59496fd937de19181f649e9c8c9c4c1e895cf56252f434bd204",
+     "superseded": "sha256:b3250849cf048d3c492ce74263e980e5265ee7962a56ebada3ab793e54cbfa53"
+    },
+    "/replay_receipt": {
+     "current": "sha256:0d47daffa9b70599dcd65aa3611e10e2f970984dd73d426d14cc9da7a08e9364",
+     "superseded": "sha256:69b21f6c01457d672c386d57e87efd0e9e36d03ad7ab6df66810d0f0378d8b8c"
+    }
+   },
+   "connected_story/warehouse/ordering_receipt.json": {
+    "/binding/history_head": {
+     "current": "sha256:72ffab712ae6f68c49bae143cc2633315ef9f8d4152cf6c543c62986481d86cf",
+     "superseded": "sha256:2a3030dac01555bfe606a1456cb3f7e745171a3b847bf060f54f880bab7f7197"
+    },
+    "/binding/replay_receipt": {
+     "current": "sha256:454c9cdbde7d21be06f2e49232104bc53e1bb0dffe02c5bc715ed20cfe25848d",
+     "superseded": "sha256:d625f6483b530869cb1abc1ad58123784bc5c0f29e6ddc14ab5624d12ea0c8a8"
+    },
+    "/report_sha256": {
+     "current": "sha256:1694c1b708b9daadc3ac966a09ac54fe99649b18391f5340fc91eeb810034518",
+     "superseded": "sha256:e1fe03b8de758292f36b4c81612a8a95432b8b735d711bf5849849a94db7f047"
+    }
+   },
+   "connected_story/warehouse/receipt.json": {
+    "/history_head": {
+     "current": "sha256:72ffab712ae6f68c49bae143cc2633315ef9f8d4152cf6c543c62986481d86cf",
+     "superseded": "sha256:2a3030dac01555bfe606a1456cb3f7e745171a3b847bf060f54f880bab7f7197"
+    },
+    "/history_sha256": {
+     "current": "sha256:32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333",
+     "superseded": "sha256:ae9bbf870fd928e96de9f62c54a43d05575929b2546bb1e4376ecc9b8191cc06"
+    },
+    "/replay_receipt": {
+     "current": "sha256:454c9cdbde7d21be06f2e49232104bc53e1bb0dffe02c5bc715ed20cfe25848d",
+     "superseded": "sha256:d625f6483b530869cb1abc1ad58123784bc5c0f29e6ddc14ab5624d12ea0c8a8"
+    },
+    "/report_sha256": {
+     "current": "sha256:f41d9ae1d87ea21f23d8a75c680095d19b179cd67c9d4e576b0e888816b0940e",
+     "superseded": "sha256:52f2141be794b9d9b1a5db06013cc50cffd7bb282227bb34f6ff713286638cc3"
+    }
+   }
+  },
+  "note": "Not an evidence scenario and not compared by assert_current_evidence. The same moved revision policy digest moved these frozen connected-story chain coordinates, and each file carries only its current value, so the superseded pair is recorded here. Paths are relative to the Small Shop directory."
+ },
+ "historical_outputs": {
+  "evidence_2026_09_06/correction/explanation.json": "sha256:075608296bc7f6bcc5336487e99bf12ac321b8a92793ee591bdd38602007e9e3",
+  "evidence_2026_09_06/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+  "evidence_2026_09_06/correction/receipt.json": "sha256:e412711612c235d565c8cc74db8b34d13effe7de4323bdf22a6dd146d5faaf5a",
+  "evidence_2026_09_06/object_event/evidence.json": "sha256:1a5f2c71ef0631b90cc9d44b6c2c4f816ed6e5b05266a4585d693710cb492131",
+  "evidence_2026_09_06/showcase/explanation.json": "sha256:39dcb763af622d11998c795f0ffa3624061e0dc34f39878e13bb711a1a35a748",
+  "evidence_2026_09_06/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+  "evidence_2026_09_06/showcase/queries.json": "sha256:5e4d3855a027340cd0ed3859c30b02134d9d1ce1020ac3d9204eba221014e6ef",
+  "evidence_2026_09_06/showcase/receipt.json": "sha256:22370f49cc952a90fe944732be0d959fd221c0fa82a836ef97ebb1eb26ee94f1",
+  "evidence_2026_09_08/correction/explanation.json": "sha256:70e0b7b8f642042ee12cc90b5a0410ca94f953e36580e86e2e5e74081e1a99f3",
+  "evidence_2026_09_08/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+  "evidence_2026_09_08/correction/receipt.json": "sha256:4ab3ae48f14c25553105fad6a32265c191dbd7a7dfc03a5988dc6b37bcaa3313",
+  "evidence_2026_09_08/fresh_import/evidence.json": "sha256:75585c2fe473c9ca67c04410b82e927efcf18ea4d90d38934623edb64d751541",
+  "evidence_2026_09_08/object_event/evidence.json": "sha256:bb7239d1b25ee4c1192ae24392a2dfff242e1e1c6e06c8e59de9261a41e5f120",
+  "evidence_2026_09_08/public_population/evidence.json": "sha256:e741dac87141868a96cee67acbdddcf2a98cb09ed3eaf01cd2f47ba821bc9f98",
+  "evidence_2026_09_08/showcase/explanation.json": "sha256:97f0e01f6a39f43194f4104c1e3a0800e3ed58549ce2e658485e05d01cbb4e14",
+  "evidence_2026_09_08/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+  "evidence_2026_09_08/showcase/queries.json": "sha256:c1a738807494ccc0058adf9b1880fcc0194a39ac0c1d380772d126f0db609c23",
+  "evidence_2026_09_08/showcase/receipt.json": "sha256:2b98f325ac89df0b11aa07e9a11cbf41ed4eeb1429c28c598d97798d80130715",
+  "evidence_2026_09_08_rule_check/correction/explanation.json": "sha256:c7658f2c4d668a542b4c54de89ad99562fd9eb0d2b1a154881045aff0e4f12a1",
+  "evidence_2026_09_08_rule_check/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+  "evidence_2026_09_08_rule_check/correction/receipt.json": "sha256:41d0086fd9df4a999503a904d2080365c1868a0985de0ec63171066b789e4832",
+  "evidence_2026_09_08_rule_check/fresh_import/evidence.json": "sha256:74201447870a845bb6f4bb7d7f948354003619d39adb37fd562a1e0d5aa4933f",
+  "evidence_2026_09_08_rule_check/object_event/evidence.json": "sha256:ac91dfba52bfdb1b64a4b3d5d080a34b130e71a8d30fb58bf708defc20e678e7",
+  "evidence_2026_09_08_rule_check/public_population/evidence.json": "sha256:abc3c4446d4bebe32d508f7a7fb2d46413708e477e678a35a3254d4fa1548987",
+  "evidence_2026_09_08_rule_check/showcase/explanation.json": "sha256:55f53637aa39303d845f005b993b72a7c5c8f0668cdde2c92cc9583cf1c8a3f9",
+  "evidence_2026_09_08_rule_check/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+  "evidence_2026_09_08_rule_check/showcase/queries.json": "sha256:033212a01dd6394ace876789cfd878f6eff80a1e00fb51e8e2d6676654951c27",
+  "evidence_2026_09_08_rule_check/showcase/receipt.json": "sha256:d7bd9f9b444a924270f8f36b243f2e31aed1105160be8ac6e6a4c650d87a8f58",
+  "evidence_2026_09_17_policy_rebinding/correction/explanation.json": "sha256:c7658f2c4d668a542b4c54de89ad99562fd9eb0d2b1a154881045aff0e4f12a1",
+  "evidence_2026_09_17_policy_rebinding/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+  "evidence_2026_09_17_policy_rebinding/correction/receipt.json": "sha256:41d0086fd9df4a999503a904d2080365c1868a0985de0ec63171066b789e4832",
+  "evidence_2026_09_17_policy_rebinding/fresh_import/evidence.json": "sha256:8ad251ddf61f4fb50589f2d047ce17552b22f5f9416511df73d3074925906cc5",
+  "evidence_2026_09_17_policy_rebinding/object_event/evidence.json": "sha256:ac91dfba52bfdb1b64a4b3d5d080a34b130e71a8d30fb58bf708defc20e678e7",
+  "evidence_2026_09_17_policy_rebinding/public_population/evidence.json": "sha256:795bb5c8689568f5805bb10c3295b3c1297380a719adc636d5e7469ebd70c494",
+  "evidence_2026_09_17_policy_rebinding/showcase/explanation.json": "sha256:55f53637aa39303d845f005b993b72a7c5c8f0668cdde2c92cc9583cf1c8a3f9",
+  "evidence_2026_09_17_policy_rebinding/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+  "evidence_2026_09_17_policy_rebinding/showcase/queries.json": "sha256:033212a01dd6394ace876789cfd878f6eff80a1e00fb51e8e2d6676654951c27",
+  "evidence_2026_09_17_policy_rebinding/showcase/receipt.json": "sha256:d7bd9f9b444a924270f8f36b243f2e31aed1105160be8ac6e6a4c650d87a8f58",
+  "fresh_import/evidence.json": "sha256:60b510ad59a0e86951bea809152c577a1fade06e34aaf7e8485290f56b40931f",
+  "public_population/evidence.json": "sha256:634b2ff3ba7faa33d8574ebb5265ec21bdf1de07e8f96c8e1a64e04cbeeff8d5"
+ },
+ "producer_commit": "7bef2db3af937f9c96e71300f9ad5299084400c0",
+ "scenarios": {
+  "correction": {
+   "compiler_artifacts": {
+    "sha256:ec918b612c034d1b35aeaa98d9ca69496bcad98dae48a505c7d40c08c1411051": {
+     "id": "malleus.contract-pipeline/python-private-v0",
+     "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    }
+   },
+   "outputs": {
+    "explanation.json": {
+     "changed_paths": [
+      "/changes/0/identity",
+      "/changes/0/selected_source/mapping_sha256",
+      "/changes/1/identity",
+      "/changes/2/identity",
+      "/checks",
+      "/contract/effective_contract_identity",
+      "/contract/machine_identity",
+      "/history/acceptance_head",
+      "/history/event_count",
+      "/history/ledger_head",
+      "/history/materialization_head"
+     ],
+     "changed_values": {
+      "/checks": {
+       "current": "len 3",
+       "superseded": "len 6"
+      },
+      "/history/event_count": {
+       "current": 55,
+       "superseded": 58
+      }
+     },
+     "predecessor": "evidence_2026_09_17_policy_rebinding/correction/explanation.json",
+     "sha256": "sha256:d4279b815fbe5b89eed7fdbf35fa45effa38b477c304f2a3f408e0b56e2fbf97"
+    },
+    "graph.json": {
+     "changed_paths": [],
+     "predecessor": "evidence_2026_09_17_policy_rebinding/correction/graph.json",
+     "sha256": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645"
+    },
+    "receipt.json": {
+     "changed_paths": [
+      "/contract_identity",
+      "/knowledge_change_set_identity",
+      "/ledger_event_count",
+      "/ledger_head",
+      "/machine_identity",
+      "/machine_state_identity",
+      "/policy_identity"
+     ],
+     "changed_values": {
+      "/ledger_event_count": {
+       "current": 55,
+       "superseded": 58
+      }
+     },
+     "predecessor": "evidence_2026_09_17_policy_rebinding/correction/receipt.json",
+     "sha256": "sha256:52545c3a32be5d0eb19888f48fbd6073c3577d4f0ec2022196d7ac3bb6334348"
+    }
+   }
+  },
+  "fresh_import": {
+   "compiler_artifacts": {
+    "sha256:636f4e751687b80f803ebb6cf960eed9da2cca7f466464ec6ad668b77ba50447": {
+     "id": "malleus.contract-pipeline/python-private-v0",
+     "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    },
+    "sha256:e244c782747e3ae60649d768b636e5ce679478a5e8d6f3392bdd91a0501b6062": {
+     "id": "malleus.contract-pipeline/python-private-v0",
+     "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    }
+   },
+   "outputs": {
+    "evidence.json": {
+     "changed_paths": [
+      "/ledger_head",
+      "/ledger_sha256",
+      "/receipt_identity"
+     ],
+     "predecessor": "evidence_2026_09_17_policy_rebinding/fresh_import/evidence.json",
+     "sha256": "sha256:36220dd940a917414e3d54587d1ded942ee1c45b8e48f9c846dd004d6d3a7c7d"
+    }
+   }
+  },
+  "object_event": {
+   "compiler_artifacts": {
+    "sha256:0f1d146d4187e89727ac955ea6a293d79445814918c873da96d6d3e375d4ecdb": {
+     "id": "malleus.contract-pipeline/python-private-v0",
+     "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    }
+   },
+   "outputs": {
+    "evidence.json": {
+     "changed_paths": [
+      "/contract_identity",
+      "/history/ledger_event_count",
+      "/history/ledger_head",
+      "/history/ledger_sha256",
+      "/history/receipt_identity",
+      "/plan_identity"
+     ],
+     "changed_values": {
+      "/history/ledger_event_count": {
+       "current": 15,
+       "superseded": 14
+      }
+     },
+     "predecessor": "evidence_2026_09_17_policy_rebinding/object_event/evidence.json",
+     "sha256": "sha256:6743ad177b849ad694276b0b5789ce16141be288ffc9b6918ac0cad7810a959a"
+    }
+   }
+  },
+  "public_population": {
+   "compiler_artifacts": {
+    "sha256:636f4e751687b80f803ebb6cf960eed9da2cca7f466464ec6ad668b77ba50447": {
+     "id": "malleus.contract-pipeline/python-private-v0",
+     "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    },
+    "sha256:e244c782747e3ae60649d768b636e5ce679478a5e8d6f3392bdd91a0501b6062": {
+     "id": "malleus.contract-pipeline/python-private-v0",
+     "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    }
+   },
+   "outputs": {
+    "evidence.json": {
+     "changed_paths": [
+      "/contract_revision/identities/0",
+      "/contract_revision/identities/1",
+      "/contract_revision/revision_identity",
+      "/history/acceptance_head",
+      "/history/ledger_event_count",
+      "/history/ledger_head",
+      "/history/ledger_sha256",
+      "/history/materialization_head",
+      "/history/receipt_identity",
+      "/records/0/contract_identity",
+      "/records/0/evidence/1/sha256",
+      "/records/0/evidence/2/sha256",
+      "/records/0/population_plan/sha256",
+      "/records/1/contract_identity",
+      "/records/1/evidence/1/sha256",
+      "/records/1/evidence/2/sha256",
+      "/records/1/population_plan/sha256",
+      "/records/2/contract_identity",
+      "/records/2/evidence/1/sha256",
+      "/records/2/evidence/2/sha256",
+      "/records/2/population_plan/sha256",
+      "/records/3/contract_identity",
+      "/records/3/evidence/1/sha256",
+      "/records/3/population_plan/sha256",
+      "/records/4/contract_identity",
+      "/records/4/evidence/1/sha256",
+      "/records/4/population_plan/sha256",
+      "/records/5/contract_identity",
+      "/records/5/evidence/1/sha256",
+      "/records/5/population_plan/sha256",
+      "/records/6/contract_identity",
+      "/records/6/evidence/1/sha256",
+      "/records/6/population_plan/sha256",
+      "/records/7/contract_identity",
+      "/records/7/evidence/1/sha256",
+      "/records/7/population_plan/sha256",
+      "/records/8/contract_identity",
+      "/records/8/evidence/1/sha256",
+      "/records/8/population_plan/sha256",
+      "/records/9/contract_identity",
+      "/records/9/evidence/1/sha256",
+      "/records/9/population_plan/sha256"
+     ],
+     "changed_values": {
+      "/history/ledger_event_count": {
+       "current": 49,
+       "superseded": 48
+      }
+     },
+     "predecessor": "evidence_2026_09_17_policy_rebinding/public_population/evidence.json",
+     "sha256": "sha256:f0814b4842dc2aa9133e6912e9f915cd9ea8a24d7b6af4355a64ad84137b2cb0"
+    }
+   }
+  },
+  "showcase": {
+   "compiler_artifacts": {
+    "sha256:3a72e20671dad61fd3d1087447a8ac25dabdb006aa1abecfa46d605f84c0dc12": {
+     "id": "malleus.contract-pipeline/python-private-v0",
+     "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+    }
+   },
+   "outputs": {
+    "explanation.json": {
+     "changed_keys": {
+      "": {
+       "current": [
+        "accepted_changes",
+        "coordinates",
+        "record_history",
+        "representative_contract_facts",
+        "run_program",
+        "runtime_oracle_named_inputs",
+        "schema",
+        "scope",
+        "source_mapping_verifications"
+       ],
+       "superseded": [
+        "accepted_changes",
+        "coordinates",
+        "record_history",
+        "representative_contract_facts",
+        "run_program",
+        "runtime_oracle_named_inputs",
+        "schema",
+        "scope",
+        "source_mapping_receipts"
+       ]
+      }
+     },
+     "changed_paths": [
+      "",
+      "/accepted_changes/0/base_coordinates/ledger_event_count",
+      "/accepted_changes/0/base_coordinates/ledger_head",
+      "/accepted_changes/0/contract_identity",
+      "/accepted_changes/0/identity",
+      "/accepted_changes/1/base_coordinates/acceptance_head",
+      "/accepted_changes/1/base_coordinates/ledger_event_count",
+      "/accepted_changes/1/base_coordinates/ledger_head",
+      "/accepted_changes/1/base_coordinates/materialization_head",
+      "/accepted_changes/1/contract_identity",
+      "/accepted_changes/1/identity",
+      "/accepted_changes/2/base_coordinates/acceptance_head",
+      "/accepted_changes/2/base_coordinates/ledger_event_count",
+      "/accepted_changes/2/base_coordinates/ledger_head",
+      "/accepted_changes/2/base_coordinates/materialization_head",
+      "/accepted_changes/2/contract_identity",
+      "/accepted_changes/2/identity",
+      "/accepted_changes/3/base_coordinates/acceptance_head",
+      "/accepted_changes/3/base_coordinates/ledger_event_count",
+      "/accepted_changes/3/base_coordinates/ledger_head",
+      "/accepted_changes/3/base_coordinates/materialization_head",
+      "/accepted_changes/3/contract_identity",
+      "/accepted_changes/3/identity",
+      "/accepted_changes/4/base_coordinates/acceptance_head",
+      "/accepted_changes/4/base_coordinates/ledger_event_count",
+      "/accepted_changes/4/base_coordinates/ledger_head",
+      "/accepted_changes/4/base_coordinates/materialization_head",
+      "/accepted_changes/4/contract_identity",
+      "/accepted_changes/4/identity",
+      "/coordinates/contract/effective_contract_identity",
+      "/coordinates/history/acceptance_head",
+      "/coordinates/history/event_count",
+      "/coordinates/history/ledger_head",
+      "/coordinates/history/materialization_head",
+      "/coordinates/history/receipt_identity",
+      "/run_program/identity"
+     ],
+     "changed_values": {
+      "/accepted_changes/0/base_coordinates/ledger_event_count": {
+       "current": 50,
+       "superseded": 49
+      },
+      "/accepted_changes/1/base_coordinates/ledger_event_count": {
+       "current": 56,
+       "superseded": 54
+      },
+      "/accepted_changes/2/base_coordinates/ledger_event_count": {
+       "current": 62,
+       "superseded": 59
+      },
+      "/accepted_changes/3/base_coordinates/ledger_event_count": {
+       "current": 68,
+       "superseded": 64
+      },
+      "/accepted_changes/4/base_coordinates/ledger_event_count": {
+       "current": 74,
+       "superseded": 69
+      },
+      "/coordinates/history/event_count": {
+       "current": 80,
+       "superseded": 74
+      }
+     },
+     "predecessor": "evidence_2026_09_17_policy_rebinding/showcase/explanation.json",
+     "sha256": "sha256:6fefa64470adb100661b69c015865f8dcbcef58e636af7a3f2907e178c563061"
+    },
+    "graph.json": {
+     "changed_paths": [],
+     "predecessor": "evidence_2026_09_17_policy_rebinding/showcase/graph.json",
+     "sha256": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+    },
+    "queries.json": {
+     "changed_paths": [
+      "/answers/0/coordinates/acceptance_head",
+      "/answers/0/coordinates/ledger_event_count",
+      "/answers/0/coordinates/ledger_head",
+      "/answers/0/coordinates/materialization_head",
+      "/answers/1/coordinates/acceptance_head",
+      "/answers/1/coordinates/ledger_event_count",
+      "/answers/1/coordinates/ledger_head",
+      "/answers/1/coordinates/materialization_head",
+      "/answers/2/coordinates/acceptance_head",
+      "/answers/2/coordinates/ledger_event_count",
+      "/answers/2/coordinates/ledger_head",
+      "/answers/2/coordinates/materialization_head",
+      "/answers/3/coordinates/acceptance_head",
+      "/answers/3/coordinates/ledger_event_count",
+      "/answers/3/coordinates/ledger_head",
+      "/answers/3/coordinates/materialization_head",
+      "/answers/4/coordinates/acceptance_head",
+      "/answers/4/coordinates/ledger_event_count",
+      "/answers/4/coordinates/ledger_head",
+      "/answers/4/coordinates/materialization_head",
+      "/answers/5/coordinates/acceptance_head",
+      "/answers/5/coordinates/ledger_event_count",
+      "/answers/5/coordinates/ledger_head",
+      "/answers/5/coordinates/materialization_head",
+      "/answers/5/result/change/identity",
+      "/answers/5/result/change/value/base_acceptance_head",
+      "/answers/5/result/change/value/base_ledger_event_count",
+      "/answers/5/result/change/value/base_ledger_head",
+      "/answers/5/result/change/value/base_materialization_head",
+      "/answers/5/result/change/value/contract_identity",
+      "/answers/5/result/change/value/evidence/2/sha256",
+      "/answers/5/result/change/value/evidence/3/sha256",
+      "/answers/5/result/change/value/evidence/4/sha256",
+      "/answers/5/result/change/value/evidence/5/sha256",
+      "/answers/5/result/change/value/evidence/6/sha256",
+      "/answers/5/result/change_evidence_closure/0/sha256",
+      "/answers/5/result/change_evidence_closure/1/sha256",
+      "/answers/5/result/change_evidence_closure/2/sha256",
+      "/answers/5/result/change_evidence_closure/3/sha256",
+      "/answers/5/result/change_evidence_closure/5/sha256",
+      "/answers/6/coordinates/acceptance_head",
+      "/answers/6/coordinates/ledger_event_count",
+      "/answers/6/coordinates/ledger_head",
+      "/answers/6/coordinates/materialization_head",
+      "/answers/6/result/change/identity",
+      "/answers/6/result/change/value/base_acceptance_head",
+      "/answers/6/result/change/value/base_ledger_event_count",
+      "/answers/6/result/change/value/base_ledger_head",
+      "/answers/6/result/change/value/base_materialization_head",
+      "/answers/6/result/change/value/contract_identity",
+      "/answers/6/result/change/value/evidence/2/sha256",
+      "/answers/6/result/change/value/evidence/3/sha256",
+      "/answers/6/result/change/value/evidence/4/sha256",
+      "/answers/6/result/change/value/evidence/5/sha256",
+      "/answers/6/result/change/value/evidence/6/sha256",
+      "/answers/6/result/change_evidence_closure/1/sha256",
+      "/answers/6/result/change_evidence_closure/2/sha256",
+      "/answers/6/result/change_evidence_closure/3/sha256",
+      "/answers/6/result/change_evidence_closure/4/sha256",
+      "/answers/6/result/change_evidence_closure/5/sha256",
+      "/answers/7/coordinates/acceptance_head",
+      "/answers/7/coordinates/ledger_event_count",
+      "/answers/7/coordinates/ledger_head",
+      "/answers/7/coordinates/materialization_head",
+      "/answers/7/result/effective_contract_identity",
+      "/answers/7/result/history_receipt_identity"
+     ],
+     "changed_values": {
+      "/answers/0/coordinates/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      },
+      "/answers/1/coordinates/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      },
+      "/answers/2/coordinates/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      },
+      "/answers/3/coordinates/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      },
+      "/answers/4/coordinates/ledger_event_count": {
+       "current": 74,
+       "superseded": 69
+      },
+      "/answers/5/coordinates/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      },
+      "/answers/5/result/change/value/base_ledger_event_count": {
+       "current": 62,
+       "superseded": 59
+      },
+      "/answers/6/coordinates/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      },
+      "/answers/6/result/change/value/base_ledger_event_count": {
+       "current": 68,
+       "superseded": 64
+      },
+      "/answers/7/coordinates/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      }
+     },
+     "predecessor": "evidence_2026_09_17_policy_rebinding/showcase/queries.json",
+     "sha256": "sha256:ec09357a7f186ba56554efe7ad59d0f644b332acfda790aea15afdae86ecf20a"
+    },
+    "receipt.json": {
+     "changed_paths": [
+      "/contract_identity",
+      "/knowledge_change_set_identity",
+      "/ledger_event_count",
+      "/ledger_head",
+      "/machine_identity",
+      "/machine_state_identity",
+      "/policy_identity"
+     ],
+     "changed_values": {
+      "/ledger_event_count": {
+       "current": 80,
+       "superseded": 74
+      }
+     },
+     "predecessor": "evidence_2026_09_17_policy_rebinding/showcase/receipt.json",
+     "sha256": "sha256:51470f3cdf195991e2f38e06bfa9769d8c308f283f900d0deeb022c7e084ad31"
+    }
+   }
+  }
+ }
+}

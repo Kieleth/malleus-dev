@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 HERE = Path(__file__).parent
-CURRENT = HERE / "evidence_2026_09_17_policy_rebinding"
+CURRENT = HERE / "evidence_2026_09_20_core_runs_checks"
 
 
 def digest(content: bytes) -> str:

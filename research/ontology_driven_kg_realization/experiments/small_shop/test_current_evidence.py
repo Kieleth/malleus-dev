@@ -118,7 +118,7 @@ def test_corrupted_expected_bytes_refuse_even_when_the_run_matches_them(
 def test_every_predecessor_receipt_remains_byte_identical():
     module = helper()
     binding = json.loads((module.CURRENT / "binding.json").read_bytes())
-    assert len(binding["historical_outputs"]) == 30
+    assert len(binding["historical_outputs"]) == 40
     for name, identity in binding["historical_outputs"].items():
         assert module.digest((HERE / name).read_bytes()) == identity
 
@@ -157,25 +157,57 @@ def test_a_revision_cannot_introduce_an_unbound_compiler_artifact(occurrence):
 
 
 def test_successor_changes_only_recorded_history_and_artifact_fingerprints():
+    """A successor moves digests, or it declares in full what else it moved.
+
+    A generation used to be accepted only when every changed leaf was a pair
+    of sha256 strings. The 2026-09-20 generation moves two things that are
+    not: ledger event counts, because Core retains one receipt per change
+    where the programs wrote none, and one field name in the showcase
+    explanation, source_mapping_receipts to source_mapping_verifications.
+    Both are declared value by value in binding.json, and anything undeclared
+    still refuses.
+    """
     module = helper()
     binding = json.loads((module.CURRENT / "binding.json").read_bytes())
 
-    def changes(old, new, path=""):
+    def changes(old, new, declared, path=""):
+        stated = declared.get("changed_values", {}).get(path)
+        if isinstance(old, list) and isinstance(new, list) and len(old) != len(new):
+            # A list that changed length is declared by its two lengths, not
+            # element by element. The only one is the correction explanation's
+            # check records, six to three.
+            assert stated == {
+                "superseded": f"len {len(old)}",
+                "current": f"len {len(new)}",
+            }, path
+            return [path]
         assert type(old) is type(new), path
         if isinstance(old, dict):
-            assert old.keys() == new.keys(), path
-            return [
-                p for k in sorted(old) for p in changes(old[k], new[k], path + "/" + k)
+            found = []
+            if old.keys() != new.keys():
+                expected = declared.get("changed_keys", {}).get(path)
+                assert expected == {
+                    "superseded": sorted(old),
+                    "current": sorted(new),
+                }, path
+                found.append(path)
+            return found + [
+                item
+                for key in sorted(set(old) & set(new))
+                for item in changes(old[key], new[key], declared, path + "/" + key)
             ]
         if isinstance(old, list):
             assert len(old) == len(new), path
             return [
-                p
-                for i, pair in enumerate(zip(old, new, strict=True))
-                for p in changes(*pair, path + "/" + str(i))
+                item
+                for index, pair in enumerate(zip(old, new, strict=True))
+                for item in changes(*pair, declared, path + "/" + str(index))
             ]
         if old == new:
             return []
+        if stated is not None:
+            assert stated == {"superseded": old, "current": new}, path
+            return [path]
         assert isinstance(old, str) and isinstance(new, str), path
         assert old.startswith("sha256:") and new.startswith("sha256:"), path
         assert len(old) == len(new) == 71, path
@@ -185,4 +217,4 @@ def test_successor_changes_only_recorded_history_and_artifact_fingerprints():
         for name, output in scenario["outputs"].items():
             old = json.loads((HERE / output["predecessor"]).read_bytes())
             new = json.loads((module.CURRENT / group / name).read_bytes())
-            assert changes(old, new) == output["changed_paths"]
+            assert changes(old, new, output) == output["changed_paths"]
