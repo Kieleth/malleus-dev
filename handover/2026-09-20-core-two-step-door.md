@@ -820,20 +820,20 @@ How the document set was computed, mechanically:
 1. Every path any sealed `DOCUMENT_REVISION` entry has ever recorded, with its
    latest `after_digest`: 721 paths, read from
    `design/contract_compiler/overseer/entries/OVR-*.json`.
-2. Everything the branch changed, `git diff --name-only 85f0ed54..HEAD`: 94
+2. Everything the branch changed, `git diff --name-only 85f0ed54..HEAD`: 95
    paths.
 3. The intersection, minus the two paths that no longer exist, minus any whose
-   current bytes already equal the recorded digest: **60 MODIFIED**.
+   current bytes already equal the recorded digest: **61 MODIFIED**.
 4. Plus two CREATED: `handover/2026-09-20-core-two-step-door.md`, which the
    brief names, and `tests/contract_compiler/pareto/test_change_set_admission.py`,
    by the precedent `OVR-000471` set when it recorded
-   `test_check_contract_executor.py` the same way. **62 documents.**
+   `test_check_contract_executor.py` the same way. **63 documents.**
 
 Nothing else qualified. `pyproject.toml` did not change on this branch, its
 `include` list declares no new file, and its `testpaths` names
 `tests/contract_compiler` as a directory rather than the new module. Every
 `before_digest` below was checked against the bytes at `85f0ed54` as well as
-against the ledger's own latest recorded digest: all 60 agree, so the two
+against the ledger's own latest recorded digest: all 61 agree, so the two
 readings of "the committed bytes at 85f0ed54" are the same bytes.
 
 The two deleted documents are the finding above and are not in the set,
@@ -846,6 +846,14 @@ All four blocks validate against
 placeholdered previous hashes: **4 of 4 valid, 0 errors**. `why` is 1158
 characters in `OVR-000472` and 338 in each successor, under the 1200 cap;
 `summary` is 169, under 240.
+
+Proved end to end in a scratch copy of the repository, hardlinked so every
+governed document is the exact byte the branch holds, with the four entries
+inserted at real hashes and `head.json` advanced to 475. With the two deleted
+documents restored in the scratch only, `python scripts/contract_compiler_ledger.py
+render` then `check` reports **validated 475 entries**. Without them it refuses
+`OVR-000352: revised document does not exist`, which is the finding above and
+nothing to do with these entries. The real worktree was never written to.
 
 
 ### `OVR-000472`
@@ -1161,7 +1169,7 @@ characters in `OVR-000472` and 338 in each successor, under the 1200 cap;
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 2 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 62 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 63 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
 
@@ -1319,7 +1327,7 @@ characters in `OVR-000472` and 338 in each successor, under the 1200 cap;
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 3 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 62 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 63 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
 
@@ -1419,6 +1427,12 @@ characters in `OVR-000472` and 338 in each successor, under the 1200 cap;
         "before_digest": "sha256:ed2ec2deea36d2a9848e38a3dfde04f3cea5838a0a4fa6705b250f2c485d00a0",
         "change": "MODIFIED",
         "path": "tests/contract_compiler/pareto/test_transition_admission.py"
+      },
+      {
+        "after_digest": "sha256:65f763f441da5886fd57e71cb8dcd3165d90e037c2af1d9f5ba7532ad3b3eff9",
+        "before_digest": "sha256:0e2d42c75459af2ee8a07e4d6379daad63b85e2d1102c41d6140b2584e36cff6",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
       }
     ]
   },
@@ -1466,6 +1480,6 @@ characters in `OVR-000472` and 338 in each successor, under the 1200 cap;
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 4 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 62 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 63 governed documents, so the set is split by sorted path across four sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
