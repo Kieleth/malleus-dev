@@ -271,11 +271,88 @@ test tree beside it. **15 failed, 1 passed.** The one that passes is
 fixture contract and never touches the entry point. GREEN on this tree: 16
 passed, with the 18 atomic and 16 executor tests still green.
 
+Full default suite on this tree, after the door and the fold:
+**133 failed, 3515 passed, 3 skipped, 10 errors**, 13m38s. The arithmetic
+closes: 3515 plus 133 plus 10 is 3658, and 3658 plus 3 skipped is 3661, which
+is the clean 3643 plus the 18 tests added here (16 in
+`test_change_set_admission.py`, and `test_atomic_population_admission.py` going
+from 18 to 20).
+
+The 143 failures and errors, by file and by cause:
+
+| count | file | cause |
+|---|---|---|
+| 14 | `tests/test_contract_compiler_integration.py` | governance digest guard |
+| 7 | `tests/test_contract_compiler_ledger.py` | governance digest guard |
+| 3 | `tests/test_docs.py` | governance digest guard, through the strict Sphinx build |
+| 27 | `test_knowledge_change_history.py` | migration not done |
+| 21 | `test_population_plan.py` | migration not done |
+| 19 | `test_transition_admission.py` | migration not done |
+| 15 | `test_check_contract_rebinding.py` | migration not done |
+| 7 | `test_governed_population.py` | migration not done |
+| 4 | `test_population_trace.py` | migration not done |
+| 2 | `test_change_composition_context.py` | migration not done |
+| 2 | `research/.../public_population/test_run.py` | migration not done |
+| 1 each | `test_atomic_population_admission.py`, `test_contract_revision.py`, `test_finite_protocol_history.py`, `test_object_event_population.py`, `test_public_compiler.py`, `test_review_coverage.py`, `test_small_shop_contract_revision.py` | migration not done |
+| 1 each | `test_default_shop_walkthrough.py`, `test_document_assertion_time.py`, `test_document_fixture_producer.py`, `test_fresh_shop_import.py`, `test_partial_shipments.py` | the fold: a frozen identity moved |
+
+The 24 governance failures have one cause and one reported path:
+`OVR-000464: latest document digest mismatch for
+src/malleus/_contract_pipeline/knowledge.py, expected sha256:15b3991f…, got
+sha256:28d90605…`. The validator stops at the first mismatch, so
+`admission.py`, `compiler.py` and the two profile documents are behind it and
+will be reported in turn; all of them are governed documents this work
+changed, and sealing `OVR-000472` clears the set. That is the allowed
+governance residue and it is the only allowed one.
+
+Every other failure is a consequence this branch created and has not yet
+answered. The fold group is a frozen identity that moved, for example
+`test_default_shop_walkthrough.py` asserting the structural bundle identity
+`sha256:0ef377d9…` where the fold now produces `sha256:8a994ed0…`. The
+migration group is the closed door refusing a caller-written check record.
+
 Ruff over `src tests`: the same nine pre-existing findings as `85f0ed54`
 (`tests/test_kg.py` E401 twice, `tests/test_logic.py` F401 twice,
 `tests/test_prolog_verifier.py` E402 five times), none in any changed file.
+
+Appendix B, run read-only on this tree and not edited.
+`paper-v4/test_shop_connected_calibration.py`: **14 errors, one cause**, all at
+setup of the module-scoped `chain` fixture. The connected story's warehouse
+stage refuses `ValueError: Warehouse extension requires the exact Table 1
+baseline` at `connected_story/warehouse/run.py:155`. That is the fold: the
+structural policy identity is inside the partial effective contract every
+structural change set binds, so the Table 1 history's bytes moved and no
+longer reproduce the frozen boundary the warehouse stage requires. The chain
+cannot be rebuilt on this tree, so the two Appendix B digests have a before
+and no after: before `32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333`
+and `15c7c1eff28ff59496fd937de19181f649e9c8c9c4c1e895cf56252f434bd204`, after
+not computable until the connected-story re-freeze of item 4 lands. This is
+the same shape of failure as E-0466 and E-0467, one identity further down.
+
+`paper-v4/test_shop_calibration.py`: **1 failed, 1 passed**. The failure is
+`test_shipment_policy_figures_and_refusal_match_a_fresh_run`, and the cause is
+not the test. It runs `small_shop/shipment_policy/run.py` as a subprocess, and
+that unmigrated consumer hits the closed door at its own line 277:
+`ShipmentPolicyRefusal: Shop policy SATISFIED: CALLER_SUPPLIED_CHECK_EVENT`.
+Neither calibration test uses the closed door itself; both fail through
+research programs that do. Neither was edited.
+
+No test in the default suite exercises
+`paper-v4/experiment-v4/content-rules-doc-01/run_policy.py` or
+`content-rules-doc-02/admit.py`. `paper-v4` is not in `testpaths`, and the only
+reference to either path under `tests/` or `research/` is one docstring line in
+`test_atomic_population_admission.py`.
+
+The caller-authored admission count was not re-measured here. The E-0501
+counting probe needs its module on `PYTHONPATH`, which the first attempt
+missed, and a second full-suite run for a number that is not yet zero would
+have bought nothing: the migration has not started, so the count stands where
+E-0503 left it, 134 caller-authored admissions in 18 files, measured on the
+content this commit carries. What is different is that all 134 now refuse
+rather than admit, which is what the 109 non-governance failures above are.
 
 ## Commits
 
 - `7c6e3f62` the third entry point and its 16 tests, additive, door still open
 - `7c3237f0` the door closed and the structural check folded, breaking
+- this handover
