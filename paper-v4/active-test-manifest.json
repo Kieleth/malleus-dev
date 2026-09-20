@@ -8,10 +8,29 @@
   "core_pins": [
     {
       "commit": "160878cf14c0d27b11a440e26688708e9b7a7e2b",
-      "pythonpath": ["paper-v4/answer-demonstration"],
+      "pythonpath": [
+        "paper-v4/answer-demonstration"
+      ],
       "paths": [
         "paper-v4/answer-demonstration",
         "paper-v4/submission-candidate/test_prepare.py"
+      ]
+    },
+    {
+      "commit": "d89a0c4718654249ad678eaff62e7b1daba30b6f",
+      "pythonpath": [],
+      "paths": [
+        "paper-v4/experiment-v4/content-rules-doc-01/test_content_rules_doc.py",
+        "paper-v4/experiment-v4/rule-census-01/test_census.py",
+        "paper-v4/experiment-v4/rule-census-01/test_normalise.py",
+        "paper-v4/experiment-v4/content-rules-doc-02/test_content_rules_doc_02.py"
+      ]
+    },
+    {
+      "commit": "d89a0c4718654249ad678eaff62e7b1daba30b6f",
+      "pythonpath": [],
+      "paths": [
+        "paper-v4/experiment-v4/shop-reconsideration-01/test_shop_reconsideration.py"
       ]
     }
   ],
@@ -23,9 +42,30 @@
     "private/paper-v4-text-layer",
     "private/paper-v4-v4-run-*",
     "private/paper-v4-v4-shop-01",
-    "private/paper-v4-answer-demonstration"
+    "private/paper-v4-answer-demonstration",
+    "private/paper-v4-baseline-01",
+    "private/paper-v4-evaluation-sample",
+    "private/paper-v4-reuse-01",
+    "private/paper-v4-reuse-01-baseline",
+    "private/paper-v4-relationship-contrast-01",
+    "private/paper-v4-relationship-repair-01",
+    "private/paper-v4-fault-injection-01",
+    "private/paper-v4-bridge-01",
+    "private/paper-v4-fault-injection-02",
+    "private/paper-v4-content-rules-doc-01",
+    "private/paper-v4-rule-census-01",
+    "private/paper-v4-content-rules-doc-02",
+    "private/shop-progressive-01/packets",
+    "private/shop-progressive-01/producer/stage-a/archive",
+    "private/shop-progressive-01/producer/stage-b/archive",
+    "private/shop-progressive-01/producer/stage-c",
+    "private/shop-progressive-01/assessment/stage-b-packet",
+    "private/shop-progressive-01/assessment/stage-c-packet"
   ],
-  "private_fixture_excludes": ["*.pdf", "__pycache__/"],
+  "private_fixture_excludes": [
+    "*.pdf",
+    "__pycache__/"
+  ],
   "paths": [
     "paper-v4/answer-demonstration",
     "paper-v4/submission-candidate/test_prepare.py",
@@ -33,6 +73,7 @@
     "paper-v4/environment",
     "paper-v4/evaluation-v2",
     "paper-v4/evaluation-v4",
+    "paper-v4/evaluation-v4/sample",
     "paper-v4/experiment-v4",
     "paper-v4/experiment-v4/run-02",
     "paper-v4/experiment-v4/run-03",
@@ -57,9 +98,24 @@
     "paper-v4/experiment-v4/run-22",
     "paper-v4/experiment-v4/run-23",
     "paper-v4/experiment-v4/run-24",
+    "paper-v4/experiment-v4/run-25",
+    "paper-v4/experiment-v4/run-26",
+    "paper-v4/experiment-v4/reuse-01",
+    "paper-v4/experiment-v4/reuse-01-baseline",
+    "paper-v4/experiment-v4/baseline-01",
     "paper-v4/experiment-v4/shop-01",
+    "paper-v4/experiment-v4/fault-injection-01/test_faults.py",
+    "paper-v4/experiment-v4/bridge-01/test_bridge.py",
+    "paper-v4/experiment-v4/fault-injection-02/test_rerun.py",
+    "paper-v4/experiment-v4/content-rules-doc-01/test_content_rules_doc.py",
+    "paper-v4/experiment-v4/rule-census-01/test_census.py",
+    "paper-v4/experiment-v4/rule-census-01/test_normalise.py",
+    "paper-v4/experiment-v4/content-rules-doc-02/test_content_rules_doc_02.py",
+    "paper-v4/experiment-v4/shop-reconsideration-01/test_shop_reconsideration.py",
     "paper-v4/test_publication_consistency.py",
-    "paper-v4/test_run_active_tests.py"
+    "paper-v4/test_run_active_tests.py",
+    "paper-v4/test_shop_calibration.py",
+    "paper-v4/test_shop_connected_calibration.py"
   ],
   "excluded_roots": [
     "research/ontology_driven_kg_realization/experiments/document_paper",

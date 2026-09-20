@@ -1,0 +1,138 @@
+{
+  "schema": "malleus.paper-v4.source-grounded-review-inputs/v3.2",
+  "status": "FROZEN_FOR_REVIEW",
+  "run_id": "reuse-01",
+  "review_protocol_sha256": "sha256:5dfd59f4aa479dd72738e2eb55653ee3e84e60886de4cccbcc0a8e66d06e55cd",
+  "evidence_surface": {
+    "kind": "SELECTED_READING_TEXT_LAYER",
+    "locator_kind": "SELECTED_READING_BLOCK_ID"
+  },
+  "fixed_identities": {
+    "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+    "competency_questions_sha256": "sha256:1d2d1c0f589432ab24b6d4ba6817c0bab3abbce5172364e394bed5a307e10bcf"
+  },
+  "stage_identities": {
+    "accepted_ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+    "ledger_head": "sha256:9fb776938683d0c5b04666dda13a0711cdd2a78ea99593a2264705a2d825f5ab",
+    "replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec",
+    "query_binding_sha256": "sha256:d80a95518eee22b39f59e69b5f414b8127011e23cd7d7a7b4bfd7f622630c83b",
+    "query_result_sha256": "sha256:77c81b7956cf91a6c52a7e5c40047bc4ffcd18096bfd291d6a8ca5e5ece8dadb",
+    "query_trace_summary_sha256": "sha256:3fef96056c9c78e46d7d2bec0490d967f16f5b3a35c09ffc9df0c75c7ceb521b",
+    "population_trace_summary_sha256": "sha256:cd53e5e6d701b2df3f1a89df57457014a500d2b46f3614fecae2c07084d388df"
+  },
+  "materials": [
+    {
+      "name": "selected_reading",
+      "path": "private/paper-v4-text-layer/selected-reading.json",
+      "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+      "visibility": "PRIVATE"
+    },
+    {
+      "name": "competency_questions",
+      "path": "paper-v4/experiment-v4/competency-questions-set-b.json",
+      "sha256": "sha256:1d2d1c0f589432ab24b6d4ba6817c0bab3abbce5172364e394bed5a307e10bcf",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "query_binding",
+      "path": "paper-v4/experiment-v4/reuse-01/results/native-query-binding.json",
+      "sha256": "sha256:d80a95518eee22b39f59e69b5f414b8127011e23cd7d7a7b4bfd7f622630c83b",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "query_result",
+      "path": "private/paper-v4-reuse-01/query/query-result.json",
+      "sha256": "sha256:77c81b7956cf91a6c52a7e5c40047bc4ffcd18096bfd291d6a8ca5e5ece8dadb",
+      "visibility": "PRIVATE"
+    },
+    {
+      "name": "population_trace",
+      "path": "paper-v4/experiment-v4/run-23/results/trace-summary.json",
+      "sha256": "sha256:cd53e5e6d701b2df3f1a89df57457014a500d2b46f3614fecae2c07084d388df",
+      "visibility": "PUBLIC"
+    },
+    {
+      "name": "retained_capture",
+      "path": "private/paper-v4-v4-run-23/ledger/retained-capture.json",
+      "sha256": "sha256:9baf8bff9c894bf68f0b5541f50cdb2796c87852d77e46802e72b613a8f2d83b",
+      "visibility": "PRIVATE"
+    },
+    {
+      "name": "query_trace_summary",
+      "path": "paper-v4/experiment-v4/reuse-01/results/query-trace-summary.json",
+      "sha256": "sha256:3fef96056c9c78e46d7d2bec0490d967f16f5b3a35c09ffc9df0c75c7ceb521b",
+      "visibility": "PUBLIC"
+    }
+  ],
+  "question_ids": [
+    "CQ-B-T1-01",
+    "CQ-B-T1-02",
+    "CQ-B-T1-03",
+    "CQ-B-T1-04",
+    "CQ-B-T1-05",
+    "CQ-B-T2-01",
+    "CQ-B-T2-02",
+    "CQ-B-T2-03",
+    "CQ-B-T2-04",
+    "CQ-B-T2-05",
+    "CQ-B-T3-01",
+    "CQ-B-T3-02",
+    "CQ-B-T3-03",
+    "CQ-B-T3-04",
+    "CQ-B-T3-05",
+    "CQ-B-T4-01",
+    "CQ-B-T4-02",
+    "CQ-B-T4-03",
+    "CQ-B-T4-04",
+    "CQ-B-T4-05",
+    "CQ-B-T5-01",
+    "CQ-B-T5-02",
+    "CQ-B-T5-03",
+    "CQ-B-T5-04",
+    "CQ-B-T5-05",
+    "CQ-B-C-01",
+    "CQ-B-C-02",
+    "CQ-B-C-03",
+    "CQ-B-C-04",
+    "CQ-B-C-05"
+  ],
+  "rows_per_question": {
+    "CQ-B-T1-01": 130,
+    "CQ-B-T1-02": 190,
+    "CQ-B-T1-03": 142,
+    "CQ-B-T1-04": 214,
+    "CQ-B-T1-05": 190,
+    "CQ-B-T2-01": 124,
+    "CQ-B-T2-02": 31,
+    "CQ-B-T2-03": 270,
+    "CQ-B-T2-04": 355,
+    "CQ-B-T2-05": 364,
+    "CQ-B-T3-01": 355,
+    "CQ-B-T3-02": 130,
+    "CQ-B-T3-03": 258,
+    "CQ-B-T3-04": 278,
+    "CQ-B-T3-05": 339,
+    "CQ-B-T4-01": 271,
+    "CQ-B-T4-02": 271,
+    "CQ-B-T4-03": 270,
+    "CQ-B-T4-04": 234,
+    "CQ-B-T4-05": 291,
+    "CQ-B-T5-01": 271,
+    "CQ-B-T5-02": 356,
+    "CQ-B-T5-03": 361,
+    "CQ-B-T5-04": 327,
+    "CQ-B-T5-05": 278,
+    "CQ-B-C-01": 130,
+    "CQ-B-C-02": 247,
+    "CQ-B-C-03": 355,
+    "CQ-B-C-04": 130,
+    "CQ-B-C-05": 271
+  },
+  "witnesses_traced": 429,
+  "authorship": {
+    "preliminary_evaluator_kind": "CLAUDE_PRELIMINARY",
+    "ratifier_evaluator_kind": "HUMAN_AUTHOR",
+    "ratifier_actor_id": "actor:luis"
+  }
+}

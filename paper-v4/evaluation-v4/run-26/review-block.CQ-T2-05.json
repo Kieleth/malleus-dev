@@ -1,0 +1,161 @@
+{
+ "question_id": "CQ-T2-05",
+ "question_responsiveness": "COVERED",
+ "responsiveness_rationale": "One funding relation carries all four: the funding record, the award identifier, the individual it is attributed to and the attribution itself.",
+ "assembly": "ONE_ROW",
+ "coverage": [
+  {
+   "semantic": "funding_record",
+   "row_index": 26,
+   "absent_reason": null,
+   "note": "A returned funding relation is the funding record the question asks about."
+  },
+  {
+   "semantic": "grant_identifier",
+   "row_index": 26,
+   "absent_reason": null,
+   "note": "The award identifier is a field on that relation row."
+  },
+  {
+   "semantic": "person",
+   "row_index": 26,
+   "absent_reason": null,
+   "note": "The relation's target endpoint is the individual author the grant is attributed to."
+  },
+  {
+   "semantic": "attribution_relation",
+   "row_index": 26,
+   "absent_reason": null,
+   "note": "The relation type and the contribution role on the row are the attribution itself."
+  }
+ ],
+ "source_locators": [
+  "page:10:block:044"
+ ],
+ "rows": [
+  {
+   "row_index": 0,
+   "witness_key": "agent:ab"
+  },
+  {
+   "row_index": 1,
+   "witness_key": "agent:ayyang"
+  },
+  {
+   "row_index": 2,
+   "witness_key": "agent:cartigny"
+  },
+  {
+   "row_index": 3,
+   "witness_key": "agent:ch"
+  },
+  {
+   "row_index": 4,
+   "witness_key": "agent:crew"
+  },
+  {
+   "row_index": 5,
+   "witness_key": "agent:db"
+  },
+  {
+   "row_index": 6,
+   "witness_key": "agent:geli"
+  },
+  {
+   "row_index": 7,
+   "witness_key": "agent:lg"
+  },
+  {
+   "row_index": 8,
+   "witness_key": "agent:lp"
+  },
+  {
+   "row_index": 9,
+   "witness_key": "agent:mm"
+  },
+  {
+   "row_index": 10,
+   "witness_key": "agent:scs"
+  },
+  {
+   "row_index": 11,
+   "witness_key": "agent:zwang"
+  },
+  {
+   "row_index": 12,
+   "witness_key": "agent:zy"
+  },
+  {
+   "row_index": 13,
+   "witness_key": "org:brittany"
+  },
+  {
+   "row_index": 14,
+   "witness_key": "org:cnr-igag"
+  },
+  {
+   "row_index": 15,
+   "witness_key": "org:erc"
+  },
+  {
+   "row_index": 16,
+   "witness_key": "org:french-gov"
+  },
+  {
+   "row_index": 17,
+   "witness_key": "org:geo-ocean"
+  },
+  {
+   "row_index": 18,
+   "witness_key": "org:independent"
+  },
+  {
+   "row_index": 19,
+   "witness_key": "org:ipgp"
+  },
+  {
+   "row_index": 20,
+   "witness_key": "org:isblue"
+  },
+  {
+   "row_index": 21,
+   "witness_key": "org:modena"
+  },
+  {
+   "row_index": 22,
+   "witness_key": "org:nsfc"
+  },
+  {
+   "row_index": 23,
+   "witness_key": "org:sio"
+  },
+  {
+   "row_index": 24,
+   "witness_key": "org:tgir"
+  },
+  {
+   "row_index": 25,
+   "witness_key": "org:zjnsf"
+  },
+  {
+   "row_index": 26,
+   "witness_key": "rel:fund:erc-advanced"
+  },
+  {
+   "row_index": 27,
+   "witness_key": "rel:fund:erc-fp7"
+  },
+  {
+   "row_index": 28,
+   "witness_key": "rel:fund:nsfc:42330308"
+  },
+  {
+   "row_index": 29,
+   "witness_key": "rel:fund:nsfc:42422603"
+  },
+  {
+   "row_index": 30,
+   "witness_key": "rel:fund:zjnsf"
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+  "question_id": "CQ-T1-04",
+  "question": "Which repository and record identifier are given for the earthquake catalogue and picked arrivals deposited by this study?",
+  "required_semantics": [
+    "dataset_record",
+    "repository_name",
+    "persistent_identifier"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T1-04:c1",
+      "blocks": [
+        "page:8:block:008"
+      ]
+    },
+    {
+      "claim_id": "CQ-T1-04:c2",
+      "blocks": [
+        "page:8:block:008",
+        "page:8:block:009"
+      ]
+    },
+    {
+      "claim_id": "CQ-T1-04:c3",
+      "blocks": [
+        "page:8:block:008"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "dataset_record",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "repository_name",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "persistent_identifier",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T1-04:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T1-04:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T1-04:c3"
+    }
+  ]
+}

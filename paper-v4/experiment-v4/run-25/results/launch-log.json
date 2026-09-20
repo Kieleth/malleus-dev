@@ -1,0 +1,354 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-25",
+  "protocol": "v4.13",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "POPULATION",
+      "first_stage": "POPULATION",
+      "launched_at": "2026-09-12T02:01:18Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-25/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path, followed in the same message by the phase-two coordinates",
+      "spawn_message_delta": "run-24's spawn message with the run id moved, its phase-one paragraph and its compiler-diagnostic sentence removed, the input list at nine with inputs/ontology-run-23.yaml named, and one paragraph added saying the ontology is given and must not be authored, revised, extended or replaced. The isolation rules, the forbidden inputs, the question-blindness and the stopping rule are run-24's words unmoved.",
+      "outcome": "POPULATION_READY",
+      "execution": {
+        "pinned_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "paper_commit": "5937d8eb",
+        "staged_at": "2026-09-12T01:57:37Z",
+        "staged_at_source": "mtime of producer-input-receipt.json",
+        "interpreter": "VERIFIED by prepare_producer.py preflight",
+        "workspace_note": "staged by run-25/prepare_producer.py; the eight inputs run-24 declared are byte-identical to run-24's workspace (8 of 8 compared by the pin's moved_since block: moved [], unchanged 8) and the ninth is inputs/ontology-run-23.yaml",
+        "core_runtime": "every parent-side cell command runs with src/malleus exported from the pinned commit c95dba7 (git archive c95dba7b86bb61487bda9a52458e1ea47cce20ab src/malleus) first on PYTHONPATH; the repository's src at HEAD 5937d8eb differs from the pin",
+        "core_export_path": "/private/tmp/claude-501/-Users-luis-Projects-malleus-dev/1e1b7a20-5bb3-486c-8880-9c4ee4c9be88/scratchpad/core-c95dba7/src"
+      },
+      "phase_two": {
+        "dispatched_at": "2026-09-12T02:01:18Z",
+        "dispatched_at_source": "the same Agent call: the phase-two coordinates were sent inside the spawn message, so dispatch and phase two share one timestamp",
+        "after_binding_frozen_at": "2026-09-12T01:59:42Z",
+        "message": "run-24's phase-two message with run-25's coordinates, the fact count (4,152), the ontology named at its staged path instead of at work/ontology-attempt-01.yaml, and 'the nine declared ones' for 'the eight declared ones'; sent in the spawn message itself because this session has no phase one to end",
+        "message_source": "~/.claude/projects/-Users-luis-Projects-malleus-dev/264ec7c2-cb80-475d-b4b7-84db254b9077.jsonl, the SendMessage tool_use input of 2026-09-10T00:43:26Z (run-24's phase-two dispatch); run-23's at 2026-09-09T21:30:04Z is the same text with its own ids",
+        "capture_id": "capture:paper-v4:yu-2025:v4:25",
+        "plan_id": "plan:paper-v4:yu-2025:v4:25",
+        "source_id": "source:yu-2025-mid-atlantic-ridge",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ],
+        "same_session": true,
+        "sent_with_the_spawn_message": true
+      },
+      "usage_cumulative": {
+        "tokens": 384287,
+        "tool_uses": 58,
+        "duration_ms": 2514947
+      },
+      "usage_by_resume": [],
+      "usage_note": "One stage and one session. usage_cumulative is the harness's figure for the whole session, which is the population stage: this producer authored no ontology, so there is no phase-one figure to subtract and usage_by_resume is empty.",
+      "launched_at_source": "the harness transcript's timestamp of the Agent call, read from this agent's own session transcript",
+      "producer_report": [
+        "186 of 186 blocks ASSERTED, nothing_assertable empty; 393 assertions, 535 records (477 entities, 1 event, 57 relations), 0 supersessions",
+        "modalities STATED 324, HYPOTHESISED 24, MEASURED 23, CALCULATED 12, NEGATED 10 (producer's own counts; the runner's census governs)",
+        "14 typed gaps: RELATION_ABSENT 7, TYPE_ABSENT 5, AGGREGATE_ONLY 1, INTERVAL_NOT_EXPRESSIBLE 1",
+        "every statement a byte span of its named block located by a whitespace-, ligature- and dash-tolerant anchor and re-verified as an exact substring; block ids from the reading's own inventory",
+        "five judgement calls flagged: a CRediT role set only where the action matches a CRediT definition (two contributions carry none and a TYPE_ABSENT gap each); three property values de-artifacted where the text layer carries a ligature or a stray dash while the statements keep the printed bytes; contact_email read off a line that names neither author; no CITES and no AFFILIATED_WITH relations because the source links them by superscript numerals (RELATION_ABSENT gaps); publication instants at T00:00:00Z with temporal_precision DAY and the campaign span left unset with an INTERVAL_NOT_EXPRESSIBLE gap",
+        "its own preflight (a re-implementation of the skill's refusal list, not the adapter's verdict) reported zero findings",
+        "stopped because every block is reviewed and the next addition would require invention; the capture is declared partial in that sense"
+      ],
+      "producer_incident": "The producer reported that three helper files it wrote in the shared session scratchpad collided by name with a concurrent session's files and that one of them, build.py, was overwritten in both directions before it noticed; it then moved its tooling to a subdirectory. No declared input, no workspace file and no producer output was affected, and the cell's artefacts are all under private/paper-v4-v4-run-25. Recorded because the producer reported it and because it is a fact about the shared scratchpad, not about this cell's evidence.",
+      "producer_status": {
+        "status": "PARTIAL_CAPTURE_DECLARED",
+        "stage": "COMPLETE",
+        "stop_reason": "EVERY_BLOCK_REVIEWED_AND_NEXT_ADDITION_WOULD_REQUIRE_INVENTION",
+        "ontology": "GIVEN_ACCEPTED",
+        "ontology_attempt_written": false,
+        "phase": "TWO"
+      },
+      "condition": "FIXED_ONTOLOGY_CONTROL",
+      "condition_note": "The producer does not author an ontology. Run-23's accepted ontology is a ninth declared input and the session starts at phase two. This cell is not a replicate of the record condition."
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+      "ontology_source": "FIXED_RUN_23_ACCEPTED_ONTOLOGY",
+      "ontology_authored_by": "run-23",
+      "ontology_authored_at_commit": "2c7e5bdbbbacbce78a6f3abaeb2f6155a0b72953",
+      "ontology_staged_as": "producer/inputs/ontology-run-23.yaml",
+      "gated_before_the_producer_was_spawned": true,
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:67e164bcc578fb4714eb4c59eb7559c3f10f412b599a2306ef6d8433ba7a73cd",
+      "validated_contract_sha256": "sha256:13f261b4f319bd6ff959bea3e974a8925baa3832fbf2249986dbabbf1ca02034",
+      "population_surface_sha256": "sha256:cc982f6460b3e06ecefc90466edab351a07a9c94b3d9dc0fa5cd688fd4cd2a2b",
+      "grounding_receipt_sha256": "sha256:7b3487566fc803e4d3c5123fa1cbb750377bdb7d0e02d9e3dd5cbf3b79e937e1",
+      "fact_count": 4152,
+      "accepted_at": "2026-09-12T01:57:46Z",
+      "accepted_at_source": "mtime of gate/attempt-01/diagnostic.json",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 25,
+        "EVENT": 2,
+        "RELATION": 4
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "ContributionRelation",
+        "GeologicRelation",
+        "ResearchRelation",
+        "ScholarlyRelation"
+      ],
+      "subject_bearing_types": [
+        "Claim",
+        "CountObservation",
+        "ElementRatio",
+        "GeochemicalObservation",
+        "GeophysicalObservation",
+        "Observation"
+      ],
+      "compiler": "paper-v4/experiment-v4/run-25/compile_ontology_candidate.py with src/malleus exported from the pinned commit c95dba7 first on PYTHONPATH (launches[0].execution.core_runtime)",
+      "reproduces_run_23": {
+        "ontology_sha256": true,
+        "validated_contract_sha256": true,
+        "validated_fact_set_sha256": true,
+        "population_surface_sha256": true,
+        "grounding_receipt_sha256": true,
+        "fact_count": true,
+        "note": "The same ontology bytes through this cell's own gate at the same Core commit return run-23's five digests and its fact count. That is a reproduction of run-23's gate, not a new acceptance of a new ontology."
+      },
+      "producer_observations": [
+        "none: this cell's producer authored no ontology and made no phase-one report"
+      ],
+      "overseer_observations": [
+        "the compiler at the pinned commit accepted the given ontology at attempt 01",
+        "the repository's src at HEAD differs from the pin; every parent-side command runs against the export",
+        "no diagnostic return was possible or used: the ontology was gated before the producer was spawned"
+      ],
+      "phase_two_inputs_staged": [
+        "producer/accepted/population-surface.json",
+        "producer/accepted/diagnostic.json"
+      ],
+      "phase_two_inputs_digests": {
+        "population-surface.json": "sha256:cc982f6460b3e06ecefc90466edab351a07a9c94b3d9dc0fa5cd688fd4cd2a2b",
+        "diagnostic.json": "sha256:9b8cdaf417c1f17862e9fb3d2f0eb20d07d3ed78ce005dcd6502d51d10efa02e"
+      },
+      "diagnostic_returns_used": 0,
+      "citation_check": {
+        "by": "the cell's agent, before the producer was spawned",
+        "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+        "method": "the ontology's grounding blocks parsed with yaml, then every distinct vocabulary_url fetched and every borrowed term looked for in what came back",
+        "checked_at": "2026-09-12T02:05Z",
+        "checked_at_end": "2026-09-12T02:12Z",
+        "checked_at_source": "the harness transcript's timestamps of the WebFetch calls",
+        "citation_blocks": 9,
+        "urls": 8,
+        "urls_note": "Eight distinct URLs over nine citation blocks: PROV-O is cited twice, from Contributor and from ScholarlyRelation. Run-23 recorded this as nine URLs, counting blocks.",
+        "borrowed_terms": 25,
+        "borrowed_terms_distinct": 24,
+        "borrowed_terms_note": "Twenty-five borrowed-term occurrences over the nine blocks, twenty-four distinct (wasAttributedTo is borrowed twice). Run-23's record says twenty-seven for the same bytes; the parse above is what the file carries and the difference is a counting difference, not an evidence difference. No term run-23 listed is missing here.",
+        "fabricated": 0,
+        "unverified": 0,
+        "vocabulary_claims_unsupported": 0,
+        "cited_url_unreachable": 0,
+        "result": "www.w3.org/TR/vocab-ssn/: feature of interest present. quake.ethz.ch/quakeml/: the landing page carries event in text and not origin, magnitude or focal mechanism; all four are declared as complexTypes in the QuakeML-BED-1.2 schema that page links (Event, Origin, Magnitude, FocalMechanism). schema.org/SoftwareApplication: SoftwareApplication, softwareVersion and downloadUrl present, SoftwareSourceCode named on the same page. www.bipm.org JCGM 200:2012: entry 2.48 measurement model read from the fetched PDF locally with pypdf, on page 48 of 108 and in the index. www.w3.org/TR/prov-o/: Agent, Person, Organization, wasAttributedTo, used, actedOnBehalfOf present. schema.org/Grant: Grant, MonetaryGrant, funder, identifier present. opengis.net/ont/geosparql: 303 to defs.opengis.net, where sfWithin, sfContains and sfTouches are defined. purl.org/spar/cito: 307 to purl.archive.org, 302 to w3id.org, 303 to sparontologies.github.io, where cites is an object property.",
+        "inherited": false,
+        "inherited_note": "Run-23 checked these same bytes on 2026-09-09 and recorded 9 URLs, 27 borrowed terms, 0 fabricated, 0 unverified and 0 unsupported. This check was run again rather than inherited, because reachability is a fact about today and not about the bytes; the conclusion is the same and the two term counts differ for the reason above.",
+        "run_23_record": {
+          "urls": 9,
+          "borrowed_terms": 27,
+          "fabricated": 0,
+          "unverified": 0,
+          "vocabulary_claims_unsupported": 0
+        }
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-12T02:43:09Z",
+      "execution_commit": "5937d8eb",
+      "core_executed_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+      "core_note": "src/malleus exported from the pinned commit c95dba7 (git archive) first on PYTHONPATH for the runner, the binder and the native query; the repository HEAD at execution was 5937d8eb; the runner script is run-25's with that one PYTHONPATH prefix and with the root source pointing at the staged fixed ontology (producer/inputs/ontology-run-23.yaml) rather than at a producer attempt",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 477,
+        "event_participations": 0,
+        "events": 1,
+        "relations": 57,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 535,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 379,
+          "PARTLY_FORMALIZED": 14,
+          "UNFORMALIZED": 0
+        },
+        "blocks_asserted": 186,
+        "blocks_declared_nothing_assertable": 0,
+        "blocks_untouched": 0,
+        "blocks_reviewed": 186,
+        "blocks_total": 186
+      },
+      "derivation_census": {
+        "non_local_relations": 23,
+        "top_hubs": [
+          {
+            "assertion": "assertion:363",
+            "block": "page:10:block:044",
+            "records": 12
+          },
+          {
+            "assertion": "assertion:107",
+            "block": "page:4:block:002",
+            "records": 11
+          },
+          {
+            "assertion": "assertion:003",
+            "block": "page:1:block:001",
+            "records": 9
+          }
+        ]
+      },
+      "subject_coverage": {
+        "ambiguous": 60,
+        "attachable": 28,
+        "proposed": 67,
+        "total": 270,
+        "unnamed": 115,
+        "with_subject": 67,
+        "without_subject": 203
+      },
+      "provenance_coverage": {
+        "total": 270,
+        "with_digest": 270,
+        "with_locator": 270
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 1,
+        "INTERVAL_NOT_EXPRESSIBLE": 1,
+        "RELATION_ABSENT": 7,
+        "TYPE_ABSENT": 5
+      },
+      "structural_diagnostic_returns_used": 0,
+      "admitted_at": "2026-09-12T02:43:51Z",
+      "admitted_at_source": "mtime of results/run-result.json",
+      "note": "admitted at the first runner attempt with no return and no defect; 186 of 186 blocks reviewed and all 186 asserted, the first cell of the series to declare nothing unassertable; 14 typed gaps, the fewest of any cell at this Core coordinate",
+      "producer_observations": [
+        "186 of 186 blocks ASSERTED, nothing_assertable empty; 393 assertions, 535 records (477 entities, 1 event, 57 relations), 0 supersessions",
+        "modalities STATED 324, HYPOTHESISED 24, MEASURED 23, CALCULATED 12, NEGATED 10 (producer's own counts; the runner's census governs)",
+        "14 typed gaps: RELATION_ABSENT 7, TYPE_ABSENT 5, AGGREGATE_ONLY 1, INTERVAL_NOT_EXPRESSIBLE 1",
+        "every statement a byte span of its named block located by a whitespace-, ligature- and dash-tolerant anchor and re-verified as an exact substring; block ids from the reading's own inventory",
+        "five judgement calls flagged: a CRediT role set only where the action matches a CRediT definition (two contributions carry none and a TYPE_ABSENT gap each); three property values de-artifacted where the text layer carries a ligature or a stray dash while the statements keep the printed bytes; contact_email read off a line that names neither author; no CITES and no AFFILIATED_WITH relations because the source links them by superscript numerals (RELATION_ABSENT gaps); publication instants at T00:00:00Z with temporal_precision DAY and the campaign span left unset with an INTERVAL_NOT_EXPRESSIBLE gap",
+        "its own preflight (a re-implementation of the skill's refusal list, not the adapter's verdict) reported zero findings",
+        "stopped because every block is reviewed and the next addition would require invention; the capture is declared partial in that sense"
+      ],
+      "overseer_observations": [
+        "the runner's census governs; the producer's counts are quoted as its report",
+        "one launch, one session, one stage: the ontology was gated before the producer was spawned and no diagnostic return was available",
+        "the root source given to the runner is the staged fixed ontology, whose digest the run result carries as ontology_sha256 and which is run-23's accepted ontology"
+      ]
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-12T01:59:42Z",
+    "bound_at_source": "mtime of query-binding.acceptance.json",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:fba42bdad9294909f7a5e851336ef594e85760ef6aeecd72cc25eb87c15534e8",
+    "type_sets_note": "query-type-sets.note.json",
+    "type_sets_written_at": "2026-09-12T01:59:24Z",
+    "type_sets_carried_from": "run-23",
+    "type_sets_carried_why": "The accepted surface is run-23's byte for byte, so the sets run-23's evaluator wrote from that surface are the sets this surface yields; they are adopted unchanged and their digest is recorded.",
+    "questions_file": "paper-v4/experiment-v4/competency-questions-v3.1.json",
+    "questions_file_sha256": "sha256:6a0e92211677536a969efcbc895eda52e9b4152961beb3c296769658cfb134a6",
+    "closure": "paper-v4/experiment-v4/type_set_closure.py: ACCEPTED, no omissions (and the binder ran the closure again)",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:7fa617b967763d05083250d29493b02754f75bc68d002ade506d38e1a9db1527",
+    "binding_schema": "malleus.paper-v4.native-query-binding/v6",
+    "cases_sha256": "sha256:9ae5140dd3cadd7aae5e4641c2cf2664f2a967283fda288fc549eb288786d222",
+    "questions": 30,
+    "cases": 10063,
+    "cases_by_kind": {
+      "ENTITY": 81,
+      "ENTITY_NO_SUBJECT": 119,
+      "RELATION": 6024,
+      "SUBJECT": 864,
+      "SUBJECT_ANY": 2975
+    },
+    "cases_sha256_equals_run_23s": true,
+    "phase_two_dispatched_after": "2026-09-12T01:59:42Z",
+    "executed_at": "2026-09-12T02:46:13Z",
+    "executed_at_source": "mtime of query/query-result.json",
+    "binding_executed": "results/native-query-binding.json",
+    "binding_executed_sha256": "sha256:3a258da1e8e3866f47b00c23c50aaaac9a92e7bb980eaad2995add813e67a575",
+    "bound_after_replay_receipt_sha256": "sha256:e6febc386510b326f23134377413df7ac316e3c413e2a3ac5a712bac1027a047",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "result_schema": "malleus.paper-v4.query-result/v3",
+    "rows_by_question": {
+      "NQ-CQ-C-01": 274,
+      "NQ-CQ-C-02": 269,
+      "NQ-CQ-C-03": 416,
+      "NQ-CQ-C-04": 153,
+      "NQ-CQ-C-05": 335,
+      "NQ-CQ-T1-01": 153,
+      "NQ-CQ-T1-02": 153,
+      "NQ-CQ-T1-03": 207,
+      "NQ-CQ-T1-04": 205,
+      "NQ-CQ-T1-05": 153,
+      "NQ-CQ-T2-01": 179,
+      "NQ-CQ-T2-02": 385,
+      "NQ-CQ-T2-03": 329,
+      "NQ-CQ-T2-04": 416,
+      "NQ-CQ-T2-05": 37,
+      "NQ-CQ-T3-01": 330,
+      "NQ-CQ-T3-02": 335,
+      "NQ-CQ-T3-03": 335,
+      "NQ-CQ-T3-04": 299,
+      "NQ-CQ-T3-05": 291,
+      "NQ-CQ-T4-01": 180,
+      "NQ-CQ-T4-02": 180,
+      "NQ-CQ-T4-03": 137,
+      "NQ-CQ-T4-04": 329,
+      "NQ-CQ-T4-05": 119,
+      "NQ-CQ-T5-01": 268,
+      "NQ-CQ-T5-02": 335,
+      "NQ-CQ-T5-03": 330,
+      "NQ-CQ-T5-04": 281,
+      "NQ-CQ-T5-05": 330
+    },
+    "rows_total": 7743,
+    "rows_by_kind": {
+      "ENTITY": 6027,
+      "RELATION": 197,
+      "SUBJECT": 1519
+    },
+    "rows_from_more_than_one_case": null,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:b34c03be51be08d51137de6031ae3049af817be8a5c980cea5cebe65c71f62df",
+    "witnesses_traced": 506
+  },
+  "review": {}
+}

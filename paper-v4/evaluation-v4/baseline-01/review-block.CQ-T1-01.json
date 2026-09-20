@@ -1,0 +1,69 @@
+{
+  "question_id": "CQ-T1-01",
+  "question": "Which research cruise deployed the ocean-bottom seismometer network whose recordings the microseismicity study uses?",
+  "required_semantics": [
+    "campaign_name",
+    "observing_system",
+    "data_acquisition"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T1-01:c1",
+      "blocks": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-T1-01:c2",
+      "blocks": [
+        "page:6:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-T1-01:c3",
+      "blocks": [
+        "page:2:block:002"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "campaign_name",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "observing_system",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "data_acquisition",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T1-01:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T1-01:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T1-01:c3"
+    }
+  ]
+}

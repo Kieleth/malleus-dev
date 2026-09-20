@@ -48,7 +48,8 @@ class CandidateTests(unittest.TestCase):
             re.findall(r"@\w+\{([^,]+),", (HERE / "references.bib").read_text())
         )
         self.assertEqual(keys, entries)
-        self.assertEqual(len(keys), 8)
+        self.assertEqual(len(keys), 20)
+        self.assertTrue({"du2025context", "kuratov2024babilong", "liu2023lost", "laban2025lost"} <= keys)
 
     def test_archive_is_exact_source_allowlist(self):
         config = json.loads((HERE / "build-config.json").read_text())
@@ -105,18 +106,14 @@ class CandidateTests(unittest.TestCase):
         ):
             self.assertIn(phrase, all_text)
 
-    def test_every_printed_experiment_report_has_an_access_entry(self):
+    def test_every_printed_evidence_path_has_an_access_entry(self):
         source = (HERE.parent / "manuscript-v4-working.md").read_text()
-        required = set(re.findall(r"\]\((answer-demonstration/[^)]+\.md)\)", source))
+        required = set(re.findall(r"\]\(((?:experiment-v4|evaluation-v4)/[^)#]+)\)", source))
         access = (HERE / "EVIDENCE-ACCESS.md").read_text()
-        mapped = set(re.findall(r"\]\(\.\./(answer-demonstration/[^)]+\.md)\)", access))
-        self.assertTrue(required, "The manuscript must identify its result reports")
+        mapped = set(re.findall(r"\]\(\.\./((?:experiment-v4|evaluation-v4)/[^)#]+)\)", access))
+        self.assertTrue(required, "The manuscript must identify its evidence files")
         self.assertFalse(
-            required - mapped, f"Unmapped result reports: {required - mapped}"
+            required - mapped, f"Unmapped evidence files: {required - mapped}"
         )
         for relative in mapped:
-            self.assertTrue((HERE.parent / relative).is_file(), relative)
-
-
-if __name__ == "__main__":
-    unittest.main()
+            self.assertTrue((HERE.parent / relative).exists(), relative)

@@ -1,0 +1,2005 @@
+{
+ "core_commit": "e7937b89",
+ "populations": {
+  "run-23": {
+   "a_no_conflicting_quantity": {
+    "with_assertion_modality": {
+     "groups": 55,
+     "groups_holding_more_than_one_record": 0,
+     "records": [],
+     "records_compared": 55,
+     "violations": 0
+    },
+    "without_assertion_modality": {
+     "groups": 54,
+     "groups_holding_more_than_one_record": 1,
+     "records": [
+      "obs:bdb-isotherm",
+      "obs:h1-isotherms"
+     ],
+     "records_compared": 55,
+     "violations": 1
+    }
+   },
+   "b_interval_sanity": {
+    "by_clause": {},
+    "reach": {
+     "count": 22,
+     "ratio_value": 3,
+     "uncertainty": 5,
+     "value_lower": 88,
+     "value_upper": 98
+    },
+    "refusals": 0
+   },
+   "c_number_in_cited_text": {
+    "CITED/GLUED_ATTACHED": {
+     "by_mechanism": {
+      "IN_NO_RETAINED_SENTENCE": 1
+     },
+     "by_slot": {
+      "value_lower": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "CITED/GLUED_FREE": {
+     "by_mechanism": {
+      "IN_NO_RETAINED_SENTENCE": 1,
+      "MATCHES_UNDER_ANOTHER_DECLARED_READING": 50
+     },
+     "by_slot": {
+      "count": 7,
+      "value_lower": 26,
+      "value_upper": 18
+     },
+     "records": 34,
+     "refusals": 51
+    },
+    "CITED/UNGLUED_FREE": {
+     "by_mechanism": {
+      "IN_NO_RETAINED_SENTENCE": 1
+     },
+     "by_slot": {
+      "value_lower": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "DERIVED/GLUED_ATTACHED": {
+     "by_mechanism": {
+      "IN_NO_RETAINED_SENTENCE": 1
+     },
+     "by_slot": {
+      "value_lower": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "DERIVED/GLUED_FREE": {
+     "by_mechanism": {
+      "IN_NO_RETAINED_SENTENCE": 1,
+      "MATCHES_UNDER_ANOTHER_DECLARED_READING": 50
+     },
+     "by_slot": {
+      "count": 7,
+      "value_lower": 26,
+      "value_upper": 18
+     },
+     "records": 34,
+     "refusals": 51
+    },
+    "DERIVED/UNGLUED_FREE": {
+     "by_mechanism": {
+      "IN_NO_RETAINED_SENTENCE": 1
+     },
+     "by_slot": {
+      "value_lower": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "reach": {
+     "assertion_confidence": 0,
+     "count": 22,
+     "publication_year": 0,
+     "ratio_value": 3,
+     "strength": 0,
+     "uncertainty": 5,
+     "value_lower": 87,
+     "value_upper": 97
+    }
+   },
+   "d_unit_in_source": {
+    "CITED/GLUED": {
+     "by_mechanism": {
+      "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE": 1
+     },
+     "by_slot": {
+      "unit": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "CITED/UNGLUED": {
+     "by_mechanism": {
+      "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE": 1
+     },
+     "by_slot": {
+      "unit": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "DERIVED/GLUED": {
+     "by_mechanism": {
+      "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE": 1
+     },
+     "by_slot": {
+      "unit": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "DERIVED/UNGLUED": {
+     "by_mechanism": {
+      "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE": 1
+     },
+     "by_slot": {
+      "unit": 1
+     },
+     "records": 1,
+     "refusals": 1
+    },
+    "reach": {
+     "unit": 103
+    }
+   },
+   "derivations": 2720,
+   "e_formula_in_source": {
+    "CITED/GLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "CITED/UNGLUED": {
+     "by_mechanism": {
+      "MATCHES_UNDER_THE_OTHER_PROFILE": 8
+     },
+     "by_slot": {
+      "analyte": 6,
+      "numerator_kind": 2
+     },
+     "records": 8,
+     "refusals": 8
+    },
+    "DERIVED/GLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/UNGLUED": {
+     "by_mechanism": {
+      "MATCHES_UNDER_THE_OTHER_PROFILE": 8
+     },
+     "by_slot": {
+      "analyte": 6,
+      "numerator_kind": 2
+     },
+     "records": 8,
+     "refusals": 8
+    },
+    "reach": {
+     "analyte": 18,
+     "denominator_kind": 3,
+     "numerator_kind": 3
+    }
+   },
+   "ontology_hash": "67e164bcc578fb4714eb4c59eb7559c3f10f412b599a2306ef6d8433ba7a73cd",
+   "population": "run-23",
+   "records": 440,
+   "retained_texts": 333
+  },
+  "shop-table-1": {
+   "a_no_conflicting_quantity": {
+    "with_assertion_modality": {
+     "groups": 0,
+     "groups_holding_more_than_one_record": 0,
+     "records": [],
+     "records_compared": 0,
+     "violations": 0
+    },
+    "without_assertion_modality": {
+     "groups": 0,
+     "groups_holding_more_than_one_record": 0,
+     "records": [],
+     "records_compared": 0,
+     "violations": 0
+    }
+   },
+   "b_interval_sanity": {
+    "by_clause": {},
+    "reach": {
+     "count": 0,
+     "ratio_value": 0,
+     "uncertainty": 0,
+     "value_lower": 0,
+     "value_upper": 0
+    },
+    "refusals": 0
+   },
+   "c_number_in_cited_text": {
+    "CITED/GLUED_ATTACHED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "CITED/GLUED_FREE": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "CITED/UNGLUED_FREE": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/GLUED_ATTACHED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/GLUED_FREE": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/UNGLUED_FREE": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "reach": {
+     "ordered_quantity": 6
+    }
+   },
+   "d_unit_in_source": {
+    "CITED/GLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "CITED/UNGLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/GLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/UNGLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "reach": {
+     "unit": 0
+    }
+   },
+   "derivations": 294,
+   "e_formula_in_source": {
+    "CITED/GLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "CITED/UNGLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/GLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "DERIVED/UNGLUED": {
+     "by_mechanism": {},
+     "by_slot": {},
+     "records": 0,
+     "refusals": 0
+    },
+    "reach": {
+     "analyte": 0,
+     "denominator_kind": 0,
+     "numerator_kind": 0
+    }
+   },
+   "ontology_hash": "e82f3569b9be903fd060e1e878bfd6d433140df751141b0efd6dbdd41aa34058",
+   "population": "shop-table-1",
+   "records": 106,
+   "retained_texts": 130,
+   "shop_non_negative_quantity": {
+    "refusals": 0
+   },
+   "shop_own_conflict_keying": {
+    "records": [],
+    "violations": 0
+   }
+  }
+ },
+ "refusals": [
+  {
+   "candidate": "NO_CONFLICTING_QUANTITY",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "QUANTITY_DISAGREEMENT",
+   "population": "run-23",
+   "reading": null,
+   "record_id": "obs:bdb-isotherm",
+   "record_ids": [
+    "obs:bdb-isotherm",
+    "obs:h1-isotherms"
+   ],
+   "record_type": "GeophysicalObservation",
+   "scope": null,
+   "slot": "QUANTIFIED"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_NO_RETAINED_SENTENCE",
+   "population": "run-23",
+   "reading": "UNGLUED_FREE",
+   "record_id": "obs:velocity-perturbation",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_NO_RETAINED_SENTENCE",
+   "population": "run-23",
+   "reading": "GLUED_ATTACHED",
+   "record_id": "obs:velocity-perturbation",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:events-romanche",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:forced-depth-subset",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:located-earthquakes",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:obs-deployed",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:relocated-events",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:useful-obs",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:velest-subdataset",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:subsections",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "gchem:rc2-co2-minimum",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "gchem:rc2-co2-preeruptive",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:abstract-deep-eq-depth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:axial-event-depth-stability",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:co2-saturation-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-mar",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-romanche",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:criterion-swave-distance",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:crust-age-west-flank",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:degassing-eq-depth-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:dry-melting-depth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:fig4-isotherm",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:forced-depths",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:h1-isotherms",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:lithospheric-age-contours",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:mar-half-spreading-rate",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:model1-vp",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:profile-tick-interval",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc2-valley-width",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc3-length",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:solubility-calc-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:thermal-model-temp",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:triggering-pore-pressure",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_NO_RETAINED_SENTENCE",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:velocity-perturbation",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:vpvs-test-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "gchem:rc2-co2-preeruptive",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:axial-event-depth-stability",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:co2-saturation-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-mar",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-romanche",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:criterion-swave-distance",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:crust-age-west-flank",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:degassing-eq-depth-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:fig4-isotherm",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:forced-depths",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:lab-water-content",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:lithospheric-age-contours",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:mar-half-spreading-rate",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:profile-tick-interval",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc2-valley-width",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc3-length",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:solubility-calc-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:vpvs-test-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_NO_RETAINED_SENTENCE",
+   "population": "run-23",
+   "reading": "UNGLUED_FREE",
+   "record_id": "obs:velocity-perturbation",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_NO_RETAINED_SENTENCE",
+   "population": "run-23",
+   "reading": "GLUED_ATTACHED",
+   "record_id": "obs:velocity-perturbation",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:events-romanche",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:forced-depth-subset",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:located-earthquakes",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:obs-deployed",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:relocated-events",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:useful-obs",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:velest-subdataset",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "count"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "cnt:subsections",
+   "record_ids": [],
+   "record_type": "CountObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "gchem:rc2-co2-minimum",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "gchem:rc2-co2-preeruptive",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:abstract-deep-eq-depth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:axial-event-depth-stability",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:co2-saturation-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-mar",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-romanche",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:criterion-swave-distance",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:crust-age-west-flank",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:degassing-eq-depth-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:dry-melting-depth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:fig4-isotherm",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:forced-depths",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:h1-isotherms",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:lithospheric-age-contours",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:mar-half-spreading-rate",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:model1-vp",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:profile-tick-interval",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc2-valley-width",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc3-length",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:solubility-calc-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:thermal-model-temp",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:triggering-pore-pressure",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_NO_RETAINED_SENTENCE",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:velocity-perturbation",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:vpvs-test-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_lower"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "gchem:rc2-co2-preeruptive",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:axial-event-depth-stability",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:co2-saturation-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-mar",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:coverage-romanche",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:criterion-swave-distance",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:crust-age-west-flank",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:degassing-eq-depth-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:fig4-isotherm",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:forced-depths",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:lab-water-content",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:lithospheric-age-contours",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:mar-half-spreading-rate",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:profile-tick-interval",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc2-valley-width",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:rc3-length",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:solubility-calc-temperature",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "NUMBER_IN_CITED_TEXT",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_ANOTHER_DECLARED_READING",
+   "population": "run-23",
+   "reading": "GLUED_FREE",
+   "record_id": "obs:vpvs-test-range",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "value_upper"
+  },
+  {
+   "candidate": "UNIT_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE",
+   "population": "run-23",
+   "reading": "GLUED",
+   "record_id": "obs:profile-halfwidth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "unit"
+  },
+  {
+   "candidate": "UNIT_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "obs:profile-halfwidth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "CITED",
+   "slot": "unit"
+  },
+  {
+   "candidate": "UNIT_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE",
+   "population": "run-23",
+   "reading": "GLUED",
+   "record_id": "obs:profile-halfwidth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "unit"
+  },
+  {
+   "candidate": "UNIT_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "IN_A_RETAINED_SENTENCE_THE_RECORD_DOES_NOT_USE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "obs:profile-halfwidth",
+   "record_ids": [],
+   "record_type": "GeophysicalObservation",
+   "scope": "DERIVED",
+   "slot": "unit"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:eq-atlantic-co2-avg",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:eq-atlantic-co2-max",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:rc2-co2-minimum",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:rc3-co2-ba",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:rc3-co2-rb",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:swir-co2-highest",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "CITED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "ratio:co2-ba",
+   "record_ids": [],
+   "record_type": "ElementRatio",
+   "scope": "CITED",
+   "slot": "numerator_kind"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "ratio:co2-rb",
+   "record_ids": [],
+   "record_type": "ElementRatio",
+   "scope": "CITED",
+   "slot": "numerator_kind"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:eq-atlantic-co2-avg",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:eq-atlantic-co2-max",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:rc2-co2-minimum",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:rc3-co2-ba",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:rc3-co2-rb",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "gchem:swir-co2-highest",
+   "record_ids": [],
+   "record_type": "GeochemicalObservation",
+   "scope": "DERIVED",
+   "slot": "analyte"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "ratio:co2-ba",
+   "record_ids": [],
+   "record_type": "ElementRatio",
+   "scope": "DERIVED",
+   "slot": "numerator_kind"
+  },
+  {
+   "candidate": "FORMULA_IN_SOURCE",
+   "class": "RULE_DEFECT",
+   "clause": null,
+   "mechanism": "MATCHES_UNDER_THE_OTHER_PROFILE",
+   "population": "run-23",
+   "reading": "UNGLUED",
+   "record_id": "ratio:co2-rb",
+   "record_ids": [],
+   "record_type": "ElementRatio",
+   "scope": "DERIVED",
+   "slot": "numerator_kind"
+  }
+ ],
+ "schema": "malleus.paper-v4.rule-census-01-outcomes/v1"
+}

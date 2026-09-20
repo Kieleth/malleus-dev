@@ -1,0 +1,10 @@
+schema_version: '1'
+contract_id: shop-content-rules
+contract_version: '1'
+ontology_hash: sha256:e82f3569b9be903fd060e1e878bfd6d433140df751141b0efd6dbdd41aa34058
+fact_contract_version: '2'
+ruleset_id: shop-content-rules
+ruleset_version: '1'
+rules_file: rules.pl
+rule_ids: [NO_CONFLICTING_QUANTITY, NO_EMPTY_RECORD]
+timeout_seconds: 10

@@ -1,0 +1,5 @@
+{
+  "purpose": "Local comparison only, not a selected producer runtime",
+  "python_package": {"name": "pypdf", "version": "6.16.2", "configuration": "pyproject.toml research extra"},
+  "external_tool": {"name": "pdftotext", "version": "26.03.0", "installation": "existing local diagnostic tool; clean-runtime packaging not selected"}
+}

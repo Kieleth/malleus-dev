@@ -1,0 +1,91 @@
+{
+  "schema": "malleus.paper-v4.derived-cq-c-03-v3-1/v1",
+  "question_id": "CQ-C-03",
+  "what": "CQ-C-03's label under competency questions v3.1, derived from the coverage entries the v3 reviews already wrote. Neither cell was re-reviewed and neither review record is touched. The rule: COVERED when every remaining semantic names a row, NONE when none does, PARTIAL otherwise.",
+  "expected_outcome": {
+    "kind": "EXCLUDED_SURFACE",
+    "expected_coverage": "NONE"
+  },
+  "questions_v3_sha256": "sha256:76d501cdb91741ede6ab51e36f1a567d59009f0b3ecf970cf7b19adf97c7490d",
+  "questions_v3_1_sha256": "sha256:6a0e92211677536a969efcbc895eda52e9b4152961beb3c296769658cfb134a6",
+  "required_semantics_v3": [
+    "site_set",
+    "maximum_depth_quantity",
+    "spreading_rate_quantity",
+    "compilation_source"
+  ],
+  "required_semantics_v3_1": [
+    "site_set",
+    "maximum_depth_quantity",
+    "spreading_rate_quantity"
+  ],
+  "dropped_semantics": [
+    "compilation_source"
+  ],
+  "cells": [
+    {
+      "run_id": "run-22",
+      "review_record_path": "paper-v4/evaluation-v4/run-22/review-record.preliminary.md",
+      "review_record_sha256": "sha256:1a10c58d864ec6832885d168d3b459d5b7d85f91b4e3ec4fb759750014b95926",
+      "recorded_responsiveness_v3": "PARTIAL",
+      "derived_label_v3": "PARTIAL",
+      "derived_label_v3_1": "NONE",
+      "semantics_v3_1": [
+        {
+          "semantic": "site_set",
+          "row_index": null,
+          "absent_reason": "NOT_IN_SOURCE",
+          "names_a_row": false
+        },
+        {
+          "semantic": "maximum_depth_quantity",
+          "row_index": null,
+          "absent_reason": "NOT_IN_SOURCE",
+          "names_a_row": false
+        },
+        {
+          "semantic": "spreading_rate_quantity",
+          "row_index": null,
+          "absent_reason": "NOT_IN_SOURCE",
+          "names_a_row": false
+        }
+      ],
+      "dropped_semantic": {
+        "semantic": "compilation_source",
+        "row_index": 140
+      }
+    },
+    {
+      "run_id": "run-23",
+      "review_record_path": "paper-v4/evaluation-v4/run-23/review-record.preliminary.md",
+      "review_record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76",
+      "recorded_responsiveness_v3": "PARTIAL",
+      "derived_label_v3": "PARTIAL",
+      "derived_label_v3_1": "NONE",
+      "semantics_v3_1": [
+        {
+          "semantic": "site_set",
+          "row_index": null,
+          "absent_reason": "NOT_IN_SOURCE",
+          "names_a_row": false
+        },
+        {
+          "semantic": "maximum_depth_quantity",
+          "row_index": null,
+          "absent_reason": "NOT_IN_SOURCE",
+          "names_a_row": false
+        },
+        {
+          "semantic": "spreading_rate_quantity",
+          "row_index": null,
+          "absent_reason": "NOT_IN_SOURCE",
+          "names_a_row": false
+        }
+      ],
+      "dropped_semantic": {
+        "semantic": "compilation_source",
+        "row_index": 142
+      }
+    }
+  ]
+}

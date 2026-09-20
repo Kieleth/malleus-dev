@@ -81,6 +81,28 @@ _STAGE_IDENTITY_KEYS = {
 }
 _MATERIAL_KEYS = {"name", "path", "sha256", "visibility"}
 _DEVIATION_KEYS = {"from", "protocol_edited", "reason", "to"}
+# An answer set has no ledger, no replay receipt and no query binding, so its
+# stage identities are a different set, not a subset with holes. v3 fixed one
+# set for every surface; v3.2 declares them per kind, the pattern the protocol
+# already uses for fixed identities and for required materials.
+_ANSWER_SET_STAGE_IDENTITY_KEYS = {
+    "answer_file_sha256",
+    "producer_model_id",
+    "producer_task_sha256",
+}
+# The one stage identity that is a name rather than a digest.
+_STAGE_IDENTITY_TEXT_KEYS = {"producer_model_id"}
+# The materials that only a ledger-backed surface has. An answer-set manifest
+# that binds one is declaring a stage it did not run.
+_LEDGER_SIDE_MATERIALS = frozenset(
+    {
+        "query_binding",
+        "query_result",
+        "population_trace",
+        "query_trace_summary",
+        "retained_capture",
+    }
+)
 
 PROTOCOL_SCHEMA_V3 = "malleus.paper-v4.source-grounded-review-protocol/v3"
 PROTOCOL_STATUS_V3 = "FROZEN_BEFORE_NEXT_CELL"
@@ -93,9 +115,34 @@ QUESTION_FILE_SCHEMAS = frozenset(
     }
 )
 
+PROTOCOL_SCHEMA_V32 = "malleus.paper-v4.source-grounded-review-protocol/v3.2"
+PROTOCOL_STATUS_V32 = "FROZEN_BEFORE_THE_BASELINE_CELL"
+MANIFEST_SCHEMA_V32 = "malleus.paper-v4.source-grounded-review-inputs/v3.2"
+REVIEW_SCHEMA_V32 = "malleus.paper-v4.source-grounded-review/v3.2"
+ANSWER_SET_SCHEMA = "malleus.paper-v4.in-context-answer-set/v1"
+
 SURFACE_LOCATOR_KINDS = {
     "SELECTED_READING_TEXT_LAYER": "SELECTED_READING_BLOCK_ID",
     "STRUCTURED_ROWS": "SOURCE_ROW_FIELD",
+}
+ANSWER_SET_KIND = "IN_CONTEXT_ANSWER_SET"
+# v3.2 adds a third kind and keeps the two v3 froze. An answer set's locator is
+# a reading block id, like the text layer's, because the reading is the same and
+# the producer cites it; what differs is what a witness is and what the reviewer
+# reads instead of a query result.
+SURFACE_LOCATOR_KINDS_V32 = dict(
+    SURFACE_LOCATOR_KINDS, **{ANSWER_SET_KIND: "SELECTED_READING_BLOCK_ID"}
+)
+SURFACE_LOCATOR_KINDS_BY_VERSION = {
+    "v3": SURFACE_LOCATOR_KINDS,
+    "v3.2": SURFACE_LOCATOR_KINDS_V32,
+}
+# Membership in the reading's block ids resolves a locator on both of these.
+_BLOCK_MEMBERSHIP_KINDS = frozenset({"SELECTED_READING_TEXT_LAYER", ANSWER_SET_KIND})
+_STAGE_IDENTITY_KEYS_BY_SURFACE_KIND = {
+    "SELECTED_READING_TEXT_LAYER": _STAGE_IDENTITY_KEYS,
+    "STRUCTURED_ROWS": _STAGE_IDENTITY_KEYS,
+    ANSWER_SET_KIND: _ANSWER_SET_STAGE_IDENTITY_KEYS,
 }
 ROW_RESOLUTIONS = (
     "VALUE_MATCHES_ROW",
@@ -111,8 +158,23 @@ COVERAGE_ABSENT_REASONS = (
     "NOT_IN_SOURCE",
     "LOCATOR_NOT_RESOLVABLE",
 )
+# The sixth code v3.2 adds. None of v3's five means "the accepted contract has a
+# place for it, the reading states it, and the producer proposed nothing and
+# declared no gap", so NOT_MODELLED carried that fact and the fact that the
+# contract had no place, and an absence could not be diagnosed from its token.
+NOT_CAPTURED = "NOT_CAPTURED"
+COVERAGE_ABSENT_REASONS_V32 = COVERAGE_ABSENT_REASONS + (NOT_CAPTURED,)
+COVERAGE_ABSENT_REASONS_BY_VERSION = {
+    "v3": COVERAGE_ABSENT_REASONS,
+    "v3.2": COVERAGE_ABSENT_REASONS_V32,
+}
 COVERAGE_LABELS = ("COVERED", "PARTIAL", "NONE")
 ASSEMBLY_DESCRIPTORS = ("ONE_ROW", "LINKED_ROWS", "UNLINKED_ROWS")
+# A prose answer always assembles, so the descriptor would be constant and
+# uninformative, and a constant token in a comparison table reads as a grade,
+# which `assembly_is: A_DESCRIPTOR_NEVER_A_GRADE` forbids. The answer surface
+# declares it not applicable instead of taking a fourth descriptor.
+ASSEMBLY_NOT_APPLICABLE = "NOT_APPLICABLE"
 CONTROL_KINDS = ("NOT_IN_SOURCE", "EXCLUDED_SURFACE", "PARAPHRASE")
 SOURCE_FORMATS = ("CSV", "JSONL")
 
@@ -157,6 +219,24 @@ _QUESTION_KEYS_V3 = {
 }
 _ROW_KEYS_V3 = {"row_index", "witness_key"}
 _COVERAGE_KEYS = {"absent_reason", "note", "row_index", "semantic"}
+_CLAIM_KEYS = {"blocks", "claim_id", "statement"}
+# The protocol is the rulebook; its checklist is how each rule is verified. One
+# entry per check, naming what passes it, what is read, who settles it and where
+# the outcome lands. v3.2 carries it; v3 does not and is not edited.
+_CHECKLIST_VERIFIERS = ("VALIDATOR", "REVIEWER")
+_CHECK_KEYS_VALIDATOR = {
+    "applies_to",
+    "id",
+    "name",
+    "passes_when",
+    "reads",
+    "records_outcome_in",
+    "validator_function",
+    "verified_by",
+}
+_CHECK_KEYS_REVIEWER = (_CHECK_KEYS_VALIDATOR - {"validator_function"}) | {
+    "reviewer_judgement"
+}
 _WITNESS_KEYS = {"rationale", "source_locators", "source_support", "witness_key"}
 _QUESTION_KEYS = {
     "question_id",
@@ -254,6 +334,8 @@ def _protocol_version(protocol_source: bytes) -> str:
         return "v2"
     if schema == PROTOCOL_SCHEMA_V3:
         return "v3"
+    if schema == PROTOCOL_SCHEMA_V32:
+        return "v3.2"
     _refuse("review protocol declares no version this validator accepts")
     raise AssertionError("unreachable")
 
@@ -261,8 +343,9 @@ def _protocol_version(protocol_source: bytes) -> str:
 def validate_protocol(protocol_source: bytes) -> dict[str, Any]:
     """Accept a frozen review protocol of a version this validator carries."""
 
-    if _protocol_version(protocol_source) == "v3":
-        return _validate_protocol_v3(protocol_source)
+    version = _protocol_version(protocol_source)
+    if version in {"v3", "v3.2"}:
+        return _validate_protocol_v3(protocol_source, version)
     return _validate_protocol_v2(protocol_source)
 
 
@@ -337,8 +420,9 @@ def validate_review_input_manifest(
 ) -> dict[str, Any]:
     """Accept a frozen manifest that binds every review input by digest."""
 
-    if _protocol_version(protocol_source) == "v3":
-        return _validate_manifest_v3(manifest_source, protocol_source)
+    version = _protocol_version(protocol_source)
+    if version in {"v3", "v3.2"}:
+        return _validate_manifest_v3(manifest_source, protocol_source, version)
     return _validate_manifest_v2(manifest_source, protocol_source)
 
 
@@ -489,8 +573,11 @@ def validate_blank_review(
 ) -> dict[str, Any]:
     """Validate the template without accepting it as a review."""
 
-    if _protocol_version(protocol_source) == "v3":
-        return _validate_blank_v3(record_source, protocol_source, manifest_source)
+    version = _protocol_version(protocol_source)
+    if version in {"v3", "v3.2"}:
+        return _validate_blank_v3(
+            record_source, protocol_source, manifest_source, version
+        )
     return _validate_blank_v2(record_source, protocol_source, manifest_source)
 
 
@@ -666,23 +753,28 @@ def validate_review(
     protocol_source: bytes,
     *,
     review_input_manifest_source: bytes,
-    query_result_source: bytes,
+    query_result_source: bytes | None = None,
     selected_reading_source: bytes | None = None,
     competency_questions_source: bytes | None = None,
     surface_sources: Mapping[str, bytes] | None = None,
+    answer_set_source: bytes | None = None,
     require_human_ratification: bool = False,
     findings: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Validate identities, references and authorship, never a judgment.
 
-    `selected_reading_source` is required by v2 and by a v3 cell whose declared
-    surface is the text layer. `competency_questions_source` and
-    `surface_sources` are v3 inputs: the first carries the required semantics
-    coverage is read against, the second the bytes a row locator is opened in.
+    `selected_reading_source` is required by v2, by a v3 cell whose declared
+    surface is the text layer, and by a v3.2 answer set, whose claims cite the
+    same reading. `competency_questions_source` and `surface_sources` are v3
+    inputs: the first carries the required semantics coverage is read against,
+    the second the bytes a row locator is opened in. `answer_set_source` is the
+    v3.2 answer surface's input and stands where `query_result_source` stands on
+    a graph surface; exactly one of the two applies to any cell.
     `findings` collects the control outcomes, which refuse nothing.
     """
 
-    if _protocol_version(protocol_source) == "v3":
+    version = _protocol_version(protocol_source)
+    if version in {"v3", "v3.2"}:
         return _validate_review_v3(
             record_source,
             protocol_source,
@@ -691,11 +783,15 @@ def validate_review(
             selected_reading_source=selected_reading_source,
             competency_questions_source=competency_questions_source,
             surface_sources=surface_sources,
+            answer_set_source=answer_set_source,
             require_human_ratification=require_human_ratification,
             findings=findings,
+            version=version,
         )
     if selected_reading_source is None:
         _refuse("the v2 protocol requires the selected reading")
+    if query_result_source is None:
+        _refuse("the v2 protocol requires the query result")
     return _validate_review_v2(
         record_source,
         protocol_source,
@@ -745,12 +841,103 @@ def _enum(value: object, allowed: tuple[str, ...], subject: str) -> str:
     return value  # type: ignore[return-value]
 
 
-def _validate_protocol_v3(protocol_source: bytes) -> dict[str, Any]:
-    """Accept the v3 protocol: it declares kinds, not one cell's surface."""
+def _answer_surface_declaration(declared: Mapping[str, Any]) -> None:
+    """The three things the answer surface must say that the graph ones do not.
+
+    A witness on a graph surface is a returned row's `record_id` or
+    `relation_id`. An answer set returns no rows, so the protocol must say what
+    a witness is there, what the reviewer reads in place of a query result, and
+    that two answers stating the same fact have no shared identity, which is why
+    the witness count is not comparable across surfaces and only coverage is.
+    """
+
+    subject = f"review protocol.surface_kinds.{ANSWER_SET_KIND}"
+    if declared.get("witness_is") != "ONE_CITED_CLAIM_KEYED_BY_CLAIM_ID":
+        _refuse(f"{subject} must declare that a witness is one cited claim")
+    if declared.get("read_instead_of_a_query_result") != "answer_file":
+        _refuse(
+            f"{subject} must name the answer file as what the reviewer reads"
+            " instead of a query result"
+        )
+    if declared.get("witness_counts_are_comparable_across_surfaces") is not False:
+        _refuse(
+            f"{subject} must declare that its witness count is not comparable"
+            " with a graph cell's, since two answers stating the same fact have"
+            " no shared identity"
+        )
+
+
+def _checklist(root: Mapping[str, Any], surface_kinds: Mapping[str, str]) -> None:
+    """Accept a checklist whose every entry names a verifier and an outcome.
+
+    The section is normative, not decorative: a check that names no verifier, or
+    that lands its outcome in a field the protocol's own outcome_fields map does
+    not declare, refuses the protocol. Whether the named function exists is the
+    guard's job, not this one's; the validator cannot import itself by name
+    without turning a declaration into an execution.
+    """
+
+    checklist = _object(root["checklist"], "review protocol.checklist")
+    fields = _object(checklist["outcome_fields"], "review protocol.checklist.outcome_fields")
+    checks = _array(checklist["checks"], "review protocol.checklist.checks")
+    if not checks:
+        _refuse("review protocol v3.2 must carry at least one checklist entry")
+    seen: set[str] = set()
+    for index, raw in enumerate(checks):
+        subject = f"review protocol.checklist.checks[{index}]"
+        check = _object(raw, subject)
+        verifier = _enum(
+            check.get("verified_by"), _CHECKLIST_VERIFIERS, f"{subject}.verified_by"
+        )
+        expected = (
+            _CHECK_KEYS_VALIDATOR if verifier == "VALIDATOR" else _CHECK_KEYS_REVIEWER
+        )
+        _exact_keys(check, expected, subject)
+        identifier = _text(check["id"], f"{subject}.id")
+        if identifier in seen:
+            _refuse(f"{subject} repeats checklist id {identifier}")
+        seen.add(identifier)
+        _text(check["name"], f"{subject}.name")
+        _text(check["passes_when"], f"{subject}.passes_when")
+        if not _string_array(check["reads"], f"{subject}.reads"):
+            _refuse(f"{subject} must name at least one artifact it reads")
+        named = (
+            check["validator_function"]
+            if verifier == "VALIDATOR"
+            else check["reviewer_judgement"]
+        )
+        _text(named, f"{subject}.verifier")
+        outcome = _text(check["records_outcome_in"], f"{subject}.records_outcome_in")
+        if outcome not in fields:
+            _refuse(
+                f"{subject} lands its outcome in {outcome!r}, which"
+                " review protocol.checklist.outcome_fields does not declare"
+            )
+        unknown = sorted(
+            set(_string_array(check["applies_to"], f"{subject}.applies_to"))
+            - set(surface_kinds)
+        )
+        if unknown:
+            _refuse(f"{subject} applies to surfaces nobody froze {unknown}")
+
+
+def _validate_protocol_v3(protocol_source: bytes, version: str) -> dict[str, Any]:
+    """Accept a v3-family protocol: it declares kinds, not one cell's surface.
+
+    v3.2 differs from v3 in three declarations and nothing else: a sixth absence
+    code, a third surface kind, and stage identities declared per surface kind
+    rather than as one set for every surface. Dispatch is by the version each
+    file declares in its own `schema` (`_protocol_version`), so a v3 protocol,
+    manifest and record never meet a v3.2 branch.
+    """
+
+    surface_kinds = SURFACE_LOCATOR_KINDS_BY_VERSION[version]
+    absent_reasons = COVERAGE_ABSENT_REASONS_BY_VERSION[version]
+    expected_status = PROTOCOL_STATUS_V3 if version == "v3" else PROTOCOL_STATUS_V32
 
     root = _object(_json(protocol_source, "review protocol"), "review protocol")
-    if root.get("status") != PROTOCOL_STATUS_V3:
-        _refuse("review protocol v3 is not frozen")
+    if root.get("status") != expected_status:
+        _refuse(f"review protocol {version} is not frozen")
     if root["purpose"] != ["SOURCE_SUPPORT", "SEMANTIC_COVERAGE"]:
         _refuse("review protocol purpose differs")
 
@@ -758,20 +945,25 @@ def _validate_protocol_v3(protocol_source: bytes) -> dict[str, Any]:
     if surface["declared_by"] != "REVIEW_INPUT_MANIFEST":
         _refuse("review protocol v3 must leave the evidence surface to the manifest")
     kinds = _object(surface["surface_kinds"], "review protocol.surface_kinds")
-    if set(kinds) != set(SURFACE_LOCATOR_KINDS):
-        _refuse("review protocol must declare exactly the two evidence surfaces")
+    if set(kinds) != set(surface_kinds):
+        _refuse(
+            "review protocol must declare exactly the"
+            f" {len(surface_kinds)} evidence surfaces"
+        )
     for kind, declared in kinds.items():
         if _object(declared, f"review protocol.surface_kinds.{kind}")[
             "locator_kind"
-        ] != SURFACE_LOCATOR_KINDS[kind]:
+        ] != surface_kinds[kind]:
             _refuse(f"review protocol surface {kind} declares the wrong locator kind")
+    if version == "v3.2":
+        _answer_surface_declaration(kinds[ANSWER_SET_KIND])
 
     judgments = _object(root["judgments"], "review protocol.judgments")
     if judgments["source_support"] != list(_SOURCE_SUPPORT_V2):
         _refuse("review protocol v3 must keep the v2 source-support judgments")
     if judgments["row_resolution"] != list(ROW_RESOLUTIONS):
         _refuse("review protocol row resolution tokens differ")
-    if judgments["coverage_absent_reasons"] != list(COVERAGE_ABSENT_REASONS):
+    if judgments["coverage_absent_reasons"] != list(absent_reasons):
         _refuse("review protocol coverage absent reasons differ")
     if judgments["question_responsiveness"] != list(COVERAGE_LABELS):
         _refuse("review protocol question responsiveness labels differ")
@@ -781,6 +973,13 @@ def _validate_protocol_v3(protocol_source: bytes) -> dict[str, Any]:
         _refuse("review protocol assembly descriptors differ")
     if judgments["assembly_is"] != "A_DESCRIPTOR_NEVER_A_GRADE":
         _refuse("review protocol assembly must never be a grade")
+    if version == "v3.2":
+        if judgments.get("assembly_not_applicable_on") != [ANSWER_SET_KIND]:
+            _refuse(
+                "review protocol v3.2 must declare assembly not applicable on the"
+                " answer surface, where a prose answer always assembles"
+            )
+        _checklist(root, surface_kinds)
 
     controls = _object(root["controls"], "review protocol.controls")
     if set(controls["kinds"]) != set(CONTROL_KINDS):
@@ -795,22 +994,56 @@ def _validate_protocol_v3(protocol_source: bytes) -> dict[str, Any]:
         identities["required_keys_by_surface_kind"],
         "review protocol.fixed_identities.required_keys_by_surface_kind",
     )
-    if set(by_kind) != set(SURFACE_LOCATOR_KINDS):
-        _refuse("review protocol must fix identities for both surfaces")
+    if set(by_kind) != set(surface_kinds):
+        _refuse("review protocol must fix identities for every surface it declares")
     for kind, keys in by_kind.items():
         _string_array(keys, f"review protocol.fixed_identities.{kind}")
     stage = _object(root["stage_identities"], "review protocol.stage_identities")
-    if set(_string_array(stage["required_keys"], "review protocol.stage_identities")) != (
-        _STAGE_IDENTITY_KEYS
-    ):
-        _refuse("review protocol stage identities differ from the v2 set")
+    if version == "v3":
+        if set(
+            _string_array(stage["required_keys"], "review protocol.stage_identities")
+        ) != _STAGE_IDENTITY_KEYS:
+            _refuse("review protocol stage identities differ from the v2 set")
+    else:
+        stage_by_kind = _object(
+            stage["required_keys_by_surface_kind"],
+            "review protocol.stage_identities.required_keys_by_surface_kind",
+        )
+        if set(stage_by_kind) != set(surface_kinds):
+            _refuse(
+                "review protocol v3.2 must declare stage identities for every"
+                " surface it declares"
+            )
+        for kind, keys in stage_by_kind.items():
+            declared = set(
+                _string_array(keys, f"review protocol.stage_identities.{kind}")
+            )
+            if declared != _STAGE_IDENTITY_KEYS_BY_SURFACE_KIND[kind]:
+                _refuse(
+                    f"review protocol stage identities for {kind} differ from the"
+                    " set this validator carries"
+                )
 
     materials = _object(root["review_materials"], "review protocol.review_materials")
     required = _object(materials["required"], "review protocol.review_materials")
-    if set(required) != set(SURFACE_LOCATOR_KINDS):
-        _refuse("review protocol must name required materials for both surfaces")
+    if set(required) != set(surface_kinds):
+        _refuse("review protocol must name required materials for every surface")
     for kind, names in required.items():
         _string_array(names, f"review protocol.review_materials.{kind}")
+    if version == "v3.2":
+        ledger_side = sorted(
+            _LEDGER_SIDE_MATERIALS.intersection(required[ANSWER_SET_KIND])
+        )
+        if ledger_side:
+            _refuse(
+                "the answer surface has no ledger, binding, replay or trace"
+                f" materials; this protocol requires {ledger_side}"
+            )
+        if "answer_file" not in required[ANSWER_SET_KIND]:
+            _refuse(
+                "the answer surface's reviewer reads the answer file where a"
+                " graph cell's reviewer reads a query result"
+            )
     if materials["sources_are_materials"] is not True:
         _refuse("review protocol must bind every declared source as a material")
 
@@ -842,17 +1075,22 @@ def _sources_by_id(manifest: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
 
 
 def _validate_manifest_v3(
-    manifest_source: bytes, protocol_source: bytes
+    manifest_source: bytes, protocol_source: bytes, version: str
 ) -> dict[str, Any]:
     """Accept a frozen manifest that declares its own evidence surface."""
 
+    surface_kinds = SURFACE_LOCATOR_KINDS_BY_VERSION[version]
+    expected_schema = MANIFEST_SCHEMA_V3 if version == "v3" else MANIFEST_SCHEMA_V32
     protocol = validate_protocol(protocol_source)
     root = _object(
         _json(manifest_source, "review input manifest"), "review input manifest"
     )
     _exact_keys(root, _MANIFEST_KEYS_V3, "review input manifest")
-    if root["schema"] != MANIFEST_SCHEMA_V3:
-        _refuse("review input manifest schema is not the v3 schema the protocol needs")
+    if root["schema"] != expected_schema:
+        _refuse(
+            f"review input manifest schema is not the {version} schema the"
+            " protocol needs"
+        )
     if root["status"] != FROZEN_MANIFEST_STATUS:
         _refuse("review input manifest must be frozen before review")
     if root["review_protocol_sha256"] != _digest(protocol_source):
@@ -861,9 +1099,9 @@ def _validate_manifest_v3(
 
     surface = _object(root["evidence_surface"], "review input manifest.evidence_surface")
     kind = surface.get("kind")
-    if kind not in SURFACE_LOCATOR_KINDS:
+    if kind not in surface_kinds:
         _refuse("review input manifest declares an evidence surface kind nobody froze")
-    if surface.get("locator_kind") != SURFACE_LOCATOR_KINDS[kind]:
+    if surface.get("locator_kind") != surface_kinds[kind]:
         _refuse(f"an evidence surface of kind {kind} carries the wrong locator kind")
 
     if kind == "STRUCTURED_ROWS":
@@ -938,9 +1176,19 @@ def _validate_manifest_v3(
         )
 
     stage = _object(root["stage_identities"], "review input manifest.stage_identities")
-    _exact_keys(stage, _STAGE_IDENTITY_KEYS, "review input manifest.stage_identities")
+    if version == "v3":
+        expected_stage = _STAGE_IDENTITY_KEYS
+    else:
+        expected_stage = set(
+            protocol["stage_identities"]["required_keys_by_surface_kind"][kind]
+        )
+    _exact_keys(stage, expected_stage, "review input manifest.stage_identities")
     for field, value in stage.items():
-        _sha256(value, f"review input manifest.stage_identities.{field}")
+        subject = f"review input manifest.stage_identities.{field}"
+        if field in _STAGE_IDENTITY_TEXT_KEYS:
+            _text(value, subject)
+        else:
+            _sha256(value, subject)
 
     materials = _array(root["materials"], "review input manifest.materials")
     names: list[str] = []
@@ -959,6 +1207,13 @@ def _validate_manifest_v3(
     )
     if missing:
         _refuse(f"review input manifest is missing required materials {missing}")
+    if kind == ANSWER_SET_KIND:
+        ledger_side = sorted(_LEDGER_SIDE_MATERIALS.intersection(names))
+        if ledger_side:
+            _refuse(
+                "an answer set has no ledger, binding, replay or trace stage;"
+                f" this manifest binds {ledger_side}"
+            )
     bound = {(item["path"], item["sha256"]) for item in materials}
     for item in _surface(root).get("sources", []):
         if (item["path"], item["sha256"]) not in bound:
@@ -1177,16 +1432,102 @@ def _query_witnesses(
     return witnesses
 
 
+def _answer_set_witnesses(
+    source: bytes,
+    manifest: Mapping[str, Any],
+    block_ids: set[str],
+) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
+    """The claims of every answer, in order, checked against the manifest.
+
+    This is the answer surface's `_query_witnesses`. A graph cell's witness is a
+    returned row's `record_id` or `relation_id`; here it is one cited claim,
+    keyed by its `claim_id`, and the blocks it cites are the evidence the
+    reviewer judges it against. Two answers stating the same fact carry two
+    claim ids and no shared identity, so the witness count is a count of claims
+    and is not comparable with a graph cell's.
+
+    A question whose answer declares NO_ANSWER_IN_SOURCE carries no claim and so
+    returns no witness; its coverage entries then take an absent reason like any
+    other unreached element.
+    """
+
+    stage = manifest["stage_identities"]
+    if _digest(source) != stage["answer_file_sha256"]:
+        _refuse("answer file differs from the frozen review inputs")
+    root = _object(_json(source, "answer set"), "answer set")
+    if root.get("schema") != ANSWER_SET_SCHEMA:
+        _refuse("answer set schema differs")
+    if root.get("condition") != "IN_CONTEXT_BASELINE":
+        _refuse("an answer set is reviewed only as the in-context baseline")
+    inputs = _object(root["inputs"], "answer set.inputs")
+    fixed = manifest["fixed_identities"]
+    if inputs.get("selected_reading_sha256") != fixed["selected_reading_sha256"]:
+        _refuse("answer set does not bind the frozen selected reading")
+    if inputs.get("competency_questions_sha256") != fixed["competency_questions_sha256"]:
+        _refuse("answer set does not bind the frozen competency questions")
+    if inputs.get("producer_task_sha256") != stage["producer_task_sha256"]:
+        _refuse("answer set does not bind the frozen producer task")
+    if root.get("producer_model_id") != stage["producer_model_id"]:
+        _refuse("answer set does not bind the frozen producer model")
+
+    witnesses: dict[str, list[str]] = {}
+    cited: dict[str, list[str]] = {}
+    for index, raw in enumerate(_array(root["answers"], "answer set.answers")):
+        subject = f"answer set.answers[{index}]"
+        answer = _object(raw, subject)
+        question_id = _text(answer["question_id"], f"{subject}.question_id")
+        if question_id in witnesses:
+            _refuse("answer set question ids must be unique")
+        _text(answer["answer"], f"{subject}.answer")
+        declared = answer["no_answer_in_source"]
+        if type(declared) is not bool:
+            _refuse(f"{subject}.no_answer_in_source must be true or false")
+        keys: list[str] = []
+        for position, raw_claim in enumerate(
+            _array(answer["claims"], f"{subject}.claims")
+        ):
+            claim_subject = f"{subject}.claims[{position}]"
+            claim = _object(raw_claim, claim_subject)
+            _exact_keys(claim, _CLAIM_KEYS, claim_subject)
+            claim_id = _text(claim["claim_id"], f"{claim_subject}.claim_id")
+            _text(claim["statement"], f"{claim_subject}.statement")
+            blocks = _string_array(claim["blocks"], f"{claim_subject}.blocks")
+            if not blocks:
+                _refuse(f"{claim_subject} must cite at least one reading block")
+            unknown = sorted(set(blocks) - block_ids)
+            if unknown:
+                _refuse(
+                    f"{claim_subject} cites blocks outside the selected reading"
+                    f" {unknown}"
+                )
+            if claim_id in cited:
+                _refuse(f"{claim_subject} repeats claim id {claim_id}")
+            cited[claim_id] = blocks
+            keys.append(claim_id)
+        if declared and keys:
+            _refuse(f"{subject} declares NO_ANSWER_IN_SOURCE and cites claims")
+        witnesses[question_id] = keys
+    if {key: len(value) for key, value in witnesses.items()} != manifest[
+        "rows_per_question"
+    ]:
+        _refuse("answer set claim counts differ from the frozen review inputs")
+    if len(cited) != manifest["witnesses_traced"]:
+        _refuse("answer set claim count differs from the frozen review inputs")
+    return witnesses, cited
+
+
 def _record_root_v3(
     record_source: bytes,
     protocol: Mapping[str, Any],
     manifest: Mapping[str, Any],
     protocol_digest: str,
+    version: str,
 ) -> dict[str, Any]:
     root = _markdown_record(record_source)
     _exact_keys(root, _RECORD_KEYS_V3, "review")
-    if root["schema"] != REVIEW_SCHEMA_V3:
-        _refuse("review schema is not the v3 schema the protocol needs")
+    expected_schema = REVIEW_SCHEMA_V3 if version == "v3" else REVIEW_SCHEMA_V32
+    if root["schema"] != expected_schema:
+        _refuse(f"review schema is not the {version} schema the protocol needs")
     if root["status"] not in _REVIEW_STATUSES:
         _refuse("review status differs")
     forbidden = {value.casefold() for value in protocol["forbidden_record_fields"]}
@@ -1228,11 +1569,16 @@ def _record_root_v3(
 
 
 def _validate_blank_v3(
-    record_source: bytes, protocol_source: bytes, manifest_source: bytes
+    record_source: bytes,
+    protocol_source: bytes,
+    manifest_source: bytes,
+    version: str,
 ) -> dict[str, Any]:
     protocol = validate_protocol(protocol_source)
     manifest = validate_review_input_manifest(manifest_source, protocol_source)
-    root = _record_root_v3(record_source, protocol, manifest, _digest(protocol_source))
+    root = _record_root_v3(
+        record_source, protocol, manifest, _digest(protocol_source), version
+    )
     if root["status"] != "BLANK":
         _refuse("blank review status must be BLANK")
     if root["inputs"]["review_input_manifest_sha256"] != "":
@@ -1279,7 +1625,7 @@ def _check_locators(
 ) -> list[bool]:
     """Membership on a text layer, resolution in the file on a row surface."""
 
-    if kind == "SELECTED_READING_TEXT_LAYER":
+    if kind in _BLOCK_MEMBERSHIP_KINDS:
         assert block_ids is not None
         unknown = sorted(set(locators) - block_ids)
         if unknown:
@@ -1300,6 +1646,7 @@ def _witnesses_v3(
     sources: Mapping[str, dict[str, Any]],
     source_bytes: Mapping[str, bytes],
     convention: Mapping[str, Any] | None,
+    cited_blocks: Mapping[str, list[str]] | None = None,
 ) -> dict[str, dict[str, Any]]:
     judged: dict[str, dict[str, Any]] = {}
     expected_keys = _WITNESS_KEYS | ({"resolution"} if kind == "STRUCTURED_ROWS" else set())
@@ -1325,6 +1672,16 @@ def _witnesses_v3(
             convention,
             f"{subject}.source_locators",
         )
+        if kind == ANSWER_SET_KIND:
+            assert cited_blocks is not None
+            missing = sorted(set(cited_blocks.get(key, [])) - set(locators))
+            if missing:
+                _refuse(
+                    f"{subject} judges a claim without citing the blocks the"
+                    f" claim itself cites {missing}; support is judged against"
+                    " the cited block and not the article around it"
+                )
+            continue
         if kind != "STRUCTURED_ROWS":
             continue
         resolution = _enum(
@@ -1366,6 +1723,7 @@ def _coverage_v3(
     row_witnesses: list[str],
     judged: Mapping[str, dict[str, Any]],
     subject: str,
+    version: str = "v3",
 ) -> None:
     coverage = _array(question["coverage"], f"{subject}.coverage")
     if [item.get("semantic") for item in coverage] != semantics:
@@ -1383,7 +1741,11 @@ def _coverage_v3(
                 f"{entry_subject} must name either a row or one absent_reason"
             )
         if reason is not None:
-            _enum(reason, COVERAGE_ABSENT_REASONS, f"{entry_subject}.absent_reason")
+            _enum(
+                reason,
+                COVERAGE_ABSENT_REASONS_BY_VERSION[version],
+                f"{entry_subject}.absent_reason",
+            )
             _text(entry["note"], f"{entry_subject}.note")
             continue
         if type(row_index) is not int or not 0 <= row_index < len(row_witnesses):
@@ -1409,7 +1771,17 @@ def _questions_v3(
     sources: Mapping[str, dict[str, Any]],
     source_bytes: Mapping[str, bytes],
     convention: Mapping[str, Any] | None,
+    version: str = "v3",
 ) -> None:
+    """Judge every question of one record.
+
+    `version` and `_witnesses_v3`'s `cited_blocks` default so that a consumer
+    calling these two positionally with the v3 argument list keeps working:
+    `paper-v4/answer-demonstration/recheck.py` calls both that way to re-check a
+    declared subset of an already-reviewed cell, and the v3 behaviour is exactly
+    what it wants. The v3.2 caller passes both explicitly.
+    """
+
     questions = root["questions"]
     ids = [item["question_id"] for item in questions]
     if ids != manifest["question_ids"]:
@@ -1425,7 +1797,14 @@ def _questions_v3(
         question = _object(raw, subject)
         _exact_keys(question, _QUESTION_KEYS_V3, subject)
         question_id = question["question_id"]
-        _enum(question["assembly"], ASSEMBLY_DESCRIPTORS, f"{subject}.assembly")
+        if kind == ANSWER_SET_KIND:
+            _enum(
+                question["assembly"],
+                (ASSEMBLY_NOT_APPLICABLE,),
+                f"{subject}.assembly",
+            )
+        else:
+            _enum(question["assembly"], ASSEMBLY_DESCRIPTORS, f"{subject}.assembly")
         _text(question["responsiveness_rationale"], f"{subject}.responsiveness_rationale")
         locators = _string_array(question["source_locators"], f"{subject}.source_locators")
         if not locators:
@@ -1452,12 +1831,20 @@ def _questions_v3(
             key = _text(row["witness_key"], f"{row_subject}.witness_key")
             if key != expected[row_index]:
                 _refuse(
-                    f"{row_subject} names witness {key!r}; the query result returns"
-                    f" {expected[row_index]!r}"
+                    f"{row_subject} names witness {key!r}; the"
+                    f" {'answer set' if kind == ANSWER_SET_KIND else 'query result'}"
+                    f" returns {expected[row_index]!r}"
                 )
             row_witnesses.append(key)
 
-        _coverage_v3(question, semantics_by_id[question_id], row_witnesses, judged, subject)
+        _coverage_v3(
+            question,
+            semantics_by_id[question_id],
+            row_witnesses,
+            judged,
+            subject,
+            version,
+        )
         derived = derived_responsiveness(question["coverage"])
         if question["question_responsiveness"] != derived:
             _refuse(
@@ -1472,18 +1859,22 @@ def _validate_review_v3(
     protocol_source: bytes,
     *,
     review_input_manifest_source: bytes,
-    query_result_source: bytes,
+    query_result_source: bytes | None,
     selected_reading_source: bytes | None,
     competency_questions_source: bytes | None,
     surface_sources: Mapping[str, bytes] | None,
+    answer_set_source: bytes | None,
     require_human_ratification: bool,
     findings: list[dict[str, Any]] | None,
+    version: str,
 ) -> dict[str, Any]:
     protocol = validate_protocol(protocol_source)
     manifest = validate_review_input_manifest(
         review_input_manifest_source, protocol_source
     )
-    root = _record_root_v3(record_source, protocol, manifest, _digest(protocol_source))
+    root = _record_root_v3(
+        record_source, protocol, manifest, _digest(protocol_source), version
+    )
     if root["status"] == "BLANK":
         _refuse("blank review is not a completed review")
     if root["inputs"]["review_input_manifest_sha256"] != _digest(
@@ -1504,7 +1895,7 @@ def _validate_review_v3(
     sources: dict[str, dict[str, Any]] = {}
     source_bytes: dict[str, bytes] = {}
     convention: Mapping[str, Any] | None = None
-    if kind == "SELECTED_READING_TEXT_LAYER":
+    if kind in _BLOCK_MEMBERSHIP_KINDS:
         if selected_reading_source is None:
             _refuse("a text-layer cell is validated against its selected reading")
         assert selected_reading_source is not None
@@ -1527,9 +1918,26 @@ def _validate_review_v3(
         source_bytes = dict(surface_sources)
         convention = _surface(manifest)["locator_convention"]
 
-    returned = _query_witnesses(query_result_source, manifest)
-    if sorted(returned) != sorted(manifest["question_ids"]):
-        _refuse("query result questions differ from the frozen review inputs")
+    cited_blocks: dict[str, list[str]] | None = None
+    if kind == ANSWER_SET_KIND:
+        if answer_set_source is None:
+            _refuse(
+                "an answer-set cell is validated against its answer file; that"
+                " file is what the reviewer reads instead of a query result"
+            )
+        assert answer_set_source is not None and block_ids is not None
+        returned, cited_blocks = _answer_set_witnesses(
+            answer_set_source, manifest, block_ids
+        )
+        if sorted(returned) != sorted(manifest["question_ids"]):
+            _refuse("answer set questions differ from the frozen review inputs")
+    else:
+        if query_result_source is None:
+            _refuse("a graph cell is validated against its query result")
+        assert query_result_source is not None
+        returned = _query_witnesses(query_result_source, manifest)
+        if sorted(returned) != sorted(manifest["question_ids"]):
+            _refuse("query result questions differ from the frozen review inputs")
     _authorship_state(root, require_human_ratification=require_human_ratification)
     judged = _witnesses_v3(
         root,
@@ -1539,6 +1947,7 @@ def _validate_review_v3(
         sources,
         source_bytes,
         convention,
+        cited_blocks,
     )
     _questions_v3(
         root,
@@ -1551,6 +1960,7 @@ def _validate_review_v3(
         sources,
         source_bytes,
         convention,
+        version,
     )
     if findings is not None:
         findings.extend(control_outcomes(root, competency_questions_source))

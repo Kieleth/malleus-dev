@@ -1,0 +1,96 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-26",
+  "core": {
+    "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "core_tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
+  },
+  "producer_input_manifest_sha256": "sha256:db7454fbaeb187442720b1a637b8147a8bd430dca1717ee862c7ffbcf25da5bc",
+  "ontology_authored_by": "run-26",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "workspace_launches": 1,
+    "producing_launch_ordinal": 1,
+    "questions_visible": false,
+    "ontology_authored": true,
+    "phases": "ONTOLOGY_THEN_POPULATION",
+    "diagnostic_returns": 0,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:94a5b1e38baf2368f1e5935fd0572465fd8f6b11c17687aaea5d36a09fe628be",
+    "final_status_sha256": "sha256:a8d97a863b1af4b31e0b955837908b00642eed55c6e9f03bfb9c8d1084f3b7e7"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:21ebb3ee7e1318d30bc1cdb7c8447db6af47b8f0c5c5407b892a1f7ccbae5f83",
+      "ontology_path": "paper-v4/experiment-v4/run-26/ontology-run/ontology-01.yaml",
+      "ontology_visibility": "PUBLIC",
+      "diagnostic_path": "paper-v4/experiment-v4/run-26/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:ecd594fe08c51c7d408a2fec44da2c1adc12fdcbd3b5ab3540ea4d1828d65e3f",
+      "accepted_at": "2026-09-12T05:47:36Z",
+      "authored_by": "run-26"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:21ebb3ee7e1318d30bc1cdb7c8447db6af47b8f0c5c5407b892a1f7ccbae5f83",
+    "validated_contract_sha256": "sha256:d280cfaba7a3d318f79a03e3f186dd763ab6b3858c90398746160cef03e75912",
+    "validated_fact_set_sha256": "sha256:9316cc434a5ca969bac799b6dd8321158903c4b528e758ec5b19239d1225baeb",
+    "fact_count": 4219,
+    "grounding_receipt_sha256": "sha256:d461a176a3a884cdab0c16b73cb521fac563f3b90f36aa37f3e731654e95f07a",
+    "population_surface_sha256": "sha256:b6e7c33d7605541f6170b13345c54f26d5940afe597c834795e5617d131f3ef7",
+    "population_surface_families": {
+      "ENTITY": 26,
+      "EVENT": 2,
+      "RELATION": 5
+    }
+  },
+  "accepted_ontology_sha256": "sha256:21ebb3ee7e1318d30bc1cdb7c8447db6af47b8f0c5c5407b892a1f7ccbae5f83",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "citation_check": {
+    "by": "the cell's agent, after ONTOLOGY_READY and before phase two",
+    "ontology_sha256": "sha256:21ebb3ee7e1318d30bc1cdb7c8447db6af47b8f0c5c5407b892a1f7ccbae5f83",
+    "method": "the ontology's grounding blocks parsed with yaml, then every distinct vocabulary_url fetched and every borrowed term looked for in what came back",
+    "checked_at": "2026-09-12T05:48Z",
+    "checked_at_end": "2026-09-12T05:51Z",
+    "checked_at_source": "the harness transcript's timestamps of the WebFetch calls",
+    "citation_blocks": 7,
+    "vocabulary_blocks": 6,
+    "none_found_blocks": 1,
+    "urls": 4,
+    "urls_note": "Four distinct URLs over six vocabulary blocks: GeoSPARQL is cited twice (GeologicFeature and GeologicRelation) and PROV-O twice (ResearchAgent and AgentRelation).",
+    "borrowed_terms": 16,
+    "borrowed_terms_distinct": 16,
+    "fabricated": 0,
+    "unverified": 3,
+    "unverified_terms": [
+      "Event",
+      "Origin",
+      "Magnitude"
+    ],
+    "vocabulary_claims_unsupported": 0,
+    "cited_url_unreachable": 1,
+    "invented_terms_declared": [
+      "GeologicMaterial",
+      "GeologicMaterialKind",
+      "Melt",
+      "MeltStage"
+    ],
+    "result": "opengis.net/ont/geosparql# redirects (303) to defs.opengis.net/prez-backend/object?uri=https://www.opengis.net/ont/geosparql, which declares all five borrowed terms: Feature, SpatialObject, sfWithin, sfContains, sfTouches. w3.org/TR/prov-o/ declares all five: Agent, Person, Organization, actedOnBehalfOf, wasAttributedTo. dublincore.org/specifications/dublin-core/dcmi-terms/ declares all three: Dataset and Software in the DCMI Type Vocabulary and identifier as a property. quakeml.org does not serve over TLS under that name (the certificate is for quake.ethz.ch); the vocabulary's current home quake.ethz.ch/quakeml/ was fetched instead, and its landing page, its BasicEventDescription and BasicEventDescriptionTypes pages carry the QuakeML 2.0 package structure with the type declarations only inside linked UML PDFs. The RFC index at quake.ethz.ch/quakeml/RFC_BED_1.0 names 'Event, Origin' and 'Magnitude' as Basic Event Description elements under discussion but declares none of them. Event, Origin and Magnitude are therefore recorded as unverified, not as fabricated: the vocabulary is real, the terms are named as its elements on its own site, and no page fetched carries the declaration.",
+    "none_found_block": "GeologicMaterial takes the none_found form outright, with the search recorded and four terms declared invented. The producer's stated reason: the declared inputs carry no material vocabulary and the session has no network, so nothing could be vouched for. That is the honest form and not a defect.",
+    "inherited": false
+  },
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4/run-26 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

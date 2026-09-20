@@ -1,0 +1,188 @@
+{
+ "question_id": "CQ-T2-05",
+ "question_responsiveness": "COVERED",
+ "responsiveness_rationale": "The award, its identifier, the author and the relation attributing the one to the other are all returned.",
+ "assembly": "LINKED_ROWS",
+ "coverage": [
+  {
+   "semantic": "funding_record",
+   "row_index": 0,
+   "absent_reason": null,
+   "note": "the named grant award"
+  },
+  {
+   "semantic": "grant_identifier",
+   "row_index": 0,
+   "absent_reason": null,
+   "note": "the same row's agreement number"
+  },
+  {
+   "semantic": "person",
+   "row_index": 15,
+   "absent_reason": null,
+   "note": "the author the grant is attributed to"
+  },
+  {
+   "semantic": "attribution_relation",
+   "row_index": 31,
+   "absent_reason": null,
+   "note": "the returned funding relation between them"
+  }
+ ],
+ "source_locators": [
+  "page:10:block:044",
+  "page:1:block:001",
+  "page:1:block:006",
+  "page:11:block:002"
+ ],
+ "rows": [
+  {
+   "row_index": 0,
+   "witness_key": "award:erc-advanced"
+  },
+  {
+   "row_index": 1,
+   "witness_key": "award:fp7"
+  },
+  {
+   "row_index": 2,
+   "witness_key": "award:investissements"
+  },
+  {
+   "row_index": 3,
+   "witness_key": "award:isblue"
+  },
+  {
+   "row_index": 4,
+   "witness_key": "award:nsfc"
+  },
+  {
+   "row_index": 5,
+   "witness_key": "award:sad"
+  },
+  {
+   "row_index": 6,
+   "witness_key": "award:zjnsf"
+  },
+  {
+   "row_index": 7,
+   "witness_key": "agent:briais"
+  },
+  {
+   "row_index": 8,
+   "witness_key": "agent:brunelli"
+  },
+  {
+   "row_index": 9,
+   "witness_key": "agent:cartigny"
+  },
+  {
+   "row_index": 10,
+   "witness_key": "agent:geli"
+  },
+  {
+   "row_index": 11,
+   "witness_key": "agent:grenet"
+  },
+  {
+   "row_index": 12,
+   "witness_key": "agent:hamelin"
+  },
+  {
+   "row_index": 13,
+   "witness_key": "agent:maia"
+  },
+  {
+   "row_index": 14,
+   "witness_key": "agent:petracchini"
+  },
+  {
+   "row_index": 15,
+   "witness_key": "agent:singh"
+  },
+  {
+   "row_index": 16,
+   "witness_key": "agent:wang"
+  },
+  {
+   "row_index": 17,
+   "witness_key": "agent:yang"
+  },
+  {
+   "row_index": 18,
+   "witness_key": "agent:yu"
+  },
+  {
+   "row_index": 19,
+   "witness_key": "org:brittany"
+  },
+  {
+   "row_index": 20,
+   "witness_key": "org:cnr-igag"
+  },
+  {
+   "row_index": 21,
+   "witness_key": "org:erc"
+  },
+  {
+   "row_index": 22,
+   "witness_key": "org:eu"
+  },
+  {
+   "row_index": 23,
+   "witness_key": "org:french-government"
+  },
+  {
+   "row_index": 24,
+   "witness_key": "org:geo-ocean"
+  },
+  {
+   "row_index": 25,
+   "witness_key": "org:ipgp"
+  },
+  {
+   "row_index": 26,
+   "witness_key": "org:nsfc"
+  },
+  {
+   "row_index": 27,
+   "witness_key": "org:sio"
+  },
+  {
+   "row_index": 28,
+   "witness_key": "org:tgir"
+  },
+  {
+   "row_index": 29,
+   "witness_key": "org:unimore"
+  },
+  {
+   "row_index": 30,
+   "witness_key": "org:zjnsf"
+  },
+  {
+   "row_index": 31,
+   "witness_key": "rel:singh-funded-erc"
+  },
+  {
+   "row_index": 32,
+   "witness_key": "rel:singh-funded-fp7"
+  },
+  {
+   "row_index": 33,
+   "witness_key": "rel:yu-funded-nsfc"
+  },
+  {
+   "row_index": 34,
+   "witness_key": "rel:yu-funded-zjnsf"
+  },
+  {
+   "row_index": 35,
+   "witness_key": "rel:yu-funded-nsfc-body"
+  },
+  {
+   "row_index": 36,
+   "witness_key": "rel:yu-funded-zjnsf-body"
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+{
+  "conversation": {
+    "repository": "mohammadtavakoli78/BEAM",
+    "ref": "b2da22eac88bb0874c64665f13457eb99835774a",
+    "path": "chats/100K/2/chat.json",
+    "git_blob": "3a3109484126472237c53fee488b452b5bc1caf2",
+    "byte_length": 535114,
+    "sha256": "sha256:3a3bd796f4aa24e8f34e718dc2823ae942663349eb89054f03885051e2daf1c4"
+  },
+  "evaluation": {
+    "repository": "mohammadtavakoli78/BEAM",
+    "ref": "b2da22eac88bb0874c64665f13457eb99835774a",
+    "path": "chats/100K/2/probing_questions/probing_questions.json",
+    "git_blob": "5c7c155923a885a4c9d6074ae35e9815d749ffed",
+    "byte_length": 29546,
+    "sha256": "sha256:d188e929644c9ef9fcd4520e7b5a3daf2c2e069b1247a324bd13d5aadd1ed96e"
+  }
+}

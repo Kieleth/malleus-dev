@@ -1,0 +1,123 @@
+{
+  "question_id": "CQ-T3-05",
+  "question": "At what pressure and temperature is the melt said to become saturated with carbon dioxide, in which units, and were those conditions measured or obtained from a solubility model?",
+  "required_semantics": [
+    "bounded_quantity",
+    "pressure_unit",
+    "temperature_unit",
+    "quantity_subject",
+    "model_derived_status"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T3-05:c1",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-05:c2",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-05:c3",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-05:c4",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-05:c5",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-05:c6",
+      "blocks": [
+        "page:10:block:013",
+        "page:10:block:014"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-05:c7",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "bounded_quantity",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "pressure_unit",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "temperature_unit",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "quantity_subject",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "model_derived_status",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T3-05:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T3-05:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T3-05:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-T3-05:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-T3-05:c5"
+    },
+    {
+      "row_index": 5,
+      "witness_key": "CQ-T3-05:c6"
+    },
+    {
+      "row_index": 6,
+      "witness_key": "CQ-T3-05:c7"
+    }
+  ]
+}

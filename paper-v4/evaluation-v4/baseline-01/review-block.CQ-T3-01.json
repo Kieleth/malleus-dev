@@ -1,0 +1,115 @@
+{
+  "question_id": "CQ-T3-01",
+  "question": "What depth range below the seafloor is reported for the deep earthquakes beneath the axis of the magmatic ridge segment, in what unit, and were those depths located in this study or taken from elsewhere?",
+  "required_semantics": [
+    "bounded_quantity",
+    "length_unit",
+    "quantity_subject",
+    "measurement_status",
+    "depth_reference_surface"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T3-01:c1",
+      "blocks": [
+        "page:2:block:004"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-01:c2",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-01:c3",
+      "blocks": [
+        "page:7:block:012"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-01:c4",
+      "blocks": [
+        "page:7:block:012",
+        "page:1:block:004"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-01:c5",
+      "blocks": [
+        "page:2:block:003",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-01:c6",
+      "blocks": [
+        "page:7:block:009",
+        "page:8:block:001"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "bounded_quantity",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "length_unit",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "quantity_subject",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "measurement_status",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "depth_reference_surface",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T3-01:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T3-01:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T3-01:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-T3-01:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-T3-01:c5"
+    },
+    {
+      "row_index": 5,
+      "witness_key": "CQ-T3-01:c6"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "question_id": "CQ-B-T5-02",
+  "question": "Combine the crustal thickness measured on the flank, with its stated error, and the depths of the axial events to say which of those events sit below the crust and in what layer.",
+  "required_semantics": [
+    "crustal_thickness_value",
+    "thickness_uncertainty",
+    "observed_depth_range",
+    "depth_inference",
+    "hosting_layer"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T5-02:c1",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-02:c2",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-02:c3",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-02:c4",
+      "blocks": [
+        "page:7:block:011",
+        "page:7:block:012"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The value and its error are one claim, the observed depths another, and the inference and the hosting layer a third.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "crustal_thickness_value",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "thickness_uncertainty",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "observed_depth_range",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "depth_inference",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "hosting_layer",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:2:block:006",
+    "page:7:block:011",
+    "page:7:block:012"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T5-02:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T5-02:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T5-02:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T5-02:c4"
+    }
+  ]
+}

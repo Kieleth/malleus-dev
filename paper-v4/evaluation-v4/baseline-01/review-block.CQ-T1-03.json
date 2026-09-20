@@ -1,0 +1,58 @@
+{
+  "question_id": "CQ-T1-03",
+  "question": "On what date was this article accepted for publication?",
+  "required_semantics": [
+    "publication_record",
+    "acceptance_event",
+    "calendar_date"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T1-03:c1",
+      "blocks": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T1-03:c2",
+      "blocks": [
+        "page:1:block:006"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "publication_record",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "acceptance_event",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "calendar_date",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T1-03:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T1-03:c2"
+    }
+  ]
+}

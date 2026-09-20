@@ -1,0 +1,79 @@
+{
+  "question_id": "CQ-B-T1-05",
+  "question": "Where did the authors deposit the event catalogue and the picked arrival times, under what identifier, and by what route can the raw recordings be obtained?",
+  "required_semantics": [
+    "repository_name",
+    "dataset_identifier",
+    "deposited_data_description",
+    "raw_data_access_route"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T1-05:c1",
+      "blocks": [
+        "page:8:block:008"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T1-05:c2",
+      "blocks": [
+        "page:8:block:008",
+        "page:8:block:009"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T1-05:c3",
+      "blocks": [
+        "page:8:block:008"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "All four elements name supported claims. The first claim carries both the repository and what was put in it; the identifier and the route to the raw recordings have a claim each.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "repository_name",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "dataset_identifier",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "deposited_data_description",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "raw_data_access_route",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:8:block:008",
+    "page:8:block:009"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T1-05:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T1-05:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T1-05:c3"
+    }
+  ]
+}

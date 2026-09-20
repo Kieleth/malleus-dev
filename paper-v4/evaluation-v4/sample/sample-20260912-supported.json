@@ -1,0 +1,1883 @@
+{
+  "schema": "malleus.paper-v4.evaluation-sample/v1",
+  "seed": 20260912,
+  "size": 200,
+  "stratification": "PROPORTIONAL_TO_STRATUM_COUNT_AT_LEAST_ONE_PER_CELL",
+  "stratum": {
+    "label": "SUPPORTED",
+    "population": "RECORDED_SUPPORTED"
+  },
+  "population_order": "WITNESS_KEY_ASCENDING",
+  "cells": [
+    {
+      "cell": "run-22-v413",
+      "record_path": "paper-v4/evaluation-v4/run-22-v413/review-record.preliminary.md",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f",
+      "witnesses_in_record": 457,
+      "witnesses_in_stratum": 457,
+      "sampled": 51
+    },
+    {
+      "cell": "run-23",
+      "record_path": "paper-v4/evaluation-v4/run-23/review-record.preliminary.md",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76",
+      "witnesses_in_record": 428,
+      "witnesses_in_stratum": 422,
+      "sampled": 47
+    },
+    {
+      "cell": "run-24",
+      "record_path": "paper-v4/evaluation-v4/run-24/review-record.preliminary.md",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b",
+      "witnesses_in_record": 416,
+      "witnesses_in_stratum": 405,
+      "sampled": 46
+    },
+    {
+      "cell": "run-25",
+      "record_path": "paper-v4/evaluation-v4/run-25/review-record.preliminary.md",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d",
+      "witnesses_in_record": 505,
+      "witnesses_in_stratum": 500,
+      "sampled": 56
+    }
+  ],
+  "witnesses": [
+    {
+      "cell": "run-22-v413",
+      "witness_key": "agent:anne-briais",
+      "source_locators": [
+        "page:10:block:045"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "agent:cedric-hamelin",
+      "source_locators": [
+        "page:10:block:045"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "agent:lea-grenet",
+      "source_locators": [
+        "page:10:block:045"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "boundary:isotherm-750",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:axial-valley-floor-character",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:ba90-rb90-calculated",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:bdb-shallower-southward",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:compiled-maximum-depths",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:deep-eq-interpreted-as-degassing",
+      "source_locators": [
+        "page:7:block:012"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:deep-events-not-location-artifact",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:deepest-earthquakes-documented",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:fixed-depth-rms-worse",
+      "source_locators": [
+        "page:8:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:max-depths-affected-by-processes",
+      "source_locators": [
+        "page:5:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:melt-focused-beneath-ridge-axis",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:no-competing-interests",
+      "source_locators": [
+        "page:10:block:047"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:ntd1-magmatic-tectonic-origin",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:primary-vs-pre-eruptive",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:ultraslow-ridges-high-co2",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:updated-compiled-data",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "claim:velocity-model-set",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "cnt:new-focal-mechanisms",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "cnt:non-transform-discontinuities",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "cnt:relocated-events",
+      "source_locators": [
+        "page:7:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "feature:detachment-fault-rti",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "feature:extinct-vent-field",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "feature:gakkel",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "feature:ntd1",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "feature:ntd1-faults",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:axial-event-depth-stability",
+      "source_locators": [
+        "page:7:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:bdb-depth-ntd2",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:brittle-lithospheric-thickness",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:dry-melting-depth",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:equatorial-atlantic-co2-average",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:high-frequency-energy-threshold",
+      "source_locators": [
+        "page:5:block:008"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:lithosphere-age-cold-edge",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:mantle-temperature-gt-1100",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:mean-vertical-error",
+      "source_locators": [
+        "page:7:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:ntd2-eq-depth-down-to",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "obs:subsection-length",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:002",
+      "source_locators": [
+        "page:8:block:014"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:019",
+      "source_locators": [
+        "page:9:block:019"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:020",
+      "source_locators": [
+        "page:9:block:020",
+        "page:9:block:021"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:023",
+      "source_locators": [
+        "page:9:block:025",
+        "page:9:block:026"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:031",
+      "source_locators": [
+        "page:9:block:035"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:034",
+      "source_locators": [
+        "page:9:block:039"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:037",
+      "source_locators": [
+        "page:9:block:042"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:040",
+      "source_locators": [
+        "page:9:block:046",
+        "page:9:block:047"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "ref:070",
+      "source_locators": [
+        "page:10:block:027",
+        "page:10:block:028"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "rel:mar-within-equatorial-atlantic",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "rel:rc1-bounded-by-detachment",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-22-v413",
+      "witness_key": "source:cc-licence",
+      "source_locators": [
+        "page:11:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "agent:brunelli",
+      "source_locators": [
+        "page:1:block:001",
+        "page:10:block:045"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "agent:singh",
+      "source_locators": [
+        "page:1:block:001",
+        "page:11:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "award:zjnsf",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:all-authors-discussed",
+      "source_locators": [
+        "page:10:block:046"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:co2-solubility-pressure",
+      "source_locators": [
+        "page:5:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:enriched-basalts-low-melting",
+      "source_locators": [
+        "page:5:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:extinct-vent-too-far",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:h1-cold-lithosphere",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:long-period-events",
+      "source_locators": [
+        "page:5:block:008"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:mechanism-similar-volcanoes",
+      "source_locators": [
+        "page:5:block:008"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:no-active-vents-rc2",
+      "source_locators": [
+        "page:3:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:occ-shallow-ruptures",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:rc2-rc3-analysed",
+      "source_locators": [
+        "page:8:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:rti-amagmatic",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:tests-support-deep",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:volatile-controls-magma",
+      "source_locators": [
+        "page:5:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:vpvs-reasonable",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "cnt:new-focal-mechanisms",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "cnt:relocation-iterations",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "gchem:rc2-co2-preeruptive",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "gchem:rc3-co2-rb",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "geo:mar",
+      "source_locators": [
+        "page:1:block:001",
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "geo:moho",
+      "source_locators": [
+        "page:7:block:010",
+        "page:7:block:011"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "geo:ntd1",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "instr:obs",
+      "source_locators": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:axial-event-depth-stability",
+      "source_locators": [
+        "page:7:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:coverage-mar",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:full-spreading-rate",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:h1-isotherms",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:lithosphere-age-45ma",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:mean-horizontal-error",
+      "source_locators": [
+        "page:7:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:melting-initiation-depth",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:ntd2-offset",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:rc2-valley-width",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:rc3-length",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:relocation-gap",
+      "source_locators": [
+        "page:7:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:relocation-obs-threshold",
+      "source_locators": [
+        "page:7:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "ratio:co2-rb",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "rel:rc2-adjacent-ntd1",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:ref-001",
+      "source_locators": [
+        "page:8:block:012",
+        "page:8:block:013"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:ref-003",
+      "source_locators": [
+        "page:8:block:015"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:ref-005",
+      "source_locators": [
+        "page:8:block:017"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:ref-013",
+      "source_locators": [
+        "page:9:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:ref-021",
+      "source_locators": [
+        "page:9:block:022"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:ref-059",
+      "source_locators": [
+        "page:10:block:015"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:ref-066",
+      "source_locators": [
+        "page:10:block:022",
+        "page:10:block:023"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "work:zenodo",
+      "source_locators": [
+        "page:8:block:008"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:basaltic-rocks",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:brittle-lithosphere",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:claim:lab-melt",
+      "source_locators": [
+        "page:1:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:claim:magmatic-tectonic",
+      "source_locators": [
+        "page:4:block:002",
+        "page:5:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:claim:not-artifact",
+      "source_locators": [
+        "page:2:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:claim:ultraslow-co2-high",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:data:zenodo",
+      "source_locators": [
+        "page:8:block:008"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:knipovich",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:lab",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:main-axial-faults",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:melt-inclusions",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:melt:primary",
+      "source_locators": [
+        "page:1:block:001",
+        "page:5:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:model:average-velocity",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:model:fastest",
+      "source_locators": [
+        "page:7:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:model:iacono-marziano",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:obs",
+      "source_locators": [
+        "page:1:block:001",
+        "page:2:block:002",
+        "page:2:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:person:briais",
+      "source_locators": [
+        "page:10:block:046",
+        "page:1:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:b-value-groups",
+      "source_locators": [
+        "page:8:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:brittle-thickness-ntds",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:dry-melting-onset",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:fixed-depth-range",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:fixed-depth-subset",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:focal-gap",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:focal-new",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:located-514",
+      "source_locators": [
+        "page:2:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:mar-317",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:no-quakes-below-20",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:ntd2-offset",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:obs-spacing-focal",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:rc2-primary-ba90",
+      "source_locators": [
+        "page:8:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:rc3-co2-rb",
+      "source_locators": [
+        "page:8:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:saturating-melt-co2",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:studied-portion-length",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:subdataset",
+      "source_locators": [
+        "page:6:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:temp-below-20",
+      "source_locators": [
+        "page:5:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:updated-uncertainty",
+      "source_locators": [
+        "page:7:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:volatile-melting-onset",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:rc2-axial-faults",
+      "source_locators": [
+        "page:3:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:rc2-median-valley",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ref:r17",
+      "source_locators": [
+        "page:9:block:016"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ref:r18",
+      "source_locators": [
+        "page:9:block:017",
+        "page:9:block:018"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ref:r32",
+      "source_locators": [
+        "page:9:block:036"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ref:r5",
+      "source_locators": [
+        "page:8:block:017"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ref:r56",
+      "source_locators": [
+        "page:10:block:011"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ref:r59",
+      "source_locators": [
+        "page:10:block:015"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ref:r70",
+      "source_locators": [
+        "page:10:block:027",
+        "page:10:block:028"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "award:nsfc",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:deep-eq-alignment",
+      "source_locators": [
+        "page:4:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:focal-mechanisms-shown",
+      "source_locators": [
+        "page:3:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:licence-terms",
+      "source_locators": [
+        "page:11:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:max-depth-not-following",
+      "source_locators": [
+        "page:2:block:007",
+        "page:3:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:melt-continues-degassing",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:melt-focusing",
+      "source_locators": [
+        "page:1:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:melt-freeze-lithosphere",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:melt-movement-strain",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:melt-resides-fractionates",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:occ-dome-ruptures",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:trace-element-assumption",
+      "source_locators": [
+        "page:5:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "claim:vp-vs-reasonable",
+      "source_locators": [
+        "page:7:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "feature:askja",
+      "source_locators": [
+        "page:4:block:002",
+        "page:4:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "feature:ntd1-faults",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "feature:ntd2",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "feature:occ",
+      "source_locators": [
+        "page:1:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "feature:romanche-tf",
+      "source_locators": [
+        "page:1:block:005",
+        "page:2:block:002",
+        "page:2:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "method:double-difference",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "method:focal-mechanism",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "method:oct-tree",
+      "source_locators": [
+        "page:7:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "model:north-flank",
+      "source_locators": [
+        "page:6:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:avg-horizontal-uncertainty",
+      "source_locators": [
+        "page:3:block:003",
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:co2-pre-eruptive-rc2",
+      "source_locators": [
+        "page:5:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:coverage-mar-axis",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:coverage-romanche",
+      "source_locators": [
+        "page:2:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:crust-thickness-rc2",
+      "source_locators": [
+        "page:7:block:011"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:eq-atlantic-co2-average",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:eq-atlantic-co2-max",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:fm-gap",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:fm-polarities",
+      "source_locators": [
+        "page:8:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:forced-depth-subset",
+      "source_locators": [
+        "page:7:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:located-514",
+      "source_locators": [
+        "page:2:block:003",
+        "page:6:block:005"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:mar-events-317",
+      "source_locators": [
+        "page:3:block:004",
+        "page:7:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:pore-pressure-trigger",
+      "source_locators": [
+        "page:5:block:003"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:quality-c-uncertainty",
+      "source_locators": [
+        "page:3:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:romanche-events-197",
+      "source_locators": [
+        "page:3:block:003",
+        "page:7:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:swir-highest-co2",
+      "source_locators": [
+        "page:5:block:009"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "org:eu",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "org:sio",
+      "source_locators": [
+        "page:1:block:006"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "org:zjnsf",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "rel:logachev-of-knipovich",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "rel:occ-on-mar",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "rel:rc2-bounded-faults",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "rel:zmap-used-for-catalog",
+      "source_locators": [
+        "page:8:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "software:gmt",
+      "source_locators": [
+        "page:8:block:010",
+        "page:8:block:011"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "software:hypodd",
+      "source_locators": [
+        "page:7:block:006",
+        "page:8:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-13",
+      "source_locators": [
+        "page:9:block:010"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-27",
+      "source_locators": [
+        "page:9:block:031"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-32",
+      "source_locators": [
+        "page:9:block:036"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-33",
+      "source_locators": [
+        "page:9:block:037",
+        "page:9:block:038"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-53",
+      "source_locators": [
+        "page:10:block:008"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-6",
+      "source_locators": [
+        "page:9:block:001",
+        "page:9:block:002"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-67",
+      "source_locators": [
+        "page:10:block:024"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-69",
+      "source_locators": [
+        "page:10:block:026"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "work:ref-7",
+      "source_locators": [
+        "page:9:block:003",
+        "page:9:block:004"
+      ],
+      "recorded_source_support": "SUPPORTED",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "question_id": "CQ-T2-05",
+  "question": "Which named grant agreement in the funding statement is attributed to which individual author?",
+  "required_semantics": [
+    "funding_record",
+    "grant_identifier",
+    "person",
+    "attribution_relation"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T2-05:c1",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-05:c2",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-05:c3",
+      "blocks": [
+        "page:10:block:045",
+        "page:11:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-05:c4",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-05:c5",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "funding_record",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "grant_identifier",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "person",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "attribution_relation",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T2-05:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T2-05:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T2-05:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-T2-05:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-T2-05:c5"
+    }
+  ]
+}

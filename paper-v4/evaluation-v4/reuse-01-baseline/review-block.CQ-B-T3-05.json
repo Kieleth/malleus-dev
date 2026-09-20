@@ -1,0 +1,89 @@
+{
+  "question_id": "CQ-B-T3-05",
+  "question": "At what pressure, equivalent depth and temperature does the modelled melt reach CO2 saturation and begin to lose gas, and whose solubility model yields that?",
+  "required_semantics": [
+    "saturation_pressure",
+    "saturation_depth",
+    "saturation_temperature",
+    "solubility_model_source"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T3-05:c1",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-05:c2",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-05:c3",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-05:c4",
+      "blocks": [
+        "page:5:block:006",
+        "page:10:block:013"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim; the pressure, depth and temperature come from one sentence of the cited block and the model attribution from the reference entry.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "saturation_pressure",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "saturation_depth",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "saturation_temperature",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "solubility_model_source",
+      "row_index": 3,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:5:block:006",
+    "page:10:block:013"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T3-05:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T3-05:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T3-05:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T3-05:c4"
+    }
+  ]
+}

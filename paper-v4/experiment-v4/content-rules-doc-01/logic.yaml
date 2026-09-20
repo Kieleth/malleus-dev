@@ -1,0 +1,10 @@
+schema_version: '1'
+contract_id: paper-v4-content-rules-doc-01
+contract_version: '1'
+ontology_hash: sha256:67e164bcc578fb4714eb4c59eb7559c3f10f412b599a2306ef6d8433ba7a73cd
+fact_contract_version: '3'
+ruleset_id: paper-v4-content-rules-doc-01
+ruleset_version: '1'
+rules_file: rules.pl
+rule_ids: [VALUE_IN_CITED_TEXT, NO_CONFLICTING_QUANTITY, NO_EMPTY_RECORD]
+timeout_seconds: 120

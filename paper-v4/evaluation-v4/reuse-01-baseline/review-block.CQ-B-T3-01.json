@@ -1,0 +1,81 @@
+{
+  "question_id": "CQ-B-T3-01",
+  "question": "At what rate does the ridge open here, expressed both per flank and in total, in what unit, and on whose earlier work does that figure rest?",
+  "required_semantics": [
+    "half_rate_value",
+    "full_rate_value",
+    "rate_unit",
+    "rate_source_attribution"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T3-01:c1",
+      "blocks": [
+        "page:1:block:005"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-01:c2",
+      "blocks": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-01:c3",
+      "blocks": [
+        "page:1:block:005",
+        "page:2:block:005",
+        "page:9:block:019"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The half-rate claim carries the unit as well, and the attribution has its own claim resting on the reference entry.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "half_rate_value",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "full_rate_value",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "rate_unit",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "rate_source_attribution",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:1:block:005",
+    "page:2:block:005",
+    "page:9:block:019"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T3-01:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T3-01:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T3-01:c3"
+    }
+  ]
+}

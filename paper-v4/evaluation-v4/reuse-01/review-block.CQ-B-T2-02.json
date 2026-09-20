@@ -1,0 +1,168 @@
+{
+  "question_id": "CQ-B-T2-02",
+  "question": "Which bodies funded which author or which element of the project, under what grant references, and who paid for the time at sea?",
+  "required_semantics": [
+    "funder_name",
+    "grant_identifier",
+    "funded_party",
+    "ship_time_funder"
+  ],
+  "question_responsiveness": "PARTIAL",
+  "responsiveness_rationale": "Bodies, grant references and the tie between an author and an award all come back; who paid for the time at sea does not, because the record that says so is outside this question's cases.",
+  "assembly": "LINKED_ROWS",
+  "coverage": [
+    {
+      "semantic": "funder_name",
+      "row_index": 11,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "grant_identifier",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "funded_party",
+      "row_index": 27,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "ship_time_funder",
+      "row_index": null,
+      "absent_reason": "UNREACHED_RECORD",
+      "note": "A record does state who paid for the time at sea, and this question's cases do not return it; the body itself comes back only as an organisation, with nothing on that row tying it to the ship time."
+    }
+  ],
+  "source_locators": [
+    "page:10:block:044"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "cruise:smarties"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "award:erc-advanced"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "award:fp7"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "award:investissements"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "award:isblue"
+    },
+    {
+      "row_index": 5,
+      "witness_key": "award:nsfc"
+    },
+    {
+      "row_index": 6,
+      "witness_key": "award:sad"
+    },
+    {
+      "row_index": 7,
+      "witness_key": "award:zjnsf"
+    },
+    {
+      "row_index": 8,
+      "witness_key": "agent:briais"
+    },
+    {
+      "row_index": 9,
+      "witness_key": "agent:brittany"
+    },
+    {
+      "row_index": 10,
+      "witness_key": "agent:brunelli"
+    },
+    {
+      "row_index": 11,
+      "witness_key": "agent:erc"
+    },
+    {
+      "row_index": 12,
+      "witness_key": "agent:french-government"
+    },
+    {
+      "row_index": 13,
+      "witness_key": "agent:grenet"
+    },
+    {
+      "row_index": 14,
+      "witness_key": "agent:hamelin"
+    },
+    {
+      "row_index": 15,
+      "witness_key": "agent:maia"
+    },
+    {
+      "row_index": 16,
+      "witness_key": "agent:nsfc"
+    },
+    {
+      "row_index": 17,
+      "witness_key": "agent:org-cnr-igag"
+    },
+    {
+      "row_index": 18,
+      "witness_key": "agent:org-geoocean"
+    },
+    {
+      "row_index": 19,
+      "witness_key": "agent:org-ipgp"
+    },
+    {
+      "row_index": 20,
+      "witness_key": "agent:org-sio"
+    },
+    {
+      "row_index": 21,
+      "witness_key": "agent:org-unimore"
+    },
+    {
+      "row_index": 22,
+      "witness_key": "agent:petracchini"
+    },
+    {
+      "row_index": 23,
+      "witness_key": "agent:singh"
+    },
+    {
+      "row_index": 24,
+      "witness_key": "agent:tgir"
+    },
+    {
+      "row_index": 25,
+      "witness_key": "agent:yu"
+    },
+    {
+      "row_index": 26,
+      "witness_key": "agent:zjnsf"
+    },
+    {
+      "row_index": 27,
+      "witness_key": "rel:singh-funded-erc"
+    },
+    {
+      "row_index": 28,
+      "witness_key": "rel:singh-funded-fp7"
+    },
+    {
+      "row_index": 29,
+      "witness_key": "rel:yu-funded-nsfc"
+    },
+    {
+      "row_index": 30,
+      "witness_key": "rel:yu-funded-zjnsf"
+    }
+  ]
+}

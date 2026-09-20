@@ -1,15 +1,15 @@
 {
   "status": "BUILT_AWAITING_VISUAL_AND_AUTHOR_REVIEW",
-  "manuscript_sha256": "7d24ff8ff821db6316f03756ee505bf5c285c1c3c0f48ddfbd344553875dabe0",
+  "manuscript_sha256": "f3165c9b64edce94bca14b78fce4b11d6c374c394321f7ee4cf35d8c08f164a3",
   "files": {
-    "main.tex": "92be0e61169771c6d06e5d130632c2931f1e3dc4135caf34810b126ad0c5578e",
-    "body.tex": "2d66f3456ed82f918c903022905a4a9480f4ff73816892a69d67892255ca9989",
-    "appendix.tex": "06008214fc44f04f38130bf9a17a07fc240802dcedbb91986d64ac3e8b9bd318",
-    "references.bib": "973e038a4dd10133548a8bc22b4189f925d8998c68968914c23a0fc61addfb19",
-    "main.bbl": "9dfd09458860e9b0d0d9607efc66f1755a87d764423b242048dcfd88bf05fc90"
+    "main.tex": "2e5f183a7b6fe1efb0814cff3046a83814dabf35388f961cd145c245329ec8bc",
+    "body.tex": "297fe9c95baa926de030df2c0a331eafd0172329b806994287e92dc3191bb848",
+    "appendix.tex": "95238b8d533f354dace7ae7b11b626001299962580335ac84841b55e8d784a75",
+    "references.bib": "6e22a550336509f4a908aca131ac96c493c03877d287cd158c3f7ce8add5a407",
+    "main.bbl": "ba249b9021e5779e33105fda0dc38e3580225d1c895516c24ef155242c3e28d1"
   },
-  "pdf_sha256": "c55ebc609b27b6be2f2d02254cd582ff9b29eec41cf3d0ae5f00726964f98e3a",
-  "archive_sha256": "98552f79c3ffdc1cd9c8a4653ac47b554f4607f4d1b8f0ac92b8d437d7ce763f",
+  "pdf_sha256": "5c686da44ccdf4ada50e36ea2f3be88b4fcfcf5635e031bff132d1af72a300a8",
+  "archive_sha256": "62d5a63e9fd622bac8fa0d4639623c18cc049dff558c26ee4671192cfcaafc9e",
   "archive_files": [
     "appendix.tex",
     "body.tex",
@@ -17,7 +17,7 @@
     "main.tex",
     "references.bib"
   ],
-  "build_directory": "/Users/luis/Projects/malleus-dev/tmp/pdfs/submission-candidate-hxl32ike",
+  "build_directory": "/Users/luis/Projects/malleus-dev/tmp/pdfs/submission-candidate-o3jgy6w0",
   "tool_versions": {
     "pdflatex": "pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)",
     "bibtex": "BibTeX 0.99e (TeX Live 2026)"

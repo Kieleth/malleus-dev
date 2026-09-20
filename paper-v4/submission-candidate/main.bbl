@@ -1,11 +1,13 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{nexusdelta}
-{Blue Brain Nexus}.
-\newblock Nexus delta: Managing the data and knowledge graph lifecycle.
-\newblock Project documentation.
-\newblock Accessed 7 September 2026.
-  \url{https://bluebrainnexus.io/products/nexus-delta/}.
+\bibitem{brush2016sepio}
+Matthew~H. Brush, Kent Shefchek, and Melissa Haendel.
+\newblock {SEPIO}: A semantic model for the integration and analysis of
+  scientific evidence.
+\newblock In {\em Proceedings of the Joint International Conference on
+  Biological Ontology and BioCreative (ICBO 2016)}, volume 1747 of {\em CEUR
+  Workshop Proceedings}, 2016.
+\newblock \url{https://ceur-ws.org/Vol-1747/IT605_ICBO2016.pdf}.
 
 \bibitem{caufield2024spires}
 J.~Harry Caufield, Harshad Hegde, Vincent Emonet, Nomi~L. Harris, Marcin~P.
@@ -15,6 +17,13 @@ J.~Harry Caufield, Harshad Hegde, Vincent Emonet, Nomi~L. Harris, Marcin~P.
   ({SPIRES}): A method for populating knowledge bases using zero-shot learning.
 \newblock {\em Bioinformatics}, 40(3):btae104, 2024.
 \newblock \url{https://doi.org/10.1093/bioinformatics/btae104}.
+
+\bibitem{clark2014micropub}
+Tim Clark, Paolo~N. Ciccarese, and Carole~A. Goble.
+\newblock Micropublications: a semantic model for claims, evidence, arguments
+  and annotations in biomedical communications.
+\newblock {\em Journal of Biomedical Semantics}, 5:28, 2014.
+\newblock \url{https://doi.org/10.1186/2041-1480-5-28}.
 
 \bibitem{cotti2026ontologx}
 Luca Cotti, Idilio Drago, Anisa Rula, Devis Bianchini, and Federico Cerutti.
@@ -30,6 +39,57 @@ Elzo~Brito dos Santos~Filho.
 \newblock arXiv:2602.23193v1, 2026.
 \newblock \url{https://arxiv.org/abs/2602.23193v1}.
 
+\bibitem{du2025context}
+Yufeng Du, Minyang Tian, Srikanth Ronanki, Subendhu Rongali, Sravan Bodapati,
+  Aram Galstyan, Azton Wells, Roy Schwartz, Eliu~A. Huerta, and Hao Peng.
+\newblock Context length alone hurts {LLM} performance despite perfect
+  retrieval.
+\newblock arXiv:2510.05381, 2025.
+\newblock \url{https://arxiv.org/abs/2510.05381}.
+
+\bibitem{fahland2022ekg}
+Dirk Fahland.
+\newblock Process mining over multiple behavioral dimensions with event
+  knowledge graphs.
+\newblock In {\em Process Mining Handbook}, volume 448 of {\em Lecture Notes in
+  Business Information Processing}. Springer International Publishing, 2022.
+\newblock Chapter 9. \url{https://doi.org/10.1007/978-3-031-08848-3_9}.
+
+\bibitem{gao2023alce}
+Tianyu Gao, Howard Yen, Jiatong Yu, and Danqi Chen.
+\newblock Enabling large language models to generate text with citations.
+\newblock In {\em Proceedings of the 2023 Conference on Empirical Methods in
+  Natural Language Processing}, pages 6465--6488, 2023.
+\newblock \url{https://arxiv.org/abs/2305.14627}.
+
+\bibitem{groth2010nanopub}
+Paul Groth, Andrew Gibson, and Jan Velterop.
+\newblock The anatomy of a nanopublication.
+\newblock {\em Information Services \& Use}, 30(1-2):51--56, 2010.
+\newblock \url{https://doi.org/10.3233/ISU-2010-0613}.
+
+\bibitem{kuhn2014trusty}
+Tobias Kuhn and Michel Dumontier.
+\newblock Trusty {URIs}: Verifiable, immutable, and permanent digital artifacts
+  for linked data.
+\newblock In {\em The Semantic Web: Trends and Challenges (ESWC 2014)}, volume
+  8465 of {\em Lecture Notes in Computer Science}, pages 395--410, 2014.
+\newblock \url{https://doi.org/10.1007/978-3-319-07443-6_27}.
+
+\bibitem{kuratov2024babilong}
+Yuri Kuratov, Aydar Bulatov, Petr Anokhin, Ivan Rodkin, Dmitry Sorokin, Artyom
+  Sorokin, and Mikhail Burtsev.
+\newblock {BABILong}: Testing the limits of {LLMs} with long context
+  reasoning-in-a-haystack.
+\newblock arXiv:2406.10149v2, 2024.
+\newblock \url{https://arxiv.org/abs/2406.10149}.
+
+\bibitem{laban2025lost}
+Philippe Laban, Hiroaki Hayashi, Yingbo Zhou, and Jennifer Neville.
+\newblock {LLMs} get lost in multi-turn conversation.
+\newblock arXiv:2505.06120, 2025.
+\newblock \url{https://arxiv.org/abs/2505.06120}.
+
 \bibitem{lebo2013provo}
 Timothy Lebo, Satya Sahoo, and Deborah McGuinness.
 \newblock {PROV-O}: The {PROV} ontology.
@@ -44,11 +104,43 @@ Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
 \newblock In {\em Advances in Neural Information Processing Systems}, 2020.
 \newblock \url{https://arxiv.org/abs/2005.11401}.
 
+\bibitem{liu2023lost}
+Nelson~F. Liu, Kevin Lin, John Hewitt, Ashwin Paranjape, Michele Bevilacqua,
+  Fabio Petroni, and Percy Liang.
+\newblock Lost in the middle: How language models use long contexts.
+\newblock arXiv:2307.03172v3, 2023.
+\newblock \url{https://arxiv.org/abs/2307.03172}.
+
+\bibitem{rashkin2023ais}
+Hannah Rashkin, Vitaly Nikolaev, Matthew Lamm, Lora Aroyo, Michael Collins,
+  Dipanjan Das, Slav Petrov, Gaurav~Singh Tomar, Iulia Turc, and David Reitter.
+\newblock Measuring attribution in natural language generation models.
+\newblock {\em Computational Linguistics}, 49(4):777--840, 2023.
+\newblock \url{https://doi.org/10.1162/coli_a_00486}.
+
 \bibitem{skjaeveland2024reasonable}
 Martin~Georg Skj{\ae}veland and Leif~Harald Karlsen.
 \newblock The reasonable ontology templates framework.
 \newblock {\em Transactions on Graph Data and Knowledge}, 2(2):5:1--5:54, 2024.
 \newblock \url{https://doi.org/10.4230/TGDK.2.2.5}.
+
+\bibitem{sy2023nexus}
+Mohameth~Fran{\c{c}}ois Sy, Bogdan Roman, Samuel Kerrien, Didac~Montero Mendez,
+  Henry Genet, Wojciech Wajerowicz, Michael Dupont, Ilya Lavriushev, Julien
+  Machon, Kenneth Pirman, Dhanesh Neela~Mana, Natalia Stafeeva, Anna-Kristin
+  Kaufmann, Huanxiang Lu, Jonathan Lurie, Pierre-Alexandre Fonta,
+  Alejandra~Garcia Martinez, Jan~Christoph Ulbrich, Genrich Ivaska, Alexander
+  Balas, Henry Markram, and Sean~L. Hill.
+\newblock {Blue Brain Nexus}: An open, secure, scalable system for knowledge
+  graph management and data-driven science.
+\newblock {\em Semantic Web}, 14(4):697--727, 2023.
+\newblock \url{https://doi.org/10.3233/SW-222974}.
+
+\bibitem{vrandecic2014wikidata}
+Denny Vrande{\v{c}}i{\'c} and Markus Kr{\"o}tzsch.
+\newblock Wikidata: a free collaborative knowledgebase.
+\newblock {\em Communications of the ACM}, 57(10):78--85, 2014.
+\newblock \url{https://doi.org/10.1145/2629489}.
 
 \bibitem{yu2025deep}
 Zhiteng Yu, Satish~C. Singh, C{\'e}dric Hamelin, L{\'e}a Grenet, Marcia Maia,

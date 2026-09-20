@@ -14,9 +14,23 @@ from pathlib import Path
 from review_packet import PROTOCOL_IDENTITY, canonical, central_key, digest
 
 
-BASE_IDENTITY = (
-    "sha256:8f9dcb5d64f707eb3542119947393c9b350e1c155cc0ca567e55f2de9353e0ae"
+# The exact base validators this extension will load, newest first. The pin is
+# what makes "the isolated base module is unchanged on disk" checkable, so it
+# names bytes and never a range. Two entries, because the sixteen retained
+# packets under private/paper-v4-answer-demonstration/ each carry a frozen copy
+# of the base as it stood when that packet was written, and re-opening a
+# retained packet is what those copies are for; a packet frozen today carries
+# the current bytes. Anything else is refused, as before.
+BASE_IDENTITIES = (
+    # paper-v4/evaluation-v4/review.py with protocol v3.2 beside v3: a sixth
+    # absence code, stage identities per surface kind, and the
+    # IN_CONTEXT_ANSWER_SET surface. Every v3 path is unchanged and every v3
+    # record, manifest and protocol still validates byte-identical.
+    "sha256:1eda2dbbac4f460bae2f865037f70af8d88423ba3e9ff6dc75ba05f194cb73df",
+    # The v3-only base, carried by every packet frozen before 2026-09-12.
+    "sha256:8f9dcb5d64f707eb3542119947393c9b350e1c155cc0ca567e55f2de9353e0ae",
 )
+BASE_IDENTITY = BASE_IDENTITIES[0]
 PROTOCOL_SCHEMA = "malleus.paper-v4.source-grounded-review-protocol/selective-v1"
 MANIFEST_SCHEMA = "malleus.paper-v4.source-grounded-review-inputs/selective-v1"
 RECORD_SCHEMA = "malleus.paper-v4.source-grounded-review/selective-v1"
@@ -100,7 +114,7 @@ def selective_witnesses(source, manifest):
 
 
 def load_base(path):
-    if digest(path.read_bytes()) != BASE_IDENTITY:
+    if digest(path.read_bytes()) not in BASE_IDENTITIES:
         raise ValueError("frozen base validator differs")
     spec = importlib.util.spec_from_file_location("isolated_paper_v3_review", path)
     module = importlib.util.module_from_spec(spec)

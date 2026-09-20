@@ -1,0 +1,245 @@
+{
+  "schema": "malleus.paper-v4.evaluation-sample/v1",
+  "seed": 20260912,
+  "size": 22,
+  "stratification": "COMPLETE_STRATUM_NOT_SAMPLED",
+  "stratum": {
+    "label": "PARTIAL",
+    "population": "RECORDED_PARTIAL"
+  },
+  "population_order": "WITNESS_KEY_ASCENDING",
+  "cells": [
+    {
+      "cell": "run-22-v413",
+      "record_path": "paper-v4/evaluation-v4/run-22-v413/review-record.preliminary.md",
+      "record_sha256": "sha256:2445494ec85a36bee76286c8db4006451f993146c866fe13d7e5618ce6e0b79f",
+      "witnesses_in_record": 457,
+      "witnesses_in_stratum": 0,
+      "sampled": 0
+    },
+    {
+      "cell": "run-23",
+      "record_path": "paper-v4/evaluation-v4/run-23/review-record.preliminary.md",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76",
+      "witnesses_in_record": 428,
+      "witnesses_in_stratum": 6,
+      "sampled": 6
+    },
+    {
+      "cell": "run-24",
+      "record_path": "paper-v4/evaluation-v4/run-24/review-record.preliminary.md",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b",
+      "witnesses_in_record": 416,
+      "witnesses_in_stratum": 11,
+      "sampled": 11
+    },
+    {
+      "cell": "run-25",
+      "record_path": "paper-v4/evaluation-v4/run-25/review-record.preliminary.md",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d",
+      "witnesses_in_record": 505,
+      "witnesses_in_stratum": 5,
+      "sampled": 5
+    }
+  ],
+  "witnesses": [
+    {
+      "cell": "run-23",
+      "witness_key": "claim:acknowledgement-discussions",
+      "source_locators": [
+        "page:10:block:043"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:fixed-depth-rms-worse",
+      "source_locators": [
+        "page:8:block:001"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:max-depth-not-following-relationship",
+      "source_locators": [
+        "page:2:block:007"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:occ-exhumed-mantle",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "claim:volatiles-reduce-solidus",
+      "source_locators": [
+        "page:6:block:001"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-23",
+      "witness_key": "obs:depth-uncertainty-bound",
+      "source_locators": [
+        "page:7:block:001"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:36c0f07ce44115e789b42c6c606ff164cc9a37a15c6d9a187a1175d0d41f2f76"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:askja",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:fagradalsfjall",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:mayotte",
+      "source_locators": [
+        "page:4:block:002"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:ntd1-faults",
+      "source_locators": [
+        "page:2:block:001"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:occ-termination",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:expected-max-depth",
+      "source_locators": [
+        "page:2:block:005"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:mar-events",
+      "source_locators": [
+        "page:3:block:004"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:q:romanche-events",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:rainbow",
+      "source_locators": [
+        "page:8:block:004"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "entity:rc2-bounding-faults",
+      "source_locators": [
+        "page:4:block:001"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-24",
+      "witness_key": "event:romanche-2016",
+      "source_locators": [
+        "page:3:block:004"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:44c3aa63ecd05dece88c6025955a466a43d7a6316199601a3ae4b5ca5e59bc2b"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "agent:geli",
+      "source_locators": [
+        "page:10:block:044"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:depth-uncertainty-cap",
+      "source_locators": [
+        "page:7:block:001"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "obs:fig3e-elevation-scale",
+      "source_locators": [
+        "page:4:block:005"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "sample:basalt",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    },
+    {
+      "cell": "run-25",
+      "witness_key": "sample:peridotite",
+      "source_locators": [
+        "page:3:block:003"
+      ],
+      "recorded_source_support": "PARTIAL",
+      "record_sha256": "sha256:b540635868f7d69819cc495ec54a2f78ab5119a0dd37483b52cb6d8637b1087d"
+    }
+  ]
+}

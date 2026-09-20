@@ -1,0 +1,75 @@
+{
+  "question_id": "CQ-B-T4-05",
+  "question": "What assumption do the authors flag as underlying the derivation of CO2 content from trace-element abundances, and what lower bound do they nevertheless state outright for the melts of the segment with the deep events?",
+  "required_semantics": [
+    "method_assumption",
+    "caveat_wording",
+    "asserted_minimum",
+    "concentration_unit",
+    "segment_label"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T4-05:c1",
+      "blocks": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T4-05:c2",
+      "blocks": [
+        "page:8:block:007"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Both claims are supported and between them carry all five elements: the first the assumption and the way the authors flag it, the second the floor with its unit and the segment it applies to.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "method_assumption",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "caveat_wording",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "asserted_minimum",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "concentration_unit",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "segment_label",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:5:block:004",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T4-05:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T4-05:c2"
+    }
+  ]
+}

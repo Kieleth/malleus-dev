@@ -1,0 +1,43 @@
+{
+  "question_id": "CQ-C-02",
+  "question": "What recurrence interval is given for the deep mantle earthquakes beneath the ridge axis?",
+  "required_semantics": [
+    "temporal_quantity",
+    "time_unit",
+    "event_population",
+    "measurement_status"
+  ],
+  "no_answer_in_source": true,
+  "claims": [],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "temporal_quantity",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "time_unit",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "event_population",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "measurement_status",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": []
+}

@@ -1,0 +1,372 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v2",
+  "run": "run-26",
+  "protocol": "v4.13",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "PRODUCER",
+      "phase": "ONTOLOGY",
+      "first_stage": "ONTOLOGY_ATTEMPT_01",
+      "launched_at": "2026-09-12T05:30:59Z",
+      "launched_at_source": "the first record of the producer's own harness transcript, which is the spawn message delivered to it: /private/tmp/claude-501/-Users-luis-Projects-malleus-dev/1e1b7a20-5bb3-486c-8880-9c4ee4c9be88/tasks/afaa7a43fc5a18637.output. Run-24 and run-25 read this from the overseer session's own jsonl under ~/.claude/projects; this cell was run by a subagent, whose Agent call is not written to that file, so the dispatched message's own delivery timestamp is the nearest harness fact. Not the bash clock.",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "model_id": "claude-opus-5",
+      "spawn_message": "paper-v4/experiment-v4/run-26/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "spawn_message_delta": "run-24's message with the run id moved and nothing else; verified by diff of the two files with the run ids normalised",
+      "outcome": "POPULATION_READY",
+      "execution": {
+        "pinned_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+        "paper_commit": "5937d8eb",
+        "staged_at": "2026-09-12T05:30:17Z",
+        "staged_at_source": "mtime of producer-input-receipt.json",
+        "interpreter": "VERIFIED by prepare_producer.py preflight",
+        "workspace_note": "staged by run-26/prepare_producer.py; the eight declared inputs are byte-identical to run-24's workspace (8 of 8 compared file by file, and the pin's moved_since block reads moved [], unchanged 8 against run-24's manifest)",
+        "core_runtime": "every parent-side cell command runs with src/malleus exported from the pinned commit c95dba7 (git archive c95dba7b86bb61487bda9a52458e1ea47cce20ab src/malleus) first on PYTHONPATH, the repository root second; the repository's src at HEAD differs from the pin",
+        "core_export_path": "/private/tmp/claude-501/-Users-luis-Projects-malleus-dev/1e1b7a20-5bb3-486c-8880-9c4ee4c9be88/scratchpad/run26/core-c95dba7/src"
+      },
+      "condition": "RECORD_CONDITION",
+      "condition_note": "Run-24's producer condition byte for byte: one fresh Claude Opus 5 session, no inherited context, question-blind, the eight declared inputs and the installed skill, phase one authors the ontology and phase two populates it in the same session. Run-20 to run-24 are the five earlier cells of this condition; run-25 is not one of them.",
+      "phase_two": {
+        "dispatched_at": "2026-09-12T05:52:16Z",
+        "dispatched_at_source": "the timestamp of the last user record in the producer's own harness transcript, which is the SendMessage delivered to it: /private/tmp/claude-501/-Users-luis-Projects-malleus-dev/1e1b7a20-5bb3-486c-8880-9c4ee4c9be88/tasks/afaa7a43fc5a18637.output. Not the bash clock.",
+        "after_binding_frozen_at": "2026-09-12T05:51:48Z",
+        "message": "run-24's phase-two message with run-26's coordinates and fact count (4,219), and one closing paragraph that is not part of the task: a note that the scratchpad directory is shared and that helper files belong in the producer's own subdirectory of it. Run-25's producer reported a name collision there.",
+        "message_source": "~/.claude/projects/-Users-luis-Projects-malleus-dev/264ec7c2-cb80-475d-b4b7-84db254b9077.jsonl, the SendMessage tool_use input of 2026-09-10T00:43:26Z (run-24's phase-two dispatch), read verbatim",
+        "message_delta_against_run_24": [
+          "capture_id, plan_id and the fact count moved to this cell's",
+          "the two staged paths moved to this cell's workspace",
+          "one closing paragraph about the shared scratchpad, recorded as an instruction beyond the task"
+        ],
+        "capture_id": "capture:paper-v4:yu-2025:v4:26",
+        "plan_id": "plan:paper-v4:yu-2025:v4:26",
+        "source_id": "source:yu-2025-mid-atlantic-ridge",
+        "staged": [
+          "producer/accepted/population-surface.json",
+          "producer/accepted/diagnostic.json"
+        ],
+        "same_session": true
+      },
+      "usage_cumulative": {
+        "tokens": 197987,
+        "tool_uses": 19,
+        "duration_ms": 970794
+      },
+      "usage_by_resume": [
+        {
+          "after": "POPULATION",
+          "tokens": 461468,
+          "tool_uses": 50,
+          "duration_ms": 2068726
+        }
+      ],
+      "usage_note": "usage_cumulative is the harness's figure at the end of phase one; usage_by_resume takes the cumulative figure at the end of phase two in the same session (one resume by SendMessage)",
+      "deviations": [
+        {
+          "id": "CELL_GUARDS_COMPLETED_WHILE_PHASE_ONE_RAN",
+          "against": "run-24's and run-25's order, which opened the cell green before the producer was spawned",
+          "what": "The producer was dispatched once the pin was idempotent, the contract written and the workspace staged and verified byte-identical to run-24's, with twenty-one of the cell's ninety-six guards still red. The guards assert the cell's own declarations and none of them can change a byte the producer reads: its eight inputs are fixed by producer-input-manifest.json, whose digest the workspace receipt carries, and the spawn message is run-24's with the run id moved.",
+          "why": "phase one costs about forty minutes of wall time and nothing in the guards gates it"
+        }
+      ],
+      "producer_report": [
+        "184 of 186 blocks ASSERTED, 2 declared nothing_assertable (page:4:block:004 and page:4:block:005, axis ticks, coordinates and legend words), 0 untouched",
+        "459 assertions; modalities STATED 382, MEASURED 34, CALCULATED 17, NEGATED 13, HYPOTHESISED 13 (producer's own counts; the runner's census governs)",
+        "600 records: 445 entities, 3 events, 152 relations, 0 supersessions; 232 carry assertion_locator and statement_sha256, 116 carry a subject",
+        "eleven typed gaps: RELATION_ABSENT 5, TYPE_ABSENT 3, AGGREGATE_ONLY 1, REQUIRED_FIELD_ABSENT_IN_SOURCE 1, INTERVAL_NOT_EXPRESSIBLE 1; three assertions carry a gap and no formalization",
+        "statements are byte spans copied from their blocks and never retyped; anchors located under a search-only normalization of whitespace, end-of-line hyphenation, ligatures and dash variants, so the output carries the reading's own projection damage",
+        "the four candidate mechanisms the source weighs are records with dispositions: cold thick lithosphere, hydrothermal cooling, mylonite shear zones and magmatic-tectonic activity all NOT_SUPPORTED, CO2 degassing PREFERRED, each disposition formalized by the sentence that disposes of it and none hypothesised",
+        "its own preflight over the skill's refusal list passes, and a second verifier re-read the written file from disk independently of the builder and re-checked the same list; both pass. The parent-side refusals (plan, profile reference, retention events, contract identity) are not checked there.",
+        "three judgement calls flagged: a number the reading reports twice is two records pointing at two assertions rather than one deduplicated record, because a record carries one locator; creators_as_stated drops the extraction's intra-word letter spacing and nothing else; and 'designed the SMARTIES project' recorded as CONCEPTUALIZATION is a reading rather than a transcription, where METHODOLOGY or PROJECT_ADMINISTRATION could be argued",
+        "the capture is declared partial: supplementary figures, supplementary tables and Supplementary Data 1 are outside the retained reading, so the sentences pointing at them are captured and the numbers behind them are not"
+      ]
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology": "producer/work/ontology-attempt-01.yaml",
+      "ontology_sha256": "sha256:21ebb3ee7e1318d30bc1cdb7c8447db6af47b8f0c5c5407b892a1f7ccbae5f83",
+      "ontology_authored_by": "run-26",
+      "validated_fact_set_sha256": "sha256:9316cc434a5ca969bac799b6dd8321158903c4b528e758ec5b19239d1225baeb",
+      "validated_contract_sha256": "sha256:d280cfaba7a3d318f79a03e3f186dd763ab6b3858c90398746160cef03e75912",
+      "population_surface_sha256": "sha256:b6e7c33d7605541f6170b13345c54f26d5940afe597c834795e5617d131f3ef7",
+      "grounding_receipt_sha256": "sha256:d461a176a3a884cdab0c16b73cb521fac563f3b90f36aa37f3e731654e95f07a",
+      "fact_count": 4219,
+      "accepted_at": "2026-09-12T05:47:36Z",
+      "accepted_at_source": "mtime of gate/attempt-01/diagnostic.json",
+      "families_admitted": [
+        "entities",
+        "events",
+        "relations"
+      ],
+      "surface_families": {
+        "ENTITY": 26,
+        "EVENT": 2,
+        "RELATION": 5
+      },
+      "event_types": [
+        "Event",
+        "SeismicEvent"
+      ],
+      "relation_types": [
+        "AgentRelation",
+        "ContributionRelation",
+        "FundingRelation",
+        "GeologicRelation",
+        "ResearchRelation"
+      ],
+      "subject_bearing_types": [
+        "Claim",
+        "CountObservation",
+        "DepthObservation",
+        "Observation",
+        "ReportedClaim",
+        "ReportedRatio",
+        "SeismicEvent"
+      ],
+      "compiler": "paper-v4/experiment-v4/run-26/compile_ontology_candidate.py with src/malleus exported from the pinned commit c95dba7 first on PYTHONPATH (launches[0].execution.core_runtime)",
+      "diagnostic_returns_used": 0,
+      "diagnostic_return_limit": 2,
+      "producer_observations": [
+        "17 classes, 9 enums, 17 slots; imports linkml:types, malleus, metrology, chronology, research; history profile source-assertion",
+        "seven classes extend a Malleus root directly and each carries its own grounding block: GeologicFeature, GeologicMaterial, SeismicEvent, DigitalResource, ResearchAgent, GeologicRelation, AgentRelation",
+        "ten classes derive through a pack or project type and carry none: Melt, Dataset, SoftwarePackage, NumericalModel, ReportedClaim, DepthObservation, CountObservation, ReportedRatio, BibliographicSource, FundingRelation",
+        "every number is an Observation whose subject is the named thing, not a slot on that thing, because the reading states approximate values, open bounds, ranges, measured values and modelled values and value_qualification, unit, uncertainty and determination have to travel with each one",
+        "two Observation subclasses only: DepthObservation adds depth_reference because the reading states depths below the sea floor and depths below sea level, and CountObservation keeps a count an integer with its scope; the proxy an estimate rests on is an OBSERVED_WITH relation to a Method and not a new slot",
+        "the Event family is narrow: only occurrents the source identifies individually. Earthquake populations are Observations whose subject is the place they lie beneath, which also keeps them reachable, since relation endpoints and subject are Entity-ranged and cannot point at an Event",
+        "bearings stay as written (orientation_as_stated); reading a compass bearing as a number is a normalization needing its own evidence",
+        "the producer's self-check is a shape pass over one file (block placement, the three closed grounding forms, compiler-bindable ranges, no name collisions with the closure), four PASS; it names the slot_usage narrowing of agent_type on ResearchAgent as the likeliest refusal site. The gate accepted the file at attempt 01 and no diagnostic was returned."
+      ],
+      "overseer_observations": [
+        "ACCEPTED at attempt 01 with no diagnostic returned to the producer",
+        "the repository's src at HEAD differs from the pin; every parent-side command runs against the export",
+        "the surface is smaller than run-24's (33 record types against 37) and carries far fewer subject-bearing types (7 against 23): this producer put the subject on the observation and claim types and not on the domain types"
+      ],
+      "citation_check": {
+        "by": "the cell's agent, after ONTOLOGY_READY and before phase two",
+        "ontology_sha256": "sha256:21ebb3ee7e1318d30bc1cdb7c8447db6af47b8f0c5c5407b892a1f7ccbae5f83",
+        "method": "the ontology's grounding blocks parsed with yaml, then every distinct vocabulary_url fetched and every borrowed term looked for in what came back",
+        "checked_at": "2026-09-12T05:48Z",
+        "checked_at_end": "2026-09-12T05:51Z",
+        "checked_at_source": "the harness transcript's timestamps of the WebFetch calls",
+        "citation_blocks": 7,
+        "vocabulary_blocks": 6,
+        "none_found_blocks": 1,
+        "urls": 4,
+        "urls_note": "Four distinct URLs over six vocabulary blocks: GeoSPARQL is cited twice (GeologicFeature and GeologicRelation) and PROV-O twice (ResearchAgent and AgentRelation).",
+        "borrowed_terms": 16,
+        "borrowed_terms_distinct": 16,
+        "fabricated": 0,
+        "unverified": 3,
+        "unverified_terms": [
+          "Event",
+          "Origin",
+          "Magnitude"
+        ],
+        "vocabulary_claims_unsupported": 0,
+        "cited_url_unreachable": 1,
+        "invented_terms_declared": [
+          "GeologicMaterial",
+          "GeologicMaterialKind",
+          "Melt",
+          "MeltStage"
+        ],
+        "result": "opengis.net/ont/geosparql# redirects (303) to defs.opengis.net/prez-backend/object?uri=https://www.opengis.net/ont/geosparql, which declares all five borrowed terms: Feature, SpatialObject, sfWithin, sfContains, sfTouches. w3.org/TR/prov-o/ declares all five: Agent, Person, Organization, actedOnBehalfOf, wasAttributedTo. dublincore.org/specifications/dublin-core/dcmi-terms/ declares all three: Dataset and Software in the DCMI Type Vocabulary and identifier as a property. quakeml.org does not serve over TLS under that name (the certificate is for quake.ethz.ch); the vocabulary's current home quake.ethz.ch/quakeml/ was fetched instead, and its landing page, its BasicEventDescription and BasicEventDescriptionTypes pages carry the QuakeML 2.0 package structure with the type declarations only inside linked UML PDFs. The RFC index at quake.ethz.ch/quakeml/RFC_BED_1.0 names 'Event, Origin' and 'Magnitude' as Basic Event Description elements under discussion but declares none of them. Event, Origin and Magnitude are therefore recorded as unverified, not as fabricated: the vocabulary is real, the terms are named as its elements on its own site, and no page fetched carries the declaration.",
+        "none_found_block": "GeologicMaterial takes the none_found form outright, with the search recorded and four terms declared invented. The producer's stated reason: the declared inputs carry no material vocabulary and the session has no network, so nothing could be vouched for. That is the honest form and not a defect.",
+        "inherited": false
+      },
+      "phase_two_inputs_staged": [
+        "producer/accepted/population-surface.json",
+        "producer/accepted/diagnostic.json"
+      ],
+      "phase_two_inputs_digests": {
+        "population-surface.json": "sha256:b6e7c33d7605541f6170b13345c54f26d5940afe597c834795e5617d131f3ef7",
+        "diagnostic.json": "sha256:ecd594fe08c51c7d408a2fec44da2c1adc12fdcbd3b5ab3540ea4d1828d65e3f"
+      }
+    }
+  ],
+  "runner": [
+    {
+      "attempt": 1,
+      "transaction_time": "2026-09-12T06:26:07Z",
+      "execution_commit": "5937d8eb",
+      "core_executed_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+      "core_note": "src/malleus exported from the pinned commit c95dba7 (git archive) first on PYTHONPATH for the runner, the binder and the native query; the repository HEAD at execution was 5937d8eb",
+      "status": "ADMITTED_AND_REPLAYED",
+      "graph": {
+        "entities": 445,
+        "event_participations": 0,
+        "events": 3,
+        "relations": 152,
+        "signals": 0
+      },
+      "ledger_event_count": 14,
+      "records_traced": 600,
+      "reopen_matches_admitted": {
+        "export_records": true,
+        "receipt": true
+      },
+      "census": {
+        "assertions": {
+          "FULLY_FORMALIZED": 448,
+          "PARTLY_FORMALIZED": 8,
+          "UNFORMALIZED": 3
+        },
+        "blocks_asserted": 184,
+        "blocks_declared_nothing_assertable": 2,
+        "blocks_reviewed": 186,
+        "blocks_total": 186,
+        "blocks_untouched": 0
+      },
+      "gaps_by_kind": {
+        "AGGREGATE_ONLY": 1,
+        "INTERVAL_NOT_EXPRESSIBLE": 1,
+        "RELATION_ABSENT": 5,
+        "REQUIRED_FIELD_ABSENT_IN_SOURCE": 1,
+        "TYPE_ABSENT": 3
+      },
+      "structural_diagnostic_returns_used": 0,
+      "structural_diagnostic_return_limit": 2,
+      "admitted_at": "2026-09-12T06:27:01Z",
+      "admitted_at_source": "mtime of results/run-result.json",
+      "note": "admitted at the first runner attempt with no return and no defect; 186 of 186 blocks reviewed, 184 asserted and 2 declared nothing assertable; eleven typed gaps",
+      "producer_observations": [
+        "184 of 186 blocks ASSERTED, 2 declared nothing_assertable (page:4:block:004 and page:4:block:005, axis ticks, coordinates and legend words), 0 untouched",
+        "459 assertions; modalities STATED 382, MEASURED 34, CALCULATED 17, NEGATED 13, HYPOTHESISED 13 (producer's own counts; the runner's census governs)",
+        "600 records: 445 entities, 3 events, 152 relations, 0 supersessions; 232 carry assertion_locator and statement_sha256, 116 carry a subject",
+        "eleven typed gaps: RELATION_ABSENT 5, TYPE_ABSENT 3, AGGREGATE_ONLY 1, REQUIRED_FIELD_ABSENT_IN_SOURCE 1, INTERVAL_NOT_EXPRESSIBLE 1; three assertions carry a gap and no formalization",
+        "statements are byte spans copied from their blocks and never retyped; anchors located under a search-only normalization of whitespace, end-of-line hyphenation, ligatures and dash variants, so the output carries the reading's own projection damage",
+        "the four candidate mechanisms the source weighs are records with dispositions: cold thick lithosphere, hydrothermal cooling, mylonite shear zones and magmatic-tectonic activity all NOT_SUPPORTED, CO2 degassing PREFERRED, each disposition formalized by the sentence that disposes of it and none hypothesised",
+        "its own preflight over the skill's refusal list passes, and a second verifier re-read the written file from disk independently of the builder and re-checked the same list; both pass. The parent-side refusals (plan, profile reference, retention events, contract identity) are not checked there.",
+        "three judgement calls flagged: a number the reading reports twice is two records pointing at two assertions rather than one deduplicated record, because a record carries one locator; creators_as_stated drops the extraction's intra-word letter spacing and nothing else; and 'designed the SMARTIES project' recorded as CONCEPTUALIZATION is a reading rather than a transcription, where METHODOLOGY or PROJECT_ADMINISTRATION could be argued",
+        "the capture is declared partial: supplementary figures, supplementary tables and Supplementary Data 1 are outside the retained reading, so the sentences pointing at them are captured and the numbers behind them are not"
+      ],
+      "overseer_observations": [
+        "the runner's census governs; the producer's counts are quoted as its report",
+        "one launch, one session, two phases: the ontology was authored in phase one and gated at attempt 01 with no diagnostic returned, and the population was written in the same session after the binding was frozen"
+      ],
+      "subject_coverage": {
+        "ambiguous": 27,
+        "attachable": 30,
+        "proposed": 116,
+        "total": 232,
+        "unnamed": 59,
+        "with_subject": 116,
+        "without_subject": 116
+      },
+      "provenance_coverage": {
+        "total": 232,
+        "with_digest": 232,
+        "with_locator": 232
+      },
+      "derivation_census": {
+        "non_local_relations": 23,
+        "top_hubs": [
+          {
+            "assertion": "assertion:0026",
+            "block": "page:1:block:005",
+            "records": 10
+          },
+          {
+            "assertion": "assertion:0024",
+            "block": "page:1:block:005",
+            "records": 9
+          },
+          {
+            "assertion": "assertion:0438",
+            "block": "page:10:block:044",
+            "records": 9
+          }
+        ]
+      }
+    }
+  ],
+  "query": {
+    "bound_at_stage": "ONTOLOGY_ACCEPTANCE",
+    "bound_at": "2026-09-12T05:51:48Z",
+    "bound_at_source": "mtime of query-binding.acceptance.json",
+    "type_sets": "query-type-sets.json",
+    "type_sets_sha256": "sha256:240b49ec88c1e00caa8e5a7fef3f6c71c5debe4f5710f118703a443cdd6ba165",
+    "type_sets_note": "query-type-sets.note.json",
+    "type_sets_written_at": "2026-09-12T05:51:34Z",
+    "type_sets_written_from": "the accepted population surface and the thirty frozen questions only, before phase two; run-24's sets translated onto this surface one to one, the translation table in query-type-sets.note.json",
+    "questions_file": "paper-v4/experiment-v4/competency-questions-v3.1.json",
+    "questions_file_sha256": "sha256:6a0e92211677536a969efcbc895eda52e9b4152961beb3c296769658cfb134a6",
+    "closure": "paper-v4/experiment-v4/type_set_closure.py: ACCEPTED, no omissions (and the binder ran the closure again)",
+    "binding_at_acceptance": "query-binding.acceptance.json",
+    "binding_at_acceptance_sha256": "sha256:e03c34206fa355971f360fa96c3252e253d6aa0157fb443f3e3aa4d02155711a",
+    "binding_schema": "malleus.paper-v4.native-query-binding/v6",
+    "cases_sha256": "sha256:12dbbcdf546c0b8372e84818cd621a8b939ff9b01c8e48977ff970d6e0bdfb65",
+    "questions": 30,
+    "cases": 13598,
+    "cases_by_kind": {
+      "ENTITY": 92,
+      "ENTITY_NO_SUBJECT": 130,
+      "RELATION": 9030,
+      "SUBJECT": 966,
+      "SUBJECT_ANY": 3380
+    },
+    "question_ids_equal_the_frozen_file": false,
+    "executed_at": "2026-09-12T06:29:45Z",
+    "executed_at_source": "mtime of query/query-result.json",
+    "binding_executed": "results/native-query-binding.json",
+    "binding_executed_sha256": "sha256:06fc5054ea7e5d99bcc94fa90157edc4e4f923c88f8c357eaee5fa39f37abddc",
+    "bound_after_replay_receipt_sha256": "sha256:e7271cb7ed2b87044e8599c23c2f2a0357c21860bf9b0a272efc71dad6dbd693",
+    "cases_sha256_matches_acceptance": true,
+    "result": "query/query-result.json",
+    "result_schema": "malleus.paper-v4.query-result/v3",
+    "rows_by_question": {
+      "CQ-C-01": 237,
+      "CQ-C-02": 229,
+      "CQ-C-03": 455,
+      "CQ-C-04": 148,
+      "CQ-C-05": 312,
+      "CQ-T1-01": 148,
+      "CQ-T1-02": 148,
+      "CQ-T1-03": 247,
+      "CQ-T1-04": 97,
+      "CQ-T1-05": 148,
+      "CQ-T2-01": 158,
+      "CQ-T2-02": 266,
+      "CQ-T2-03": 296,
+      "CQ-T2-04": 455,
+      "CQ-T2-05": 31,
+      "CQ-T3-01": 299,
+      "CQ-T3-02": 312,
+      "CQ-T3-03": 312,
+      "CQ-T3-04": 260,
+      "CQ-T3-05": 253,
+      "CQ-T4-01": 168,
+      "CQ-T4-02": 168,
+      "CQ-T4-03": 121,
+      "CQ-T4-04": 296,
+      "CQ-T4-05": 91,
+      "CQ-T5-01": 226,
+      "CQ-T5-02": 312,
+      "CQ-T5-03": 299,
+      "CQ-T5-04": 248,
+      "CQ-T5-05": 299
+    },
+    "rows_total": 7039,
+    "rows_by_kind": {
+      "ENTITY": 3826,
+      "RELATION": 543,
+      "SUBJECT": 2670
+    },
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "graph_state_digest": "sha256:92144955ff0f7c51fd792eb920dee29a6e621733ee61c9f2f24c12c9c7abfc28",
+    "witnesses_of_returned_rows": 547,
+    "records_traced": 552,
+    "witness_count_note": "The review package binds the witnesses of the returned rows, which is 547; the trace summary counts every record the executor traced, 552, including 5 reached only as another row's subject. review.py checks the manifest against the first. Run-25's reviewer was refused over that difference and its builder was corrected; this cell's builder carries the correction."
+  },
+  "review": {}
+}

@@ -1,0 +1,96 @@
+{
+  "question_id": "CQ-T3-03",
+  "question": "What pre-eruptive carbon dioxide concentration range is given for the studied segment, in which unit, and is it presented as an estimate or as a direct measurement?",
+  "required_semantics": [
+    "bounded_quantity",
+    "concentration_unit",
+    "melt_stage",
+    "estimation_status"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T3-03:c1",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-03:c2",
+      "blocks": [
+        "page:5:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-03:c3",
+      "blocks": [
+        "page:5:block:006",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-03:c4",
+      "blocks": [
+        "page:8:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T3-03:c5",
+      "blocks": [
+        "page:8:block:006"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "bounded_quantity",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "concentration_unit",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "melt_stage",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "estimation_status",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T3-03:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T3-03:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T3-03:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-T3-03:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-T3-03:c5"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "schema": "malleus.paper-v4.reuse-01-graph-reference/v1",
+  "run_id": "reuse-01",
+  "status": "QUERIED_RUN_23_WITHOUT_MOVING_IT",
+  "what_this_cell_is": "A second, independent question set put to run-23's already accepted and frozen graph. No producer ran, no ontology was authored, nothing was captured, admitted, disposed or replayed here. The only new artefacts are the thirty type sets, the binding they expand to and the query result.",
+  "graph": {
+    "authored_by": "run-23",
+    "ledger": "private/paper-v4-v4-run-23/ledger/history.jsonl",
+    "ledger_sha256_before_query": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+    "ledger_sha256_after_query": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+    "ledger_unchanged": true,
+    "ledger_head": "sha256:9fb776938683d0c5b04666dda13a0711cdd2a78ea99593a2264705a2d825f5ab",
+    "accepted_ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+    "validated_contract_sha256": "sha256:13f261b4f319bd6ff959bea3e974a8925baa3832fbf2249986dbabbf1ca02034",
+    "replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec",
+    "graph_state_digest": "sha256:9309b9bcf98613bc194756e13fd06c9c2436469adb3c2c12d56be88e8bb7af5f",
+    "entities": 417,
+    "events": 1,
+    "relations": 22
+  },
+  "questions": {
+    "file": "paper-v4/experiment-v4/competency-questions-set-b.json",
+    "sha256": "sha256:1d2d1c0f589432ab24b6d4ba6817c0bab3abbce5172364e394bed5a307e10bcf",
+    "set": "B",
+    "count": 30,
+    "authored_blind_to_this_graph": true
+  },
+  "binding": {
+    "file": "paper-v4/experiment-v4/reuse-01/results/native-query-binding.json",
+    "sha256": "sha256:d80a95518eee22b39f59e69b5f414b8127011e23cd7d7a7b4bfd7f622630c83b",
+    "cases_sha256": "sha256:b57a84386fa7a86d7fa154680fb7e8f35db28874b77d41a53d28c28460f97eb0",
+    "population_surface_sha256": "sha256:cc982f6460b3e06ecefc90466edab351a07a9c94b3d9dc0fa5cd688fd4cd2a2b",
+    "cases": 11912,
+    "cases_by_kind": {
+      "ENTITY": 104,
+      "ENTITY_NO_SUBJECT": 125,
+      "RELATION": 7596,
+      "SUBJECT": 962,
+      "SUBJECT_ANY": 3125
+    },
+    "bound_by": "paper-v4/experiment-v4/run-23/bind_from_surface.py, unedited, from run-23's accepted population surface and validated contract",
+    "type_set_closure": "ACCEPTED"
+  },
+  "query": {
+    "executed_by": "paper-v4/experiment-v4/run-23/native_query.py, unedited",
+    "core_pin": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    },
+    "rows_total": 7433,
+    "rows_per_question": {
+      "CQ-B-C-01": 130,
+      "CQ-B-C-02": 247,
+      "CQ-B-C-03": 355,
+      "CQ-B-C-04": 130,
+      "CQ-B-C-05": 271,
+      "CQ-B-T1-01": 130,
+      "CQ-B-T1-02": 190,
+      "CQ-B-T1-03": 142,
+      "CQ-B-T1-04": 214,
+      "CQ-B-T1-05": 190,
+      "CQ-B-T2-01": 124,
+      "CQ-B-T2-02": 31,
+      "CQ-B-T2-03": 270,
+      "CQ-B-T2-04": 355,
+      "CQ-B-T2-05": 364,
+      "CQ-B-T3-01": 355,
+      "CQ-B-T3-02": 130,
+      "CQ-B-T3-03": 258,
+      "CQ-B-T3-04": 278,
+      "CQ-B-T3-05": 339,
+      "CQ-B-T4-01": 271,
+      "CQ-B-T4-02": 271,
+      "CQ-B-T4-03": 270,
+      "CQ-B-T4-04": 234,
+      "CQ-B-T4-05": 291,
+      "CQ-B-T5-01": 271,
+      "CQ-B-T5-02": 356,
+      "CQ-B-T5-03": 361,
+      "CQ-B-T5-04": 327,
+      "CQ-B-T5-05": 278
+    },
+    "rows_by_kind": {
+      "ENTITY": 4985,
+      "RELATION": 103,
+      "SUBJECT": 2345
+    },
+    "distinct_witnesses": 429,
+    "records_traced": 429
+  }
+}

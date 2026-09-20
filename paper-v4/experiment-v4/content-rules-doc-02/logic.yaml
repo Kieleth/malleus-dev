@@ -1,0 +1,18 @@
+# The check contract for the four adopted document-path rules.
+#
+# Core closes this document's fields (malleus.logic.CONTRACT_FIELDS), so the
+# adopter declarations Luis asked for here -- the formula slots, the qualifier
+# list, the quantity families and the interval slots -- live in rules.pl, which
+# this contract pins by digest. See ROADMAP.md items E2 and E3 for the Core
+# requirement that would let the ontology supply them, and README.md for why
+# they cannot live in this file.
+schema_version: '1'
+contract_id: paper-v4-content-rules-doc-02
+contract_version: '1'
+ontology_hash: sha256:67e164bcc578fb4714eb4c59eb7559c3f10f412b599a2306ef6d8433ba7a73cd
+fact_contract_version: '3'
+ruleset_id: paper-v4-content-rules-doc-02
+ruleset_version: '1'
+rules_file: rules.pl
+rule_ids: [NO_CONFLICTING_QUANTITY, INTERVAL_SANITY, NUMBER_IN_CITED_TEXT, FORMULA_IN_SOURCE]
+timeout_seconds: 300

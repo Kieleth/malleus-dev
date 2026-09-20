@@ -1,0 +1,77 @@
+{
+  "question_id": "CQ-B-T4-03",
+  "question": "Why do the authors set aside cooling by circulating fluids as the cause, and what related feature do they acknowledge exists not far away?",
+  "required_semantics": [
+    "declined_explanation",
+    "rejection_evidence",
+    "conceded_observation",
+    "spatial_qualification"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T4-03:c1",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T4-03:c2",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T4-03:c3",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The first claim carries both the declined account and the absence of active vents that is the ground for declining it.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "declined_explanation",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "rejection_evidence",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "conceded_observation",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "spatial_qualification",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:3:block:002"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T4-03:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T4-03:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T4-03:c3"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "question_id": "CQ-B-C-01",
+  "question": "With what sampling rate and what kind of sensor were the seafloor instruments configured?",
+  "required_semantics": [
+    "sampling_rate_value",
+    "sensor_type",
+    "instrument_configuration_detail",
+    "instrument_count"
+  ],
+  "no_answer_in_source": true,
+  "claims": [],
+  "question_responsiveness": "NONE",
+  "responsiveness_rationale": "The answer declares the reading has no answer here and makes no claim, so nothing names a semantic. Two of the four elements are genuinely absent from the reading and a third, the configuration detail the question asks for, is absent with them; the instrument count is a different case, since the reading does state it and this answer simply does not.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "sampling_rate_value",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "The reading nowhere gives a sampling rate for the seafloor instruments."
+    },
+    {
+      "semantic": "sensor_type",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "The reading never describes the sensors inside the instruments, only that vertical components were analysed."
+    },
+    {
+      "semantic": "instrument_configuration_detail",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "The reading gives deployment facts such as count, spacing and duration but no detail of how the instruments were configured."
+    },
+    {
+      "semantic": "instrument_count",
+      "row_index": null,
+      "absent_reason": "NOT_CAPTURED",
+      "note": "The reading does state how many instruments were deployed, but this answer carries no claim at all, so no claim of this question states the count."
+    }
+  ],
+  "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002"
+  ],
+  "rows": []
+}

@@ -1,0 +1,2491 @@
+{
+ "base_run": "run-23",
+ "control": {
+  "contract_differences_from_frozen_run_23": [
+   {
+    "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+    "path": "/evidence/producer/sha256",
+    "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+   },
+   {
+    "left": "sha256:fe881eb594e6443b16be61e28208e2195da00832fdd0cc50b4e443b777e458a3",
+    "path": "/evidence_sha256",
+    "right": "sha256:a28df96b527a5d4f25f3d7d701038e57623332585b53e0f647c6db2534891873"
+   }
+  ],
+  "equals_frozen_run_23": false,
+  "export_equals_frozen_run_23": true,
+  "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+  "ledger_sha256": "sha256:3e9135031ed2f28b27914ddcbc2015633d6e529465e895a1df45d93c531a0f3d",
+  "replay_receipt_sha256": "sha256:f3a014b1e347f093fd06be722b41c112705d60fbd32ffcb9e5d1aa27be501f75"
+ },
+ "core_commit": "e7937b89917c8da7ee4a08acc22e99ad12b9985b",
+ "core_is_the_frozen_pin": false,
+ "core_repository": "/private/tmp/malleus-progressive-guidance.uxhila/repo",
+ "inputs": {
+  "honest_population_sha256": "sha256:9d608bffe7cb1259d1f397e6d272290a5e21073744847b6d32a0994543416fd3",
+  "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+  "reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+ },
+ "instances_per_variant": 5,
+ "replay_after_trials": {
+  "equals_control": true,
+  "equals_frozen_run_23": false,
+  "exit_status": 0,
+  "replay_receipt_sha256": "sha256:f3a014b1e347f093fd06be722b41c112705d60fbd32ffcb9e5d1aa27be501f75"
+ },
+ "schema": "malleus.paper-v4.fault-injection-01-outcomes/v1",
+ "seed": 23,
+ "trials": [
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "analyte"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:b080ede8b12d6c910055899ad3e3447a10162ab3b007f6f9cc1ffdecf4e0bb61"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:9d2ef33a2bbbe8aa261df56144c3fc11ae2f4f85c8625ce07ddb358c1cb71b23",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:1e62c547979a82239fd35960ade494f5182d21af562dae5557a6721bfcd8c8b1",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:ac8cdba9b01513984ec6db1a6bcadc0fae14ed515824bb36ab9b97013a27f499",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:92bd5cd0fce8ae35f1fd243c5102f98b88a8d840969add56751b9024cad30ded",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:4ecc24ea7d3c6412b9361e2ba5625f93fb3e05a3816c42b01ade4fff8e0738bc"
+   },
+   "target": {
+    "injected_value": "FAULT-A-01-SYNTHETIC",
+    "locator": "assertion:129",
+    "record_id": "gchem:eq-atlantic-co2-avg",
+    "slot": "analyte"
+   },
+   "trial_id": "a-01"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "analyte"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:275fd6a52126e47b2e41a36bac06a08755c49f6dc4eb30563498ffcd199d29dc"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:3dd36158003e97cf79daa991fce1c56d62471b4736cf85b87ff13afc206b9de3",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:097a98fac6943f93fbc90e479235da5a21f50c46bf197f361e5c452467600bb5",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:5fc9a6561cd78ce640efaf09748d82bfd332f7aed262ef3ff0ec7f5e0549ff57",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:71114d93f8f849b8cdc1c1987e3f5ed5ac10c2c2b2a322b40ae3fb8069d79f78",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:3648616d9f2e1724ec54f8037c1546a85b46626e14cbcb383146a6b0b7981b13"
+   },
+   "target": {
+    "injected_value": "FAULT-A-02-SYNTHETIC",
+    "locator": "assertion:193",
+    "record_id": "gchem:rc2-co2-rb",
+    "slot": "analyte"
+   },
+   "trial_id": "a-02"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "quantity_kind"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:38a1cfb2f1096ce7c11278c9adee6f04817a217bdc242bef7514f291473e0a30"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:d19defc4c539dd86baa94b3d86fdc622df04fbea882020bba3489eca2f299fb6",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:5570613e7ac007fa243a79614b39b1610fa72983f53d36792ebe81ca89c250d6",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:b7367989518b22d50b6b454c858faa085381b9967d4051544eb83ae213811f50",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:47facb0c78e57a10fa58808ca150da0b162c3ab4a8a4b47e02def8bc5ae289bd",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:e405bd49893204ba0c42f8b78bd58b96b70bfe4fe3a87e5f6c7441b27aff0f38"
+   },
+   "target": {
+    "injected_value": "FAULT-A-03-SYNTHETIC",
+    "locator": "assertion:010",
+    "record_id": "obs:melting-initiation-depth",
+    "slot": "quantity_kind"
+   },
+   "trial_id": "a-03"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "quantity_kind"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:5bb48e3c5761c104ee40b790d90b91c2045c8d6cad0ddca70f7a20209130c1cb"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:9a636a0561dcb0b07c8ba333e0e9c98d96235dd61a6936b617b4a6ac0acd8768",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:fdf06e7c5ca5589f00d0c6ae5c3a3ff20aeb45a89dadb8ec15104940b99abb0a",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:e3bdaee09c55305a176faef8019cfb31edd5b4d0b7935a57db9b41341e7b1b78",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:8e01fd5c045c07f88d3f246b1ca7b5b5b29f8be1cb1d36ebf9cb44834da5df85",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:a603145419d7201ae5dd1612f4eb7820e0b2af044bef37f6e4009d90ae1d91d5"
+   },
+   "target": {
+    "injected_value": "FAULT-A-04-SYNTHETIC",
+    "locator": "assertion:055",
+    "record_id": "obs:occ-depth-range",
+    "slot": "quantity_kind"
+   },
+   "trial_id": "a-04"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "ratio_value"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:c106cac39c814a11dcc2cfb5c26367e997bd74a8431ad4170f1c324de2e15dea"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:677bcb3b20304aa0c0ec3564e8fad8d6f058a802c7aa7480c62e33b70a14bebd",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:b6c3b59801ea86bb1c5c9329add15dff6c41ca3771abaf509786b39acc379a28",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:ec021a6bc7d103a6f2963488e4d039a13a1ada1435f394ba4288464d3ec8450e",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:b8d6d5873be6cf36879cbacf76bfec93cdcf72221ef8f99c2de5b702e444be5e",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:cf46ccd7e39fd4b4662cc349a2ed83b1ab1e39111b61cde02ce40ac4048e5b12"
+   },
+   "target": {
+    "injected_value": 900005.0,
+    "locator": "assertion:153",
+    "record_id": "ratio:vp-vs",
+    "slot": "ratio_value"
+   },
+   "trial_id": "a-05"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:compilation-covariates names assertion assertion:260 with statement digest sha256:2b2c79b9eb432c6da12cc13aa0f5591735df1e3e4a17085e27dc5a769a159705, and that assertion's statement digests to sha256:43014b487f21555d9b2d5a7bd1cb1d03b71922529422c99f0d09811da0773bab [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:5922eb082fa02f731b1e42ce7960ac17eaef8e9ef32d66fd39d09ba54381ae16",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:8:block:004"
+    ],
+    "from_locator": [
+     "assertion:187"
+    ],
+    "record_id": "claim:compilation-covariates",
+    "to_block": "page:9:block:052",
+    "to_locator": "assertion:260"
+   },
+   "trial_id": "b1-01"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:ntd2-bdb-normal names assertion assertion:022 with statement digest sha256:d2fb89644de0b09497469f235b549b638040cea220983f14cf6c9166efbca53c, and that assertion's statement digests to sha256:2ad32e3d2b7a46ac7c590e7dbaabc0028cfc674a4cc349b95539a7905cb408e4 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:355e4c1eea6c40421d68b1055afd2459b0f2aa153d017e733bacc188fa1f04c9",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:3:block:001"
+    ],
+    "from_locator": [
+     "assertion:077"
+    ],
+    "record_id": "claim:ntd2-bdb-normal",
+    "to_block": "page:1:block:005",
+    "to_locator": "assertion:022"
+   },
+   "trial_id": "b1-02"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record cnt:velest-subdataset names assertion assertion:057 with statement digest sha256:477104469f2a7de5f7d920ad1f219c56c3b2c6968ff345bc4ce0c65b7a183220, and that assertion's statement digests to sha256:b70da5e3add639b7c1d0c00e3062dee8993b881605a99e127c975bdc6bac6075 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:41e8140f74c6d08a3ac4a917b4496e4940f3020991c2b20807216db3bc44b72f",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:6:block:004"
+    ],
+    "from_locator": [
+     "assertion:147"
+    ],
+    "record_id": "cnt:velest-subdataset",
+    "to_block": "page:2:block:005",
+    "to_locator": "assertion:057"
+   },
+   "trial_id": "b1-03"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:co2-saturation-pressure names assertion assertion:196 with statement digest sha256:073d31bb7458c2a29885a2862dcc6044ca3f91708e7449df7b3414b898310915, and that assertion's statement digests to sha256:6670db5e9009c4719f259278142b67b9c8ee0bec502f3341e4cd59a6fe0d9a62 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7d0ae9a96b5dc9f9b507d0bed2f2a72e5d104b7018ee3b4bfab11469a7bdc47b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:5:block:006"
+    ],
+    "from_locator": [
+     "assertion:122"
+    ],
+    "record_id": "obs:co2-saturation-pressure",
+    "to_block": "page:8:block:007",
+    "to_locator": "assertion:196"
+   },
+   "trial_id": "b1-04"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:ntd1-length names assertion assertion:095 with statement digest sha256:f2b152669960fdcebb8ad9269a13780a07925603e9f8a84b203759d481569a76, and that assertion's statement digests to sha256:418a7cf919bcf36709e3acbae82065708935174ed19430f6a51ccfb61813aed2 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:bfe41e6a78e0768d2524e226b9cd4bf5833d18e9705ed7aa077566b2cca483ac",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:2:block:001"
+    ],
+    "from_locator": [
+     "assertion:033"
+    ],
+    "record_id": "obs:ntd1-length",
+    "to_block": "page:4:block:002",
+    "to_locator": "assertion:095"
+   },
+   "trial_id": "b1-05"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "records cite an assertion they are not derived from: claim:deep-events-not-artifacts cites assertion:118, derived from assertion:178; a record's assertion_locator must be the locator of one of that record's own derivations",
+    "error": "PopulationPlanRefusal",
+    "reason": "LOCATOR_NOT_DERIVED"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:41c553c95116df305c2985359f39c57cf9fd25c7244851653b09bd7c7a92b5ce",
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "target": {
+    "from_blocks": [
+     "page:8:block:001"
+    ],
+    "from_locator": [
+     "assertion:178"
+    ],
+    "record_id": "claim:deep-events-not-artifacts",
+    "to_block": "page:5:block:005",
+    "to_locator": "assertion:118"
+   },
+   "trial_id": "b2-01"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "records cite an assertion they are not derived from: claim:melt-lens-defines-bdb cites assertion:133, derived from assertion:013; a record's assertion_locator must be the locator of one of that record's own derivations",
+    "error": "PopulationPlanRefusal",
+    "reason": "LOCATOR_NOT_DERIVED"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:29184c9e672b6881b9e63555683810579ce82175666d608624331ac6e660183b",
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "target": {
+    "from_blocks": [
+     "page:1:block:004"
+    ],
+    "from_locator": [
+     "assertion:013"
+    ],
+    "record_id": "claim:melt-lens-defines-bdb",
+    "to_block": "page:5:block:010",
+    "to_locator": "assertion:133"
+   },
+   "trial_id": "b2-02"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "records cite an assertion they are not derived from: claim:melt-movement-not-applicable cites assertion:276, derived from assertion:104; a record's assertion_locator must be the locator of one of that record's own derivations",
+    "error": "PopulationPlanRefusal",
+    "reason": "LOCATOR_NOT_DERIVED"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:e5815c627cb10c8f964b7094b6b3c4db4a4a376f4f17641c38d70ab64630c9ca",
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "target": {
+    "from_blocks": [
+     "page:5:block:001"
+    ],
+    "from_locator": [
+     "assertion:104"
+    ],
+    "record_id": "claim:melt-movement-not-applicable",
+    "to_block": "page:10:block:014",
+    "to_locator": "assertion:276"
+   },
+   "trial_id": "b2-03"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "records cite an assertion they are not derived from: claim:rti-amagmatic cites assertion:038, derived from assertion:025; a record's assertion_locator must be the locator of one of that record's own derivations",
+    "error": "PopulationPlanRefusal",
+    "reason": "LOCATOR_NOT_DERIVED"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:d8bd77fcf26c038d18be60f1f4cfcb4c1e905d9fd5bae55433cfdb3f1c9f568a",
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "target": {
+    "from_blocks": [
+     "page:1:block:005"
+    ],
+    "from_locator": [
+     "assertion:025"
+    ],
+    "record_id": "claim:rti-amagmatic",
+    "to_block": "page:2:block:001",
+    "to_locator": "assertion:038"
+   },
+   "trial_id": "b2-04"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "records cite an assertion they are not derived from: obs:criterion-swave-distance cites assertion:198, derived from assertion:166; a record's assertion_locator must be the locator of one of that record's own derivations",
+    "error": "PopulationPlanRefusal",
+    "reason": "LOCATOR_NOT_DERIVED"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:140ddaa43a01669ffde4c3280b8f2002c2dfc8972acca783fd66f1a92f6a95eb",
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "target": {
+    "from_blocks": [
+     "page:7:block:008"
+    ],
+    "from_locator": [
+     "assertion:166"
+    ],
+    "record_id": "obs:criterion-swave-distance",
+    "to_block": "page:8:block:007",
+    "to_locator": "assertion:198"
+   },
+   "trial_id": "b2-05"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:247",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:94e4c9a3830db16eec3c0e2182bb7228c9b2fca8204654abe87c2b924e73717c"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:88436b3a2efdd61d620b184d211ad8f4dbdd285dba8cdb0e34915ca25f688b90",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:580771e9defe7b8222a1ebb205c7c8620c739fa5951e62911d9e98e12ff3a091",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:588bb12e3c57a3996e6734e1530c225e3ba626921e53b26d02a624d95dd351ec",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:70412eb167700467f69cb8ef6e57c0c3b9a070c8a68cca8185c228ec030d41fa",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:5625acbc261da8d9487d65b5e1d1e071913a11c0379fda746a59e80856d82e06"
+   },
+   "target": {
+    "from_blocks": [
+     "page:1:block:005"
+    ],
+    "from_locator": [
+     "assertion:023"
+    ],
+    "record_id": "cnt:subsections",
+    "to_block": "page:9:block:039",
+    "to_locator": "assertion:247"
+   },
+   "trial_id": "b4-01"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:078",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:78c9b877d2efb1fcb462a958fbae21cd28c95a9d81f0691a63605427ae8fe6f7"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:94019f0f05600add10d13d11b049624be46eda626939f66766b998b34811f57e",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:914149d1483e1c3816f779e204a45cf2120b2a82c56f4fc595aeedecfffeb491",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:5a3129834b91bc5ce6ed3c6252f791a9a07f51d930099da9279be694108d8795",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:c4a80ffcd25fe7bcd0cef76c60380799e7d0a4d6afdc033616e4cf3b31d84dad",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:15f3e550ba235e77ed1da6cfd6ff81a0b09f902e578ac45ec48a94fcb61d6f85"
+   },
+   "target": {
+    "from_blocks": [
+     "page:5:block:006"
+    ],
+    "from_locator": [
+     "assertion:122"
+    ],
+    "record_id": "obs:co2-saturation-temperature",
+    "to_block": "page:3:block:001",
+    "to_locator": "assertion:078"
+   },
+   "trial_id": "b4-02"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:173",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:7ded9c3396e053b9a0111effa492a520012528fea2bdc722342f1f40d2cc12e5"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:e93cdfc69f2a203ca54bc5fbf4447b9e587102d4eaedeba974255ade11616cd3",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:6cd7c6b1f1668949863294fb6d3bc0f9219555180d1589e323cd5dc56134aa49",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:c74dfa28d79e44a51df8d6ad6f36aa78be80d77f72a7e74fdfc091652918a290",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:8629766a95352ffddd00311a99a36b50d11028a05aaad538bfafdcc121f6c50f",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:57cf831b768d45b7f234d91dced21a3cc22ab4cbb456eaa47f74279563144fab"
+   },
+   "target": {
+    "from_blocks": [
+     "page:7:block:009"
+    ],
+    "from_locator": [
+     "assertion:169"
+    ],
+    "record_id": "obs:model1-vp",
+    "to_block": "page:7:block:010",
+    "to_locator": "assertion:173"
+   },
+   "trial_id": "b4-03"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:116",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:fb409f153bcec761a90403ce277c3e63da67519edff7358079de9ea887636ba7"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:c840493d04525f037a7cbc280d556c0bfc1792a19444fa7fd0d409fecc066675",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:1e02f9c0b26a4d635436d281d4650a163ed0ae559d52c240fd2b2d60eb61ace4",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:3a4bd815c0fdaa5e931ad2676121ccd500f44c16c55a322b20035ccc872398ad",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:6119e95835f390de9c21bd8922594f6a8c01a410d06ea28467836150bd0556fb",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:235d8ce7be22e9a694e4ad26671aac84417fa0079550bae9a5b55153b8514fba"
+   },
+   "target": {
+    "from_blocks": [
+     "page:7:block:006"
+    ],
+    "from_locator": [
+     "assertion:162"
+    ],
+    "record_id": "obs:relocation-rms",
+    "to_block": "page:5:block:004",
+    "to_locator": "assertion:116"
+   },
+   "trial_id": "b4-04"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:066",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:602847b02186cd4a724b06e2f7f6db5974205e86b8419f14c7bc203d9168a600"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:e70c89cdb421313701aa7d5dff7832de400fbfc4ccda81141020ced4e789113e",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_control": false,
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:112051fea57d80d2c27696811e513aad796a7460690d0da3bd72363a292716e2",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:e66eed14237b5d01f2d25ef97769e6b52ae2a78d09dc0397a8e1ba276c65c908",
+    "receipt_equals_control": false,
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:94ff7f6145cdd78232450f74032a85115add1956db75b926d9dbcea2ea33ca9d",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:81c9d21822b587f1e2d21daa4d0366d8c085ae7cc116498ce25ee786f00dd97b"
+   },
+   "target": {
+    "from_blocks": [
+     "page:5:block:004"
+    ],
+    "from_locator": [
+     "assertion:113"
+    ],
+    "record_id": "ratio:co2-ba",
+    "to_block": "page:2:block:006",
+    "to_locator": "assertion:066"
+   },
+   "trial_id": "b4-05"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:acknowledgement-crew names assertion assertion:310 with statement digest sha256:9028437c51a8afab2a73ab159b28d6cc2a09abce7a5c7345978a5cca1cf47874, and that assertion's statement digests to sha256:aaa392c2edc4d563d11fbaf169749e71be347527f15e1d91ca15eb3d6eb9879e [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:85b4300268f588fa9ca6451424fab3bea28b3719e612727490e2ee470baf1ea0",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:9028437c51a8afab2a73ab159b28d6cc2a09abce7a5c7345978a5cca1cf47874",
+    "locator": "assertion:310",
+    "record_id": "claim:acknowledgement-crew"
+   },
+   "trial_id": "c-01"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:fig3-panels names assertion assertion:100 with statement digest sha256:0c5e4502520aa50238870d92c5b5689e1186e1e07d8862b2922cdc8a114d2e75, and that assertion's statement digests to sha256:43c21040be594e213e1330146334e7f0b63513bf2bd1255756897f8118f3c1b6 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:394a5481bde2f2f7b1a06fb1c0ac9d34bfafb53b5f28347414c18cfe6fa2fb23",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:0c5e4502520aa50238870d92c5b5689e1186e1e07d8862b2922cdc8a114d2e75",
+    "locator": "assertion:100",
+    "record_id": "claim:fig3-panels"
+   },
+   "trial_id": "c-02"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:no-active-vents-rc2 names assertion assertion:080 with statement digest sha256:cb2723beff38a3f145e445e5507aee8f9559db5a2dc1bed5f60e0e46e3372b90, and that assertion's statement digests to sha256:13cfb02958660e889c3a714b24e31dfc58311bee58001dff7d78e6d3b9e910c3 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:ed33db33704d7a21a73c21f03269b437ad386db464f40e83f14989f365ca362b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:cb2723beff38a3f145e445e5507aee8f9559db5a2dc1bed5f60e0e46e3372b90",
+    "locator": "assertion:080",
+    "record_id": "claim:no-active-vents-rc2"
+   },
+   "trial_id": "c-03"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:mean-horizontal-uncertainty names assertion assertion:088 with statement digest sha256:6a79ebb08b8159dc68a519b657f330ead6242e6fac9fdb92649538eb86aef05d, and that assertion's statement digests to sha256:18049b64dda0395618d021ffe754ee1500b6ee298bc7d0bf4baeadfeea978e17 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7eee438a3fd67d85ce8fc2192a9a2180ced0afd079e597c0050fb835176d0e2f",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:6a79ebb08b8159dc68a519b657f330ead6242e6fac9fdb92649538eb86aef05d",
+    "locator": "assertion:088",
+    "record_id": "obs:mean-horizontal-uncertainty"
+   },
+   "trial_id": "c-04"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:ntd2-depth-range names assertion assertion:055 with statement digest sha256:d0aad917235ff8d59ba2b72a9f967c9975b15235dbbd5cef175328478ce9b159, and that assertion's statement digests to sha256:66e1975e5b79b00f499a9802e28c10f0502b147bcd52ade28b09189f1428d96e [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:aa41e17eb98a4628a1a20e52ae7bcdd3806e800a7063a36d6e6eb7730dfa491a",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:d0aad917235ff8d59ba2b72a9f967c9975b15235dbbd5cef175328478ce9b159",
+    "locator": "assertion:055",
+    "record_id": "obs:ntd2-depth-range"
+   },
+   "trial_id": "c-05"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:hash-used-for-focal has absent target_id: fault:d:01:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:d1bfcf5290cef9f644a985c4a28348d30c98cfa0a42d4b8a7987dc959365b793",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:01:absent-endpoint",
+    "record_id": "rel:hash-used-for-focal",
+    "was": "method:first-motion"
+   },
+   "trial_id": "d-01"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:mar-in-atlantic has absent target_id: fault:d:02:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7822505ce97ebb97b77f431ebdd630c76af2516302d9b1db246f62d7bfa9a62f",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:02:absent-endpoint",
+    "record_id": "rel:mar-in-atlantic",
+    "was": "geo:equatorial-atlantic"
+   },
+   "trial_id": "d-02"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:rc1-bounded-detachment has absent target_id: fault:d:03:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:b516d723fb1beba88f0a09b051dfef1d3ffd39a1b1e07919b406fc1c6fa2d1c3",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:03:absent-endpoint",
+    "record_id": "rel:rc1-bounded-detachment",
+    "was": "geo:detachment-east"
+   },
+   "trial_id": "d-03"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:rc2-bounded-faults has absent target_id: fault:d:04:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:bf9a96cca95c20cc91f4460647cde0ffd70bb3c704df301c2b77fc0f8c8b43c1",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:04:absent-endpoint",
+    "record_id": "rel:rc2-bounded-faults",
+    "was": "geo:rc2-bounding-faults"
+   },
+   "trial_id": "d-04"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:seisan-used-for-stalta has absent target_id: fault:d:05:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7bbe200cc89b60c0c1f090786b3a05093c8f67c7097adc71160c765ded70c206",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:05:absent-endpoint",
+    "record_id": "rel:seisan-used-for-stalta",
+    "was": "method:stalta"
+   },
+   "trial_id": "d-05"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[286] 'claim:focal-not-robust': Unknown entity type: 'FaultInjectedTypeE01'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:f2b84f5047ebd1fd577dc695ba63538a6ad9f79fe044e8ff19c04a449c5a0e01",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE01",
+    "record_id": "claim:focal-not-robust",
+    "was": "Claim"
+   },
+   "trial_id": "et-01"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[77] 'claim:refraction-profile-used': Unknown entity type: 'FaultInjectedTypeE02'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:dc01672085233b408bdb7890500cf5c650a77e009b704327e969f3bf4f224f70",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE02",
+    "record_id": "claim:refraction-profile-used",
+    "was": "Claim"
+   },
+   "trial_id": "et-02"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[118] 'obs:h1-bdb-depth': Unknown entity type: 'FaultInjectedTypeE03'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:9b91c204c4bab58a139538170fc55598eb75cc8216961c14dc64d7277b08129a",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE03",
+    "record_id": "obs:h1-bdb-depth",
+    "was": "GeophysicalObservation"
+   },
+   "trial_id": "et-03"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[186] 'obs:no-eq-below-20km': Unknown entity type: 'FaultInjectedTypeE04'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:1cedc2b35f6b4ec09e64d1f2e938c8ebf4979a627df9991eff9e6700d15d0c09",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE04",
+    "record_id": "obs:no-eq-below-20km",
+    "was": "GeophysicalObservation"
+   },
+   "trial_id": "et-04"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[159] 'obs:offaxis-swarm-depth': Unknown entity type: 'FaultInjectedTypeE05'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:f065e1a68826101b5ea84f833b8ed6f4d1825d5281ce6357f86a825755e79a56",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE05",
+    "record_id": "obs:offaxis-swarm-depth",
+    "was": "GeophysicalObservation"
+   },
+   "trial_id": "et-05"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[162] 'claim:degassing-volume-change': Unknown property 'fault_injected_slot_e01' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:4e8ad4cfe0238fa388e5be31017460008f0ab26babe1056e7264905b80bbeec6"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:8057d6330d7c4a843e767acd65d505fdfb1b63bb1508fc5fb133325dd9f531c3",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:108",
+    "injected": "fault_injected_slot_e01",
+    "record_id": "claim:degassing-volume-change"
+   },
+   "trial_id": "es-01"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[150] 'claim:melt-movement-strain': Unknown property 'fault_injected_slot_e02' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:b3701d5a777cab799f7bbd9e6e13aaf41c7462b8b5dc6b43ccc65631cfe0855f"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7fbe59365eb25d6210474761a2366d4fc60f69dfa1f3c6b0231589b1268736d2",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:095",
+    "injected": "fault_injected_slot_e02",
+    "record_id": "claim:melt-movement-strain"
+   },
+   "trial_id": "es-02"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[77] 'claim:refraction-profile-used': Unknown property 'fault_injected_slot_e03' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:5b012b61399a09d80a718e828ae47665e61c7d22a87632d23c83f511229a268b"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:072eb885ecb5a9bc7923807fffe67b129268754ee08678ae8cd1cbc7789eb0eb",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:043",
+    "injected": "fault_injected_slot_e03",
+    "record_id": "claim:refraction-profile-used"
+   },
+   "trial_id": "es-03"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[236] 'claim:vpvs-reasonable': Unknown property 'fault_injected_slot_e04' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:8fc9e87d780c412252785cecdb896c022e60580d1ada79e0aa287f480791d54f"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:8eb7902515b16380818f7de5a9872a14fc7fafe8a101400783f638e7d5a25953",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:155",
+    "injected": "fault_injected_slot_e04",
+    "record_id": "claim:vpvs-reasonable"
+   },
+   "trial_id": "es-04"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[270] 'obs:forced-depths': Unknown property 'fault_injected_slot_e05' for GeophysicalObservation",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:151eaa853d667cdf399184d2b5fca05ad66813ccaf3bad0538c393f28ddc103d"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:a1c30ba734ce29bc2b1be05c2d9cd0989d213d7f02c01f15802dcdd90047c3a6",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:173",
+    "injected": "fault_injected_slot_e05",
+    "record_id": "obs:forced-depths"
+   },
+   "trial_id": "es-05"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: claim:updated-depth-data",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:15fdb31d988dfde89a81e8674f755ac9d8b7f1bdbc3fd3a9dbfc436e6729f2e2",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "claim:updated-depth-data"
+   },
+   "trial_id": "f-01"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: cnt:forced-depth-subset",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:e19bb71db5c3c7223babb8d61c791aef40035ff12c6f24c8b9d42a347cb3e10e",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "cnt:forced-depth-subset"
+   },
+   "trial_id": "f-02"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: obs:depth-uncertainty-bound",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:1b680d06d0b280d2d5d3edf2e393f21fa68e7d7e9c6b82247618c3ef34bf9d4d",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "obs:depth-uncertainty-bound"
+   },
+   "trial_id": "f-03"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: obs:relocation-rms",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:853821caeab78e468451d2e8d0461464f92fbe20974f5a35c5daab2e719599b9",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "obs:relocation-rms"
+   },
+   "trial_id": "f-04"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: obs:shallow-eq-rti",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:289f8817f5e70d584839a56da99b70ef64ed87f8fafd7c454ec4a548e923219e",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "obs:shallow-eq-rti"
+   },
+   "trial_id": "f-05"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:01:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:e711ed7e8f9ea3d3d35beb09d78e00903ef7c53cde33ace6b92b2cee4b574f4b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:01",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-01"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:02:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:0d672251860d4f0d4c3d49e99a0cb09829e4bcf797ce0d38649221256a9d5b93",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:02",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-02"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:03:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:ba60c633da9ae0d501294e7851aa4f886cc18052d1a6804d0f37d2a1853f540b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:03",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-03"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:04:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:5594c44f8ec5926e8d44cde529c1fdaba219f77d18c8f49a717b3ba86662a807",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:04",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-04"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:05:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:01c8ec20bc3541f1c7c66f011ba2e6c1b24a8e97833ee6b1f5e32f42af3d9315",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:05",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-05"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "records carry no derivation: fault:g:no_fields:01; every record needs at least one derivation naming a source it came from, and a record with no properties and no endpoints is not exempt",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_RECORD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:c69b4118930799fe4429d3b247b1e368eebb629daf22f4084a009f6ab87ffb98",
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "target": {
+    "record_id": "fault:g:no_fields:01",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-01"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "records carry no derivation: fault:g:no_fields:02; every record needs at least one derivation naming a source it came from, and a record with no properties and no endpoints is not exempt",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_RECORD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:e689c5728dc219d5820780bee757ba0e5ebf44010462d1be29876741013beb9b",
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "target": {
+    "record_id": "fault:g:no_fields:02",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-02"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "records carry no derivation: fault:g:no_fields:03; every record needs at least one derivation naming a source it came from, and a record with no properties and no endpoints is not exempt",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_RECORD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:d59aa20d152dd967193bd7bab9296a8321bfd62de085decb98aff29760d7ecdd",
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "target": {
+    "record_id": "fault:g:no_fields:03",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-03"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "records carry no derivation: fault:g:no_fields:04; every record needs at least one derivation naming a source it came from, and a record with no properties and no endpoints is not exempt",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_RECORD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:5171638357389353b5b0f057b67113ac1e35c5234896348eb119b51cc7cd4538",
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "target": {
+    "record_id": "fault:g:no_fields:04",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-04"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "records carry no derivation: fault:g:no_fields:05; every record needs at least one derivation naming a source it came from, and a record with no properties and no endpoints is not exempt",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_RECORD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:7b750dc22120e04b5da15cb771828624951f39117840439dec08a68aeb3ac29c"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:3ed87f5192ea191bc528a8b1f90f51fe2ab0cebdefd22c9bea5821ee57832730",
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "target": {
+    "record_id": "fault:g:no_fields:05",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-05"
+  }
+ ]
+}

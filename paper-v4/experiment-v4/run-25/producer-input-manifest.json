@@ -1,0 +1,233 @@
+{
+  "schema": "malleus.paper-v4.producer-input-manifest/v1",
+  "run_id": "run-25",
+  "status": "FROZEN",
+  "producer_workspace": "private/paper-v4-v4-run-25/producer",
+  "core": {
+    "commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "tree": "39a9b9da7dcd41660b8b10fb20b1b1d8e2261082"
+  },
+  "interface_coordinates": {
+    "capture_id": "capture:paper-v4:yu-2025:v4:25",
+    "plan_id": "plan:paper-v4:yu-2025:v4:25",
+    "source_id": "source:yu-2025-mid-atlantic-ridge"
+  },
+  "fixed_ontology": {
+    "authored_by": "run-23",
+    "authored_condition": "THE_RECORD_CONDITION_ONE_FRESH_OPUS_5_SESSION_PHASE_ONE",
+    "accepted_by": "run-23's gate at attempt 01",
+    "accepted_at": "2026-09-09T21:25:09Z",
+    "source": "paper-v4/experiment-v4/run-23/ontology-run/ontology-01.yaml",
+    "source_commit": "2c7e5bdbbbacbce78a6f3abaeb2f6155a0b72953",
+    "source_result": "paper-v4/experiment-v4/run-23/ontology-run/result.json",
+    "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+    "stated_in_the_frozen_record_as": [
+      "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21"
+    ],
+    "fact_count_at_its_own_gate": 4152,
+    "validated_contract_sha256_at_its_own_gate": "sha256:13f261b4f319bd6ff959bea3e974a8925baa3832fbf2249986dbabbf1ca02034",
+    "validated_fact_set_sha256_at_its_own_gate": "sha256:67e164bcc578fb4714eb4c59eb7559c3f10f412b599a2306ef6d8433ba7a73cd",
+    "population_surface_families_at_its_own_gate": {
+      "ENTITY": 25,
+      "EVENT": 2,
+      "RELATION": 4
+    },
+    "staged_as": "inputs/ontology-run-23.yaml",
+    "non_claim": "THIS_CELL_IS_NOT_A_REPLICATE_OF_THE_RECORD_CONDITION_ITS_PRODUCER_AUTHORS_NO_ONTOLOGY"
+  },
+  "history_profile": {
+    "profile_id": "source-assertion",
+    "profile_identity": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+    "semantic_unit": "COMPOSITION",
+    "origin": "PARTIAL_IMPORT"
+  },
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "workspace_layout": "CLAUDE",
+    "session": "FRESH_SINGLE_SESSION",
+    "spawned_by": "OVERSEER",
+    "inputs": [
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "SELECTED_READING",
+      "MALLEUS_ROOT",
+      "LINKML_TYPES",
+      "SHIPPED_GROUNDED_PACKS",
+      "SOURCE_ASSERTION_PROFILE",
+      "FIXED_ONTOLOGY"
+    ],
+    "forbidden_inputs": [
+      "COMPETENCY_QUESTIONS",
+      "QUERY_BINDING",
+      "ANSWER_ORACLE",
+      "PRIOR_POPULATION",
+      "PRIOR_RESULT",
+      "MANUSCRIPT",
+      "REPOSITORY_DOCUMENTATION",
+      "NETWORK"
+    ],
+    "network": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "fallback": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 0,
+    "max_ontology_revision_rounds": 0,
+    "revision_trigger": "NONE_THE_ONTOLOGY_IS_FIXED",
+    "terminal_rule": "STOP_WHEN_EVERY_BLOCK_IS_REVIEWED_OR_NOTHING_ASSERTABLE_OR_THE_NEXT_ADDITION_WOULD_REQUIRE_INVENTION",
+    "spawn_message": "ISOLATION_ONLY_NO_MODELLING_INSTRUCTION_PLUS_STOP_RULE_CLARIFICATION_PLUS_THE_ONTOLOGY_IS_GIVEN",
+    "prior_ontology": "DECLARED_INPUT_NOT_FORBIDDEN_IN_THIS_CELL",
+    "prior_ontology_detail": "PRIOR_ONTOLOGY is forbidden in every cell of the record condition and is the one item that moves here. This producer is given run-23's accepted ontology as inputs/ontology-run-23.yaml, which is a prior cell's ontology by construction; withholding it would leave the cell with no ontology at all. Nothing else of run-23 reaches this producer: not its population, not its result, not its session log, not its gate diagnostic beyond the acceptance receipt this cell's own gate writes.",
+    "phases": "POPULATION_ONLY",
+    "ontology_authored": false,
+    "ontology_source": "FIXED_RUN_23_ACCEPTED_ONTOLOGY",
+    "first_stage": "POPULATION",
+    "diagnostic_returns_note": "The ontology is gated before the producer is spawned, so there is no compiler diagnostic for this session to receive and no ontology attempt for it to revise. The runner's structural refusal is returned as in every cell, at most twice, and is recorded in the launch log's runner list."
+  },
+  "input_bytes": {
+    "tracked": "GIT_SHOW_AT_CORE_COMMIT",
+    "untracked": "PRIVATE_PATH",
+    "untracked_inputs": [
+      "SELECTED_READING"
+    ]
+  },
+  "interpreter_preflight": {
+    "checked_by": "paper-v4/experiment-v4/run-25/prepare_producer.py",
+    "lock": "paper-v4/environment/requirements-cp312-macos-arm64.lock",
+    "packages": [
+      "linkml",
+      "linkml-runtime"
+    ],
+    "recorded_in": "producer-input-receipt.json under interpreter"
+  },
+  "skill_installer": {
+    "method": "WRITE_DECLARED_BYTES_AT_CORE_COMMIT",
+    "reason": "the live skill tree is expected to move; the run consumes the bytes recorded in this manifest",
+    "installed_tree": ".claude/skills",
+    "target": ".claude/skills/malleus-acolyte/SKILL.md"
+  },
+  "declared_inputs": [
+    {
+      "name": "MALLEUS_NASCENT_PROJECT_SKILL",
+      "source": ".claude/skills/malleus-acolyte/SKILL.md",
+      "target": ".claude/skills/malleus-acolyte/SKILL.md",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81",
+      "sha256": "sha256:8278753a08ff8fdbd867c9da212f160f049378b63d55663ed29e5ce73ccd0a81"
+    },
+    {
+      "name": "SELECTED_READING",
+      "source": "private/paper-v4-text-layer/selected-reading.json",
+      "target": "inputs/selected-reading.json",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+      "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+    },
+    {
+      "name": "MALLEUS_ROOT",
+      "source": "ontology/malleus.yaml",
+      "target": "inputs/malleus.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3",
+      "sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
+    },
+    {
+      "name": "LINKML_TYPES",
+      "source": "paper-v4/experiment-v2/run-inputs/linkml-types.yaml",
+      "target": "inputs/linkml-types.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00",
+      "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+    },
+    {
+      "name": "METROLOGY_PACK",
+      "source": "ontology/packs/metrology.yaml",
+      "target": "inputs/metrology.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:be843436a99ea38c1147d8b4296e560348fe34fa8ec5a23d176868239cd01fef",
+      "sha256": "sha256:be843436a99ea38c1147d8b4296e560348fe34fa8ec5a23d176868239cd01fef"
+    },
+    {
+      "name": "CHRONOLOGY_PACK",
+      "source": "ontology/packs/chronology.yaml",
+      "target": "inputs/chronology.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1",
+      "sha256": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1"
+    },
+    {
+      "name": "RESEARCH_PACK",
+      "source": "ontology/packs/research.yaml",
+      "target": "inputs/research.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b",
+      "sha256": "sha256:70e0cfe6566df9d866354c4b7ae4052a5d9fe1d81e670f2d93015bd41c4d817b"
+    },
+    {
+      "name": "SOURCE_ASSERTION_PROFILE",
+      "source": "src/malleus/profiles/source-assertion.json",
+      "target": "inputs/profile-source-assertion.json",
+      "staged_as": "CANONICAL_JSON",
+      "source_sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46",
+      "sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
+    },
+    {
+      "name": "FIXED_ONTOLOGY",
+      "source": "paper-v4/experiment-v4/run-23/ontology-run/ontology-01.yaml",
+      "target": "inputs/ontology-run-23.yaml",
+      "staged_as": "SOURCE_BYTES",
+      "source_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+      "sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+      "source_commit": "2c7e5bdbbbacbce78a6f3abaeb2f6155a0b72953"
+    }
+  ],
+  "moved_since": {
+    "reference_run": "run-24",
+    "reference_manifest": "paper-v4/experiment-v4/run-24/producer-input-manifest.json",
+    "added": [
+      "FIXED_ONTOLOGY"
+    ],
+    "added_cause": {
+      "FIXED_ONTOLOGY": "THE_ONTOLOGY_IS_GIVEN_THE_PRODUCER_STARTS_AT_PHASE_TWO"
+    },
+    "moved": [],
+    "moved_cause": {},
+    "unchanged": [
+      "CHRONOLOGY_PACK",
+      "LINKML_TYPES",
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "MALLEUS_ROOT",
+      "METROLOGY_PACK",
+      "RESEARCH_PACK",
+      "SELECTED_READING",
+      "SOURCE_ASSERTION_PROFILE"
+    ]
+  },
+  "forbidden_inputs": [
+    "COMPETENCY_QUESTIONS",
+    "QUERY_BINDING",
+    "ANSWER_ORACLE",
+    "PRIOR_POPULATION",
+    "PRIOR_RESULT",
+    "MANUSCRIPT",
+    "REPOSITORY_DOCUMENTATION",
+    "NETWORK"
+  ],
+  "session": {
+    "fresh": true,
+    "single_session": true,
+    "delegation": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 2,
+    "max_additive_revision_rounds": 2,
+    "fallback": "FORBIDDEN"
+  },
+  "outputs": {
+    "ontology_pattern": "work/ontology-attempt-NN.yaml",
+    "population": "work/document-population.json",
+    "session_log": "work/session-log.md",
+    "status": "work/status.json"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "malleus.paper-v4.independent-judge-launch-log/v1",
+  "seed": 20260912,
+  "cells": [
+    "run-22-v413",
+    "run-23",
+    "run-24",
+    "run-25"
+  ],
+  "strata": [
+    {
+      "sample": "paper-v4/evaluation-v4/sample/sample-20260912-supported.json",
+      "sample_sha256": "sha256:f573af6bea6d425b72918d39923e3ca14aff9fe2c9bf03b6510b4cf25fd88338",
+      "design": "random, proportional across cells, recorded label SUPPORTED only, size 200",
+      "packet": "private/paper-v4-evaluation-sample/packet-20260912-f573af6b.json",
+      "task": "private/paper-v4-evaluation-sample/judge-task-20260912-f573af6b.md",
+      "record": "private/paper-v4-evaluation-sample/judge-record-20260912-f573af6b.md",
+      "actor_id": "actor:fable-judge-20260912-f573af6b",
+      "dispatched_at": "2026-09-12T04:18:38.219Z"
+    },
+    {
+      "sample": "paper-v4/evaluation-v4/sample/sample-20260912-partial-all.json",
+      "sample_sha256": "sha256:ce1e451cc0c8059e25207ab2c3a4ac661a98eddc55761158274002da89fec518",
+      "design": "complete stratum, every witness with recorded label PARTIAL, 22",
+      "packet": "private/paper-v4-evaluation-sample/packet-20260912-ce1e451c.json",
+      "task": "private/paper-v4-evaluation-sample/judge-task-20260912-ce1e451c.md",
+      "record": "private/paper-v4-evaluation-sample/judge-record-20260912-ce1e451c.md",
+      "actor_id": "actor:fable-judge-20260912-ce1e451c",
+      "dispatched_at": "2026-09-12T04:18:42.744Z"
+    }
+  ],
+  "judge": {
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "fable",
+    "model_id": "claude-fable-5-1",
+    "evaluator_kind": "INDEPENDENT_MODEL_JUDGE",
+    "sessions": "one fresh session per packet, each blind to the recorded labels and to the other packet",
+    "reasoning_effort": "harness default, not pinned or observed; Luis asked for xhigh, the Agent tool exposes no effort parameter",
+    "same_model_as_dispatcher": true,
+    "dispatched_at": "per stratum, from this session's transcript (the Agent tool calls)"
+  },
+  "ruling": "Luis, 2026-09-11: the judge is Fable, not a human; 2026-09-12: SUPPORTED-only random stratum of 200 plus all PARTIAL, one judge, disagreement rate with binomial bound as headline"
+}

@@ -1,0 +1,91 @@
+{
+  "question_id": "CQ-B-T5-01",
+  "question": "Set the maximum event depth expected for this opening rate against the depths actually recorded beneath the axis of the segment with deep seismicity, and say how far apart the two are.",
+  "required_semantics": [
+    "expected_depth_bound",
+    "observed_depth_range",
+    "spreading_rate_basis",
+    "segment_label"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T5-01:c1",
+      "blocks": [
+        "page:2:block:005"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-01:c2",
+      "blocks": [
+        "page:2:block:006",
+        "page:2:block:004"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-01:c3",
+      "blocks": [
+        "page:2:block:005",
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-01:c4",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The first claim carries both the expected bound and the spreading rate it is read off; the observed depths and the segment come from the second.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "expected_depth_bound",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "observed_depth_range",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "spreading_rate_basis",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "segment_label",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:2:block:005",
+    "page:2:block:006",
+    "page:2:block:004"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T5-01:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T5-01:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T5-01:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T5-01:c4"
+    }
+  ]
+}

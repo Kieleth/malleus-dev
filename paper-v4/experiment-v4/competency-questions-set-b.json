@@ -1,0 +1,432 @@
+{
+  "schema": "malleus.paper-v4.competency-questions/v3",
+  "status": "FROZEN",
+  "set": "B",
+  "set_note": "An independent second question set, not a revision of competency-questions-v3.1.json. It was authored from the selected reading alone by one fresh Claude Opus 5 session that saw no ontology, no graph, no capture, no query material, no review record and no earlier question file, and it exists to put a second set to a graph that was built question-blind against the first. Its ids carry the prefix CQ-B- so that no id of either set can be mistaken for the other's.",
+  "visibility": "WITHHELD_FROM_PRODUCER_UNTIL_POST_REPLAY",
+  "visibility_note": "Withheld from every graph producer, as set A was. The in-context baseline of reuse-01-baseline is handed this file, which is the one place the question-blind rule is broken and is the condition that cell prices.",
+  "scope": {
+    "answer_surface": "REPLAY_DERIVED_NATIVE_GRAPH_QUERY_WITH_PROVENANCE_TRACE",
+    "source_support": "SELECTED_READING_TEXT_LAYER",
+    "figures": "EXCLUDED",
+    "tables": "EXCLUDED",
+    "free_form_synthesis": "EXCLUDED"
+  },
+  "authored": {
+    "kind": "CLAUDE_FRESH_SESSION",
+    "model": "claude-opus-5",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "blind_to": [
+      "EVERY_ONTOLOGY",
+      "EVERY_GRAPH",
+      "EVERY_CAPTURE",
+      "EVERY_EXISTING_QUESTION_FILE",
+      "EVERY_REVIEW_RECORD",
+      "THE_REPOSITORY"
+    ],
+    "inputs": [
+      {
+        "role": "paper_text_layer",
+        "path": "private/paper-v4-text-layer/selected-reading.json",
+        "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+      }
+    ],
+    "draft": {
+      "path": "private/paper-v4-reuse-01/author/questions-set-b.draft.json",
+      "sha256": "sha256:ec37022960fa033b8352497489d7c8b4ac04cccc6e9e95f90469727231a8b0cb"
+    },
+    "launch_log": "private/paper-v4-reuse-01/launch-log.json"
+  },
+  "shape": {
+    "questions": 30,
+    "positive_questions": 25,
+    "tiers": {
+      "T1": "direct facts",
+      "T2": "relationships",
+      "T3": "quantities",
+      "T4": "qualifications",
+      "T5": "composition"
+    },
+    "required_elements_over_positive_questions": 102,
+    "required_elements_over_all_questions": 121,
+    "controls": {
+      "CQ-B-C-01": "NOT_IN_SOURCE",
+      "CQ-B-C-02": "NOT_IN_SOURCE",
+      "CQ-B-C-03": "EXCLUDED_SURFACE",
+      "CQ-B-C-04": "PARAPHRASE",
+      "CQ-B-C-05": "PARAPHRASE"
+    }
+  },
+  "independent_of": {
+    "file": "paper-v4/experiment-v4/competency-questions-v3.1.json",
+    "sha256": "sha256:6a0e92211677536a969efcbc895eda52e9b4152961beb3c296769658cfb134a6",
+    "relation": "NEITHER_A_REVISION_NOR_A_SUPERSESSION",
+    "relation_note": "Set A stays frozen and binds run-24, run-25 and baseline-01. Neither file supersedes the other; they are two independent sets over one reading, and the author of this one never saw that one."
+  },
+  "publication_rule": {
+    "check": "SHARED_NORMALIZED_CHARACTER_RUN_AGAINST_EVERY_READING_BLOCK",
+    "measured_by": "paper-v4/experiment-v4/reuse-01/leak_ladder.py",
+    "window": 60,
+    "draft_reached": 0
+  },
+  "questions": [
+    {
+      "id": "CQ-B-T1-01",
+      "tier": "T1",
+      "question": "Which seafloor instrument deployment supplied the recordings analysed here, in which year was it carried out, and how many instruments were put on the bottom?",
+      "required_semantics": [
+        "cruise_name",
+        "deployment_year",
+        "instrument_count"
+      ]
+    },
+    {
+      "id": "CQ-B-T1-02",
+      "tier": "T1",
+      "question": "Under what digital object identifier was this article published, and what dates does it give for submission and for acceptance?",
+      "required_semantics": [
+        "article_doi",
+        "received_date",
+        "accepted_date"
+      ]
+    },
+    {
+      "id": "CQ-B-T1-03",
+      "tier": "T1",
+      "question": "On which ridge, and in which ocean region, did the authors work, what labels do they give to the subsections of the studied stretch, and what do they call the segment lying immediately to its south?",
+      "required_semantics": [
+        "study_area_name",
+        "ocean_region",
+        "subsection_labels",
+        "adjacent_segment_label"
+      ]
+    },
+    {
+      "id": "CQ-B-T1-04",
+      "tier": "T1",
+      "question": "Which named software did the authors use for picking phases, for the first hypocentre search, and for the relocation step, and where do they say each one can be obtained?",
+      "required_semantics": [
+        "phase_picking_software",
+        "location_software",
+        "relocation_software",
+        "software_availability_source"
+      ]
+    },
+    {
+      "id": "CQ-B-T1-05",
+      "tier": "T1",
+      "question": "Where did the authors deposit the event catalogue and the picked arrival times, under what identifier, and by what route can the raw recordings be obtained?",
+      "required_semantics": [
+        "repository_name",
+        "dataset_identifier",
+        "deposited_data_description",
+        "raw_data_access_route"
+      ]
+    },
+    {
+      "id": "CQ-B-T2-01",
+      "tier": "T2",
+      "question": "Which parts of the work does each named author take credit for, and who oversaw the collection and the handling of the seismic recordings?",
+      "required_semantics": [
+        "author_name",
+        "contribution_role",
+        "supervision_relation",
+        "project_design_credit"
+      ]
+    },
+    {
+      "id": "CQ-B-T2-02",
+      "tier": "T2",
+      "question": "Which bodies funded which author or which element of the project, under what grant references, and who paid for the time at sea?",
+      "required_semantics": [
+        "funder_name",
+        "grant_identifier",
+        "funded_party",
+        "ship_time_funder"
+      ]
+    },
+    {
+      "id": "CQ-B-T2-03",
+      "tier": "T2",
+      "question": "Between which two large transform faults does the studied ridge stretch lie, and whereabouts within that stretch does the exhumed dome of mantle rock sit?",
+      "required_semantics": [
+        "bounding_transform_names",
+        "segment_position",
+        "core_complex_location",
+        "fault_relation"
+      ]
+    },
+    {
+      "id": "CQ-B-T2-04",
+      "tier": "T2",
+      "question": "Which earlier measurement do the authors rely on for the thickness of the crust on the western flank, and what does it let them conclude about the layer that hosts the deep axial events?",
+      "required_semantics": [
+        "crustal_thickness_source",
+        "flank_identification",
+        "depth_inference",
+        "hosting_layer"
+      ]
+    },
+    {
+      "id": "CQ-B-T2-05",
+      "tier": "T2",
+      "question": "Which fixed ratios between CO2 and two trace elements do the authors adopt, whose compilation supplied those ratios, from which sample database did the rock analyses come, and what were the ratios used to work out?",
+      "required_semantics": [
+        "ratio_pair_identity",
+        "ratio_source_study",
+        "sample_database_name",
+        "computation_purpose",
+        "target_segment_label"
+      ]
+    },
+    {
+      "id": "CQ-B-T3-01",
+      "tier": "T3",
+      "question": "At what rate does the ridge open here, expressed both per flank and in total, in what unit, and on whose earlier work does that figure rest?",
+      "required_semantics": [
+        "half_rate_value",
+        "full_rate_value",
+        "rate_unit",
+        "rate_source_attribution"
+      ]
+    },
+    {
+      "id": "CQ-B-T3-02",
+      "tier": "T3",
+      "question": "For how long did the instruments record without interruption, how far apart were they set, and how many of those deployed actually yielded usable traces?",
+      "required_semantics": [
+        "recording_duration",
+        "instrument_spacing",
+        "usable_instrument_count",
+        "instrument_count"
+      ]
+    },
+    {
+      "id": "CQ-B-T3-03",
+      "tier": "T3",
+      "question": "How many events were located altogether, how many of those were successfully relocated by the differential-time method, and what average horizontal uncertainty resulted?",
+      "required_semantics": [
+        "located_event_count",
+        "relocated_event_count",
+        "horizontal_uncertainty_value",
+        "uncertainty_unit"
+      ]
+    },
+    {
+      "id": "CQ-B-T3-04",
+      "tier": "T3",
+      "question": "What range of CO2 content do the authors give for the primary melts of the segment with the deep axial events and for its southern neighbour, in what unit, by way of which proxy element, and are those figures measured or worked out?",
+      "required_semantics": [
+        "concentration_range",
+        "concentration_unit",
+        "segment_label",
+        "proxy_element",
+        "calculation_status"
+      ]
+    },
+    {
+      "id": "CQ-B-T3-05",
+      "tier": "T3",
+      "question": "At what pressure, equivalent depth and temperature does the modelled melt reach CO2 saturation and begin to lose gas, and whose solubility model yields that?",
+      "required_semantics": [
+        "saturation_pressure",
+        "saturation_depth",
+        "saturation_temperature",
+        "solubility_model_source"
+      ]
+    },
+    {
+      "id": "CQ-B-T4-01",
+      "tier": "T4",
+      "question": "Among the accounts the authors weigh for the deep seismicity, which do they say they favour, how many rivals do they consider, and what physical process does the favoured one rest on?",
+      "required_semantics": [
+        "preferred_mechanism",
+        "alternative_count",
+        "preference_wording",
+        "mechanism_physical_basis"
+      ]
+    },
+    {
+      "id": "CQ-B-T4-02",
+      "tier": "T4",
+      "question": "On what grounds do the authors decline the account that the deep events mark an unusually cold and thick lithosphere, and against which other ridge do they contrast the shape of the seafloor?",
+      "required_semantics": [
+        "declined_explanation",
+        "rejection_evidence",
+        "comparison_setting",
+        "morphology_observation"
+      ]
+    },
+    {
+      "id": "CQ-B-T4-03",
+      "tier": "T4",
+      "question": "Why do the authors set aside cooling by circulating fluids as the cause, and what related feature do they acknowledge exists not far away?",
+      "required_semantics": [
+        "declined_explanation",
+        "rejection_evidence",
+        "conceded_observation",
+        "spatial_qualification"
+      ]
+    },
+    {
+      "id": "CQ-B-T4-04",
+      "tier": "T4",
+      "question": "How firmly do the authors claim that the deep events are long-period in character, what observation backs that, and what do they say is still missing?",
+      "required_semantics": [
+        "hedged_claim",
+        "supporting_observation",
+        "stated_limitation",
+        "future_requirement"
+      ]
+    },
+    {
+      "id": "CQ-B-T4-05",
+      "tier": "T4",
+      "question": "What assumption do the authors flag as underlying the derivation of CO2 content from trace-element abundances, and what lower bound do they nevertheless state outright for the melts of the segment with the deep events?",
+      "required_semantics": [
+        "method_assumption",
+        "caveat_wording",
+        "asserted_minimum",
+        "concentration_unit",
+        "segment_label"
+      ]
+    },
+    {
+      "id": "CQ-B-T5-01",
+      "tier": "T5",
+      "question": "Set the maximum event depth expected for this opening rate against the depths actually recorded beneath the axis of the segment with deep seismicity, and say how far apart the two are.",
+      "required_semantics": [
+        "expected_depth_bound",
+        "observed_depth_range",
+        "spreading_rate_basis",
+        "segment_label"
+      ]
+    },
+    {
+      "id": "CQ-B-T5-02",
+      "tier": "T5",
+      "question": "Combine the crustal thickness measured on the flank, with its stated error, and the depths of the axial events to say which of those events sit below the crust and in what layer.",
+      "required_semantics": [
+        "crustal_thickness_value",
+        "thickness_uncertainty",
+        "observed_depth_range",
+        "depth_inference",
+        "hosting_layer"
+      ]
+    },
+    {
+      "id": "CQ-B-T5-03",
+      "tier": "T5",
+      "question": "Weigh the CO2 content estimated here for the segment with the deep events against the largest value previously reported for melt at any spreading ridge, and name where that earlier figure came from.",
+      "required_semantics": [
+        "concentration_range",
+        "prior_maximum_value",
+        "prior_maximum_location",
+        "concentration_unit"
+      ]
+    },
+    {
+      "id": "CQ-B-T5-04",
+      "tier": "T5",
+      "question": "Put the modelled temperatures at depth together with the absence of events below a certain level to explain why the authors think the seismicity stops where it does.",
+      "required_semantics": [
+        "modelled_temperature_range",
+        "depth_cutoff",
+        "absence_explanation",
+        "thermal_model_source"
+      ]
+    },
+    {
+      "id": "CQ-B-T5-05",
+      "tier": "T5",
+      "question": "Compare the trace-element enrichment of the samples from the segment with the deep events, and the CO2 contents worked out from them, with the equivalent figures for the segment to the south.",
+      "required_semantics": [
+        "trace_element_threshold",
+        "concentration_range",
+        "segment_label",
+        "comparison_segment_label"
+      ]
+    },
+    {
+      "id": "CQ-B-C-01",
+      "tier": "C",
+      "question": "With what sampling rate and what kind of sensor were the seafloor instruments configured?",
+      "required_semantics": [
+        "sampling_rate_value",
+        "sensor_type",
+        "instrument_configuration_detail",
+        "instrument_count"
+      ],
+      "expected_outcome": {
+        "kind": "NOT_IN_SOURCE",
+        "expected_coverage": "NONE",
+        "why": "The reading says how many instruments were put down and how far apart they sat, but it never describes how any of them was set up to record. No sampling rate and no sensor description appear anywhere in its running text."
+      }
+    },
+    {
+      "id": "CQ-B-C-02",
+      "tier": "C",
+      "question": "What was the largest local magnitude among the events recorded during the deployment?",
+      "required_semantics": [
+        "maximum_magnitude_value",
+        "magnitude_scale",
+        "event_identification",
+        "recording_period"
+      ],
+      "expected_outcome": {
+        "kind": "NOT_IN_SOURCE",
+        "expected_coverage": "NONE",
+        "why": "The text gives the formula used for magnitudes, a completeness level and several b values, yet it never reports the size of the biggest event in the catalogue. Nothing in the running text fixes an upper end of the magnitude range."
+      }
+    },
+    {
+      "id": "CQ-B-C-03",
+      "tier": "C",
+      "question": "In the worldwide compilation of the deepest axial events at slowly opening ridges, what maximum depth goes with each site, and at what opening rate?",
+      "required_semantics": [
+        "site_name",
+        "maximum_depth_value",
+        "full_rate_value",
+        "depth_unit"
+      ],
+      "expected_outcome": {
+        "kind": "EXCLUDED_SURFACE",
+        "expected_coverage": "NONE",
+        "why": "The running text says such a compilation was assembled and points the reader to a plot and a supporting table for it. The per-site numbers live only on those surfaces, which this question set puts out of scope."
+      }
+    },
+    {
+      "id": "CQ-B-C-04",
+      "tier": "C",
+      "question": "Which expedition gathered the seismic recordings the study rests on, when did it run, and how many recording units were placed on the seafloor?",
+      "required_semantics": [
+        "cruise_name",
+        "deployment_year",
+        "instrument_count"
+      ],
+      "expected_outcome": {
+        "kind": "PARAPHRASE",
+        "expected_coverage": "SAME_AS",
+        "of": "CQ-B-T1-01",
+        "why": "It asks for the same expedition, the same year and the same instrument tally, worded differently."
+      }
+    },
+    {
+      "id": "CQ-B-C-05",
+      "tier": "C",
+      "question": "Which of the candidate mechanisms for the deep events do the authors settle on, how many competitors did they weigh, and what physics underpins the one they choose?",
+      "required_semantics": [
+        "preferred_mechanism",
+        "alternative_count",
+        "preference_wording",
+        "mechanism_physical_basis"
+      ],
+      "expected_outcome": {
+        "kind": "PARAPHRASE",
+        "expected_coverage": "SAME_AS",
+        "of": "CQ-B-T4-01",
+        "why": "It seeks the identical preferred mechanism, count of rival accounts, strength of the preference and underlying process, phrased another way."
+      }
+    }
+  ]
+}

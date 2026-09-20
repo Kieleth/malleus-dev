@@ -1,0 +1,36 @@
+{
+  "question_id": "CQ-C-03",
+  "question": "For each of the other slow- and ultraslow-spreading ridge sites compiled for comparison, what maximum earthquake depth and full spreading rate is plotted?",
+  "required_semantics": [
+    "site_set",
+    "maximum_depth_quantity",
+    "spreading_rate_quantity"
+  ],
+  "no_answer_in_source": true,
+  "claims": [],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "site_set",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "maximum_depth_quantity",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "spreading_rate_quantity",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": []
+}

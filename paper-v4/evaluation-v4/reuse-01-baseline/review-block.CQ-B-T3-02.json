@@ -1,0 +1,80 @@
+{
+  "question_id": "CQ-B-T3-02",
+  "question": "For how long did the instruments record without interruption, how far apart were they set, and how many of those deployed actually yielded usable traces?",
+  "required_semantics": [
+    "recording_duration",
+    "instrument_spacing",
+    "usable_instrument_count",
+    "instrument_count"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T3-02:c1",
+      "blocks": [
+        "page:2:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-02:c2",
+      "blocks": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-02:c3",
+      "blocks": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The third claim carries both counts, the seventeen that worked and the nineteen that were put down.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "recording_duration",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "instrument_spacing",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "usable_instrument_count",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "instrument_count",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T3-02:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T3-02:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T3-02:c3"
+    }
+  ]
+}

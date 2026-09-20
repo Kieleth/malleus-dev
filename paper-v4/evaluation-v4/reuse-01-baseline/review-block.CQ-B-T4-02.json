@@ -1,0 +1,87 @@
+{
+  "question_id": "CQ-B-T4-02",
+  "question": "On what grounds do the authors decline the account that the deep events mark an unusually cold and thick lithosphere, and against which other ridge do they contrast the shape of the seafloor?",
+  "required_semantics": [
+    "declined_explanation",
+    "rejection_evidence",
+    "comparison_setting",
+    "morphology_observation"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T4-02:c1",
+      "blocks": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T4-02:c2",
+      "blocks": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T4-02:c3",
+      "blocks": [
+        "page:3:block:001"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T4-02:c4",
+      "blocks": [
+        "page:3:block:001"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim, all four resting on the same block. The morphological observations and the ground for declining the account are the same claim, because the block makes them one sentence.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "declined_explanation",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "rejection_evidence",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "comparison_setting",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "morphology_observation",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:3:block:001"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T4-02:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T4-02:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T4-02:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T4-02:c4"
+    }
+  ]
+}

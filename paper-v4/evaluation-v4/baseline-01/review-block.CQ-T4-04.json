@@ -1,0 +1,95 @@
+{
+  "question_id": "CQ-T4-04",
+  "question": "What do the authors state about the presence of active hydrothermal venting on the axis of the deep-earthquake segment, and is that statement an assertion of presence or of absence?",
+  "required_semantics": [
+    "existence_claim",
+    "negated_disposition",
+    "claim_subject",
+    "spatial_scope"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T4-04:c1",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-T4-04:c2",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-T4-04:c3",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-T4-04:c4",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-T4-04:c5",
+      "blocks": [
+        "page:3:block:002"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "existence_claim",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "negated_disposition",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "claim_subject",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "spatial_scope",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T4-04:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T4-04:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T4-04:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-T4-04:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-T4-04:c5"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "question_id": "CQ-B-T1-02",
+  "question": "Under what digital object identifier was this article published, and what dates does it give for submission and for acceptance?",
+  "required_semantics": [
+    "article_doi",
+    "received_date",
+    "accepted_date"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T1-02:c1",
+      "blocks": [
+        "page:1:block:001"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T1-02:c2",
+      "blocks": [
+        "page:1:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T1-02:c3",
+      "blocks": [
+        "page:1:block:006"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "All three elements name supported claims, the identifier from the article head and the two dates from the header block.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "article_doi",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "received_date",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "accepted_date",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:1:block:001",
+    "page:1:block:006"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T1-02:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T1-02:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T1-02:c3"
+    }
+  ]
+}

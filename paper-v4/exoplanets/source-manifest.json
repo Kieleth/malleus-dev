@@ -1,0 +1,145 @@
+{
+  "status": "PREPARATION_ONLY",
+  "case": "LHS 1140 b",
+  "retrieved_date": "2026-09-14",
+  "retrieved_timezone": "America/Los_Angeles",
+  "identity_checker_pypdf": "6.16.2",
+  "sources": [
+    {
+      "filename": "2010.06928v1.pdf",
+      "kind": "pdf",
+      "stage": "initial_candidate",
+      "url": "https://arxiv.org/pdf/2010.06928v1",
+      "metadata_url": "https://arxiv.org/abs/2010.06928v1",
+      "sha256": "f8bd8ce8126560b479be346d2d1dbbba62793e6e535951ca56a55ba3e4477405",
+      "bytes": 10831220,
+      "pages": 22,
+      "first_page_markers": ["Planetary system LHS 1140 revisited", "with ESPRESSO and TESS", "J. Lillo-Box", "arXiv:2010.06928v1"],
+      "table": {"page": 21, "label": "Table B.3."},
+      "license_url": "https://arxiv.org/licenses/nonexclusive-distrib/1.0/license.html",
+      "redistribution": "private_only"
+    },
+    {
+      "filename": "2310.15490v2.pdf",
+      "kind": "pdf",
+      "stage": "later_candidate",
+      "url": "https://arxiv.org/pdf/2310.15490v2",
+      "metadata_url": "https://arxiv.org/abs/2310.15490v2",
+      "sha256": "dade8b72d0ca6c0e53415fa158093fe0629282a4653686fea927bbb3a827230a",
+      "bytes": 6786763,
+      "pages": 31,
+      "first_page_markers": ["New Mass and Radius Constraints on the LHS 1140 Planets", "Charles Cadieux", "arXiv:2310.15490v2"],
+      "table": {"page": 24, "label": "Table D1."},
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "redistribution": "retained_privately_no_public_copy_in_this_task"
+    },
+    {
+      "filename": "LHS_1140_b_planet_params.csv",
+      "kind": "archive_overview_csv",
+      "stage": "investigator_only_mixed_references",
+      "url": "https://exoplanetarchive.ipac.caltech.edu/overview/LHS%201140%20b",
+      "acquisition": "Expand LHS 1140 b Planetary Parameters; click the Source row download button. Original browser download, not a transcription or TAP response.",
+      "sha256": "49353dc97c7268defbc119fddd8f68ac6b503a34661fee2c59b06e36eb6f400f",
+      "bytes": 1972,
+      "references": ["Cadieux et al. 2024", "Kokori et al. 2023", "Edwards et al. 2021", "Lillo-Box et al. 2020", "Ment et al. 2019", "Dittmann et al. 2017", "ExoFOP"],
+      "quantities": ["P (days)", "a (au)", "Rp (R⨁)", "Rp (RJup)", "Mp (M⨁)", "Mp (MJup)", "Mp sin i (M⨁)", "Mp sin i (MJup)", "ρ (g/cm3)", "e", "S (S⨁)", "Teq (K)", "i (deg)", "TC (days)", "b", "δ (%)", "T14 (hours)", "a/R✶", "Rp/R✶", "K (m/s)"],
+      "warning": "Current overview export, not historical snapshot or raw PS export. Contains later sources and must not enter the initial producer session."
+    },
+    {
+      "filename": "LHS_1140_b_PS.xml",
+      "kind": "archive_ps_votable",
+      "stage": "investigator_only_mixed_references",
+      "url": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+*+from+ps+where+pl_name%3D%27LHS+1140+b%27&format=votable",
+      "acquisition": "Native Chrome opened the TAP response and saved XML. Same all-column query as the rejected CSV, using NASA's documented VOTable output. No local CSV repair, transcription or column filtering.",
+      "sha256": "1bd39a895e23abdc06692d6fb4e8844702213a07fff251f22a90bae68f11d2a3",
+      "bytes": 104788,
+      "planet": "LHS 1140 b",
+      "row_count": 7,
+      "column_count": 355,
+      "field_units": {"pl_masse": "Mearth", "pl_masseerr1": "Mearth", "pl_masseerr2": "Mearth", "pl_rade": "Rearth", "pl_radeerr1": "Rearth", "pl_radeerr2": "Rearth", "pl_dens": "g/cm**3", "pl_denserr1": "g/cm**3", "pl_denserr2": "g/cm**3"},
+      "required_columns": ["pl_name", "pl_refname", "st_refname", "sy_refname", "tic_id", "pl_masse", "pl_masseerr1", "pl_masseerr2", "pl_masselim", "pl_rade", "pl_radeerr1", "pl_radeerr2", "pl_radelim", "pl_dens", "pl_denserr1", "pl_denserr2", "pl_denslim", "pl_bmassprov", "rowupdate", "pl_pubdate", "releasedate"],
+      "reference_ids": ["DITTMANN_ET_AL__2017", "MENT_ET_AL__2019", "KOKORI_ET_AL__2023", "CADIEUX_ET_AL__2024", "EXOFOP", "LILLO_BOX_ET_AL__2020", "EDWARDS_ET_AL_2021"],
+      "warning": "Current archive export, not a historical snapshot. All 355 fields require stage-leakage review before deriving a producer subset."
+    },
+    {
+      "filename": "API_PS_columns.html",
+      "kind": "html_documentation",
+      "stage": "documentation_candidate",
+      "url": "https://exoplanetarchive.ipac.caltech.edu/docs/API_PS_columns.html",
+      "acquisition": "Native Chrome Save Page, HTML Only. Retained browser-saved HTML, not a claimed raw HTTP response.",
+      "sha256": "969748184bdd0e5bb9dd1c4d684edb603d821f89771e4341a280f094f3d9e17d",
+      "bytes": 113472,
+      "required_markers": ["<title>Planetary Systems and Planetary Systems Composite Parameters Data Column Definitions</title>", "The PS Table contains one row per planet per reference.", "Planet Mass [Earth Mass]", "Planet Radius [Earth Radius]", "Planet Density [g/cm**3]", "pl_masseerr1", "pl_masseerr2", "pl_masselim", "pl_refname", "Last updated: 4 June 2026", "</html>"],
+      "warning": "Current documentation includes unrelated material. Any producer-facing subset requires a declared mechanical projection and original locators."
+    },
+    {
+      "filename": "tess2018263035959-s0003-0000000092226327-0123-s_lc.fits",
+      "kind": "fits_observation",
+      "stage": "later_observation_candidate",
+      "url": "https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:TESS/product/tess2018263035959-s0003-0000000092226327-0123-s_lc.fits",
+      "acquisition": "Native Chrome download from MAST; unchanged local copy retained privately.",
+      "sha256": "c1bd33475e6e64e8243b58789078d80a8e4912320977b127ae4616f6cc83936f",
+      "bytes": 1998720,
+      "headers": [
+        {
+          "offset": 0,
+          "cards": [
+            "SIMPLE  =                    T / conforms to FITS standards",
+            "SIMDATA =                    F / file is based on simulated data",
+            "DATE    = '2020-11-26'         / file creation date.",
+            "DATE-OBS= '2018-09-20T12:55:31.065' / TSTART as UTC calendar date",
+            "DATE-END= '2018-10-17T21:19:00.693' / TSTOP as UTC calendar date",
+            "PROCVER = 'spoc-5.0.20-20201120' / SW version",
+            "TELESCOP= 'TESS    '           / telescope",
+            "DATA_REL=                   42 / data release version number",
+            "TICID   =             92226327 / unique tess target identifier",
+            "SECTOR  =                    3 / Observing sector"
+          ]
+        },
+        {
+          "offset": 5760,
+          "cards": [
+            "XTENSION= 'BINTABLE'           / marks the beginning of a new HDU",
+            "NAXIS2  =                19692 / length of second array dimension",
+            "TFIELDS =                   20 / number of table fields",
+            "TTYPE1  = 'TIME    '           / column title: data time stamps",
+            "TUNIT1  = 'BJD - 2457000, days' / column units: Barycenter corrected TESS Julian",
+            "TTYPE8  = 'PDCSAP_FLUX'        / column title: aperture phot. PDC flux",
+            "TUNIT8  = 'e-/s    '           / column units: electrons per second",
+            "TTYPE9  = 'PDCSAP_FLUX_ERR'    / column title: ap. phot. PDC flux error",
+            "TTYPE10 = 'QUALITY '           / column title: aperture photometry quality flag",
+            "EXTNAME = 'LIGHTCURVE'         / name of extension",
+            "NUM_FRM =                   60 / number of frames per time stamp",
+            "TIMEDEL = 0.001388888888888889 / [d] time resolution of data"
+          ]
+        }
+      ],
+      "warning": "Processing version, target and sector match the later paper's description. Exact equality to the authors' working bytes is not established. This product postdates the older PDF and must not be labelled as that study's input. No transit refit or per-sample graph population."
+    }
+  ],
+  "rejected_sources": [
+    {
+      "filename": "LHS_1140_b_PS.csv",
+      "url": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+*+from+ps+where+pl_name%3D%27LHS+1140+b%27&format=csv",
+      "sha256": "d78ce05369adcc40b93dfabd738fc21c76e32839544bc42823f34b47d069206b",
+      "bytes": 27899,
+      "reason": "Unescaped double quotes in HTML display cells cause strict CSV parsing to refuse the first data row. Retained unchanged as negative source evidence, not a producer or projection input."
+    }
+  ],
+  "observation_candidate": {
+    "status": "RETAINED_HEADER_IDENTITY_CHECKED",
+    "discovery_url": "https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html",
+    "search": "TIC 92226327; provenance SPOC; sequence 3",
+    "observation_id": "tess2018263035959-s0003-0000000092226327-0123-s",
+    "mission": "TESS",
+    "target_name": "92226327",
+    "exposure_seconds": 120,
+    "processing_version": "spoc-5.0.20-20201120",
+    "study_byte_identity": "NOT_ESTABLISHED"
+  },
+  "open_requirements": [
+    "Select and verify a complete text-layer reading with stable locators; current diagnostic extracts are not selected inputs.",
+    "Freeze stage-separated producer packets without future-source or evaluator leakage.",
+    "Approve the Core coordinate and execution method before any model launch."
+  ]
+}

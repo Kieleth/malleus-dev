@@ -1,0 +1,43 @@
+{
+  "question_id": "CQ-C-01",
+  "question": "What sulfur and chlorine concentrations are reported for the basalt samples used in the volatile estimation?",
+  "required_semantics": [
+    "bounded_quantity",
+    "concentration_unit",
+    "sample_set",
+    "measurement_status"
+  ],
+  "no_answer_in_source": true,
+  "claims": [],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "bounded_quantity",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "concentration_unit",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "sample_set",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "measurement_status",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": []
+}

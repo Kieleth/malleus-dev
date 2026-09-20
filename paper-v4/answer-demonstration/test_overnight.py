@@ -88,5 +88,7 @@ def test_new_condition_does_not_become_model_ranking_or_typed_composition():
         "original A/B totals remain unchanged",
     ):
         assert phrase in report
-    manuscript = (ROOT / "paper-v4/manuscript-v4-working.md").read_text()
-    assert "answer-demonstration/OVERNIGHT-RESULTS.md" in manuscript
+    # The overnight fixed-ontology condition is a retained record, not a printed
+    # condition of the results manuscript (rewritten 2026-09-11 around the five
+    # cells of the record condition). Its report stays bound by the phrases above.
+    assert REPORT.is_file()

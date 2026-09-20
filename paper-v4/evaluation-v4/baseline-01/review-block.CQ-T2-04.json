@@ -1,0 +1,95 @@
+{
+  "question_id": "CQ-T2-04",
+  "question": "Which earlier study supplies the crustal thickness used for the study area, and which ridge flank and crustal age does that thickness belong to?",
+  "required_semantics": [
+    "source_study",
+    "crustal_thickness_claim",
+    "location_relation",
+    "crustal_age"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T2-04:c1",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-04:c2",
+      "blocks": [
+        "page:9:block:036"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-04:c3",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-04:c4",
+      "blocks": [
+        "page:2:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-T2-04:c5",
+      "blocks": [
+        "page:7:block:011"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "source_study",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "crustal_thickness_claim",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "location_relation",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "crustal_age",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T2-04:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-T2-04:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-T2-04:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-T2-04:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-T2-04:c5"
+    }
+  ]
+}

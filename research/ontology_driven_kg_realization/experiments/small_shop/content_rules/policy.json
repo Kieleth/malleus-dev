@@ -1,0 +1,1 @@
+{"grammar":"malleus.policy-program/private-v0","outcome_verdicts":{"SATISFIED":"ACCEPT","UNKNOWN":"DEFER","VIOLATED":"REJECT"},"policy_id":"shop-content-rules","precedence":["REJECT","DEFER","ACCEPT"],"required_checks":[{"check_contract_id":"shop-content-rules","check_contract_identity":"sha256:32526e77169af3a5ab1843cf44909473c1b01fc5437db1ac80e4e9d43c8b0c29"}]}

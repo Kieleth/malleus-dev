@@ -1,0 +1,101 @@
+{
+  "question_id": "CQ-B-T2-05",
+  "question": "Which fixed ratios between CO2 and two trace elements do the authors adopt, whose compilation supplied those ratios, from which sample database did the rock analyses come, and what were the ratios used to work out?",
+  "required_semantics": [
+    "ratio_pair_identity",
+    "ratio_source_study",
+    "sample_database_name",
+    "computation_purpose",
+    "target_segment_label"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T2-05:c1",
+      "blocks": [
+        "page:5:block:004",
+        "page:8:block:006"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-05:c2",
+      "blocks": [
+        "page:5:block:004",
+        "page:10:block:004"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-05:c3",
+      "blocks": [
+        "page:8:block:005"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-05:c4",
+      "blocks": [
+        "page:8:block:006",
+        "page:8:block:007"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim, the last two both resting on the claim that states what the ratios were used to work out and for which segments.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "ratio_pair_identity",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "ratio_source_study",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "sample_database_name",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "computation_purpose",
+      "row_index": 3,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "target_segment_label",
+      "row_index": 3,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:5:block:004",
+    "page:8:block:006",
+    "page:10:block:004",
+    "page:8:block:005",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T2-05:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T2-05:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T2-05:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T2-05:c4"
+    }
+  ]
+}

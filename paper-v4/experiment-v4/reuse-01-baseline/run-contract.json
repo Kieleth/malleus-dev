@@ -1,0 +1,129 @@
+{
+  "schema": "malleus.paper-v4.baseline-run-contract/v1",
+  "run_id": "reuse-01-baseline",
+  "status": "READY_FOR_PRODUCER",
+  "condition": "IN_CONTEXT_BASELINE",
+  "is_not_a_malleus_cell": true,
+  "is_not_a_malleus_cell_note": "This cell runs no ontology, no compiler, no admission, no ledger, no replay and no query. It has no run-result.json, no census, no gaps and no trace summary, because it has no stage that could produce one. It is not a v4 run contract and does not carry a v4 protocol version; it is a baseline whose only output is a prose answer file with block citations.",
+  "what_it_measures": {
+    "question": "What does a second question set cost the in-context side?",
+    "asked_by": "the amortization claim of manuscript section 4.8, which is arithmetic on measured build and read costs and has never been measured",
+    "answer_surface": "IN_CONTEXT_ANSWER_SET",
+    "reviewed_under": "paper-v4/evaluation-v4/review-protocol-v3.2.json",
+    "judged_by": "the same definitions of SUPPORTED and of semantic coverage the graph cells are judged by, in one protocol and one validator, which is the point of adding a surface kind rather than writing a second protocol",
+    "pairs_with": "paper-v4/experiment-v4/reuse-01, the same question set put to run-23's already accepted graph"
+  },
+  "is_a_second_run_of_baseline_01": {
+    "same": [
+      "THE_SELECTED_READING",
+      "THE_ANSWER_GRAMMAR",
+      "THE_ISOLATION_SENTENCES",
+      "THE_REVIEW_PROTOCOL"
+    ],
+    "different": [
+      "THE_QUESTION_FILE",
+      "THE_PRODUCER_SESSION"
+    ],
+    "note": "baseline-01 answered competency-questions-v3.1.json. This cell answers competency-questions-set-b.json, an independent second set authored blind to every graph and to the first set. The producer is a fresh session that inherits nothing from baseline-01's, so the full read is paid again: that is the figure the amortization read needs."
+  },
+  "questions_are_visible_to_this_producer": true,
+  "questions_are_visible_to_this_producer_note": "By design, and it is the one place this cell breaks the experiment's question-blind rule. Every graph producer was denied the competency questions; this producer is handed them. The comparison is therefore tilted toward the baseline on purpose, and that is what makes the result a price rather than a contest. It is stated here, in the manifest, in the review task and wherever the two columns are printed.",
+  "producer": {
+    "model": "claude-opus-5",
+    "session": "FRESH_NO_INHERITED_CONTEXT",
+    "skill": "NONE",
+    "skill_note": "No Malleus acolyte skill is installed in this workspace. The producer is not asked to model anything.",
+    "isolation": [
+      "OWNS_ONLY_ITS_WORK_DIRECTORY",
+      "NO_REPOSITORY",
+      "NO_NETWORK",
+      "NO_DELEGATION",
+      "NO_OTHER_CELL"
+    ],
+    "spawn_message": "paper-v4/experiment-v4/reuse-01-baseline/spawn-message.md",
+    "workspace": "private/paper-v4-reuse-01-baseline/producer",
+    "output": "private/paper-v4-reuse-01-baseline/producer/work/answers.json"
+  },
+  "declared_inputs": [
+    {
+      "name": "SELECTED_READING",
+      "source": "private/paper-v4-text-layer/selected-reading.json",
+      "target": "inputs/selected-reading.json",
+      "tracked": false
+    },
+    {
+      "name": "COMPETENCY_QUESTIONS",
+      "source": "paper-v4/experiment-v4/competency-questions-set-b.json",
+      "target": "inputs/competency-questions-set-b.json",
+      "tracked": true
+    },
+    {
+      "name": "ANSWER_FILE_SCHEMA",
+      "source": "paper-v4/experiment-v4/reuse-01-baseline/answer-file-schema.json",
+      "target": "inputs/answer-file-schema.json",
+      "tracked": true
+    },
+    {
+      "name": "PRODUCER_TASK",
+      "source": "paper-v4/experiment-v4/reuse-01-baseline/spawn-message.md",
+      "target": "TASK.md",
+      "tracked": true
+    }
+  ],
+  "declared_inputs_note": "Two of these are the inputs the producer answers from, which is what 'the selected reading and the frozen question file as its only inputs' means: the schema is the grammar of the file it writes and the task is the instruction it was given. Both are staged so that the input closure is exact and so that producer_task_sha256 is a digest of bytes on disk rather than of a message nobody kept.",
+  "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+  "source_sha256_note": "The article PDF. The producer never sees it; it is the fixed identity the selected reading projects, and the review manifest binds it like every other cell's.",
+  "verbatim_rule": {
+    "window": 60,
+    "normalization": "WHITESPACE_COLLAPSED",
+    "enforced_by": "paper-v4/experiment-v4/reuse-01-baseline/validate_answers.py",
+    "reason": "The reading is private and the answer file is published beside the graph cells' figures. Sixty normalized characters is the threshold every frozen cell clears."
+  },
+  "stages": [
+    {
+      "stage": "PREPARE",
+      "command": ".venv/bin/python paper-v4/experiment-v4/reuse-01-baseline/prepare_producer.py --reading private/paper-v4-text-layer/selected-reading.json --output private/paper-v4-reuse-01-baseline/producer",
+      "writes": [
+        "private/paper-v4-reuse-01-baseline/producer/inputs/",
+        "private/paper-v4-reuse-01-baseline/producer/work/",
+        "private/paper-v4-reuse-01-baseline/producer-input-receipt.json"
+      ]
+    },
+    {
+      "stage": "PRODUCE",
+      "dispatched_by": "THE_PARENT",
+      "with": "paper-v4/experiment-v4/reuse-01-baseline/spawn-message.md, with <PRODUCER_WORKSPACE> substituted",
+      "writes": [
+        "private/paper-v4-reuse-01-baseline/producer/work/answers.json"
+      ]
+    },
+    {
+      "stage": "VALIDATE",
+      "command": ".venv/bin/python paper-v4/experiment-v4/reuse-01-baseline/validate_answers.py --answers private/paper-v4-reuse-01-baseline/producer/work/answers.json --reading private/paper-v4-text-layer/selected-reading.json"
+    },
+    {
+      "stage": "BUILD_REVIEW_INPUTS",
+      "command": ".venv/bin/python paper-v4/experiment-v4/reuse-01-baseline/build_review_inputs.py --stage freeze",
+      "writes": [
+        "paper-v4/evaluation-v4/reuse-01-baseline/review-input-manifest.json",
+        "paper-v4/evaluation-v4/reuse-01-baseline/review-task.md",
+        "paper-v4/evaluation-v4/reuse-01-baseline/review-record.blank.md",
+        "paper-v4/evaluation-v4/reuse-01-baseline/review-block.<question id>.json"
+      ]
+    },
+    {
+      "stage": "REVIEW",
+      "dispatched_by": "THE_PARENT",
+      "under": "paper-v4/evaluation-v4/review-protocol-v3.2.json",
+      "evaluator_kind": "CLAUDE_PRELIMINARY",
+      "ratified_by": "actor:luis"
+    }
+  ],
+  "cannot_establish": [
+    "ONE_MODEL_ONE_ARTICLE_ONE_PROMPT",
+    "NOT_A_RETRIEVAL_BASELINE",
+    "A_CITED_BLOCK_DOES_NOT_PROVE_THE_ANSWER_WAS_READ_FROM_IT",
+    "WITNESS_COUNTS_ARE_NOT_COMPARABLE_ACROSS_SURFACES"
+  ],
+  "cannot_establish_note": "A prose answer can cite a block and still be composed from the model's memory of the article, and no check in this cell excludes that, so zero UNSUPPORTED on the baseline would not mean grounded. Only coverage of the authored elements is comparable with the graph cells, and the absent-properties list is reported beside it: no replay, no typed refusal, no declared gap, no locator required before admission, no re-query of the same state."
+}

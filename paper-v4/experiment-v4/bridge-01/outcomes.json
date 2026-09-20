@@ -1,0 +1,1006 @@
+{
+ "cells": [
+  "run-20",
+  "run-21",
+  "run-22",
+  "run-23",
+  "run-24",
+  "run-25",
+  "run-26"
+ ],
+ "coordinates": {
+  "CANDIDATE": {
+   "cells": [
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": false,
+      "population_plan": true,
+      "replay_receipt": false,
+      "trace_summary": true
+     },
+     "cell": "run-20",
+     "contract_artifact_differences": [
+      {
+       "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+       "path": "/evidence/producer/sha256",
+       "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+      },
+      {
+       "left": "sha256:b3ae121e1a30c79b228c1a34076b897250dab8e1176f24e940f50fbf50bf08c1",
+       "path": "/evidence_sha256",
+       "right": "sha256:e9d2643d766c7566d71da35e761736ff77a45b3221c371ee11682d170a78b70c"
+      }
+     ],
+     "declared_producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:6667fb757fe29ea625f076a89345889fa311723e77322235068503ffe35cc65e",
+      "graph": {
+       "entities": 426,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 55,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:c4f071ec9f062a9947ea806f080859d443a958995ab37c1168f8c6096f910d10",
+      "records_traced": 482,
+      "replay_receipt_sha256": "sha256:6042d490a8c5c039a0cd3974870ba486edc05590e3e723dfb8a5f5efd955495d"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:6d212859c755d120738d9e37a71c217aa5c5b6119940f894166d228eba57d75a"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:6667fb757fe29ea625f076a89345889fa311723e77322235068503ffe35cc65e",
+      "graph": {
+       "entities": 426,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 55,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:6d212859c755d120738d9e37a71c217aa5c5b6119940f894166d228eba57d75a",
+      "records_traced": 482,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:9d92d7bbec45b93a64ec25ea224159bd162fe691b9c2ba09e4044b832633c0f1",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": false,
+      "population_plan": true,
+      "replay_receipt": false,
+      "trace_summary": true
+     },
+     "cell": "run-21",
+     "contract_artifact_differences": [
+      {
+       "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+       "path": "/evidence/producer/sha256",
+       "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+      },
+      {
+       "left": "sha256:96bd7a7996bba8d10e30aa3c5f722680ac93651509cc59a7225be3e5a0eee679",
+       "path": "/evidence_sha256",
+       "right": "sha256:768124e83a5c153b6bef83a125cc564d0046e6c45724de80db0e0e030503fdf0"
+      }
+     ],
+     "declared_producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:77e4671620f5b8d35eeb097ee4beaa4488a55c28058688906573a00546a85ecf",
+      "graph": {
+       "entities": 508,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 26,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:75eff0d04cc787cd4c8c6f187641845657ee8b6f4e9064999b74723534842564",
+      "records_traced": 535,
+      "replay_receipt_sha256": "sha256:2cab922f229d578f183a647e445d0b99348ce2f931fb161a0652547a29a6e832"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:566c5c109bb3d2d7f4d15d4b921385f7499bc8efa77a9e079e7c5ff6a795f7f9"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:77e4671620f5b8d35eeb097ee4beaa4488a55c28058688906573a00546a85ecf",
+      "graph": {
+       "entities": 508,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 26,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:566c5c109bb3d2d7f4d15d4b921385f7499bc8efa77a9e079e7c5ff6a795f7f9",
+      "records_traced": 535,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:78275d7048896c577f625f5cb782923eef5604bb1b852d2ecd24cad4c36607b4",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": false,
+      "population_plan": true,
+      "replay_receipt": false,
+      "trace_summary": true
+     },
+     "cell": "run-22",
+     "contract_artifact_differences": [
+      {
+       "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+       "path": "/evidence/producer/sha256",
+       "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+      },
+      {
+       "left": "sha256:9aa7124818d203fc2b25d6fe07281c320b2e7e137fbccdd407f3da0fad8d0e6f",
+       "path": "/evidence_sha256",
+       "right": "sha256:59cb01452d371e758dc6a960df4557c95c57b33642efd9c9c2e03bea100cbd7c"
+      }
+     ],
+     "declared_producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:21c0bd4ea4ad82d73b22bb15b632f745b3537f2f0f72108d37f18c5667f775ce",
+      "graph": {
+       "entities": 443,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 31,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:1bbd9876c797f46732ef642d8e898c38a135ad1563b5775b10604b8f178f314f",
+      "records_traced": 475,
+      "replay_receipt_sha256": "sha256:e6b025be41452c4192331cbbf7e5704ef3c344507a2c76efdc4eeb26d9fff4d5"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:b47caebc53b54461e8f0c43f04e4cf92ca9048624e8ec0b786b72254050ebc7e"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:21c0bd4ea4ad82d73b22bb15b632f745b3537f2f0f72108d37f18c5667f775ce",
+      "graph": {
+       "entities": 443,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 31,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:b47caebc53b54461e8f0c43f04e4cf92ca9048624e8ec0b786b72254050ebc7e",
+      "records_traced": 475,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:5c01aafa6690561b8c0b20110b855d400bc3885e897ae6d7f335961bed87549f",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": false,
+      "population_plan": true,
+      "replay_receipt": false,
+      "trace_summary": true
+     },
+     "cell": "run-23",
+     "contract_artifact_differences": [
+      {
+       "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+       "path": "/evidence/producer/sha256",
+       "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+      },
+      {
+       "left": "sha256:fe881eb594e6443b16be61e28208e2195da00832fdd0cc50b4e443b777e458a3",
+       "path": "/evidence_sha256",
+       "right": "sha256:a28df96b527a5d4f25f3d7d701038e57623332585b53e0f647c6db2534891873"
+      }
+     ],
+     "declared_producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+      "graph": {
+       "entities": 417,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 22,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+      "records_traced": 440,
+      "replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:3e9135031ed2f28b27914ddcbc2015633d6e529465e895a1df45d93c531a0f3d"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+      "graph": {
+       "entities": 417,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 22,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:3e9135031ed2f28b27914ddcbc2015633d6e529465e895a1df45d93c531a0f3d",
+      "records_traced": 440,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:f3a014b1e347f093fd06be722b41c112705d60fbd32ffcb9e5d1aa27be501f75",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": false,
+      "population_plan": true,
+      "replay_receipt": false,
+      "trace_summary": true
+     },
+     "cell": "run-24",
+     "contract_artifact_differences": [
+      {
+       "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+       "path": "/evidence/producer/sha256",
+       "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+      },
+      {
+       "left": "sha256:ee1d894b333bb3ea7052ccaa3015ef47e63876f29e98ca29afa678ed42175d98",
+       "path": "/evidence_sha256",
+       "right": "sha256:5726c329168f0d0a16e6b9ad6cf6242f7fbeb7b137bcc30d7c36e5a003b85a00"
+      }
+     ],
+     "declared_producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:ebcb487eaf7c66cdb5fe74bfa607d94eb48e652d4817165a1246a70839ba9d62",
+      "graph": {
+       "entities": 400,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 21,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:ae4558b178c87810c3eb738ebab65272f177d86d8a7ba69ddb09eb37d5c0309c",
+      "records_traced": 422,
+      "replay_receipt_sha256": "sha256:23ec9d8abc1998e7d81a1bd75369370a9e2d2f12669a41bdb4c25506b972359e"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:94fe50bb906da10ac0454ffd96df5c4ef50d31c1b20dacb0ee6cbf05ee826d08"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:ebcb487eaf7c66cdb5fe74bfa607d94eb48e652d4817165a1246a70839ba9d62",
+      "graph": {
+       "entities": 400,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 21,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:94fe50bb906da10ac0454ffd96df5c4ef50d31c1b20dacb0ee6cbf05ee826d08",
+      "records_traced": 422,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:024e1fbe3e8cecf3626ef3b0cf1a003c1b95a5a3a0a7712d1f4b081c4145d1b9",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": false,
+      "population_plan": true,
+      "replay_receipt": false,
+      "trace_summary": true
+     },
+     "cell": "run-25",
+     "contract_artifact_differences": [
+      {
+       "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+       "path": "/evidence/producer/sha256",
+       "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+      },
+      {
+       "left": "sha256:fe881eb594e6443b16be61e28208e2195da00832fdd0cc50b4e443b777e458a3",
+       "path": "/evidence_sha256",
+       "right": "sha256:a28df96b527a5d4f25f3d7d701038e57623332585b53e0f647c6db2534891873"
+      }
+     ],
+     "declared_producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:a5beefc3a46a0204e54ee46986db0f8bc6898056fea807b2fbb31cb378b15f6a",
+      "graph": {
+       "entities": 477,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 57,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:2f787e5179664bf7786874b39fe6dba784028557bc90ea31b8ab629021d9a021",
+      "records_traced": 535,
+      "replay_receipt_sha256": "sha256:e6febc386510b326f23134377413df7ac316e3c413e2a3ac5a712bac1027a047"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:8da524ab4dc710394a465cd043524921a3a0e208423110bd0924f4f323df1a56"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:a5beefc3a46a0204e54ee46986db0f8bc6898056fea807b2fbb31cb378b15f6a",
+      "graph": {
+       "entities": 477,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 57,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:8da524ab4dc710394a465cd043524921a3a0e208423110bd0924f4f323df1a56",
+      "records_traced": 535,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:2915f85d221d9aac7579d69fed861e491e945b9b3eb0f782b193f42fd48f07e1",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": false,
+      "population_plan": true,
+      "replay_receipt": false,
+      "trace_summary": true
+     },
+     "cell": "run-26",
+     "contract_artifact_differences": [
+      {
+       "left": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+       "path": "/evidence/producer/sha256",
+       "right": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+      },
+      {
+       "left": "sha256:510ecb2e57c8598145b2a5a5c9c0a2ed02142aca0678b636ae36c92431279bf5",
+       "path": "/evidence_sha256",
+       "right": "sha256:866ba095f326d2258970f7416bcf653a250c63fcc2c4d165b7c0e9e52ed141c0"
+      }
+     ],
+     "declared_producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:d06297bc6230a72a1d8d48ef5ca75a9f309e644fb458a5f5e290be6583b072e4",
+      "graph": {
+       "entities": 445,
+       "event_participations": 0,
+       "events": 3,
+       "relations": 152,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:a9da942f9190ddb9b5eb256bf9151973302de7e52b4fbf9e2dd938072c90d0b9",
+      "records_traced": 600,
+      "replay_receipt_sha256": "sha256:e7271cb7ed2b87044e8599c23c2f2a0357c21860bf9b0a272efc71dad6dbd693"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:bb111604c2aab9d2378fda5a5b730eb760abc57d3e5ad0057400603b5e921fd9"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:d06297bc6230a72a1d8d48ef5ca75a9f309e644fb458a5f5e290be6583b072e4",
+      "graph": {
+       "entities": 445,
+       "event_participations": 0,
+       "events": 3,
+       "relations": 152,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:bb111604c2aab9d2378fda5a5b730eb760abc57d3e5ad0057400603b5e921fd9",
+      "records_traced": 600,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:9d9b5b9e8898da771cd41ac1c9b4852ddb22a9571cd38e5d0cdce14bee0447c4",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    }
+   ],
+   "core_commit": "e7937b89917c8da7ee4a08acc22e99ad12b9985b",
+   "core_repository": "/private/tmp/malleus-progressive-guidance.uxhila/repo",
+   "label": "CANDIDATE",
+   "probe": {
+    "cell": "run-20",
+    "construction": "REMOVE_STATEMENT_DIGEST_KEEP_LOCATOR",
+    "diagnostic": {
+     "detail": "records do not bind the assertion behind them: claim:axis-relocating of type Claim does not set statement_sha256; under the source-assertion profile a record whose type declares assertion_locator must set assertion_locator and statement_sha256",
+     "error": "PopulationPlanRefusal",
+     "reason": "SOURCE_BINDING_REQUIRED"
+    },
+    "exit_status": 2,
+    "outcome": "REFUSED",
+    "population_sha256": "sha256:807e677301baa0668543a124045e46852c3138680376cb680ee032c6031f2534",
+    "record_id": "claim:axis-relocating",
+    "records_named": [
+     "claim:axis-relocating"
+    ]
+   },
+   "producer_sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+  },
+  "FROZEN": {
+   "cells": [
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": true,
+      "population_plan": true,
+      "replay_receipt": true,
+      "trace_summary": true
+     },
+     "cell": "run-20",
+     "contract_artifact_differences": [],
+     "declared_producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:6667fb757fe29ea625f076a89345889fa311723e77322235068503ffe35cc65e",
+      "graph": {
+       "entities": 426,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 55,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:c4f071ec9f062a9947ea806f080859d443a958995ab37c1168f8c6096f910d10",
+      "records_traced": 482,
+      "replay_receipt_sha256": "sha256:6042d490a8c5c039a0cd3974870ba486edc05590e3e723dfb8a5f5efd955495d"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:c4f071ec9f062a9947ea806f080859d443a958995ab37c1168f8c6096f910d10"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:6667fb757fe29ea625f076a89345889fa311723e77322235068503ffe35cc65e",
+      "graph": {
+       "entities": 426,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 55,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:c4f071ec9f062a9947ea806f080859d443a958995ab37c1168f8c6096f910d10",
+      "records_traced": 482,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:6042d490a8c5c039a0cd3974870ba486edc05590e3e723dfb8a5f5efd955495d",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": true,
+      "population_plan": true,
+      "replay_receipt": true,
+      "trace_summary": true
+     },
+     "cell": "run-21",
+     "contract_artifact_differences": [],
+     "declared_producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:77e4671620f5b8d35eeb097ee4beaa4488a55c28058688906573a00546a85ecf",
+      "graph": {
+       "entities": 508,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 26,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:75eff0d04cc787cd4c8c6f187641845657ee8b6f4e9064999b74723534842564",
+      "records_traced": 535,
+      "replay_receipt_sha256": "sha256:2cab922f229d578f183a647e445d0b99348ce2f931fb161a0652547a29a6e832"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:75eff0d04cc787cd4c8c6f187641845657ee8b6f4e9064999b74723534842564"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:77e4671620f5b8d35eeb097ee4beaa4488a55c28058688906573a00546a85ecf",
+      "graph": {
+       "entities": 508,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 26,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:75eff0d04cc787cd4c8c6f187641845657ee8b6f4e9064999b74723534842564",
+      "records_traced": 535,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:2cab922f229d578f183a647e445d0b99348ce2f931fb161a0652547a29a6e832",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": true,
+      "population_plan": true,
+      "replay_receipt": true,
+      "trace_summary": true
+     },
+     "cell": "run-22",
+     "contract_artifact_differences": [],
+     "declared_producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:21c0bd4ea4ad82d73b22bb15b632f745b3537f2f0f72108d37f18c5667f775ce",
+      "graph": {
+       "entities": 443,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 31,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:1bbd9876c797f46732ef642d8e898c38a135ad1563b5775b10604b8f178f314f",
+      "records_traced": 475,
+      "replay_receipt_sha256": "sha256:e6b025be41452c4192331cbbf7e5704ef3c344507a2c76efdc4eeb26d9fff4d5"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:1bbd9876c797f46732ef642d8e898c38a135ad1563b5775b10604b8f178f314f"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:21c0bd4ea4ad82d73b22bb15b632f745b3537f2f0f72108d37f18c5667f775ce",
+      "graph": {
+       "entities": 443,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 31,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:1bbd9876c797f46732ef642d8e898c38a135ad1563b5775b10604b8f178f314f",
+      "records_traced": 475,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:e6b025be41452c4192331cbbf7e5704ef3c344507a2c76efdc4eeb26d9fff4d5",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": true,
+      "population_plan": true,
+      "replay_receipt": true,
+      "trace_summary": true
+     },
+     "cell": "run-23",
+     "contract_artifact_differences": [],
+     "declared_producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+      "graph": {
+       "entities": 417,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 22,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+      "records_traced": 440,
+      "replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+      "graph": {
+       "entities": 417,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 22,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+      "records_traced": 440,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": true,
+      "population_plan": true,
+      "replay_receipt": true,
+      "trace_summary": true
+     },
+     "cell": "run-24",
+     "contract_artifact_differences": [],
+     "declared_producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:ebcb487eaf7c66cdb5fe74bfa607d94eb48e652d4817165a1246a70839ba9d62",
+      "graph": {
+       "entities": 400,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 21,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:ae4558b178c87810c3eb738ebab65272f177d86d8a7ba69ddb09eb37d5c0309c",
+      "records_traced": 422,
+      "replay_receipt_sha256": "sha256:23ec9d8abc1998e7d81a1bd75369370a9e2d2f12669a41bdb4c25506b972359e"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:ae4558b178c87810c3eb738ebab65272f177d86d8a7ba69ddb09eb37d5c0309c"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:ebcb487eaf7c66cdb5fe74bfa607d94eb48e652d4817165a1246a70839ba9d62",
+      "graph": {
+       "entities": 400,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 21,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:ae4558b178c87810c3eb738ebab65272f177d86d8a7ba69ddb09eb37d5c0309c",
+      "records_traced": 422,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:23ec9d8abc1998e7d81a1bd75369370a9e2d2f12669a41bdb4c25506b972359e",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": true,
+      "population_plan": true,
+      "replay_receipt": true,
+      "trace_summary": true
+     },
+     "cell": "run-25",
+     "contract_artifact_differences": [],
+     "declared_producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:a5beefc3a46a0204e54ee46986db0f8bc6898056fea807b2fbb31cb378b15f6a",
+      "graph": {
+       "entities": 477,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 57,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:2f787e5179664bf7786874b39fe6dba784028557bc90ea31b8ab629021d9a021",
+      "records_traced": 535,
+      "replay_receipt_sha256": "sha256:e6febc386510b326f23134377413df7ac316e3c413e2a3ac5a712bac1027a047"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:2f787e5179664bf7786874b39fe6dba784028557bc90ea31b8ab629021d9a021"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:a5beefc3a46a0204e54ee46986db0f8bc6898056fea807b2fbb31cb378b15f6a",
+      "graph": {
+       "entities": 477,
+       "event_participations": 0,
+       "events": 1,
+       "relations": 57,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:2f787e5179664bf7786874b39fe6dba784028557bc90ea31b8ab629021d9a021",
+      "records_traced": 535,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:e6febc386510b326f23134377413df7ac316e3c413e2a3ac5a712bac1027a047",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    },
+    {
+     "byte_identical": {
+      "census": true,
+      "export_records": true,
+      "ledger": true,
+      "population_plan": true,
+      "replay_receipt": true,
+      "trace_summary": true
+     },
+     "cell": "run-26",
+     "contract_artifact_differences": [],
+     "declared_producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf",
+     "diagnostic": {
+      "detail": "",
+      "error": "",
+      "reason": ""
+     },
+     "exit_status": 0,
+     "frozen": {
+      "export_records_sha256": "sha256:d06297bc6230a72a1d8d48ef5ca75a9f309e644fb458a5f5e290be6583b072e4",
+      "graph": {
+       "entities": 445,
+       "event_participations": 0,
+       "events": 3,
+       "relations": 152,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:a9da942f9190ddb9b5eb256bf9151973302de7e52b4fbf9e2dd938072c90d0b9",
+      "records_traced": 600,
+      "replay_receipt_sha256": "sha256:e7271cb7ed2b87044e8599c23c2f2a0357c21860bf9b0a272efc71dad6dbd693"
+     },
+     "ledger": {
+      "admission_events": [
+       "KNOWLEDGE_CHANGE_SET_RETAINED",
+       "CHANGE_PROPOSED",
+       "CHECK_RECORDED",
+       "VERDICT_RECORDED"
+      ],
+      "event_count": 14,
+      "sha256": "sha256:a9da942f9190ddb9b5eb256bf9151973302de7e52b4fbf9e2dd938072c90d0b9"
+     },
+     "observed": {
+      "export_records_sha256": "sha256:d06297bc6230a72a1d8d48ef5ca75a9f309e644fb458a5f5e290be6583b072e4",
+      "graph": {
+       "entities": 445,
+       "event_participations": 0,
+       "events": 3,
+       "relations": 152,
+       "signals": 0
+      },
+      "ledger_sha256": "sha256:a9da942f9190ddb9b5eb256bf9151973302de7e52b4fbf9e2dd938072c90d0b9",
+      "records_traced": 600,
+      "reopen_matches_admitted": {
+       "export_records": true,
+       "receipt": true
+      },
+      "replay_receipt_sha256": "sha256:e7271cb7ed2b87044e8599c23c2f2a0357c21860bf9b0a272efc71dad6dbd693",
+      "status": "ADMITTED_AND_REPLAYED"
+     },
+     "outcome": "ADMITTED",
+     "records_named": []
+    }
+   ],
+   "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+   "core_repository": "/Users/luis/Projects/malleus-dev",
+   "label": "FROZEN",
+   "probe": {
+    "cell": "run-20",
+    "construction": "REMOVE_STATEMENT_DIGEST_KEEP_LOCATOR",
+    "diagnostic": {
+     "detail": "",
+     "error": "",
+     "reason": ""
+    },
+    "exit_status": 0,
+    "outcome": "ADMITTED",
+    "population_sha256": "sha256:807e677301baa0668543a124045e46852c3138680376cb680ee032c6031f2534",
+    "record_id": "claim:axis-relocating",
+    "records_named": []
+   },
+   "producer_sha256": "sha256:5eb3ca2ba74e8cee3d8e7f5d4710ae026f728ffa5923d215a00c40716c03edcf"
+  }
+ },
+ "probe_cell": "run-20",
+ "schema": "malleus.paper-v4.bridge-01-outcomes/v1"
+}

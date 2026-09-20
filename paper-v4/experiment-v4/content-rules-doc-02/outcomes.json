@@ -1,0 +1,370 @@
+{
+ "base_run": "run-23",
+ "core_commit": "d867c3ab",
+ "gate_1": {
+  "acceptance": {
+   "graph_defects": 0,
+   "refusals": 0,
+   "rule_defects": 0,
+   "unclassified": 0
+  },
+  "census_oracle": {
+   "census_refusals_by_candidate": {
+    "FORMULA_IN_SOURCE": 0,
+    "INTERVAL_SANITY": 0,
+    "NO_CONFLICTING_QUANTITY": 0,
+    "NUMBER_IN_CITED_TEXT": 1
+   },
+   "observed_refused_records": [],
+   "removed_by_the_added_production": [
+    "obs:velocity-perturbation"
+   ],
+   "reproduced": true
+  },
+  "control": {
+   "contract_differences_from_frozen_run_23": [
+    "/evidence/producer/sha256",
+    "/evidence_sha256"
+   ],
+   "equals_frozen_run_23": false,
+   "exit_status": 0,
+   "export_equals_frozen_run_23": true,
+   "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+   "graph": {
+    "entities": 417,
+    "event_participations": 0,
+    "events": 1,
+    "relations": 22,
+    "signals": 0
+   },
+   "ledger_event_count": 14,
+   "replay_receipt_sha256": "sha256:f3a014b1e347f093fd06be722b41c112705d60fbd32ffcb9e5d1aa27be501f75",
+   "status": "ADMITTED_AND_REPLAYED"
+  },
+  "equivalence": {
+   "corpus_disagreeing": [
+    "assertion/assertion:091",
+    "assertion/assertion:100",
+    "assertion/assertion:171"
+   ],
+   "corpus_disagreeing_by_the_declared_production": 3,
+   "corpus_disagreeing_count": 3,
+   "corpus_disagreeing_otherwise": 0,
+   "corpus_normalisation_disagreeing": 0,
+   "corpus_strings": 2637,
+   "declared_differences": [
+    "bare-plus-or-minus",
+    "bare-plus-or-minus-after-a-word",
+    "bare-plus-or-minus-leading",
+    "bare-plus-or-minus-tight",
+    "bare-plus-or-minus-twice"
+   ],
+   "fixtures": 81,
+   "fixtures_disagreeing": []
+  },
+  "honest": {
+   "accepted_changes": 1,
+   "check_contract_identity": "sha256:5eb30d131ed4f90105249077490e09e8fb947ede80655453cb6836e25dc26c65",
+   "check_outcome": "SATISFIED",
+   "checked_rule_ids": [
+    "FORMULA_IN_SOURCE",
+    "INTERVAL_SANITY",
+    "NO_CONFLICTING_QUANTITY",
+    "NUMBER_IN_CITED_TEXT"
+   ],
+   "contract_differences_from_the_control": [],
+   "derivations": 2720,
+   "engine": "SWI-Prolog 100002",
+   "export_equals_frozen_run_23": true,
+   "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+   "fact_count": 6405,
+   "graph": {
+    "entities": 417,
+    "event_participations": 0,
+    "events": 1,
+    "relations": 22,
+    "signals": 0
+   },
+   "ledger_event_count": 16,
+   "outcome": "ADMITTED",
+   "partial_contract_differences_from_the_control": [
+    "/normative_profile/policy_programs[0]/policy_program/policy_id",
+    "/normative_profile/policy_programs[0]/policy_program/required_checks[0]/check_contract_id",
+    "/normative_profile/policy_programs[0]/policy_program/required_checks[0]/check_contract_identity",
+    "/normative_profile/policy_programs[0]/policy_program_identity",
+    "/normative_profile_identity"
+   ],
+   "policy_identity": "sha256:02d65e48e5e7e62b373c52d95dc11913ef660ee881b41c1322600e6f09bae002",
+   "receipt_identity": "sha256:48496e02961b72877b8ac4c8bd7c65d17e0d2eba49bbafb357c94a9e7815e8cb",
+   "records_traced": 440,
+   "refused": [],
+   "replay_receipt_sha256": "sha256:0c88365b9ec84fa054f914a68683c3994572d68fd00ca1242f43cb9b20204abe",
+   "retained_sentences": 333,
+   "violated_rule_ids": []
+  }
+ },
+ "gate_2": {
+  "admitted": 2,
+  "core_commit": "d867c3abf31420607da02070b45d0852d3f81227",
+  "moved_against_the_structural_gate": {
+   "admitted_to_refused": [
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "VALUE_NOT_IN_BLOCK",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "a-01"
+    },
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "VALUE_NOT_IN_BLOCK",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "a-02"
+    },
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "VALUE_NOT_IN_BLOCK",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "a-05"
+    },
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "b4-01"
+    },
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "b4-02"
+    },
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "b4-03"
+    },
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "b4-04"
+    },
+    {
+     "after": "REFUSED",
+     "before": "ADMITTED_INVISIBLE",
+     "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+     "reason": "CONTENT_RULE_VIOLATED",
+     "trial_id": "b4-05"
+    }
+   ],
+   "other": [],
+   "refused_to_admitted": []
+  },
+  "population_digests_match_the_first_cell": true,
+  "reached_the_rules": [
+   "a-01",
+   "a-02",
+   "a-03",
+   "a-04",
+   "a-05",
+   "b4-01",
+   "b4-02",
+   "b4-03",
+   "b4-04",
+   "b4-05"
+  ],
+  "refused": 53,
+  "refused_by_a_rule": [
+   "a-01",
+   "a-02",
+   "a-05",
+   "b4-01",
+   "b4-02",
+   "b4-03",
+   "b4-04",
+   "b4-05"
+  ],
+  "runner": "/Users/luis/Projects/malleus-dev/paper-v4/experiment-v4/content-rules-doc-02/admit.py",
+  "table": [
+   "| # | class | n | structural gate alone | structural gate plus the four rules |",
+   "| :-- | :-- | --: | :-- | :-- |",
+   "| 1 | `VALUE_NOT_IN_BLOCK` | 5 | ADMITTED_INVISIBLE | ADMITTED_INVISIBLE / REFUSED, `CONTENT_RULE_VIOLATED` |",
+   "| 2 | `LOCATOR_REPOINTED_STALE_DIGEST` | 5 | REFUSED, `DIGEST_MISMATCH` | REFUSED, `DIGEST_MISMATCH` |",
+   "| 3 | `LOCATOR_REPOINTED_COHERENT_DIGEST` | 5 | REFUSED, `LOCATOR_NOT_DERIVED` | REFUSED, `LOCATOR_NOT_DERIVED` |",
+   "| 4 | `LOCATOR_REPOINTED_COHERENT_DERIVATION` | 5 | ADMITTED_INVISIBLE | REFUSED, `CONTENT_RULE_VIOLATED` |",
+   "| 5 | `DIGEST_MISMATCH` | 5 | REFUSED, `DIGEST_MISMATCH` | REFUSED, `DIGEST_MISMATCH` |",
+   "| 6 | `DANGLING_ENDPOINT` | 5 | REFUSED, `DANGLING_ENDPOINT` | REFUSED, `DANGLING_ENDPOINT` |",
+   "| 7 | `TYPE_OUTSIDE_ONTOLOGY` | 5 | REFUSED, `RECORDS_NOT_REHYDRATABLE` | REFUSED, `RECORDS_NOT_REHYDRATABLE` |",
+   "| 8 | `SLOT_OUTSIDE_ONTOLOGY` | 5 | REFUSED, `RECORDS_NOT_REHYDRATABLE` | REFUSED, `RECORDS_NOT_REHYDRATABLE` |",
+   "| 9 | `DUPLICATE_RECORD_ID` | 5 | REFUSED, `MALFORMED_CAPTURE` | REFUSED, `MALFORMED_CAPTURE` |",
+   "| 10 | `RECORD_WITH_NO_SOURCE_WITH_FIELDS` | 5 | REFUSED, `UNDERIVED_FIELD` | REFUSED, `UNDERIVED_FIELD` |",
+   "| 11 | `RECORD_WITH_NO_SOURCE_NO_FIELDS` | 5 | REFUSED, `UNDERIVED_RECORD` | REFUSED, `UNDERIVED_RECORD` |"
+  ],
+  "trials_by_rule": {
+   "FORMULA_IN_SOURCE": [
+    "a-01",
+    "a-02",
+    "b4-05"
+   ],
+   "NUMBER_IN_CITED_TEXT": [
+    "a-05",
+    "b4-01",
+    "b4-02",
+    "b4-03",
+    "b4-04",
+    "b4-05"
+   ]
+  },
+  "violations": [
+   {
+    "fault_class": "VALUE_NOT_IN_BLOCK",
+    "record_ids": [
+     "gchem:eq-atlantic-co2-avg"
+    ],
+    "rule_id": "FORMULA_IN_SOURCE",
+    "slot": "analyte",
+    "trial_id": "a-01",
+    "violation_code": "FORMULA_NOT_IN_CITED_TEXT/analyte"
+   },
+   {
+    "fault_class": "VALUE_NOT_IN_BLOCK",
+    "record_ids": [
+     "gchem:rc2-co2-rb"
+    ],
+    "rule_id": "FORMULA_IN_SOURCE",
+    "slot": "analyte",
+    "trial_id": "a-02",
+    "violation_code": "FORMULA_NOT_IN_CITED_TEXT/analyte"
+   },
+   {
+    "fault_class": "VALUE_NOT_IN_BLOCK",
+    "record_ids": [
+     "ratio:vp-vs"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "ratio_value",
+    "trial_id": "a-05",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/ratio_value"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "cnt:subsections"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "count",
+    "trial_id": "b4-01",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/count"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "cnt:subsections"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "value_lower",
+    "trial_id": "b4-01",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/value_lower"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "cnt:subsections"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "value_upper",
+    "trial_id": "b4-01",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/value_upper"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "obs:co2-saturation-temperature"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "value_lower",
+    "trial_id": "b4-02",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/value_lower"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "obs:co2-saturation-temperature"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "value_upper",
+    "trial_id": "b4-02",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/value_upper"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "obs:model1-vp"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "value_lower",
+    "trial_id": "b4-03",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/value_lower"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "obs:relocation-rms"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "value_upper",
+    "trial_id": "b4-04",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/value_upper"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "ratio:co2-ba"
+    ],
+    "rule_id": "FORMULA_IN_SOURCE",
+    "slot": "denominator_kind",
+    "trial_id": "b4-05",
+    "violation_code": "FORMULA_NOT_IN_CITED_TEXT/denominator_kind"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "ratio:co2-ba"
+    ],
+    "rule_id": "FORMULA_IN_SOURCE",
+    "slot": "numerator_kind",
+    "trial_id": "b4-05",
+    "violation_code": "FORMULA_NOT_IN_CITED_TEXT/numerator_kind"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "ratio:co2-ba"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "ratio_value",
+    "trial_id": "b4-05",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/ratio_value"
+   },
+   {
+    "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+    "record_ids": [
+     "ratio:co2-ba"
+    ],
+    "rule_id": "NUMBER_IN_CITED_TEXT",
+    "slot": "uncertainty",
+    "trial_id": "b4-05",
+    "violation_code": "NUMBER_NOT_IN_CITED_TEXT/uncertainty"
+   }
+  ]
+ },
+ "schema": "malleus.paper-v4.content-rules-doc-02-outcomes/v1"
+}

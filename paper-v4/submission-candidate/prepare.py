@@ -20,9 +20,21 @@ CITATIONS = {
     "https://arxiv.org/abs/2510.01409": "cotti2026ontologx",
     "https://www.w3.org/TR/prov-o/": "lebo2013provo",
     "https://ottr.xyz/": "skjaeveland2024reasonable",
-    "https://bluebrainnexus.io/products/nexus-delta/": "nexusdelta",
+    "https://doi.org/10.3233/SW-222974": "sy2023nexus",
     "https://arxiv.org/abs/2602.23193": "santos2026esaa",
     "https://arxiv.org/abs/2005.11401": "lewis2020retrieval",
+    "https://doi.org/10.1007/978-3-031-08848-3_9": "fahland2022ekg",
+    "https://doi.org/10.3233/ISU-2010-0613": "groth2010nanopub",
+    "https://doi.org/10.1007/978-3-319-07443-6_27": "kuhn2014trusty",
+    "https://doi.org/10.1186/2041-1480-5-28": "clark2014micropub",
+    "https://ceur-ws.org/Vol-1747/IT605_ICBO2016.pdf": "brush2016sepio",
+    "https://doi.org/10.1145/2629489": "vrandecic2014wikidata",
+    "https://doi.org/10.1162/coli_a_00486": "rashkin2023ais",
+    "https://arxiv.org/abs/2305.14627": "gao2023alce",
+    "https://arxiv.org/abs/2510.05381": "du2025context",
+    "https://arxiv.org/abs/2406.10149": "kuratov2024babilong",
+    "https://arxiv.org/abs/2307.03172": "liu2023lost",
+    "https://arxiv.org/abs/2505.06120": "laban2025lost",
 }
 
 

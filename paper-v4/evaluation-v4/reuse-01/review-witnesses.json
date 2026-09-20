@@ -1,0 +1,3511 @@
+[
+ {
+  "witness_key": "cruise:smarties",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:043",
+   "page:10:block:046",
+   "page:2:block:002",
+   "page:6:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the deployment, say what it was mounted for and give the span over which it recorded. Fields judged: description, duration, name."
+ },
+ {
+  "witness_key": "instr:obs",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001",
+   "page:2:block:002",
+   "page:6:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the instruments and say whose records the study works from. Fields judged: description, name."
+ },
+ {
+  "witness_key": "cnt:catalog-links",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:final-located",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:identified-earthquakes",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:location-categories",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:magnitude-groups",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:new-focal-mechanisms",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:ntds",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:relocated-events",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:relocation-iterations",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "cnt:subsections",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name, quantity_kind, quantity_kind_class, unit, value_lower, value_upper."
+ },
+ {
+  "witness_key": "cnt:total-focal-mechanisms",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:velest-iterations",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:velest-subdataset",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:velocity-models",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "cnt:well-relocated",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the tally and what it counts. Fields judged: assertion_modality, count, count_scope, name."
+ },
+ {
+  "witness_key": "gchem:abstract-co2-primary",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the analyte, the melt stage, the bounds and the unit the row records. Fields judged: analyte, assertion_modality, determination, melt_stage, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:average-depth-uncertainty",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:009"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:axial-event-depth-stability",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:009"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:b-value",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:brittle-thickness",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:co2-gas-loss",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:co2-saturation-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:co2-saturation-pressure",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:co2-saturation-temperature",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, determination, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:criterion-arrivals",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:criterion-azimuthal-gap",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:criterion-swave-distance",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:crust-age-west-flank",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:crust-thickness-west-flank",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, uncertainty, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:degassing-eq-depth-range",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:009"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:depth-uncertainty-bound",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:7:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block opens part-way through the sentence, so the bound it carries is not labelled there as a depth uncertainty and is not tied there to the located events; the number and the unit are in the block and the label is not. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:dry-melting-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_upper."
+ },
+ {
+  "witness_key": "obs:error-ellipsoid-confidence",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:expected-max-depth-slow",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, depth_reference, determination, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:expected-max-depth-ultraslow",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, depth_reference, determination, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:fig3-shading-threshold",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:fig4-isotherm",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:010"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:focal-selection-criteria",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:fraction-two-criteria",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:full-spreading-rate",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:group-b-values",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:high-frequency-threshold",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:horizontal-uncertainty-bound",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:instrument-spacing",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:lithosphere-age-45ma",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:lithospheric-age-contours",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:magnitude-completeness",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:mean-horizontal-error",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:mean-horizontal-uncertainty",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:mean-vertical-error",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:melting-initiation-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:model1-vp",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:009"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:offaxis-cluster-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:offaxis-swarm-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:predicted-max-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:profile-halfwidth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:profile-tick-interval",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:quality-abc-uncertainty",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:quality-d-uncertainty",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:relocation-gap",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:relocation-obs-threshold",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:relocation-rms",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:relocation-uncertainty",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:rms-residual-bound",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:solubility-calc-temperature",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:station-gap-bound",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:studied-portion-length",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:triggering-pore-pressure",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:updated-horizontal-uncertainty",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:velocity-constraint-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, depth_reference, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:velocity-perturbation",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:010"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:vpvs-test-range",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:young-crust-age",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:009"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block states the quantity, its bounds and its unit at the modality the row records. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "cnt:min-obs-per-event",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the tally and what it counts. The subject the row names occurs in that same block. Fields judged: assertion_modality, count, count_scope, name, subject."
+ },
+ {
+  "witness_key": "cnt:obs-deployed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the tally and what it counts. The subject the row names occurs in that same block. Fields judged: assertion_modality, count, count_scope, name, subject."
+ },
+ {
+  "witness_key": "cnt:useful-obs",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the tally and what it counts. The subject the row names occurs in that same block. Fields judged: assertion_modality, count, count_scope, name, subject."
+ },
+ {
+  "witness_key": "cnt:events-mar",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the tally and what it counts. The subject the row names occurs in that same block. Fields judged: assertion_modality, count, count_scope, name, subject."
+ },
+ {
+  "witness_key": "cnt:events-romanche",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the tally and what it counts. The subject the row names occurs in that same block. Fields judged: assertion_modality, count, count_scope, name, subject."
+ },
+ {
+  "witness_key": "cnt:forced-depth-subset",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:010"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the tally and what it counts. The subject the row names occurs in that same block. Fields judged: assertion_modality, count, count_scope, name, subject."
+ },
+ {
+  "witness_key": "cnt:located-earthquakes",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:003"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the tally and what it counts. The subject the row names occurs in that same block. Fields judged: assertion_modality, count, count_scope, name, subject."
+ },
+ {
+  "witness_key": "gchem:eq-atlantic-co2-avg",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:009"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, name, quantity_kind, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:eq-atlantic-co2-max",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:009"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, name, quantity_kind, subject, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc2-ba",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, melt_stage, name, quantity_kind, subject, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "gchem:rc2-co2-ba",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc2-co2-ba90",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc2-co2-minimum",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "gchem:rc2-co2-preeruptive",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc2-co2-primary-calc",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:5:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block gives the segment, the range and the unit, but it does not name the two proxy elements the row records as the basis of the estimate; those are named in a block this witness does not reach. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc2-co2-rb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc2-co2-rb90",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc2-rb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, melt_stage, name, quantity_kind, subject, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "gchem:rc3-co2-ba",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc3-co2-ba90",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc3-co2-primary-calc",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:5:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block gives the segment, the range and the unit, but it does not name the two proxy elements the row records as the basis of the estimate; those are named in a block this witness does not reach. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc3-co2-rb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:rc3-co2-rb90",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, determination, estimation_proxy, melt_stage, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "gchem:swir-co2-highest",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:009"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the analyte, the melt stage, the bounds and the unit the row records. The subject the row names occurs in that same block. Fields judged: analyte, assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:abstract-deep-eq-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:bdb-isotherm",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, uncertainty, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:coverage-mar",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:coverage-romanche",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:deep-eq-rc2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:deep-micro-rc2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:forced-depths",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:010"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:h1-bdb-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:h1-isotherms",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:iceland-magmatic-depths",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:interpreted-deep-eq-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:012"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, depth_reference, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:lab-melt-fraction",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:lab-water-content",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, subject, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:mar-half-spreading-rate",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:mar-segment-length",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:mayotte-depths",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:no-eq-below-20km",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification."
+ },
+ {
+  "witness_key": "obs:normal-depth-ntd2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:ntd1-length",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:ntd2-depth-10",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:ntd2-depth-range",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:ntd2-offset",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:occ-depth-range",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:offaxis-bdb-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:offaxis-crustal-age",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:rc2-crust-thickness",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:011"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, uncertainty, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:rc2-length",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:rc2-valley-width",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:rc3-length",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:shallow-eq-rti",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "obs:thermal-model-temp",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the quantity, its bounds and its unit at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, determination, name, quantity_kind, quantity_kind_class, subject, unit, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "method:cross-correlation",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:depth-resolution-tests",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:double-difference",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:fc-correction",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:first-motion",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:003"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:local-magnitude",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002",
+   "page:8:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:location-criteria",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:003",
+   "page:7:block:008"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:ml-formula",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:nonlinear-location",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:stalta",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:station-corrections",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:swave-delay-removal",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "method:wadati",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the procedure and says what it was used for. Fields judged: description, name."
+ },
+ {
+  "witness_key": "event:romanche-2016",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the event and the magnitude the row projects. Fields judged: event_type, name, quantity_kind, quantity_kind_class, value_lower, value_qualification, value_upper."
+ },
+ {
+  "witness_key": "claim:ab-good-quality",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:acknowledgement-crew",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:043"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:acknowledgement-discussions",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:10:block:043"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block opens the thanks and breaks off inside the list of names, so it carries neither the reason given for the thanks nor more than one of the people thanked. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:all-authors-discussed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:046"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:axial-valley-floor-basaltic",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:both-perturbations-deep",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:010"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:brittle-10km-at-ntds",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:category-definitions",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:co2-behaves-incompatible",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:co2-solubility-pressure",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:compilation-covariates",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:correlations-used-globally",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:correspondence",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:11:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:crust-from-mantle-melt",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:deeper-eq-observed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:deepest-documented",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:degassing-volume-change",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:eq-in-mantle-below-10km",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:fig3-panel-content",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, name."
+ },
+ {
+  "witness_key": "claim:fixed-depth-rms-worse",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:8:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block carries the slower decrease and the higher final residuals, but the condition being described and the higher starting residuals fall in the block before it. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:focus-on-segments",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:h3-mylonite",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, hypothesis_disposition, name."
+ },
+ {
+  "witness_key": "claim:h4-magmatic-tectonic",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002",
+   "page:5:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, hypothesis_disposition, name."
+ },
+ {
+  "witness_key": "claim:long-period-events",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:magmatic-tectonic-contexts-differ",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:manual-check",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:max-depth-compilation",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:max-depth-other-factors",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:max-depth-selection",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, name."
+ },
+ {
+  "witness_key": "claim:max-depths-affected",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:010"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:mechanism-similar-volcanoes",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:melt-focused-narrow-zone",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:melt-migration-not-understood",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, name."
+ },
+ {
+  "witness_key": "claim:melt-movement-not-applicable",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:melt-movement-strain",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:melt-resides-fractionates",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:more-events-needed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:008"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, name."
+ },
+ {
+  "witness_key": "claim:no-competing-interests",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:047"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:no-current-eruption",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:ntd1-origin",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:occ-exhumed-mantle",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block carries the inference about exhumed mantle and the tectonic origin, but the sentence starts in the block before it, so the block does not say that peridotites are what indicate it. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:offaxis-magmatism",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:peer-review",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:11:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:preexisting-faults-favor-migration",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:primary-vs-preeruptive",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:publisher-note",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:11:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:ratios-good-proxy",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:reduced-velocity-preferred",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:010"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:samples-degassed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:seafloor-basalts-degassed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:shear-zone-with-detachment",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:shiptime-funded",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:station-corrections-iterated",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:swave-delays-removed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:005"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:tests-support-deep",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:tf-deep-eq-mylonite",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:trace-element-assumption",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, name."
+ },
+ {
+  "witness_key": "claim:ultraslow-co2-high",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:009"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:updated-depth-data",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:velocity-model-matters",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:volatile-controls-magma",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:volatile-role-unknown",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, claim_kind, name."
+ },
+ {
+  "witness_key": "claim:volatiles-extend-melting-depth",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:001"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:vpvs-reasonable",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:003"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block asserts what the row names, at the modality the row records. Fields judged: assertion_modality, name."
+ },
+ {
+  "witness_key": "claim:axis-relocating",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:bdb-shallower-southward",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:co2-degassing-deep-eq",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001",
+   "page:5:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, hypothesis_disposition, name, subject."
+ },
+ {
+  "witness_key": "claim:co2-influences-lab-melt",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, name, subject."
+ },
+ {
+  "witness_key": "claim:deep-eq-aligned",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:003",
+   "page:5:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:deep-events-not-artifacts",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:depths-not-artifact",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:detachment-inactive",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:enriched-basalts-low-melting",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:extinct-vent-too-far",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:fig3-panels",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:006"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, name, subject."
+ },
+ {
+  "witness_key": "claim:fig6-panels",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:011"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, name, subject."
+ },
+ {
+  "witness_key": "claim:five-models-enumerated",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:003"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:focal-not-robust",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:003"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, name, subject."
+ },
+ {
+  "witness_key": "claim:h1-cold-lithosphere",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, hypothesis_disposition, name, subject."
+ },
+ {
+  "witness_key": "claim:h2-hydrothermal-cooling",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, hypothesis_disposition, name, subject."
+ },
+ {
+  "witness_key": "claim:higher-temp-hinders-nucleation",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:keller-volatiles-flush",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:010"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:lab-melt-co2-h2o",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:magmatism-dominates-rc2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:mantle-hot",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:max-depth-not-following-relationship",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:2:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block states the mismatch but stops before the phrase ends, and it does not say that the relationship in question is one observed at other sites. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:melt-lens-defines-bdb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:model1-inappropriate",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:010"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:model5-selected",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:003"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:no-active-vents-rc2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:ntd2-bdb-normal",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:occ-recent-deformation",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:occ-shallow-ruptures",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:one-obs-no-data",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:007"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:rc2-magmatic-origin",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:rc2-no-detachment",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:rc2-rc3-analysed",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:rc2-robust",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:refraction-profile-used",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:rti-amagmatic",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:selected-model-more-events",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:small-pressure-increase-induces",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:003"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:snapshot-limitation",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:004"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, claim_kind, name, subject."
+ },
+ {
+  "witness_key": "claim:tomography-normal-vpvs",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:003"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block asserts what the row names, at the modality the row records. The subject the row names occurs in that same block. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "claim:volatiles-reduce-solidus",
+  "source_support": "PARTIAL",
+  "source_locators": [
+   "page:6:block:001"
+  ],
+  "rationale": "DIGEST_OK SUBJECT_IN_BLOCK The cited block carries the consequence and the boundary it applies to, but what does the reducing is named only in the block before it. Fields judged: assertion_modality, name, subject."
+ },
+ {
+  "witness_key": "geo:askja",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:bdb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001",
+   "page:1:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: name."
+ },
+ {
+  "witness_key": "geo:chain-tf",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:detachment-east",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:equatorial-atlantic",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: name."
+ },
+ {
+  "witness_key": "geo:extinct-vent-field",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:fagradalsfjall",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:gakkel",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:009"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:iceland",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: name."
+ },
+ {
+  "witness_key": "geo:inactive-mound",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:007"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:juan-de-fuca",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:knipovich",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:lab",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: name."
+ },
+ {
+  "witness_key": "geo:logachev",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:mar",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:001",
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: name."
+ },
+ {
+  "witness_key": "geo:mayotte",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:moho",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:010",
+   "page:7:block:011"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:neovolcanic-ridge",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:ntd1",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:ntd1-faults",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:ntd2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:ntd2-faults",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:occ",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:occ-normal-faults",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:rainbow",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:rc1",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:rc2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:rc2-bounding-faults",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:rc3",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, feature_orientation, name."
+ },
+ {
+  "witness_key": "geo:romanche-tf",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005",
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:rti",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "geo:swir",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the feature and support the kind and orientation the row projects. Fields judged: feature_kind, name."
+ },
+ {
+  "witness_key": "work:article",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:048",
+   "page:11:block:001",
+   "page:11:block:003",
+   "page:11:block:005",
+   "page:11:block:006",
+   "page:1:block:001",
+   "page:1:block:006",
+   "page:2:block:008",
+   "page:3:block:006",
+   "page:4:block:008",
+   "page:5:block:011",
+   "page:6:block:006",
+   "page:7:block:013",
+   "page:8:block:018",
+   "page:9:block:056"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: container_title, doi, licence, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:cruise-portal",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:008"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: access_url, description, name, source_kind."
+ },
+ {
+  "witness_key": "work:eq-catalog",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:008",
+   "page:8:block:009"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: description, doi, name, source_kind."
+ },
+ {
+  "witness_key": "work:petdb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:005",
+   "page:8:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: access_url, description, name, source_kind."
+ },
+ {
+  "witness_key": "work:ref-001",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:012",
+   "page:8:block:013"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-002",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:014"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-003",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:015"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-004",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:016"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-005",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:017"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-006",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:001",
+   "page:9:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-007",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:003",
+   "page:9:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, doi, name, pages, publication_year, source_kind."
+ },
+ {
+  "witness_key": "work:ref-008",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-009",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-010",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:007"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-011",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:008"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-012",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:009"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-013",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-014",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:011",
+   "page:9:block:012"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-015",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:013"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-016",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:014",
+   "page:9:block:015"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, doi, name, pages, publication_year, source_kind."
+ },
+ {
+  "witness_key": "work:ref-017",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:016"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-018",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:017",
+   "page:9:block:018"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-019",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:019"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-020",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:020",
+   "page:9:block:021"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-021",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:022"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, doi, name, pages, publication_year, source_kind."
+ },
+ {
+  "witness_key": "work:ref-022",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:023",
+   "page:9:block:024"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, doi, name, publication_year, source_kind."
+ },
+ {
+  "witness_key": "work:ref-023",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:025",
+   "page:9:block:026"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-024",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:027",
+   "page:9:block:028"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-025",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:029"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind."
+ },
+ {
+  "witness_key": "work:ref-026",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:030"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-027",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:031"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, doi, name, pages, publication_year, source_kind."
+ },
+ {
+  "witness_key": "work:ref-028",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:031",
+   "page:9:block:032"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-029",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:033"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-030",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:034"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-031",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:035"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-032",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:036"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-033",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:037",
+   "page:9:block:038"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-034",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:039"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-035",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:040"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-036",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:041"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-037",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:042"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-038",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:043"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-039",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:044",
+   "page:9:block:045"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-040",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:046",
+   "page:9:block:047"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-041",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:048"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-042",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:049"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-043",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:050"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-044",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:051"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-045",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:052"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-046",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:053",
+   "page:9:block:054"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-047",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:9:block:055"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-048",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:001",
+   "page:9:block:056"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-049",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-050",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:003"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-051",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:004",
+   "page:10:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-052",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:006",
+   "page:10:block:007"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-053",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:008"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-054",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:009"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-055",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-056",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:011"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-057",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:012"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-058",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:013",
+   "page:10:block:014"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-059",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:015"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-060",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:016"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-061",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:017"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-062",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:018"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-063",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:019"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-064",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:020"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-065",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:021"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-066",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:022",
+   "page:10:block:023"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-067",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:024"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-068",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:025"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-069",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:026"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-070",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:027",
+   "page:10:block:028"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-071",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:029"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-072",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:030"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-073",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:031",
+   "page:10:block:032",
+   "page:10:block:033"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: access_url, author_statement, name, publication_year, source_kind."
+ },
+ {
+  "witness_key": "work:ref-074",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:034"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-075",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:035",
+   "page:10:block:036"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, doi, name, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-076",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:037"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-077",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:038",
+   "page:10:block:039"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-078",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:040"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:ref-079",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:041",
+   "page:10:block:042"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: author_statement, container_title, name, pages, publication_year, source_kind, volume."
+ },
+ {
+  "witness_key": "work:zenodo",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:008"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited reference blocks carry the bibliographic fields the row projects for this entry. Fields judged: name, source_kind."
+ },
+ {
+  "witness_key": "rel:mar-in-atlantic",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:rc1-bounded-detachment",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:rc2-adjacent-ntd1",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:rc2-bounded-faults",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:4:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:rc3-adjacent-ntd2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:catalog-in-zenodo",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:008"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "sw:global-mapper",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name."
+ },
+ {
+  "witness_key": "sw:gmt6",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:010",
+   "page:8:block:011"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name, software_version."
+ },
+ {
+  "witness_key": "sw:hash",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:003",
+   "page:8:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name, software_version."
+ },
+ {
+  "witness_key": "sw:hypodd",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:006",
+   "page:8:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name, software_version."
+ },
+ {
+  "witness_key": "sw:nonlinloc",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:004",
+   "page:8:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name."
+ },
+ {
+  "witness_key": "sw:seisan",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:002",
+   "page:8:block:002",
+   "page:8:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name."
+ },
+ {
+  "witness_key": "sw:velest",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:004",
+   "page:8:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name."
+ },
+ {
+  "witness_key": "sw:zmap",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:002",
+   "page:8:block:010"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the package, say what it did and give where it can be obtained. Fields judged: access_url, description, name."
+ },
+ {
+  "witness_key": "rel:hash-used-for-focal",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:003"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:nonlinloc-used-for-location",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:seisan-used-for-stalta",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "agent:briais",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:045",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:brittany",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:brunelli",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:045",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:erc",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:french-government",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:grenet",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:045",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:hamelin",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:045",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:maia",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:045",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:nsfc",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:org-cnr-igag",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:org-geoocean",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:org-ipgp",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:org-sio",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:org-unimore",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:1:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:petracchini",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:045",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:singh",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044",
+   "page:11:block:002",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:tgir",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:yu",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044",
+   "page:11:block:002",
+   "page:1:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "agent:zjnsf",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited blocks name the person or body and support the kind of agent the row projects. Fields judged: agent_type, name."
+ },
+ {
+  "witness_key": "award:erc-advanced",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the award and the identifier or programme the row projects. Fields judged: award_identifier, name."
+ },
+ {
+  "witness_key": "award:fp7",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the award and the identifier or programme the row projects. Fields judged: award_programme, name."
+ },
+ {
+  "witness_key": "award:investissements",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the award and the identifier or programme the row projects. Fields judged: award_programme, name."
+ },
+ {
+  "witness_key": "award:isblue",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the award and the identifier or programme the row projects. Fields judged: award_identifier, award_programme, name."
+ },
+ {
+  "witness_key": "award:nsfc",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the award and the identifier or programme the row projects. Fields judged: award_identifier, name."
+ },
+ {
+  "witness_key": "award:sad",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the award and the identifier or programme the row projects. Fields judged: award_programme, name."
+ },
+ {
+  "witness_key": "award:zjnsf",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the award and the identifier or programme the row projects. Fields judged: award_identifier, name."
+ },
+ {
+  "witness_key": "rel:singh-funded-erc",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:singh-funded-fp7",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:yu-funded-nsfc",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "rel:yu-funded-zjnsf",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:10:block:044"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "sample:melt-inclusions",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the sample set and the material it is made of. Fields judged: description, name, sample_material."
+ },
+ {
+  "witness_key": "sample:morb-obs-network",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the sample set and the material it is made of. Fields judged: description, name, sample_material."
+ },
+ {
+  "witness_key": "sample:morb-rc2",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the sample set and the material it is made of. Fields judged: description, name, sample_material."
+ },
+ {
+  "witness_key": "sample:morb-rc3",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the sample set and the material it is made of. Fields judged: description, name, sample_material."
+ },
+ {
+  "witness_key": "sample:popping-rocks",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the sample set and the material it is made of. Fields judged: description, name, sample_material."
+ },
+ {
+  "witness_key": "ratio:co2-ba",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block gives the ratio, the two elements it is taken between and the spread around it. Fields judged: assertion_modality, denominator_kind, name, numerator_kind, ratio_value, uncertainty."
+ },
+ {
+  "witness_key": "ratio:co2-rb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:004"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block gives the ratio, the two elements it is taken between and the spread around it. Fields judged: assertion_modality, denominator_kind, name, numerator_kind, ratio_value, uncertainty."
+ },
+ {
+  "witness_key": "ratio:vp-vs",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:002"
+  ],
+  "rationale": "DIGEST_OK NO_SUBJECT_IN_ROW The cited block gives the ratio, the two elements it is taken between and the spread around it. Fields judged: assertion_modality, denominator_kind, name, numerator_kind, ratio_value."
+ },
+ {
+  "witness_key": "rel:morb-from-petdb",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:005"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST DERIVATION_LOCAL The block that states the tie also derives both of its endpoints, so the link rests on one place in the reading. Fields judged: relation_type, source_id, target_id."
+ },
+ {
+  "witness_key": "model:co2-solubility",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:5:block:006"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ },
+ {
+  "witness_key": "model:iacono-marziano",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:8:block:007"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ },
+ {
+  "witness_key": "model:min-1d",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:004"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ },
+ {
+  "witness_key": "model:thermal",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:3:block:001"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ },
+ {
+  "witness_key": "model:thermal-simulated",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:012"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ },
+ {
+  "witness_key": "model:velocity-1d",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:2:block:002"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ },
+ {
+  "witness_key": "model:velocity-model-1",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:7:block:009"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ },
+ {
+  "witness_key": "model:velocity-model-5",
+  "source_support": "SUPPORTED",
+  "source_locators": [
+   "page:6:block:003"
+  ],
+  "rationale": "NO_STATEMENT_DIGEST NO_SUBJECT_IN_ROW The cited block names the model and says what it was used for. Fields judged: description, model_kind, name."
+ }
+]

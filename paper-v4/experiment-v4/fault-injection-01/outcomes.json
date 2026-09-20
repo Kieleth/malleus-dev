@@ -1,0 +1,2905 @@
+{
+ "base_run": "run-23",
+ "control": {
+  "equals_frozen_run_23": true,
+  "export_records_sha256": "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286",
+  "ledger_sha256": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+  "replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec"
+ },
+ "core_commit": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+ "inputs": {
+  "honest_population_sha256": "sha256:9d608bffe7cb1259d1f397e6d272290a5e21073744847b6d32a0994543416fd3",
+  "ontology_sha256": "sha256:9aa5fdcfb74dc9cad9b36b16b27e8a829b5a71ad1b2bc61892e12a2568b06d21",
+  "reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+ },
+ "instances_per_variant": 5,
+ "replay_after_trials": {
+  "equals_frozen_run_23": true,
+  "exit_status": 0,
+  "replay_receipt_sha256": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec"
+ },
+ "schema": "malleus.paper-v4.fault-injection-01-outcomes/v1",
+ "seed": 23,
+ "trials": [
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "analyte"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:42b18f19b1e4ae091a60ae10568ecfb4100e54599960e49e1f357a58139f3034"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:9d2ef33a2bbbe8aa261df56144c3fc11ae2f4f85c8625ce07ddb358c1cb71b23",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:1e62c547979a82239fd35960ade494f5182d21af562dae5557a6721bfcd8c8b1",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:8d6ce2fcb1dc413a08c210361a348e24957d94621caf46705aae833548037b0d",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:62bcd3cd61c1bdf51f0ccfd55a2af1279c2313c712c43c09f134e23490ea044c",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:4ecc24ea7d3c6412b9361e2ba5625f93fb3e05a3816c42b01ade4fff8e0738bc"
+   },
+   "target": {
+    "injected_value": "FAULT-A-01-SYNTHETIC",
+    "locator": "assertion:129",
+    "record_id": "gchem:eq-atlantic-co2-avg",
+    "slot": "analyte"
+   },
+   "trial_id": "a-01"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "analyte"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:57afdfc0ebd6a3353ed172533be93e914d802432112bad73913bf61c52e1297a"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:3dd36158003e97cf79daa991fce1c56d62471b4736cf85b87ff13afc206b9de3",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:097a98fac6943f93fbc90e479235da5a21f50c46bf197f361e5c452467600bb5",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:24a127535667f8eb2cfed4c11a33dc96d30636e20c81ce733f686522e7039e68",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:eef9d06e03e5d401d773141f539e3c25f32e89727dab3c8c740d88d15fc0904e",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:3648616d9f2e1724ec54f8037c1546a85b46626e14cbcb383146a6b0b7981b13"
+   },
+   "target": {
+    "injected_value": "FAULT-A-02-SYNTHETIC",
+    "locator": "assertion:193",
+    "record_id": "gchem:rc2-co2-rb",
+    "slot": "analyte"
+   },
+   "trial_id": "a-02"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "quantity_kind"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:e149e5045ec6c45e4f791c52f3aeb8ae2690b41d5b272e3943cc1776f0b61b13"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:d19defc4c539dd86baa94b3d86fdc622df04fbea882020bba3489eca2f299fb6",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:5570613e7ac007fa243a79614b39b1610fa72983f53d36792ebe81ca89c250d6",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:5de337049175905cbbf5848600254d0c0d1ac7ebbbafa5d257bee4b1ef5b394b",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:ca4414219f37d63e32f75a5cf52403532cd231abd44350a354fa1dda4cfde31f",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:e405bd49893204ba0c42f8b78bd58b96b70bfe4fe3a87e5f6c7441b27aff0f38"
+   },
+   "target": {
+    "injected_value": "FAULT-A-03-SYNTHETIC",
+    "locator": "assertion:010",
+    "record_id": "obs:melting-initiation-depth",
+    "slot": "quantity_kind"
+   },
+   "trial_id": "a-03"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "quantity_kind"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:0fc10b0c48c909122ff7c7288457d6442978ffba133daed88e7c801f6ae6e169"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:9a636a0561dcb0b07c8ba333e0e9c98d96235dd61a6936b617b4a6ac0acd8768",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:fdf06e7c5ca5589f00d0c6ae5c3a3ff20aeb45a89dadb8ec15104940b99abb0a",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:db34258ae104b91ba0655cbcfe9a06844421cd4a1c9f1cc66b5c7f633437ddc2",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:fc2a1ec01c9667d30c03401c9e772904bd520290fe9b50033ac6872ceb1d2b5f",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:a603145419d7201ae5dd1612f4eb7820e0b2af044bef37f6e4009d90ae1d91d5"
+   },
+   "target": {
+    "injected_value": "FAULT-A-04-SYNTHETIC",
+    "locator": "assertion:055",
+    "record_id": "obs:occ-depth-range",
+    "slot": "quantity_kind"
+   },
+   "trial_id": "a-04"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "VALUE_NOT_IN_BLOCK",
+   "fault_in_export": {
+    "observed_equals_injected": true,
+    "present": true,
+    "slot": "ratio_value"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:f83462879b3a066769c08929df9a78c5fccf63ee2c18ffbefff50526a3f88b19"
+   },
+   "letter": "a",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:677bcb3b20304aa0c0ec3564e8fad8d6f058a802c7aa7480c62e33b70a14bebd",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:b6c3b59801ea86bb1c5c9329add15dff6c41ca3771abaf509786b39acc379a28",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:65307fadcc9d891f74f35f355d12252f05e9c7666b9b5b53fa1d60c0fe32eef3",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:c28f858d194db08fd8c01b2b9da7f066363f349ab9e98f3e551715bf3c0115cb",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:cf46ccd7e39fd4b4662cc349a2ed83b1ab1e39111b61cde02ce40ac4048e5b12"
+   },
+   "target": {
+    "injected_value": 900005.0,
+    "locator": "assertion:153",
+    "record_id": "ratio:vp-vs",
+    "slot": "ratio_value"
+   },
+   "trial_id": "a-05"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:compilation-covariates names assertion assertion:260 with statement digest sha256:2b2c79b9eb432c6da12cc13aa0f5591735df1e3e4a17085e27dc5a769a159705, and that assertion's statement digests to sha256:43014b487f21555d9b2d5a7bd1cb1d03b71922529422c99f0d09811da0773bab [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:5922eb082fa02f731b1e42ce7960ac17eaef8e9ef32d66fd39d09ba54381ae16",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:8:block:004"
+    ],
+    "from_locator": [
+     "assertion:187"
+    ],
+    "record_id": "claim:compilation-covariates",
+    "to_block": "page:9:block:052",
+    "to_locator": "assertion:260"
+   },
+   "trial_id": "b1-01"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:ntd2-bdb-normal names assertion assertion:022 with statement digest sha256:d2fb89644de0b09497469f235b549b638040cea220983f14cf6c9166efbca53c, and that assertion's statement digests to sha256:2ad32e3d2b7a46ac7c590e7dbaabc0028cfc674a4cc349b95539a7905cb408e4 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:355e4c1eea6c40421d68b1055afd2459b0f2aa153d017e733bacc188fa1f04c9",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:3:block:001"
+    ],
+    "from_locator": [
+     "assertion:077"
+    ],
+    "record_id": "claim:ntd2-bdb-normal",
+    "to_block": "page:1:block:005",
+    "to_locator": "assertion:022"
+   },
+   "trial_id": "b1-02"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record cnt:velest-subdataset names assertion assertion:057 with statement digest sha256:477104469f2a7de5f7d920ad1f219c56c3b2c6968ff345bc4ce0c65b7a183220, and that assertion's statement digests to sha256:b70da5e3add639b7c1d0c00e3062dee8993b881605a99e127c975bdc6bac6075 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:41e8140f74c6d08a3ac4a917b4496e4940f3020991c2b20807216db3bc44b72f",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:6:block:004"
+    ],
+    "from_locator": [
+     "assertion:147"
+    ],
+    "record_id": "cnt:velest-subdataset",
+    "to_block": "page:2:block:005",
+    "to_locator": "assertion:057"
+   },
+   "trial_id": "b1-03"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:co2-saturation-pressure names assertion assertion:196 with statement digest sha256:073d31bb7458c2a29885a2862dcc6044ca3f91708e7449df7b3414b898310915, and that assertion's statement digests to sha256:6670db5e9009c4719f259278142b67b9c8ee0bec502f3341e4cd59a6fe0d9a62 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7d0ae9a96b5dc9f9b507d0bed2f2a72e5d104b7018ee3b4bfab11469a7bdc47b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:5:block:006"
+    ],
+    "from_locator": [
+     "assertion:122"
+    ],
+    "record_id": "obs:co2-saturation-pressure",
+    "to_block": "page:8:block:007",
+    "to_locator": "assertion:196"
+   },
+   "trial_id": "b1-04"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:ntd1-length names assertion assertion:095 with statement digest sha256:f2b152669960fdcebb8ad9269a13780a07925603e9f8a84b203759d481569a76, and that assertion's statement digests to sha256:418a7cf919bcf36709e3acbae82065708935174ed19430f6a51ccfb61813aed2 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "LOCATOR_REPOINTED_STALE_DIGEST",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "b",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:bfe41e6a78e0768d2524e226b9cd4bf5833d18e9705ed7aa077566b2cca483ac",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "from_blocks": [
+     "page:2:block:001"
+    ],
+    "from_locator": [
+     "assertion:033"
+    ],
+    "record_id": "obs:ntd1-length",
+    "to_block": "page:4:block:002",
+    "to_locator": "assertion:095"
+   },
+   "trial_id": "b1-05"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "fault_in_export": {
+    "cited": "assertion:118",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:5825607b78eae51d773a42b61b9234a491288ce875a8b45c6b5b3331e2968fa5"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_EXPOSED",
+   "population_sha256": "sha256:41c553c95116df305c2985359f39c57cf9fd25c7244851653b09bd7c7a92b5ce",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": [
+     {
+      "cited": "assertion:118",
+      "derived_from": "assertion:178",
+      "record_id": "claim:deep-events-not-artifacts"
+     }
+    ]
+   },
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:ba2cc93832daeaff699ae5550c4bf37bf3fb13c76a366b36d9c486d96d47872c",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:c73b2922eb60cb7a1f32c9c40d792727ee5133487ff20506404c7b154240a235",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:5eb9d4cf3f1fe89b2fa40d1457f8bb1fae5a7211263e4029490117e872645445",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:a634f7d5cde447b1f5d02fd5734176d9fd224e17703370bd4e454e14c6c4bd9b"
+   },
+   "target": {
+    "from_blocks": [
+     "page:8:block:001"
+    ],
+    "from_locator": [
+     "assertion:178"
+    ],
+    "record_id": "claim:deep-events-not-artifacts",
+    "to_block": "page:5:block:005",
+    "to_locator": "assertion:118"
+   },
+   "trial_id": "b2-01"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "fault_in_export": {
+    "cited": "assertion:133",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:bbfe4bb50e72c7651fe655aa55a9dab5d04390d38e4b91f6f68d8c2e31cc1bdb"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_EXPOSED",
+   "population_sha256": "sha256:29184c9e672b6881b9e63555683810579ce82175666d608624331ac6e660183b",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": [
+     {
+      "cited": "assertion:133",
+      "derived_from": "assertion:013",
+      "record_id": "claim:melt-lens-defines-bdb"
+     }
+    ]
+   },
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:3706d7f1be642eafa652447ebecc9d1ae2ee21cca06222da40102f707a79d442",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:bd187a56c59905449c87e352eabfe9014e303268b3f109c731ca3d92ccbedc5f",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:df870d984a6c8ad53dec448562ec65abab0384f71bf1c16ac1db742266a4ae40",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:f83de581425cbc7ad0823b3287ddc9633bbad321170dd161e2baf5e9e40ecd8b"
+   },
+   "target": {
+    "from_blocks": [
+     "page:1:block:004"
+    ],
+    "from_locator": [
+     "assertion:013"
+    ],
+    "record_id": "claim:melt-lens-defines-bdb",
+    "to_block": "page:5:block:010",
+    "to_locator": "assertion:133"
+   },
+   "trial_id": "b2-02"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "fault_in_export": {
+    "cited": "assertion:276",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:29731168d0bedd4bd37940304aa8df7208e65f76ebbdff14fb911da618553073"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_EXPOSED",
+   "population_sha256": "sha256:e5815c627cb10c8f964b7094b6b3c4db4a4a376f4f17641c38d70ab64630c9ca",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": [
+     {
+      "cited": "assertion:276",
+      "derived_from": "assertion:104",
+      "record_id": "claim:melt-movement-not-applicable"
+     }
+    ]
+   },
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:6183ed5af23b895a7f360326d83861d651162f3d4d84278e1bf662c44a0a4edb",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:2516f0033ef83b2a8cea19c2dc0a24766cf87722ab3ea9489d525c64fd853a4a",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:b56b885132f8dae7514b4a786226daa2758ec88be0f7429e392ee2e279941872",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:eb0b8180fb9cfe6437e2c1c55f5f25368b2b5eb7fdcfcefcbf826caa3b4e55f4"
+   },
+   "target": {
+    "from_blocks": [
+     "page:5:block:001"
+    ],
+    "from_locator": [
+     "assertion:104"
+    ],
+    "record_id": "claim:melt-movement-not-applicable",
+    "to_block": "page:10:block:014",
+    "to_locator": "assertion:276"
+   },
+   "trial_id": "b2-03"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "fault_in_export": {
+    "cited": "assertion:038",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:2a26dbc8ece2c819fcdc17647f1cdaca2be3937ed7853f7044ce0ac0483f6619"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_EXPOSED",
+   "population_sha256": "sha256:d8bd77fcf26c038d18be60f1f4cfcb4c1e905d9fd5bae55433cfdb3f1c9f568a",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": [
+     {
+      "cited": "assertion:038",
+      "derived_from": "assertion:025",
+      "record_id": "claim:rti-amagmatic"
+     }
+    ]
+   },
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:820f4d1762ccd8591f53117f898cea1db448e3a9ab95cb6aa1bef5e847c3a1f2",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:d00df8fee2276de0625ca303217e326bd20615aa8380157bf1bd58e37aa2859b",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:330b9a8d53503566e0a1dfd170921b56585b4c96a58035330710ef7151843f90",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:608e84f6cbf8ada31745d1d729d209e8e34cc234461dcabaee18390cc5ea369e"
+   },
+   "target": {
+    "from_blocks": [
+     "page:1:block:005"
+    ],
+    "from_locator": [
+     "assertion:025"
+    ],
+    "record_id": "claim:rti-amagmatic",
+    "to_block": "page:2:block:001",
+    "to_locator": "assertion:038"
+   },
+   "trial_id": "b2-04"
+  },
+  {
+   "designed_catcher": "TRACE_DERIVATION",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DIGEST",
+   "fault_in_export": {
+    "cited": "assertion:198",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:14c3d51e224938224567ef29fa8de5aa505616ebf891b43681e60f07434bda84"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_EXPOSED",
+   "population_sha256": "sha256:140ddaa43a01669ffde4c3280b8f2002c2dfc8972acca783fd66f1a92f6a95eb",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": [
+     {
+      "cited": "assertion:198",
+      "derived_from": "assertion:166",
+      "record_id": "obs:criterion-swave-distance"
+     }
+    ]
+   },
+   "predicted_outcome": "ADMITTED_EXPOSED",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:800b67f03cf09c3fd3bff6a97aa9e7f2d660ce15e19adc1857c6c5e62ea2ac06",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:20e328fd236bdc21cc540a4f5218c56f49c18e909fe58d875624fce40db83905",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:b4bba67dc6e9678bc1b6f6e1c07261a96ea4ec035c0111f92e04bd967e431cb6",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:8f34561f6d5208c784f5dd5002e0cb853f747a930bf9a54daca35eee0dcaede2"
+   },
+   "target": {
+    "from_blocks": [
+     "page:7:block:008"
+    ],
+    "from_locator": [
+     "assertion:166"
+    ],
+    "record_id": "obs:criterion-swave-distance",
+    "to_block": "page:8:block:007",
+    "to_locator": "assertion:198"
+   },
+   "trial_id": "b2-05"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:247",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:ee2d3b5067ef1f71f2f0c6f9d1a05430422eb25aab0e0dca1e3e7821e26398a8"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:88436b3a2efdd61d620b184d211ad8f4dbdd285dba8cdb0e34915ca25f688b90",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:580771e9defe7b8222a1ebb205c7c8620c739fa5951e62911d9e98e12ff3a091",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:7ec1bdc5d5111556b3a283f4d07f117d62651fd97523d0aa33f73d46e86ddae2",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:b7f6ddd3f4c37bca4ec5bab22b582ae509c1b3d11e23ea62a6a8839b8aa5230f",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:5625acbc261da8d9487d65b5e1d1e071913a11c0379fda746a59e80856d82e06"
+   },
+   "target": {
+    "from_blocks": [
+     "page:1:block:005"
+    ],
+    "from_locator": [
+     "assertion:023"
+    ],
+    "record_id": "cnt:subsections",
+    "to_block": "page:9:block:039",
+    "to_locator": "assertion:247"
+   },
+   "trial_id": "b4-01"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:078",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:68aaef8ba5a11f08825b6a2e5ca081200e81cad1303367945ba02b5e89f018c1"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:94019f0f05600add10d13d11b049624be46eda626939f66766b998b34811f57e",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:914149d1483e1c3816f779e204a45cf2120b2a82c56f4fc595aeedecfffeb491",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:23470ee0be6553834937055de557c6841ad731c645a30f3b6bae64d28014f8af",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:4a331e24243a64f3b2d85a82d1c832538ab5511d3704281198582c462ddf44a0",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:15f3e550ba235e77ed1da6cfd6ff81a0b09f902e578ac45ec48a94fcb61d6f85"
+   },
+   "target": {
+    "from_blocks": [
+     "page:5:block:006"
+    ],
+    "from_locator": [
+     "assertion:122"
+    ],
+    "record_id": "obs:co2-saturation-temperature",
+    "to_block": "page:3:block:001",
+    "to_locator": "assertion:078"
+   },
+   "trial_id": "b4-02"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:173",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:02296209fca90e0beb4420a4dfc16f2be033ecd5c24234175236f2eb890f428e"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:e93cdfc69f2a203ca54bc5fbf4447b9e587102d4eaedeba974255ade11616cd3",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:6cd7c6b1f1668949863294fb6d3bc0f9219555180d1589e323cd5dc56134aa49",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:b2908d0c851cb075edd7986f32128f484cd785f4bdb9308dd68cef00ae223e99",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:d25840ccdc4aa045408bf021b7f5404d29e31d4c11bfbeaff20815f28671ee70",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:57cf831b768d45b7f234d91dced21a3cc22ab4cbb456eaa47f74279563144fab"
+   },
+   "target": {
+    "from_blocks": [
+     "page:7:block:009"
+    ],
+    "from_locator": [
+     "assertion:169"
+    ],
+    "record_id": "obs:model1-vp",
+    "to_block": "page:7:block:010",
+    "to_locator": "assertion:173"
+   },
+   "trial_id": "b4-03"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:116",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:ae4d474d9a5b9aaba30f91d97a7d8f6ff77c0c1f297ddb802977bbea5d302cc3"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:c840493d04525f037a7cbc280d556c0bfc1792a19444fa7fd0d409fecc066675",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:1e02f9c0b26a4d635436d281d4650a163ed0ae559d52c240fd2b2d60eb61ace4",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:6dd2e9deb8ce44eb670b7d69dd4e666746dbd5a21fce64259ad3032f74f55194",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:dc700c84f6212224c9dc20be22d9d72cac3d92eae9ea04b0b1a53c505555badd",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:235d8ce7be22e9a694e4ad26671aac84417fa0079550bae9a5b55153b8514fba"
+   },
+   "target": {
+    "from_blocks": [
+     "page:7:block:006"
+    ],
+    "from_locator": [
+     "assertion:162"
+    ],
+    "record_id": "obs:relocation-rms",
+    "to_block": "page:5:block:004",
+    "to_locator": "assertion:116"
+   },
+   "trial_id": "b4-04"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "LOCATOR_REPOINTED_COHERENT_DERIVATION",
+   "fault_in_export": {
+    "cited": "assertion:066",
+    "observed_equals_injected": true,
+    "present": true
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:67a54e39f4a1aa9dcb7f3cb0649c722ed45663e0ad99873d311d3a04da670069"
+   },
+   "letter": "b",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:e70c89cdb421313701aa7d5dff7832de400fbfc4ccda81141020ced4e789113e",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:112051fea57d80d2c27696811e513aad796a7460690d0da3bd72363a292716e2",
+    "graph": {
+     "entities": 417,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:c6f892461b472bf32816293e9af162a65f1e7334075991eeccacbe6f6475f3c1",
+    "receipt_equals_frozen": false,
+    "records_traced": 440,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:aee10e251588ee16d9af03efe23f4296ff29d8b617dc986687dea64c8dd3dbc0",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:81c9d21822b587f1e2d21daa4d0366d8c085ae7cc116498ce25ee786f00dd97b"
+   },
+   "target": {
+    "from_blocks": [
+     "page:5:block:004"
+    ],
+    "from_locator": [
+     "assertion:113"
+    ],
+    "record_id": "ratio:co2-ba",
+    "to_block": "page:2:block:006",
+    "to_locator": "assertion:066"
+   },
+   "trial_id": "b4-05"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:acknowledgement-crew names assertion assertion:310 with statement digest sha256:9028437c51a8afab2a73ab159b28d6cc2a09abce7a5c7345978a5cca1cf47874, and that assertion's statement digests to sha256:aaa392c2edc4d563d11fbaf169749e71be347527f15e1d91ca15eb3d6eb9879e [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:85b4300268f588fa9ca6451424fab3bea28b3719e612727490e2ee470baf1ea0",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:9028437c51a8afab2a73ab159b28d6cc2a09abce7a5c7345978a5cca1cf47874",
+    "locator": "assertion:310",
+    "record_id": "claim:acknowledgement-crew"
+   },
+   "trial_id": "c-01"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:fig3-panels names assertion assertion:100 with statement digest sha256:0c5e4502520aa50238870d92c5b5689e1186e1e07d8862b2922cdc8a114d2e75, and that assertion's statement digests to sha256:43c21040be594e213e1330146334e7f0b63513bf2bd1255756897f8118f3c1b6 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:394a5481bde2f2f7b1a06fb1c0ac9d34bfafb53b5f28347414c18cfe6fa2fb23",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:0c5e4502520aa50238870d92c5b5689e1186e1e07d8862b2922cdc8a114d2e75",
+    "locator": "assertion:100",
+    "record_id": "claim:fig3-panels"
+   },
+   "trial_id": "c-02"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record claim:no-active-vents-rc2 names assertion assertion:080 with statement digest sha256:cb2723beff38a3f145e445e5507aee8f9559db5a2dc1bed5f60e0e46e3372b90, and that assertion's statement digests to sha256:13cfb02958660e889c3a714b24e31dfc58311bee58001dff7d78e6d3b9e910c3 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:ed33db33704d7a21a73c21f03269b437ad386db464f40e83f14989f365ca362b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:cb2723beff38a3f145e445e5507aee8f9559db5a2dc1bed5f60e0e46e3372b90",
+    "locator": "assertion:080",
+    "record_id": "claim:no-active-vents-rc2"
+   },
+   "trial_id": "c-03"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:mean-horizontal-uncertainty names assertion assertion:088 with statement digest sha256:6a79ebb08b8159dc68a519b657f330ead6242e6fac9fdb92649538eb86aef05d, and that assertion's statement digests to sha256:18049b64dda0395618d021ffe754ee1500b6ee298bc7d0bf4baeadfeea978e17 [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7eee438a3fd67d85ce8fc2192a9a2180ced0afd079e597c0050fb835176d0e2f",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:6a79ebb08b8159dc68a519b657f330ead6242e6fac9fdb92649538eb86aef05d",
+    "locator": "assertion:088",
+    "record_id": "obs:mean-horizontal-uncertainty"
+   },
+   "trial_id": "c-04"
+  },
+  {
+   "designed_catcher": "DIGEST_BINDING",
+   "diagnostic": {
+    "detail": "document capture derivations are not accepted: record obs:ntd2-depth-range names assertion assertion:055 with statement digest sha256:d0aad917235ff8d59ba2b72a9f967c9975b15235dbbd5cef175328478ce9b159, and that assertion's statement digests to sha256:66e1975e5b79b00f499a9802e28c10f0502b147bcd52ade28b09189f1428d96e [DIGEST_MISMATCH]; a record's assertion_locator names an assertion of this capture, a statement_sha256 comes with the locator that checks it and is the SHA-256 of that assertion's statement bytes, a slot the contract declares evaluative is formalized by at least one assertion whose modality is not HYPOTHESISED, a name of a record's subject, its name or one of its tags, occurs as a word in the statement of an assertion that formalizes that subject, and a record's assertion_modality is the modality of an assertion that formalizes it",
+    "error": "DocumentAssertionRefusal",
+    "reason": "DIGEST_MISMATCH"
+   },
+   "exit_status": 2,
+   "fault_class": "DIGEST_MISMATCH",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "c",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:aa41e17eb98a4628a1a20e52ae7bcdd3806e800a7063a36d6e6eb7730dfa491a",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected_digest": "sha256:d0aad917235ff8d59ba2b72a9f967c9975b15235dbbd5cef175328478ce9b159",
+    "locator": "assertion:055",
+    "record_id": "obs:ntd2-depth-range"
+   },
+   "trial_id": "c-05"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:hash-used-for-focal has absent target_id: fault:d:01:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:d1bfcf5290cef9f644a985c4a28348d30c98cfa0a42d4b8a7987dc959365b793",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:01:absent-endpoint",
+    "record_id": "rel:hash-used-for-focal",
+    "was": "method:first-motion"
+   },
+   "trial_id": "d-01"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:mar-in-atlantic has absent target_id: fault:d:02:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7822505ce97ebb97b77f431ebdd630c76af2516302d9b1db246f62d7bfa9a62f",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:02:absent-endpoint",
+    "record_id": "rel:mar-in-atlantic",
+    "was": "geo:equatorial-atlantic"
+   },
+   "trial_id": "d-02"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:rc1-bounded-detachment has absent target_id: fault:d:03:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:b516d723fb1beba88f0a09b051dfef1d3ffd39a1b1e07919b406fc1c6fa2d1c3",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:03:absent-endpoint",
+    "record_id": "rel:rc1-bounded-detachment",
+    "was": "geo:detachment-east"
+   },
+   "trial_id": "d-03"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:rc2-bounded-faults has absent target_id: fault:d:04:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:bf9a96cca95c20cc91f4460647cde0ffd70bb3c704df301c2b77fc0f8c8b43c1",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:04:absent-endpoint",
+    "record_id": "rel:rc2-bounded-faults",
+    "was": "geo:rc2-bounding-faults"
+   },
+   "trial_id": "d-04"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "relation rel:seisan-used-for-stalta has absent target_id: fault:d:05:absent-endpoint",
+    "error": "PopulationPlanRefusal",
+    "reason": "DANGLING_ENDPOINT"
+   },
+   "exit_status": 2,
+   "fault_class": "DANGLING_ENDPOINT",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "d",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7bbe200cc89b60c0c1f090786b3a05093c8f67c7097adc71160c765ded70c206",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "endpoint": "target_id",
+    "injected": "fault:d:05:absent-endpoint",
+    "record_id": "rel:seisan-used-for-stalta",
+    "was": "method:stalta"
+   },
+   "trial_id": "d-05"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[286] 'claim:focal-not-robust': Unknown entity type: 'FaultInjectedTypeE01'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:f2b84f5047ebd1fd577dc695ba63538a6ad9f79fe044e8ff19c04a449c5a0e01",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE01",
+    "record_id": "claim:focal-not-robust",
+    "was": "Claim"
+   },
+   "trial_id": "et-01"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[77] 'claim:refraction-profile-used': Unknown entity type: 'FaultInjectedTypeE02'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:dc01672085233b408bdb7890500cf5c650a77e009b704327e969f3bf4f224f70",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE02",
+    "record_id": "claim:refraction-profile-used",
+    "was": "Claim"
+   },
+   "trial_id": "et-02"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[118] 'obs:h1-bdb-depth': Unknown entity type: 'FaultInjectedTypeE03'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:9b91c204c4bab58a139538170fc55598eb75cc8216961c14dc64d7277b08129a",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE03",
+    "record_id": "obs:h1-bdb-depth",
+    "was": "GeophysicalObservation"
+   },
+   "trial_id": "et-03"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[186] 'obs:no-eq-below-20km': Unknown entity type: 'FaultInjectedTypeE04'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:1cedc2b35f6b4ec09e64d1f2e938c8ebf4979a627df9991eff9e6700d15d0c09",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE04",
+    "record_id": "obs:no-eq-below-20km",
+    "was": "GeophysicalObservation"
+   },
+   "trial_id": "et-04"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[159] 'obs:offaxis-swarm-depth': Unknown entity type: 'FaultInjectedTypeE05'",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "TYPE_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:f065e1a68826101b5ea84f833b8ed6f4d1825d5281ce6357f86a825755e79a56",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "injected": "FaultInjectedTypeE05",
+    "record_id": "obs:offaxis-swarm-depth",
+    "was": "GeophysicalObservation"
+   },
+   "trial_id": "et-05"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[162] 'claim:degassing-volume-change': Unknown property 'fault_injected_slot_e01' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:f52cf17db348572791ca9d5bf5f3c556b135fd13564480d071eb81f610c035d5"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:8057d6330d7c4a843e767acd65d505fdfb1b63bb1508fc5fb133325dd9f531c3",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:108",
+    "injected": "fault_injected_slot_e01",
+    "record_id": "claim:degassing-volume-change"
+   },
+   "trial_id": "es-01"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[150] 'claim:melt-movement-strain': Unknown property 'fault_injected_slot_e02' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:8ce5fee1617db8cd123cc2f0d1c2ba1a1028ede45c25af5673d39c61e544690f"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:7fbe59365eb25d6210474761a2366d4fc60f69dfa1f3c6b0231589b1268736d2",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:095",
+    "injected": "fault_injected_slot_e02",
+    "record_id": "claim:melt-movement-strain"
+   },
+   "trial_id": "es-02"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[77] 'claim:refraction-profile-used': Unknown property 'fault_injected_slot_e03' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:26a2e929c91305c927b4a88c7b3d0f7bdf6279e614acd679948353733d2b76fa"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:072eb885ecb5a9bc7923807fffe67b129268754ee08678ae8cd1cbc7789eb0eb",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:043",
+    "injected": "fault_injected_slot_e03",
+    "record_id": "claim:refraction-profile-used"
+   },
+   "trial_id": "es-03"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[236] 'claim:vpvs-reasonable': Unknown property 'fault_injected_slot_e04' for Claim",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:ad1dc7ae4faefc6bef031a4020a0cd58fcc4d2b0a30c95b3c7b58a64fd6a0b3d"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:8eb7902515b16380818f7de5a9872a14fc7fafe8a101400783f638e7d5a25953",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:155",
+    "injected": "fault_injected_slot_e04",
+    "record_id": "claim:vpvs-reasonable"
+   },
+   "trial_id": "es-04"
+  },
+  {
+   "designed_catcher": "COMPILER",
+   "diagnostic": {
+    "detail": "Cannot rehydrate graph from records: entities[270] 'obs:forced-depths': Unknown property 'fault_injected_slot_e05' for GeophysicalObservation",
+    "error": "PopulationPlanRefusal",
+    "reason": "RECORDS_NOT_REHYDRATABLE"
+   },
+   "exit_status": 2,
+   "fault_class": "SLOT_OUTSIDE_ONTOLOGY",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:57322fb2575f0e5b3eb90556c3886bb59c4e988a80e5c3b6eb29d452bb474b2a"
+   },
+   "letter": "e",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:a1c30ba734ce29bc2b1be05c2d9cd0989d213d7f02c01f15802dcdd90047c3a6",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "cited_from": "assertion:173",
+    "injected": "fault_injected_slot_e05",
+    "record_id": "obs:forced-depths"
+   },
+   "trial_id": "es-05"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: claim:updated-depth-data",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:15fdb31d988dfde89a81e8674f755ac9d8b7f1bdbc3fd3a9dbfc436e6729f2e2",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "claim:updated-depth-data"
+   },
+   "trial_id": "f-01"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: cnt:forced-depth-subset",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:e19bb71db5c3c7223babb8d61c791aef40035ff12c6f24c8b9d42a347cb3e10e",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "cnt:forced-depth-subset"
+   },
+   "trial_id": "f-02"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: obs:depth-uncertainty-bound",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:1b680d06d0b280d2d5d3edf2e393f21fa68e7d7e9c6b82247618c3ef34bf9d4d",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "obs:depth-uncertainty-bound"
+   },
+   "trial_id": "f-03"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: obs:relocation-rms",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:853821caeab78e468451d2e8d0461464f92fbe20974f5a35c5daab2e719599b9",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "obs:relocation-rms"
+   },
+   "trial_id": "f-04"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "repeated record ID: obs:shallow-eq-rti",
+    "error": "DocumentAssertionRefusal",
+    "reason": "MALFORMED_CAPTURE"
+   },
+   "exit_status": 2,
+   "fault_class": "DUPLICATE_RECORD_ID",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "f",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:289f8817f5e70d584839a56da99b70ef64ed87f8fafd7c454ec4a548e923219e",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "family": "entities",
+    "record_id": "obs:shallow-eq-rti"
+   },
+   "trial_id": "f-05"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:01:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:e711ed7e8f9ea3d3d35beb09d78e00903ef7c53cde33ace6b92b2cee4b574f4b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:01",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-01"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:02:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:0d672251860d4f0d4c3d49e99a0cb09829e4bcf797ce0d38649221256a9d5b93",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:02",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-02"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:03:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:ba60c633da9ae0d501294e7851aa4f886cc18052d1a6804d0f37d2a1853f540b",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:03",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-03"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:04:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:5594c44f8ec5926e8d44cde529c1fdaba219f77d18c8f49a717b3ba86662a807",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:04",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-04"
+  },
+  {
+   "designed_catcher": "ADMISSION_STRUCTURAL_CHECK",
+   "diagnostic": {
+    "detail": "record fields lack derivations: fault:g:with_fields:05:['properties', 'name']; every properties key and both relation endpoints need a derivation, type and id do not",
+    "error": "PopulationPlanRefusal",
+    "reason": "UNDERIVED_FIELD"
+   },
+   "exit_status": 2,
+   "fault_class": "RECORD_WITH_NO_SOURCE_WITH_FIELDS",
+   "ledger": {
+    "admission_events": [],
+    "event_count": 7,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED"
+    ],
+    "opens_the_control_ledger": true,
+    "sha256": "sha256:50b5841c0b72e3abc863232a095bb5a7747e747b4d64257ed154c4dc2f7c1c7a"
+   },
+   "letter": "g",
+   "outcome": "REFUSED",
+   "population_sha256": "sha256:01c8ec20bc3541f1c7c66f011ba2e6c1b24a8e97833ee6b1f5e32f42af3d9315",
+   "predicted_outcome": "REFUSED",
+   "target": {
+    "record_id": "fault:g:with_fields:05",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gw-05"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "fault_in_export": {
+    "present": true,
+    "properties_count": 0,
+    "type": "GeologicFeature"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:93b87f0d2f1fbf19b3db226641d760dc133c7e7750ae549f63431c38d37df884"
+   },
+   "letter": "g",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:c69b4118930799fe4429d3b247b1e368eebb629daf22f4084a009f6ab87ffb98",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:d4a266f45cd799bfa6c6875886d9d09c6c1af24da2a136a565d48789ace70024",
+    "graph": {
+     "entities": 418,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:0e99ba3fc35d207077dfb1b2d06ef366a98adfe1d8d8dfdc8967dcac50e822c8",
+    "receipt_equals_frozen": false,
+    "records_traced": 441,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:166c1899fcda44f3cc7ea4d5203117877cfe241598f874edc2c0a6a5fd66346e",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:5ee399eca02e983936b1e86f361412b0b765876ab2460f126562ce608e9202f0"
+   },
+   "target": {
+    "record_id": "fault:g:no_fields:01",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-01"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "fault_in_export": {
+    "present": true,
+    "properties_count": 0,
+    "type": "GeologicFeature"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:c7b48f1706a99b4638814723da644ecfc11ecc0d2a45c747ca4736faf98eee6e"
+   },
+   "letter": "g",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:e689c5728dc219d5820780bee757ba0e5ebf44010462d1be29876741013beb9b",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:b81af01044bf765e994845c1feafcd4f727d67e9bf78b52644371fb2298cc5b1",
+    "graph": {
+     "entities": 418,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:cc230d00ad8e2a85a69c3e8a5df336790758298f5b063ba8c6c5fad59f5e21b1",
+    "receipt_equals_frozen": false,
+    "records_traced": 441,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:636cc792a83eaf7fb3beb4158444170011d6ee35b0636ab2b5e25877497ba4ab",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:30f9a1e707ad42233a197386915de3b8cafc1d4f3dd6a9281d7e1b0d5f580cf2"
+   },
+   "target": {
+    "record_id": "fault:g:no_fields:02",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-02"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "fault_in_export": {
+    "present": true,
+    "properties_count": 0,
+    "type": "GeologicFeature"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:c81f81feb1b09cf88c7a26d925eca303d25642746cc0be9dab8ad7f29fdf9c68"
+   },
+   "letter": "g",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:d59aa20d152dd967193bd7bab9296a8321bfd62de085decb98aff29760d7ecdd",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:4d41bf274518dc9d278f05bf16d4e113dba0f64d02ff6b8b14a523f6e08754b0",
+    "graph": {
+     "entities": 418,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:c9b12f57d0ad54808c1d9ec7434f62fb22f44d22f3ef996f5cdf45e9a593b50e",
+    "receipt_equals_frozen": false,
+    "records_traced": 441,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:d2e236f089ce56d117dfd9831067bee77d78a31d47e54ce5235491326ddafe99",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:64bd1b11764369c1743616d492924c6905a4b66be00ea3f08efe0ac7a0e309d1"
+   },
+   "target": {
+    "record_id": "fault:g:no_fields:03",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-03"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "fault_in_export": {
+    "present": true,
+    "properties_count": 0,
+    "type": "GeologicFeature"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:403101fd2e680b7abb97fb219239bd240dd03f1513cc87fa0bb55115a82e007a"
+   },
+   "letter": "g",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:5171638357389353b5b0f057b67113ac1e35c5234896348eb119b51cc7cd4538",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:cef63ee626c3e7eaad339794070cd614c5440b805c5fdcbadf103b69d300dd03",
+    "graph": {
+     "entities": 418,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:e8f437f7048ec022775026b6c86f71fdaa20908857b51e2294cd2e45f1ffae81",
+    "receipt_equals_frozen": false,
+    "records_traced": 441,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:55d2b233d9d97e0aa0b744136cf07a32c0577b7d693328d3e77eb709c403e1eb",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:f641adb4f24af2339f7cdeef4ea72e30e9c7f4a001dde28fd89a356e106f9acb"
+   },
+   "target": {
+    "record_id": "fault:g:no_fields:04",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-04"
+  },
+  {
+   "designed_catcher": "NONE_REVIEW_ONLY",
+   "diagnostic": {
+    "detail": "",
+    "error": "",
+    "reason": ""
+   },
+   "exit_status": 0,
+   "fault_class": "RECORD_WITH_NO_SOURCE_NO_FIELDS",
+   "fault_in_export": {
+    "present": true,
+    "properties_count": 0,
+    "type": "GeologicFeature"
+   },
+   "ledger": {
+    "admission_events": [
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "event_count": 14,
+    "event_types": [
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "SOURCE_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "ARTIFACT_REGISTERED",
+     "KNOWLEDGE_CHANGE_SET_RETAINED",
+     "CHANGE_PROPOSED",
+     "CHECK_RECORDED",
+     "VERDICT_RECORDED"
+    ],
+    "opens_the_control_ledger": false,
+    "sha256": "sha256:731812ee99ca0088eef101ddcc6bc712a695628c57b1fca40949789aa9fe3771"
+   },
+   "letter": "g",
+   "outcome": "ADMITTED_INVISIBLE",
+   "population_sha256": "sha256:3ed87f5192ea191bc528a8b1f90f51fe2ab0cebdefd22c9bea5821ee57832730",
+   "post_admission_checks": {
+    "digest_disagreements": [],
+    "locator_disagreements": []
+   },
+   "predicted_outcome": "ADMITTED_INVISIBLE",
+   "run": {
+    "export_equals_frozen": false,
+    "export_records_sha256": "sha256:fa8ecac5d5eba63707f94d381a22aac62ba6f0e037ccd2b87a678401cd7ed89f",
+    "graph": {
+     "entities": 418,
+     "event_participations": 0,
+     "events": 1,
+     "relations": 22,
+     "signals": 0
+    },
+    "ledger_head": "sha256:80ca515ca3e9168f1a5cd935ff325b3770495da52978256606d2d0ad092f71b5",
+    "receipt_equals_frozen": false,
+    "records_traced": 441,
+    "reopen_matches_admitted": {
+     "export_records": true,
+     "receipt": true
+    },
+    "replay_receipt_sha256": "sha256:ed1cd886409eae1f24f092c7e28eec4a0cb6f20f4254e36de584a4c9a20165e0",
+    "status": "ADMITTED_AND_REPLAYED",
+    "trace_summary_sha256": "sha256:c40b61baebc72a5eed7c542eec5bca7c6d45f375cc74f84ee849f9a7c908dd2c"
+   },
+   "target": {
+    "record_id": "fault:g:no_fields:05",
+    "type": "GeologicFeature"
+   },
+   "trial_id": "gn-05"
+  }
+ ]
+}

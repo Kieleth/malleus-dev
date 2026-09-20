@@ -1,0 +1,45 @@
+{
+  "question_id": "CQ-B-C-03",
+  "question": "In the worldwide compilation of the deepest axial events at slowly opening ridges, what maximum depth goes with each site, and at what opening rate?",
+  "required_semantics": [
+    "site_name",
+    "maximum_depth_value",
+    "full_rate_value",
+    "depth_unit"
+  ],
+  "no_answer_in_source": true,
+  "claims": [],
+  "question_responsiveness": "NONE",
+  "responsiveness_rationale": "The answer declares the reading has no answer here and makes no claim, so nothing names a semantic. The running text says the worldwide compilation was assembled and points to a figure and a supplementary table for it, and the per-site depths and rates live only there; the site names are the exception, since the text does name several compiled sites and this answer states none.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "site_name",
+      "row_index": null,
+      "absent_reason": "NOT_CAPTURED",
+      "note": "The methods text names several of the compiled sites, so the reading carries the element, but this answer carries no claim and states none of them."
+    },
+    {
+      "semantic": "maximum_depth_value",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "The reading states no maximum depth for any compiled site; the compiled depths are only in the figure and the supplementary table, which the question file's scope excludes."
+    },
+    {
+      "semantic": "full_rate_value",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "The reading states no opening rate for any compiled site, only the rate of its own study area, which is a different subject."
+    },
+    {
+      "semantic": "depth_unit",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "With no per-site depth stated in the reading, no unit for one is stated either."
+    }
+  ],
+  "source_locators": [
+    "page:8:block:004"
+  ],
+  "rows": []
+}

@@ -1,0 +1,98 @@
+{
+  "schema": "malleus.paper-v4.answer-file-schema/v1",
+  "status": "FROZEN_BEFORE_THE_BASELINE_PRODUCER",
+  "describes": "malleus.paper-v4.in-context-answer-set/v1",
+  "describes_note": "The grammar of the baseline producer's one output. review.py reads the same file under the IN_CONTEXT_ANSWER_SET surface kind of review-protocol-v3.2.json, where a witness is one cited claim keyed by its claim_id; this file is what the producer is held to before any review begins.",
+  "condition": "IN_CONTEXT_BASELINE",
+  "is_not": "This is not a Malleus capture grammar. There is no ontology, no record, no slot, no gap and no ledger here. A claim is a sentence the answer makes and the blocks it rests on, and nothing in this file is admitted anywhere.",
+  "root_keys": [
+    "answers",
+    "condition",
+    "inputs",
+    "producer_model_id",
+    "schema"
+  ],
+  "inputs_keys": [
+    "competency_questions_sha256",
+    "producer_task_sha256",
+    "selected_reading_sha256"
+  ],
+  "answer_keys": [
+    "answer",
+    "claims",
+    "no_answer_in_source",
+    "question_id"
+  ],
+  "claim_keys": [
+    "blocks",
+    "claim_id",
+    "statement"
+  ],
+  "rules": {
+    "question_ids": "Exactly the ids of the frozen competency question file, each once, in that file's order. An unknown id is refused and a missing question is refused.",
+    "answer": "One answer text per question, nonblank. Where the producer finds no answer in the reading it writes that in the answer text and sets no_answer_in_source to true.",
+    "no_answer_in_source": "true or false. A question that declares it carries no claim; a question that does not declare it carries at least one.",
+    "claim_id": "One identifier per claim, unique across the whole file. It is the witness key the reviewer judges, so two claims stating the same fact are two witnesses with no shared identity.",
+    "statement": "One short sentence-level assertion the answer makes, in the producer's own words. It is refused if it shares a sixty-character normalized run with any block of the selected reading.",
+    "blocks": "One or more block ids of the selected reading, each of which must be a block the reading declares. A claim with no cited block is refused."
+  },
+  "verbatim_rule": {
+    "normalization": "WHITESPACE_COLLAPSED",
+    "normalization_note": "\" \".join(text.split()), the normalization every cell's leak ladder uses.",
+    "window": 60,
+    "applies_to": [
+      "answer",
+      "claims[].statement"
+    ],
+    "reason": "The answer file is a public artifact and the selected reading is private, so no part of it may reproduce the reading. Sixty normalized characters is the threshold every frozen cell clears; the baseline clears the same one, which is what lets its answers be published beside the graph cells' row counts.",
+    "consequence": "A producer that quotes the reading writes a file the validator refuses, and the run is re-dispatched with the refusal stated. There is no repair pass that rewrites the producer's words."
+  },
+  "example": {
+    "schema": "malleus.paper-v4.in-context-answer-set/v1",
+    "condition": "IN_CONTEXT_BASELINE",
+    "producer_model_id": "claude-opus-5",
+    "inputs": {
+      "selected_reading_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "competency_questions_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "producer_task_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "answers": [
+      {
+        "question_id": "CQ-EXAMPLE-01",
+        "answer": "Two instruments were deployed, and the reading names the campaign that deployed them.",
+        "no_answer_in_source": false,
+        "claims": [
+          {
+            "claim_id": "CQ-EXAMPLE-01:c1",
+            "statement": "Two instruments were deployed.",
+            "blocks": [
+              "page:1:block:001"
+            ]
+          }
+        ]
+      },
+      {
+        "question_id": "CQ-EXAMPLE-02",
+        "answer": "The reading does not state a shipping carrier.",
+        "no_answer_in_source": true,
+        "claims": []
+      }
+    ],
+    "example_note": "The three digests are placeholders: they are the digests of the reading, the question file and the task the producer was actually given, and they cannot be written before that producer runs. Everything else in this example is executed. paper-v4/experiment-v4/reuse-01-baseline/test_reuse_01_baseline.py builds a reading carrying page:1:block:001 and a question file asking CQ-EXAMPLE-01 and CQ-EXAMPLE-02, substitutes those three digests, and runs this object through validate_answers.py; it reports ACCEPTED, two questions, one claim, and CQ-EXAMPLE-02 as the one NO_ANSWER_IN_SOURCE."
+  },
+  "validator": {
+    "path": "paper-v4/experiment-v4/reuse-01-baseline/validate_answers.py",
+    "entry_point": "validate_answers",
+    "refuses": [
+      "AN_UNKNOWN_QUESTION_ID",
+      "A_MISSING_QUESTION",
+      "A_REPEATED_QUESTION_OR_CLAIM_ID",
+      "A_CLAIM_WITH_NO_CITED_BLOCK",
+      "A_BLOCK_ID_THE_READING_DOES_NOT_DECLARE",
+      "A_CLAIM_OR_ANSWER_SHARING_A_SIXTY_CHARACTER_NORMALIZED_RUN_WITH_THE_READING",
+      "A_NO_ANSWER_IN_SOURCE_QUESTION_THAT_CITES_CLAIMS",
+      "A_QUESTION_WITH_NEITHER_A_CLAIM_NOR_A_NO_ANSWER_DECLARATION"
+    ],
+    "never": "judges whether an answer is right, or whether a cited block supports its claim; that is the reviewer's, under review-protocol-v3.2.json"
+  }
+}

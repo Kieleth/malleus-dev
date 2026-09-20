@@ -1,10 +1,399 @@
 # Malleus paper master plan
 
-Version: 1.5.35
+Version: 1.5.55
 
-Date: 2026-09-08
+Date: 2026-09-17
 
 ## Governing paper session directive
+
+E-0439 (2026-09-17): the document path adopts four content rules (conflict
+with modality, interval sanity, numbers in the cited sentence, formulas in the
+cited sentence), the unit rule dropped, the grammar reading a bare
+plus-or-minus as an interval, GLUED text with ATTACHED numbers, slots selected
+from the ontology's declared ranges. These are research-level rules that bubble
+up to Core after publication (ROADMAP.md E1), with a formula-ontology-KG
+submodule (E2) and a per-slot source relation (E3) as reportable future work.
+Master becomes 1.5.55. Resume at handover/2026-09-16-overlord-claude-resume.md,
+state block E-0439.
+
+E-0437 (2026-09-17): "hardened branch merges now, for sure." The hardened Core
+is on main at d867c3ab; the checkout's Core and the experiment runtime are the
+same bytes. The first half of the Shop reconsideration experiment finished
+PARTIAL with 107 records admitted under both Shop rules (E-0438); the second
+half is being prepared and launches only on Luis's go. Master becomes 1.5.54.
+Resume at handover/2026-09-16-overlord-claude-resume.md, state block E-0438.
+
+E-0436 (2026-09-17): Core is not frozen for its own sake. Luis: "if we need to
+fix something, lets do it and bump Core for the paper, lets not make a big deal
+out of this unless we're in the final stages of proving the paper,
+bulletproofing it." The paper's Core pin moves to the current Core when Core
+changes; cells re-run and re-baseline; the bridge replay is the evidence earlier
+populations reproduce; hard freeze only before submission. The gate imports its
+export in process for every pinned group (fix authorised). The hardened Core
+e7937b89 is now a commit this repository holds (local branch
+codex/progressive-interpretation-guidance); merging it onto main is Luis's
+call. Master becomes 1.5.53. Resume at
+handover/2026-09-16-overlord-claude-resume.md, state block E-0436.
+
+E-0433 (2026-09-17): the first half of the Shop reconsideration experiment is
+launched, 2026-09-17T04:48:13Z, after the launch gate closed: the runner pins
+and verifies its Core, the procedure names the interpreter, the launch step
+verifies every input digest and writes the receipt binding Core e7937b89. The
+rule census (E-0432) is in; Luis picks the document-path rules from its table;
+adoption follows as an admission check with the census as oracle, then the
+55-fault rerun with the rules on. Master becomes 1.5.52. Resume at
+handover/2026-09-16-overlord-claude-resume.md, state block E-0433.
+
+E-0431 (2026-09-17): Luis's go for the first half of the Shop reconsideration
+experiment (a fresh Opus 5 session builds the graph from Table 1 against the
+Shop ontology, mapping withheld, the two Shop rules on, the harness filling the
+plan's binding fields as built). Launch is held only on a preparation fix: the
+launch packet must name the interpreter and the runner must pin and verify its
+Core; then the Overlord launches. The three new cells (bridge-01,
+fault-injection-02, content-rules-doc-01) are registered in the paper gate. A
+new skill, .claude/skills/malleus-paper/SKILL.md, carries the paper directives
+Luis repeats: the paper is a moving front of the project's progress; results
+enter the paper by his decision; explicit names, no codenames. Master becomes
+1.5.51. Resume at handover/2026-09-16-overlord-claude-resume.md, state block
+E-0431.
+
+E-0430 (2026-09-17): rulings since 1.5.49, all Luis's, in force. The bridge
+replay admits all seven frozen populations on e7937b89 with domain artifacts
+byte-identical, receipts moving by the producer digest only; the 55-fault
+rerun goes from 35 refused to 45 (E-0429); no bridge ruling was needed. The
+document-path content rules failed gate 1 (E-0426, E-0428) and the RCA of
+E-0430 governs how rules are chosen from now on: a rule's acceptance criterion
+is "every refusal explained, rule defects at zero", with zero refusals required
+only on dimensions the review protocol verified; rules are proposed only with a
+read-only census over every honest population on both consumers; the per-slot
+source relation (copied, tallied, authored) is a Core requirement; the
+suspected citation slips in run-23 are learning, not paper narrative. The
+learnings are in .claude/skills/malleus-dev/SKILL.md "Choose an adopter rule".
+Step C's rule 1 is dropped in its naive form; gate 2 is skipped; the Shop
+stage-A rules stand (zero refusals at C1). A rule census runs read-only; Luis
+picks document-path rules from its table. Stage A still waits on Luis's
+explicit go. Master becomes 1.5.50. Resume at
+handover/2026-09-16-overlord-claude-resume.md, state block E-0430.
+
+E-0425 (2026-09-17): rulings since 1.5.48, all Luis's, in force. Option B
+hardening of current Malleus (E-0412), implemented in the isolated Core
+candidate to e7937b89 with two sealed governance entries; the citation rule
+scoped to the source-assertion profile after its first structurally different
+consumer refused it (E-0420, E-0421). S1 re-baselined on the pin (E-0410). Run
+D: two fresh producer sessions, one per stage; a fresh Opus 5 assessor, then
+author ratification (E-0417); stage A runs with the Shop rule layer installed
+(E-0425); stage A does not launch until the bridge replay and the document-path
+false-positive count are in and ruled on, and then only on an explicit go. The
+five later graph-result reviews are ratified by the author in full (E-0413).
+Master becomes 1.5.49. Resume at handover/2026-09-16-overlord-claude-resume.md,
+state block E-0425.
+
+E-0405 (2026-09-16): Claude Code holds the Overlord role. Luis's scope ruling
+of E-0400 governs: paper one reports the Shop and the PDF only, and it is not
+written until a model-in-the-loop reconsideration result exists, because "this
+is core to malleus, if we write the paper without this, we have very little to
+show." Rulings A to E of E-0405 are the authorised sequence, each with a strict
+exit gate; a failed gate stops the sequence and returns to Luis in chat, it
+does not get worked around.
+
+A. Experiment runtime pinned at Core 25f94cbf (review-coverage checker), by
+export, not merge. B. Reattribution modelled as a slot first; Core change only
+on a failing concrete case; held until D's Shop gate. C. Three content rules as
+an adopter PolicyProgram with a Prolog check: Shop path first, false positive is
+a STOP; then the document path under c95dba7b and the twenty admitted faults of
+fault-injection-01 rerun. D. Shop stage-B model run behind a preparation gate D0
+that freezes packets, obligations and exposure checks before any model call;
+the model run needs its own explicit go; the order-B correction case follows
+only if the payment-context case passes; the PDF stage (the CC BY preprint as
+earlier state, the published text as later evidence, E-0404) follows only after
+the Shop stage passes. E. Section 3 and Appendix B on the connected story and a
+fault-injection subsection after 4.5 are bound into the manuscript now and
+nothing else is written.
+
+Not authorised: merging any branch into main, model runs without a D0 gate
+report, submission, commits, robotics or beyond-context sections. Every agent
+reads the malleus-dev skill first and works RED before GREEN. Master becomes
+1.5.48. Resume at handover/2026-09-16-overlord-claude-resume.md.
+
+E-0399 (2026-09-15): Luis's authorized Overlord relay resumes paper-owned
+contextual interpretation work. Prepare the smallest adoption/repair specification
+and concrete regression cases for the mixed scientific/metadata and bibliography
+records. Identify exact existing versions, evidence boundaries, reader checks and
+meanings that must survive. Coordinate with KGs' GE-1 comparison instead of
+duplicating its research. This authorizes preparation, not new ontology/population,
+semantic judgments, model runs, live-runtime selection, historical rebind,
+manuscript changes, commits or publication. Master becomes 1.5.47.
+
+The specification is in the existing RELATIONSHIP-REPAIR-RESULTS.md. Six new
+characterization checks bind the proposed subjects and expose the difference
+between exact record preservation and preservation of meaning inside a replacement.
+Metadata representation and the bibliography's continuing identity remain author
+choices. The optional Core review checker is available; its separate read-only
+adoption route is proposed, not installed or applied. KGs has not selected its
+estimate representation. Frozen paper artifacts remain unchanged. Resume at E-0399
+in the September 15 handover; no new model or accepted amendment is authorized.
+
+E-0397 (2026-09-15): Luis approves one fresh Sol representation-design pass
+over E-0396's three mixed-content cases. Use gpt-5.6-sol with the previous
+explicit ultra setting and no inherited conversation. Supply the exact selected
+reading, accepted ontology/imports, current records and their retained captures,
+frozen guidance and the bounded task. No questions, scores or earlier assessments.
+The output identifies coherent meanings, necessary evidence/context, existing
+records to reuse, proposed category definitions and exact schema/history needs.
+This is a guided design exercise, not fresh acquisition, population or acceptance.
+One design-only submission; no additional model/reviewer, semantic retry, runtime
+change, Core/skill action, rebind, graph amendment, regrading, manuscript rewrite,
+commit, push or publication. Definitions and changes remain proposals for author
+selection. Master becomes 1.5.46. Current handover is September 15.
+
+E-0398 outcome: the one Sol design submission is complete and preserved. The
+parent verified exact delivery, cited locators/records and the source-backed
+distinction between a western-flank thickness estimate and its axial application.
+The existing repair report records the design plus unresolved choices: preserving
+graph-accessible metadata, explicit classification/modality meanings, and whether
+the bibliography record remains a citation assertion or requires withdrawal.
+The designer's proposed new history operation is conditional on the selected
+identity model, not a proved current-Core dependency. No proposal is accepted for
+population. The focused suite passes 221 tests; accepted evidence/results remain
+unchanged. No designer/reviewer is running. Next is an author-selected minimal
+correction boundary, not a new full capture. Master remains 1.5.46.
+
+E-0395 (2026-09-14): Luis rejects the blanket exclusion of figures and tables
+and approves the evidence / meaning / classification separation. Figures,
+captions, legends and tables are legitimate document evidence. Incomplete
+extraction or unavailable visual/table structure is a capture/evidence gap,
+not permission to declare those sources out of scope or absent from the article.
+Use only exact retained, locatable evidence for any claimed interpretation;
+inclusion does not establish that the current text reading captures it all.
+
+1. Evidence: retain original blocks and other source artifacts unchanged.
+2. Meaning: represent coherent propositions or metadata separately, using
+   surrounding context when necessary. One proposition may need several blocks;
+   one block may support several propositions. Preserve their evidence links.
+3. Classification: define what each category asserts about the content it
+   qualifies. Do not use a copied block or legal enum label as semantic proof.
+
+Apply this ruling to active instructions and future preparation, with a guard
+against silently reusing the excluded-figure/table condition. Preserve frozen
+questions, reading bytes, ontologies, graphs and assessments. Their historical
+scope is not rewritten or presented as this author's intent. A successor
+measurement must declare the corrected evidence scope and apply the same rules
+to both sides of a comparison; no automatic regrading or new total follows.
+Prepare the next modelling step around these three responsibilities, not wider
+labels that make mixed blocks pass. No evaluator-authored population, new model
+launch, image/table extraction claim, Core/skill edit, manuscript rewrite,
+commit or publication action is implied. Master becomes 1.5.45.
+
+E-0396 outcome: the existing repair report now contains the bounded representation
+proposal for interrupted scientific text, mixed caption content and bibliography.
+Synthetic checks confirm many-to-many evidence/record links, description-only
+source attestation without structural fact changes, and the frozen path's refusal
+of cross-type replacement and one-to-many supersession. These are capability
+checks, not article population or a semantic repair. Proposed category meanings
+and the next model-design scope remain for author selection. Existing evidence
+and judgments are unchanged; no model/Core action or rebind occurred. Master
+stays 1.5.45. Resume at E-0396 in the September 14 handover.
+
+E-0393 (2026-09-14): Luis approves RCA/resolution of the completed repair's
+assessment disagreement before another capture, and asks which lessons belong
+in Core or its skill. Inspect the exact source, ontology/imports, returned
+fields, both reviews and their assembly procedures. Resolve factual conflicts
+under existing rules; retain genuinely undecided interpretations explicitly,
+without selecting a new rule on the author's behalf. Correct the result account
+and add paper-local regression checks for demonstrated procedural failures.
+Preserve all frozen inputs, captures, graphs, judgments and recorded totals.
+No new model, population repair, protocol revision, Core edit/rebind, skill edit,
+manuscript rewrite, commit or publication action. Classify upstream lessons
+against the current skill before proposing a bounded Core-owned change.
+Master advances to 1.5.44 at this author decision.
+
+E-0394 outcome: the RCA identifies missing ontology/import source delivery,
+one blanket text-match support branch covering all 111 positive regrades, and
+incorrect absence explanations for already returned prose. The uncertainty
+repair adds typed, final-catalogue-scoped representation, not the first returned
+2.1 km value. Six credits citing new records do not establish six newly available
+elements. next_run.py now checks future graph-review semantic source closure;
+206 focused tests pass, frozen artifacts and judgments remain unchanged.
+Figure-text eligibility and undefined claim-function semantics still require
+an explicit author ruling before adjudication or another comparative run.
+The existing repair report contains the factual case audit and three proposed
+generic skill lessons. No Core runtime defect or skill change is claimed.
+Master remains 1.5.44; current resume is the E-0394 section of the September 14
+handover. No new model or manuscript action is authorized by this outcome.
+
+E-0385 (2026-09-14): Luis says "continue" to the explicit approval question
+for the two proposed ontology additions. Add PORE_PRESSURE_INCREASE to
+EarthScienceEventType and optional HypothesisClaim.proposed_trigger with range
+EarthScienceProcess. Preserve the original ontology and use the public additive
+contract-revision path on a copy of the accepted history. This resolves E-0384's
+representation choice, not the source interpretation of any replacement record.
+Continue E-0383's bounded TDD, Sol proposal, independent source review and
+unchanged-query comparison. No other ontology change or measurement change is
+authorized. Master advances to 1.5.43 at this author decision.
+
+E-0383 (2026-09-14): Luis approves the ten-step bounded amendment proposal.
+Use contextual condition b, attempt 3, of relationship-contrast-01 as the base.
+Scope: the bounded-feature relation, the proposed earthquake-trigger mechanism,
+and the missing final location-uncertainty observation. Freeze/reproduce the
+baseline, establish source meaning, and check representability before generation.
+An exact required ontology change is an author decision before generation, not
+implicit permission to change the ontology, Core or measurement instrument.
+Then use TDD for permitted changes and preservation; one fresh Sol proposer,
+at most two structural correction returns and one semantic correction round;
+independent source review before accepting the whole batch; append to a copy of
+the existing history; replay; unchanged thirty queries and review rules; report
+meaning gains, losses and unresolved items. Preserve all attempts and unaffected
+records. No evaluator-authored replacement facts, cherry-picked passing subset,
+new broad capture, Core edit/rebind, general graph cleanup, manuscript rewrite,
+commit, push or submission. A fresh transfer run requires a later decision.
+
+Atomic deliverables, in order: (1) reproduced baseline, (2) three source-to-record
+diagnoses, (3) representation decision for each, (4) RED scope/preservation tests,
+(5) GREEN repair path, (6) model amendment with per-problem disposition, (7) source
+review decision, (8) accepted continuation and replay/preservation evidence,
+(9) unchanged-query before/after assessment, (10) transfer recommendation.
+Record outcomes in the existing ledger and one repair report; do not create a
+document or governance layer per step. Master becomes 1.5.42 at this approval.
+
+E-0384 outcome: baseline graph/receipt and a new execution of all thirty queries
+and traces reproduce byte-for-byte. Three source diagnoses are documented in
+experiment-v4/RELATIONSHIP-REPAIR-RESULTS.md. Bounding and uncertainty fit the
+current ontology. The causal case can remain a qualified proposition, or use
+the proposed two-declaration extension to identify its hypothesised physical
+trigger explicitly. That representation choice is with the author; no extension,
+scope harness, proposer or repair has been applied. Do not silently equate a
+prose-level correction with a process-level causal representation. Master stays
+1.5.42; this is an outcome, not a new author decision.
+
+E-0379 (2026-09-14): Luis, through the Overlord coordination task, approves
+finishing the existing two-condition Sol comparison. Validate retained proposals,
+return only the previously bounded structural diagnostics to their same sessions,
+admit valid changes, reopen/replay, execute the frozen queries and perform
+source-grounded model-assisted assessment. Compare earlier Sol only under
+explicitly labelled, defensible reading/evaluation conditions. Inspect losses,
+direction, attribution and qualification, not just relation counts. Preserve all
+attempts. No extra capture, evaluator-authored repair, Core edit/rebind, commit,
+push or manuscript rewrite. Record a Codex preliminary assessor as the deviation
+the frozen review protocol requires; never silently label it Claude or human.
+The old question file remains frozen; defective controls are not comparative
+evidence. This supersedes the prior status-only pause, not the experiment inputs.
+
+E-0376 (2026-09-14): Luis selects Sol for both prepared conditions and asks to
+compare new results with earlier Sol captures. Execute one fresh gpt-5.6-sol
+producer per condition, retaining the earlier successful fresh run's explicit
+ultra setting in both. Each keeps its own session through ontology and population.
+The selected relationship paragraph is the only scientific instruction difference.
+Exact input delivery, task and feedback limits are common. Historical results
+remain condition-labelled references, not substitutes for the new control.
+No hidden extra sampling, Core edit, manuscript rewrite, commit, ref move or
+upload. Master becomes 1.5.40. Current resume:
+handover/2026-09-14-paper-session-handover.md.
+
+E-0375 (2026-09-13): Luis says Ok after the controlled relationship-guidance
+comparison was recommended. Prepare that contrast using Core's existing
+correction, preserving historical evidence and holding every other input fixed.
+experiment-v4/RELATIONSHIP-CONTRAST.md records the bounded design and verified
+input difference. Each future producer must create its own ontology and
+population from a fresh session. Model/launch route is still an explicit open
+choice, Opus through Fable or Sol for both new conditions. No model substitution,
+launch, Core edit, shared-ref change, commit or upload follows from preparation.
+Master becomes 1.5.39 at this decision; the prior completed cut remains below.
+
+E-0362 (2026-09-13): Luis approves the repair-and-reconcile cut proposed after
+the handover audit. Current continuation: handover/2026-09-13-paper-session-handover.md.
+Include reuse-01 as a bounded, model-assisted result with
+both producer-only and producer-plus-review accounting. Exclude its defective
+absence controls from comparative conclusions. Do not claim a measured
+break-even point, a precision advantage across unlike witness units, or a
+cross-session learning benefit. Preserve frozen question files, producer inputs,
+captures, graphs and review judgements. Repair future preparation checks and
+record the deferred chronology. No new producer/reviewer run, Core change,
+shared-ref change, commit or upload is authorized by this cut. Commit remains
+an author decision. Master becomes 1.5.38 at this author decision only.
+
+The baseline is a favourable fresh-context calibration reference. Its 101 of
+102 is the observed result, not a statistically estimated or theoretical upper
+bound. The prior ceiling wording is narrowed accordingly. Total session tokens
+minus document length do not isolate reasoning; the proposed budget curve
+requires actual usage definitions/breakdowns before execution. Long-context
+citations motivate future work on their own models and tasks, not an unmeasured
+Malleus benefit. The four foundational questions remain ontology usefulness,
+population faithfulness, accepted-history reconstruction, and retrieval plus
+composition. More graph relations or a passing check do not substitute for a
+source-backed evidence-to-claim link.
+
+Current preparation checks: evaluation-v4/control_screen.py requires complete,
+source-bound element assessments; audit_controls.py derives historical findings
+without new semantic judgement. experiment-v4/next_run.py is the future baseline
+preparer and model/input/witness-count check. Old per-cell scripts remain
+historical reproducibility artifacts, not future launch templates. This is not
+a new review protocol version or a claim of automatic semantic verification.
+
+E-0372 records completion of this cut: 3,007 active paper tests plus two subtests
+pass; the fifteen-page candidate passes build, transcription and visual checks.
+No new model run, human ratification, Core change, commit or submission occurred.
+E-0373 narrows one reporting claim after checking all exported graphs: run-26
+contains two SUPPORTS links, though not the links missing from the two evaluated
+arguments. The former test checked only run-25. The manuscript and regression
+now distinguish selective omission from no use anywhere. The proposed next
+stages are in answer-demonstration/EVIDENCE-CONNECTION-PLAN.md. No new model
+execution or Core rebind follows from that plan. This evidence correction does
+not change the author-selected master version.
+E-0374's read-only source-to-record audit is in
+answer-demonstration/EVIDENCE-CONNECTION-RCA.md. Status derivations retain some
+argument evidence without a typed argument edge. Run-26's old skill restricted
+contextual relationships; Core already corrected it at 723a4f92. A future
+comparison must select that input deliberately, not conflate the frozen old
+condition with current adoption. No model launch or rebind is authorized here.
+The dated directives below preserve prior decisions and are read in light of
+E-0375's current preparation scope and earlier outcomes, not separate launch authority.
+
+E-pending (2026-09-12): the resume point for this front is
+`handover/2026-09-12-paper-session-handover.md`; read it before changing any
+experiment. The manuscript is a results paper at fourteen pages reporting seven
+producer conditions, the Small Shop calibration, an independent Fable judge on a
+sampled 222 witnesses, and an in-context baseline. Protocol v3.2 is frozen with
+a sixth absence code, per-surface stage identities, a third evidence surface and
+a normative thirteen-entry checklist; run-26 is its required graph cell under
+the standing rule in AGENTS.md.
+
+Luis's framing ruling of 2026-09-12 governs how results are presented: Malleus
+does not compete for single-document accuracy against a fresh context window,
+and the paper must not pretend otherwise. What it offers is permanent semantic
+memory across sessions whose connecting tissue grows with use. The single PDF is
+a calibration establishing the ceiling and our distance from it. The
+cross-session benefit is not yet claimable because it is unmeasured; the
+degradation argument is carried by four citations already vetted in
+`paper/paper.md:379-384`, not by a new experiment. The baseline's 101 of 102 is
+a ceiling under ideal conditions (one pass, whole document, questions visible)
+and must be reported as such.
+
+Four items are authorized and unbuilt, in order: a validator refusing a question
+set whose control semantics are answerable from the reading (the control has
+been built wrong twice, E-0346 and set B); the limits and framing rewrite; the
+thinking-budget curve at several document sizes; and, only after a recon pass
+establishes current open-source state of the art, a retrieval comparison. A
+corpus exceeding the context window is a successor paper, not a section.
+
+Undecided and blocking nothing else: how to report the reuse experiment, whose
+amortization answer splits (zero producer tokens marginally, 1.40 times more
+including review, and coverage falling from 92 to 88 on a second question set,
+which makes coverage a property of graph-and-questions rather than of the graph).
+E-0361 is taken by the robotics front; paper entries start at E-0362 and none is
+written. Nothing is committed. Master becomes 1.5.37.
+
+E-pending (2026-09-11): Luis directs the manuscript to be rewritten around the
+latest results, not the development history ("here are the results of how it
+works, check them out yourself"). The rewrite reports the five cells of the
+record condition and the three Small Shop fixtures; robotics stays out until
+its A4 stage lands. An external review of the rewrite was received the same
+day; Luis rules: execute its text-only fixes (items 2, 6, 7, 8, 9, 11, the
+demotion in 3) and queue the rest. The queue, in dependency order, is in
+handover/2026-09-11-paper-results-rewrite.md under "Todo after the external
+review": run-22 rebind under v4.13; protocol v3.2 with a NOT_CAPTURED absence
+code (needs a ruling); the in-context baseline; an optional fixed-ontology
+control; the human ratification sample last; the word budget against D4.
+Master becomes 1.5.36.
 
 E-0337: the requested prevention guidance is delivered by Core at 59277bc4,
 tree c7bb7cb64ac3f902a1bd8b41c2e357b3d9d2fdb7. Paper verified both skill digests,
@@ -1321,6 +1710,28 @@ Submit only when:
 - the manuscript is internally consistent and approximately 3,500 words.
 
 ## Plan changelog
+
+- 1.5.41, 2026-09-14: Complete the existing paired Sol experiment through
+  structural execution and source-grounded assessment. No new capture or rebind.
+  E-0379.
+
+- 1.5.40, 2026-09-14: Sol selected for both fresh relationship-guidance
+  conditions. Same-session ontology/population, explicit ultra effort, no
+  fallback. Previous Sol results remain separate comparison conditions. E-0376.
+
+- 1.5.39, 2026-09-13: Approved preparation of the controlled relationship-
+  guidance contrast. Verified exactly one replaced skill paragraph; model and
+  launch route remain open. No execution or Core change. E-0375.
+
+- 1.5.37, 2026-09-12: Seven conditions reported; protocol v3.2 with the
+  checklist and its required graph cell run-26; the independent judge; the
+  in-context baseline and Luis's reframe of the contribution; the reuse
+  experiment complete and its report undecided. Resume point
+  handover/2026-09-12-paper-session-handover.md.
+
+- 1.5.36, 2026-09-11: Results rewrite of the manuscript on Luis's instruction;
+  external review received; text-only fixes executed; five measurement items
+  and the word-budget ruling queued in the handover of the same date.
 
 - 1.5.35, 2026-09-08: Author requests skill-level prevention of inventory-only
   completion and incompatible repair restrictions. Added immediate paper reload

@@ -1,0 +1,74 @@
+{
+  "question_id": "CQ-B-C-04",
+  "question": "Which expedition gathered the seismic recordings the study rests on, when did it run, and how many recording units were placed on the seafloor?",
+  "required_semantics": [
+    "cruise_name",
+    "deployment_year",
+    "instrument_count"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-C-04:c1",
+      "blocks": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-C-04:c2",
+      "blocks": [
+        "page:6:block:002",
+        "page:2:block:002"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-C-04:c3",
+      "blocks": [
+        "page:2:block:002",
+        "page:6:block:002"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every required element names a supported claim: the expedition, the year and the count of recording units each have their own claim resting on a block that carries it.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "cruise_name",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "deployment_year",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "instrument_count",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:2:block:002",
+    "page:6:block:002"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-C-04:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-C-04:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-C-04:c3"
+    }
+  ]
+}

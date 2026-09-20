@@ -1,0 +1,100 @@
+{
+  "question_id": "CQ-B-T3-04",
+  "question": "What range of CO2 content do the authors give for the primary melts of the segment with the deep axial events and for its southern neighbour, in what unit, by way of which proxy element, and are those figures measured or worked out?",
+  "required_semantics": [
+    "concentration_range",
+    "concentration_unit",
+    "segment_label",
+    "proxy_element",
+    "calculation_status"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T3-04:c1",
+      "blocks": [
+        "page:5:block:005",
+        "page:1:block:001"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-04:c2",
+      "blocks": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-04:c3",
+      "blocks": [
+        "page:5:block:004",
+        "page:8:block:007"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T3-04:c4",
+      "blocks": [
+        "page:5:block:005",
+        "page:8:block:007"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The opening claim carries the range, its unit and the segment it belongs to; the proxy elements and the calculated status have a claim each.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "concentration_range",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "concentration_unit",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "segment_label",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "proxy_element",
+      "row_index": 2,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "calculation_status",
+      "row_index": 3,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:5:block:005",
+    "page:1:block:001",
+    "page:5:block:004",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T3-04:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T3-04:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T3-04:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T3-04:c4"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "question_id": "CQ-B-T5-05",
+  "question": "Compare the trace-element enrichment of the samples from the segment with the deep events, and the CO2 contents worked out from them, with the equivalent figures for the segment to the south.",
+  "required_semantics": [
+    "trace_element_threshold",
+    "concentration_range",
+    "segment_label",
+    "comparison_segment_label"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T5-05:c1",
+      "blocks": [
+        "page:5:block:004"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-05:c2",
+      "blocks": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-05:c3",
+      "blocks": [
+        "page:8:block:007"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-05:c4",
+      "blocks": [
+        "page:5:block:005",
+        "page:8:block:007"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The first claim carries the two element thresholds, the segment they belong to and the segment they are set against; the concentration range comes from the second. The fourth claim, which puts an order of magnitude on the gap, is PARTIAL and names nothing, but no element depends on it.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "trace_element_threshold",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "concentration_range",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "segment_label",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "comparison_segment_label",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:5:block:004",
+    "page:5:block:005",
+    "page:8:block:007"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T5-05:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T5-05:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T5-05:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T5-05:c4"
+    }
+  ]
+}

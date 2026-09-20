@@ -1,0 +1,38 @@
+{
+  "schema": "malleus.paper-v4.relationship-measurement/v1",
+  "status": "METHOD_SELECTED_BEFORE_NEW_ONTOLOGIES",
+  "producer_condition": "gpt-5.6-sol/ultra, fresh same-session ontology and population",
+  "core": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+  "reader": {
+    "path": "paper-v4/experiment-v4/run-26/native_query.py",
+    "sha256": "2d8befd7b37fad2bea9e30586f9a418270a07e9668ca6806bd58ff8f865bf869"
+  },
+  "binding_expander": {
+    "path": "paper-v4/experiment-v4/run-26/bind_from_surface.py",
+    "sha256": "a6e863203c6b4238078907ab5b523d9816690a641cd76d04030d5b47fa8144ac"
+  },
+  "ontology_compiler": {
+    "path": "paper-v4/experiment-v4/run-26/compile_ontology_candidate.py",
+    "sha256": "de23d9d3b853309b2cd4d91ed94bbaeb4792ff69a63bb1687218d46e1d7d4928"
+  },
+  "public_execution_reference": {
+    "path": "paper-v4/experiment-v4/run-26/run.py",
+    "sha256": "bca8eafee558dfc4648017dd5ac6ebf9681daf394235bccb0b8a0c485d38f8bd",
+    "note": "Reuse execution with an explicitly identified new run label, never relabel a historical result. No historical preparation template."
+  },
+  "questions": {
+    "path": "paper-v4/experiment-v4/competency-questions-v3.json",
+    "sha256": "76d501cdb91741ede6ab51e36f1a567d59009f0b3ecf970cf7b19adf97c7490d"
+  },
+  "review_protocol": {
+    "path": "paper-v4/evaluation-v4/review-protocol-v3.2.json",
+    "sha256": "5dfd59f4aa479dd72738e2eb55653ee3e84e60886de4cccbcc0a8e66d06e55cd"
+  },
+  "binding_rule": "Evaluator selects type sets from accepted ontology and questions before population exists; unchanged expander and reader. No answer values or record IDs.",
+  "historical_comparison": "Condition-labelled source-backed content comparison. Historical totals are unchanged and not comparable across different readers or review rules without a new derived assessment.",
+  "limits": [
+    "Two single captures are a pilot, not a reliable improvement rate.",
+    "Review remains model-assisted pending human ratification.",
+    "More relations and successful replay do not establish source truth or complete coverage."
+  ]
+}

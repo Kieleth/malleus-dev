@@ -1,0 +1,97 @@
+{
+  "question_id": "CQ-B-T2-02",
+  "question": "Which bodies funded which author or which element of the project, under what grant references, and who paid for the time at sea?",
+  "required_semantics": [
+    "funder_name",
+    "grant_identifier",
+    "funded_party",
+    "ship_time_funder"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T2-02:c1",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-02:c2",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-02:c3",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-02:c4",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-02:c5",
+      "blocks": [
+        "page:10:block:044"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The first claim carries funder, grant references and the funded person together; the ship time has its own claim.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "funder_name",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "grant_identifier",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "funded_party",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "ship_time_funder",
+      "row_index": 4,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:10:block:044"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T2-02:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T2-02:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T2-02:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T2-02:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-B-T2-02:c5"
+    }
+  ]
+}

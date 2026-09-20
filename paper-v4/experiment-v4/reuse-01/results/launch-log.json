@@ -1,0 +1,127 @@
+{
+  "schema": "malleus.paper-v4.reuse-01-launch-log/v1",
+  "run_id": "reuse-01",
+  "condition": "SECOND_QUESTION_SET_AGAINST_AN_ACCEPTED_GRAPH",
+  "dispatched_at_source": "This session read `date -u` immediately before each Agent tool call and recorded the value. The harness transcript is not readable from inside this session, so the figure is the clock at the call site, not a line lifted out of the transcript; it is accurate to the second or two the call took to issue.",
+  "launches": [
+    {
+      "ordinal": 1,
+      "role": "QUESTION_SET_AUTHOR",
+      "launched_at": "2026-09-12T06:23:54Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_id": "claude-opus-5",
+      "declared_inputs": [
+        "private/paper-v4-text-layer/selected-reading.json"
+      ],
+      "blind_to": [
+        "EVERY_ONTOLOGY",
+        "EVERY_GRAPH",
+        "EVERY_CAPTURE",
+        "EVERY_EXISTING_QUESTION_FILE",
+        "EVERY_REVIEW_RECORD",
+        "THE_REPOSITORY"
+      ],
+      "instruction_beyond_the_reading": "the structure of the file to write, restated in the prompt: thirty questions, five tiers of five positives with three to five required semantics each and about 102 in all, three unanswerable controls, two paraphrase controls, the CQ-B- id prefix, lowercase snake_case semantic names, the sixty-character paraphrase rule and the exclusion of figures and tables from scope. The existing question file was never shown.",
+      "reasoning_effort": "harness default, not pinned or observed",
+      "output": "private/paper-v4-reuse-01/author/questions-set-b.draft.json",
+      "outcome": "30 questions written; the parent verified the shape independently before freezing (30 unique ids in the specified order, five per tier, 102 required semantics over the 25 positives and 121 over all 30, every semantics list three to five lowercase snake_case names, positives carrying no expected_outcome, both paraphrases carrying their named question's semantics in order, leak ladder 0 against the reading)",
+      "usage": {
+        "author_total_tokens": 106882,
+        "tool_uses": 7,
+        "duration_ms": 258781,
+        "source": "the Claude Code Agent tool's usage report for the authoring session; one session, not split into input, output or cache tokens",
+        "note": "harness-reported; reasoning effort was the harness default"
+      }
+    }
+  ],
+  "type_sets": {
+    "stage": "COMPLETE",
+    "authored_by": "THE_PARENT_SESSION_BY_HAND",
+    "authored_at": "2026-09-12T06:31Z",
+    "inputs": [
+      "paper-v4/experiment-v4/run-23/ontology-run/population-surface.json",
+      "paper-v4/experiment-v4/run-23/ontology-run/validated-contract.json",
+      "paper-v4/experiment-v4/competency-questions-set-b.json"
+    ],
+    "cost_in_tool_calls": 5,
+    "cost_note": "One call printed the surface's record types, families, subject slots and subtype closure; two read the ledger entries E-0342 and E-0343 for the rule; one wrote the thirty sets; one ran the closure check. No token figure carries this cost and RESULTS.md states it as its own line.",
+    "closure": "ACCEPTED",
+    "note": "private/paper-v4-reuse-01/query-type-sets.note.json"
+  },
+  "binding": {
+    "stage": "COMPLETE",
+    "bound_at": "2026-09-12T06:33Z",
+    "by": "paper-v4/experiment-v4/run-23/bind_from_surface.py, unedited",
+    "core_pin": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "replay_receipt": "sha256:a3abceec58dc93692cbdeabf9a95c03551177ba97d9ee4225fe29198f37f1eec",
+    "cases": 11912,
+    "cases_by_kind": {
+      "ENTITY": 104,
+      "ENTITY_NO_SUBJECT": 125,
+      "RELATION": 7596,
+      "SUBJECT": 962,
+      "SUBJECT_ANY": 3125
+    },
+    "cases_sha256": "sha256:b57a84386fa7a86d7fa154680fb7e8f35db28874b77d41a53d28c28460f97eb0"
+  },
+  "query": {
+    "stage": "COMPLETE",
+    "started_at": "2026-09-12T06:33:49Z",
+    "ended_at": "2026-09-12T06:35:29Z",
+    "by": "paper-v4/experiment-v4/run-23/native_query.py, unedited",
+    "core_pin": "c95dba7b86bb61487bda9a52458e1ea47cce20ab",
+    "ledger": "private/paper-v4-v4-run-23/ledger/history.jsonl",
+    "ledger_sha256_before": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+    "ledger_sha256_after": "sha256:d5ef64c0ca6558967aa664705aa9661d3aec399d73c94aa7a5286ea6a991a908",
+    "rows_total": 7433,
+    "distinct_witnesses": 429,
+    "records_traced": 429,
+    "forbidden_attempts": {
+      "embedding_import": 0,
+      "file_read": 0,
+      "network": 0
+    }
+  },
+  "review": {
+    "stage": "COMPLETE",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_id": "claude-opus-5",
+    "evaluator_kind": "CLAUDE_PRELIMINARY",
+    "actor_id": "actor:claude-preliminary-reuse-01",
+    "task": "paper-v4/evaluation-v4/reuse-01/review-task.md",
+    "protocol": "paper-v4/evaluation-v4/review-protocol-v3.2.json",
+    "manifest_sha256": "sha256:64e23c8ed8a85cb7517a40b8771f09e67ba17b555dbfe1fb0ad9d693726d7c8f",
+    "record_sha256": "sha256:13558349e320e267c9e4881fcbabd037dce3776dba11f4b44f1f81dfdcdd6adf",
+    "sessions": 1,
+    "dispatched_at": "2026-09-12T06:40:22Z",
+    "completed_at": "2026-09-12T07:01:49Z",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "instruction_beyond_task": [
+      "the subject-tie clarification is in the instantiated task itself, quoted with its digest, rather than handed separately as it was to run-22, run-23, run-24 and baseline-01",
+      "the prohibition on reading the expected_outcome fields, and on opening the competency question file at all, since every review block already carries its question's text and required semantics",
+      "the prohibition on opening the in-context half of this experiment, which ran in parallel on the same questions",
+      "the rows are written by script and are not the reviewer's to edit",
+      "the whole paper gate is waived, because another agent's cell is in flight; the record is validated on its own"
+    ],
+    "outcome": "PRELIMINARY_COMPLETE, validated under v3.2 on the first run of the assembled record, no refusal; 421 of 429 witnesses SUPPORTED, 8 PARTIAL, 0 UNSUPPORTED, 0 NOT_EVALUABLE; 96 of 121 required elements named a row, absences NOT_IN_SOURCE 8, NOT_CAPTURED 7, WITHHELD_STATEMENT 6, NOT_MODELLED 2, UNREACHED_RECORD 2, LOCATOR_NOT_RESOLVABLE 0; questions COVERED 15, PARTIAL 15, NONE 0; assembly UNLINKED_ROWS 20, ONE_ROW 7, LINKED_ROWS 3; controls 2 of 5 matched; none of the eleven checklist entries failed",
+    "reviewer_judgement_calls": [
+      "The eight PARTIAL witnesses are of two causes the reviewer names. Six are block-boundary artefacts of the text layer: the sentence the record rests on starts or ends in a neighbouring block the witness does not cite (obs:depth-uncertainty-bound, claim:occ-exhumed-mantle, claim:acknowledgement-discussions, claim:fixed-depth-rms-worse, claim:max-depth-not-following-relationship, claim:volatiles-reduce-solidus). Two record an estimation proxy the cited block does not name (gchem:rc2-co2-primary-calc, gchem:rc3-co2-primary-calc). None of the eight is named by a coverage entry, so none moves a question label.",
+      "Checklist entry 10, the control outcomes, was settled entirely by the validator; the reviewer did not read the question file or the findings list."
+    ],
+    "checklist": "paper-v4/evaluation-v4/reuse-01/review-checklist.md",
+    "controls": {
+      "matched": 2,
+      "of": 5,
+      "finding": "The two paraphrase controls matched their named questions. The three unanswerable controls read PARTIAL against an expected NONE, and each for one reason: one required semantic of each is an element the reading does state about the control's own subject. CQ-B-C-01's instrument_count is the count of the very instruments the question asks about; CQ-B-C-02's magnitude_scale is the formula the paper states; CQ-B-C-03's site_name is named. The other three semantics of each control are NOT_IN_SOURCE on the graph, so no row asserts a sampling rate, a maximum magnitude or a per-site depth and nothing here is a fabrication finding. This is the defect Luis fixed in set A at E-0346 by dropping the in-text semantic from CQ-C-03, reappearing in set B because the authoring session was asked for questions the reading cannot answer and wrote three whose answer it cannot give but one of whose required elements it states.",
+      "why_the_two_surfaces_differ": "The answer grammar carries a per-question no_answer_in_source declaration; the producer set it on all three controls, which zeroes the claims, so every coverage entry must take an absence code and the derived label is NONE by construction. A graph has no per-question declaration. It returns the rows its type set reaches, and a row that carries the element for the question's own subject names it under the subject-tie rule. The control comparison across the two surfaces is therefore not like-for-like and RESULTS.md reports it as a confound, not as a score."
+    },
+    "usage": {
+      "reviewer_total_tokens": 459121,
+      "tool_uses": 64,
+      "duration_ms": 1319605,
+      "source": "the Claude Code Agent tool's usage report for the review session"
+    }
+  }
+}

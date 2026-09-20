@@ -1,0 +1,625 @@
+id: https://malleus.dev/schema/projects/ridge-seismicity
+name: ridge_seismicity
+version: 0.1.0
+title: Ridge Seismicity and Melt Volatiles Project Ontology
+description: >-
+  Project vocabulary for a document population over a marine geoscience reading
+  that reports ocean-bottom seismometer microseismicity beneath a slow-spreading
+  mid-ocean ridge, the tectonic and volcanic setting of the ridge subsections,
+  the volatile content of the melts beneath them, and the candidate mechanisms
+  the source weighs for the earthquake depths it observes.
+
+  Quantities, counts, ratios, attributed claims, methods, instruments,
+  campaigns, samples and sources come from the metrology, chronology and
+  research packs and are reused unchanged wherever the pack type already says
+  what the reading says. This document adds only what those packs cannot
+  express: named geological features and the structural relations between them,
+  named geological materials and the melt stages the source distinguishes,
+  seismic occurrents, the digital artifacts the source names, the agents it
+  credits and the non-contribution links between them, the datum a depth is
+  measured from, and the bibliographic fields of a cited work.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  ridge: https://malleus.dev/schema/projects/ridge-seismicity/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+enums:
+
+  GeologicFeatureKind:
+    description: >-
+      Kind of named geological or geographical feature. The list covers the
+      kinds this reading names and grows by adding values, never by redefining
+      one. Leaving it unset is the honest value when the source names a feature
+      without saying what kind of feature it is.
+    permissible_values:
+      MID_OCEAN_RIDGE:
+      RIDGE_SEGMENT:
+      RIDGE_AXIS:
+        description: The axial line of a ridge segment, as distinct from the segment.
+      RIDGE_FLANK:
+      NON_TRANSFORM_DISCONTINUITY:
+        description: An offset of the ridge axis that is not a transform fault.
+      TRANSFORM_FAULT:
+      TRANSFORM_VALLEY:
+      FRACTURE_ZONE:
+      RIDGE_TRANSFORM_INTERSECTION:
+        description: The place where a ridge axis meets a transform fault.
+      OCEANIC_CORE_COMPLEX:
+        description: Exhumed lower crust or mantle exposed by a detachment fault.
+      DETACHMENT_FAULT:
+      NORMAL_FAULT:
+      FAULT:
+        description: A fault whose kind the source does not further specify.
+      SHEAR_ZONE:
+      AXIAL_VALLEY:
+      NEOVOLCANIC_RIDGE:
+      VOLCANO:
+      VOLCANIC_CONE:
+      SEAMOUNT:
+      MASSIF:
+      TRANSVERSE_RIDGE:
+      SUSPENDED_VALLEY:
+      HYDROTHERMAL_VENT_FIELD:
+      HYDROTHERMAL_MOUND:
+      MELT_LENS:
+      MAGMA_RESERVOIR:
+      OCEAN_BASIN:
+      ISLAND:
+      PENINSULA:
+      TECTONIC_PLATE:
+      LITHOSPHERIC_LAYER:
+        description: A layer of the solid Earth, such as crust, mantle or lithosphere.
+      STRUCTURAL_INTERFACE:
+        description: >-
+          A surface separating two layers or rheological regimes, such as a
+          Moho, a brittle-ductile boundary, or a lithosphere-asthenosphere
+          boundary.
+      ISOTHERM:
+        description: A surface of constant temperature the source names.
+      SEAFLOOR:
+      STUDY_AREA:
+        description: A spatial extent the source delimits for its own study.
+
+  GeologicMaterialKind:
+    description: >-
+      Kind of geological material or substance the source names. The list grows
+      by adding values, never by redefining one.
+    permissible_values:
+      MELT:
+      MAGMA:
+      VOLCANIC_ROCK:
+      MANTLE_ROCK:
+      METAMORPHIC_ROCK:
+      SEDIMENT:
+      MINERAL:
+      MELT_INCLUSION:
+      GAS_PHASE:
+      CHEMICAL_SPECIES:
+        description: A compound the source names as a constituent, such as a volatile species.
+      TRACE_ELEMENT:
+
+  MeltStage:
+    description: >-
+      The stage in a melt's history that the source assigns to it. Unset is the
+      honest value when the source names a melt without placing it in one.
+    permissible_values:
+      PRIMARY:
+        description: Melt the source places in equilibrium with its mantle source.
+      PRE_ERUPTIVE:
+        description: >-
+          Melt the source places after fractional crystallisation and before
+          eruption.
+      PRIMITIVE:
+        description: >-
+          Melt the source calls primitive. Kept distinct from PRIMARY because
+          the source uses both words and never equates them.
+
+  DepthReference:
+    description: >-
+      The datum a reported depth is measured from. Unset is the honest value
+      when the source states a depth without naming its datum.
+    permissible_values:
+      SEA_FLOOR:
+      SEA_LEVEL:
+
+  SeismicEventType:
+    description: Kind of seismic occurrent the source reports.
+    permissible_values:
+      EARTHQUAKE:
+      SUBEVENT:
+        description: An occurrent the source reports as part of a larger earthquake.
+      EARTHQUAKE_SWARM:
+
+  AgentKind:
+    description: Whether a credited agent is a person or an organisation.
+    permissible_values:
+      PERSON:
+      ORGANIZATION:
+
+  ClaimKind:
+    description: >-
+      Project refinement of what a source is doing with an attributed claim.
+      It records the claim's role in the source's own argument and never
+      Malleus's acceptance of it.
+    permissible_values:
+      BACKGROUND:
+        description: Knowledge the source restates as already established elsewhere.
+      HYPOTHESIS:
+        description: A candidate explanation the source raises.
+      INTERPRETATION:
+        description: What the source concludes from observations it reports.
+      LIMITATION:
+        description: A caveat the source states about its own result.
+      IMPLICATION:
+        description: What the source says its result means for something beyond it.
+
+  GeologicRelationType:
+    description: >-
+      Structural, spatial and material predicates between named geological
+      records. Each value fixes a direction from source_id to target_id.
+    permissible_values:
+      PART_OF:
+        description: The source record is a part of the target record.
+      LOCATED_IN:
+        description: The source record lies in or on the target record.
+      ADJACENT_TO:
+        description: The source record lies beside the target record.
+      BOUNDED_BY:
+        description: The target record bounds the source record.
+      OFFSET_BY:
+        description: The target record offsets the source record.
+      UNDERLIES:
+        description: The source record lies beneath the target record.
+      OVERLIES:
+        description: The source record lies above the target record.
+      CUT_BY:
+        description: The target record cuts the source record.
+      DERIVED_FROM:
+        description: The source material comes from the target record.
+      CONSISTS_OF:
+        description: The source record is made of the target material.
+
+  AgentRelationType:
+    description: >-
+      Links between a credited agent and something other than a contribution.
+      Each value fixes a direction from source_id to target_id. A credited
+      contribution is a ContributionRelation and is not restated here.
+    permissible_values:
+      AFFILIATED_WITH:
+        description: The source agent is affiliated with the target organisation.
+      ACKNOWLEDGED_IN:
+        description: The source agent is acknowledged in the target work.
+      CORRESPONDING_AUTHOR_OF:
+        description: Correspondence for the target work is addressed to the source agent.
+
+classes:
+
+  GeologicFeature:
+    is_a: Entity
+    description: >-
+      A geological or geographical feature the source names and refers to. The
+      feature carries identity, the kind of feature it is, and the orientations
+      the source states for it. Quantities about it, such as length, depth,
+      thickness, age or spreading rate, are Observation records whose subject
+      is this record; they are not slots here.
+    slots:
+      - feature_kind
+      - orientation_as_stated
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Submarine geology and geomorphology
+          taxonomy: DDC 551.46
+          vocabularies:
+            - vocabulary: OGC GeoSPARQL geospatial vocabulary
+              vocabulary_url: http://www.opengis.net/ont/geosparql#
+              borrowed_terms:
+                - Feature
+                - SpatialObject
+          invented_terms:
+            - GeologicFeature
+            - GeologicFeatureKind
+          invention_search: >-
+            GeoSPARQL supplies the general notion of a spatially located feature
+            and is borrowed for it. It does not classify features
+            geologically. The geoscience interchange standards that do,
+            GeoSciML of the IUGS Commission for the Management and Application
+            of Geoscience Information and the SWEET ontology, are known by name
+            but could not be checked for current term spellings or a current
+            URL from the declared inputs, and this session has no network, so
+            citing either would be a URL this producer cannot vouch for. The
+            class name and the kind enum are therefore recorded as local.
+
+  GeologicMaterial:
+    is_a: Entity
+    description: >-
+      A rock, melt, mineral, gas phase or chemical constituent the source names.
+      Concentrations, contents and ratios reported for it are Observation or
+      Ratio records whose subject is this record.
+    slots:
+      - material_kind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Petrology
+          taxonomy: DDC 552
+          none_found: true
+          search: >-
+            The declared inputs were read for a material vocabulary. The
+            metrology pack names kinds of quantity and not kinds of matter, the
+            chronology pack is temporal, and the research pack's Sample is the
+            thing analysed rather than what it is made of; SOSA/SSN, cited by
+            that pack, has FeatureOfInterest and Sample and no material
+            taxonomy. Outside the inputs, the IUGS Subcommission classification
+            of igneous rocks and the CGI lithology vocabularies are known by
+            name but could not be checked for term spellings or a current URL
+            from the declared inputs, and this session has no network, so no
+            vocabulary here can be vouched for. The class, its kind enum and the
+            melt-stage vocabulary are recorded as local.
+          invented_terms:
+            - GeologicMaterial
+            - GeologicMaterialKind
+            - Melt
+            - MeltStage
+
+  Melt:
+    is_a: GeologicMaterial
+    description: >-
+      A melt the source names, carrying the stage the source assigns to it.
+      Kept as its own class because the source's argument turns on which stage
+      a reported concentration belongs to.
+    slots:
+      - melt_stage
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+      - SourceAsserted
+    description: >-
+      One seismic occurrent the source identifies individually, with the
+      quantity it reports for it, such as a magnitude. A population of events
+      the source counts or whose depths it reports as a range is not this class:
+      that is a CountObservation or a DepthObservation whose subject is the
+      place the population lies beneath.
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology
+          taxonomy: DDC 551.22
+          vocabularies:
+            - vocabulary: QuakeML, the standard exchange format for seismological data
+              vocabulary_url: https://quakeml.org/
+              borrowed_terms:
+                - Event
+                - Origin
+                - Magnitude
+          invented_terms:
+            - SeismicEventType
+          invention_search: >-
+            QuakeML's Event, its Origin and its Magnitude are borrowed and carry
+            its meanings: an event, the hypocentre and time of that event, and a
+            reported magnitude. QuakeML also carries a controlled event-type
+            list, but its exact value spellings could not be checked from the
+            declared inputs and this session has no network, so the three local
+            values are recorded as local rather than cited against spellings
+            this producer cannot vouch for.
+
+  DigitalResource:
+    is_a: Entity
+    description: >-
+      A digital artifact the source names and, where it gives one, a route to
+      it: a dataset, a software package, or a numerical model.
+    slots:
+      - locator
+      - doi
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Data and software
+          taxonomy: DDC 005
+          vocabularies:
+            - vocabulary: DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - Dataset
+                - Software
+                - identifier
+          invented_terms:
+            - DigitalResource
+            - NumericalModel
+          invention_search: >-
+            DCMI names a dataset, a software program and an identifier, and
+            those are borrowed. It does not name a parameterised numerical
+            model, and neither does SOSA/SSN, whose Procedure is a workflow or
+            algorithm rather than the parameterisation a procedure runs on.
+            CodeMeta and the DataCite metadata schema are known by name but
+            could not be checked for term spellings or a current URL from the
+            declared inputs, and this session has no network. The common parent
+            and the model class are recorded as local.
+
+  Dataset:
+    is_a: DigitalResource
+    description: A body of data the source names, deposits, or draws samples from.
+
+  SoftwarePackage:
+    is_a: DigitalResource
+    description: A named software package the source used, with the version it states.
+    slots:
+      - software_version
+
+  NumericalModel:
+    is_a: DigitalResource
+    description: >-
+      A parameterised numerical model the source constructs or takes from
+      elsewhere, such as a one-dimensional velocity model or a thermal model.
+      What the model says is an Observation whose subject is this record, or a
+      claim; it is not a slot here.
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person or organisation the source names as bearing a part in the work:
+      an author, an affiliation, a funder, a crew, or someone it thanks.
+    slots:
+      - contact_email
+    slot_usage:
+      agent_type:
+        range: AgentKind
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+          invented_terms: []
+
+  ReportedClaim:
+    is_a: Claim
+    description: >-
+      An attributed claim carrying the role it plays in the source's own
+      argument. The disposition of a hypothesis is inherited from the research
+      pack's Evaluative mixin and is captured from the sentence that disposes of
+      the hypothesis.
+    slot_usage:
+      claim_kind:
+        range: ClaimKind
+
+  DepthObservation:
+    is_a: Observation
+    description: >-
+      An observation of a depth, carrying the datum the depth is measured from.
+      Kept as its own class because the reading states depths below the sea
+      floor and depths below sea level and the distinction changes the number's
+      meaning.
+    slots:
+      - depth_reference
+
+  CountObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      An observation whose reported value is an integer count and the scope
+      counted, such as a number of located earthquakes or of deployed
+      instruments.
+
+  ReportedRatio:
+    is_a: Ratio
+    description: >-
+      A ratio the source reports as a ratio, with both kinds kept explicit and
+      the route back to the assertion that states it.
+    mixins:
+      - SourceAsserted
+
+  BibliographicSource:
+    is_a: Source
+    description: >-
+      A work the source cites or the work itself, with the bibliographic fields
+      the reading states for it. The creators are carried as the source writes
+      them; they are not resolved to ResearchAgent records unless the reading
+      itself credits a part in the work.
+    slots:
+      - doi
+      - publication_year
+      - container_title
+      - bibliographic_volume
+      - bibliographic_pages
+      - creators_as_stated
+      - received_date_as_stated
+      - accepted_date_as_stated
+
+  GeologicRelation:
+    is_a: Relation
+    description: >-
+      A structural, spatial or material relation between two named geological
+      records, as the source states it.
+    slots:
+      - spatial_qualifier_as_stated
+    slot_usage:
+      relation_type:
+        range: GeologicRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Structural geology
+          taxonomy: DDC 551.8
+          vocabularies:
+            - vocabulary: OGC GeoSPARQL geospatial vocabulary
+              vocabulary_url: http://www.opengis.net/ont/geosparql#
+              borrowed_terms:
+                - sfWithin
+                - sfContains
+                - sfTouches
+          invented_terms:
+            - GeologicRelation
+            - GeologicRelationType
+          invention_search: >-
+            GeoSPARQL's simple-feature predicates carry containment and contact
+            and are borrowed for PART_OF, LOCATED_IN and ADJACENT_TO. They are
+            topological only: they do not say that one structure bounds,
+            offsets, underlies or cuts another, or that one material comes from
+            another, which is what the rest of this list says. GeoSciML and
+            SWEET are known by name but could not be checked for term spellings
+            or a current URL from the declared inputs, and this session has no
+            network. The relation class and its predicate list are recorded as
+            local.
+
+  AgentRelation:
+    is_a: Relation
+    description: >-
+      A link between a credited agent and something other than a contribution,
+      such as an affiliation or an acknowledgement. A credited contribution is a
+      ContributionRelation from the research pack and is not restated here.
+    slot_usage:
+      relation_type:
+        range: AgentRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Research and experimental development
+          taxonomy: DDC 001.4
+          vocabularies:
+            - vocabulary: W3C PROV-O, The PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - actedOnBehalfOf
+                - wasAttributedTo
+          invented_terms:
+            - AgentRelation
+            - AgentRelationType
+          invention_search: >-
+            PROV-O's delegation and attribution are the nearest accepted terms
+            and are borrowed for the shape of an agent-to-thing link. Neither
+            names an institutional affiliation, an acknowledgement, or the
+            agent correspondence is addressed to. CRediT, cited by the research
+            pack, names contribution roles and no other link. FOAF is known by
+            name but could not be checked for term spellings or a current URL
+            from the declared inputs, and this session has no network. The
+            relation class and its predicate list are recorded as local.
+
+  FundingRelation:
+    is_a: ContributionRelation
+    description: >-
+      Funding credited to a funder for a work or a campaign, carrying the award
+      identifier the source states. It is a ContributionRelation because the
+      source credits a part in the work, and CRediT names that part.
+    slots:
+      - award_identifier
+
+slots:
+
+  feature_kind:
+    range: GeologicFeatureKind
+    description: Kind of geological or geographical feature.
+
+  orientation_as_stated:
+    range: string
+    multivalued: true
+    description: >-
+      Orientation, strike or trend of the feature exactly as the source writes
+      it, such as a compass bearing. Retained unconverted: reading a bearing
+      notation as a number is a normalization and would need its own evidence.
+
+  material_kind:
+    range: GeologicMaterialKind
+    description: Kind of geological material or substance.
+
+  melt_stage:
+    range: MeltStage
+    description: Stage in a melt's history that the source assigns to it.
+
+  depth_reference:
+    range: DepthReference
+    description: >-
+      Datum the reported depth is measured from. Unset when the source states a
+      depth without naming its datum.
+
+  doi:
+    range: string
+    description: Digital Object Identifier the source states for the work or resource.
+
+  publication_year:
+    range: integer
+    description: Year of publication the source states.
+
+  container_title:
+    range: string
+    description: >-
+      Journal, book or series the cited work appeared in, as the source writes
+      it.
+
+  bibliographic_volume:
+    range: string
+    description: Volume designation of the cited work, as the source writes it.
+
+  bibliographic_pages:
+    range: string
+    description: >-
+      Page range or article number of the cited work, as the source writes it.
+
+  creators_as_stated:
+    range: string
+    multivalued: true
+    description: >-
+      Creators of the cited work as the source writes them, one entry per name
+      the citation gives. They are strings and not identities: nothing here
+      resolves a person.
+
+  received_date_as_stated:
+    range: string
+    description: Date of receipt as the source writes it, retained unconverted.
+
+  accepted_date_as_stated:
+    range: string
+    description: Date of acceptance as the source writes it, retained unconverted.
+
+  software_version:
+    range: string
+    description: Version of the software package as the source states it.
+
+  contact_email:
+    range: string
+    description: Contact address the source publishes for this agent.
+
+  award_identifier:
+    range: string
+    description: Grant, award or agreement number the source states for this funding.
+
+  spatial_qualifier_as_stated:
+    range: string
+    description: >-
+      The source's own wording for where or how the relation holds, such as a
+      side or a direction, retained unconverted. It qualifies the statement and
+      never replaces the predicate.

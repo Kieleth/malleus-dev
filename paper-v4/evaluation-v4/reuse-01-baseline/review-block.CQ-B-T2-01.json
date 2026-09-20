@@ -1,0 +1,108 @@
+{
+  "question_id": "CQ-B-T2-01",
+  "question": "Which parts of the work does each named author take credit for, and who oversaw the collection and the handling of the seismic recordings?",
+  "required_semantics": [
+    "author_name",
+    "contribution_role",
+    "supervision_relation",
+    "project_design_credit"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T2-01:c1",
+      "blocks": [
+        "page:10:block:045"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-01:c2",
+      "blocks": [
+        "page:10:block:045"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-01:c3",
+      "blocks": [
+        "page:10:block:045"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-01:c4",
+      "blocks": [
+        "page:10:block:045"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-01:c5",
+      "blocks": [
+        "page:10:block:045"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T2-01:c6",
+      "blocks": [
+        "page:10:block:046"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The first claim carries an author and the tasks credited to them, the second the supervision, and the fifth the project design, which rests on a sentence running across the block boundary.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "author_name",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "contribution_role",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "supervision_relation",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "project_design_credit",
+      "row_index": 4,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:10:block:045",
+    "page:10:block:046"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T2-01:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T2-01:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T2-01:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T2-01:c4"
+    },
+    {
+      "row_index": 4,
+      "witness_key": "CQ-B-T2-01:c5"
+    },
+    {
+      "row_index": 5,
+      "witness_key": "CQ-B-T2-01:c6"
+    }
+  ]
+}

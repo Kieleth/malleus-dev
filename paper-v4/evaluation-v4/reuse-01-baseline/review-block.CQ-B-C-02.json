@@ -1,0 +1,45 @@
+{
+  "question_id": "CQ-B-C-02",
+  "question": "What was the largest local magnitude among the events recorded during the deployment?",
+  "required_semantics": [
+    "maximum_magnitude_value",
+    "magnitude_scale",
+    "event_identification",
+    "recording_period"
+  ],
+  "no_answer_in_source": true,
+  "claims": [],
+  "question_responsiveness": "NONE",
+  "responsiveness_rationale": "The answer declares the reading has no answer here and makes no claim, so nothing names a semantic. The largest magnitude and any identification of such an event are absent from the reading; the magnitude scale and the recording period are in the reading and are simply not stated by this answer.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "maximum_magnitude_value",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "The reading gives the magnitude formula, the completeness magnitude and b values, but never the largest magnitude recorded during the deployment."
+    },
+    {
+      "semantic": "magnitude_scale",
+      "row_index": null,
+      "absent_reason": "NOT_CAPTURED",
+      "note": "The reading names the local magnitude scale used, but this answer carries no claim, so no claim of this question states it."
+    },
+    {
+      "semantic": "event_identification",
+      "row_index": null,
+      "absent_reason": "NOT_IN_SOURCE",
+      "note": "The reading identifies no individual event of the deployment as the largest one."
+    },
+    {
+      "semantic": "recording_period",
+      "row_index": null,
+      "absent_reason": "NOT_CAPTURED",
+      "note": "The reading states the recording period, but this answer carries no claim, so no claim of this question states it."
+    }
+  ],
+  "source_locators": [
+    "page:8:block:002"
+  ],
+  "rows": []
+}

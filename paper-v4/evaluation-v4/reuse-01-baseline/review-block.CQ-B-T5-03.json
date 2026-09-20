@@ -1,0 +1,91 @@
+{
+  "question_id": "CQ-B-T5-03",
+  "question": "Weigh the CO2 content estimated here for the segment with the deep events against the largest value previously reported for melt at any spreading ridge, and name where that earlier figure came from.",
+  "required_semantics": [
+    "concentration_range",
+    "prior_maximum_value",
+    "prior_maximum_location",
+    "concentration_unit"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-B-T5-03:c1",
+      "blocks": [
+        "page:5:block:005"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-03:c2",
+      "blocks": [
+        "page:5:block:009"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-03:c3",
+      "blocks": [
+        "page:5:block:009",
+        "page:10:block:004"
+      ]
+    },
+    {
+      "claim_id": "CQ-B-T5-03:c4",
+      "blocks": [
+        "page:5:block:005",
+        "page:5:block:009"
+      ]
+    }
+  ],
+  "question_responsiveness": "COVERED",
+  "responsiveness_rationale": "Every element names a supported claim. The new range and its unit come from the first claim, the previous maximum and the ridge it was reported at from the second.",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "concentration_range",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "prior_maximum_value",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "prior_maximum_location",
+      "row_index": 1,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "concentration_unit",
+      "row_index": 0,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [
+    "page:5:block:005",
+    "page:5:block:009",
+    "page:10:block:004"
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-B-T5-03:c1"
+    },
+    {
+      "row_index": 1,
+      "witness_key": "CQ-B-T5-03:c2"
+    },
+    {
+      "row_index": 2,
+      "witness_key": "CQ-B-T5-03:c3"
+    },
+    {
+      "row_index": 3,
+      "witness_key": "CQ-B-T5-03:c4"
+    }
+  ]
+}

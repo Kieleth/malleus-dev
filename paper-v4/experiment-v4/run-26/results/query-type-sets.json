@@ -1,0 +1,284 @@
+{
+  "CQ-T1-01": [
+    "Campaign",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T1-02": [
+    "Campaign",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T1-03": [
+    "BibliographicSource",
+    "Instant",
+    "Claim",
+    "ReportedClaim"
+  ],
+  "CQ-T1-04": [
+    "Dataset",
+    "Claim",
+    "ReportedClaim"
+  ],
+  "CQ-T1-05": [
+    "Campaign",
+    "Interval",
+    "QuantityValue",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T2-01": [
+    "GeologicFeature",
+    "GeologicRelation",
+    "Claim",
+    "ReportedClaim"
+  ],
+  "CQ-T2-02": [
+    "SoftwarePackage",
+    "Method",
+    "NumericalModel",
+    "Claim",
+    "ReportedClaim",
+    "Dataset",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T2-03": [
+    "GeologicFeature",
+    "GeologicRelation",
+    "Claim",
+    "ReportedClaim",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T2-04": [
+    "BibliographicSource",
+    "QuantityValue",
+    "GeologicFeature",
+    "ResearchRelation",
+    "ContributionRelation",
+    "FundingRelation",
+    "Claim",
+    "ReportedClaim",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T2-05": [
+    "ResearchAgent",
+    "ResearchRelation",
+    "ContributionRelation",
+    "FundingRelation",
+    "AgentRelation"
+  ],
+  "CQ-T3-01": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "SeismicEvent",
+    "GeologicFeature"
+  ],
+  "CQ-T3-02": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "Sample",
+    "Melt",
+    "GeologicFeature",
+    "ReportedRatio"
+  ],
+  "CQ-T3-03": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "Sample",
+    "Melt",
+    "GeologicFeature",
+    "ReportedRatio"
+  ],
+  "CQ-T3-04": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "Method",
+    "NumericalModel",
+    "SeismicEvent",
+    "Instrument",
+    "SoftwarePackage"
+  ],
+  "CQ-T3-05": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "Method",
+    "NumericalModel",
+    "Melt"
+  ],
+  "CQ-T4-01": [
+    "Claim",
+    "ReportedClaim",
+    "GeologicFeature",
+    "SeismicEvent",
+    "Melt"
+  ],
+  "CQ-T4-02": [
+    "Claim",
+    "ReportedClaim",
+    "GeologicFeature",
+    "SeismicEvent",
+    "Melt"
+  ],
+  "CQ-T4-03": [
+    "Claim",
+    "ReportedClaim",
+    "Method",
+    "NumericalModel",
+    "ReportedRatio",
+    "Sample",
+    "Melt"
+  ],
+  "CQ-T4-04": [
+    "Claim",
+    "ReportedClaim",
+    "GeologicFeature",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T4-05": [
+    "Claim",
+    "ReportedClaim",
+    "SeismicEvent"
+  ],
+  "CQ-T5-01": [
+    "Claim",
+    "ReportedClaim",
+    "Evidence",
+    "ResearchRelation",
+    "ContributionRelation",
+    "FundingRelation",
+    "GeologicRelation",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T5-02": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "GeologicFeature",
+    "Melt",
+    "Sample",
+    "ReportedRatio",
+    "GeologicRelation"
+  ],
+  "CQ-T5-03": [
+    "GeologicFeature",
+    "QuantityValue",
+    "SeismicEvent",
+    "Claim",
+    "ReportedClaim",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T5-04": [
+    "Claim",
+    "ReportedClaim",
+    "Method",
+    "NumericalModel",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-T5-05": [
+    "Claim",
+    "ReportedClaim",
+    "GeologicFeature",
+    "Evidence",
+    "SeismicEvent",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-C-01": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "Sample",
+    "ReportedRatio",
+    "Melt"
+  ],
+  "CQ-C-02": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "SeismicEvent",
+    "Interval"
+  ],
+  "CQ-C-03": [
+    "GeologicFeature",
+    "QuantityValue",
+    "BibliographicSource",
+    "Claim",
+    "ReportedClaim",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-C-04": [
+    "Campaign",
+    "Instrument",
+    "SoftwarePackage",
+    "Observation",
+    "CountObservation",
+    "DepthObservation"
+  ],
+  "CQ-C-05": [
+    "QuantityValue",
+    "Observation",
+    "CountObservation",
+    "DepthObservation",
+    "Claim",
+    "ReportedClaim",
+    "Sample",
+    "Melt",
+    "GeologicFeature",
+    "ReportedRatio"
+  ]
+}

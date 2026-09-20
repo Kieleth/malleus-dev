@@ -1,0 +1,55 @@
+{
+  "question_id": "CQ-T1-05",
+  "question": "For how long were the seismic data recorded continuously during the deployment?",
+  "required_semantics": [
+    "recording_interval",
+    "duration_value",
+    "time_unit",
+    "observing_system"
+  ],
+  "no_answer_in_source": false,
+  "claims": [
+    {
+      "claim_id": "CQ-T1-05:c1",
+      "blocks": [
+        "page:2:block:002"
+      ]
+    }
+  ],
+  "question_responsiveness": "PENDING",
+  "responsiveness_rationale": "",
+  "assembly": "NOT_APPLICABLE",
+  "coverage": [
+    {
+      "semantic": "recording_interval",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "duration_value",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "time_unit",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    },
+    {
+      "semantic": "observing_system",
+      "row_index": null,
+      "absent_reason": null,
+      "note": ""
+    }
+  ],
+  "source_locators": [],
+  "rows": [
+    {
+      "row_index": 0,
+      "witness_key": "CQ-T1-05:c1"
+    }
+  ]
+}
