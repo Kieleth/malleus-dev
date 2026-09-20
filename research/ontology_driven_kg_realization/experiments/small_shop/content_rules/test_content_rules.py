@@ -143,7 +143,9 @@ def test_synthetic_conflict_refuses_and_leaves_the_ledger(admitted):
     report, _ = admitted
     refusal = next(item for item in report["refusals"] if item["kind"] == "conflict")
     assert refusal["outcome"] == "VIOLATED"
-    assert refusal["refusal_reason"] == "REJECTED_CHANGE"
+    # Core refuses at CHECK now, before any append; it was REJECTED_CHANGE
+    # when the program ran the rules itself and handed Core the outcome.
+    assert refusal["refusal_reason"] == "CONTENT_RULE_VIOLATED"
     assert refusal["ledger_unchanged"] is True
     assert [item["violation_code"] for item in refusal["violations"]] == [
         "QUANTITY_DISAGREEMENT"
@@ -154,7 +156,9 @@ def test_synthetic_empty_record_refuses_and_leaves_the_ledger(admitted):
     report, _ = admitted
     refusal = next(item for item in report["refusals"] if item["kind"] == "empty")
     assert refusal["outcome"] == "VIOLATED"
-    assert refusal["refusal_reason"] == "REJECTED_CHANGE"
+    # Core refuses at CHECK now, before any append; it was REJECTED_CHANGE
+    # when the program ran the rules itself and handed Core the outcome.
+    assert refusal["refusal_reason"] == "CONTENT_RULE_VIOLATED"
     assert refusal["ledger_unchanged"] is True
     assert [item["violation_code"] for item in refusal["violations"]] == [
         "RECORD_WITHOUT_PROPERTIES"
@@ -282,8 +286,10 @@ def test_added_and_removed_retentions_are_the_rule_layer(policied_clean, connect
     _, other = connected
     mine, theirs = ledger_records(path), ledger_records(other)
     added = set(mine) - set(theirs)
+    # Core names a receipt after the change and the check it ran, so the ID
+    # carries the contract: it was receipt:change:plan:shop-connected:<id>.
     assert added == {content.LOGIC_ID, content.RULES_ID} | {
-        f"receipt:change:plan:shop-connected:{row['event_id']}"
+        f"receipt:change:plan:shop-connected:{row['event_id']}:shop-content-rules"
         for row in story.load_sources(story.HERE)[0]
     }
     assert set(theirs) - set(mine) == {"malleus:structural-admission-check/v1"}

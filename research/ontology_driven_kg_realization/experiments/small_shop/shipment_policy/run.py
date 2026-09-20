@@ -13,8 +13,6 @@ from pathlib import Path
 
 import malleus.compiler as api
 from malleus.logic import LogicCheckResult, LogicContract, LogicError
-from malleus.prolog_verifier import PrologVerifier
-from malleus.staging import ProposedOperation, stage_subgraph
 from research.ontology_driven_kg_realization.experiments.small_shop.partial_shipments import (
     run as shipments,
 )
@@ -135,7 +133,11 @@ def start(path: Path):
 
 
 def prepare(history, name: str):
-    """Retain a truthful plan, including the deliberately conflicting source."""
+    """Build one truthful plan, including the deliberately conflicting source.
+
+    Nothing is retained here. Core compiles, checks and admits the plan bytes
+    in one operation, so the plan is data until that operation accepts it.
+    """
     if name == "duplicate-unit":
         plan = shipments.plan_for(
             history, "shipment-2", source_id="source:partial-shipments:duplicate-unit"
@@ -151,7 +153,7 @@ def prepare(history, name: str):
                 "sha256": digest(replay.retained_bytes(identifier)),
             }
         )
-    return shipments.prepare_plan(history, plan, transaction_time=TIME, actor_id=ACTOR)
+    return plan
 
 
 @dataclass(frozen=True)
@@ -159,123 +161,45 @@ class ShipmentAdmission:
     replay: api.KnowledgeHistoryReplay
     check: LogicCheckResult
     receipt_identity: str
+    plan_identity: str
 
 
 class ShipmentPolicyRefusal(ValueError):
+    """Core refused the episode. ``check`` is the engine's own result."""
+
     def __init__(self, check, refusal):
         self.check = check
         self.refusal = refusal
-        super().__init__(f"Shop policy {check.outcome}: {refusal}")
+        super().__init__(f"Shop policy {check.outcome}: {refusal.reason}")
 
 
-def admit(history, prepared):
-    """Run the selected rule, then atomically admit its receipt and exact KCS.
+def admit(history, plan):
+    """Compile, check and admit one plan as one Core operation.
 
-    No caller-supplied check outcome. Only this fixture's insert-only Entity and
-    Relation operations are supported. Preparation is a prior retention step.
+    The policy's required check is the pinned ``logic.yaml`` and ``rules.pl``
+    pair this history retains, which Core resolves as a ``PROLOG_RULES``
+    contract and runs itself. The program supplies the plan and nothing else:
+    no rule execution, no outcome, no receipt and no protocol event is
+    authored here, and a violated outcome refuses before the first append.
     """
-    before = history.replay()
-    if before.receipt.identity != prepared.retention_replay.receipt.identity:
-        raise api.KnowledgeChangeRefusal(
-            api.KnowledgeChangeRefusalReason.STALE_BASE, "Shop preparation is stale"
-        )
-    if prepared.change_set is None:
-        raise ValueError("Shop episode requires a change set, not NO_DOMAIN_CHANGE")
-    change = api.KnowledgeChangeSet.from_bytes(prepared.change_set.canonical_bytes)
-    logic = LogicContract.load(HERE / "logic.yaml")
-    for identifier, content in (
-        ("shop:logic", (HERE / "logic.yaml").read_bytes()),
-        ("shop:rules", logic.rules_source.encode()),
-    ):
-        if (identifier, digest(content)) not in change.evidence:
-            raise LogicError("change does not bind the selected rule evidence")
-        if before.retained_bytes(identifier) != content:
-            raise LogicError("rule evidence differs from the selected history")
-    policy = before.partial_contract.normative_profile.policy("required-check-verdict")
-    if json.loads(policy.canonical_bytes)["required_checks"] != [
-        {
-            "check_contract_id": logic.contract_id,
-            "check_contract_identity": logic.contract_hash,
-        }
-    ]:
-        raise LogicError("history policy does not select this exact logic contract")
-    writes = []
-    for op in change.operations:
-        if op.supersedes_record_id is not None or op.operation_type not in {
-            "CREATE_ENTITY",
-            "CREATE_RELATION",
-        }:
-            raise LogicError(
-                "Shop rule episode supports insert-only Entity/Relation operations"
-            )
-        writes.append(
-            ProposedOperation(
-                op_type=op.operation_type,
-                record_type=op.record_type,
-                record_id=op.record_id,
-                properties=dict(op.properties),
-                source_id=op.source_id,
-                target_id=op.target_id,
-            )
-        )
-    checked = PrologVerifier(logic).verify_candidate_subgraph(
-        stage_subgraph(before.graph, writes)
-    )
-    plan_id = prepared.compilation.plan_id
-    plan_bytes = before.retained_bytes(plan_id)
-    if (plan_id, digest(plan_bytes)) not in change.evidence:
-        raise LogicError("change does not bind its retained population plan")
-    receipt_bytes = canonical(
-        {
-            "knowledge_change_set_identity": change.identity,
-            "population_plan_identity": digest(plan_bytes),
-            "check": asdict(checked),
-        }
-    )
-    receipt_identity = digest(receipt_bytes)
-    receipt_anchor = anchor(receipt_identity, receipt_bytes)
-    preview = api.execute_event(
-        before.partial_contract, before.machine_state, receipt_anchor.machine_event
-    )
-    if preview.receipt.outcome != "APPLIED":
-        raise LogicError("check receipt cannot enter the selected protocol machine")
-    proposal = "proposal:" + change.identity
-    events = (
-        event(
-            "CHANGE_PROPOSED",
-            proposal_id=proposal,
-            expected_machine_state_identity=preview.state.identity,
-            knowledge_change_set_identity=change.identity,
-            policy_id=policy.identifier,
-            policy_identity=policy.identity,
-        ),
-        event(
-            "CHECK_RECORDED",
-            proposal_id=proposal,
-            check_contract_id=logic.contract_id,
-            check_contract_identity=logic.contract_hash,
-            outcome=checked.outcome,
-            policy_identity=policy.identity,
-            receipt_id="check:" + change.identity,
-            receipt_identity=receipt_identity,
-        ),
-        event(
-            "VERDICT_RECORDED",
-            proposal_id=proposal,
-            decision_id="decision:" + change.identity,
-        ),
-    )
     try:
-        replay = history.admit_with_anchors(
-            anchors=(receipt_anchor,),
-            change_set=change,
-            machine_events=events,
+        admitted = api.check_and_admit_population_plan(
+            history=history,
+            plan_bytes=canonical(plan),
+            history_profile=api.STATE_VERSION_PROFILE,
             transaction_time=TIME,
             actor_id=ACTOR,
         )
-    except api.KnowledgeChangeRefusal as error:
-        raise ShipmentPolicyRefusal(checked, error) from error
-    return ShipmentAdmission(replay, checked, receipt_identity)
+    except api.PopulationAdmissionRefusal as error:
+        if error.check is None:
+            raise
+        raise ShipmentPolicyRefusal(error.check, error) from error
+    return ShipmentAdmission(
+        admitted.replay,
+        admitted.check,
+        admitted.checks[0].receipt_identity,
+        admitted.plan_identity,
+    )
 
 
 def run(path: Path):
@@ -295,8 +219,7 @@ def run(path: Path):
         if (
             not refusal["ledger_unchanged"]
             or error.check.outcome != "VIOLATED"
-            or error.refusal.reason
-            is not api.KnowledgeChangeRefusalReason.REJECTED_CHANGE
+            or error.refusal.reason != "CONTENT_RULE_VIOLATED"
         ):
             raise RuntimeError(
                 "duplicate-unit refusal did not preserve the admission prefix"

@@ -1,9 +1,9 @@
 """Selected Shop policy, real rule execution, atomic admission and replay."""
 
-from dataclasses import replace
-from hashlib import sha256
+import ast
 from importlib import import_module
 import json
+from pathlib import Path
 import subprocess
 import sys
 
@@ -32,13 +32,16 @@ def test_duplicate_refuses_atomically_then_distinct_unit_admits_and_replays(
     tmp_path, monkeypatch
 ):
     shop, path, history = fixture(tmp_path)
-    prepared = shop.prepare(history, "duplicate-unit")
+    plan = shop.prepare(history, "duplicate-unit")
     before = path.read_bytes()
     before_graph = history.replay().graph.export_records()
     with pytest.raises(shop.ShipmentPolicyRefusal) as refused:
-        shop.admit(history, prepared)
+        shop.admit(history, plan)
     error = refused.value
-    assert error.refusal.reason is api.KnowledgeChangeRefusalReason.REJECTED_CHANGE
+    # Core refuses at CHECK, before the first append. It was REJECTED_CHANGE
+    # while the program ran the engine and handed Core the outcome.
+    assert error.refusal.stage is api.PopulationAdmissionStage.CHECK
+    assert error.refusal.reason == "CONTENT_RULE_VIOLATED"
     assert error.check.outcome == "VIOLATED"
     assert error.check.violations[0].violation_code == "UNIT_ASSIGNED_TWICE"
     assert error.check.violations[0].witness_record_ids == (
@@ -49,17 +52,22 @@ def test_duplicate_refuses_atomically_then_distinct_unit_admits_and_replays(
     assert path.read_bytes() == before
     assert history.replay().graph.export_records() == before_graph
 
-    prepared = shop.prepare(history, "shipment-2")
-    admitted = shop.admit(history, prepared)
+    admitted = shop.admit(history, shop.prepare(history, "shipment-2"))
     assert admitted.check.outcome == "SATISFIED"
     assert len(admitted.replay.change_sets) == 3
-    receipt = json.loads(admitted.replay.retained_bytes(admitted.receipt_identity))
-    assert receipt["knowledge_change_set_identity"] == prepared.change_set.identity
-    assert receipt["population_plan_identity"] == (
-        "sha256:" + sha256(prepared.compilation.canonical_plan_bytes).hexdigest()
+    receipt = json.loads(
+        admitted.replay.retained_bytes(
+            f"receipt:{admitted.replay.change_sets[-1].change_set_id}"
+            ":shop-one-shipment-per-unit"
+        )
     )
+    assert receipt["knowledge_change_set_identity"] == (
+        admitted.replay.change_sets[-1].identity
+    )
+    assert receipt["population_plan_identity"] == admitted.plan_identity
     assert receipt["check"]["contract_hash"] == admitted.check.contract_hash
     assert receipt["check"]["ruleset_hash"] == admitted.check.ruleset_hash
+    assert receipt["check"]["executor_kind"] == "PROLOG_RULES"
     checks = [
         r
         for r in admitted.replay.machine_state.records
@@ -93,55 +101,72 @@ def test_duplicate_refuses_atomically_then_distinct_unit_admits_and_replays(
     assert evidence["shop:logic"] == (shop.HERE / "logic.yaml").read_bytes()
 
 
-def test_stale_preparation_refuses_before_engine_or_write(tmp_path, monkeypatch):
+def test_stale_plan_refuses_before_engine_or_write(tmp_path, monkeypatch):
+    """A stale preparation is gone; a stale pin in the plan still refuses first.
+
+    The program used to retain the plan, then admit it, and the gap between
+    the two could go stale. The one-call operation reads the base itself, so
+    the only thing left that can be stale is what the plan pins. It refuses at
+    COMPILE, before the engine and before any write.
+    """
     shop, path, history = fixture(tmp_path)
-    prepared = shop.prepare(history, "shipment-2")
-    history.append_anchors(
-        anchors=(
-            api.structural_evidence_anchor(
-                record_id="later-evidence", content=b"later", media_type="text/plain"
-            ),
-        ),
-        transaction_time=shop.TIME,
-        actor_id=shop.ACTOR,
-    )
+    plan = shop.prepare(history, "shipment-2")
+    plan["contract_identity"] = "sha256:" + "0" * 64
     before = path.read_bytes()
 
     def no_engine(*args, **kwargs):
-        raise AssertionError("stale preparation reached the engine")
+        raise AssertionError("a stale plan reached the engine")
 
     monkeypatch.setattr(PrologVerifier, "verify_candidate_subgraph", no_engine)
-    with pytest.raises(api.KnowledgeChangeRefusal) as refused:
-        shop.admit(history, prepared)
-    assert refused.value.reason is api.KnowledgeChangeRefusalReason.STALE_BASE
+    with pytest.raises(api.PopulationAdmissionRefusal) as refused:
+        shop.admit(history, plan)
+    assert refused.value.stage is api.PopulationAdmissionStage.COMPILE
+    assert refused.value.ledger_unchanged is True
     assert path.read_bytes() == before
 
 
 def test_failed_execution_is_not_a_satisfied_check(tmp_path, monkeypatch):
     shop, path, history = fixture(tmp_path)
-    prepared = shop.prepare(history, "shipment-2")
+    plan = shop.prepare(history, "shipment-2")
     before = path.read_bytes()
 
     def failed(*args, **kwargs):
         raise LogicExecutionError("test engine failure")
 
     monkeypatch.setattr(PrologVerifier, "verify_candidate_subgraph", failed)
-    with pytest.raises(LogicExecutionError, match="test engine failure"):
-        shop.admit(history, prepared)
+    # The engine failure used to reach the caller raw; Core now names the
+    # stage and the engine, and still writes nothing.
+    with pytest.raises(api.PopulationAdmissionRefusal, match="test engine failure"):
+        shop.admit(history, plan)
     assert path.read_bytes() == before
 
 
-def test_check_uses_actual_change_not_mutable_preparation_metadata(tmp_path):
-    shop, path, history = fixture(tmp_path)
-    prepared = shop.prepare(history, "duplicate-unit")
-    altered = replace(
-        prepared, compilation=replace(prepared.compilation, operations=())
-    )
-    before = path.read_bytes()
-    with pytest.raises(shop.ShipmentPolicyRefusal) as refused:
-        shop.admit(history, altered)
-    assert refused.value.check.outcome == "VIOLATED"
-    assert path.read_bytes() == before
+def test_the_program_hands_core_plan_bytes_and_nothing_else():
+    """There is no object between the program and the engine left to alter.
+
+    The predecessor of this test altered a prepared compilation's operations
+    and required the check to read the real change anyway. The program no
+    longer holds a compilation: it passes the plan bytes, and every other
+    argument of the one call is a coordinate.
+    """
+    module = import_module(MODULE)
+    tree = ast.parse(Path(module.__file__).read_text(encoding="utf-8"))
+    calls = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "check_and_admit_population_plan"
+    ]
+    assert len(calls) == 1
+    assert not calls[0].args
+    assert {keyword.arg for keyword in calls[0].keywords} == {
+        "history",
+        "plan_bytes",
+        "history_profile",
+        "transaction_time",
+        "actor_id",
+    }
 
 
 def test_cli_and_second_run_produce_exact_history_and_report(tmp_path):

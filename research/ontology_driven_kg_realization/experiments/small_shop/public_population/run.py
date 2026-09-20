@@ -39,6 +39,7 @@ SHOP = ROOT / "research/ontology_driven_kg_realization/experiments/small_shop"
 MACHINE_PATH = SHOP / "pareto/machine.json"
 POLICY_PATH = SHOP / "pareto/policy.json"
 BINDING_PATH = SHOP / "pareto/mapping.json"
+CHECK_PATH = SHOP / "pareto/checks/structural-conformance.json"
 
 SOURCE_PATHS = {
     "source:small-shop:inventory": (
@@ -72,6 +73,7 @@ EVIDENCE_PATHS = {
     "artifact:small-shop:baseline-mapping": BINDING_PATH,
     "artifact:small-shop:correction-mapping": SHOP / "correction/mapping.json",
     "artifact:small-shop:settlement-mapping": SHOP / "showcase/settlement-mapping.json",
+    "artifact:small-shop:structural-conformance-check": CHECK_PATH,
 }
 
 ACTOR = "actor:small-shop-public-population"
@@ -191,7 +193,7 @@ def _runtime(history_path: Path):
         contract_view=base.view,
         binding=binding,
     )
-    return history, base, target, base_partial, target_partial, policy
+    return history, base, target, base_partial, target_partial
 
 
 def _bootstrap(
@@ -265,46 +267,8 @@ def _retention_events(
     return events
 
 
-def _protocol_events(
-    policy: compiler.PolicyProgram,
-    change: compiler.KnowledgeChangeSet,
-    state_identity: str,
-    suffix: str,
-) -> tuple[bytes, ...]:
-    proposal_id = f"proposal:small-shop:{suffix}"
-    checks = tuple(
-        _event(
-            "CHECK_RECORDED",
-            check_contract_id=check_id,
-            check_contract_identity=check_identity,
-            outcome="SATISFIED",
-            policy_identity=policy.identity,
-            proposal_id=proposal_id,
-            receipt_id=f"receipt:small-shop:{suffix}:{ordinal}",
-        )
-        for ordinal, (check_id, check_identity) in enumerate(policy.required_checks)
-    )
-    return (
-        _event(
-            "CHANGE_PROPOSED",
-            expected_machine_state_identity=state_identity,
-            knowledge_change_set_identity=change.identity,
-            policy_id=policy.identifier,
-            policy_identity=policy.identity,
-            proposal_id=proposal_id,
-        ),
-        *checks,
-        _event(
-            "VERDICT_RECORDED",
-            decision_id=f"decision:small-shop:{suffix}",
-            proposal_id=proposal_id,
-        ),
-    )
-
-
 def _admit_plan(
     history: compiler.KnowledgeChangeHistory,
-    policy: compiler.PolicyProgram,
     path: Path,
     transaction_time: str,
 ) -> compiler.KnowledgeHistoryReplay:
@@ -325,23 +289,18 @@ def _admit_plan(
     )
     if prepared.change_set is None:
         raise RuntimeError(f"Small Shop plan produced no change: {path.name}")
-    return history.admit(
+    return compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            policy,
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            path.stem,
-        ),
         transaction_time=transaction_time,
         actor_id=ACTOR,
-    )
+    ).replay
 
 
 def _build_history(history_path: Path) -> compiler.KnowledgeHistoryReplay:
-    history, base, target, base_partial, target_partial, policy = _runtime(history_path)
+    history, base, target, base_partial, target_partial = _runtime(history_path)
     _bootstrap(history, base, base_partial)
-    _admit_plan(history, policy, PLAN_PATHS[0], TIMES[1])
+    _admit_plan(history, PLAN_PATHS[0], TIMES[1])
     revision = history.compose_contract_revision(
         revision_id="revision:small-shop:full-public-v1",
         target_validated_contract_bytes=target.artifact.artifact_bytes,
@@ -355,7 +314,7 @@ def _build_history(history_path: Path) -> compiler.KnowledgeHistoryReplay:
         actor_id=ACTOR,
     )
     for path, transaction_time in zip(PLAN_PATHS[1:], TIMES[3:], strict=True):
-        _admit_plan(history, policy, path, transaction_time)
+        _admit_plan(history, path, transaction_time)
     return compiler.KnowledgeChangeHistory.reopen(history_path).replay()
 
 

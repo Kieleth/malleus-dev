@@ -3,7 +3,7 @@
     "adapter_id": "small-shop-object-event-fixture",
     "version": "1"
   },
-  "contract_identity": "sha256:90c8bc3e02e34d12a6b1c3c8d9cd8a5dcba3927c42922f15eb34b8aea30efd47",
+  "contract_identity": "sha256:d4ce63548721928c3530d63ed086c823c376f473f1cd9ddfcf29da33a478e88e",
   "derivations": [
     {"locator": "row:0:order", "path": ["properties", "order_number"], "record_id": "O1", "source_id": "source:small-shop:object-event:warehouse"},
     {"locator": "row:0:actor", "path": ["properties", "actor_id"], "record_id": "R4", "source_id": "source:small-shop:object-event:warehouse"},

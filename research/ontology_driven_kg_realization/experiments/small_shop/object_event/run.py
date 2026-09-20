@@ -15,7 +15,6 @@ from research.ontology_driven_kg_realization.experiments.small_shop.public_popul
     _canonical,
     _digest,
     _event,
-    _protocol_events,
     _source_anchors,
 )
 
@@ -38,6 +37,7 @@ SHOP = ROOT / "research/ontology_driven_kg_realization/experiments/small_shop"
 MACHINE_PATH = SHOP / "pareto/machine.json"
 POLICY_PATH = SHOP / "pareto/policy.json"
 BINDING_PATH = SHOP / "pareto/mapping.json"
+CHECK_PATH = SHOP / "pareto/checks/structural-conformance.json"
 
 ACTOR = "actor:small-shop-object-event"
 BOOTSTRAP_TIME = "2026-09-04T01:00:00Z"
@@ -88,7 +88,7 @@ def _runtime(history_path: Path):
         contract_view=compiled.view,
         binding=binding,
     )
-    return history, compiled, partial, policy
+    return history, compiled, partial
 
 
 def _bootstrap(
@@ -122,6 +122,11 @@ def _bootstrap(
             TIME_CONTEXT_PATH.read_bytes(),
             "RETAINED_EVIDENCE",
         ),
+        _artifact_anchor(
+            "artifact:small-shop:structural-conformance-check",
+            CHECK_PATH.read_bytes(),
+            "RETAINED_EVIDENCE",
+        ),
         *_source_anchors(
             "source:small-shop:object-event:warehouse",
             SOURCE_PATH.read_bytes(),
@@ -136,7 +141,7 @@ def _bootstrap(
 
 
 def _build(history_path: Path) -> compiler.KnowledgeHistoryReplay:
-    history, compiled, partial, policy = _runtime(history_path)
+    history, compiled, partial = _runtime(history_path)
     _bootstrap(history, compiled, partial)
     plan = json.loads(PLAN_PATH.read_bytes())
     plan_bytes = _canonical(plan)
@@ -161,14 +166,9 @@ def _build(history_path: Path) -> compiler.KnowledgeHistoryReplay:
     )
     if prepared.change_set is None:
         raise RuntimeError("Small Shop object-event plan produced no change")
-    history.admit(
+    compiler.check_and_admit_change_set(
+        history=history,
         change_set=prepared.change_set,
-        machine_events=_protocol_events(
-            policy,
-            prepared.change_set,
-            prepared.retention_replay.machine_state.identity,
-            "ret-040-object-event",
-        ),
         transaction_time=ADMISSION_TIME,
         actor_id=ACTOR,
     )

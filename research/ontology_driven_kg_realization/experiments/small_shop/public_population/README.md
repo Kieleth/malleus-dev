@@ -23,7 +23,7 @@ second source mapper or import the older research runners.
 | Source bytes | Warehouse JSONL, inventory CSV, invoice CSV, payment JSONL, and supplier-order JSONL |
 | Population | Five exact neutral plans in [`plans/`](plans/) |
 | Domain history choice | The shipped full `state-version` profile |
-| Governance | The shipped declarative machine and required-check policy |
+| Governance | The shipped declarative machine and the required-check policy, whose one check Core runs itself |
 | History | One append-only `KnowledgeChangeHistory` containing five accepted changes and one contract revision |
 | Projection | Reopen and replay derive the current `KnowledgeGraph` |
 | Explanation | `trace_population_record` verifies every current and superseded record back to its retained plan, derivations, sources, and evidence |
@@ -52,6 +52,30 @@ is a state version, valid time is domain time, corrections supersede prior
 versions, and replay selects current non-superseded records. Its genesis scope
 is the declared source set, not a claim that the first change describes the
 whole shop.
+
+## The check the policy requires, and the one that was removed
+
+`pareto/policy.json` requires one check contract, `structural-conformance`, a
+`malleus.check-contract/v1` `CORE_BUILTIN` document at
+`sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9`
+naming `malleus.core.operations-apply-atomically` version `1`. The runner
+retains that document at bootstrap and then hands Core the change set:
+`check_and_admit_change_set` resolves the required contract against what this
+history retains, runs the builtin over the state the change would produce,
+mints the receipt and writes `CHANGE_PROPOSED`, `CHECK_RECORDED` and
+`VERDICT_RECORDED`. No outcome is written here any more.
+
+The policy required a second check before this run, `retained-source-integrity`
+at `sha256:8208a29397002098d74498c4956f5a86d10526f8e4cf806feae4fe769074c19d`.
+It is gone. That identity matched no file in the repository: no contract
+document, no rule layer, nothing Core or anyone else could have run. The
+`CHECK_RECORDED` event this runner wrote for it carried `outcome: SATISFIED`
+as a literal, so it attested a check that never existed. Removing it removes an
+attestation, not a guarantee. `pareto/policy.json` moved from
+`sha256:c0ec653f...` to `sha256:433f2f9b...` with it, and `pareto/mapping.json`
+from `sha256:4e8851c5...` to `sha256:ba4291a2...`, which is why every plan in
+[`plans/`](plans/) was re-cut: the partial effective contract each plan pins is
+composed from that policy, and `ret010.json` pins the mapping as evidence.
 
 ## Exact boundary
 

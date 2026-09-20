@@ -16,10 +16,7 @@ import json
 from pathlib import Path
 
 import malleus.compiler as api
-from malleus.kg import KnowledgeGraph
 from malleus.logic import LogicCheckResult, LogicContract, LogicError
-from malleus.prolog_verifier import PrologVerifier
-from malleus.staging import ProposedOperation, stage_subgraph
 
 from research.ontology_driven_kg_realization.experiments.small_shop.connected_story import (
     run as story,
@@ -174,65 +171,6 @@ def story_anchors():
     )
 
 
-def prepare(history, plan, profile):
-    """Compile and retain one plan through the public population path."""
-    replay = history.replay()
-    compiled = api.compile_population_plan(
-        plan,
-        partial_contract=replay.partial_contract,
-        contract_view=replay.contract_view,
-        base_state=api.PopulationBaseState.from_replay(replay),
-        history_profile=profile,
-    )
-    return api.prepare_population_change(
-        history=history,
-        plan=plan,
-        profile=profile,
-        retention_events=api.population_retention_events(
-            history=history, compilation=compiled, profile=profile
-        ),
-        transaction_time=TIME,
-        actor_id=ACTOR,
-    )
-
-
-def check_base(replay, change):
-    """The accepted graph this candidate applies to, with its retirements removed.
-
-    Core removes superseded records before applying a change. The check must see
-    the same base, or an explicit replacement would read as a live disagreement.
-    """
-    retired = {
-        operation.supersedes_record_id
-        for operation in change.operations
-        if operation.supersedes_record_id is not None
-    }
-    if not retired:
-        return replay.graph
-    kept = {
-        family: [record for record in records if record["id"] not in retired]
-        for family, records in replay.graph.export_records().items()
-    }
-    return KnowledgeGraph.from_records(replay.graph.registry, kept)
-
-
-def check_writes(change):
-    """Mirror the change's exact operations as proposed graph writes."""
-    writes = []
-    for operation in change.operations:
-        writes.append(
-            ProposedOperation(
-                op_type=operation.operation_type,
-                record_type=operation.record_type,
-                record_id=operation.record_id,
-                properties=dict(operation.properties),
-                source_id=operation.source_id,
-                target_id=operation.target_id,
-            )
-        )
-    return writes
-
-
 @dataclass(frozen=True)
 class ContentAdmission:
     replay: api.KnowledgeHistoryReplay
@@ -240,94 +178,26 @@ class ContentAdmission:
     receipt_identity: str
 
 
-class ContentRuleRefusal(ValueError):
-    def __init__(self, check, refusal):
-        self.check = check
-        self.refusal = refusal
-        super().__init__(f"Shop content policy {check.outcome}: {refusal}")
+def admit(history, plan, profile):
+    """Compile, check and admit one plan in one Core operation.
 
+    Core resolves the policy's required check against what this history
+    retains, which is the pinned ``logic.yaml`` and ``rules.pl`` pair, runs
+    ``PrologVerifier`` over the candidate itself and writes the receipt and the
+    three protocol events. The program supplies the plan and nothing else: no
+    check execution, no outcome and no protocol event is authored here.
+    """
 
-def admit(history, prepared):
-    """Run the selected rules, then atomically admit their receipt and the change."""
-    before = history.replay()
-    if before.receipt.identity != prepared.retention_replay.receipt.identity:
-        raise api.KnowledgeChangeRefusal(
-            api.KnowledgeChangeRefusalReason.STALE_BASE,
-            "Shop content preparation is stale",
-        )
-    if prepared.change_set is None:
-        raise ValueError("Shop content episode requires a change set")
-    change = api.KnowledgeChangeSet.from_bytes(prepared.change_set.canonical_bytes)
-    logic = load_contract()
-    for identifier, content in (
-        (LOGIC_ID, (HERE / "logic.yaml").read_bytes()),
-        (RULES_ID, logic.rules_source.encode()),
-    ):
-        if before.retained_bytes(identifier) != content:
-            raise LogicError("rule evidence differs from the selected history")
-    policy = before.partial_contract.normative_profile.policy(POLICY_REFERENCE)
-    if json.loads(policy.canonical_bytes)["required_checks"] != [
-        {
-            "check_contract_id": logic.contract_id,
-            "check_contract_identity": logic.contract_hash,
-        }
-    ]:
-        raise LogicError("history policy does not select this exact logic contract")
-    checked = PrologVerifier(logic).verify_candidate_subgraph(
-        stage_subgraph(check_base(before, change), check_writes(change))
+    admitted = api.check_and_admit_population_plan(
+        history=history,
+        plan_bytes=canonical(plan),
+        history_profile=profile,
+        transaction_time=TIME,
+        actor_id=ACTOR,
     )
-    plan_id = prepared.compilation.plan_id
-    receipt_bytes = canonical(
-        {
-            "check": asdict(checked),
-            "knowledge_change_set_identity": change.identity,
-            "population_plan_identity": digest(before.retained_bytes(plan_id)),
-        }
+    return ContentAdmission(
+        admitted.replay, admitted.check, admitted.checks[0].receipt_identity
     )
-    receipt_identity = digest(receipt_bytes)
-    receipt_id = f"receipt:{change.change_set_id}"
-    receipt_anchor = anchor(receipt_id, receipt_bytes, "application/json")
-    preview = api.execute_event(
-        before.partial_contract, before.machine_state, receipt_anchor.machine_event
-    )
-    if preview.receipt.outcome != "APPLIED":
-        raise LogicError("check receipt cannot enter the selected protocol machine")
-    proposal = f"proposal:{change.change_set_id}"
-    events = (
-        event(
-            "CHANGE_PROPOSED",
-            expected_machine_state_identity=preview.state.identity,
-            knowledge_change_set_identity=change.identity,
-            policy_id=policy.identifier,
-            policy_identity=policy.identity,
-            proposal_id=proposal,
-        ),
-        event(
-            "CHECK_RECORDED",
-            check_contract_id=logic.contract_id,
-            check_contract_identity=logic.contract_hash,
-            outcome=checked.outcome,
-            policy_identity=policy.identity,
-            proposal_id=proposal,
-            receipt_id=f"check:{change.change_set_id}",
-        ),
-        event(
-            "VERDICT_RECORDED",
-            decision_id=f"decision:{change.change_set_id}",
-            proposal_id=proposal,
-        ),
-    )
-    try:
-        replay = history.admit_with_anchors(
-            anchors=(receipt_anchor,),
-            change_set=change,
-            machine_events=events,
-            transaction_time=TIME,
-            actor_id=ACTOR,
-        )
-    except api.KnowledgeChangeRefusal as error:
-        raise ContentRuleRefusal(checked, error) from error
-    return ContentAdmission(replay, checked, receipt_identity)
 
 
 def honest_plans(history, profile):
@@ -431,19 +301,24 @@ def synthetic_plan(replay, profile, kind: str):
 
 
 def refuse_synthetic(history, profile, kind: str):
-    """Submit one faulted candidate and require the ledger to stay where it was."""
-    prepared = prepare(
-        history, synthetic_plan(history.replay(), profile, kind), profile
-    )
+    """Submit one faulted candidate and require the ledger to stay where it was.
+
+    Core refuses at ``CHECK``, before any append, so a refused candidate now
+    retains nothing at all: the plan bytes that the separate preparation step
+    used to leave behind never reach the ledger.
+    """
+    plan = synthetic_plan(history.replay(), profile, kind)
     before = history.path.read_bytes()
     try:
-        admit(history, prepared)
-    except ContentRuleRefusal as error:
+        admit(history, plan, profile)
+    except api.PopulationAdmissionRefusal as error:
+        if error.check is None:
+            raise
         return {
             "kind": kind,
             "outcome": error.check.outcome,
             "violations": [asdict(item) for item in error.check.violations],
-            "refusal_reason": error.refusal.reason.name,
+            "refusal_reason": error.reason,
             "ledger_unchanged": history.path.read_bytes() == before,
         }
     raise RuntimeError(f"synthetic {kind} candidate was accepted")
@@ -452,12 +327,12 @@ def refuse_synthetic(history, profile, kind: str):
 def run(path: Path, *, probe: bool = True):
     """Admit the honest Table 1 rows, then optionally submit the faulted candidates.
 
-    A refused candidate appends nothing, but its earlier preparation retains the
-    plan bytes, so ``probe=False`` gives the ledger the honest rows alone.
+    A refused candidate appends nothing at all, so ``probe`` no longer changes
+    the ledger. It is kept because the refusals are the point of the episode.
     """
     history, profile = start(path)
     for plan in honest_plans(history, profile):
-        admit(history, prepare(history, plan, profile))
+        admit(history, plan, profile)
     refusals = (
         [refuse_synthetic(history, profile, kind) for kind in ("conflict", "empty")]
         if probe
