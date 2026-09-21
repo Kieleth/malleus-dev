@@ -210,6 +210,16 @@ runners that print one as JSON and can be edited: `content_rules/run.py` and
 those reports is unchanged, and each has a test that reads its stdout by key
 rather than as a whole document.
 
+Both report `"open_gaps": []` today, and that is the honest state, not a broken
+report. No tracked program under
+`research/ontology_driven_kg_realization/experiments/` declares a `TYPE_ABSENT`
+or a `RELATION_ABSENT` gap: a grep for either kind across that tree returns
+nothing, and `connected_story/mapping.json` declares no gap of any kind. The
+Shop round that declared a customer `TYPE_ABSENT`, which is where this roadmap
+item came from, lives under `private/`, which never enters git. The report line
+is exercised against a history that does carry an open gap by Core's own tests,
+over both consumer shapes.
+
 **`connected_story/run.py` cannot be migrated without re-pinning frozen
 evidence, so it was not.** It retains its own source bytes, `Path(__file__)` at
 `run.py:320`, as the evidence artifact `artifact:connected-shop:adapter`, and
@@ -338,12 +348,24 @@ refuses with `recompiled validated contract differs from acceptance`
 before anything here existed. It is a stale pinned LinkML recompile coordinate,
 the same class of defect as ROADMAP F6, and it is not fixed here.
 
-`tests/test_docs.py` reports **3 failed, 137 passed**, all three with one cause:
-`OVR-000472: latest document digest mismatch for docs/contract_compiler/index.md`.
-The documentation build validates the overseer ledger against the governed
-documents' current bytes, so a branch that edits a governed document fails it
-until its entry is sealed. `OVR-000477` below is that entry. The three go green
-with it; nothing else in `tests/test_docs.py` moved.
+The full default suite, `pytest -q -p no:randomly` over `testpaths`, reports
+**24 failed, 3670 passed, 3 skipped**. All 24 have one cause, printed verbatim
+by each of them:
+
+```text
+OVR-000472: latest document digest mismatch for docs/contract_compiler/index.md,
+expected sha256:a8ff630e…, got sha256:c57886e0…
+```
+
+They are 7 in `tests/test_contract_compiler_ledger.py`, 14 in
+`tests/test_contract_compiler_integration.py` and 3 in `tests/test_docs.py`,
+whose documentation build runs the same validator. The overseer ledger is
+checked against the governed documents' current bytes, so any branch that edits
+a governed document fails these until its entry is sealed. `OVR-000477` below is
+that entry. This is not an assertion: in the sealed scratch copy described under
+the entry, with `OVR-000477` inserted and `head.json` advanced, those three
+files report **495 passed, 0 failed** (296 and 199). No other test in the
+default suite moved.
 
 ## Commits
 
