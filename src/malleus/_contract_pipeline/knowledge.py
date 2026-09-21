@@ -26,11 +26,26 @@ from malleus._contract_pipeline.view import (
     load_validated_contract_artifact,
 )
 from malleus._contract_pipeline.revision import (
+    CONTRACT_REVISION_POLICY,
     ContractRevision,
     ContractRevisionRefusal,
     ContractRevisionRefusalReason,
     compile_contract_revision,
     contract_revision_policy,
+)
+from malleus._contract_pipeline.gap_answer import (
+    ONTOLOGY_GAP_ANSWER_EVENT,
+    ONTOLOGY_GAP_KINDS,
+    OntologyGapAnswer,
+    OntologyGapAnswerRefusal,
+    OntologyGapAnswerRefusalReason,
+    OntologyRevisionProposal,
+    OpenOntologyGap,
+    OpenRevisionProposal,
+    check_answerable,
+    gap_index,
+    read_proposal,
+    refuse as _refuse_gap_answer,
 )
 from malleus._contract_pipeline.protocol_runtime import (
     PROGRAM_EVENT,
@@ -120,6 +135,7 @@ _CHANGE_FIELDS = frozenset(
 _REVISION_FIELDS = frozenset(
     {"contract_revision_bytes_base64", "revision_id", "revision_identity"}
 )
+_ANSWER_FIELDS = frozenset({"answer_identity", "gap_answer_bytes_base64"})
 
 
 class KnowledgeChangeRefusalReason(Enum):
@@ -761,10 +777,64 @@ class KnowledgeHistoryReplay:
     _record_history: Mapping[str, KnowledgeRecordHistory]
     _graphs_by_change: Mapping[str, KnowledgeGraph]
     protocol_replay: ProtocolReplay | None = None
+    gap_answers: tuple[OntologyGapAnswer, ...] = ()
 
     @property
     def retained_inputs(self) -> tuple[KnowledgeRetainedInput, ...]:
         return tuple(self._retained.values())
+
+    def open_gaps(self) -> tuple[OpenOntologyGap, ...]:
+        """Every declared ontology gap still open, with its open proposals.
+
+        A gap of kind ``TYPE_ABSENT`` or ``RELATION_ABSENT`` is open until one
+        recorded answer names its identity. A proposal is open against a gap
+        while it names that gap and no answer has decided it. The result is
+        sorted by plan ID then gap identity, so two reads of one history and a
+        read of a reopened copy give the same bytes.
+        """
+
+        index = gap_index(self._retained)
+        answered = frozenset(
+            identity for answer in self.gap_answers for identity in answer.answered_gaps
+        )
+        decided = frozenset(
+            answer.proposal_id
+            for answer in self.gap_answers
+            if answer.proposal_id is not None
+        )
+        by_gap: dict[str, list[OpenRevisionProposal]] = {}
+        for member in self._retained.values():
+            proposal = read_proposal(member.record_id, bytes(member.content))
+            if proposal is None or proposal.proposal_id in decided:
+                continue
+            open_proposal = OpenRevisionProposal(
+                proposal.proposal_id, proposal.identity
+            )
+            for identity in proposal.answers_gaps:
+                by_gap.setdefault(identity, []).append(open_proposal)
+        return tuple(
+            sorted(
+                (
+                    OpenOntologyGap(
+                        gap.identity,
+                        gap.kind,
+                        gap.locator,
+                        gap.plan_id,
+                        gap.source_id,
+                        gap.statement,
+                        tuple(
+                            sorted(
+                                by_gap.get(gap.identity, ()),
+                                key=lambda item: (item.proposal_id, item.identity),
+                            )
+                        ),
+                    )
+                    for gap in index.values()
+                    if gap.kind in ONTOLOGY_GAP_KINDS and gap.identity not in answered
+                ),
+                key=lambda item: (item.plan_id, item.identity),
+            )
+        )
 
     def retained_bytes(self, record_id: str) -> bytes:
         try:
@@ -1618,7 +1688,24 @@ class KnowledgeChangeHistory:
                 ContractRevisionRefusalReason.IDENTITY_MISMATCH,
                 "contract revision fields do not match its bytes",
             )
-        entry = {
+        self._append(
+            (
+                self._contract_revision_entry(
+                    revision, transaction_time=transaction_time, actor_id=actor_id
+                ),
+            ),
+            validate=self._validate_candidate,
+        )
+        return self.replay()
+
+    def _contract_revision_entry(
+        self,
+        revision: ContractRevision,
+        *,
+        transaction_time: str,
+        actor_id: str,
+    ) -> dict[str, object]:
+        return {
             "actor_id": actor_id,
             "event_id": f"revision:{revision.identity}",
             "event_type": _REVISION_EVENT,
@@ -1631,7 +1718,157 @@ class KnowledgeChangeHistory:
             },
             "transaction_time": transaction_time,
         }
-        self._append((entry,), validate=self._validate_candidate)
+
+    def _gap_answer_entry(
+        self,
+        answer: OntologyGapAnswer,
+        *,
+        transaction_time: str,
+        actor_id: str,
+    ) -> dict[str, object]:
+        return {
+            "actor_id": actor_id,
+            "event_id": f"gap-answer:{answer.identity}",
+            "event_type": ONTOLOGY_GAP_ANSWER_EVENT,
+            "payload": {
+                "answer_identity": answer.identity,
+                "gap_answer_bytes_base64": b64encode(answer.canonical_bytes).decode(
+                    "ascii"
+                ),
+            },
+            "transaction_time": transaction_time,
+        }
+
+    def accept_ontology_revision_proposal(
+        self,
+        *,
+        proposal_id: str,
+        deciding_actor: str,
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
+        """Accept one retained proposal: the revision and the answer, one act.
+
+        Acceptance is the revision. Core composes the additive revision from the
+        proposal's own bytes and appends it together with the answer that closes
+        the gaps, in one ledger batch, or the ledger is untouched. There is no
+        state in which a proposal is accepted and not applied.
+
+        The deciding actor is recorded, not authenticated. Whether this actor
+        may decide is the adopter's to establish; Core records who did.
+        """
+
+        replay = self.replay()
+        member = replay._retained.get(proposal_id)
+        proposal = (
+            None
+            if member is None
+            else read_proposal(member.record_id, bytes(member.content))
+        )
+        if proposal is None:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.UNKNOWN_PROPOSAL,
+                f"no retained proposal: {proposal_id}",
+            )
+        if any(answer.proposal_id == proposal_id for answer in replay.gap_answers):
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.PROPOSAL_ALREADY_DECIDED,
+                f"proposal is already decided: {proposal_id}",
+            )
+        if not isinstance(deciding_actor, str) or not deciding_actor:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.MISSING_DECIDING_ACTOR,
+                "a deciding actor is required; Core records who, it does not decide",
+            )
+        check_answerable(
+            proposal.answers_gaps,
+            index=gap_index(replay._retained),
+            answered=frozenset(
+                identity
+                for answer in replay.gap_answers
+                for identity in answer.answered_gaps
+            ),
+        )
+        revision = self._probe_revision(
+            proposal,
+            active_contract=replay.partial_contract,
+            active_view=replay.contract_view,
+            base_ledger_head=replay.ledger_head,
+            base_ledger_event_count=replay.ledger_event_count,
+            base_acceptance_head=replay.acceptance_head,
+            base_materialization_head=replay.materialization_head,
+            base_accepted_state_digest=replay.graph.state_digest(),
+            previous_receipt=(
+                replay.contract_revisions[-1].migration_receipt.digest
+                if replay.contract_revisions
+                else None
+            ),
+        )
+        answer = OntologyGapAnswer.compose(
+            disposition="ACCEPTED",
+            answered_gaps=proposal.answers_gaps,
+            deciding_actor=deciding_actor,
+            reason=proposal.reason,
+            proposal_id=proposal.proposal_id,
+            revision_identity=revision.identity,
+        )
+        self._append(
+            (
+                self._contract_revision_entry(
+                    revision, transaction_time=transaction_time, actor_id=actor_id
+                ),
+                self._gap_answer_entry(
+                    answer, transaction_time=transaction_time, actor_id=actor_id
+                ),
+            ),
+            validate=self._validate_candidate,
+        )
+        return self.replay()
+
+    def refuse_ontology_gaps(
+        self,
+        *,
+        gap_identities: tuple[str, ...],
+        reason: str,
+        deciding_actor: str,
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
+        """Close declared ontology gaps with a reason and move no ontology.
+
+        A closed gap may be declared again in a later plan with new evidence.
+        That is a new gap with its own identity, not this one reopened.
+        """
+
+        replay = self.replay()
+        if not isinstance(gap_identities, tuple) or not gap_identities:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.MALFORMED_ANSWER,
+                "an ordered nonempty gap identity tuple is required",
+            )
+        check_answerable(
+            tuple(gap_identities),
+            index=gap_index(replay._retained),
+            answered=frozenset(
+                identity
+                for answer in replay.gap_answers
+                for identity in answer.answered_gaps
+            ),
+        )
+        answer = OntologyGapAnswer.compose(
+            disposition="REFUSED",
+            answered_gaps=tuple(gap_identities),
+            deciding_actor=deciding_actor,
+            reason=reason,
+        )
+        self._append(
+            (
+                self._gap_answer_entry(
+                    answer, transaction_time=transaction_time, actor_id=actor_id
+                ),
+            ),
+            validate=self._validate_candidate,
+        )
         return self.replay()
 
     def admit(
@@ -1757,7 +1994,11 @@ class KnowledgeChangeHistory:
     def replay(self) -> KnowledgeHistoryReplay:
         try:
             return self._replay_envelopes(self._ledger.read())
-        except (ContractRevisionRefusal, KnowledgeChangeRefusal):
+        except (
+            ContractRevisionRefusal,
+            KnowledgeChangeRefusal,
+            OntologyGapAnswerRefusal,
+        ):
             raise
         except (KeyError, TypeError, ValueError, LedgerError) as error:
             raise _refuse(
@@ -1767,6 +2008,116 @@ class KnowledgeChangeHistory:
 
     def _validate_candidate(self, events: list[dict[str, object]]) -> None:
         self._replay_envelopes(events)
+
+    @staticmethod
+    def _probe_revision(
+        proposal: OntologyRevisionProposal,
+        *,
+        active_contract: PartialEffectiveContract,
+        active_view: ContractView,
+        base_ledger_head: str,
+        base_ledger_event_count: int,
+        base_acceptance_head: str,
+        base_materialization_head: str,
+        base_accepted_state_digest: str,
+        previous_receipt: str | None,
+    ) -> ContractRevision:
+        """Compose the revision this proposal would install, or refuse.
+
+        This is the additive check, and it is the same mechanism acceptance
+        uses: ``compile_contract_revision`` under ``CONTRACT_REVISION_POLICY``,
+        which admits only ``ADD_CLASS``, ``ADD_ENUM_VALUE``, ``ADD_SLOT`` and
+        ``REBIND_CHECK_CONTRACT`` and refuses a removal or a narrowing. The
+        composed value is discarded at retention: the base coordinates move
+        with every append, so the revision acceptance records is composed then,
+        against the history as it stands then.
+        """
+
+        try:
+            return compile_contract_revision(
+                revision_id=proposal.revision_id,
+                base_ledger_head=base_ledger_head,
+                base_ledger_event_count=base_ledger_event_count,
+                base_acceptance_head=base_acceptance_head,
+                base_materialization_head=base_materialization_head,
+                base_accepted_state_digest=base_accepted_state_digest,
+                current_validated_contract_bytes=active_view.artifact_bytes,
+                current_partial_contract_bytes=active_contract.canonical_bytes,
+                target_validated_contract_bytes=(
+                    proposal.target_validated_contract_bytes
+                ),
+                target_partial_contract_bytes=proposal.target_partial_contract_bytes,
+                reason=proposal.reason,
+                issued_at=proposal.issued_at,
+                previous_migration_receipt=previous_receipt,
+                policy=CONTRACT_REVISION_POLICY,
+            )
+        except ContractRevisionRefusal as error:
+            reason = (
+                OntologyGapAnswerRefusalReason.PROPOSAL_NOT_ADDITIVE
+                if error.reason
+                in {
+                    ContractRevisionRefusalReason.NON_ADDITIVE_CHANGE,
+                    ContractRevisionRefusalReason.POLICY_REFUSAL,
+                }
+                else OntologyGapAnswerRefusalReason.PROPOSAL_DOES_NOT_COMPILE
+            )
+            raise _refuse_gap_answer(
+                reason,
+                f"proposal {proposal.proposal_id}: {error.reason.name}: {error.detail}",
+            ) from error
+        except OntologyGapAnswerRefusal:
+            raise
+        except (KeyError, TypeError, ValueError) as error:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.PROPOSAL_DOES_NOT_COMPILE,
+                f"proposal {proposal.proposal_id}: {error}",
+            ) from error
+
+    @staticmethod
+    def _validate_acceptance(
+        answer: OntologyGapAnswer,
+        retained: Mapping[str, KnowledgeRetainedInput],
+        answers: list[OntologyGapAnswer],
+        revisions: list[ContractRevision],
+    ) -> None:
+        """No state in which a proposal is accepted and not applied."""
+
+        member = retained.get(answer.proposal_id or "")
+        proposal = (
+            None
+            if member is None
+            else read_proposal(member.record_id, bytes(member.content))
+        )
+        if proposal is None:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.UNKNOWN_PROPOSAL,
+                f"no retained proposal: {answer.proposal_id}",
+            )
+        if any(recorded.proposal_id == proposal.proposal_id for recorded in answers):
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.PROPOSAL_ALREADY_DECIDED,
+                f"proposal is already decided: {proposal.proposal_id}",
+            )
+        if answer.answered_gaps != proposal.answers_gaps:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.MALFORMED_ANSWER,
+                "an accepted answer closes exactly the gaps its proposal names",
+            )
+        revision = next(
+            (item for item in revisions if item.identity == answer.revision_identity),
+            None,
+        )
+        if (
+            revision is None
+            or revision.revision_id != proposal.revision_id
+            or revision.target_validated_contract_bytes
+            != proposal.target_validated_contract_bytes
+        ):
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.MALFORMED_ANSWER,
+                "an accepted proposal's revision is not recorded in this history",
+            )
 
     def _replay_envelopes(
         self, events: list[dict[str, object]]
@@ -1794,6 +2145,7 @@ class KnowledgeChangeHistory:
         accepted_changes: list[KnowledgeChangeSet] = []
         revisions: list[ContractRevision] = []
         revision_ids: set[str] = set()
+        answers: list[OntologyGapAnswer] = []
         record_history: dict[str, KnowledgeRecordHistory] = {}
         graphs_by_change: dict[str, KnowledgeGraph] = {}
         bootstrap_roles: set[str] = set()
@@ -1812,6 +2164,7 @@ class KnowledgeChangeHistory:
             accepted_changes = list(replay.change_sets)
             revisions = list(replay.contract_revisions)
             revision_ids = {item.revision_id for item in revisions}
+            answers = list(replay.gap_answers)
             record_history = dict(replay._record_history)
             graphs_by_change = dict(replay._graphs_by_change)
             bootstrap_roles = set(prior.bootstrap_roles)
@@ -2009,6 +2362,39 @@ class KnowledgeChangeHistory:
                 revisions.append(revision)
                 revision_ids.add(revision.revision_id)
                 continue
+            if event_type == ONTOLOGY_GAP_ANSWER_EVENT:
+                if bootstrap_roles != _REOPEN_ROLES:
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                        "a gap answer requires the complete retained bootstrap",
+                    )
+                _exact(payload, _ANSWER_FIELDS, "gap answer event is not closed")
+                answer = OntologyGapAnswer.from_bytes(
+                    _decode_b64(
+                        payload["gap_answer_bytes_base64"],
+                        "gap answer bytes are malformed",
+                    )
+                )
+                if payload["answer_identity"] != answer.identity or answer.identity in {
+                    item.identity for item in answers
+                }:
+                    raise _refuse_gap_answer(
+                        OntologyGapAnswerRefusalReason.MALFORMED_ANSWER,
+                        "recorded gap answer does not match its bytes",
+                    )
+                check_answerable(
+                    answer.answered_gaps,
+                    index=gap_index(retained),
+                    answered=frozenset(
+                        identity
+                        for recorded in answers
+                        for identity in recorded.answered_gaps
+                    ),
+                )
+                if answer.disposition == "ACCEPTED":
+                    self._validate_acceptance(answer, retained, answers, revisions)
+                answers.append(answer)
+                continue
             if event_type == _CHANGE_EVENT:
                 if bootstrap_roles != _REOPEN_ROLES:
                     raise _refuse(
@@ -2126,6 +2512,36 @@ class KnowledgeChangeHistory:
                         "REUSED_RECORD_ID", "machine record reuses a protocol record ID"
                     )
                 machine_receipts.append(result.receipt)
+                # Retention is the check. Bytes that declare the proposal
+                # grammar are read as a proposal here, whichever door retained
+                # them, so a proposal that answers nothing open or does not
+                # compose additively never reaches the ledger.
+                proposal = read_proposal(record_id, retained_bytes)
+                if proposal is not None:
+                    check_answerable(
+                        proposal.answers_gaps,
+                        index=gap_index(retained),
+                        answered=frozenset(
+                            identity
+                            for answer in answers
+                            for identity in answer.answered_gaps
+                        ),
+                    )
+                    self._probe_revision(
+                        proposal,
+                        active_contract=active_contract,
+                        active_view=active_view,
+                        base_ledger_head=event["previous_event_hash"],
+                        base_ledger_event_count=event["sequence"] - 1,
+                        base_acceptance_head=acceptance_head,
+                        base_materialization_head=materialization_head,
+                        base_accepted_state_digest=projection.state_digest(),
+                        previous_receipt=(
+                            revisions[-1].migration_receipt.digest
+                            if revisions
+                            else None
+                        ),
+                    )
                 retained[record_id] = KnowledgeRetainedInput(
                     record_id,
                     retained_bytes,
@@ -2264,6 +2680,7 @@ class KnowledgeChangeHistory:
             _record_history=MappingProxyType(dict(record_history)),
             _graphs_by_change=MappingProxyType(dict(graphs_by_change)),
             protocol_replay=protocol_replay,
+            gap_answers=tuple(answers),
         )
         return _HistoryContinuation(
             replay,
