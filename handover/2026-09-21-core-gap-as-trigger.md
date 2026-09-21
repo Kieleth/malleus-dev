@@ -233,10 +233,28 @@ blast radius was 6 failed tests and 22 errors, all downstream of that history:
 `test_baseline_reproduces_the_committed_connected_receipt`, which builds the
 connected history to compare against.
 
-This was established by bisection, not inference: the same single test passes in
-a pristine `d3833d02` tree with this branch's Core, and fails in this branch's
-tree with pristine `d3833d02` Core. Core is not what moved it; the runner's own
-bytes are.
+This is established by identity, not by inference and not by bisection. The
+committed `connected_story/run.py` hashes to
+`sha256:7bb13ede36a9969b79ff5d93bbc02313d79328f0e6567beb7284a887c34c1e30`, which
+**is** the frozen `artifact:connected-shop:adapter` digest, and the same file
+with the four comment lines and the one key hashes to
+`sha256:519c2d9e7e62c63cd749a0a59ee3834bff5203474c1bed47e30d94627f421620`, which
+is the digest the failing run reported. The runner's source bytes are the
+artifact, so editing the file moves the artifact by definition. Core is not
+involved.
+
+One correction to the record, because the first attempt at this was wrong and
+the commit message of `2d18c6e2` still carries it. That message says the finding
+was established by bisection, "the same test passes in a pristine `d3833d02`
+tree with this branch's Core and fails in this branch's tree with pristine
+Core". Those two runs do not show what they were read as showing:
+`pyproject.toml:256` sets `pythonpath = [".", "src"]`, and pytest prepends that
+to `sys.path`, so under pytest the Core is always the rootdir's `src` whatever
+`PYTHONPATH` says. Both runs used the Core of the tree they ran in, so they
+varied nothing and isolated nothing. The conclusion they were read as supporting
+is right, but the two digests above are why, and they were measured afterwards.
+Anyone swapping Core for a control in this repository must move the tree or
+override `pythonpath`, not export `PYTHONPATH`.
 
 **The smallest shape that does not move them**, for whoever decides: stop
 retaining the runner's source as the adapter artifact, and retain the adapter's
@@ -298,7 +316,15 @@ observations (a) to (g), both consumer shapes, the ten refusals, determinism
 across a reopen, and the two unmoved-identity guards. Eight of the thirty are
 the observation tests parametrized over both consumer shapes.
 
-Suites, `PYTHONPATH` exported from the worktree root, `-p no:randomly`:
+Suites, run from the worktree root with `PYTHONPATH` exported and
+`-p no:randomly`. Note for anyone repeating this: the export is belt and braces,
+not what selects the tree. `pyproject.toml:256` sets
+`pythonpath = [".", "src"]`, which pytest prepends to `sys.path`, so a pytest
+run always uses the rootdir's own `src` whatever `PYTHONPATH` says. The baseline
+column below is therefore a real baseline for a different reason: it was
+measured in this worktree at `d3833d02` with a clean tree, before any file here
+existed. The RED column was measured in the same worktree when the test file was
+the only thing that existed.
 
 | Selection | Baseline at `d3833d02` | This branch |
 |---|---|---|
