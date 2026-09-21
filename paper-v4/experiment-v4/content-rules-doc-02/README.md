@@ -39,13 +39,18 @@ that pin moved from `e7937b89`, 52 modules
 `d89a0c4718654249ad678eaff62e7b1daba30b6f`, 53 modules
 `sha256:340196130e1820e9a4f9979223f40dcf6b8c1227d8805d812fd08ca529a3ed04`,
 the sealed Core carrying the one-call atomic admission
-`malleus.compiler.check_and_admit_population_plan`; E-0436 is the rule that
-moves it, and the one module added is `_contract_pipeline/admission.py`.
-Re-run on the new pin the cell is 56 passed, with every measurement in
+`malleus.compiler.check_and_admit_population_plan`; the one module added was
+`_contract_pipeline/admission.py`. On 2026-09-21 it moved again, to
+`5641bbf1f64b68b2d4e71b9d67726c5beb078f6e`, 54 modules
+`sha256:487b426a4d6ed2cc5742ba262c8a1eb8f991469cb017765c3d9eb238ee4703a1`,
+the sealed Core that closes the two-step admission door and folds the
+structural admission check into a v1 `CORE_BUILTIN` check contract; the module
+added is `_contract_pipeline/check_contract.py`. E-0436 is the rule that moves
+it. Re-run on each new pin the cell is 56 passed, with every measurement in
 `outcomes.json`, `fault-outcomes.json` and `RESULTS.md` unchanged, and the
 fact contract still version 3. The four adopted rules were measured on
 `d867c3ab`, which `RESULTS.md` names, and that coordinate does not move.
-The gate runs this cell in its `d89a0c47` pinned group, against that export;
+The gate runs this cell in its `5641bbf1` pinned group, against that export;
 gate 1 and the cell's own command import the checkout's `src`, whose tracked
 bytes are the same tree. Gate 2 goes through
 `fault-injection-01/run_faults.py`, which exports `src/malleus` at the commit

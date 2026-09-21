@@ -66,16 +66,17 @@ RESULTS = HERE / "RESULTS.md"
 RULES = HERE / "rules.pl"
 
 CORE_COMMIT = "d867c3ab"
-# The paper gate pins this module to d89a0c47 and exports that commit into a
+# The paper gate pins this module to 5641bbf1 and exports that commit into a
 # temporary directory, so Core is bound by the bytes of the package that was
 # imported rather than by the path it was imported from. The three values are
 # rule-census-01's, which pins the same Core the same way. Moved on 2026-09-19
 # from e7937b89917c8da7ee4a08acc22e99ad12b9985b, 52 modules
-# sha256:d57f3cc9…b1355, under E-0436.
-CORE_PIN = "d89a0c4718654249ad678eaff62e7b1daba30b6f"
-CORE_MODULE_COUNT = 53
+# sha256:d57f3cc9…b1355, to d89a0c47, 53 modules sha256:340196…3ed04, and on
+# 2026-09-21 to the sealed two-step-door Core, 54 modules, both under E-0436.
+CORE_PIN = "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e"
+CORE_MODULE_COUNT = 54
 CORE_SOURCE_DIGEST = (
-    "sha256:340196130e1820e9a4f9979223f40dcf6b8c1227d8805d812fd08ca529a3ed04"
+    "sha256:487b426a4d6ed2cc5742ba262c8a1eb8f991469cb017765c3d9eb238ee4703a1"
 )
 FROZEN_EXPORT = (
     "sha256:0634e0696a34bc2cc736f84dbeadf6b65416ebcd9f84f0e67eeb11bb9a44a286"
@@ -174,7 +175,7 @@ def core_source_identity(package, modules: list[str]) -> tuple[int, str]:
 def test_the_imported_core_is_the_pinned_one_by_its_own_bytes():
     """Bind Core by identity, not by the path it happens to sit at.
 
-    The gate pins this module to ``d89a0c47`` and exports that commit into a
+    The gate pins this module to ``5641bbf1`` and exports that commit into a
     temporary directory, so an assertion on the import location refuses the
     gate's own run. The commit is not recoverable from the package bytes
     either: a ``git archive`` carries no commit metadata, no ``RUNTIME.md`` and
@@ -183,20 +184,25 @@ def test_the_imported_core_is_the_pinned_one_by_its_own_bytes():
     is what this asserts.
 
     **The set is the tracked one, on purpose.** Under the gate the import
-    resolves to the export, 53 modules. Under this cell's own documented
-    command it resolves to the working checkout, which holds those 53 and seven
+    resolves to the export, 54 modules. Under this cell's own documented
+    command it resolves to the working checkout, which holds those 54 and seven
     more that are gitignored, so digesting every ``.py`` file it finds would
     refuse the gate. Restricting to the modules
-    ``git archive d89a0c47 -- src/malleus`` carries gives one value both paths
+    ``git archive 5641bbf1 -- src/malleus`` carries gives one value both paths
     produce, and it is the value ``rule-census-01`` pins.
 
     **The pin moved on 2026-09-19** from ``e7937b89`` to ``d89a0c47``, the
     sealed Core that carries the one-call atomic admission, under E-0436: when
     Core changes the paper's pin moves to it and the cells re-baseline on it.
     Old value 52 modules ``sha256:d57f3cc9…b1355``, new value 53 modules
-    ``sha256:340196…3ed04``; it moved because Core's own bytes moved, with
-    ``_contract_pipeline/admission.py`` added. Every measurement this cell
-    holds was re-run on the new pin through the gate and did not move.
+    ``sha256:340196…3ed04``, with ``_contract_pipeline/admission.py`` added.
+
+    **It moved again on 2026-09-21** to ``5641bbf1``, the sealed Core that
+    closes the two-step admission door and folds the structural admission check
+    into a v1 ``CORE_BUILTIN`` check contract. Old value 53 modules
+    ``sha256:340196…3ed04``, new value 54 modules ``sha256:487b42…03a1``, with
+    ``_contract_pipeline/check_contract.py`` added. Every measurement this cell
+    holds was re-run on each new pin through the gate and did not move.
 
     **The pin and this cell's Core constant name different trees now.**
     ``CORE_COMMIT`` here is ``d867c3ab``, the merge that put the hardened Core

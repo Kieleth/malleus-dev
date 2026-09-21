@@ -30,7 +30,8 @@ def test_manifest_declares_the_answer_demonstration_core_pin() -> None:
 
     E-0436 moves the paper's Core pin whenever Core moves, and on 2026-09-19
     the other two pins moved to the sealed one-call-admission Core
-    ``d89a0c47``. This one was moved too and put back. Against a
+    ``d89a0c47``, and on 2026-09-21 to ``5641bbf1``. This one was moved too
+    and put back. Against a
     ``git archive`` of ``d89a0c47`` the group reads 30 failed, 631 passed,
     2 subtests passed. Twenty-nine of the failures are
     ``pilot.verify_runtime`` refusing before any Core work happens, because
@@ -79,10 +80,19 @@ def test_manifest_pins_the_rule_cells_to_the_current_core() -> None:
     the same count and the same measurements as on e7937b89; the two Core
     fingerprints inside the cells moved from 52 modules
     sha256:d57f3cc9…b1355 to 53 modules sha256:340196…3ed04, and nothing else
-    did. The fact contract is still version 3.
+    did.
+
+    It moved again on 2026-09-21 to 5641bbf1f64b68b2d4e71b9d67726c5beb078f6e, the
+    sealed Core that closes the two-step admission door and folds the
+    structural admission check into a v1 ``CORE_BUILTIN`` check contract
+    (OVR-000471 to OVR-000475). Measured through the gate's own mechanism
+    before the move, the group read 2 failed, 182 passed, and both failures
+    were the Core fingerprint itself; nothing the cells measure moved. The two
+    fingerprints are now 54 modules sha256:487b42…03a1. The fact contract is
+    still version 3.
     """
     pin = MANIFEST["core_pins"][1]
-    assert pin["commit"] == "d89a0c4718654249ad678eaff62e7b1daba30b6f"
+    assert pin["commit"] == "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e"
     assert pin["pythonpath"] == []
     assert set(pin["paths"]) == {
         "paper-v4/experiment-v4/content-rules-doc-01/test_content_rules_doc.py",
@@ -101,12 +111,15 @@ def test_manifest_pins_the_shop_reconsideration_cell_to_the_current_core() -> No
 
     The pin moved on 2026-09-19 from d5d014ba1d7e3bfe906bc71dc93ded5657a3b424
     to d89a0c4718654249ad678eaff62e7b1daba30b6f, the sealed Core carrying the
-    one-call atomic admission, under E-0436. The cell reads frozen records and
-    produces nothing, so the move changes which Core its assertions import and
-    no measured value: re-run through the gate's own mechanism on the new pin
-    the cell is 32 passed, as on d5d014ba. Its Core fingerprint moved from 52
-    modules sha256:f2fd444d…e73c to 53 modules sha256:340196…3ed04, Core's own
-    bytes, with ``_contract_pipeline/admission.py`` added.
+    one-call atomic admission, under E-0436, and again on 2026-09-21 to
+    5641bbf1f64b68b2d4e71b9d67726c5beb078f6e, the sealed Core that closes the
+    two-step admission door. The cell reads frozen records and produces
+    nothing, so a move changes which Core its assertions import and no
+    measured value: re-run through the gate's own mechanism the cell is 32
+    passed on each pin, as on d5d014ba. Its Core fingerprint moved from 52
+    modules sha256:f2fd444d…e73c to 53 modules sha256:340196…3ed04, with
+    ``_contract_pipeline/admission.py`` added, and then to 54 modules
+    sha256:487b42…03a1, with ``_contract_pipeline/check_contract.py`` added.
 
     The cell asserts the imported Core by a digest over the package's own
     modules, so the pin has to hold in process; without it the checkout's
@@ -114,7 +127,7 @@ def test_manifest_pins_the_shop_reconsideration_cell_to_the_current_core() -> No
     the cell would measure.
     """
     pin = MANIFEST["core_pins"][2]
-    assert pin["commit"] == "d89a0c4718654249ad678eaff62e7b1daba30b6f"
+    assert pin["commit"] == "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e"
     assert pin["pythonpath"] == []
     assert pin["paths"] == [
         "paper-v4/experiment-v4/shop-reconsideration-01/test_shop_reconsideration.py"
@@ -172,7 +185,8 @@ def test_plan_partitions_pinned_paths_and_orders_the_pin_first() -> None:
     """Two pin entries naming one commit stay two groups.
 
     Since 2026-09-19 the rule cells and the Shop reconsideration cell are both
-    pinned to d89a0c47 and are still planned separately, because a group is a
+    pinned to one commit, 5641bbf1 since 2026-09-21, and are still planned
+    separately, because a group is a
     commit plus an import path and only the commit is shared. They export into
     the same directory, keyed by the commit, and the export is written once per
     group.
@@ -182,8 +196,8 @@ def test_plan_partitions_pinned_paths_and_orders_the_pin_first() -> None:
     plan = runner.plan(manifest, paths, export_root=Path("/exports"))
     assert [group["pin"] for group in plan] == [
         "160878cf14c0d27b11a440e26688708e9b7a7e2b",
-        "d89a0c4718654249ad678eaff62e7b1daba30b6f",
-        "d89a0c4718654249ad678eaff62e7b1daba30b6f",
+        "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e",
+        "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e",
         None,
     ]
     pinned, rules, shop, rest = plan
@@ -210,7 +224,7 @@ def test_the_unpinned_partition_does_not_sweep_a_pinned_cell_back_in() -> None:
     Core the cell was measured on and once against whatever the checkout holds.
     The Shop reconsideration cell joined them on 2026-09-18, so the unpinned
     partition ignores five files, not four. Both groups moved to the d89a0c47
-    pin on 2026-09-19.
+    pin on 2026-09-19 and to the 5641bbf1 pin on 2026-09-21.
     """
     manifest, paths = runner.load_active_paths()
     pinned, rules, shop, rest = runner.plan(manifest, paths, export_root=Path("/exports"))

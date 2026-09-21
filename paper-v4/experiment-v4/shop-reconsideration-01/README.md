@@ -69,15 +69,20 @@ The Core the paper gate imports for this cell is a separate coordinate, and on
 2026-09-19 it moved to `d89a0c4718654249ad678eaff62e7b1daba30b6f`, the sealed
 commit carrying the one-call atomic admission
 `malleus.compiler.check_and_admit_population_plan`, governance head
-`OVR-000468`. E-0436 is the standing rule: when Core changes, the paper's pin
-moves to it, the cells re-run on it and the new fingerprints are the baseline.
-That export is 53 modules,
+`OVR-000468`, 53 modules
 `sha256:340196130e1820e9a4f9979223f40dcf6b8c1227d8805d812fd08ca529a3ed04`,
 against `d5d014ba`'s 52 and
-`sha256:f2fd444d09072c02575e64d6e918b30599b2ccb5823639188d76dabb72a3e73c`; the
-one module added is `_contract_pipeline/admission.py`. Nothing this cell reads
-moved with the pin. This cell produces no artifact: it reads frozen records,
-so the move changes which Core the assertions import and no measured value.
+`sha256:f2fd444d09072c02575e64d6e918b30599b2ccb5823639188d76dabb72a3e73c`. On
+2026-09-21 it moved again, to `5641bbf1f64b68b2d4e71b9d67726c5beb078f6e`, the
+sealed commit that closes the two-step admission door and folds the structural
+admission check into a v1 `CORE_BUILTIN` check contract, governance head
+`OVR-000475`, 54 modules
+`sha256:487b426a4d6ed2cc5742ba262c8a1eb8f991469cb017765c3d9eb238ee4703a1`;
+the module added is `_contract_pipeline/check_contract.py`. E-0436 is the
+standing rule: when Core changes, the paper's pin moves to it, the cells re-run
+on it and the new fingerprints are the baseline. Nothing this cell reads moved
+with either pin. This cell produces no artifact: it reads frozen records, so
+the move changes which Core the assertions import and no measured value.
 
 Core capability reused, not written here:
 `malleus.acquisition.check_review_coverage` for the completion certificate, and
@@ -121,11 +126,15 @@ chapter's prose out of this repository.
 The evidence packets and the producer workspaces stay under `private/`. They
 are available to the author for verification and they never enter git.
 
-Run it alone, with the Core the gate pins first on the import path:
+Run it alone, with the Core the gate pins first on the import path. `private/`
+holds runtime exports of earlier Cores, among them `d5d014ba` and `d89a0c47`,
+and none of the current pin, so export the pin the way the gate does:
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 \
-PYTHONPATH=private/shop-progressive-01/runtime-d89a0c47/src \
+EXPORT=$(mktemp -d)
+git archive 5641bbf1f64b68b2d4e71b9d67726c5beb078f6e src/malleus ontology \
+    | tar -x -C "$EXPORT"
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$EXPORT/src" \
     .venv/bin/python -m pytest -q -p no:cacheprovider -o pythonpath= \
     paper-v4/experiment-v4/shop-reconsideration-01/test_shop_reconsideration.py
 ```
@@ -133,9 +142,8 @@ PYTHONPATH=private/shop-progressive-01/runtime-d89a0c47/src \
 The `-o pythonpath=` matters. This checkout's `src/malleus` carries seven
 gitignored modules that no commit does, so a plain run imports more modules
 than the pin has and the Core assertion refuses, correctly. Under the paper
-gate the cell runs in the `d89a0c47` pinned group against a `git archive`
-export of that commit, and that export and the private
-`runtime-d89a0c47` export give the same 53 modules and the same digest.
+gate the cell runs in the `5641bbf1` pinned group against exactly that
+`git archive` export.
 
 Ledger entries: E-0433 to E-0483. Run report:
 `private/shop-progressive-01/D0-REPORT.md`, addenda 1 to 18.

@@ -114,13 +114,14 @@ def test_the_shop_reconsideration_cell_is_registered_with_its_core_pin():
     assert relative in manifest["paths"]
     # The Core the gate exports for this cell. The pin moved on 2026-09-19 from
     # d5d014ba, the Core the third boundary and its certificate were produced
-    # on, to the sealed one-call-admission Core, under E-0436. The run's own
-    # Core stays recorded in the cell's replay verification and README. Two pin
-    # entries now name this commit, so the entry is selected by the path it
-    # holds and not by the commit alone.
+    # on, to the sealed one-call-admission Core, and on 2026-09-21 to the
+    # sealed two-step-door Core, both under E-0436. The run's own Core stays
+    # recorded in the cell's replay verification and README. Two pin entries
+    # name this commit, so the entry is selected by the path it holds and not
+    # by the commit alone.
     holders = [pin for pin in manifest["core_pins"] if relative in pin["paths"]]
     assert len(holders) == 1, "the cell is named by more than one Core pin"
-    assert holders[0]["commit"] == "d89a0c4718654249ad678eaff62e7b1daba30b6f"
+    assert holders[0]["commit"] == "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e"
     assert holders[0]["paths"] == [relative]
 
 

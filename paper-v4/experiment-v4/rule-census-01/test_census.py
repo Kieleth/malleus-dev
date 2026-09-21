@@ -26,15 +26,19 @@ RUN_23 = ROOT / "private/paper-v4-v4-run-23"
 # Moved on 2026-09-19 from e7937b89917c8da7ee4a08acc22e99ad12b9985b, 52 modules
 # sha256:d57f3cc9…b1355, to the sealed one-call-admission Core, 53 modules,
 # under E-0436: when Core changes the paper's pin moves to it, the cells re-run
-# on it and the new fingerprints become the baseline. The one module added is
+# on it and the new fingerprints become the baseline. The module added there was
 # ``_contract_pipeline/admission.py``, which carries
-# ``check_and_admit_population_plan``. The census itself was measured on
+# ``check_and_admit_population_plan``. Moved again on 2026-09-21 from that Core,
+# 53 modules sha256:340196…3ed04, to the sealed Core that closes the two-step
+# admission door and folds the structural check into a ``CORE_BUILTIN`` check
+# contract, 54 modules, under the same rule; the module added is
+# ``_contract_pipeline/check_contract.py``. The census itself was measured on
 # e7937b89 and RESULTS.md still names that coordinate; nothing this cell
-# measures moved with the pin.
-CORE_COMMIT = "d89a0c4718654249ad678eaff62e7b1daba30b6f"
-CORE_MODULE_COUNT = 53
+# measures moved with either pin.
+CORE_COMMIT = "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e"
+CORE_MODULE_COUNT = 54
 CORE_SOURCE_DIGEST = (
-    "sha256:340196130e1820e9a4f9979223f40dcf6b8c1227d8805d812fd08ca529a3ed04"
+    "sha256:487b426a4d6ed2cc5742ba262c8a1eb8f991469cb017765c3d9eb238ee4703a1"
 )
 
 # This cell's own modules, the way bridge-01 and fault-injection-02 reach
@@ -82,7 +86,7 @@ def test_the_imported_core_is_the_pinned_one_by_its_own_bytes():
     strongest identity the bytes do support: a digest over every module of the
     package that was actually imported.
 
-    The pinned value is what ``git archive d89a0c4718654249ad678eaff62e7b1daba30b6f
+    The pinned value is what ``git archive 5641bbf1f64b68b2d4e71b9d67726c5beb078f6e
     src/malleus`` produces. The correspondence between the commit and these
     bytes is made by the export command, once, outside this test; the test's
     job is to refuse a Core whose bytes are not those.
@@ -91,9 +95,15 @@ def test_the_imported_core_is_the_pinned_one_by_its_own_bytes():
     sealed Core that carries the one-call atomic admission, under E-0436:
     when Core changes the paper's pin moves to it and the cells re-baseline
     on it. Old value 52 modules ``sha256:d57f3cc9…b1355``, new value 53
-    modules ``sha256:340196…3ed04``; it moved because Core's own bytes moved,
-    one module added. Everything this cell measures was re-run on the new pin
-    through the gate and did not move.
+    modules ``sha256:340196…3ed04``.
+
+    **It moved again on 2026-09-21** to ``5641bbf1``, the sealed Core that
+    closes the two-step admission door and folds the structural admission
+    check into a v1 ``CORE_BUILTIN`` check contract. Old value 53 modules
+    ``sha256:340196…3ed04``, new value 54 modules ``sha256:487b42…03a1``; it
+    moved because Core's own bytes moved, with
+    ``_contract_pipeline/check_contract.py`` added. Everything this cell
+    measures was re-run on each new pin through the gate and did not move.
     """
 
     count, digest = core_source_identity(malleus)

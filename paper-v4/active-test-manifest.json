@@ -17,7 +17,7 @@
       ]
     },
     {
-      "commit": "d89a0c4718654249ad678eaff62e7b1daba30b6f",
+      "commit": "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e",
       "pythonpath": [],
       "paths": [
         "paper-v4/experiment-v4/content-rules-doc-01/test_content_rules_doc.py",
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "commit": "d89a0c4718654249ad678eaff62e7b1daba30b6f",
+      "commit": "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e",
       "pythonpath": [],
       "paths": [
         "paper-v4/experiment-v4/shop-reconsideration-01/test_shop_reconsideration.py"

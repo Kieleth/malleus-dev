@@ -75,21 +75,26 @@ MAIN_AT_CLOSE_OUT = "ff1c69315f68de949a223aedd3175e0319802807"
 
 # GATE_CORE is the Core the paper gate exports and this module imports, bound
 # by the bytes of the package rather than by the path it is imported from. The
-# value is what ``git archive d89a0c4718654249ad678eaff62e7b1daba30b6f
-# src/malleus`` produces, and the private export
-# ``private/shop-progressive-01/runtime-d89a0c47`` gives the same 53 modules
-# and the same digest, which is what makes that export that commit's Core.
+# value is what ``git archive 5641bbf1f64b68b2d4e71b9d67726c5beb078f6e
+# src/malleus`` produces. ``private/`` holds no export of this commit;
+# ``private/shop-progressive-01/runtime-d89a0c47`` is the previous pin's Core,
+# 53 modules sha256:340196…3ed04, so the standalone command in the README
+# exports the pin itself.
 #
 # Moved on 2026-09-19 from d5d014ba, 52 modules
-# sha256:f2fd444d…e73c, to the sealed one-call-admission Core, under E-0436:
-# when Core changes the paper's pin moves to it, the cells re-run on it and the
-# new fingerprints are the baseline. The one module added is
-# ``_contract_pipeline/admission.py``. Nothing this cell reads moved with it;
-# the cell reads frozen records and produces nothing.
-GATE_CORE = "d89a0c4718654249ad678eaff62e7b1daba30b6f"
-CORE_MODULE_COUNT = 53
+# sha256:f2fd444d…e73c, to the sealed one-call-admission Core, 53 modules
+# sha256:340196…3ed04, with ``_contract_pipeline/admission.py`` added. Moved
+# again on 2026-09-21 to the sealed Core that closes the two-step admission
+# door and folds the structural admission check into a v1 ``CORE_BUILTIN``
+# check contract, 54 modules, with ``_contract_pipeline/check_contract.py``
+# added. Both under E-0436: when Core changes the paper's pin moves to it, the
+# cells re-run on it and the new fingerprints are the baseline. Nothing this
+# cell reads moved with either; the cell reads frozen records and produces
+# nothing.
+GATE_CORE = "5641bbf1f64b68b2d4e71b9d67726c5beb078f6e"
+CORE_MODULE_COUNT = 54
 CORE_SOURCE_DIGEST = (
-    "sha256:340196130e1820e9a4f9979223f40dcf6b8c1227d8805d812fd08ca529a3ed04"
+    "sha256:487b426a4d6ed2cc5742ba262c8a1eb8f991469cb017765c3d9eb238ee4703a1"
 )
 
 
@@ -195,8 +200,9 @@ def test_the_replay_verification_names_the_core_the_readme_and_the_run_core():
 
     The third boundary was produced on ``d5d014ba`` and its replay
     verification says so. The gate's pin moved to ``d89a0c47`` on 2026-09-19
-    (E-0436) and this record did not move with it, because a record of what a
-    run was produced on is not a coordinate anyone is free to re-point.
+    and to ``5641bbf1`` on 2026-09-21 (E-0436), and this record did not move
+    with either, because a record of what a run was produced on is not a
+    coordinate anyone is free to re-point.
     """
 
     replay = load(REPLAY)
