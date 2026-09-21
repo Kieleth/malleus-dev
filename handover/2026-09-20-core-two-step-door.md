@@ -558,9 +558,9 @@ caller-built events.
    `render` and `hash` are unchanged, because the bounded projection in
    `status.md` names no document path and no change kind.
 2. **One entry cannot hold this branch.** `documentRevisionData.documents` has
-   `maxItems: 20` and the chain covers 71 governed documents. The draft below
+   `maxItems: 20` and the chain covers 73 governed documents. The draft below
    is therefore a chain of four, `OVR-000472` to `OVR-000475`, split by sorted
-   path with 20, 20, 20 and 11 documents. The split is mechanical and means
+   path with 20, 20, 20 and 13 documents. The split is mechanical and means
    nothing: the reason, the evidence commits and the subject are `OVR-000472`'s,
    and the other three say so. Each successor's `previous_entry_hash` is the
    literal `<previous entry hash>`, because it is the predecessor's `entry_hash`,
@@ -855,6 +855,8 @@ errors above are.
 - `934ef948` the successor Shop evidence generation for Core-run checks
 - `623f5c4d` the overseer ledger gains `REMOVED`, RED first
 - `6214e2bc` three governed passages catch up with decision D
+- `bc54ee8e` a removal claims no provenance for a later verified fact
+- `19c8b05f` two docs still linked the two deleted check contracts
 
 ## The overseer entry: `OVR-000472` to `OVR-000475`
 
@@ -865,28 +867,29 @@ How the document set was computed, mechanically:
    `design/contract_compiler/overseer/entries/OVR-*.json`. 721 paths have been
    recorded at some point; one lives only in a superseded entry, which the
    validator does not hold.
-2. Everything the branch changed, `git diff --name-only 85f0ed54..HEAD`: 101
+2. Everything the branch changed, `git diff --name-only 85f0ed54..HEAD`: 103
    paths.
-3. The intersection: **67 MODIFIED and 2 REMOVED**. Nothing in it already stood
+3. The intersection: **69 MODIFIED and 2 REMOVED**. Nothing in it already stood
    at its recorded digest.
 4. Plus two CREATED: `handover/2026-09-20-core-two-step-door.md`, which the
    brief names, and `tests/contract_compiler/pareto/test_change_set_admission.py`,
    by the precedent `OVR-000471` set when it recorded
-   `test_check_contract_executor.py` the same way. **71 documents.**
+   `test_check_contract_executor.py` the same way. **73 documents.**
 
 Nothing else qualified. `pyproject.toml` did not change on this branch, its
 `include` list declares no new file, and its `testpaths` names
 `tests/contract_compiler` as a directory rather than the new module. Every
 `before_digest` below was checked against the bytes at `85f0ed54` as well as
-against the ledger's own latest recorded digest: all 67 agree, so the two
-readings of "the committed bytes at 85f0ed54" are the same bytes. The six
+against the ledger's own latest recorded digest: all 69 agree, so the two
+readings of "the committed bytes at 85f0ed54" are the same bytes. The eight
 documents this pass added to the set are
 `.claude/skills/malleus-dev/SKILL.md`, `ROADMAP.md`,
 `design/contract_compiler/overseer/README.md`,
 `design/contract_compiler/overseer/ledger.schema.json`,
+`docs/SMALL_SHOP_WALKTHROUGH.md`, `docs/index.md`,
 `scripts/contract_compiler_ledger.py` and
-`tests/test_contract_compiler_ledger.py`; `CHANGELOG.md` was already in it and
-its `after_digest` moved.
+`tests/test_contract_compiler_ledger.py`; `CHANGELOG.md` was already in the set
+and its `after_digest` moved.
 
 The two deleted documents are recorded as `REMOVED`, the correction's check in
 `OVR-000472` and the showcase's in `OVR-000473`, each with `before_digest` the
@@ -895,7 +898,9 @@ ledger's latest recorded digest for its path:
 `OVR-000352` and
 `sha256:ad5de0ee774298c12b641d7a15f1ef7fcab3adf693ad319bcc3e39959148734e` from
 `OVR-000359`. Neither path was revised after the entry that created it, so the
-creating entry's `after_digest` is the latest recorded digest.
+creating entry's `after_digest` is the latest recorded digest. `OVR-000472`
+also carries this file as `CREATED`, and `OVR-000474` carries
+`test_change_set_admission.py`.
 
 All four blocks validate against
 `design/contract_compiler/overseer/ledger.schema.json` with
@@ -903,9 +908,9 @@ All four blocks validate against
 `sha256:0000...0000` for `entry_hash`, for the placeholdered digest and for the
 placeholdered previous hashes, and a real UTC timestamp for the placeholdered
 sealing moment: **4 of 4 valid, 0 errors**. The probe reads the fenced `json`
-blocks of this file and finds exactly four that parse as an object with an
-`entry_id`. `why` is 1197 characters in `OVR-000472` and 335 in each successor,
-under the 1200 cap; `summary` is 169, under 240.
+blocks of this file and finds five, of which exactly four parse as an object
+with an `entry_id`. `why` is 1197 characters in `OVR-000472` and 335 in each
+successor, under the 1200 cap; `summary` is 169, under 240.
 
 Proved end to end in a scratch copy of the repository, hardlinked so every
 governed document is the exact byte the branch holds, **with the two deleted
@@ -914,7 +919,7 @@ documents left deleted**, the four entries inserted at real hashes and
 then `check` reports, verbatim:
 
 ```text
-validated 475 entries; head OVR-000475 sha256:8e539f72755ab50ae7fec82af4e134249eb1da532640e72e4d0adf31eb8e940f
+validated 475 entries; head OVR-000475 sha256:3d521a9f8998d22dd21068aaef565b253202dc61a86e3699a42e29d8f156d943
 ```
 
 The scratch run binds this file as it stood immediately before this paragraph
@@ -977,10 +982,22 @@ re-derives it. The real worktree was never written to.
         "path": "docs/IMPLEMENTATION_STATUS.md"
       },
       {
+        "after_digest": "sha256:ce3183b742418bb2af1e8c9806043939ad6a12a9887606c0403843e7a0278fa4",
+        "before_digest": "sha256:81ce100a6a0df1fc2fd201e1820c85d1bdcd25fc9b139e8813153a83dc62bc35",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
         "after_digest": "sha256:a8ff630e712d695f5567505907541b51ec41dbdb84238291635cebc146367797",
         "before_digest": "sha256:006bdea4921ade62c58e1fc51b2043b8ef1855a71530c1c485e6d1e7135bb581",
         "change": "MODIFIED",
         "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:d5a38750b98118cb26cd68ffdacf9cc4a49892f0f57a8388ff8bb02856d19160",
+        "before_digest": "sha256:c87b021e2e1a28e54bf7e7bf086a7598577aa3c218d9574f65b6f52d2556ddd5",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
       },
       {
         "after_digest": "<digest of this file once final>",
@@ -1039,18 +1056,6 @@ re-derives it. The real worktree was never written to.
         "before_digest": "sha256:e0b3541ee706250b78a49ee1b2b784b95993c3e2464425a1f24b67fe85a95023",
         "change": "MODIFIED",
         "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/run.py"
-      },
-      {
-        "after_digest": "sha256:ba4291a2423d78de1951ab4378f4d4b4ea4b296b0a9ecf28df8aba059eca131e",
-        "before_digest": "sha256:4e8851c5b9ded2d9165e2e1c14e70b24b12d4a52e356a94032be60e068614dce",
-        "change": "MODIFIED",
-        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json"
-      },
-      {
-        "after_digest": "sha256:433f2f9b2da4fa7d5e8740e05eb724b9e852fed051f4e78727570b3e5f265e5f",
-        "before_digest": "sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b",
-        "change": "MODIFIED",
-        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json"
       }
     ]
   },
@@ -1096,6 +1101,16 @@ re-derives it. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "bc54ee8e71622b3adba1a4905a849bb3c69d7c33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1125,6 +1140,18 @@ re-derives it. The real worktree was never written to.
       "CC-R11"
     ],
     "documents": [
+      {
+        "after_digest": "sha256:ba4291a2423d78de1951ab4378f4d4b4ea4b296b0a9ecf28df8aba059eca131e",
+        "before_digest": "sha256:4e8851c5b9ded2d9165e2e1c14e70b24b12d4a52e356a94032be60e068614dce",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json"
+      },
+      {
+        "after_digest": "sha256:433f2f9b2da4fa7d5e8740e05eb724b9e852fed051f4e78727570b3e5f265e5f",
+        "before_digest": "sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json"
+      },
       {
         "after_digest": "sha256:1c5a75283a3bc74f4a67d471e1d5e63ed05ff5cfc6578efb145d3c4cfed29612",
         "before_digest": "sha256:b8c558b9dc2ca63f274bbae0b46231d7322719421db29bbf6729dbc68e12cc07",
@@ -1231,18 +1258,6 @@ re-derives it. The real worktree was never written to.
         "before_digest": "sha256:588ab3766625c184992860730fe33bc0ca17550b555fb9635d973e7a77d09244",
         "change": "MODIFIED",
         "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.py"
-      },
-      {
-        "after_digest": "sha256:343c23c4c5aa8c107f15e7a0da6bf236b250c578da73d699b762250bae65ae73",
-        "before_digest": "sha256:1767f6e65c49faa3a4da3be504f992ab29a13e925b20a3915b9c0ce2d7a76f3e",
-        "change": "MODIFIED",
-        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py"
-      },
-      {
-        "after_digest": "sha256:85778d6b396239aafa8587a06c78d2d74747d2526d57b7f277045862bab29ada",
-        "before_digest": "sha256:aee752c22d399983de648b6376a88c37405306f36cee20528234c88300bcb303",
-        "change": "MODIFIED",
-        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_query.py"
       }
     ]
   },
@@ -1288,6 +1303,16 @@ re-derives it. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "bc54ee8e71622b3adba1a4905a849bb3c69d7c33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1300,7 +1325,7 @@ re-derives it. The real worktree was never written to.
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 2 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 71 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 73 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
 
@@ -1317,6 +1342,18 @@ re-derives it. The real worktree was never written to.
       "CC-R11"
     ],
     "documents": [
+      {
+        "after_digest": "sha256:343c23c4c5aa8c107f15e7a0da6bf236b250c578da73d699b762250bae65ae73",
+        "before_digest": "sha256:1767f6e65c49faa3a4da3be504f992ab29a13e925b20a3915b9c0ce2d7a76f3e",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py"
+      },
+      {
+        "after_digest": "sha256:85778d6b396239aafa8587a06c78d2d74747d2526d57b7f277045862bab29ada",
+        "before_digest": "sha256:aee752c22d399983de648b6376a88c37405306f36cee20528234c88300bcb303",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_query.py"
+      },
       {
         "after_digest": "sha256:064695217ce8b50743c688eb7ed9ad884078cfc45a08be8dcf743aa7f6fad728",
         "before_digest": "sha256:f2ea7c2cee679262349864557b22a317ca788494946271c0cfdb874bd0340b33",
@@ -1423,18 +1460,6 @@ re-derives it. The real worktree was never written to.
         "before_digest": "sha256:6d0c9d791d5bb9a350ef28cf07c1424f8bf0b7382948102f8aff5dfef6bd6057",
         "change": "MODIFIED",
         "path": "tests/contract_compiler/pareto/test_finite_protocol_history.py"
-      },
-      {
-        "after_digest": "sha256:d71ef53f7a1f3fa3c96e0225e04cc76f4abae33c222597c02dc8cafff43a5f86",
-        "before_digest": "sha256:70392d0b73093c1e970cf033f8794851f8a0ebfb9309928eee9496918bd21a50",
-        "change": "MODIFIED",
-        "path": "tests/contract_compiler/pareto/test_governed_population.py"
-      },
-      {
-        "after_digest": "sha256:b2f1f373fa898a5d842178230c2c6c08d0d16e98b3bb87fff3a951e5b6c417e8",
-        "before_digest": "sha256:9771738d663490917d626ce2ff74910f717905c93cbcc9bf07b27bc8d3752973",
-        "change": "MODIFIED",
-        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
       }
     ]
   },
@@ -1480,6 +1505,16 @@ re-derives it. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "bc54ee8e71622b3adba1a4905a849bb3c69d7c33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1492,7 +1527,7 @@ re-derives it. The real worktree was never written to.
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 3 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 71 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 73 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
 
@@ -1509,6 +1544,18 @@ re-derives it. The real worktree was never written to.
       "CC-R11"
     ],
     "documents": [
+      {
+        "after_digest": "sha256:d71ef53f7a1f3fa3c96e0225e04cc76f4abae33c222597c02dc8cafff43a5f86",
+        "before_digest": "sha256:70392d0b73093c1e970cf033f8794851f8a0ebfb9309928eee9496918bd21a50",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_governed_population.py"
+      },
+      {
+        "after_digest": "sha256:b2f1f373fa898a5d842178230c2c6c08d0d16e98b3bb87fff3a951e5b6c417e8",
+        "before_digest": "sha256:9771738d663490917d626ce2ff74910f717905c93cbcc9bf07b27bc8d3752973",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      },
       {
         "after_digest": "sha256:5d481487d9d5633d1e2def3b0916dd81883bb5cf44cde399e24119b4bee755dd",
         "before_digest": "sha256:368b200e8cb23a214be8e84404b71aefd00bfa69a07209ae45cd1eb6d70f4853",
@@ -1564,7 +1611,7 @@ re-derives it. The real worktree was never written to.
         "path": "tests/contract_compiler/pareto/test_transition_admission.py"
       },
       {
-        "after_digest": "sha256:07c3a052324e80d8271647aa5e9a504c6c3b670d1d595deafe01b92cf8067fb1",
+        "after_digest": "sha256:34ba4633be93601e27e5b1319bb7be6e9d4470f29e958be5338a97985614ad61",
         "before_digest": "sha256:7640d767fb3fcc45db89bb12da7283b548cb5d81d6ad5a9724d7d80ef328e2a0",
         "change": "MODIFIED",
         "path": "tests/test_contract_compiler_ledger.py"
@@ -1619,6 +1666,16 @@ re-derives it. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "bc54ee8e71622b3adba1a4905a849bb3c69d7c33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1631,6 +1688,6 @@ re-derives it. The real worktree was never written to.
     "type": "DOCUMENT"
   },
   "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 4 of 4.",
-  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 71 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 73 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
