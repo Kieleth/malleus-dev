@@ -358,6 +358,71 @@ that declares the superseded policy while carrying a re-binding refuses as an
 unknown change kind. This is not policy migration: Core runs no rule and
 produces no check outcome.
 
+## A declared gap is a trigger, not a note
+
+A population plan or a document capture declares a typed gap when the source
+states something the ontology cannot hold. `POPULATION_GAP_KINDS` names the six
+kinds, and Core retains the gaps as an artifact bound to the plan ID. Two of the
+six kinds, `TYPE_ABSENT` and `RELATION_ABSENT`, are questions about the
+ontology's own vocabulary; `ONTOLOGY_GAP_KINDS` is exactly those two. They are
+now open questions with a recorded answer rather than a note nobody reads.
+
+A gap's identity is derived from the bytes it identifies.
+`ontology_gap_identity(gap=..., plan_id=...)` digests the canonical JSON object
+`{"gap": <the gap's four declared fields>, "plan_id": <the plan it was declared
+in>}`. Nothing is derived from a path, so the same gap declared in another plan
+is another gap, and a closed gap re-declared later with new evidence is a new
+gap with a new identity rather than this one reopened.
+
+The declaring producer, or anyone, retains a proposal under
+`malleus.ontology-revision-proposal/v1`. It is an ordinary retained-evidence
+record whose record ID is the proposal ID its owner declared, and its closed
+fields are `answers_gaps`, `grammar`, `issued_at`, `linkml_addition`,
+`proposal_id`, `reason`, `revision_id` and `target`, where `target` carries the
+`validated_contract` and `partial_contract` artifacts the revision would
+install and `linkml_addition` carries the addition as its owner wrote it.
+Retention is the check: whichever door retains the bytes, Core reads them as a
+proposal, refuses `UNKNOWN_GAP`, `GAP_KIND_NOT_ONTOLOGY` or
+`GAP_ALREADY_ANSWERED` for the gaps it names, and composes the revision it
+would install through `compile_contract_revision` under
+`CONTRACT_REVISION_POLICY`, refusing `PROPOSAL_NOT_ADDITIVE` for a removal or a
+narrowing and `PROPOSAL_DOES_NOT_COMPILE` for target artifacts Core cannot
+compile. A refused proposal writes nothing. Core drafts no proposal and reads
+no class or slot name out of a gap's statement.
+
+Accepting is the revision, in one act:
+
+```python
+replay = history.accept_ontology_revision_proposal(
+    proposal_id="proposal:customer",
+    deciding_actor="actor:ontology-owner",
+    transaction_time="2026-09-21T00:00:00Z",
+    actor_id="actor:producer",
+)
+```
+
+Core composes the additive revision from the proposal's own bytes and appends
+it together with one `malleus.ontology-gap-answer/v1` record in one ledger
+batch, or the ledger is untouched. There is no state in which a proposal is
+accepted and not applied: an `ACCEPTED` answer only folds when the revision its
+proposal named is recorded in the same history with the same target bytes. A
+second acceptance refuses `PROPOSAL_ALREADY_DECIDED`, an unknown proposal
+refuses `UNKNOWN_PROPOSAL`, and an empty deciding actor refuses
+`MISSING_DECIDING_ACTOR`. The deciding actor is recorded, not authenticated:
+whether this actor may decide is the adopter's to establish.
+
+`history.refuse_ontology_gaps(gap_identities=..., reason=...,
+deciding_actor=...)` is the other decision. It records the same answer grammar
+with disposition `REFUSED`, closes the named gaps, and moves no ontology.
+
+`KnowledgeHistoryReplay.open_gaps()` is the report. It returns the open gaps of
+the two ontology kinds, each with its identity, kind, locator, plan ID,
+source ID, statement and the identities of the proposals still open against it,
+sorted by plan ID then gap identity so two reads of one history agree byte for
+byte. `KnowledgeHistoryReplay.gap_answers` holds the recorded decisions.
+Check-contract re-binding is unchanged by this: it stays the declared
+`REBIND_CHECK_CONTRACT` change of the section above.
+
 ## One operation from a plan to an admitted change
 
 An adopter used to write the whole sequence: compile the plan, find the check

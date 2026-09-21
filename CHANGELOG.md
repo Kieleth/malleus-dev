@@ -37,6 +37,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A declared ontology gap is a trigger, not a note (ROADMAP F2). A plan or a
+  capture could already declare `TYPE_ABSENT` and `RELATION_ABSENT`, and Core
+  retained the gaps artifact and nothing consumed it. Those two kinds, now
+  public as `malleus.compiler.ONTOLOGY_GAP_KINDS`, are open questions with a
+  recorded answer. `ontology_gap_identity` derives a gap's identity from the
+  bytes it identifies, the digest of the canonical object `{"gap": <its four
+  declared fields>, "plan_id": <the plan it was declared in>}`. A proposal
+  under `malleus.ontology-revision-proposal/v1` names the gaps it answers,
+  carries the LinkML addition its owner wrote and the exact target contract
+  artifacts, and is refused at retention, on whichever door retained it, unless
+  every named gap is an open gap of one of those kinds and the composed result
+  is purely additive under the existing `CONTRACT_REVISION_POLICY`.
+  `KnowledgeChangeHistory.accept_ontology_revision_proposal` composes the
+  revision from the proposal's own bytes and appends it with one
+  `malleus.ontology-gap-answer/v1` record in one ledger batch, so there is no
+  state in which a proposal is accepted and not applied;
+  `refuse_ontology_gaps` closes the named gaps with a reason and moves no
+  ontology; `KnowledgeHistoryReplay.open_gaps` reports what is still open with
+  the proposals still open against it. Ten closed refusal reasons:
+  `MALFORMED_PROPOSAL`, `MALFORMED_ANSWER`, `UNKNOWN_GAP`,
+  `GAP_ALREADY_ANSWERED`, `GAP_KIND_NOT_ONTOLOGY`, `PROPOSAL_NOT_ADDITIVE`,
+  `PROPOSAL_DOES_NOT_COMPILE`, `UNKNOWN_PROPOSAL`, `PROPOSAL_ALREADY_DECIDED`
+  and `MISSING_DECIDING_ACTOR`. No change kind was added, so the
+  content-addressed revision policy identity does not move, and the gaps
+  artifact's bytes are read and never written, so no frozen evidence re-pins.
+  Core drafts no proposal, derives no class or slot name from a gap's
+  statement, and records the deciding actor without authenticating them.
+  Check-contract re-binding is untouched and stays the declared
+  `REBIND_CHECK_CONTRACT` change. The Small Shop `content_rules` and
+  `shipment_policy` runners end their round report with an `open_gaps` key;
+  every other key of those reports is unchanged. `connected_story/run.py`
+  retains its own source bytes as the evidence artifact
+  `artifact:connected-shop:adapter`, so editing it at all re-pins every plan
+  digest, the ledger head and the frozen replay receipt; it was left alone and
+  the measurement is in the handover.
 - Added `REMOVED` to the overseer ledger's `documentChange.change`, the fourth
   document change kind, because the ledger recorded no way to say that a
   governed document was deleted. A `REMOVED` record carries `before_digest`,

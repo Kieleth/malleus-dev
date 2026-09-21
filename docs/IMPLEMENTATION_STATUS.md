@@ -230,6 +230,24 @@ exposes an existing vocabulary and changes no admitted value: a plan or capture
 accepted before is accepted now, and a producer no longer has to read private
 code or search for the set.
 
+Two of those six kinds are now consumed rather than only retained.
+`malleus.compiler.ONTOLOGY_GAP_KINDS` names them, `TYPE_ABSENT` and
+`RELATION_ABSENT`, and `malleus.compiler.ontology_gap_identity` derives a gap's
+identity from the bytes it identifies: the digest of the canonical object
+`{"gap": <its four declared fields>, "plan_id": <the plan it was declared in>}`.
+A proposal under `malleus.ontology-revision-proposal/v1` names the gaps it
+answers, carries the LinkML addition its owner wrote and the exact target
+contract artifacts, and is refused at retention unless every named gap is an
+open gap of one of those two kinds and the composed result is purely additive
+under `CONTRACT_REVISION_POLICY`. `KnowledgeChangeHistory.accept_ontology_revision_proposal`
+records the additive revision and the `malleus.ontology-gap-answer/v1` answer in
+one ledger batch; `KnowledgeChangeHistory.refuse_ontology_gaps` closes the gaps
+with a reason and moves no ontology; `KnowledgeHistoryReplay.open_gaps` reports
+what is still open with the proposals still open against it. The gaps artifact
+itself is unchanged: this reads those bytes and writes none of them. Core drafts
+no proposal, derives no class or slot name from a gap's statement, and records
+the deciding actor without authenticating them.
+
 `malleus.compiler.check_and_admit_population_plan` makes compilation, the
 policy's check and admission one operation. It takes the history, the plan
 bytes as a producer wrote them, the bound domain-history profile, the actor and
