@@ -83,6 +83,7 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "three-valued-valid-time-projection",
         "indeterminacy-reason-commitments",
         "explicit-record-supersession",
+        "recorded-ontology-gap-answers",
         "accepted-graph-materialization-head",
         "typed-authorization-policies",
         "action-bound-authorization-policy",
