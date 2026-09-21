@@ -40,100 +40,35 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _anchored_history,
     _digest,
     _event,
-    _generic_compilation,
+)
+from tests.contract_compiler.pareto.test_linkml_addition import BASE, CLASS_FRAGMENT
+from tests.contract_compiler.pareto.test_ontology_source_set import (
+    _sources,
+    run_probe,
 )
 from tests.contract_compiler.pareto.test_population_plan import _plan
 from tests.contract_compiler.pareto.test_protocol_machine import (
     _canonical,
-    _effective,
 )
 
 
 DECIDER = "actor:ontology-owner"
-BASE_SOURCE = b"""\
-id: https://example.malleus.dev/pareto-history
-name: pareto_history
-default_range: string
-prefixes:
-  linkml: https://w3id.org/linkml/
-  malleus: https://malleus.dev/schema/
-  test: https://example.malleus.dev/pareto-history/
-imports:
-  - linkml:types
-  - malleus
-enums:
-  LinkKind:
-    permissible_values:
-      LINKS:
-slots:
-  label:
-    range: string
+BASE_SOURCE = BASE
+ADDITION = CLASS_FRAGMENT.decode("utf-8")
+EXISTING_CLASS_ADDITION = """\
 classes:
-  LeftObject:
-    is_a: Entity
-    slots:
-      - label
-    slot_usage:
-      label:
-        required: true
   RightObject:
     is_a: Entity
     slots:
       - label
-    slot_usage:
-      label:
-        required: true
-  ObjectLink:
-    is_a: Relation
-    slot_usage:
-      relation_type:
-        range: LinkKind
-        required: true
-        equals_string: LINKS
-      source_id:
-        range: LeftObject
-        required: true
-      target_id:
-        range: RightObject
-        required: true
 """
-ADDITION = """\
+UNCOMPILABLE_ADDITION = """\
 classes:
   CustomerObject:
-    is_a: Entity
+    is_a: NoSuchParentClass
     slots:
       - label
-    slot_usage:
-      label:
-        required: true
 """
-ADDITIVE_SOURCE = BASE_SOURCE.replace(
-    b"  RightObject:\n",
-    b"  CustomerObject:\n"
-    b"    is_a: Entity\n"
-    b"    slots:\n"
-    b"      - label\n"
-    b"    slot_usage:\n"
-    b"      label:\n"
-    b"        required: true\n"
-    b"  RightObject:\n",
-)
-NON_ADDITIVE_SOURCE = BASE_SOURCE.replace(
-    b"  RightObject:\n"
-    b"    is_a: Entity\n"
-    b"    slots:\n"
-    b"      - label\n"
-    b"    slot_usage:\n"
-    b"      label:\n"
-    b"        required: true\n",
-    b"  RightObject:\n"
-    b"    is_a: Entity\n"
-    b"    slots:\n"
-    b"      - label\n"
-    b"    slot_usage:\n"
-    b"      label:\n"
-    b"        required: false\n",
-)
 
 
 def _gap(
@@ -150,27 +85,17 @@ def _gap(
     }
 
 
-def _target(source: bytes) -> tuple[bytes, bytes]:
-    """The target contract artifacts a proposal carries, from exact bytes."""
-
-    compiled = _generic_compilation(source)
-    partial = _effective(
-        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
-    )
-    return compiled.artifact.artifact_bytes, partial.canonical_bytes
-
-
 def _proposal_bytes(
     *,
     answers: tuple[str, ...],
     proposal_id: str = "proposal:customer",
     revision_id: str = "revision:customer",
-    source: bytes = ADDITIVE_SOURCE,
     addition: str = ADDITION,
     reason: str = "the source names a customer the contract cannot type",
     issued_at: str = "2026-09-21T00:00:00Z",
 ) -> bytes:
-    validated, partial = _target(source)
+    """A proposal as its owner writes it: a fragment, and no compiled artifact."""
+
     return _canonical(
         {
             "answers_gaps": sorted(answers),
@@ -180,33 +105,34 @@ def _proposal_bytes(
             "proposal_id": proposal_id,
             "reason": reason,
             "revision_id": revision_id,
-            "target": {
-                "partial_contract": json.loads(partial),
-                "validated_contract": json.loads(validated),
-            },
         }
     )
 
 
+def _retain_source(history: KnowledgeChangeHistory) -> None:
+    history.retain_ontology_source(
+        root_locator="generic",
+        sources=_sources(BASE_SOURCE),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+
 def _retain_proposal(history: KnowledgeChangeHistory, proposal: bytes) -> None:
-    record_id = json.loads(proposal)["proposal_id"]
-    _anchor(
-        history,
-        _event(
-            "ARTIFACT_REGISTERED",
-            artifact_id=record_id,
-            artifact_identity=_digest(proposal),
-        ),
-        proposal,
-        "RETAINED_EVIDENCE",
-        media_type="application/json",
+    history.retain_ontology_revision_proposal(
+        proposal_bytes=proposal,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
     )
 
 
 def _plan_history(tmp_path: Path, *, gap: dict[str, str] | None = None):
     """Consumer one: a population-plan history whose plan declares a gap."""
 
-    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    history, _, partial, _, source, evidence = _anchored_history(
+        tmp_path, contract_source=BASE_SOURCE
+    )
+    _retain_source(history)
     plan = _plan(
         partial.identity,
         source_identity=source,
@@ -230,7 +156,10 @@ def _plan_history(tmp_path: Path, *, gap: dict[str, str] | None = None):
 def _change_set_history(tmp_path: Path, *, gap: dict[str, str] | None = None):
     """Consumer two: a change-set history that retains its own gaps artifact."""
 
-    history, _, _, _, _, _ = _anchored_history(tmp_path)
+    history, _, _, _, _, _ = _anchored_history(
+        tmp_path, contract_source=BASE_SOURCE
+    )
+    _retain_source(history)
     round_id = "round:change-set:1"
     declared = {"gaps": [gap or _gap()], "plan_id": round_id}
     gaps_artifact = _canonical(declared)
@@ -590,13 +519,15 @@ def test_a_non_additive_proposal_refuses_at_retention_and_writes_nothing(
     with pytest.raises(compiler.OntologyGapAnswerRefusal) as refusal:
         _retain_proposal(
             history,
-            _proposal_bytes(answers=(identity,), source=NON_ADDITIVE_SOURCE),
+            _proposal_bytes(answers=(identity,), addition=EXISTING_CLASS_ADDITION),
         )
 
     assert (
         refusal.value.reason
         is compiler.OntologyGapAnswerRefusalReason.PROPOSAL_NOT_ADDITIVE
     )
+    # The composition rule refused first, and it says which rule it was.
+    assert "EXISTING_CLASS" in refusal.value.detail
     assert history.path.read_bytes() == before
     assert history.replay().open_gaps()[0].open_proposals == ()
 
@@ -604,11 +535,12 @@ def test_a_non_additive_proposal_refuses_at_retention_and_writes_nothing(
 def test_a_proposal_that_does_not_compile_refuses_at_retention(tmp_path) -> None:
     history, identity, _ = _plan_history(tmp_path)
     before = history.path.read_bytes()
-    broken = json.loads(_proposal_bytes(answers=(identity,)))
-    broken["target"]["validated_contract"] = {"not": "a validated contract"}
 
     with pytest.raises(compiler.OntologyGapAnswerRefusal) as refusal:
-        _retain_proposal(history, _canonical(broken))
+        _retain_proposal(
+            history,
+            _proposal_bytes(answers=(identity,), addition=UNCOMPILABLE_ADDITION),
+        )
 
     assert (
         refusal.value.reason
@@ -711,6 +643,273 @@ def test_a_proposal_against_an_already_answered_gap_refuses(tmp_path) -> None:
         is compiler.OntologyGapAnswerRefusalReason.GAP_ALREADY_ANSWERED
     )
     assert history.path.read_bytes() == before
+
+
+# --- the proposal is born a fragment -----------------------------------------
+
+
+def test_a_proposal_carries_the_fragment_and_no_compiled_artifact() -> None:
+    proposal = json.loads(_proposal_bytes(answers=("sha256:" + "0" * 64,)))
+
+    assert set(proposal) == {
+        "answers_gaps",
+        "grammar",
+        "issued_at",
+        "linkml_addition",
+        "proposal_id",
+        "reason",
+        "revision_id",
+    }
+    assert proposal["linkml_addition"] == ADDITION
+
+
+def test_a_proposal_that_supplies_its_own_target_refuses(tmp_path) -> None:
+    history, identity, _ = _plan_history(tmp_path)
+    supplied = json.loads(_proposal_bytes(answers=(identity,)))
+    supplied["target"] = {"partial_contract": {}, "validated_contract": {}}
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.OntologyGapAnswerRefusal) as refusal:
+        _retain_proposal(history, _canonical(supplied))
+
+    assert (
+        refusal.value.reason
+        is compiler.OntologyGapAnswerRefusalReason.MALFORMED_PROPOSAL
+    )
+    assert "target" in refusal.value.detail
+    assert history.path.read_bytes() == before
+
+
+@pytest.mark.parametrize("consumer", CONSUMERS)
+def test_core_derives_and_retains_the_target_the_proposer_did_not_supply(
+    tmp_path, consumer
+) -> None:
+    history, identity, _ = consumer(tmp_path)
+    proposal = _proposal_bytes(answers=(identity,))
+    current = history.replay().ontology_source_set()
+
+    _retain_proposal(history, proposal)
+
+    replay = history.replay()
+    target = replay.ontology_revision_target("proposal:customer")
+    assert target.proposal_identity == _digest(proposal)
+    assert target.source_set_identity == current.identity
+    # The composed root is in the history, and it is the base plus the fragment.
+    composed = compiler.compose_linkml_addition(
+        BASE_SOURCE, ADDITION.encode("utf-8")
+    )
+    assert _digest(composed) == target.composed_root_sha256
+    assert replay.retained_bytes(
+        f"ontology-source:{target.composed_root_sha256}"
+    ) == composed
+
+
+def test_a_proposal_against_a_history_with_no_retained_source_refuses(
+    tmp_path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(
+        tmp_path, contract_source=BASE_SOURCE
+    )
+    plan = _plan(partial.identity, source_identity=source, evidence_identity=evidence)
+    plan["gaps"] = [_gap()]
+    prepared = _prepare(history, plan, NEUTRAL_PROFILE_DATA)
+    assert prepared.change_set is not None
+    compiler.check_and_admit_change_set(
+        history=history,
+        change_set=prepared.change_set,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    identity = compiler.ontology_gap_identity(
+        gap=plan["gaps"][0], plan_id=plan["plan_id"]
+    )
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.OntologySourceRefusal) as refusal:
+        _retain_proposal(history, _proposal_bytes(answers=(identity,)))
+
+    assert (
+        refusal.value.reason
+        is compiler.OntologySourceRefusalReason.ONTOLOGY_SOURCE_NOT_RETAINED
+    )
+    assert history.path.read_bytes() == before
+
+
+def test_a_proposal_retained_without_a_derived_target_refuses(tmp_path) -> None:
+    """The ordinary anchor door cannot slip a proposal past the derivation."""
+
+    history, identity, _ = _plan_history(tmp_path)
+    proposal = _proposal_bytes(answers=(identity,))
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.OntologyGapAnswerRefusal) as refusal:
+        _anchor(
+            history,
+            _event(
+                "ARTIFACT_REGISTERED",
+                artifact_id="proposal:customer",
+                artifact_identity=_digest(proposal),
+            ),
+            proposal,
+            "RETAINED_EVIDENCE",
+            media_type="application/json",
+        )
+
+    assert (
+        refusal.value.reason
+        is compiler.OntologyGapAnswerRefusalReason.PROPOSAL_TARGET_NOT_DERIVED
+    )
+    assert history.path.read_bytes() == before
+
+
+@pytest.mark.parametrize("consumer", CONSUMERS)
+def test_acceptance_makes_the_composed_root_the_current_source(
+    tmp_path, consumer
+) -> None:
+    history, identity, _ = consumer(tmp_path)
+    _retain_proposal(history, _proposal_bytes(answers=(identity,)))
+    composed = compiler.compose_linkml_addition(
+        BASE_SOURCE, ADDITION.encode("utf-8")
+    )
+
+    replay = history.accept_ontology_revision_proposal(
+        proposal_id="proposal:customer",
+        deciding_actor=DECIDER,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+    source_set = replay.ontology_source_set()
+    assert source_set is not None
+    assert source_set.root_sha256 == _digest(composed)
+    assert source_set.validated_contract_identity == (
+        replay.partial_contract.validated_fact_set_sha256
+    )
+    assert replay.ontology_source_bytes("generic") == composed
+
+
+def test_a_second_proposal_composes_onto_the_first_acceptance(tmp_path) -> None:
+    history, identity, _ = _plan_history(tmp_path)
+    _retain_proposal(history, _proposal_bytes(answers=(identity,)))
+    history.accept_ontology_revision_proposal(
+        proposal_id="proposal:customer",
+        deciding_actor=DECIDER,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    second = _canonical(
+        {
+            "gaps": [_gap(statement="no type for the referral agent")],
+            "plan_id": "round:second",
+        }
+    )
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="round:second:gaps",
+            artifact_identity=_digest(second),
+        ),
+        second,
+        "RETAINED_EVIDENCE",
+        media_type="application/json",
+    )
+    next_identity = compiler.ontology_gap_identity(
+        gap=json.loads(second)["gaps"][0], plan_id="round:second"
+    )
+
+    _retain_proposal(
+        history,
+        _proposal_bytes(
+            answers=(next_identity,),
+            proposal_id="proposal:referral",
+            revision_id="revision:referral",
+            addition="classes:\n  ReferralObject:\n    is_a: Entity\n",
+        ),
+    )
+    replay = history.accept_ontology_revision_proposal(
+        proposal_id="proposal:referral",
+        deciding_actor=DECIDER,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+    assert replay.contract_view.has_type("CustomerObject")
+    assert replay.contract_view.has_type("ReferralObject")
+    assert len(replay.contract_revisions) == 2
+    assert replay.open_gaps() == ()
+
+
+def test_two_proposals_composing_to_the_same_contract_both_retain(
+    tmp_path,
+) -> None:
+    """One digest is one record, and a shared derivation is not a collision."""
+
+    history, identity, _ = _plan_history(tmp_path)
+    second = _canonical(
+        {
+            "gaps": [_gap(statement="the contract has no customer type either")],
+            "plan_id": "round:second",
+        }
+    )
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="round:second:gaps",
+            artifact_identity=_digest(second),
+        ),
+        second,
+        "RETAINED_EVIDENCE",
+        media_type="application/json",
+    )
+    other = compiler.ontology_gap_identity(
+        gap=json.loads(second)["gaps"][0], plan_id="round:second"
+    )
+
+    _retain_proposal(history, _proposal_bytes(answers=(identity,)))
+    _retain_proposal(
+        history,
+        _proposal_bytes(
+            answers=(other,),
+            proposal_id="proposal:customer-again",
+            revision_id="revision:customer-again",
+        ),
+    )
+
+    replay = history.replay()
+    first = replay.ontology_revision_target("proposal:customer")
+    again = replay.ontology_revision_target("proposal:customer-again")
+    assert first.composed_root_sha256 == again.composed_root_sha256
+    assert first.source_set_identity == again.source_set_identity
+    assert first.identity != again.identity
+    assert [gap.plan_id for gap in replay.open_gaps()] == [
+        "plan:neutral:1",
+        "round:second",
+    ]
+
+
+def test_acceptance_and_replay_need_no_compiler(tmp_path) -> None:
+    """The proposer needs a compiler for retention; nobody else needs one."""
+
+    history, identity, _ = _plan_history(tmp_path)
+    _retain_proposal(history, _proposal_bytes(answers=(identity,)))
+
+    finished = run_probe(
+        "from malleus._contract_pipeline.knowledge import KnowledgeChangeHistory\n"
+        f"history = KnowledgeChangeHistory.reopen({str(history.path)!r})\n"
+        "replay = history.accept_ontology_revision_proposal(\n"
+        "    proposal_id='proposal:customer',\n"
+        f"    deciding_actor={DECIDER!r},\n"
+        f"    transaction_time={TRANSACTION_TIME!r},\n"
+        "    actor_id='actor:test',\n"
+        ")\n"
+        "assert replay.open_gaps() == ()\n"
+        "assert len(replay.contract_revisions) == 1\n"
+    )
+
+    assert finished.returncode == 0, finished.stderr
+    assert finished.stdout.strip() == ""
 
 
 # --- determinism and closure -------------------------------------------------

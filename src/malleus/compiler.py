@@ -99,6 +99,12 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeValidTime,
     compose_change_set,
 )
+from malleus._contract_pipeline.linkml_addition import (
+    LINKML_ADDITION_KEYS,
+    LinkMLAdditionRefusal,
+    LinkMLAdditionRefusalReason,
+    compose_linkml_addition,
+)
 from malleus._contract_pipeline.machine import (
     MachineArtifactRefusal,
     MachineArtifactRefusalReason,
@@ -116,6 +122,15 @@ from malleus._contract_pipeline.machine import (
     compose_partial_effective_contract,
     execute_event,
     replay_events,
+)
+from malleus._contract_pipeline.ontology_source import (
+    ONTOLOGY_REVISION_TARGET_GRAMMAR,
+    ONTOLOGY_SOURCE_SET_GRAMMAR,
+    OntologyRevisionTarget,
+    OntologySourceModule,
+    OntologySourceRefusal,
+    OntologySourceRefusalReason,
+    OntologySourceSet,
 )
 from malleus._contract_pipeline.population import (
     DomainHistoryProfile,
@@ -665,7 +680,10 @@ __all__ = (
     "KnowledgeRecordHistory",
     "KnowledgeRetainedInput",
     "KnowledgeValidTime",
+    "LINKML_ADDITION_KEYS",
     "LinkMLAdapterRefusal",
+    "LinkMLAdditionRefusal",
+    "LinkMLAdditionRefusalReason",
     "LinkMLRefusalReason",
     "MachineArtifactRefusal",
     "MachineArtifactRefusalReason",
@@ -680,10 +698,17 @@ __all__ = (
     "ONTOLOGY_GAP_DISPOSITIONS",
     "ONTOLOGY_GAP_KINDS",
     "ONTOLOGY_REVISION_PROPOSAL_GRAMMAR",
+    "ONTOLOGY_REVISION_TARGET_GRAMMAR",
+    "ONTOLOGY_SOURCE_SET_GRAMMAR",
     "OntologyGapAnswer",
     "OntologyGapAnswerRefusal",
     "OntologyGapAnswerRefusalReason",
     "OntologyRevisionProposal",
+    "OntologyRevisionTarget",
+    "OntologySourceModule",
+    "OntologySourceRefusal",
+    "OntologySourceRefusalReason",
+    "OntologySourceSet",
     "OpenOntologyGap",
     "OpenRevisionProposal",
     "POPULATION_GAP_KINDS",
@@ -721,6 +746,7 @@ __all__ = (
     "compile_contract_revision",
     "contract_revision_policy",
     "compile_population_plan",
+    "compose_linkml_addition",
     "compose_normative_profile",
     "compose_change_set",
     "compose_partial_effective_contract",

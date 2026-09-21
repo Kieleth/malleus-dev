@@ -17,6 +17,7 @@ from malleus._contract_pipeline.machine import (
     MachineReceipt,
     MachineState,
     PartialEffectiveContract,
+    compose_partial_effective_contract,
     _TransitionInput,
     _evaluate_transition_rules,
     execute_event,
@@ -46,6 +47,16 @@ from malleus._contract_pipeline.gap_answer import (
     gap_index,
     read_proposal,
     refuse as _refuse_gap_answer,
+)
+from malleus._contract_pipeline.ontology_source import (
+    ONTOLOGY_SOURCE_MEDIA_TYPE,
+    ONTOLOGY_SOURCE_RECORD_PREFIX,
+    OntologyRevisionTarget,
+    OntologySourceRefusalReason,
+    OntologySourceSet,
+    read_revision_target,
+    read_source_set,
+    refuse as _refuse_ontology_source,
 )
 from malleus._contract_pipeline.protocol_runtime import (
     PROGRAM_EVENT,
@@ -836,6 +847,75 @@ class KnowledgeHistoryReplay:
             )
         )
 
+    def ontology_source_set(self) -> OntologySourceSet | None:
+        """The retained LinkML source set the active contract came from.
+
+        A source set is current while the contract it reproduces is the one the
+        history is running. A recorded revision moves the contract, so the set
+        behind the old one stops being current and stays in the ledger as the
+        record of what that contract was compiled from.
+        """
+
+        active = self.partial_contract.validated_fact_set_sha256
+        for member in self._retained.values():
+            source_set = read_source_set(member.record_id, bytes(member.content))
+            if source_set is not None and (
+                source_set.validated_contract_identity == active
+            ):
+                return source_set
+        return None
+
+    def ontology_revision_target(self, proposal_id: str) -> OntologyRevisionTarget:
+        """What Core derived for one retained proposal."""
+
+        member = self._retained.get(proposal_id)
+        proposal = (
+            None
+            if member is None
+            else read_proposal(member.record_id, bytes(member.content))
+        )
+        if proposal is None:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.UNKNOWN_PROPOSAL,
+                f"no retained proposal: {proposal_id}",
+            )
+        return _derived_target(self._retained, proposal)
+
+    def ontology_source_map(self) -> Mapping[str, bytes]:
+        """The current source set's exact bytes, keyed by module locator."""
+
+        source_set = self.ontology_source_set()
+        if source_set is None:
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.ONTOLOGY_SOURCE_NOT_RETAINED,
+                "this history holds no LinkML source for its active contract",
+            )
+        by_identity = {
+            member.identity: bytes(member.content)
+            for member in self._retained.values()
+        }
+        sources: dict[str, bytes] = {}
+        for module in source_set.modules:
+            content = by_identity.get(module.sha256)
+            if content is None:
+                raise _refuse_ontology_source(
+                    OntologySourceRefusalReason.ONTOLOGY_SOURCE_BYTES_NOT_RETAINED,
+                    f"module {module.locator} bytes are not retained",
+                )
+            sources[module.locator] = content
+        return MappingProxyType(sources)
+
+    def ontology_source_bytes(self, locator: str) -> bytes:
+        """One module's exact bytes out of the current source set."""
+
+        try:
+            return self.ontology_source_map()[locator]
+        except KeyError as error:
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.ONTOLOGY_SOURCE_BYTES_NOT_RETAINED,
+                f"the current source set has no module {locator}",
+            ) from error
+
     def retained_bytes(self, record_id: str) -> bytes:
         try:
             return bytes(self._retained[record_id].content)
@@ -1273,6 +1353,89 @@ def compose_change_set(
     )
 
 
+def _check_source_set_bytes(
+    source_set: OntologySourceSet,
+    retained: Mapping[str, KnowledgeRetainedInput],
+) -> None:
+    """A source set names bytes; the history must hold every one of them."""
+
+    lengths = {member.identity: len(member.content) for member in retained.values()}
+    for module in source_set.modules:
+        if module.sha256 not in lengths:
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.ONTOLOGY_SOURCE_BYTES_NOT_RETAINED,
+                f"module {module.locator} names {module.sha256}, which this "
+                "history does not hold",
+            )
+        if lengths[module.sha256] != module.byte_length:
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.MALFORMED_SOURCE_SET,
+                f"module {module.locator} declares a byte length its bytes deny",
+            )
+
+
+def _derived_target(
+    retained: Mapping[str, KnowledgeRetainedInput],
+    proposal: OntologyRevisionProposal,
+) -> OntologyRevisionTarget:
+    """The target Core derived for this proposal, found by the proposal's bytes.
+
+    The binding is the proposal's own identity, never a name and never a path.
+    A proposal with no derived target beside it is refused, which is what stops
+    the ordinary anchor door from admitting a proposal nobody compiled.
+    """
+
+    for member in retained.values():
+        target = read_revision_target(member.record_id, bytes(member.content))
+        if target is not None and target.proposal_identity == proposal.identity:
+            return target
+    raise _refuse_gap_answer(
+        OntologyGapAnswerRefusalReason.PROPOSAL_TARGET_NOT_DERIVED,
+        f"proposal {proposal.proposal_id} has no derived target; a proposal is "
+        "retained through retain_ontology_revision_proposal, which composes its "
+        "fragment onto the retained source and compiles the result",
+    )
+
+
+def _retained_source_set(
+    retained: Mapping[str, KnowledgeRetainedInput], identity: str
+) -> OntologySourceSet | None:
+    for member in retained.values():
+        if member.identity == identity:
+            return read_source_set(member.record_id, bytes(member.content))
+    return None
+
+
+def _check_revision_target(
+    target: OntologyRevisionTarget,
+    retained: Mapping[str, KnowledgeRetainedInput],
+    active_contract: PartialEffectiveContract,
+) -> None:
+    """A derived target names the composed root and the set it composed onto."""
+
+    if not any(
+        member.identity == target.composed_root_sha256 for member in retained.values()
+    ):
+        raise _refuse_ontology_source(
+            OntologySourceRefusalReason.ONTOLOGY_SOURCE_BYTES_NOT_RETAINED,
+            "the composed root source this target names is not retained",
+        )
+    source_set = _retained_source_set(retained, target.source_set_identity)
+    if source_set is None:
+        raise _refuse_ontology_source(
+            OntologySourceRefusalReason.ONTOLOGY_SOURCE_NOT_RETAINED,
+            "the source set this target composed onto is not retained",
+        )
+    if source_set.validated_contract_identity != (
+        active_contract.validated_fact_set_sha256
+    ):
+        raise _refuse_ontology_source(
+            OntologySourceRefusalReason.REVISION_TARGET_SOURCE_SET_NOT_CURRENT,
+            "a derived target composes onto the source set of the active "
+            "contract, not onto an earlier one",
+        )
+
+
 class KnowledgeChangeHistory:
     def __init__(
         self,
@@ -1602,6 +1765,266 @@ class KnowledgeChangeHistory:
         self._append(entries, validate=self._validate_candidate)
         return self.replay()
 
+    def _retention_anchor(
+        self,
+        *,
+        record_id: str,
+        content: bytes,
+        media_type: str,
+        role: str = "RETAINED_EVIDENCE",
+    ) -> KnowledgeAnchorInput:
+        """Build one anchor from the binding's own retention declaration.
+
+        Core does not know this history's event vocabulary; the binding does.
+        Exactly one declared retention event may carry the role, or the history
+        cannot say unambiguously how these bytes are retained and refuses.
+        """
+
+        retention = self.binding.data["retention_events"]
+        declared = [
+            (event_type, fields)
+            for event_type, fields in sorted(retention.items())
+            if role in fields["allowed_roles"]
+        ]
+        if len(declared) != 1:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                f"the history binding must declare exactly one retention event "
+                f"for {role}; it declares {len(declared)}",
+            )
+        event_type, fields = declared[0]
+        return KnowledgeAnchorInput(
+            machine_event=_canonical(
+                {
+                    "event_type": event_type,
+                    "payload": {
+                        fields["record_id_field"]: record_id,
+                        fields["identity_field"]: _digest(content),
+                    },
+                }
+            ),
+            retained_bytes=content,
+            media_type=media_type,
+            role=role,
+        )
+
+    def _ontology_source_anchors(
+        self,
+        source_set: OntologySourceSet,
+        sources: Mapping[str, bytes],
+        retained: Mapping[str, KnowledgeRetainedInput],
+    ) -> tuple[KnowledgeAnchorInput, ...]:
+        """The module bytes this history lacks, then the set that names them."""
+
+        held = {member.identity for member in retained.values()}
+        anchors = []
+        for module in source_set.modules:
+            # Two locators may carry identical bytes, and one digest is one
+            # record. Retaining it twice in a batch would refuse as an
+            # inconsistent input, which is true and says the wrong thing.
+            if module.sha256 in held:
+                continue
+            held.add(module.sha256)
+            anchors.append(
+                self._retention_anchor(
+                    record_id=ONTOLOGY_SOURCE_RECORD_PREFIX + module.sha256,
+                    content=sources[module.locator],
+                    media_type=ONTOLOGY_SOURCE_MEDIA_TYPE,
+                )
+            )
+        # Two proposals whose fragments compose to the same contract produce
+        # the same set, and one digest is one record. The caller that must not
+        # retain a set twice, retain_ontology_source, refuses by name before it
+        # gets here.
+        if source_set.record_id not in retained:
+            anchors.append(
+                self._retention_anchor(
+                    record_id=source_set.record_id,
+                    content=source_set.canonical_bytes,
+                    media_type="application/json",
+                )
+            )
+        return tuple(anchors)
+
+    def retain_ontology_source(
+        self,
+        *,
+        root_locator: str,
+        sources: Mapping[str, bytes],
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
+        """Retain the exact LinkML source the active contract was compiled from.
+
+        ``root_locator`` and ``sources`` are what ``compile_linkml_contract``
+        takes, unchanged, so a runner that already assembles a source map hands
+        Core the same map. Core compiles it and refuses unless the compiled
+        validated contract identity is, byte for byte, the one this history is
+        running: a source set that does not reproduce the contract is not this
+        contract's source, whatever it is named.
+
+        The identity is the comparison, not the artifact envelope. The envelope
+        also carries the compiler's own evidence, which differs between
+        compilation entry points for one contract, so requiring envelope
+        equality would admit only histories created through this exact door.
+        The envelope is not thrown away: the retained set records the compiler
+        execution identity, so a later reader sees which compilation produced
+        the contract and can tell two executions apart.
+
+        This is the only door that puts LinkML source into a history. Genesis
+        does not, a recorded revision does not, and nothing already written
+        moves when it runs.
+        """
+
+        # Deferred: the fold and every replay stay free of LinkML, and only
+        # this act, which is compiler-enabled by definition, imports it.
+        from malleus.compiler import compile_linkml_contract
+
+        replay = self.replay()
+        try:
+            compiled = compile_linkml_contract(
+                root_locator=root_locator, sources=sources
+            )
+        except (TypeError, ValueError) as error:
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.ONTOLOGY_SOURCE_DOES_NOT_REPRODUCE_CONTRACT,
+                f"the source set does not compile: {error}",
+            ) from error
+        if compiled.artifact.validated_fact_set_sha256 != (
+            replay.partial_contract.validated_fact_set_sha256
+        ):
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.ONTOLOGY_SOURCE_DOES_NOT_REPRODUCE_CONTRACT,
+                "the source set compiles to "
+                f"{compiled.artifact.validated_fact_set_sha256}; this history "
+                f"runs {replay.partial_contract.validated_fact_set_sha256}",
+            )
+        source_set = OntologySourceSet.compose(
+            root_locator=root_locator,
+            sources=sources,
+            compiler_execution_identity=compiled.artifact.evidence_sha256,
+            validated_contract_identity=(
+                compiled.artifact.validated_fact_set_sha256
+            ),
+        )
+        if source_set.record_id in replay._retained:
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.ONTOLOGY_SOURCE_ALREADY_RETAINED,
+                f"this source set is already retained: {source_set.record_id}",
+            )
+        self.append_anchors(
+            anchors=self._ontology_source_anchors(
+                source_set, sources, replay._retained
+            ),
+            transaction_time=transaction_time,
+            actor_id=actor_id,
+        )
+        return self.replay()
+
+    def retain_ontology_revision_proposal(
+        self,
+        *,
+        proposal_bytes: bytes,
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
+        """Retain one proposal and the target Core derives from its fragment.
+
+        The proposal is a fragment and seven declared fields. Core reads the
+        history's current retained source set, composes the fragment onto its
+        root under the one additive rule, compiles the composed set with that
+        set's own dependency map, and composes the target partial contract with
+        this history's normative profile. The composed root, the source set the
+        next contract will have, the derived target and the proposal are
+        appended in one batch, so a refusal at any step leaves the ledger
+        untouched.
+
+        The additive diff still runs, as the second check, inside the fold. The
+        composition rule says the source only grew; the diff says the compiled
+        contract only grew, which is the claim the revision policy admits.
+
+        This door needs a compiler. Acceptance does not, and replay does not:
+        both read the target this act already derived.
+        """
+
+        # Deferred: replay and acceptance stay free of LinkML.
+        from malleus._contract_pipeline.linkml_addition import (
+            LinkMLAdditionRefusal,
+            compose_linkml_addition,
+        )
+        from malleus.compiler import compile_linkml_contract
+
+        replay = self.replay()
+        proposal = OntologyRevisionProposal.from_bytes(proposal_bytes)
+        current = replay.ontology_source_set()
+        if current is None:
+            raise _refuse_ontology_source(
+                OntologySourceRefusalReason.ONTOLOGY_SOURCE_NOT_RETAINED,
+                "a proposal composes onto the retained LinkML source; this "
+                "history holds none for its active contract",
+            )
+        sources = dict(replay.ontology_source_map())
+        try:
+            composed = compose_linkml_addition(
+                sources[current.root_locator],
+                proposal.linkml_addition.encode("utf-8"),
+            )
+        except LinkMLAdditionRefusal as error:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.PROPOSAL_NOT_ADDITIVE,
+                f"proposal {proposal.proposal_id}: {error}",
+            ) from error
+        sources[current.root_locator] = composed
+        try:
+            compiled = compile_linkml_contract(
+                root_locator=current.root_locator, sources=sources
+            )
+            partial = compose_partial_effective_contract(
+                validated_fact_set_sha256=(
+                    compiled.artifact.validated_fact_set_sha256
+                ),
+                normative_profile=replay.partial_contract.normative_profile,
+            )
+        except (KeyError, TypeError, ValueError) as error:
+            raise _refuse_gap_answer(
+                OntologyGapAnswerRefusalReason.PROPOSAL_DOES_NOT_COMPILE,
+                f"proposal {proposal.proposal_id}: {error}",
+            ) from error
+        next_set = OntologySourceSet.compose(
+            root_locator=current.root_locator,
+            sources=sources,
+            compiler_execution_identity=compiled.artifact.evidence_sha256,
+            validated_contract_identity=(
+                compiled.artifact.validated_fact_set_sha256
+            ),
+        )
+        target = OntologyRevisionTarget.compose(
+            proposal_identity=proposal.identity,
+            source_set_identity=current.identity,
+            composed_root_sha256=_digest(composed),
+            validated_contract_bytes=compiled.artifact.artifact_bytes,
+            partial_contract_bytes=partial.canonical_bytes,
+        )
+        anchors = [
+            *self._ontology_source_anchors(next_set, sources, replay._retained),
+            self._retention_anchor(
+                record_id=target.record_id,
+                content=target.canonical_bytes,
+                media_type="application/json",
+            ),
+            self._retention_anchor(
+                record_id=proposal.proposal_id,
+                content=proposal.canonical_bytes,
+                media_type="application/json",
+            ),
+        ]
+        self.append_anchors(
+            anchors=tuple(anchors),
+            transaction_time=transaction_time,
+            actor_id=actor_id,
+        )
+        return self.replay()
+
     def compose_change_set(
         self,
         *,
@@ -1791,6 +2214,7 @@ class KnowledgeChangeHistory:
         )
         revision = self._probe_revision(
             proposal,
+            target=_derived_target(replay._retained, proposal),
             active_contract=replay.partial_contract,
             active_view=replay.contract_view,
             base_ledger_head=replay.ledger_head,
@@ -2013,6 +2437,7 @@ class KnowledgeChangeHistory:
     def _probe_revision(
         proposal: OntologyRevisionProposal,
         *,
+        target: OntologyRevisionTarget,
         active_contract: PartialEffectiveContract,
         active_view: ContractView,
         base_ledger_head: str,
@@ -2043,10 +2468,8 @@ class KnowledgeChangeHistory:
                 base_accepted_state_digest=base_accepted_state_digest,
                 current_validated_contract_bytes=active_view.artifact_bytes,
                 current_partial_contract_bytes=active_contract.canonical_bytes,
-                target_validated_contract_bytes=(
-                    proposal.target_validated_contract_bytes
-                ),
-                target_partial_contract_bytes=proposal.target_partial_contract_bytes,
+                target_validated_contract_bytes=target.validated_contract_bytes,
+                target_partial_contract_bytes=target.partial_contract_bytes,
                 reason=proposal.reason,
                 issued_at=proposal.issued_at,
                 previous_migration_receipt=previous_receipt,
@@ -2108,11 +2531,12 @@ class KnowledgeChangeHistory:
             (item for item in revisions if item.identity == answer.revision_identity),
             None,
         )
+        derived = _derived_target(retained, proposal)
         if (
             revision is None
             or revision.revision_id != proposal.revision_id
             or revision.target_validated_contract_bytes
-            != proposal.target_validated_contract_bytes
+            != derived.validated_contract_bytes
         ):
             raise _refuse_gap_answer(
                 OntologyGapAnswerRefusalReason.MALFORMED_ANSWER,
@@ -2512,10 +2936,17 @@ class KnowledgeChangeHistory:
                         "REUSED_RECORD_ID", "machine record reuses a protocol record ID"
                     )
                 machine_receipts.append(result.receipt)
-                # Retention is the check. Bytes that declare the proposal
-                # grammar are read as a proposal here, whichever door retained
-                # them, so a proposal that answers nothing open or does not
-                # compose additively never reaches the ledger.
+                # Retention is the check. Bytes that declare one of these
+                # grammars are read here, whichever door retained them, so a
+                # record that names bytes the history lacks, a source set that
+                # is not its own digest, or a proposal that answers nothing
+                # open never reaches the ledger.
+                source_set = read_source_set(record_id, retained_bytes)
+                if source_set is not None:
+                    _check_source_set_bytes(source_set, retained)
+                target = read_revision_target(record_id, retained_bytes)
+                if target is not None:
+                    _check_revision_target(target, retained, active_contract)
                 proposal = read_proposal(record_id, retained_bytes)
                 if proposal is not None:
                     check_answerable(
@@ -2527,8 +2958,10 @@ class KnowledgeChangeHistory:
                             for identity in answer.answered_gaps
                         ),
                     )
+                    derived = _derived_target(retained, proposal)
                     self._probe_revision(
                         proposal,
+                        target=derived,
                         active_contract=active_contract,
                         active_view=active_view,
                         base_ledger_head=event["previous_event_hash"],

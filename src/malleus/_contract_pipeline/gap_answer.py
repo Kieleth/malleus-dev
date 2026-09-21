@@ -12,10 +12,12 @@ What is closed here:
   declared in>}``, where ``<the gap>`` is the four-field object exactly as the
   retained gaps artifact holds it. Nothing is derived from a path or a name.
 * A proposal is retained evidence under ``malleus.ontology-revision-proposal/v1``
-  and carries the LinkML addition its owner wrote, the identities of the gaps it
-  answers, and the exact target contract artifacts the revision would install.
-  Core never drafts one and never reads a class or slot name out of a gap's
-  statement (architectural law 8).
+  and carries the LinkML addition its owner wrote and the identities of the gaps
+  it answers. It is born a fragment: Core composes that fragment onto the
+  history's retained root, compiles it, and retains the compiled target
+  alongside, so a proposer needs no compiler and cannot hand Core an artifact
+  Core did not derive. Core never drafts a proposal and never reads a class or
+  slot name out of a gap's statement (architectural law 8).
 * Retention is the check. Any door that retains proposal bytes runs this
   validation inside the fold, so a proposal that names an unknown gap, an
   already answered gap, a gap of a non-ontology kind, or that does not compose
@@ -73,10 +75,8 @@ _PROPOSAL_FIELDS = frozenset(
         "proposal_id",
         "reason",
         "revision_id",
-        "target",
     }
 )
-_TARGET_FIELDS = frozenset({"partial_contract", "validated_contract"})
 _ANSWER_FIELDS = frozenset(
     {
         "answered_gaps",
@@ -105,6 +105,7 @@ class OntologyGapAnswerRefusalReason(Enum):
     UNKNOWN_PROPOSAL = auto()
     PROPOSAL_ALREADY_DECIDED = auto()
     MISSING_DECIDING_ACTOR = auto()
+    PROPOSAL_TARGET_NOT_DERIVED = auto()
 
 
 class OntologyGapAnswerRefusal(ValueError):
@@ -292,8 +293,6 @@ class OntologyRevisionProposal:
     issued_at: str
     linkml_addition: str
     answers_gaps: tuple[str, ...]
-    target_validated_contract_bytes: bytes
-    target_partial_contract_bytes: bytes
 
     @classmethod
     def from_bytes(cls, source: bytes) -> OntologyRevisionProposal:
@@ -309,16 +308,14 @@ class OntologyRevisionProposal:
             if canonical_json(data) != source:
                 raise ValueError("proposal bytes are not canonical")
             if set(data) != _PROPOSAL_FIELDS:
+                if "target" in set(data) - _PROPOSAL_FIELDS:
+                    raise ValueError(
+                        "Core derives a proposal's target from the retained "
+                        "source; a proposal that supplies target is not one"
+                    )
                 raise ValueError("proposal fields are not closed")
             if data["grammar"] != ONTOLOGY_REVISION_PROPOSAL_GRAMMAR:
                 raise ValueError("proposal grammar is unsupported")
-            target = data["target"]
-            if not isinstance(target, dict) or set(target) != _TARGET_FIELDS:
-                raise ValueError("proposal target is not closed")
-            validated = target["validated_contract"]
-            partial = target["partial_contract"]
-            if not isinstance(validated, dict) or not isinstance(partial, dict):
-                raise ValueError("proposal target artifacts must be objects")
             return cls(
                 source,
                 _digest(source),
@@ -328,8 +325,6 @@ class OntologyRevisionProposal:
                 _text(data["issued_at"], "revision issue time"),
                 _text(data["linkml_addition"], "LinkML addition"),
                 _identities(data["answers_gaps"], "answered gap identities"),
-                canonical_json(validated),
-                canonical_json(partial),
             )
         except OntologyGapAnswerRefusal:
             raise
