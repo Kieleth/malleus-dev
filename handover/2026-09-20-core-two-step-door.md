@@ -498,12 +498,19 @@ calibration files were not edited.
   `before = history.replay()` at `test_knowledge_change_history.py:1485` from
   the migration; it was removed.
 
-**What remains after sealing, stated honestly.** Zero, now that the deletion has
-a word. The governance digest mismatches clear when the chain is sealed, and the
-deleted-document refusal, `OVR-000352: revised document does not exist`, is
-answered by the two `REMOVED` records the chain carries. The scratch run below
-validates all 475 entries against this tree, with the two deleted files absent,
-which is the state the branch actually holds.
+**What remains after sealing, stated honestly.** Zero, measured rather than
+predicted. The governance digest mismatches clear when the chain is sealed, and
+the deleted-document refusal, `OVR-000352: revised document does not exist`, is
+answered by the two `REMOVED` records the chain carries. Measured by sealing a
+hardlinked scratch copy and running the three files that hold every governance
+guard inside it: `tests/test_contract_compiler_ledger.py`,
+`tests/test_contract_compiler_integration.py` and `tests/test_docs.py` read
+**495 passed, 0 failed**. That run is also what found the last three defects the
+deletion left behind, all of them masked on the unsealed tree because the same
+files failed earlier on the digest guard: a `KeyError` on the missing
+`after_digest`, two dead myst cross-references in `docs/SMALL_SHOP_WALKTHROUGH.md`
+and `docs/index.md`, and one milestone test still requiring the deleted contract
+to be linked.
 
 **The four documents are written.** `CHANGELOG.md` (the `check_and_admit_change_set`
 entry under Added, the closed door and the fold under Changed, and the stale
@@ -857,6 +864,7 @@ errors above are.
 - `6214e2bc` three governed passages catch up with decision D
 - `bc54ee8e` a removal claims no provenance for a later verified fact
 - `19c8b05f` two docs still linked the two deleted check contracts
+- `c93914c7` the correction milestone links the declaration, not the contract
 
 ## The overseer entry: `OVR-000472` to `OVR-000475`
 
@@ -919,7 +927,7 @@ documents left deleted**, the four entries inserted at real hashes and
 then `check` reports, verbatim:
 
 ```text
-validated 475 entries; head OVR-000475 sha256:3d521a9f8998d22dd21068aaef565b253202dc61a86e3699a42e29d8f156d943
+validated 475 entries; head OVR-000475 sha256:5229b2fe5e6791cf9fc73bdf32814b9f3cd923205bf7362ed60c6bcf2a47a1d2
 ```
 
 The scratch run binds this file as it stood immediately before this paragraph
@@ -1108,6 +1116,11 @@ re-derives it. The real worktree was never written to.
     {
       "relation": "EVIDENCES",
       "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c93914c795160c3ddf87c8631e71273705de683f",
       "type": "COMMIT"
     },
     {
@@ -1313,6 +1326,11 @@ re-derives it. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "c93914c795160c3ddf87c8631e71273705de683f",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1515,6 +1533,11 @@ re-derives it. The real worktree was never written to.
       "type": "COMMIT"
     },
     {
+      "relation": "EVIDENCES",
+      "target": "c93914c795160c3ddf87c8631e71273705de683f",
+      "type": "COMMIT"
+    },
+    {
       "relation": "AFFECTS",
       "target": "CC-R11",
       "type": "WORKSTREAM"
@@ -1617,7 +1640,7 @@ re-derives it. The real worktree was never written to.
         "path": "tests/test_contract_compiler_ledger.py"
       },
       {
-        "after_digest": "sha256:65f763f441da5886fd57e71cb8dcd3165d90e037c2af1d9f5ba7532ad3b3eff9",
+        "after_digest": "sha256:c248256a8eee51146c25fb550647745b9d594d8913c62e3943cd556b5b8bc2ea",
         "before_digest": "sha256:0e2d42c75459af2ee8a07e4d6379daad63b85e2d1102c41d6140b2584e36cff6",
         "change": "MODIFIED",
         "path": "tests/test_docs.py"
@@ -1673,6 +1696,11 @@ re-derives it. The real worktree was never written to.
     {
       "relation": "EVIDENCES",
       "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c93914c795160c3ddf87c8631e71273705de683f",
       "type": "COMMIT"
     },
     {
