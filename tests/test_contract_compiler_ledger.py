@@ -6143,6 +6143,11 @@ def test_verified_facts_do_not_claim_future_artifact_bytes() -> None:
         )
         if entry["entry_type"] == "DOCUMENT_REVISION":
             for document in entry["data"]["documents"]:
+                if document["change"] == "REMOVED":
+                    # A removal records the bytes that went, not bytes that
+                    # arrived, so it carries no after_digest and claims no
+                    # provenance for a later verified fact.
+                    continue
                 provenance.setdefault(document["path"], []).append(
                     (entry["sequence"], document["after_digest"])
                 )
