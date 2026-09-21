@@ -240,6 +240,10 @@ def run(path: Path):
         "check_receipt_identity": result.receipt_identity,
         "rule_contract_identity": result.check.contract_hash,
         "rule_bytes_identity": result.check.ruleset_hash,
+        # ROADMAP F2: a declared ontology gap is an open question until its
+        # owner accepts a revision proposal or refuses it with a reason. The
+        # round ends by saying what is still open.
+        "open_gaps": [gap.as_dict() for gap in reopened.open_gaps()],
     }
 
 

@@ -349,6 +349,10 @@ def run(path: Path, *, probe: bool = True):
         "historical_records": len(replay.record_history),
         "rule_contract_identity": load_contract().contract_hash,
         "policy_identity": load_policy().identity,
+        # ROADMAP F2: a declared ontology gap is an open question until its
+        # owner accepts a revision proposal or refuses it with a reason. The
+        # round ends by saying what is still open.
+        "open_gaps": [gap.as_dict() for gap in replay.open_gaps()],
     }
 
 
