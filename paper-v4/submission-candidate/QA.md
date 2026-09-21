@@ -192,3 +192,88 @@ No Core change, new producer/reviewer, commit, upload or arXiv server
 processing. The fault-injection control changed nothing in Core: four
 constructions it admits are recorded with reproducers and left alone. Human
 ratification and the public full-evidence access decision remain open.
+
+Three ledger digests and two byte counts were re-cut on 21 September 2026, and
+one printed event count moved with them. Core moved on main to
+5641bbf1f64b68b2d4e71b9d67726c5beb078f6e, which closes the two-step admission
+door and folds the structural admission check into a v1 CORE_BUILTIN check
+contract; that is decision D, sealed as overseer entries OVR-000471 to
+OVR-000475. The fold moves the structural history bundle, one stage further up
+than the revision-policy move recorded above, so all three of the connected
+Small Shop chain's ledgers digest differently this time rather than two. The
+Table 1 ledger is now
+dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3, the warehouse
+ledger 0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b and the
+synthetic ledger 099955003f3274aea590edf1578520540033321cfb3cabcf9aa6b3dff36063bb;
+those three supersede the values printed earlier in this file. Two byte counts
+moved with them, each printed twice in the Section 3 stage table, once as a
+stage's own size and once as the prefix the next stage preserves: the Table 1
+ledger from 895,257 to 895,097 bytes and the warehouse history from 1,646,996 to
+1,646,836 bytes. The separate shipment-policy fixture now prints 31 ledger
+events where it printed 32, and that one is not the fold but the migration,
+because Core writes the receipt and the check record itself where the runner
+wrote its own pair. Nothing else moved. The three stage rows' change and
+revision counts, their protocol-event counts 121, 193 and 216, the record,
+object, occurrence and participation counts, the ordering comparison, the
+abstract sentence and all three Appendix B exhibits still match a chain rebuilt
+from empty, and no line of any exhibit moved: the shipment-policy exhibit was
+regenerated from a fresh run and compares equal, field for field, to the one
+printed. test_shop_connected_calibration.py and test_shop_calibration.py read
+6 failed, 10 passed before the reprint and 16 passed after, and each of those
+six failures named one of the values above.
+
+Two of the three Core pins moved on 21 September 2026, under E-0436, the rule
+that moved them on 19 September. The new pin is
+5641bbf1f64b68b2d4e71b9d67726c5beb078f6e, governance head OVR-000475; the rule
+cells and the Shop reconsideration cell both moved to it from
+d89a0c4718654249ad678eaff62e7b1daba30b6f. Three fingerprints moved with them,
+all three to one value, because Core's own bytes moved: the census cell, the
+rule-adoption cell and the Shop reconsideration cell each pinned 53 modules
+sha256:340196130e1820e9a4f9979223f40dcf6b8c1227d8805d812fd08ca529a3ed04 and now
+pin 54 modules
+sha256:487b426a4d6ed2cc5742ba262c8a1eb8f991469cb017765c3d9eb238ee4703a1. The
+one module added is `_contract_pipeline/check_contract.py`. No measurement
+moved, and that was measured before either pin was touched: against a
+`git archive` of 5641bbf1 the rule-cell group read 2 failed, 182 passed and the
+Shop reconsideration cell 1 failed, 31 passed, every failure being the Core
+fingerprint assertion itself and nothing else. After the move the two groups
+read 184 and 32, the counts they read on the old pin, and every domain
+artifact, count and digest the cells bind is byte-identical. The first pin
+stays at 160878cf for the reason recorded above, which has not changed. One
+thing did change with the pin: `private/` holds runtime exports of earlier
+Cores and none of 5641bbf1, so the Shop reconsideration cell's standalone
+command in its README now exports the pin with `git archive`, the way the gate
+does; run that way the cell is 32 passed. Two paper-side runners still call
+`admit_with_anchors` with caller-built CHECK_RECORDED and VERDICT_RECORDED
+events, which this Core refuses with CALLER_SUPPLIED_CHECK_EVENT:
+`content-rules-doc-01/run_policy.py` and `content-rules-doc-02/admit.py`.
+Nothing under either pin runs them. The doc-01 cell names `run_policy.py` only
+in its leak list, and the doc-02 cell reads `admit.py` as the runner recorded in
+a frozen outcomes file and as an argument default, never executing either, so
+the two are unexercised rather than migrated.
+
+The full active paper gate was rerun after the reprint and the pin move, with
+the documented command. Three of its four partitions are green: 184 tests
+passed against the Core pinned at 5641bbf1 for the four rule-cell modules, 32
+passed against the same pin for the Shop reconsideration cell, and 2,547 passed
+in the unpinned partition, which imports the checkout's Core at 5641bbf1. The
+answer-demonstration partition read 7 failed, 656 passed against the Core
+pinned at 160878cf, and the gate exited 1 for those seven alone. The seven have
+one cause and it is not this work: the run was made from a git worktree, and the
+frozen producer task text binds the repository's absolute path,
+/Users/luis/Projects/malleus-dev/private/paper-v4-answer-demonstration, which
+the harness regenerates as the worktree's own path and then compares byte for
+byte. Five are named tests, in test_argument.py, test_event_query.py,
+test_links.py, test_meaning_audit.py and test_meaning_run.py, and two are the
+sol-e2e-01 and sol-e2e-02 subtests of test_e2e_condition.py. The record above
+has this partition at 661 passed plus two subtests, measured from the
+repository root, and a run from there is what would settle it; nothing in the
+seven touches Core, the pins or the reprint. Every public file this revision changed was measured
+against the selected reading at the sixty-character window and against the Shop
+chapter's retained text and its three evidence packets. The manuscript shares
+forty-nine windows with the reading, the same count as before and still the
+article title in Section 4.1 and the Appendix A source excerpts; every other
+changed file shares nothing with either, and the repository-level leak guard
+over the appendix evidence catalogue is 5 passed. The candidate was not rebuilt:
+prepare.py still refuses on the Section 3.2 table overflow described above,
+which is an author decision.
