@@ -133,9 +133,9 @@ compare bytes.
 
 | Stage | Accepted changes / revisions | Ledger events | What the history holds |
 | --- | ---: | ---: | --- |
-| Table 1 population | 21 / 0 | 121 | Seventeen enduring objects, 21 occurrences and 62 qualified participations; 107 historical records, of which 106 are current; supplier order B at quantity 1 the one superseded record, quantity 2 current, and both source occurrences e4 and e7 retained; three typed source gaps where the table prints no usable date and no changed invoice value; 895,257 bytes. |
-| Figure 14 warehouse extension | 34 / 1 | 193 | The same 17 objects, now carrying 34 occurrences and 75 participations; 133 historical records; one additive contract revision introducing only SCAN, STORE and RETRIEVE; the previous 895,257 bytes an exact prefix; 1,646,996 bytes. |
-| Synthetic partial shipments | 37 / 2 | 216 | A separately labelled synthetic order with its own two units and two shipments, admitted into the same history through a second additive revision; 144 historical records; units not yet assigned to a shipment queried after each step as 2, 1, then 0; the previous 1,646,996 bytes an exact prefix. |
+| Table 1 population | 21 / 0 | 121 | Seventeen enduring objects, 21 occurrences and 62 qualified participations; 107 historical records, of which 106 are current; supplier order B at quantity 1 the one superseded record, quantity 2 current, and both source occurrences e4 and e7 retained; three typed source gaps where the table prints no usable date and no changed invoice value; 895,097 bytes. |
+| Figure 14 warehouse extension | 34 / 1 | 193 | The same 17 objects, now carrying 34 occurrences and 75 participations; 133 historical records; one additive contract revision introducing only SCAN, STORE and RETRIEVE; the previous 895,097 bytes an exact prefix; 1,646,836 bytes. |
+| Synthetic partial shipments | 37 / 2 | 216 | A separately labelled synthetic order with its own two units and two shipments, admitted into the same history through a second additive revision; 144 historical records; units not yet assigned to a shipment queried after each step as 2, 1, then 0; the previous 1,646,836 bytes an exact prefix. |
 
 Counts are cumulative over the one history. Four properties of the gate are
 visible here without any model.
@@ -195,7 +195,7 @@ receipt.
 
 One refusal the connected history cannot express has its own fixture. A Prolog
 rule retained in that fixture's own history and executed at admission gives 3
-accepted changes and 32 ledger events, and the candidate assigning unit
+accepted changes and 31 ledger events, and the candidate assigning unit
 SYN-PS-X1 to a second shipment is refused as VIOLATED with three witness records
 and no admission bytes appended, after which the legitimate second unit is
 admitted. That fixture needs SWI-Prolog, which the connected chain does not.
@@ -1167,11 +1167,11 @@ The policy runner's report records its own refused candidate:
 
 Reopening any stage with the public history class and replaying it reproduces
 that stage's receipt. The Table 1 ledger is
-1c989c554b9aa68e97226c0efc6355496723613f17e901bb7689a4c4da28acbe, the warehouse
+dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3, the warehouse
 ledger is
-32798a67f4b2d5b6fab2de102ae6c4b41087f04ae794547517497232256ac333 and the
+0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b and the
 synthetic ledger is
-15c7c1eff28ff59496fd937de19181f649e9c8c9c4c1e895cf56252f434bd204. The fixtures
+099955003f3274aea590edf1578520540033321cfb3cabcf9aa6b3dff36063bb. The fixtures
 are conformance evidence for the structural path over a transcribed published
 example and a labelled synthetic cohort; they establish no source truth, no
 semantic completeness and no physical delivery.

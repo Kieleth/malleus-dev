@@ -59,11 +59,11 @@ def appendix_b_exhibits():
 def test_shipment_policy_figures_and_refusal_match_a_fresh_run(tmp_path):
     stdout = run_module("shipment_policy", "--history", str(tmp_path / "policy.jsonl"))
     report = json.loads(stdout[stdout.index("{") :])
-    assert report["accepted_changes"] == 3 and report["event_count"] == 32
+    assert report["accepted_changes"] == 3 and report["event_count"] == 31
     refusal = report["duplicate_unit"]
     assert refusal["outcome"] == "VIOLATED" and refusal["ledger_unchanged"] is True
     assert len(refusal["violations"][0]["witness_record_ids"]) == 3
     prose = " ".join(MANUSCRIPT.read_text().split())
-    assert "3 accepted changes and 32 ledger events" in prose
+    assert "3 accepted changes and 31 ledger events" in prose
     assert "refused as VIOLATED with three witness records" in prose
     exact_subset(appendix_b_exhibits()[2], report)

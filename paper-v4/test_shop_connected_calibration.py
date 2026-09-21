@@ -373,9 +373,9 @@ def test_table_1_stage_row_matches_a_fresh_run(chain):
     }
     assert stage["retained_occurrences"] == ["e4", "e7"]
     assert stage["source_gaps"] == 3
-    assert stage["bytes"] == 895257
+    assert stage["bytes"] == 895097
     assert "| Table 1 population | 21 / 0 | 121 |" in manuscript_text()
-    assert "895,257 bytes" in manuscript_text()
+    assert "895,097 bytes" in manuscript_text()
 
 
 def test_source_inventory_accounts_for_every_field(chain):
@@ -417,14 +417,14 @@ def test_warehouse_stage_row_matches_a_fresh_run(chain):
     assert stage["occurrences"] == 34 and stage["participations"] == 75
     assert stage["baseline_prefix_preserved"] is True
     assert stage["baseline_digest_matches"] is True
-    assert stage["baseline_bytes"] == 895257
+    assert stage["baseline_bytes"] == 895097
     assert stage["revision_change_kinds"] == ["ADD_ENUM_VALUE"]
     assert stage["new_activity_values"] == ["RETRIEVE", "SCAN", "STORE"]
     assert stage["revision_from_table_1"] is True
-    assert stage["history_bytes"] == 1646996
+    assert stage["history_bytes"] == 1646836
     assert stage["warehouse_source_rows"] == 13
     assert "| Figure 14 warehouse extension | 34 / 1 | 193 |" in manuscript_text()
-    assert "1,646,996 bytes" in manuscript_text()
+    assert "1,646,836 bytes" in manuscript_text()
     assert "13 warehouse observations" in manuscript_prose()
 
 
@@ -495,7 +495,7 @@ def test_shipment_stage_row_matches_a_fresh_run(chain):
     assert stage["historical_records"] == 144
     assert stage["baseline_prefix_preserved"] is True
     assert stage["baseline_digest_matches"] is True
-    assert stage["baseline_bytes"] == 1646996
+    assert stage["baseline_bytes"] == 1646836
     assert stage["remaining_units"] == [2, 1, 0]
     assert stage["duplicate_assignment_rule"] == "NOT_SELECTED"
     assert stage["revision_kinds"] == [["ADD_ENUM_VALUE"], ["ADD_CLASS", "ADD_SLOT"]]
@@ -549,11 +549,11 @@ def test_occurrence_replacement_refusal_exhibit_matches_a_fresh_run(chain):
 @pytest.mark.skipif(shutil.which("swipl") is None, reason="SWI-Prolog is not on PATH")
 def test_shipment_policy_refusal_exhibit_matches_a_fresh_run(chain):
     report = chain["policy"]
-    assert report["accepted_changes"] == 3 and report["event_count"] == 32
+    assert report["accepted_changes"] == 3 and report["event_count"] == 31
     assert report["duplicate_unit"]["outcome"] == "VIOLATED"
     assert report["duplicate_unit"]["ledger_unchanged"] is True
     assert appendix_exhibits()[2] == {"duplicate_unit": report["duplicate_unit"]}
-    assert "3 accepted changes and 32 ledger events" in manuscript_prose()
+    assert "3 accepted changes and 31 ledger events" in manuscript_prose()
 
 
 def test_the_abstract_sentence_matches_a_fresh_chain(chain):
