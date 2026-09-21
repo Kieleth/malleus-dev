@@ -319,11 +319,15 @@ order follows the frozen test ladder, not business-event chronology.
 The
 [machine](../research/ontology_driven_kg_realization/experiments/small_shop/correction/machine.json)
 defines the legal lifecycle. The
-[source-mapping check](../research/ontology_driven_kg_realization/experiments/small_shop/showcase/checks/source-mapping-conformance.json)
-recomputes each declared source-to-change mapping. The
+[structural check](../research/ontology_driven_kg_realization/experiments/small_shop/showcase/checks/structural-conformance.json)
+is the one contract the
 [policy](../research/ontology_driven_kg_realization/experiments/small_shop/showcase/policy.json)
-requires that check and maps `SATISFIED` to `ACCEPT`, `VIOLATED` to `REJECT`,
-and `UNKNOWN` to `DEFER`.
+requires, and Core runs it: it maps `SATISFIED` to `ACCEPT`, `VIOLATED` to
+`REJECT`, and `UNKNOWN` to `DEFER`. The showcase's own recompute of each
+declared source-to-change mapping still runs before admission and still retains
+its result in the same batch, but it is research evidence rather than a check
+the protocol ran, declared in
+[source-mapping-declaration.json](../research/ontology_driven_kg_realization/experiments/small_shop/showcase/source-mapping-declaration.json).
 
 The resulting ledger is compact enough to summarize exactly:
 
