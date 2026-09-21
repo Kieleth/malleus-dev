@@ -268,7 +268,11 @@ test_links.py, test_meaning_audit.py and test_meaning_run.py, and two are the
 sol-e2e-01 and sol-e2e-02 subtests of test_e2e_condition.py. The record above
 has this partition at 661 passed plus two subtests, measured from the
 repository root, and a run from there is what would settle it; nothing in the
-seven touches Core, the pins or the reprint. Every public file this revision changed was measured
+seven touches Core, the pins or the reprint. That run was then made from the
+repository root after the merge, at main 106a2198, with the same documented
+command: 661 passed plus two subtests against the Core pinned at 160878cf,
+184 and 32 against the Core pinned at 5641bbf1, 2,547 in the unpinned
+partition, exit 0. None of the seven appears there. Every public file this revision changed was measured
 against the selected reading at the sixty-character window and against the Shop
 chapter's retained text and its three evidence packets. The manuscript shares
 forty-nine windows with the reading, the same count as before and still the
