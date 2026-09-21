@@ -364,8 +364,13 @@ checked against the governed documents' current bytes, so any branch that edits
 a governed document fails these until its entry is sealed. `OVR-000477` below is
 that entry. This is not an assertion: in the sealed scratch copy described under
 the entry, with `OVR-000477` inserted and `head.json` advanced, those three
-files report **495 passed, 0 failed** (296 and 199). No other test in the
-default suite moved.
+files plus `tests/test_capability_declaration.py` report **506 passed, 0
+failed**. No other test in the default suite moved.
+
+That count was taken after the capability declaration entered the set, so it
+covers the two documents this entry gained,
+`.claude/skills/malleus-dev/references/CAPABILITIES.md` and
+`src/malleus/status.py`.
 
 ## Commits
 
@@ -374,23 +379,35 @@ default suite moved.
 | `0374937fb0f95b305a6404a56facf32abeffda4e` | A declared ontology gap is an open question with a recorded answer |
 | `2d18c6e22d946d9217eb298d1e4bdfb199d83ead` | The round report says which ontology gaps are still open |
 | `0ac2d432a05fb0eb9452c5fd1e5406fbdca39dc5` | The gap answer enters the compiler page, the status boundary and the changelog |
+| `5a5737b83e854ba71a9c47b863ab5210c76d99ab` | Core declares the gap answer as a capability |
 
-A fourth commit carries this file. The entry evidences the three above, which
-are the work.
+Three further commits carry this file: `9a45942748e67181bdcb3028964c7d6781632fc2`,
+`a7108e52523517e32411bfc21f3912c8bf52492a` and
+`bfeea1e5887f9d1202ed8c408048c71741c664ef`. The entry evidences the four above,
+which are the work.
 
-## The CAPABILITIES.md row
+## The declared capability
 
-`.claude/skills/` is out of scope by the brief, so the declaration was not
-edited. This is the row to add, after the existing additive-revision row:
+`malleus.IMPLEMENTATION_STATUS` gains `recorded-ontology-gap-answers`, beside
+`explicit-record-supersession`, and
+`.claude/skills/malleus-dev/references/CAPABILITIES.md` gains the matching row,
+placed immediately after the additive-revision row it builds on and carrying the
+same six columns as its neighbours: the eleven public entry points, what the
+capability does, `implemented`,
+`OPTIONAL_PROFILE: semantic-history with compiler-enabled`, and
+`Public compiler and population facade`.
 
-```text
-| A declared ontology gap answered by an additive revision, or refused with a reason | `malleus.compiler.ONTOLOGY_GAP_KINDS`, `malleus.compiler.ontology_gap_identity`, `malleus.compiler.ONTOLOGY_REVISION_PROPOSAL_GRAMMAR`, `malleus.compiler.ONTOLOGY_GAP_ANSWER_GRAMMAR`, `malleus.compiler.OntologyRevisionProposal`, `malleus.compiler.OntologyGapAnswer`, `malleus.compiler.OpenOntologyGap`, `malleus.compiler.OntologyGapAnswerRefusal`, `malleus.compiler.KnowledgeChangeHistory.accept_ontology_revision_proposal`, `malleus.compiler.KnowledgeChangeHistory.refuse_ontology_gaps`, `malleus.compiler.KnowledgeHistoryReplay.open_gaps` | Turns a declared `TYPE_ABSENT` or `RELATION_ABSENT` gap into an open question with one recorded answer. A gap's identity is the digest of the canonical `{"gap": <its four declared fields>, "plan_id": <the plan it was declared in>}`; a `malleus.ontology-revision-proposal/v1` record names the gaps it answers and carries the target contract artifacts, and is refused at retention unless every named gap is open, of an ontology kind, and the composed result is purely additive. Accepting composes and records the revision and the answer in one ledger batch, so a proposal is never accepted without being applied; refusing closes the gaps with a reason and moves no ontology; `open_gaps` reports what is still open with the proposals open against it. The deciding actor is recorded, not authenticated. Core drafts no proposal and derives no class or slot name from a gap's statement. | implemented | OPTIONAL_PROFILE: semantic-history with compiler-enabled | Public compiler and population facade |
-```
+The two are one act, not two: `tests/test_capability_declaration.py` refuses an
+ID in the status module that the declaration does not carry, and refuses a
+declared entry point that does not import. Both were run: **11 passed** there,
+and **107 passed, 1 skipped** in `tests/test_inquisition.py`, unchanged, because
+no acolyte-facing text moved. All eleven entry points resolve.
 
-No capability ID was added to `malleus.IMPLEMENTATION_STATUS`, deliberately:
-`tests/test_capability_declaration.py` requires every ID there to appear in
-that declaration, and the declaration could not be edited here. Adding the ID
-and the row is one act, for whoever owns the skill.
+This matters more than a row in a table. The rule at the top of that file exists
+because three consumer projects met a limitation on 2026-09-17 and worked around
+it while Core already carried the capability. A capability that ships and is not
+declared is a capability the next project will work around, which is the exact
+failure this whole roadmap item came from.
 
 ## The overseer entry: `OVR-000477`
 
@@ -402,19 +419,35 @@ How the document set was computed, mechanically:
    supersession applied and `REMOVED` respected: **722 paths**, plus 2 recorded
    as removed.
 2. Everything this branch changed, `git diff --name-only d3833d02..HEAD`:
-   **9 paths**, plus this file.
-3. The intersection with the governed set: **6 MODIFIED**. The other 3 have never
+   **11 paths**, plus this file.
+3. The intersection with the governed set: **8 MODIFIED**. The other 3 have never
    been recorded and are **CREATED**, by the precedent `OVR-000472` set when it
    added eight existing documents to the set the same way. This file is the
-   tenth, **CREATED**, with `after_digest` the literal placeholder the sealing
+   twelfth, **CREATED**, with `after_digest` the literal placeholder the sealing
    step re-derives.
-4. **10 documents**, one entry, under the cap of 20.
+4. **12 documents**, one entry, under the cap of 20.
+
+Every `before_digest` was checked twice, against the ledger's own latest
+recorded digest for that path **and** against the file's bytes at `d3833d02`:
+all eight agree, so the two readings of "the committed bytes this branch started
+from" are the same bytes. The latest recording per path is `OVR-000472` for
+`CAPABILITIES.md`, `CHANGELOG.md`, `docs/IMPLEMENTATION_STATUS.md` and
+`docs/contract_compiler/index.md`, `OVR-000473` for `shipment_policy/run.py`,
+`OVR-000474` for `knowledge.py` and `compiler.py`, and `OVR-000442` for
+`src/malleus/status.py`.
 
 Nothing else qualified. `pyproject.toml` did not change: its `include` list
 declares no new file and its `testpaths` names `tests/contract_compiler` as a
 directory rather than the new module, so the new test file needs no entry there.
-`ROADMAP.md`, `head.json`, `status.md`, `design/contract_compiler/overseer/entries/`,
-`paper-v4/` and `.claude/skills/` were not touched, by the brief.
+`ROADMAP.md`, `head.json`, `status.md`, `design/contract_compiler/overseer/entries/`
+and `paper-v4/` were not touched.
+
+`.claude/skills/malleus-dev/references/CAPABILITIES.md` is in the set because
+the declaration was authorized separately, for one row and nothing else. That
+row and the matching `recorded-ontology-gap-answers` ID in
+`malleus.IMPLEMENTATION_STATUS` are why `src/malleus/status.py` is here too:
+`tests/test_capability_declaration.py` holds the two to each other, so they are
+one act, not two.
 
 One of the two migrated runners, `content_rules/run.py`, is `CREATED` rather
 than `MODIFIED`: it has never been recorded in the ledger, while
@@ -426,10 +459,10 @@ The block below validates against
 `Draft202012Validator` and a `FormatChecker`, substituting
 `sha256:0000…0000` for `entry_hash`, for the placeholdered `after_digest` and
 for the placeholdered previous hash, and a real UTC timestamp for the
-placeholdered sealing moment: **1 of 1 valid, 0 errors**. The probe reads the
-fenced `json` blocks of this file and finds two, of which exactly one parses as
-an object with an `entry_id`. `why` is 1170 characters, under the 1200 cap;
-`summary` is 163, under 240.
+placeholdered sealing moment: **1 of 1 valid, 0 errors, 12 documents**. The
+probe reads the fenced `json` blocks of this file and finds two, of which
+exactly one parses as an object with an `entry_id`. `why` is 1170 characters,
+under the 1200 cap; `summary` is 163, under 240.
 
 Proved end to end in a scratch copy of the repository, hardlinked so every
 governed document is the exact byte this branch holds, with the entry inserted
@@ -438,14 +471,21 @@ at the real previous hash and `head.json` advanced to 477.
 verbatim:
 
 ```text
-validated 477 entries; head OVR-000477 sha256:30f5c38a809c50c9df0859cf6ed516d649896134686961b01d328905816622b0
+validated 477 entries; head OVR-000477 sha256:3ac5843c685c8a218fd3e3a03c4bfb39d7274cd21a340099df33151e6043e071
 ```
 
-That run reaches the real Git ancestry read-only, so the three evidenced commits
+That run reaches the real Git ancestry read-only, so the four evidenced commits
 are checked for durable reachability rather than assumed. It binds this file as
 it stood immediately before this paragraph was written; the entry records
 `<digest of this file once final>`, so sealing re-derives it and the head hash
 above moves with it. The real worktree was never written to.
+
+The head hash above is the second one this file has carried. The first cut of
+this entry, over 10 documents, reported
+`sha256:30f5c38a809c50c9df0859cf6ed516d649896134686961b01d328905816622b0`. The
+entry was re-cut when the capability declaration and the status module joined
+the set, which is why the hash moved. Both runs passed; only the later one
+describes the branch.
 
 ### `OVR-000477`
 
@@ -460,6 +500,12 @@ above moves with it. The real worktree was never written to.
       "CC-R11"
     ],
     "documents": [
+      {
+        "after_digest": "sha256:0199f1115fe1dc1c9ea7660e48d1e71270e0dbfb0e28647f837fd183075b684d",
+        "before_digest": "sha256:428abf6449b7f55864e8e8b7cef44dfd23cf808ea738fec997be344c25377240",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
       {
         "after_digest": "sha256:ce005ed65084dec9482092366f586f0a56b62a89992e8e824c23b90360e0c966",
         "before_digest": "sha256:71ee0e48be085c1e75af6658df40719c1b7b1cff933a11f6b731c9840bf696ee",
@@ -512,6 +558,12 @@ above moves with it. The real worktree was never written to.
         "path": "src/malleus/compiler.py"
       },
       {
+        "after_digest": "sha256:941b9fd36246629798947ad0c00e732165d4e41b34fed8a0e9bb086170d9079d",
+        "before_digest": "sha256:392e9a58615a44974c2e4b2327c4bd4f98bc014199c10baf5ccca60b658a27d7",
+        "change": "MODIFIED",
+        "path": "src/malleus/status.py"
+      },
+      {
         "after_digest": "sha256:aecb3fd93cfba0eeaae7f9b8be89640ff906cef887318a8ccec5e10404a2fed1",
         "change": "CREATED",
         "path": "tests/contract_compiler/pareto/test_ontology_gap_answer.py"
@@ -537,6 +589,11 @@ above moves with it. The real worktree was never written to.
     {
       "relation": "EVIDENCES",
       "target": "0ac2d432a05fb0eb9452c5fd1e5406fbdca39dc5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5a5737b83e854ba71a9c47b863ab5210c76d99ab",
       "type": "COMMIT"
     },
     {
