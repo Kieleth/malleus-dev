@@ -374,21 +374,96 @@ in>}`. Nothing is derived from a path, so the same gap declared in another plan
 is another gap, and a closed gap re-declared later with new evidence is a new
 gap with a new identity rather than this one reopened.
 
-The declaring producer, or anyone, retains a proposal under
-`malleus.ontology-revision-proposal/v1`. It is an ordinary retained-evidence
-record whose record ID is the proposal ID its owner declared, and its closed
-fields are `answers_gaps`, `grammar`, `issued_at`, `linkml_addition`,
-`proposal_id`, `reason`, `revision_id` and `target`, where `target` carries the
-`validated_contract` and `partial_contract` artifacts the revision would
-install and `linkml_addition` carries the addition as its owner wrote it.
-Retention is the check: whichever door retains the bytes, Core reads them as a
+### The history holds the source the contract came from
+
+A history holds its validated contract and not the LinkML behind it, which is
+enough to admit and to replay and not enough to compose an addition. One
+explicit act puts the source in:
+
+```python
+history.retain_ontology_source(
+    root_locator="small-shop",
+    sources={
+        "small-shop": root_bytes,
+        "malleus": malleus_bytes,
+        "linkml:types": types_bytes,
+    },
+    transaction_time="2026-09-21T00:00:00Z",
+    actor_id="actor:producer",
+)
+```
+
+`root_locator` and `sources` are what `compile_linkml_contract` takes,
+unchanged. Core compiles the set and refuses
+`ONTOLOGY_SOURCE_DOES_NOT_REPRODUCE_CONTRACT` unless the compiled validated
+contract identity is the one the history is already running. The comparison is
+the contract identity, not the artifact envelope: the envelope also carries the
+compiler's own evidence, which differs between compilation entry points for one
+contract. The envelope is not discarded, because the retained set records the
+compiler execution identity that produced it.
+
+The set is retained under `malleus.ontology-source-set/v1` with the root
+locator, every module's locator, media type, byte length and sha256, the
+compiler execution identity and the validated contract identity it reproduces.
+The module bytes are retained as ordinary artifacts and the fold refuses
+`ONTOLOGY_SOURCE_BYTES_NOT_RETAINED` for any digest the set names and the
+history does not hold. The record ID of a source set is its own digest, so it
+cannot be retained under a name that is not its bytes.
+
+Nothing happens by itself. Genesis retains no source set, a recorded revision
+retains none, and a set stops being current when the contract it reproduces
+stops being the active one. `KnowledgeHistoryReplay.ontology_source_set()`,
+`.ontology_source_map()` and `.ontology_source_bytes(locator)` read it back.
+
+### The proposal is born a fragment
+
+The declaring producer, or anyone, writes a proposal under
+`malleus.ontology-revision-proposal/v1`. Its closed fields are `answers_gaps`,
+`grammar`, `issued_at`, `linkml_addition`, `proposal_id`, `reason` and
+`revision_id`. There is no `target`: a proposal that supplies one refuses
+`MALFORMED_PROPOSAL`, because Core derives the target and a proposer holds no
+compiler.
+
+`linkml_addition` is a fragment, and `compose_linkml_addition(base_root_bytes,
+fragment_bytes)` is the one rule that composes it. A fragment may carry only
+`classes`, `enums`, `imports`, `prefixes` and `slots`, and under them it may
+only add: a named class or slot must be absent from the base, an existing enum
+admits new `permissible_values` and nothing else, an import literal must not
+already be imported, a prefix name must not already be bound. Anything that
+touches an existing entry, including `slot_usage` on an existing class, refuses
+`EXISTING_CLASS`; any other top-level key refuses `UNSUPPORTED_FRAGMENT_KEY`; a
+non-mapping, an anchor or an alias refuses `MALFORMED_FRAGMENT` or
+`MALFORMED_BASE`. The output keeps the base's key order, appends in the
+fragment's order, and is written by one fixed serialiser, so the same two
+inputs give the same bytes. The compiled contract does not depend on YAML style
+or key order, which is why re-serialising the base is not a semantic act.
+
+`history.retain_ontology_revision_proposal(proposal_bytes=...)` is the door.
+Core reads the current source set, refusing `ONTOLOGY_SOURCE_NOT_RETAINED` if
+there is none, composes the fragment onto the root, compiles the composed set
+with that set's own dependency map, and composes the target partial contract
+with this history's normative profile. Four records are appended in one batch:
+the composed root's bytes, the source set the next contract will have, the
+derived target under `malleus.ontology-revision-target/v1`, and the proposal.
+Any refusal leaves the ledger untouched.
+
+Retention is the check. Whichever door retains the bytes, Core reads them as a
 proposal, refuses `UNKNOWN_GAP`, `GAP_KIND_NOT_ONTOLOGY` or
-`GAP_ALREADY_ANSWERED` for the gaps it names, and composes the revision it
-would install through `compile_contract_revision` under
-`CONTRACT_REVISION_POLICY`, refusing `PROPOSAL_NOT_ADDITIVE` for a removal or a
-narrowing and `PROPOSAL_DOES_NOT_COMPILE` for target artifacts Core cannot
-compile. A refused proposal writes nothing. Core drafts no proposal and reads
-no class or slot name out of a gap's statement.
+`GAP_ALREADY_ANSWERED` for the gaps it names, refuses
+`PROPOSAL_TARGET_NOT_DERIVED` when no derived target names its identity, and
+runs the additive diff through `compile_contract_revision` under
+`CONTRACT_REVISION_POLICY` as the second check, refusing
+`PROPOSAL_NOT_ADDITIVE` for a removal or a narrowing and
+`PROPOSAL_DOES_NOT_COMPILE` for a fragment that composes and will not compile.
+A refused proposal writes nothing. Core drafts no proposal and reads no class
+or slot name out of a gap's statement.
+
+The LinkML runtime is required for exactly two acts, `retain_ontology_source`
+and `retain_ontology_revision_proposal`, both of which run under a
+compiler-enabled profile. Admission, acceptance and replay do not import
+LinkML: they read the target this retention already derived. A test holds that
+boundary by replaying and accepting in a fresh interpreter and asserting no
+`linkml` module was loaded.
 
 Accepting is the revision, in one act:
 
@@ -401,9 +476,11 @@ replay = history.accept_ontology_revision_proposal(
 )
 ```
 
-Core composes the additive revision from the proposal's own bytes and appends
-it together with one `malleus.ontology-gap-answer/v1` record in one ledger
-batch, or the ledger is untouched. There is no state in which a proposal is
+Core composes the additive revision from the target it derived at retention and
+appends it together with one `malleus.ontology-gap-answer/v1` record in one
+ledger batch, or the ledger is untouched. Acceptance needs no compiler. After
+it, the composed root is the history's current retained source, so the next
+proposal composes on it. There is no state in which a proposal is
 accepted and not applied: an `ACCEPTED` answer only folds when the revision its
 proposal named is recorded in the same history with the same target bytes. A
 second acceptance refuses `PROPOSAL_ALREADY_DECIDED`, an unknown proposal

@@ -236,17 +236,45 @@ Two of those six kinds are now consumed rather than only retained.
 identity from the bytes it identifies: the digest of the canonical object
 `{"gap": <its four declared fields>, "plan_id": <the plan it was declared in>}`.
 A proposal under `malleus.ontology-revision-proposal/v1` names the gaps it
-answers, carries the LinkML addition its owner wrote and the exact target
-contract artifacts, and is refused at retention unless every named gap is an
-open gap of one of those two kinds and the composed result is purely additive
-under `CONTRACT_REVISION_POLICY`. `KnowledgeChangeHistory.accept_ontology_revision_proposal`
-records the additive revision and the `malleus.ontology-gap-answer/v1` answer in
-one ledger batch; `KnowledgeChangeHistory.refuse_ontology_gaps` closes the gaps
-with a reason and moves no ontology; `KnowledgeHistoryReplay.open_gaps` reports
-what is still open with the proposals still open against it. The gaps artifact
-itself is unchanged: this reads those bytes and writes none of them. Core drafts
-no proposal, derives no class or slot name from a gap's statement, and records
-the deciding actor without authenticating them.
+answers and carries the LinkML addition its owner wrote as a fragment. It
+supplies no compiled artifact, and one that supplies a `target` is refused.
+Core derives the target itself, which is why the history now holds the source
+its contract was compiled from: `KnowledgeChangeHistory.retain_ontology_source`
+takes the same `root_locator` and `sources` that `compile_linkml_contract`
+takes, refuses unless that set reproduces the running contract's identity, and
+retains it under `malleus.ontology-source-set/v1` with every module's locator,
+media type, byte length and sha256, the compiler execution identity and the
+contract identity it reproduces. Nothing at genesis and no recorded revision
+retains a source set by itself.
+
+`malleus.compiler.compose_linkml_addition` is the one composition rule: a
+fragment may carry only `classes`, `enums`, `imports`, `prefixes` and `slots`,
+and under them it may only add. The output keeps the base's key order, appends
+in the fragment's order, and is written by one fixed serialiser, so the same
+two inputs give the same bytes.
+`KnowledgeChangeHistory.retain_ontology_revision_proposal` composes the
+fragment onto the retained root, compiles the composed set, composes the target
+partial contract with the history's normative profile, and appends the composed
+root, the next source set, the derived target under
+`malleus.ontology-revision-target/v1` and the proposal in one batch. It is
+refused unless every named gap is an open gap of one of those two kinds and the
+compiled result is purely additive under `CONTRACT_REVISION_POLICY`, which runs
+as the second check inside the fold.
+`KnowledgeChangeHistory.accept_ontology_revision_proposal` records the additive
+revision and the `malleus.ontology-gap-answer/v1` answer in one ledger batch and
+makes the composed root the current source, so the next proposal composes on it;
+`KnowledgeChangeHistory.refuse_ontology_gaps` closes the gaps with a reason and
+moves no ontology; `KnowledgeHistoryReplay.open_gaps` reports what is still open
+with the proposals still open against it. The gaps artifact itself is unchanged:
+this reads those bytes and writes none of them. Core drafts no proposal, derives
+no class or slot name from a gap's statement, and records the deciding actor
+without authenticating them.
+
+The LinkML runtime is required for exactly two acts, `retain_ontology_source`
+and `retain_ontology_revision_proposal`, which run under a compiler-enabled
+profile. Admission, acceptance and replay stay LinkML-free: they read the target
+retention already derived, and a test asserts in a fresh interpreter that
+replaying and accepting load no `linkml` module.
 
 `malleus.compiler.check_and_admit_population_plan` makes compilation, the
 policy's check and admission one operation. It takes the history, the plan

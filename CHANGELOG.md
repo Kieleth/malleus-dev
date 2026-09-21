@@ -44,22 +44,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   recorded answer. `ontology_gap_identity` derives a gap's identity from the
   bytes it identifies, the digest of the canonical object `{"gap": <its four
   declared fields>, "plan_id": <the plan it was declared in>}`. A proposal
-  under `malleus.ontology-revision-proposal/v1` names the gaps it answers,
-  carries the LinkML addition its owner wrote and the exact target contract
-  artifacts, and is refused at retention, on whichever door retained it, unless
-  every named gap is an open gap of one of those kinds and the composed result
-  is purely additive under the existing `CONTRACT_REVISION_POLICY`.
+  under `malleus.ontology-revision-proposal/v1` names the gaps it answers and
+  carries the LinkML addition its owner wrote as a fragment, with no compiled
+  artifact: a proposal that supplies a `target` is refused, and Core derives
+  the target itself.
+  `KnowledgeChangeHistory.retain_ontology_source` puts the LinkML a contract
+  was compiled from into the history, taking the same `root_locator` and
+  `sources` that `compile_linkml_contract` takes and refusing
+  `ONTOLOGY_SOURCE_DOES_NOT_REPRODUCE_CONTRACT` unless the set compiles back to
+  the running contract's identity. It is explicit: genesis retains no source
+  set and a recorded revision retains none.
+  `malleus.compiler.compose_linkml_addition` is the one composition rule, a
+  pure function over exact bytes, and
+  `KnowledgeChangeHistory.retain_ontology_revision_proposal` composes the
+  fragment onto the retained root, compiles it, and appends the composed root,
+  the next source set, the derived target under
+  `malleus.ontology-revision-target/v1` and the proposal in one batch. A
+  proposal is refused at retention, on whichever door retained it, unless every
+  named gap is an open gap of one of those kinds, a derived target names it,
+  and the compiled result is purely additive under the existing
+  `CONTRACT_REVISION_POLICY`, which runs as the second check.
   `KnowledgeChangeHistory.accept_ontology_revision_proposal` composes the
-  revision from the proposal's own bytes and appends it with one
+  revision from the derived target and appends it with one
   `malleus.ontology-gap-answer/v1` record in one ledger batch, so there is no
-  state in which a proposal is accepted and not applied;
+  state in which a proposal is accepted and not applied, and the composed root
+  becomes the current source so the next proposal composes on it;
   `refuse_ontology_gaps` closes the named gaps with a reason and moves no
   ontology; `KnowledgeHistoryReplay.open_gaps` reports what is still open with
-  the proposals still open against it. Ten closed refusal reasons:
-  `MALFORMED_PROPOSAL`, `MALFORMED_ANSWER`, `UNKNOWN_GAP`,
+  the proposals still open against it. Eleven closed gap-answer refusal
+  reasons: `MALFORMED_PROPOSAL`, `MALFORMED_ANSWER`, `UNKNOWN_GAP`,
   `GAP_ALREADY_ANSWERED`, `GAP_KIND_NOT_ONTOLOGY`, `PROPOSAL_NOT_ADDITIVE`,
-  `PROPOSAL_DOES_NOT_COMPILE`, `UNKNOWN_PROPOSAL`, `PROPOSAL_ALREADY_DECIDED`
-  and `MISSING_DECIDING_ACTOR`. No change kind was added, so the
+  `PROPOSAL_DOES_NOT_COMPILE`, `UNKNOWN_PROPOSAL`, `PROPOSAL_ALREADY_DECIDED`,
+  `MISSING_DECIDING_ACTOR` and `PROPOSAL_TARGET_NOT_DERIVED`; seven ontology
+  source reasons: `MALFORMED_SOURCE_SET`, `MALFORMED_REVISION_TARGET`,
+  `ONTOLOGY_SOURCE_NOT_RETAINED`, `ONTOLOGY_SOURCE_ALREADY_RETAINED`,
+  `ONTOLOGY_SOURCE_BYTES_NOT_RETAINED`,
+  `ONTOLOGY_SOURCE_DOES_NOT_REPRODUCE_CONTRACT` and
+  `REVISION_TARGET_SOURCE_SET_NOT_CURRENT`; and nine composition reasons:
+  `MALFORMED_BASE`, `MALFORMED_FRAGMENT`, `UNSUPPORTED_FRAGMENT_KEY`,
+  `EXISTING_CLASS`, `EXISTING_SLOT`, `EXISTING_ENUM_FIELD`,
+  `EXISTING_PERMISSIBLE_VALUE`, `EXISTING_IMPORT` and `EXISTING_PREFIX`. The
+  LinkML runtime is needed only by the two retention acts, which run under a
+  compiler-enabled profile; admission, acceptance and replay import no LinkML
+  and a test holds that in a fresh interpreter. No change kind was added, so the
   content-addressed revision policy identity does not move, and the gaps
   artifact's bytes are read and never written, so no frozen evidence re-pins.
   Core drafts no proposal, derives no class or slot name from a gap's
