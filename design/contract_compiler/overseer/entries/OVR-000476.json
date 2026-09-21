@@ -1,0 +1,87 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:527cc1f3b8a45a3a05af176530b4a823184c8884a1d463bd5353f55b7e1ef811",
+        "before_digest": "sha256:4e457d697a79e091f5b86be39b736e678f511f145ee0bc3c1b8062c6c040a9fb",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:75ee7ec845c078fcf9a5df391e624ed15c1ba4f4e6ef476e32ef7910479cffbd",
+        "before_digest": "sha256:b18e426e8e8bfb60217f2dde44cd641dd7b6f53aaf027a820ea20c6a3940d9ab",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:f063810bcb3944379fa73c66f0f86d1147b80b0c74b54db39eacbc3ffb71a531",
+        "before_digest": "sha256:52e1dc247a8d97535addb5c729f5e7f1d1e84a78fa0ecdfb61e5202ab4cecc83",
+        "change": "MODIFIED",
+        "path": "ROADMAP.md"
+      },
+      {
+        "after_digest": "sha256:04fa089a589f1059f75776fed8c5a8c62bad0d561e85709e6cb652e9dbcfbd66",
+        "change": "CREATED",
+        "path": "handover/2026-09-21-adopters-follow-core.md"
+      },
+      {
+        "after_digest": "sha256:55c23cccf2ea94d85eee3bb35cafb777b9e8ba27dd5e6c77de9f70fcbd959618",
+        "change": "CREATED",
+        "path": "tests/test_caller_supplied_check_event_scan.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000476",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:380bbab0491a0e83f2f137819c75cfc994eda973b314809aef48bbedba440708",
+  "recorded_at": "2026-09-21T17:01:43Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "6be96df1cccbec43d42d2ddc9407059e58784236",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "fee18aef05f70af9e2509cef40fe5e40c42c5826",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "739666bdb09fd6566e5a017aa687af64bec07f42",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "fa4c3785be6043fed25a92f4c316811c5ba970b9",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "790198f1fb424381b3c72a3c062ea6d4249c777b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 476,
+  "subject": {
+    "id": "adopters-follow-core-2026-09-21",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record the rule that adopters follow Core in both skills, the document path runner's migration to Core's own admission, the static guard over the closed door, and the ROADMAP F1 statement brought current.",
+  "why": "Decision D closed the two-step admission door and migrated eight research programs; the document path runner, which the marine-article reconsideration will use, was left two-step and unexercised. It is now migrated to check_and_admit_change_set with exported graph, plan and provenance bytes identical, and a static AST scan over the tracked tree fails the default suite on any caller that hands Core its own check or verdict event, Core's five door tests excepted and one blocked historical audit declared. Luis ruled on 2026-09-21 that every protocol adopter follows a Core move and that the skills must enforce checking a project's Core coordinate before any work; the sentence enters the dev skill (Core side) and the acolyte skill (adopter side). The skill's still-two-step list and ROADMAP F1 now name what remains: the two paper-side runners, the paper front's to adapt, and the frozen action-history audit at its Core 2a112405.",
+  "entry_hash": "sha256:96cf09b01073ff0b128e3e6b47618e67db5df4e4b3a53ab5ac56a300dd1c7d7c"
+}
