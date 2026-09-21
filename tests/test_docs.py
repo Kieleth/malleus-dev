@@ -2635,7 +2635,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "correction/machine.json",
         "correction/policy.json",
         "correction/run.json",
-        "checks/source-mapping-conformance.json",
+        "correction/source-mapping-declaration.json",
         "checks/structural-conformance.json",
         "correction/run.py",
         "oracle/shop-supplier-order-correction.json",
