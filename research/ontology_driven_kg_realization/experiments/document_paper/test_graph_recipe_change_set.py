@@ -11,10 +11,13 @@ from pathlib import Path
 
 import pytest
 
+from malleus._contract_pipeline.admission import (
+    PopulationAdmissionRefusal,
+    check_and_admit_change_set,
+)
 from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeHistory,
     KnowledgeChangeHistoryBinding,
-    KnowledgeChangeRefusal,
     KnowledgeChangeRefusalReason,
     KnowledgeValidTime,
 )
@@ -47,13 +50,13 @@ from research.ontology_driven_kg_realization.experiments.graph_recipe.stottr imp
     expand_invocation,
     parse_stottr,
 )
+from tests.contract_compiler.pareto.test_knowledge_change_history import (
+    _check_contract_anchors,
+)
 from tests.contract_compiler.pareto.test_protocol_machine import (
-    CHECKS,
-    POLICY_ID,
     _canonical,
     _effective,
     _event,
-    _load_policy,
 )
 from tests.contract_compiler.pareto.test_validated_contract import (
     ROOT as CONTRACT_ROOT,
@@ -174,7 +177,7 @@ def _history_binding() -> KnowledgeChangeHistoryBinding:
                     "record_type": "DecisionRecord",
                     "verdict_field": "verdict",
                 },
-                "grammar": "malleus.knowledge-history-binding/private-v0",
+                "grammar": "malleus.knowledge-history-binding/private-v1",
                 "proposal": {
                     "change_set_identity_field": "knowledge_change_set_identity",
                     "event_type": "CHANGE_PROPOSED",
@@ -183,10 +186,18 @@ def _history_binding() -> KnowledgeChangeHistoryBinding:
                 },
                 "retention_events": {
                     "ARTIFACT_REGISTERED": {
+                        "allowed_roles": [
+                            "KNOWLEDGE_HISTORY_BINDING",
+                            "PARTIAL_EFFECTIVE_CONTRACT",
+                            "RETAINED_EVIDENCE",
+                            "SOURCE_ARTIFACT",
+                            "VALIDATED_CONTRACT",
+                        ],
                         "identity_field": "artifact_identity",
                         "record_id_field": "artifact_id",
                     },
                     "SOURCE_REGISTERED": {
+                        "allowed_roles": ["RETAINED_SOURCE"],
                         "identity_field": "source_identity",
                         "record_id_field": "source_id",
                     },
@@ -336,6 +347,10 @@ def _anchored_history(tmp_path: Path, history_contract, plan: AssemblyPlan):
             plan_bytes,
             "RETAINED_EVIDENCE",
         ),
+        # The fixture policy requires two check contracts. Core resolves and
+        # runs both out of what this history retains, so both documents must
+        # be here before any admission.
+        *_check_contract_anchors(),
     )
     for event, retained, role in anchors:
         _anchor(history, event=event, retained=retained, role=role)
@@ -371,37 +386,6 @@ def _change(
         valid_time=KnowledgeValidTime("INSTANT", TRANSACTION_TIME),
         supersedes=(),
     )
-
-
-def _protocol_events(change_set, machine_state_identity: str) -> tuple[bytes, ...]:
-    policy = _load_policy()
-    proposal_id = "proposal-paper-1"
-    proposal = _event(
-        "CHANGE_PROPOSED",
-        expected_machine_state_identity=machine_state_identity,
-        knowledge_change_set_identity=change_set.identity,
-        policy_id=POLICY_ID,
-        policy_identity=policy.identity,
-        proposal_id=proposal_id,
-    )
-    checks = tuple(
-        _event(
-            "CHECK_RECORDED",
-            check_contract_id=check_id,
-            check_contract_identity=check_identity,
-            outcome="SATISFIED",
-            policy_identity=policy.identity,
-            proposal_id=proposal_id,
-            receipt_id=f"receipt-paper-{index}",
-        )
-        for index, (check_id, check_identity) in enumerate(CHECKS)
-    )
-    decision = _event(
-        "VERDICT_RECORDED",
-        decision_id="decision-paper-1",
-        proposal_id=proposal_id,
-    )
-    return (proposal, *checks, decision)
 
 
 def test_ge020_mapping_is_deterministic_and_preserves_plan_semantics() -> None:
@@ -540,15 +524,14 @@ def test_accepted_change_reopens_to_the_same_graph(
         history_contract,
         plan,
     )
-    before = history.replay()
     change_set = _change(history, partial, source_bytes, plan)
 
-    admitted = history.admit(
+    admitted = check_and_admit_change_set(
+        history=history,
         change_set=change_set,
-        machine_events=_protocol_events(change_set, before.machine_state.identity),
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:paper-test",
-    )
+    ).replay
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert reopened.graph.snapshot() == admitted.graph.snapshot()
@@ -573,18 +556,27 @@ def test_accepted_change_reopens_to_the_same_graph(
     ]
 
 
+# ``invalid-relation`` refuses one stage earlier than it used to. The change
+# never reaches ``_admit``: Core stages the candidate graph and the structural
+# builtin returns ``VIOLATED``, so the refusal is ``CONTENT_RULE_VIOLATED`` at
+# ``CHECK`` and it carries the application's own refusal name in its detail.
 @pytest.mark.parametrize(
-    ("failure", "reason"),
+    ("failure", "reason", "detail_contains"),
     (
-        ("stale-base", KnowledgeChangeRefusalReason.STALE_BASE),
-        ("invalid-relation", KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL),
+        ("stale-base", KnowledgeChangeRefusalReason.STALE_BASE.name, ""),
+        (
+            "invalid-relation",
+            "CONTENT_RULE_VIOLATED",
+            KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL.name,
+        ),
     ),
 )
 def test_refusal_is_atomic_for_ledger_and_replay_graph(
     tmp_path: Path,
     history_contract,
     failure: str,
-    reason: KnowledgeChangeRefusalReason,
+    reason: str,
+    detail_contains: str,
 ) -> None:
     plan = _ge020_plan()
     if failure == "invalid-relation":
@@ -624,18 +616,17 @@ def test_refusal_is_atomic_for_ledger_and_replay_graph(
     )
     ledger_before = history.path.read_bytes()
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
-        history.admit(
+    with pytest.raises(PopulationAdmissionRefusal) as refusal:
+        check_and_admit_change_set(
+            history=history,
             change_set=change_set,
-            machine_events=_protocol_events(
-                change_set,
-                before.machine_state.identity,
-            ),
             transaction_time=TRANSACTION_TIME,
             actor_id="actor:paper-test",
         )
 
-    assert refusal.value.reason is reason
+    assert refusal.value.reason == reason
+    assert detail_contains in refusal.value.detail
+    assert refusal.value.ledger_unchanged
     after = history.replay()
     assert history.path.read_bytes() == ledger_before
     assert after.graph.snapshot() == before.graph.snapshot()

@@ -327,15 +327,25 @@ def test_run_is_deterministic_and_reopens_from_ledger_only(tmp_path: Path) -> No
     assert replay.receipt.canonical_bytes == first.replay_receipt_bytes
     assert replay.graph.node_count == 8
     assert replay.graph.edge_count == 6
+    # Core names the proposal and the decision after the change set.
     assert (
         replay.machine_state.get_record(
-            "DecisionRecord", "decision:paper-v4:population"
+            "DecisionRecord", "decision:change:paper-v4:population"
         )["verdict"]
         == "ACCEPT"
     )
 
 
-def test_check_events_are_derived_from_retained_receipts(tmp_path: Path) -> None:
+def test_the_check_record_binds_the_contract_core_ran(tmp_path: Path) -> None:
+    """Core's own check record, against the contract this history retains.
+
+    Until 2026-09-21 this module built two ``CHECK_RECORDED`` events from two
+    receipts it wrote itself, each carrying ``outcome: SATISFIED`` as a
+    literal, and this test read them back. There is one check now, it is the
+    ``malleus.check-contract/v1`` ``CORE_BUILTIN`` document the policy
+    requires, and both the receipt and the record are Core's.
+    """
+
     ledger = tmp_path / "semantic.jsonl"
     run = _run(ledger)
     replay = KnowledgeChangeHistory.reopen(ledger).replay()
@@ -356,36 +366,57 @@ def test_check_events_are_derived_from_retained_receipts(tmp_path: Path) -> None
         run.provenance_bytes
     )
 
-    for check_id in ("source-locator-integrity", "structural-conformance"):
-        contract_id = f"evidence:paper-v4:check-contract:{check_id}"
-        result_id = f"evidence:paper-v4:check-result:{check_id}"
-        contract_bytes = replay.retained_bytes(contract_id)
-        receipt_bytes = replay.retained_bytes(result_id)
-        receipt = json.loads(receipt_bytes)
-        assert closure[contract_id] == _digest(contract_bytes)
-        assert closure[result_id] == _digest(receipt_bytes)
-        assert receipt["check_contract_id"] == check_id
-        assert receipt["check_contract_identity"] == _digest(contract_bytes)
-        assert receipt["outcome"] == "SATISFIED"
-        assert "verdict" not in receipt
-        if check_id == "source-locator-integrity":
-            assert {item["record_id"] for item in receipt["inputs"]} == {
-                "source:paper-v4:selected-reading",
-                "evidence:paper-v4:population",
-                "evidence:paper-v4:assembly-plan",
-                "evidence:paper-v4:population-provenance",
-            }
-        for item in receipt["inputs"]:
+    contract_id = "evidence:paper-v4:check-contract:structural-conformance"
+    contract_bytes = replay.retained_bytes(contract_id)
+    assert closure[contract_id] == _digest(contract_bytes)
+    contract = json.loads(contract_bytes)
+    assert contract == {
+        "check_contract_id": "structural-conformance",
+        "executor": {
+            "builtin_id": "malleus.core.operations-apply-atomically",
+            "builtin_version": "1",
+            "kind": "CORE_BUILTIN",
+        },
+        "grammar": "malleus.check-contract/v1",
+        "outcomes": ["SATISFIED", "VIOLATED"],
+    }
+    assert _digest(contract_bytes) == (
+        "sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9"
+    )
+
+    check_events = [
+        json.loads(line)
+        for line in ledger.read_bytes().splitlines()
+        if json.loads(line)["event_type"] == "CHECK_RECORDED"
+    ]
+    assert len(check_events) == 1
+    payload = check_events[0]["payload"]
+    assert payload["check_contract_id"] == "structural-conformance"
+    assert payload["check_contract_identity"] == _digest(contract_bytes)
+    assert payload["outcome"] == "SATISFIED"
+
+    record = replay.machine_state.get_record("CheckRecord", payload["receipt_id"])
+    assert record is not None
+    for field in ("check_contract_id", "check_contract_identity", "outcome"):
+        assert record[field] == payload[field]
+
+    # Core retains one receipt per check, in the same batch as the change.
+    assert replay.retained_bytes(payload["receipt_id"].replace("check:", "receipt:", 1))
+
+    # The two recomputes this module runs itself are retained as evidence and
+    # state no outcome: nothing was accepted on the strength of them.
+    for verification_id in ("source-locator-integrity", "plan-contract-alignment"):
+        record_id = f"evidence:paper-v4:verification:{verification_id}"
+        retained = json.loads(replay.retained_bytes(record_id))
+        assert closure[record_id] == _digest(replay.retained_bytes(record_id))
+        assert retained["verification_id"] == verification_id
+        assert retained["grammar"] == (
+            "malleus.paper-v4.verification-declaration/private-v0"
+        )
+        assert "outcome" not in retained
+        assert "verdict" not in retained
+        for item in retained["inputs"]:
             assert closure[item["record_id"]] == item["sha256"]
-        record = replay.machine_state.get_record("CheckRecord", receipt["receipt_id"])
-        assert record is not None
-        for field in (
-            "check_contract_id",
-            "check_contract_identity",
-            "outcome",
-            "receipt_id",
-        ):
-            assert record[field] == receipt[field]
 
     verdict_events = [
         json.loads(line)
@@ -394,15 +425,10 @@ def test_check_events_are_derived_from_retained_receipts(tmp_path: Path) -> None
     ]
     assert len(verdict_events) == 1
     assert verdict_events[0]["payload"] == {
-        "decision_id": "decision:paper-v4:population",
-        "proposal_id": "proposal:paper-v4:population",
+        "decision_id": "decision:change:paper-v4:population",
+        "proposal_id": "proposal:change:paper-v4:population",
     }
     assert "verdict" not in verdict_events[0]["payload"]
-
-
-def test_satisfied_receipt_requires_a_verifier_result() -> None:
-    with pytest.raises(ExperimentRunError, match="completed verification"):
-        experiment_module._make_check(object())
 
 
 def test_configuration_has_no_defaulted_coordinates() -> None:
@@ -498,12 +524,15 @@ def test_admitted_evidence_closure_is_exactly_query_neutral(tmp_path: Path) -> N
     _run(ledger)
     change = KnowledgeChangeHistory.reopen(ledger).replay().change_sets[0]
 
+    # One check contract, the one Core runs, and two verification records for
+    # the two recomputes this module runs itself. The four paper-grammar
+    # entries this set used to hold, two contracts and two self-written check
+    # results, are gone with the grammar.
     assert {record_id for record_id, _ in change.evidence} == {
         "evidence:paper-v4:assembly-plan",
-        "evidence:paper-v4:check-contract:source-locator-integrity",
         "evidence:paper-v4:check-contract:structural-conformance",
-        "evidence:paper-v4:check-result:source-locator-integrity",
-        "evidence:paper-v4:check-result:structural-conformance",
+        "evidence:paper-v4:verification:source-locator-integrity",
+        "evidence:paper-v4:verification:plan-contract-alignment",
         "evidence:paper-v4:generic-recipes",
         "evidence:paper-v4:linkml-types",
         "evidence:paper-v4:malleus-import",
@@ -600,8 +629,8 @@ def test_provenance_locator_mutation_cannot_create_check_or_ledger(
     message: str,
 ) -> None:
     compile_population = experiment_module.compile_population
-    make_check = experiment_module._make_check
-    checks = []
+    record = experiment_module._verification_record
+    verifications = []
 
     def mutate(*args, **kwargs) -> PopulationCompilation:
         result = compile_population(*args, **kwargs)
@@ -618,15 +647,15 @@ def test_provenance_locator_mutation_cannot_create_check_or_ledger(
     monkeypatch.setattr(experiment_module, "compile_population", mutate)
     monkeypatch.setattr(
         experiment_module,
-        "_make_check",
-        lambda verification: checks.append(verification.check_id)
-        or make_check(verification),
+        "_verification_record",
+        lambda verification: verifications.append(verification.verification_id)
+        or record(verification),
     )
     ledger = tmp_path / "provenance-drift.jsonl"
     with pytest.raises(ExperimentRunError, match=message):
         _run(ledger)
     assert not ledger.exists()
-    assert checks == []
+    assert verifications == []
 
 
 @pytest.mark.parametrize(
@@ -644,8 +673,8 @@ def test_provenance_semantic_or_lineage_mutation_refuses_before_check(
     message: str,
 ) -> None:
     compile_population = experiment_module.compile_population
-    make_check = experiment_module._make_check
-    checks = []
+    record = experiment_module._verification_record
+    verifications = []
 
     def mutate(*args, **kwargs) -> PopulationCompilation:
         result = compile_population(*args, **kwargs)
@@ -677,15 +706,15 @@ def test_provenance_semantic_or_lineage_mutation_refuses_before_check(
     monkeypatch.setattr(experiment_module, "compile_population", mutate)
     monkeypatch.setattr(
         experiment_module,
-        "_make_check",
-        lambda verification: checks.append(verification.check_id)
-        or make_check(verification),
+        "_verification_record",
+        lambda verification: verifications.append(verification.verification_id)
+        or record(verification),
     )
     ledger = tmp_path / f"{mutation}.jsonl"
     with pytest.raises(ExperimentRunError, match=message):
         _run(ledger)
     assert not ledger.exists()
-    assert checks == []
+    assert verifications == []
 
 
 def test_provenance_plan_digest_drift_cannot_create_check_or_ledger(
@@ -693,7 +722,7 @@ def test_provenance_plan_digest_drift_cannot_create_check_or_ledger(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     compile_population = experiment_module.compile_population
-    checks = []
+    verifications = []
 
     def mutate(*args, **kwargs) -> PopulationCompilation:
         result = compile_population(*args, **kwargs)
@@ -707,14 +736,14 @@ def test_provenance_plan_digest_drift_cannot_create_check_or_ledger(
     monkeypatch.setattr(experiment_module, "compile_population", mutate)
     monkeypatch.setattr(
         experiment_module,
-        "_make_check",
-        lambda verification: checks.append(verification.check_id),
+        "_verification_record",
+        lambda verification: verifications.append(verification.verification_id),
     )
     ledger = tmp_path / "provenance-plan-drift.jsonl"
     with pytest.raises(ExperimentRunError, match="does not bind its inputs"):
         _run(ledger)
     assert not ledger.exists()
-    assert checks == []
+    assert verifications == []
 
 
 @pytest.mark.parametrize(
@@ -738,7 +767,7 @@ def test_plan_property_python_equal_type_mutation_refuses_before_check(
     )
     acquisition["properties"]["instrument_count"]["value"] = population_value
     compile_population = experiment_module.compile_population
-    checks = []
+    verifications = []
 
     def mutate(*args, **kwargs) -> PopulationCompilation:
         result = compile_population(*args, **kwargs)
@@ -771,14 +800,14 @@ def test_plan_property_python_equal_type_mutation_refuses_before_check(
     monkeypatch.setattr(experiment_module, "compile_population", mutate)
     monkeypatch.setattr(
         experiment_module,
-        "_make_check",
-        lambda verification: checks.append(verification.check_id),
+        "_verification_record",
+        lambda verification: verifications.append(verification.verification_id),
     )
     ledger = tmp_path / f"property-type-{type(plan_value).__name__}.jsonl"
     with pytest.raises(ExperimentRunError, match="plan operation differ"):
         _run(ledger, population=_bytes(source))
     assert not ledger.exists()
-    assert checks == []
+    assert verifications == []
 
 
 def test_plan_alignment_mutation_cannot_create_check_or_ledger(
@@ -786,8 +815,8 @@ def test_plan_alignment_mutation_cannot_create_check_or_ledger(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     compile_population = experiment_module.compile_population
-    make_check = experiment_module._make_check
-    checks = []
+    record = experiment_module._verification_record
+    verifications = []
 
     def mutate(*args, **kwargs) -> PopulationCompilation:
         result = compile_population(*args, **kwargs)
@@ -817,15 +846,19 @@ def test_plan_alignment_mutation_cannot_create_check_or_ledger(
     monkeypatch.setattr(experiment_module, "compile_population", mutate)
     monkeypatch.setattr(
         experiment_module,
-        "_make_check",
-        lambda verification: checks.append(verification.check_id)
-        or make_check(verification),
+        "_verification_record",
+        lambda verification: verifications.append(verification.verification_id)
+        or record(verification),
     )
     ledger = tmp_path / "plan-drift.jsonl"
     with pytest.raises(GraphRecipeFailure, match="AssemblyPlan contract digest"):
         _run(ledger)
     assert not ledger.exists()
-    assert checks == ["source-locator-integrity"]
+    # Both recomputes now run before either is retained, so the alignment
+    # failure lands before any record is written. This used to read
+    # ``["source-locator-integrity"]``, because the source check was turned
+    # into a receipt the moment it passed.
+    assert verifications == []
 
 
 def test_selected_reading_source_digest_drift_refuses_before_ledger(

@@ -1,17 +1,30 @@
-"""Private paper-local path from one GraphRecipe plan to replayed history."""
+"""Private paper-local path from one GraphRecipe plan to replayed history.
+
+Core runs the checks. This module retains the run's artifacts and its source,
+composes one change set from the plan's operations, and hands that change set
+to ``check_and_admit_change_set``. Core resolves every check the history's
+policy requires against what this history retains, runs it over the state the
+change would produce, mints one receipt each, and writes ``CHANGE_PROPOSED``,
+one ``CHECK_RECORDED`` per check and ``VERDICT_RECORDED``. This module states
+no outcome and builds no protocol event beyond the two retention events its
+binding declares.
+
+What stays here is what Core does not check: that the producer's input is well
+formed, that the plan evidence retains the canonical ``AssemblyPlan`` bytes,
+that every retained record ID is unique, that the ledger path is new, and that
+a reopen of the ledger alone replays to the admitted state.
+"""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-import json
 from pathlib import Path
-from typing import Callable
 
+from malleus._contract_pipeline.admission import check_and_admit_change_set
 from malleus._contract_pipeline.knowledge import (
     KnowledgeAnchorInput,
     KnowledgeChangeHistory,
     KnowledgeChangeHistoryBinding,
-    KnowledgeChangeSet,
     KnowledgeHistoryReplay,
     KnowledgeValidTime,
 )
@@ -29,7 +42,6 @@ from .graph_recipe_change_set import (
 _VALIDATED_CONTRACT_ID = "artifact:paper-v4:validated-contract"
 _PARTIAL_CONTRACT_ID = "artifact:paper-v4:partial-contract"
 _HISTORY_BINDING_ID = "artifact:paper-v4:history-binding"
-_CHECK_EVENT = "CHECK_RECORDED"
 
 
 class DocumentRunError(ValueError):
@@ -76,9 +88,6 @@ class RetainedDocumentEvidence:
         _require_text(self.record_id, "evidence record_id")
         _require_bytes(self.content, "evidence content")
         _require_text(self.media_type, "evidence media_type")
-
-
-ProtocolEventFactory = Callable[[KnowledgeChangeSet, str], tuple[bytes, ...]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -136,36 +145,6 @@ def _source_anchor(source: RetainedDocumentSource) -> KnowledgeAnchorInput:
     )
 
 
-def _event_type(source: bytes) -> str:
-    _require_bytes(source, "protocol event")
-    try:
-        value = json.loads(source.decode("utf-8"))
-        if (
-            not isinstance(value, dict)
-            or set(value) != {"event_type", "payload"}
-            or canonical_json(value).encode("utf-8") != source
-        ):
-            raise ValueError("event is not closed canonical JSON")
-        return _require_text(value["event_type"], "protocol event_type")
-    except (KeyError, LedgerError, UnicodeError, ValueError) as error:
-        raise DocumentRunError("protocol event is not closed canonical JSON") from error
-
-
-def _require_lifecycle(
-    events: tuple[bytes, ...],
-    binding: KnowledgeChangeHistoryBinding,
-) -> None:
-    if not isinstance(events, tuple):
-        raise DocumentRunError("protocol events must be an ordered tuple")
-    event_types = tuple(_event_type(event) for event in events)
-    proposal = binding.data["proposal"]["event_type"]
-    decision = binding.data["decision"]["event_type"]
-    if event_types != (proposal, _CHECK_EVENT, _CHECK_EVENT, decision):
-        raise DocumentRunError(
-            "protocol lifecycle must be one proposal, two checks, and one verdict"
-        )
-
-
 def run_document_history(
     ledger_path: str | Path,
     *,
@@ -180,7 +159,6 @@ def run_document_history(
     valid_time: KnowledgeValidTime,
     transaction_time: str,
     actor_id: str,
-    protocol_events: ProtocolEventFactory,
 ) -> DocumentRun:
     """Admit one genesis plan and return only its ledger-rebuilt projection."""
 
@@ -197,8 +175,6 @@ def run_document_history(
     _require_text(change_set_id, "change_set_id")
     _require_text(transaction_time, "transaction_time")
     _require_text(actor_id, "actor_id")
-    if not callable(protocol_events):
-        raise DocumentRunError("protocol_events must be callable")
 
     plan_bytes = canonical_assembly_plan_bytes(plan)
     plan_members = [item for item in evidence if item.record_id == plan_evidence_id]
@@ -274,15 +250,12 @@ def run_document_history(
         valid_time=valid_time,
         supersedes=(),
     )
-    before = history.replay()
-    events = protocol_events(change_set, before.machine_state.identity)
-    _require_lifecycle(events, binding)
-    admitted = history.admit(
+    admitted = check_and_admit_change_set(
+        history=history,
         change_set=change_set,
-        machine_events=events,
         transaction_time=transaction_time,
         actor_id=actor_id,
-    )
+    ).replay
     expected_graph = admitted.graph.snapshot()
     expected_receipt = admitted.receipt.canonical_bytes
     expected_machine = admitted.machine_state.canonical_bytes

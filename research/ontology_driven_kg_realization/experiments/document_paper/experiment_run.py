@@ -1,4 +1,27 @@
-"""Private, paper-v4-specific document experiment orchestration."""
+"""Private, paper-v4-specific document experiment orchestration.
+
+Two verifications happen here and they are not the same kind of thing.
+
+Core runs the one check the policy requires, ``structural-conformance``, a
+``malleus.check-contract/v1`` ``CORE_BUILTIN`` document at
+``sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9``
+naming ``malleus.core.operations-apply-atomically``. ``run_document_history``
+hands the composed change set to ``check_and_admit_change_set``, which resolves
+that contract against what the history retains, runs it, mints its receipt and
+writes ``CHANGE_PROPOSED``, ``CHECK_RECORDED`` and ``VERDICT_RECORDED``. This
+module states no outcome.
+
+The source-provenance recompute and the plan-contract alignment check are this
+module's own. Both run before admission, under
+``malleus.paper-v4.verification-declaration/private-v0``, and both retain their
+result as evidence in the same batch as the change. **Core does not vouch for
+them.** They were required check contracts in a private grammar,
+``malleus.paper-v4.check-contract/v1``, until 2026-09-21, which meant this
+module ran its own program and wrote ``outcome: SATISFIED`` into two
+``CHECK_RECORDED`` events it built itself. What the two recomputes establish is
+unchanged; what changed is that they no longer present themselves as checks the
+protocol accepted.
+"""
 
 from __future__ import annotations
 
@@ -10,7 +33,6 @@ from typing import Any
 
 from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeHistoryBinding,
-    KnowledgeChangeSet,
     KnowledgeValidTime,
 )
 from malleus._contract_pipeline.machine import (
@@ -44,10 +66,12 @@ _FACT_ORDER = {
     "RelationTarget": 3,
     "DependsOn": 4,
 }
-_POLICY_ID = "paper-v4-two-check-policy"
+_POLICY_ID = "paper-v4-structural-check-policy"
+_CHECK_ID = "structural-conformance"
+_CHECK_CONTRACT_ID = "evidence:paper-v4:check-contract:structural-conformance"
+_VERIFICATION_GRAMMAR = "malleus.paper-v4.verification-declaration/private-v0"
 _ACTOR_ID = "actor:paper-v4-evaluator"
-_PROPOSAL_ID = "proposal:paper-v4:population"
-_DECISION_ID = "decision:paper-v4:population"
+_CHANGE_SET_ID = "change:paper-v4:population"
 _PLAN_ID = "evidence:paper-v4:assembly-plan"
 _PROVENANCE_ID = "evidence:paper-v4:population-provenance"
 _SOURCE_ID = "source:paper-v4:selected-reading"
@@ -170,17 +194,10 @@ class PaperExperimentRun:
 
 
 @dataclass(frozen=True, slots=True)
-class _Check:
-    check_id: str
-    contract_record_id: str
-    contract_bytes: bytes
-    receipt_record_id: str
-    receipt_bytes: bytes
-
-
-@dataclass(frozen=True, slots=True)
 class _Verification:
-    check_id: str
+    """One recompute this module ran itself. Core does not vouch for it."""
+
+    verification_id: str
     predicate: str
     inputs: tuple[tuple[str, str], ...]
 
@@ -255,7 +272,7 @@ def _history_binding() -> KnowledgeChangeHistoryBinding:
                     "record_type": "DecisionRecord",
                     "verdict_field": "verdict",
                 },
-                "grammar": "malleus.knowledge-history-binding/private-v0",
+                "grammar": "malleus.knowledge-history-binding/private-v1",
                 "proposal": {
                     "change_set_identity_field": "knowledge_change_set_identity",
                     "event_type": "CHANGE_PROPOSED",
@@ -264,10 +281,18 @@ def _history_binding() -> KnowledgeChangeHistoryBinding:
                 },
                 "retention_events": {
                     "ARTIFACT_REGISTERED": {
+                        "allowed_roles": [
+                            "KNOWLEDGE_HISTORY_BINDING",
+                            "PARTIAL_EFFECTIVE_CONTRACT",
+                            "RETAINED_EVIDENCE",
+                            "SOURCE_ARTIFACT",
+                            "VALIDATED_CONTRACT",
+                        ],
                         "identity_field": "artifact_identity",
                         "record_id_field": "artifact_id",
                     },
                     "SOURCE_REGISTERED": {
+                        "allowed_roles": ["RETAINED_SOURCE"],
                         "identity_field": "source_identity",
                         "record_id_field": "source_id",
                     },
@@ -526,47 +551,59 @@ def _verify_structure(
 ) -> _Verification:
     require_plan_contract_alignment(plan, contract, compilation)
     return _Verification(
-        "structural-conformance",
+        "plan-contract-alignment",
         "ASSEMBLY_PLAN_ALIGNS_WITH_THE_VALIDATED_SELECTED_TYPE_CONTRACT",
         inputs,
     )
 
 
-def _make_check(verification: _Verification) -> _Check:
-    if type(verification) is not _Verification:
-        raise ExperimentRunError("SATISFIED requires a completed verification")
-    check_id = verification.check_id
-    contract = _json_bytes(
+def _check_contract_bytes() -> bytes:
+    """The one contract the policy requires: Core's own structural builtin.
+
+    These are the exact bytes of the shipped
+    ``small_shop/pareto/checks/structural-conformance.json``, at
+    ``sha256:4cef2ab7...``. Core resolves it out of what this history retains
+    and runs the builtin the document names; nothing here runs it.
+    """
+
+    return _json_bytes(
         {
-            "check_contract_id": check_id,
-            "grammar": "malleus.paper-v4.check-contract/v1",
-            "predicate": verification.predicate,
+            "check_contract_id": _CHECK_ID,
+            "executor": {
+                "builtin_id": "malleus.core.operations-apply-atomically",
+                "builtin_version": "1",
+                "kind": "CORE_BUILTIN",
+            },
+            "grammar": "malleus.check-contract/v1",
+            "outcomes": ["SATISFIED", "VIOLATED"],
         }
     )
-    receipt_id = f"receipt:paper-v4:{check_id}"
-    receipt = _json_bytes(
+
+
+def _verification_record(verification: _Verification) -> bytes:
+    """Retain what this module recomputed, with no outcome and no verdict.
+
+    A declaration of what ran and over which retained bytes. It is evidence in
+    the same batch as the change, not a check record: the protocol accepted
+    nothing on the strength of it.
+    """
+
+    if type(verification) is not _Verification:
+        raise ExperimentRunError("a completed verification is required")
+    return _json_bytes(
         {
-            "check_contract_id": check_id,
-            "check_contract_identity": _digest(contract),
-            "grammar": "malleus.paper-v4.check-result/v1",
+            "grammar": _VERIFICATION_GRAMMAR,
             "inputs": [
                 {"record_id": record_id, "sha256": identity}
                 for record_id, identity in verification.inputs
             ],
-            "outcome": "SATISFIED",
-            "receipt_id": receipt_id,
+            "predicate": verification.predicate,
+            "verification_id": verification.verification_id,
         }
     )
-    return _Check(
-        check_id,
-        f"evidence:paper-v4:check-contract:{check_id}",
-        contract,
-        f"evidence:paper-v4:check-result:{check_id}",
-        receipt,
-    )
 
 
-def _policy(checks: tuple[_Check, ...]) -> PolicyProgram:
+def _policy(check_contract: bytes) -> PolicyProgram:
     return PolicyProgram.from_bytes(
         _json_bytes(
             {
@@ -580,78 +617,13 @@ def _policy(checks: tuple[_Check, ...]) -> PolicyProgram:
                 "precedence": ["REJECT", "DEFER", "ACCEPT"],
                 "required_checks": [
                     {
-                        "check_contract_id": check.check_id,
-                        "check_contract_identity": _digest(check.contract_bytes),
+                        "check_contract_id": _CHECK_ID,
+                        "check_contract_identity": _digest(check_contract),
                     }
-                    for check in checks
                 ],
             }
         )
     )
-
-
-def _event(event_type: str, **payload: object) -> bytes:
-    return _json_bytes({"event_type": event_type, "payload": payload})
-
-
-def _protocol_events(
-    policy: PolicyProgram,
-    checks: tuple[_Check, ...],
-):
-    def produce(
-        change_set: KnowledgeChangeSet, machine_state_identity: str
-    ) -> tuple[bytes, ...]:
-        retained = dict((*change_set.sources, *change_set.evidence))
-        events = [
-            _event(
-                "CHANGE_PROPOSED",
-                expected_machine_state_identity=machine_state_identity,
-                knowledge_change_set_identity=change_set.identity,
-                policy_id=_POLICY_ID,
-                policy_identity=policy.identity,
-                proposal_id=_PROPOSAL_ID,
-            )
-        ]
-        for check in checks:
-            contract_identity = _digest(check.contract_bytes)
-            if retained.get(check.contract_record_id) != contract_identity:
-                raise ExperimentRunError("check contract is absent from KCS evidence")
-            if retained.get(check.receipt_record_id) != _digest(check.receipt_bytes):
-                raise ExperimentRunError("check result is absent from KCS evidence")
-            receipt = _strict_json(check.receipt_bytes, "check result")
-            if (
-                receipt["check_contract_id"] != check.check_id
-                or receipt["check_contract_identity"] != contract_identity
-                or receipt["outcome"] != "SATISFIED"
-                or any(
-                    retained.get(item["record_id"]) != item["sha256"]
-                    for item in receipt["inputs"]
-                )
-            ):
-                raise ExperimentRunError(
-                    "check result does not bind its contract and inputs"
-                )
-            events.append(
-                _event(
-                    "CHECK_RECORDED",
-                    check_contract_id=receipt["check_contract_id"],
-                    check_contract_identity=receipt["check_contract_identity"],
-                    outcome=receipt["outcome"],
-                    policy_identity=policy.identity,
-                    proposal_id=_PROPOSAL_ID,
-                    receipt_id=receipt["receipt_id"],
-                )
-            )
-        events.append(
-            _event(
-                "VERDICT_RECORDED",
-                decision_id=_DECISION_ID,
-                proposal_id=_PROPOSAL_ID,
-            )
-        )
-        return tuple(events)
-
-    return produce
 
 
 def run_paper_experiment(
@@ -742,7 +714,7 @@ def run_paper_experiment(
         )
     )
     refs = {item.record_id: _digest(item.content) for item in evidence}
-    source_check = _make_check(
+    verifications = (
         _verify_source_provenance(
             population_bytes,
             reading,
@@ -751,9 +723,7 @@ def run_paper_experiment(
             population.plan,
             contract,
             configuration.population_recipe_profile.provenance_schema,
-        )
-    )
-    structure_check = _make_check(
+        ),
         _verify_structure(
             population.plan,
             contract,
@@ -764,19 +734,24 @@ def run_paper_experiment(
                 (_EVIDENCE_IDS["recipes"], refs[_EVIDENCE_IDS["recipes"]]),
                 (_PLAN_ID, refs[_PLAN_ID]),
             ),
+        ),
+    )
+    check_contract = _check_contract_bytes()
+    evidence.append(
+        RetainedDocumentEvidence(
+            _CHECK_CONTRACT_ID, check_contract, "application/json"
         )
     )
-    checks = (source_check, structure_check)
     evidence.extend(
-        RetainedDocumentEvidence(record_id, content, "application/json")
-        for check in checks
-        for record_id, content in (
-            (check.contract_record_id, check.contract_bytes),
-            (check.receipt_record_id, check.receipt_bytes),
+        RetainedDocumentEvidence(
+            f"evidence:paper-v4:verification:{item.verification_id}",
+            _verification_record(item),
+            "application/json",
         )
+        for item in verifications
     )
 
-    policy = _policy(checks)
+    policy = _policy(check_contract)
     machine = ProtocolMachineProgram.from_bytes(protocol_machine_bytes)
     profile = compose_normative_profile(
         protocol_machine_program=machine,
@@ -801,13 +776,15 @@ def run_paper_experiment(
         ),
         evidence=tuple(evidence),
         plan_evidence_id=_PLAN_ID,
-        change_set_id="change:paper-v4:population",
+        change_set_id=_CHANGE_SET_ID,
         valid_time=KnowledgeValidTime("ORDER_ONLY", "population-1"),
         transaction_time=configuration.transaction_time,
         actor_id=_ACTOR_ID,
-        protocol_events=_protocol_events(policy, checks),
     )
-    decision = run.replay.machine_state.get_record("DecisionRecord", _DECISION_ID)
+    # Core names the proposal and the decision after the change set.
+    decision = run.replay.machine_state.get_record(
+        "DecisionRecord", f"decision:{_CHANGE_SET_ID}"
+    )
     if decision is None or decision.get("verdict") != "ACCEPT":
         raise ExperimentRunError("policy did not compute ACCEPT")
     if (run.replay.graph.node_count, run.replay.graph.edge_count) != (
