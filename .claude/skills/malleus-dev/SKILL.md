@@ -235,11 +235,14 @@ rather than plans. Core runs every check in policy order and writes the
 `CHECK_RECORDED` event itself; a check contract the ledger does not retain, or
 one Core cannot run, refuses `CHECK_CONTRACT_NOT_RETAINED` or
 `UNRUNNABLE_REQUIRED_CHECK`. The research programs and Core's own tests are
-migrated with every exported graph byte-identical. Still two-step and
-unexercised: `paper-v4/experiment-v4/content-rules-doc-01/run_policy.py`,
-`paper-v4/experiment-v4/content-rules-doc-02/admit.py` and
-`research/ontology_driven_kg_realization/experiments/document_paper/document_run.py`
-(E-0486 to E-0508; `handover/2026-09-19-core-atomic-admission.md`,
+migrated with every exported graph byte-identical, and the document path
+runner followed on 2026-09-21 (main `fa4c3785`), again byte-identical. Still
+two-step: the paper front's `paper-v4/experiment-v4/content-rules-doc-01/run_policy.py`
+and `content-rules-doc-02/admit.py`, unexercised and the paper front's to
+adapt, and the blocked research audit `research/action_history_contract_freeze`,
+kept as historical evidence at its own Core `2a112405`.
+`tests/test_caller_supplied_check_event_scan.py` names both and fails on any
+other caller (E-0486 to E-0510; `handover/2026-09-19-core-atomic-admission.md`,
 `handover/2026-09-20-core-check-executor.md`,
 `handover/2026-09-20-core-two-step-door.md`).
 
@@ -504,6 +507,14 @@ production path. Adding a conforming implementation at an explicit adapter
 boundary is not a fallback: every implementation is explicitly selected and
 passes the same suite. Never retain an implicit fallback or two authoritative
 interpretations of the same source language.
+
+A Core change that moves a public surface adapts every adopter in this
+repository in the same branch, with a guard test that proves no adopter still
+uses the old path; for the admission door that guard is
+`tests/test_caller_supplied_check_event_scan.py`, a static scan over the
+tracked tree. Merging Core and leaving an adopter behind is not landing the
+change. Luis, 2026-09-21: "we've moved Core, all protocol adopters need to be
+adapted."
 
 Two steps an adopter misses exactly once, both from the Shop staged run of
 2026-09-18:

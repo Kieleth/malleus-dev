@@ -1030,8 +1030,11 @@ OVR-000471), `admit` and `admit_with_anchors` refuse a caller-supplied check or
 verdict event, and `malleus.compiler.check_and_admit_change_set` is the
 Core-authored path for callers that build change sets; the research programs and
 Core's own tests are migrated with exported graphs byte-identical (OVR-000472
-onward). Still two-step and unexercised: two paper-side consumers under
-`paper-v4/experiment-v4/` and `document_paper/document_run.py`. Details in
+onward); the document path runner followed on 2026-09-21 (`fa4c3785`), with a
+static guard test over the tracked tree. Still two-step: two paper-side
+consumers under `paper-v4/experiment-v4/`, the paper front's to adapt, and the
+blocked `research/action_history_contract_freeze` audit, kept historical at its
+Core `2a112405`. Details in
 `handover/2026-09-19-core-atomic-admission.md` and
 `handover/2026-09-20-core-two-step-door.md`.
 

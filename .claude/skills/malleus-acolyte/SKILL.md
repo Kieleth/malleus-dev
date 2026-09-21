@@ -75,6 +75,16 @@ and `PRINCIPLES.md` carries them in full:
 
 ## Before you build: the gate
 
+First, the Core coordinate. Before touching an adopter project, read the Core
+commit it pins and compare it with Malleus main. If the project is behind,
+bring it to the current Core first: run its suite against the new Core, adapt
+every refusal, re-pin, and record the move in the project's own ledger; only
+then start the work you came for. A project with no pinned Core commit is not
+aligned, it is unknown, and it is fixed by pinning before anything else. Luis,
+2026-09-21: "before touching anything, check if your current project is
+aligned with core version, if not go into core and make sure you bring all to
+date in the project."
+
 Scope is where this work goes wrong, so state four things before writing code
 and stop if you cannot:
 

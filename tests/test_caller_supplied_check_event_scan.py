@@ -109,12 +109,14 @@ ALLOWED = frozenset(
 
 KNOWN_UNMIGRATED = frozenset(
     {
-        # Found by this scan on 2026-09-21 and left alone: outside the brief
-        # that wrote this file, which covered the document path. It is a real
-        # unmigrated caller, red at ``4ad1367f`` before any change here with
-        # ``CALLER_SUPPLIED_CHECK_EVENT`` at setup of seven tests, and it went
-        # unnoticed because ``research/action_history_contract_freeze`` is not
-        # in ``testpaths``. It imports ``_protocol_events`` from
+        # Found by this scan on 2026-09-21. A real unmigrated caller, red at
+        # ``4ad1367f`` with ``CALLER_SUPPLIED_CHECK_EVENT`` at setup of seven
+        # tests, unnoticed because ``research/action_history_contract_freeze``
+        # is not in ``testpaths``. Kept unmigrated by decision (Overlord,
+        # 2026-09-21, on Luis's "go with your recs"): that packet is a BLOCKED
+        # research audit frozen at its own base Core ``2a112405`` (its
+        # README), historical evidence rather than a live adopter, so adapting
+        # it would rewrite what it froze. It imports ``_protocol_events`` from
         # ``sequential_fixture`` and calls ``history.admit`` with it.
         (
             "research/action_history_contract_freeze/programs/test_action_inputs.py",
