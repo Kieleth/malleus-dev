@@ -19,10 +19,10 @@ on a tree where it passes. This is that probe made permanent and static. It
 reads the tracked tree, so it sees a caller no test exercises, and it changes
 nothing it looks at.
 
-**Scope.** ``src/``, ``research/`` and ``tests/``. The four Core tests named in
-``ALLOWED`` are the tests *of* the door: their subject is the refusal, so they
-must keep supplying the event the door rejects, and a reading of zero would
-mean the door had lost its tests.
+**Scope.** ``src/``, ``research/`` and ``tests/``. The Core tests named in
+``ALLOWED`` are the tests *of* the door and of the admission lifecycle: their
+subject is the refusal, so they must keep supplying the event the door
+rejects, and a reading of zero would mean the door had lost its tests.
 
 ``paper-v4/`` is deliberately excluded. It is the paper front's tree, governed
 by the ``malleus-paper`` skill and off limits to Core agents, and it still
@@ -165,6 +165,7 @@ def _resolve(
     tree: ast.AST,
     expression: ast.AST,
     parameters: frozenset[str],
+    called: frozenset[str],
     hops: int = 2,
 ) -> tuple[list[ast.AST], bool]:
     """``expression`` plus what it names, and whether the walk gave up.
@@ -221,13 +222,10 @@ def _resolve(
             for value in assignments.get(name, ()):
                 frontier.append(value)
                 resolved = True
-            if not resolved and name in _CALLED_NAMES.get(id(tree), frozenset()):
+            if not resolved and name in called:
                 opaque = True
         collected.extend(frontier)
     return collected, opaque
-
-
-_CALLED_NAMES: dict[int, frozenset[str]] = {}
 
 
 def _event_literals(nodes: list[ast.AST]) -> set[str]:
@@ -255,7 +253,7 @@ def _caller_authored_admissions(path: Path) -> list[tuple[str, int, str]]:
     """
 
     tree = ast.parse(path.read_text(encoding="utf-8"))
-    _CALLED_NAMES[id(tree)] = frozenset(
+    called = frozenset(
         node.func.id
         for node in ast.walk(tree)
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
@@ -282,7 +280,7 @@ def _caller_authored_admissions(path: Path) -> list[tuple[str, int, str]]:
             reached, opaque = [events_argument], False
         else:
             reached, opaque = _resolve(
-                tree, events_argument, _parameters_of(tree, function)
+                tree, events_argument, _parameters_of(tree, function), called
             )
         literals = _event_literals(reached)
         authored = sorted(literals & set(CORE_AUTHORED_EVENTS))
@@ -296,7 +294,6 @@ def _caller_authored_admissions(path: Path) -> list[tuple[str, int, str]]:
                     "events this module cannot show to be check-free",
                 )
             )
-    _CALLED_NAMES.pop(id(tree), None)
     return findings
 
 
