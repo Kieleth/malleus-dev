@@ -20,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from malleus._contract_pipeline.admission import check_and_admit_change_set
+from malleus.compiler import check_and_admit_change_set
 from malleus._contract_pipeline.knowledge import (
     KnowledgeAnchorInput,
     KnowledgeChangeHistory,
