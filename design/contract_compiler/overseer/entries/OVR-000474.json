@@ -1,0 +1,203 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:343c23c4c5aa8c107f15e7a0da6bf236b250c578da73d699b762250bae65ae73",
+        "before_digest": "sha256:1767f6e65c49faa3a4da3be504f992ab29a13e925b20a3915b9c0ce2d7a76f3e",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_evidence.py"
+      },
+      {
+        "after_digest": "sha256:85778d6b396239aafa8587a06c78d2d74747d2526d57b7f277045862bab29ada",
+        "before_digest": "sha256:aee752c22d399983de648b6376a88c37405306f36cee20528234c88300bcb303",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_query.py"
+      },
+      {
+        "after_digest": "sha256:064695217ce8b50743c688eb7ed9ad884078cfc45a08be8dcf743aa7f6fad728",
+        "before_digest": "sha256:f2ea7c2cee679262349864557b22a317ca788494946271c0cfdb874bd0340b33",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_run.py"
+      },
+      {
+        "after_digest": "sha256:83f5a3e0cd75c273013b64b8a552cc4d165c79085b1d3562f8b3f00742c22a83",
+        "before_digest": "sha256:258d7d77b09248d6315e102fa4a14871b531f24f9951712024c102b010211d06",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/test_current_evidence.py"
+      },
+      {
+        "after_digest": "sha256:c36e4a93be5d14a8fcdcaad2bfc19f8f85acb25d18eecd895269b642cb667af9",
+        "before_digest": "sha256:fad3a9c6e136e2b9711c07e6c8163f27a9bc4be5502531614a944e622afe644d",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/input/population/ret-040.json"
+      },
+      {
+        "after_digest": "sha256:7a69d144f6259802f310a0a112cd53055e07bf91f8a37ef04c06251eedc2704c",
+        "before_digest": "sha256:6459c6ebb6d85e3e9be9b2273608137b74fc196519f55210d663f30f993d2113",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:cb9f354c59c35fb5f269699a91720fdced343637eb56f91a8d2418c05ac898c8",
+        "before_digest": "sha256:ca22ef6dcdf8a8a79f1f93690a3a71a6b0d462a45f4c6e22f9bbdc455be73e58",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:df52f876665c96923e97dd3c5dd8f2f49f51cf7659651240b31d30ba31fc1729",
+        "before_digest": "sha256:415d7175da82381ef24536c9b9acc237b5d5121f16c18944d8d15cc6679c3a0f",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/admission.py"
+      },
+      {
+        "after_digest": "sha256:0d4fa887438300337891684bb7e4d0c63d561d2cb99de5655b635498ac5f801c",
+        "before_digest": "sha256:15b3991fb349d72007f4742bc9bd060453d640f92fbb70f1abd880b1adc1f960",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:5fc3a0253da35bb37c10379c54ad0b4cafcad8593e922f49c07c7cae4d880b5e",
+        "before_digest": "sha256:9d856b6c28a68de43ea23a199f5bef36bf3a26b996fb58ce8360919f091ffb12",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:d69971668aa0f002849166f3a90abf39d546b35631abce649492aabc0769f67d",
+        "before_digest": "sha256:daa2cc88009b281ae5343497ced2fceea77417ba77b115cf854554d617e1aee9",
+        "change": "MODIFIED",
+        "path": "src/malleus/profiles/structural-admission-check.json"
+      },
+      {
+        "after_digest": "sha256:1ed8dea5dd6461a7a2e513a70556f7a5a0ce988a543528ec0348426c30421252",
+        "before_digest": "sha256:4e0acca2c15b78f66d3994e77d4f9e878ed4cc69047ede08a8aa9b455aa71546",
+        "change": "MODIFIED",
+        "path": "src/malleus/profiles/structural-admission-policy.json"
+      },
+      {
+        "after_digest": "sha256:62c5e36611c20c3cd9e65834ba184e8bd17877f07e35b2b998ed0c520f73fad6",
+        "before_digest": "sha256:5f309d574731a3fe2d19910c3ec9f971bb486483832926d2596eb7d448612f2d",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_atomic_population_admission.py"
+      },
+      {
+        "after_digest": "sha256:9ed4cbb9eac5478ea003ebf4000c644a85e14d013c24ca891ee3fa442d4fd637",
+        "before_digest": "sha256:b2858dd0259061ddc628e39a5f968c9c4063841b146487b4a51297a5f3870323",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_change_composition_context.py"
+      },
+      {
+        "after_digest": "sha256:76fe608db81bc05b163a76568ed932c3a4918d1cd0abfecb6cfd30bb5659300b",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_change_set_admission.py"
+      },
+      {
+        "after_digest": "sha256:d5c712de27dd405c7d947ca6d39607a4fed2580d505226c938c6facddeee0fb7",
+        "before_digest": "sha256:39907071b235908d40897bfe44e9578b6ebd0964e64a153517474986f424a338",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_check_contract_executor.py"
+      },
+      {
+        "after_digest": "sha256:c0573d2c0ead48022a619b422f8a225ccfcb6b10bcd9f5bf1f06981ce2085ffe",
+        "before_digest": "sha256:b124b9c161b57a3e933c37e555784892f3d45dabc3baca913501976e54894503",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_check_contract_rebinding.py"
+      },
+      {
+        "after_digest": "sha256:63210031c87e3b6fb101904d13250019c9ec0a1a133b4a19b15723539d7ff615",
+        "before_digest": "sha256:b79a7799841581683f788bbc726a5b33195c9d0de3d1073d1f598f784edf1c20",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_contract_revision.py"
+      },
+      {
+        "after_digest": "sha256:2ac45f3e2893df38086145edd88e24b1bc865c85a2b1c9bc7dc9c5003b3bcc88",
+        "before_digest": "sha256:1940c85af19b73d56f06ce8a6e9bd7fef2be9edf12133af4e70ffb823bd71f00",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_document_fixture_producer.py"
+      },
+      {
+        "after_digest": "sha256:cfdf1e5032acf87d43e92d29581f1bdc0b159dcb5ac2581c8c387637673a7fd8",
+        "before_digest": "sha256:6d0c9d791d5bb9a350ef28cf07c1424f8bf0b7382948102f8aff5dfef6bd6057",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_finite_protocol_history.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000474",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e8229e8ba882aee010a9dba88f63bb6d8565da79bc10782771bcdb09dc0e8732",
+  "recorded_at": "2026-09-21T00:45:37Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "623f5c4d69f65dade0120914b1a5051d7d0ca41e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6214e2bc9326a83bb0aacc6eab9c56300dd3e049",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bc54ee8e71622b3adba1a4905a849bb3c69d7c33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c93914c795160c3ddf87c8631e71273705de683f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 474,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 3 of 4.",
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 73 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's.",
+  "entry_hash": "sha256:3f2ae732414bb4dd7d6e77893375cca52e2eec3b8a9be7c5ab8120aa5a476b24"
+}

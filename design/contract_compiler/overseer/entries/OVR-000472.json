@@ -1,0 +1,202 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b18e426e8e8bfb60217f2dde44cd641dd7b6f53aaf027a820ea20c6a3940d9ab",
+        "before_digest": "sha256:931a230b1f2723ff63f236490bb64ecfbf990289d9d20db2e585563e81d2c5c8",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:428abf6449b7f55864e8e8b7cef44dfd23cf808ea738fec997be344c25377240",
+        "before_digest": "sha256:224b8278cbb6974f9c3d577cf71446d689f4f1ec4f95883aecb27f67eab3f10e",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
+      {
+        "after_digest": "sha256:71ee0e48be085c1e75af6658df40719c1b7b1cff933a11f6b731c9840bf696ee",
+        "before_digest": "sha256:f637cbba30d0363d068a8e700c400d1e947301d22495f07eccf4bc90678efe49",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:52e1dc247a8d97535addb5c729f5e7f1d1e84a78fa0ecdfb61e5202ab4cecc83",
+        "before_digest": "sha256:e5c3841991c0c5a910a9d5d0b693551f17cb6142b1338febc5ab94867bf27ced",
+        "change": "MODIFIED",
+        "path": "ROADMAP.md"
+      },
+      {
+        "after_digest": "sha256:f3b88b9e8cf2e651b8c14b2a5f23e10a8cc534bc301c2531cacb0af02ce2b991",
+        "before_digest": "sha256:e2eae18a85d937a8759c8a910d9a4c2d17c9af6540c38fbfd54614334aa69f9a",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/overseer/README.md"
+      },
+      {
+        "after_digest": "sha256:a4b3e6441238cb30f5b189103fa4bea26100f6dba12efa482b3841792f393858",
+        "before_digest": "sha256:034cadaad32401e98e5ee5131461ae7f2e335f1a6a7d8289634219974cd25c07",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/overseer/ledger.schema.json"
+      },
+      {
+        "after_digest": "sha256:09feedab1dac003c5ec959ef0367f603070e3c544a5346b9a678320cb5b4d137",
+        "before_digest": "sha256:ce786f210433a04b914690ea4fc272f16e5431530fdc98e556b137154e0e3665",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:ce3183b742418bb2af1e8c9806043939ad6a12a9887606c0403843e7a0278fa4",
+        "before_digest": "sha256:81ce100a6a0df1fc2fd201e1820c85d1bdcd25fc9b139e8813153a83dc62bc35",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:a8ff630e712d695f5567505907541b51ec41dbdb84238291635cebc146367797",
+        "before_digest": "sha256:006bdea4921ade62c58e1fc51b2043b8ef1855a71530c1c485e6d1e7135bb581",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:d5a38750b98118cb26cd68ffdacf9cc4a49892f0f57a8388ff8bb02856d19160",
+        "before_digest": "sha256:c87b021e2e1a28e54bf7e7bf086a7598577aa3c218d9574f65b6f52d2556ddd5",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:017f4a4fdc779e18151449abc071c99e3ebd44659e60688e43e8c30f19ced659",
+        "change": "CREATED",
+        "path": "handover/2026-09-20-core-two-step-door.md"
+      },
+      {
+        "before_digest": "sha256:d98a26162b65c6f517788cc0cc5a0c1492f81918cc61d1674cfac06cc19c82a9",
+        "change": "REMOVED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/source-mapping-conformance.json"
+      },
+      {
+        "after_digest": "sha256:4cef2ab7e63c87ff3b3290026b6c0b1335b01cea18e30b353adfaf6ce52b8bd9",
+        "before_digest": "sha256:47e59912feaa8584c52a3b3914754b61a0cd5caad6724cef7a910c19c8673fde",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/structural-conformance.json"
+      },
+      {
+        "after_digest": "sha256:66913e1e39bec010c600543f756318dbc53f9ae3ce1767cdf08eb41e8fef29b8",
+        "before_digest": "sha256:825c8d998ec311c93426dd7b787fff732eec09b7a9e0805fdfc2f7b215faf375",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/machine.json"
+      },
+      {
+        "after_digest": "sha256:724f16702697e591504c819395a6b1877d85283ba13c1830edb29dec94ba3be9",
+        "before_digest": "sha256:57972777e8132ecd4c0430da659c92312e89a80f36779722276e804b4b92850f",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/policy.json"
+      },
+      {
+        "after_digest": "sha256:2554fbd5998c008c14af1a23d98ebbe4cd62f1f7c119b9eb897dd62ddd1eafaa",
+        "before_digest": "sha256:414db35b85dd0931be75e27e80001046a8f457dda332425c9f42d244cd0bd160",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.json"
+      },
+      {
+        "after_digest": "sha256:9e04076f0181886c53e3ecfc003dfa1881c3c5af033146feb086cec0202c7fb8",
+        "before_digest": "sha256:29902a7e7249efcad89637a0c3bea5cb6a2b17adeed85b4abf2bfcaf29114dbe",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.py"
+      },
+      {
+        "after_digest": "sha256:023b0e0026aff92e9d3c1cf5273ec7d1e8b4c3dd5b2cbdc5d122bb8266a9d4f9",
+        "before_digest": "sha256:63f6068125e89aff5a594f88cca6971f215c4b6635f428bbb4d073a75d31781f",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py"
+      },
+      {
+        "after_digest": "sha256:81a690dcdc15b32465abcb676973116cf24c9ff4a7baa48f0b4c8e62d0d68726",
+        "before_digest": "sha256:0d04ddd11d2de303b7502a4e3287627d6eafa2d81e4c78cca213b1b699b3bfc1",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_assertions.py"
+      },
+      {
+        "after_digest": "sha256:7b56b161e1c6ed68d4f52a24346fa1f4905c92eedf2fabafa4a95adc31dea0a9",
+        "before_digest": "sha256:e0b3541ee706250b78a49ee1b2b784b95993c3e2464425a1f24b67fe85a95023",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/run.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000472",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7cb9e624476d13a78ed15a5d5d89f219414cb536f3738eda7a91a94f1de984fd",
+  "recorded_at": "2026-09-21T00:45:37Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "623f5c4d69f65dade0120914b1a5051d7d0ca41e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6214e2bc9326a83bb0aacc6eab9c56300dd3e049",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bc54ee8e71622b3adba1a4905a849bb3c69d7c33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c93914c795160c3ddf87c8631e71273705de683f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 472,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 1 of 4.",
+  "why": "Decision D (E-0502 to E-0508), step 2 of two. Core runs every check itself, so the public door closes. admit and admit_with_anchors refuse a caller-supplied CHECK_RECORDED or VERDICT_RECORDED with CALLER_SUPPLIED_CHECK_EVENT before any append, the verdict too because SELECT_POLICY_VERDICT derives it from the check records. PolicyProgram refuses an empty required_checks and acceptance needs the binding's VERDICT_RECORDED, so the two methods now admit nothing under any shipped binding. check_and_admit_change_set is the third Core-authored entry point, for a caller that composed its own operations; neither entry point takes an outcome. Core's structural check is now a malleus.check-contract/v1 CORE_BUILTIN document, moving STRUCTURAL_HISTORY_BUNDLE 0ef377d9 to 8a994ed0 and every coordinate cut against it. Nine research programs stopped writing their own outcomes, and three check contracts whose executor was their own program, or nothing, were removed. Two of the three were governed documents, so documentChange.change gains REMOVED: the ledger had no word for a deletion and refused whatever this entry recorded. Every exported graph and domain record stays byte-identical to 85f0ed54.",
+  "entry_hash": "sha256:0fc5e98f7bf5f4bf2821c150aef1539795a29df20b0f1b3fe405840928a24be6"
+}

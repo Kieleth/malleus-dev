@@ -1719,3 +1719,27 @@ re-derives it. The real worktree was never written to.
   "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 73 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's."
 }
 ```
+
+## Sealing note for OVR-000472, 2026-09-21
+
+`entries/OVR-000472.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.
+
+## Sealing note for OVR-000473, 2026-09-21
+
+`entries/OVR-000473.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.
+
+## Sealing note for OVR-000474, 2026-09-21
+
+`entries/OVR-000474.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.
+
+## Sealing note for OVR-000475, 2026-09-21
+
+`entries/OVR-000475.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.

@@ -1,0 +1,162 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d71ef53f7a1f3fa3c96e0225e04cc76f4abae33c222597c02dc8cafff43a5f86",
+        "before_digest": "sha256:70392d0b73093c1e970cf033f8794851f8a0ebfb9309928eee9496918bd21a50",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_governed_population.py"
+      },
+      {
+        "after_digest": "sha256:b2f1f373fa898a5d842178230c2c6c08d0d16e98b3bb87fff3a951e5b6c417e8",
+        "before_digest": "sha256:9771738d663490917d626ce2ff74910f717905c93cbcc9bf07b27bc8d3752973",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      },
+      {
+        "after_digest": "sha256:5d481487d9d5633d1e2def3b0916dd81883bb5cf44cde399e24119b4bee755dd",
+        "before_digest": "sha256:368b200e8cb23a214be8e84404b71aefd00bfa69a07209ae45cd1eb6d70f4853",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_maintained_projection.py"
+      },
+      {
+        "after_digest": "sha256:74f1da917de09b703a95ee37fd74c7db0ddeaab8edd0ad62fcde55b2d0ea8997",
+        "before_digest": "sha256:fc9ebe2b1010dd7496a6c2645c8110b5dae413921bbbc500e8184148e6086d28",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_object_event_population.py"
+      },
+      {
+        "after_digest": "sha256:a3a3dbb32fef15bf6ede09eb2528c7025825b230aaf2d9969445af91436f65d3",
+        "before_digest": "sha256:1a663a98ccc5a93269e408faf6d69e4f55c3985e74609f3067f5c60a62e0a310",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:a1ba73711077437a87e5bbe136391ee57ae2d98299d3052b639d25317c4f082c",
+        "before_digest": "sha256:8d6d727ce5a401372668d2fa408758d3aa9a4379b670a96e9b7f2924b560d04a",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_trace.py"
+      },
+      {
+        "after_digest": "sha256:e0330970ac35524becd34bae6f2a1471b6022aa089a8882dfc1e19def5d95903",
+        "before_digest": "sha256:c32317607d96863234d654ab8a19d4903a1d24f752b33dc0e97afe52c7b122e8",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_protocol_machine.py"
+      },
+      {
+        "after_digest": "sha256:7daa17585759d7f366c916f89a06e3fadace2caeadab59cc0bc8bb6bc70e8e7b",
+        "before_digest": "sha256:2224a1d5a98f6eabcc862f01cca097d4783a8929e98f123a6d558000d739c541",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py"
+      },
+      {
+        "after_digest": "sha256:3883c846e8a33dd57f9cd99a24219fdfd89488af23bd0801007de5b84b56500a",
+        "before_digest": "sha256:87d18028d83dd7388d6e2000bdba6360ccc994239e4687421a41dceef300ba88",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_review_coverage.py"
+      },
+      {
+        "after_digest": "sha256:cb4e0230457329fadaab87fa94c5d8965990b134a3b35c18a23b795a1324fd83",
+        "before_digest": "sha256:784c33c2ccce87048abeaf31aa99f4dc20898e9aa37e907d852c8d6f06c080e3",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_small_shop_contract_revision.py"
+      },
+      {
+        "after_digest": "sha256:f162f0ba007d19bf17279a7bdebf37ae3a0e5e1affe7f82ddda559763aa38899",
+        "before_digest": "sha256:ed2ec2deea36d2a9848e38a3dfde04f3cea5838a0a4fa6705b250f2c485d00a0",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_transition_admission.py"
+      },
+      {
+        "after_digest": "sha256:34ba4633be93601e27e5b1319bb7be6e9d4470f29e958be5338a97985614ad61",
+        "before_digest": "sha256:7640d767fb3fcc45db89bb12da7283b548cb5d81d6ad5a9724d7d80ef328e2a0",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:c248256a8eee51146c25fb550647745b9d594d8913c62e3943cd556b5b8bc2ea",
+        "before_digest": "sha256:0e2d42c75459af2ee8a07e4d6379daad63b85e2d1102c41d6140b2584e36cff6",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000475",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3f2ae732414bb4dd7d6e77893375cca52e2eec3b8a9be7c5ab8120aa5a476b24",
+  "recorded_at": "2026-09-21T00:45:37Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7c6e3f627968e1c59de0bbe7d027179773d3d273",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7c3237f06a7e1d7a4882d4e3cb787e7c889fd49f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "980cb609a3d254460ce1958edc89ae335d3e9157",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "127c3f675e09db0d782f0aa0d423a72cd3f8c347",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "934ef948b0046665f6cd477eb67ea564d7de507f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "623f5c4d69f65dade0120914b1a5051d7d0ca41e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6214e2bc9326a83bb0aacc6eab9c56300dd3e049",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bc54ee8e71622b3adba1a4905a849bb3c69d7c33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "19c8b05fe4fe041e4f77f5311cc1edfeb943262b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c93914c795160c3ddf87c8631e71273705de683f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 475,
+  "subject": {
+    "id": "core-two-step-door",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close Core's public admission door, add the third Core-authored entry point, fold Core's structural check into the grammar, and migrate every consumer. Documents 4 of 4.",
+  "why": "Continuation of OVR-000472, same work and same commits. The overseer schema caps one DOCUMENT_REVISION at 20 documents and this branch changes 73 governed documents, so the set is split by sorted path across 4 sequential entries. Splitting is mechanical and carries no meaning: the change, the evidence and the reason are OVR-000472's.",
+  "entry_hash": "sha256:380bbab0491a0e83f2f137819c75cfc994eda973b314809aef48bbedba440708"
+}
