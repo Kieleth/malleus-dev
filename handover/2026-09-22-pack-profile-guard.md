@@ -86,3 +86,9 @@ The pack change fixes one pack and leaves the pattern alive in every producer on
 ```
 
 Another Core agent may draft OVR-000480 in parallel; the number is the Overlord's to assign at seal.
+
+## Sealing note for OVR-000480, 2026-09-22
+
+`entries/OVR-000480.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.

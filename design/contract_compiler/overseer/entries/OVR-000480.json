@@ -1,0 +1,66 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:792109980f2ba01d6fa36295fcfe08b160d1706f9054ce44dc2c0f3352742b3e",
+        "before_digest": "sha256:5fd1e2c4624d8124484fa5144a69cbd1504e41c695a824160cb4c7187b7fc03c",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
+      {
+        "after_digest": "sha256:d293853aea4866232e18c25eaac89c7b3df94f56d8969fa24fbd30fd103f0ff7",
+        "before_digest": "sha256:b4caa1c5f57e6a8de5e4727ff563992789552041e89fc7db67888acc035d2766",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:6978128db638791318d26f36a5a476007f60a6d35038da6edfcb3d3abdcb64b9",
+        "change": "CREATED",
+        "path": "handover/2026-09-22-pack-profile-guard.md"
+      },
+      {
+        "after_digest": "sha256:6660a0ea422b79d4ab4038ad2d602808f902843741ab80bc8a2cf5537772efd0",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/shipped_ontology_profiles.yaml"
+      },
+      {
+        "after_digest": "sha256:882f3182bd355d5c9a3e9c8c99266f8de11923718dd278a5328fbeed1b4f4006",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/test_shipped_ontology_profiles.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000480",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0259f6a77e624cfa9e8ae51a37a60866cac6b3369fb3e5993a059637cda3ee10",
+  "recorded_at": "2026-09-22T21:38:16Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7fabf14f665623b590bea23ffbb0bf4932ebca95",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 480,
+  "subject": {
+    "id": "pack-profile-guard-2026-09-22",
+    "type": "DOCUMENT"
+  },
+  "summary": "Declare the profiles every shipped schema loads under and guard them: the research pack is compiler-enabled only, recon typed-graph only. Measure both fixes for the registry refusal; apply neither.",
+  "why": "The registry refuses Core's shipped research pack, and any schema importing it, because ResearchRelation and ContributionRelation range relation_type over an enum with no equals_string; the compiler compiles the same bytes. Luis ruled on 2026-09-22: pack and rule unchanged, a guard, an honest declaration, measure first. Measured at fd68b757: of ten schemas under ontology/, eight load under both loaders, research only under the compiler, recon only under the registry because the compiler refuses its linkml:uri range; 39 of 41 concrete relation classes pin their predicate; run-23 holds 0 ResearchRelation and 8 ContributionRelation records, and its own ontology repeats the pattern twice. The guard declares each schema's profiles beside the test and fails naming each refusal and each undeclared schema: RED on exactly research under typed-graph and recon under compiler-enabled, GREEN 3 passed. Loosening the rule moves no byte and no replay; changing the pack moves a digest named in 73 tracked files and is refused as non-additive. Neither is applied.",
+  "entry_hash": "sha256:9f62665545fd4e1fce7af591cad8aafb0c7afe2c737c2851c8eb799a13a449b7"
+}
