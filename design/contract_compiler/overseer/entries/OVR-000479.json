@@ -1,0 +1,79 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11",
+      "CC-X02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b4caa1c5f57e6a8de5e4727ff563992789552041e89fc7db67888acc035d2766",
+        "before_digest": "sha256:e457392794b3f7fb1a24c63ce177fc05c76d08cc3b6ed98e0b3dc7e5fbadef9a",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:2026a8f2d546ad4d246df438c64322cbc577450464e0302f626b988434026b36",
+        "before_digest": "sha256:e30270a44e1305a355c27cf063ee99b4cd5112f4bb9bcfa74392315252f7e475",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json"
+      },
+      {
+        "after_digest": "sha256:359cad031d22059acd624a0893ddc27e317b03a4feba35d701ba01b3b79b4d96",
+        "before_digest": "sha256:c481094613e46a6d28882a332cc9bd5dc6a1816639c5fba98aa34125c26fbd9c",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-X01-environment-contract-correction.json"
+      },
+      {
+        "after_digest": "sha256:c36707ddad7e24efd993cc985a78b77113d7930322ae5e40071635d5bd100ac4",
+        "change": "CREATED",
+        "path": "handover/2026-09-22-wheel-include-list.md"
+      },
+      {
+        "after_digest": "sha256:7c6d162bde1fcaf493972eceac3c1a2e92a234471c0fc3e6614ba1092849352d",
+        "before_digest": "sha256:037567e39af4eca01f8ff0560625075d053729f8311d5dce3bc9270b0f47a47d",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:5de85a588c403c2cc1abd01897f24fbf3b493fa78a60db49f9ef69d32103860c",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/test_packaging.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000479",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e00255f240f24ad332d770dd7e1bca99a3be79096c011bc3237cd07f625649a8",
+  "recorded_at": "2026-09-22T04:04:11Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "efc60e3c875691bb3c7bdcb06fd1752b9fd96454",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 479,
+  "subject": {
+    "id": "packaging-include-list-2026-09-22",
+    "type": "DOCUMENT"
+  },
+  "summary": "Add gap_answer.py, linkml_addition.py and ontology_source.py to the packaging include list, which governs the source distribution, and re-record by tool the two measurements that bind pyproject.toml's bytes.",
+  "why": "The finding said an installed wheel cannot import malleus.compiler. Measured on c4ef80d9 the wheel is complete: hatchling appends a target's packages to its include patterns (builders/config.py include_spec) and targets.wheel sets packages = [\"src/malleus\"], so the wheel ships all 57 tracked modules whatever the list says; an unlisted scratch module was measured into it. targets.sdist declares no packages, so the list is the sdist's whole include set, and the sdist carried 54 of 57. A wheel rebuilt from that sdist differs by exactly those three members and raises ModuleNotFoundError on malleus._contract_pipeline.gap_answer, so scripts/ci.py package is RED on main and release.yml's build job stops on a v* tag; tests.yml runs test and docs only, which is why no push saw it. tests/contract_compiler/test_packaging.py is the guard, inside the default selection: 3 failed 1 passed before the fix, 4 passed after. pyproject.toml moved from 12074 bytes sha256:037567e3 to 12643 bytes sha256:7c6d162b; the CC-X02 scan and the CC-X01 correction were re-recorded by --write and refresh-evidence, and no observation changed.",
+  "entry_hash": "sha256:0259f6a77e624cfa9e8ae51a37a60866cac6b3369fb3e5993a059637cda3ee10"
+}
