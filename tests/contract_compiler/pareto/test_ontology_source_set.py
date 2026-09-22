@@ -453,16 +453,30 @@ def test_the_fold_replays_a_retained_source_set_without_importing_linkml(
     assert finished.stdout.strip() == ""
 
 
-def test_the_linkml_free_probe_runs_the_tree_under_test() -> None:
-    """The control for the probe above: it must fail when the tree is wrong."""
+def test_the_linkml_free_probe_runs_the_tree_under_test(tmp_path) -> None:
+    """The control for the probe above: it must fail when the tree is wrong.
+
+    The wrong tree is an empty temporary directory, never the installed
+    package's own location: from a worktree the installed package lives in
+    another tree, but from the main checkout it is this tree, and a control
+    that relied on that difference passed in one place and failed in the other
+    (main e33467f6, the F2 seal, read 1 failed on exactly this test).
+    """
 
     assert run_probe("").returncode == 0
+    wrong_root = tmp_path / "not-the-tree"
+    wrong_root.mkdir()
+    wrong_preamble = (
+        "import sys\n"
+        "import malleus\n"
+        f"assert malleus.__file__.startswith({str(wrong_root)!r}), malleus.__file__\n"
+    )
     wrong = subprocess.run(
-        [sys.executable, "-c", PROBE_PREAMBLE],
+        [sys.executable, "-c", wrong_preamble],
         capture_output=True,
         text=True,
         cwd=str(ROOT),
-        env={**os.environ, "PYTHONPATH": ""},
+        env=PROBE_ENV,
         check=False,
     )
     assert wrong.returncode != 0
