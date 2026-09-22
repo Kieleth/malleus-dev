@@ -840,6 +840,29 @@ def test_a_second_proposal_composes_onto_the_first_acceptance(tmp_path) -> None:
     assert replay.open_gaps() == ()
 
 
+def test_a_fragment_importing_a_module_the_source_set_lacks_refuses(
+    tmp_path,
+) -> None:
+    """The composition rule allows a new import; the retained map must carry it."""
+
+    history, identity, _ = _plan_history(tmp_path)
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.OntologyGapAnswerRefusal) as refusal:
+        _retain_proposal(
+            history,
+            _proposal_bytes(
+                answers=(identity,), addition="imports:\n  - not-in-the-source-set\n"
+            ),
+        )
+
+    assert (
+        refusal.value.reason
+        is compiler.OntologyGapAnswerRefusalReason.PROPOSAL_DOES_NOT_COMPILE
+    )
+    assert history.path.read_bytes() == before
+
+
 def test_two_proposals_composing_to_the_same_contract_both_retain(
     tmp_path,
 ) -> None:
