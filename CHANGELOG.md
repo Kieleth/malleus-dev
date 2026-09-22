@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The source distribution dropped three modules `malleus.compiler` imports.
+  `pyproject.toml` `[tool.hatch.build] include` did not name
+  `src/malleus/_contract_pipeline/gap_answer.py`, `linkml_addition.py` or
+  `ontology_source.py`. The wheel built from the repository was unaffected:
+  `[tool.hatch.build.targets.wheel]` sets `packages = ["src/malleus"]` and
+  hatchling appends a target's `packages` to that target's include patterns, so
+  the wheel ships every file under `src/malleus` whether the list names it or
+  not. The sdist target declares no `packages`, so the list is the sdist's
+  entire include set: the archive carried 54 of the 57 tracked modules, a wheel
+  rebuilt from it raised `ModuleNotFoundError: No module named
+  'malleus._contract_pipeline.gap_answer'` on `import malleus.compiler`, and
+  `scripts/ci.py package` failed at `package-parity` with "repository and
+  source-archive wheels differ". That profile runs on a release tag and not on
+  a push, which is why no gate saw it. The three paths join the list, the
+  comment above the list no longer claims that only listed files are packaged,
+  and `tests/contract_compiler/test_packaging.py` refuses a tracked module
+  absent from the list, an include pattern that selects no tracked file, a
+  source archive missing a tracked module, and a wheel rebuilt from that
+  archive that cannot import the compiler. The new `pyproject.toml` bytes moved
+  the two retained measurements that bind them, both re-derived by their own
+  tool: `scripts/contract_compiler_duplicate_scan.py --write` for the CC-X02
+  bundled declaration scan and `scripts/contract_compiler_ledger.py
+  refresh-evidence` for the CC-X01 environment contract correction. No CC-X01
+  or CC-X02 observation changed.
 - Re-recorded the three contract-compiler measurements of repository bytes,
   which had gone stale, and removed the way they go stale silently. CC-X04
   pinned digests for ten reader sources recorded at commit `5e4ec73e`; seven
