@@ -1,0 +1,25 @@
+# Which profile each schema under ontology/ is declared to load under.
+# typed-graph: malleus.OntologyRegistry. compiler-enabled:
+# malleus.compiler.compile_linkml_contract over the schema's exact import
+# closure. test_shipped_ontology_profiles.py holds every pair here to a load and
+# fails on a schema under ontology/ that this file does not name. A narrowed
+# entry records a measured refusal; it is not a design choice.
+schemas:
+  assent.yaml: [typed-graph, compiler-enabled]
+  domains/attack.yaml: [typed-graph, compiler-enabled]
+  domains/cyp450.yaml: [typed-graph, compiler-enabled]
+  domains/ocr.yaml: [typed-graph, compiler-enabled]
+  # The compiler refuses slot source_uri: its range linkml:uri is not one of
+  # the compiler's seed scalars (INVALID_RANGE). Measured at fd68b757.
+  domains/recon.yaml: [typed-graph]
+  malleus.yaml: [typed-graph, compiler-enabled]
+  packs/chronology.yaml: [typed-graph, compiler-enabled]
+  packs/metrology.yaml: [typed-graph, compiler-enabled]
+  # The registry refuses ResearchRelation and ContributionRelation: their
+  # relation_type is ranged over the enum ResearchRelationType and fixed by no
+  # equals_string, which the registry requires of every concrete relation.
+  # Reported by the paper side in paper-v4/reader-comparison-01/CORE-REQUEST.md
+  # section 2. Luis, 2026-09-22: pack and rule stay unchanged until measured;
+  # handover/2026-09-22-pack-profile-guard.md holds the measurement.
+  packs/research.yaml: [compiler-enabled]
+  profiles/object-event.yaml: [typed-graph, compiler-enabled]

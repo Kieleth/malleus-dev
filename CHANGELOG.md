@@ -61,6 +61,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Every schema under `ontology/` is declared to load under named profiles, and
+  a guard holds it there. `OntologyRegistry` refuses the shipped research pack,
+  and any schema importing it, with "Concrete relation 'ResearchRelation' must
+  fix relation_type with equals_string", while `compile_linkml_contract`
+  compiles the same bytes (reported by the paper side in
+  `paper-v4/reader-comparison-01/CORE-REQUEST.md`). The pack and the rule are
+  unchanged. `tests/contract_compiler/shipped_ontology_profiles.yaml` declares
+  `packs/research.yaml` compiler-enabled only and `domains/recon.yaml`
+  typed-graph only, because the compiler refuses recon's `linkml:uri` range
+  with `INVALID_RANGE`; the other eight schemas are declared under both.
+  `tests/contract_compiler/test_shipped_ontology_profiles.py` loads every
+  declared pair and names each refusal, and fails on a schema added under
+  `ontology/` with no declaration. With both profiles declared for every
+  schema it failed on exactly those two pairs.
+
 - A declared ontology gap is a trigger, not a note (ROADMAP F2). A plan or a
   capture could already declare `TYPE_ABSENT` and `RELATION_ABSENT`, and Core
   retained the gaps artifact and nothing consumed it. Those two kinds, now
