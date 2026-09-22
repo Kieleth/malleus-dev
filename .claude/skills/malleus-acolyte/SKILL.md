@@ -538,8 +538,13 @@ fallback.
    exact plan, source, capture, and field derivations behind an accepted record.
    The same three reads are `malleus-compiler replay`, which writes
    `export_records()` and the receipt to named paths, `malleus-compiler query`,
-   which takes a record type and repeated `--where KEY=VALUE` filters compared
-   as text, and `malleus-compiler trace` for one record ID.
+   which takes a record or relation type and repeated `--where KEY=VALUE`
+   filters read by each field's declared range, refuses vocabulary the contract
+   does not declare, and reports whether a limited result is complete, and
+   `malleus-compiler trace`, one record ID or `--batch` with a status per ID.
+   Each read can name the ledger head it expects and refuses if it moved; the
+   documented contract is "Read a governed history from the command line" in
+   the checkout's `docs/index.md`.
    Do not call a structurally valid record true merely because it was admitted.
 9. **Grow only from recorded gaps.** Keep propose, populate, refuse or record
    gaps, revise, and repopulate in one working session by default. Set the limit

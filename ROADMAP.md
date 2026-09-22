@@ -1061,6 +1061,12 @@ proposal (class or relation, anchored to the gap's source and locator) that the
 ontology's owner accepts or refuses as a recorded act, and the runner reports
 open gaps against open proposals.
 
+Built 2026-09-22 (entry OVR-000477, main e33467f6): a proposal carries a LinkML
+fragment that Core composes onto the retained ontology source, compiles and
+diffs additively; accepting records the revision and the answer in one batch;
+refusing closes the gap with a reason; the replay reports open gaps. Record:
+`handover/2026-09-21-core-gap-as-trigger.md`.
+
 ### F3. Impact of an ontology revision, not a full redo
 
 An additive revision today is proven by replaying the whole graph byte for byte
@@ -1123,3 +1129,32 @@ files are in `testpaths` with a test refusing any compiler test outside it.
 Finding for CC-D02 from the widened scan: `packs/research.yaml` re-declares
 `Claim` and `Evidence` beside `domains/recon.yaml` and `ontology/assent.yaml`,
 and `claim_kind` and `unit` are declared twice, all with `adopts` absent.
+
+### F7. May one relation class stand for a family of predicates? (parked 2026-09-22)
+
+The typed-graph registry requires every concrete relation class to fix one
+predicate with `equals_string`, so the class's endpoint ranges check which
+things that predicate may join at write time (Core doctrine since cbceffe3,
+2026-08-12; `tests/test_ontology.py::test_generic_relation_subclass_is_rejected`).
+The compiler accepts a relation whose predicate ranges over an enum. The
+research pack ships that pattern (`ResearchRelation`, `ContributionRelation`),
+and producer ontologies copy it: run-23's own ontology is refused by the
+registry at two of its relation classes. Measured options (OVR-000480,
+`handover/2026-09-22-pack-profile-guard.md`): loosen the registry rule, which
+moves no byte and gives up per-predicate endpoint checks for those classes; or
+change the pack, which moves an identity 73 tracked files name, is refused as
+non-additive, and still leaves producer ontologies refused. Beside it, the
+recon schema loads under the registry and the compiler refuses its `linkml:uri`
+range. Until decided, `tests/contract_compiler/shipped_ontology_profiles.yaml`
+declares the research pack compiler-profile only and recon typed-graph only.
+
+### F8. Filter comparisons the command line refuses today (proposed 2026-09-22, not built)
+
+`malleus-compiler query` refuses `UNSUPPORTED_COMPARISON` for float, datetime
+and multivalued fields (OVR-000481). Proposed semantics, answered "ok" by Luis
+on 2026-09-22 in a message that also covered other items; confirm before
+building: a float filter
+matches numerically equal values (`1.50` matches `1.5`); a datetime filter
+matches the same instant whatever the written zone; a multivalued filter
+matches when the list contains the value. Build RED first when a consumer
+needs it.
