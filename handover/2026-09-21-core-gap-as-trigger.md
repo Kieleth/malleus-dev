@@ -1037,3 +1037,9 @@ anyway from `<digest of this file once final>`.
   "why": "Luis, 2026-09-21, go. The first build retained linkml_addition verbatim and never parsed it, so a proposal whose text did not describe its own target would have been accepted. The fragment is now the checked input and target is gone from the grammar: a proposal supplying one is refused. Deriving the target needs the LinkML the contract was compiled from, which a history did not hold, so retain_ontology_source puts it in explicitly: it takes what compile_linkml_contract takes and refuses unless the set reproduces the running contract's identity. Genesis retains none and a recorded revision retains none, so no existing history moves. compose_linkml_addition is one pure additive rule with a deterministic serialiser, chosen by measuring that the compiled contract does not depend on YAML key order or style. retain_ontology_revision_proposal composes, compiles, and appends the composed root, the next source set, the derived target and the proposal in one batch; the additive diff under CONTRACT_REVISION_POLICY runs in the fold as the second check. Acceptance reads that target, so only two acts import LinkML and replay imports none. No change kind was added, so no frozen identity moves."
 }
 ```
+
+## Sealing note for OVR-000477, 2026-09-22
+
+`entries/OVR-000477.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.

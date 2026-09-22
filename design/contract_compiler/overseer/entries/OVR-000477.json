@@ -1,0 +1,177 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:5fd1e2c4624d8124484fa5144a69cbd1504e41c695a824160cb4c7187b7fc03c",
+        "before_digest": "sha256:428abf6449b7f55864e8e8b7cef44dfd23cf808ea738fec997be344c25377240",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
+      {
+        "after_digest": "sha256:e457392794b3f7fb1a24c63ce177fc05c76d08cc3b6ed98e0b3dc7e5fbadef9a",
+        "before_digest": "sha256:71ee0e48be085c1e75af6658df40719c1b7b1cff933a11f6b731c9840bf696ee",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:1f97126796b8b1420805c4d4e05703f12629650f1650325253e232493da7dca2",
+        "before_digest": "sha256:09feedab1dac003c5ec959ef0367f603070e3c544a5346b9a678320cb5b4d137",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:9e0ae5a84478e414f79b5c60500e4c8f9db8cd30a31a1ffa0bf39ebb82fd6262",
+        "before_digest": "sha256:a8ff630e712d695f5567505907541b51ec41dbdb84238291635cebc146367797",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:9e36af2161fc029ef9c4950e9fb29dcceb6486a7ff437b35c471fedb97bba643",
+        "change": "CREATED",
+        "path": "handover/2026-09-21-core-gap-as-trigger.md"
+      },
+      {
+        "after_digest": "sha256:dc918f4fb855fff7e8aa6af50119b66a1e7af33e1bfad723f5aea6acebedd90a",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/content_rules/run.py"
+      },
+      {
+        "after_digest": "sha256:06ce9cb9657c18e6e74f18ac2398cd9e1f0a6c21aa2db344241bb92958747f7d",
+        "before_digest": "sha256:f1d14f37497829e2871471a3e2413213ba0b34ae55e38413d7e50080568cb415",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/shipment_policy/run.py"
+      },
+      {
+        "after_digest": "sha256:93582a2ad71bee08f93b2319ad22287496b0bb2c33968c75434a63ca63ddfd48",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/gap_answer.py"
+      },
+      {
+        "after_digest": "sha256:e4bac3ccf1c2da4cff4c03c7e02eb0574bb4f7d211eab49a701b4338ed6b712c",
+        "before_digest": "sha256:0d4fa887438300337891684bb7e4d0c63d561d2cb99de5655b635498ac5f801c",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:2d5d3999b10b2f0b34dde729fc929a2483f7bb6fc4718f7972e986f98088ce57",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/linkml_addition.py"
+      },
+      {
+        "after_digest": "sha256:57025fb7f4d691b236162c6234ebebbca5df2856f965ece744bee1b24d3fdd3c",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/ontology_source.py"
+      },
+      {
+        "after_digest": "sha256:1c31e27c035a050772871582d92523ea4dd3a05bd667835eee0e280a6adbedbb",
+        "before_digest": "sha256:5fc3a0253da35bb37c10379c54ad0b4cafcad8593e922f49c07c7cae4d880b5e",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:941b9fd36246629798947ad0c00e732165d4e41b34fed8a0e9bb086170d9079d",
+        "before_digest": "sha256:392e9a58615a44974c2e4b2327c4bd4f98bc014199c10baf5ccca60b658a27d7",
+        "change": "MODIFIED",
+        "path": "src/malleus/status.py"
+      },
+      {
+        "after_digest": "sha256:d1ea9d9ea5069160ad1d172f80ed47b6f622097c62257f74910e7095a94a7801",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_linkml_addition.py"
+      },
+      {
+        "after_digest": "sha256:6316aa9b7f9b46ac359e9f67f4659a9b171b6ad4e71921553b1348fe0d954bc6",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_ontology_gap_answer.py"
+      },
+      {
+        "after_digest": "sha256:d4ad4a3553570c029c866bab86708b67ec1150bef858257897e4a15efa219b2a",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_ontology_source_set.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000477",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:96cf09b01073ff0b128e3e6b47618e67db5df4e4b3a53ab5ac56a300dd1c7d7c",
+  "recorded_at": "2026-09-22T01:33:22Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "0374937fb0f95b305a6404a56facf32abeffda4e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2d18c6e22d946d9217eb298d1e4bdfb199d83ead",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0ac2d432a05fb0eb9452c5fd1e5406fbdca39dc5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5a5737b83e854ba71a9c47b863ab5210c76d99ab",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "a21962b3e4dbd038c5153fce17285cd166b3c493",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7178797dd897a79e49c5e1ad52f5f27a23cb7fba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3e55d43c28bbad051b24b85ee618afb6e4dacb59",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b82c5cb4e44b0f1e5d06d5a12defa080de4861d5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "a465222b1ebfb13235a91b8d1710e96e416f6a32",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3147ccd3a8a5b45e285ffba27d41d1d3d2113912",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "590b9a394a54cd92d5fde645efc13e505b2c8a88",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 477,
+  "subject": {
+    "id": "core-gap-as-trigger",
+    "type": "DOCUMENT"
+  },
+  "summary": "ROADMAP F2, second build: the ontology revision proposal is born a LinkML fragment, Core composes it onto the source the history now holds and compiles it, and no version with an unchecked field is sealed.",
+  "why": "Luis, 2026-09-21, go. The first build retained linkml_addition verbatim and never parsed it, so a proposal whose text did not describe its own target would have been accepted. The fragment is now the checked input and target is gone from the grammar: a proposal supplying one is refused. Deriving the target needs the LinkML the contract was compiled from, which a history did not hold, so retain_ontology_source puts it in explicitly: it takes what compile_linkml_contract takes and refuses unless the set reproduces the running contract's identity. Genesis retains none and a recorded revision retains none, so no existing history moves. compose_linkml_addition is one pure additive rule with a deterministic serialiser, chosen by measuring that the compiled contract does not depend on YAML key order or style. retain_ontology_revision_proposal composes, compiles, and appends the composed root, the next source set, the derived target and the proposal in one batch; the additive diff under CONTRACT_REVISION_POLICY runs in the fold as the second check. Acceptance reads that target, so only two acts import LinkML and replay imports none. No change kind was added, so no frozen identity moves.",
+  "entry_hash": "sha256:c9066026cc74e41b2998cf92ba015f77755f5cc92e5d99f32c0f42f2c99375b6"
+}
