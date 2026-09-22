@@ -1,0 +1,86 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:a1e4dbde0df8e340d8a69117ebe9308a7b998b1b80a7e731cefc2f8b3940fd34",
+        "before_digest": "sha256:792109980f2ba01d6fa36295fcfe08b160d1706f9054ce44dc2c0f3352742b3e",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md"
+      },
+      {
+        "after_digest": "sha256:8ec694ecb535553d6082cad08baa31a672866ee1ed83163ed32fd82609ae23d6",
+        "before_digest": "sha256:d293853aea4866232e18c25eaac89c7b3df94f56d8969fa24fbd30fd103f0ff7",
+        "change": "MODIFIED",
+        "path": "CHANGELOG.md"
+      },
+      {
+        "after_digest": "sha256:64d186048711ce94598e921f2f0d9ddd13858aacd389ae8a7a4497ec6c7f6dda",
+        "before_digest": "sha256:56c227a60407eadf0675fe293b8dec6a658a28092bf9c6ba10f10203f7fb7225",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:9af12ce6efd46ab9891059176ab464bd54f05d916b11adb5bd77122eb45f4789",
+        "before_digest": "sha256:1f97126796b8b1420805c4d4e05703f12629650f1650325253e232493da7dca2",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:1c19166b86eb56a74f8a3e07701a899b57f7d44d02dc047698206ee0ce728a75",
+        "before_digest": "sha256:d5a38750b98118cb26cd68ffdacf9cc4a49892f0f57a8388ff8bb02856d19160",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:8fefad6038696b2244eec72843aa2e5d2325fca0daec97dde2ffd6d84ddbfea3",
+        "change": "CREATED",
+        "path": "handover/2026-09-22-query-trace-hardening.md"
+      },
+      {
+        "after_digest": "sha256:4d8fcf4637eb929ece69670cabaa8d2a709f22756d58e80362f9d84f152a4278",
+        "before_digest": "sha256:221d5c35e2f971fb0cbd51411d862d2ef91b71e7a45accf8ffef3088a7b78f73",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler_cli.py"
+      },
+      {
+        "after_digest": "sha256:a3545236065d570b522063b1e0a4ff7b90745de79c3d02049d13330294abebc3",
+        "before_digest": "sha256:5c3f3a97e6ba40d3e3f447bd048f029f94269c54a0c341545525c4b6d0d219a7",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_compiler_cli.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000481",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9f62665545fd4e1fce7af591cad8aafb0c7afe2c737c2851c8eb799a13a449b7",
+  "recorded_at": "2026-09-22T22:13:42Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "b2fd90c27daaf77360d86dd41db6e6f44d7fef3a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 481,
+  "subject": {
+    "id": "query-trace-hardening-2026-09-22",
+    "type": "DOCUMENT"
+  },
+  "summary": "Harden malleus-compiler replay, query and trace into a documented read surface: named position with a stale refusal, declared vocabulary and typed comparison, stated matching and completeness, batch trace.",
+  "why": "The paper's reader-comparison cell needs a documented command-line read surface; Luis ruled on 2026-09-22 that Core hardens the existing commands instead of adding a reader layer. Measured on fd68b757: query returned [] for an undeclared type and for every relation type, compared an integer field as text so ordered_quantity=2 matched nothing, printed no position, and trace silently kept only the last of repeated --record-id. Now every read names its ledger head and count, --expect-head with --expect-count refuses STALE_BASE through KnowledgeHistoryProjection, query refuses undeclared vocabulary, compares by declared range and refuses float, datetime, multivalued, inlined and identifier comparisons, states its matching and completeness, and trace --batch gives one status per ID. RED 13 failed 13 passed; GREEN 26 passed. malleus.compiler and view.py are untouched, and runtime_equivalence reproduces run-23 against both retained projections with no difference.",
+  "entry_hash": "sha256:cdd8dd2dbe90a68345fb57ca941e344b471e6b73e97e51aca64bba403914c4db"
+}

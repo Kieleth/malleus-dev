@@ -265,3 +265,9 @@ hash, render and check from the draft block above, with the sealing moment, the
 previous entry hash where placeholdered, and this file's digest filled in. If
 another entry is sealed first, the Overlord renumbers at seal and re-reads each
 `before_digest` against the ledger's latest.
+
+## Sealing note for OVR-000481, 2026-09-22
+
+`entries/OVR-000481.json` was sealed by the operator with the ledger tool's own
+hash, render and check from the draft block above, with the sealing moment,
+the previous entry hash where placeholdered, and this file's digest filled in.
