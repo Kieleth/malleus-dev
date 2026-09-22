@@ -349,6 +349,89 @@ def test_a_source_set_record_id_that_is_not_its_digest_refuses(tmp_path) -> None
     )
 
 
+# --- the derived target is checked at retention too ---------------------------
+
+
+def _target_record(**fields) -> bytes:
+    return _canonical({"grammar": compiler.ONTOLOGY_REVISION_TARGET_GRAMMAR, **fields})
+
+
+def _retain_record(history: KnowledgeChangeHistory, content: bytes, record_id: str):
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id=record_id,
+            artifact_identity=_digest(content),
+        ),
+        content,
+        "RETAINED_EVIDENCE",
+        media_type="application/json",
+    )
+
+
+def test_a_revision_target_record_id_that_is_not_its_digest_refuses(tmp_path) -> None:
+    history = _history(tmp_path)
+    replay = _retain(history)
+    source_set = replay.ontology_source_set()
+    content = _target_record(
+        composed_root_sha256=source_set.root_sha256,
+        partial_contract=json.loads(replay.partial_contract.canonical_bytes),
+        proposal_identity=_digest(b"a proposal"),
+        source_set_identity=source_set.identity,
+        validated_contract=json.loads(replay.contract_view.artifact_bytes),
+    )
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.OntologySourceRefusal) as caught:
+        _retain_record(history, content, "ontology-revision-target:chosen-by-hand")
+
+    assert caught.value.reason == (
+        compiler.OntologySourceRefusalReason.MALFORMED_REVISION_TARGET
+    )
+    assert history.path.read_bytes() == before
+
+
+def test_a_target_composed_onto_a_stale_source_set_refuses(tmp_path) -> None:
+    """A derived target composes onto the active contract's source, not an old one."""
+
+    history = _history(tmp_path)
+    replay = _retain(history)
+    stale = replay.ontology_source_set()
+    target = _generic_compilation(compiler.compose_linkml_addition(BASE, CLASS_FRAGMENT))
+    revision = history.compose_contract_revision(
+        revision_id="revision:plain",
+        target_validated_contract_bytes=target.artifact.artifact_bytes,
+        target_partial_contract_bytes=_effective(
+            validated_fact_set_sha256=target.artifact.validated_fact_set_sha256
+        ).canonical_bytes,
+        reason="the contract moves, so the retained source stops being current",
+        issued_at="2026-09-21T00:00:00Z",
+    )
+    moved = history.record_contract_revision(
+        revision=revision, transaction_time=TRANSACTION_TIME, actor_id=ACTOR
+    )
+    assert moved.ontology_source_set() is None
+    content = _target_record(
+        composed_root_sha256=stale.root_sha256,
+        partial_contract=json.loads(moved.partial_contract.canonical_bytes),
+        proposal_identity=_digest(b"a proposal"),
+        source_set_identity=stale.identity,
+        validated_contract=json.loads(moved.contract_view.artifact_bytes),
+    )
+    before = history.path.read_bytes()
+
+    with pytest.raises(compiler.OntologySourceRefusal) as caught:
+        _retain_record(
+            history, content, f"ontology-revision-target:{_digest(content)}"
+        )
+
+    assert caught.value.reason == (
+        compiler.OntologySourceRefusalReason.REVISION_TARGET_SOURCE_SET_NOT_CURRENT
+    )
+    assert history.path.read_bytes() == before
+
+
 # --- replay stays LinkML-free ------------------------------------------------
 
 
