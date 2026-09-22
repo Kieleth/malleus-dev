@@ -7,6 +7,7 @@ from importlib import import_module
 from importlib.resources import files
 import json
 from pathlib import Path
+import re
 
 import pytest
 
@@ -859,21 +860,23 @@ def test_query_reads_the_replayed_graph_through_its_public_signature(
         capsysbinary, ["query", "--ledger", str(ledger), "--type", "Asset"]
     )
     assert code == 0, err.decode()
-    assert json.loads(out) == [{"id": "asset:P-7", "name": "P-7", "type": "Asset"}]
+    assert json.loads(out)["records"] == [
+        {"id": "asset:P-7", "name": "P-7", "type": "Asset"}
+    ]
 
     code, filtered, _ = _run(
         capsysbinary,
         ["query", "--ledger", str(ledger), "--type", "Asset", "--where", "name=P-7"],
     )
     assert code == 0
-    assert json.loads(filtered) == json.loads(out)
+    assert json.loads(filtered)["records"] == json.loads(out)["records"]
 
     code, empty, _ = _run(
         capsysbinary,
         ["query", "--ledger", str(ledger), "--type", "Asset", "--where", "name=P-8"],
     )
     assert code == 0
-    assert json.loads(empty) == []
+    assert json.loads(empty)["records"] == []
 
     code, nothing, err = _run(
         capsysbinary,
@@ -994,3 +997,454 @@ def test_cli_chain_equals_the_library_route_on_the_inspection_note_fixture(
     assert api.STRUCTURAL_HISTORY_BUNDLE.normative_profile.identity not in json.dumps(
         fixture_change
     )
+
+
+# The read surface: replay, query and trace, hardened for a reader working
+# from a command line. Two consumers of different shape exercise it: the
+# governed document path above (one inspection note) and the Shop's
+# structural history (five plans, one contract revision, one supersession).
+
+SHOP_RUN = (
+    "research.ontology_driven_kg_realization.experiments.small_shop"
+    ".default_admission.run"
+)
+DOCS_INDEX = ROOT / "docs/index.md"
+READ_SECTION = "### Read a governed history from the command line"
+
+
+@pytest.fixture(scope="module")
+def shop_ledger(tmp_path_factory) -> Path:
+    output = tmp_path_factory.mktemp("shop") / "run"
+    import_module(SHOP_RUN).run_shop(output)
+    return output / "history.jsonl"
+
+
+def _refused(capsysbinary, argv: list[str], reason: str) -> str:
+    code, out, err = _run(capsysbinary, argv)
+    assert code == 2, (out, err)
+    assert out == b""
+    message = err.decode()
+    assert message.startswith(f"malleus-compiler: {reason}: "), message
+    return message
+
+
+def _position(ledger: Path) -> tuple[str, int]:
+    replay = _api().KnowledgeChangeHistory.reopen(ledger).replay()
+    return replay.ledger_head, replay.ledger_event_count
+
+
+def _query(capsysbinary, ledger: Path, *arguments: str) -> dict:
+    return _emitted(capsysbinary, ["query", "--ledger", str(ledger), *arguments])
+
+
+def test_every_read_prints_the_position_it_read(tmp_path: Path, capsysbinary) -> None:
+    ledger, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    head, count = _position(ledger)
+    replayed = _emitted(
+        capsysbinary,
+        [
+            "replay",
+            "--ledger",
+            str(ledger),
+            "--records-out",
+            str(tmp_path / "records.json"),
+            "--receipt-out",
+            str(tmp_path / "receipt.json"),
+        ],
+    )
+    queried = _query(capsysbinary, ledger, "--type", "Asset")
+    traced = _emitted(
+        capsysbinary, ["trace", "--ledger", str(ledger), "--record-id", "asset:P-7"]
+    )
+    for result in (replayed, queried, traced):
+        assert (result["ledger_head"], result["ledger_event_count"]) == (head, count)
+
+
+def test_reads_bound_to_a_position_refuse_once_the_ledger_moved(
+    tmp_path: Path, capsysbinary
+) -> None:
+    ledger, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    head, count = _position(ledger)
+    bound = ["--expect-head", head, "--expect-count", str(count)]
+    records_out = tmp_path / "records.json"
+    replay_argv = [
+        "replay",
+        "--ledger",
+        str(ledger),
+        "--records-out",
+        str(records_out),
+        "--receipt-out",
+        str(tmp_path / "receipt.json"),
+    ]
+    query_argv = ["query", "--ledger", str(ledger), "--type", "Asset"]
+    trace_argv = ["trace", "--ledger", str(ledger), "--record-id", "asset:P-7"]
+    for argv in (replay_argv, query_argv, trace_argv):
+        assert _emitted(capsysbinary, [*argv, *bound])["ledger_head"] == head
+    records_out.unlink()
+
+    moved = tmp_path / "second-capture.json"
+    moved.write_bytes(b'{"moved": true}')
+    _emitted(
+        capsysbinary,
+        [
+            "retain",
+            "--ledger",
+            str(ledger),
+            "--evidence",
+            "capture:second",
+            str(moved),
+            "application/json",
+            "--transaction-time",
+            TRANSACTION_TIME,
+            "--actor-id",
+            ACTOR,
+        ],
+    )
+    assert _position(ledger) != (head, count)
+    for argv in (replay_argv, query_argv, trace_argv):
+        _refused(capsysbinary, [*argv, *bound], "STALE_BASE")
+    assert not records_out.exists()
+
+    _refused(capsysbinary, [*query_argv, "--expect-head", head], "MALFORMED_REQUEST")
+    _refused(
+        capsysbinary, [*query_argv, "--expect-count", str(count)], "MALFORMED_REQUEST"
+    )
+
+
+def test_query_limit_reports_what_it_returned_and_never_passes_it_as_a_count(
+    shop_ledger: Path, capsysbinary
+) -> None:
+    whole = _query(capsysbinary, shop_ledger, "--type", "Entity")
+    assert whole["matched"] == whole["returned"] == len(whole["records"]) == 6
+    assert whole["complete"] is True
+    assert whole["limit"] is None
+
+    cut = _query(capsysbinary, shop_ledger, "--type", "Entity", "--limit", "2")
+    assert cut["records"] == whole["records"][:2]
+    assert (cut["returned"], cut["matched"], cut["complete"]) == (2, 6, False)
+    assert cut["limit"] == 2
+
+    wide = _query(capsysbinary, shop_ledger, "--type", "Entity", "--limit", "6")
+    assert wide["complete"] is True
+
+    for bad in ("0", "-1"):
+        _refused(
+            capsysbinary,
+            ["query", "--ledger", str(shop_ledger), "--type", "Entity", "--limit", bad],
+            "MALFORMED_REQUEST",
+        )
+
+
+def test_query_refuses_vocabulary_the_replayed_contract_does_not_declare(
+    tmp_path: Path, shop_ledger: Path, capsysbinary
+) -> None:
+    document, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    for ledger, record_type in ((document, "Asset"), (shop_ledger, "SalesOrder")):
+        base = ["query", "--ledger", str(ledger)]
+        assert "Nonesuch" in _refused(
+            capsysbinary, [*base, "--type", "Nonesuch"], "UNDECLARED_TYPE"
+        )
+        assert "Nonesuch" in _refused(
+            capsysbinary,
+            [*base, "--type", record_type, "--mixin", "Nonesuch"],
+            "UNDECLARED_MIXIN",
+        )
+        assert record_type in _refused(
+            capsysbinary,
+            [*base, "--type", "Entity", "--mixin", record_type],
+            "UNDECLARED_MIXIN",
+        )
+        assert "colour" in _refused(
+            capsysbinary,
+            [*base, "--type", record_type, "--where", "colour=red"],
+            "UNDECLARED_FIELD",
+        )
+        assert "Temporal" in _refused(
+            capsysbinary, [*base, "--type", "Temporal"], "MALFORMED_REQUEST"
+        )
+        # The identifier is the record's identity, not a stored property: a
+        # filter on it could only ever return nothing, so it is refused.
+        assert "id" in _refused(
+            capsysbinary,
+            [*base, "--type", record_type, "--where", "id=x"],
+            "UNSUPPORTED_COMPARISON",
+        )
+    declared = _query(
+        capsysbinary, shop_ledger, "--type", "Entity", "--mixin", "Temporal"
+    )
+    assert declared["returned"] == 6
+
+
+def test_query_compares_by_the_declared_range_and_refuses_what_it_cannot(
+    tmp_path: Path, shop_ledger: Path, capsysbinary
+) -> None:
+    typed = _query(
+        capsysbinary,
+        shop_ledger,
+        "--type",
+        "SupplierOrderState",
+        "--where",
+        "ordered_quantity=2",
+    )
+    assert [row["id"] for row in typed["records"]] == ["supplier-order-state:B:e7"]
+    assert typed["where"] == {"ordered_quantity": 2}
+    base = ["query", "--ledger", str(shop_ledger), "--type", "SupplierOrderState"]
+    for spelling in ("02", "2.0", "two", "+2", ""):
+        assert "ordered_quantity" in _refused(
+            capsysbinary,
+            [*base, "--where", f"ordered_quantity={spelling}"],
+            "INVALID_FILTER_VALUE",
+        )
+    assert "tags" in _refused(
+        capsysbinary, [*base, "--where", "tags=x"], "UNSUPPORTED_COMPARISON"
+    )
+    assert "created_at" in _refused(
+        capsysbinary,
+        [*base, "--where", "created_at=2026-09-06T00:00:00Z"],
+        "UNSUPPORTED_COMPARISON",
+    )
+    assert "NOPE" in _refused(
+        capsysbinary,
+        [
+            "query",
+            "--ledger",
+            str(shop_ledger),
+            "--type",
+            "OrderContainsUnit",
+            "--where",
+            "relation_type=NOPE",
+        ],
+        "INVALID_FILTER_VALUE",
+    )
+
+    document, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    message = _refused(
+        capsysbinary,
+        [
+            "query",
+            "--ledger",
+            str(document),
+            "--type",
+            "VibrationReading",
+            "--where",
+            "vibration_mm_s=1.5",
+        ],
+        "UNSUPPORTED_COMPARISON",
+    )
+    assert "vibration_mm_s" in message and "Float" in message
+
+
+def test_query_reads_relations_with_the_matching_it_states(
+    tmp_path: Path, shop_ledger: Path, capsysbinary
+) -> None:
+    document, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    exact = _query(capsysbinary, document, "--type", "InspectionOfRelation")
+    assert exact["match"] == "exact"
+    assert exact["record_family"] == "relations"
+    assert exact["records"] == [
+        {
+            "key": "inspection-of:P-7:2026-03-02",
+            "relation_type": "INSPECTION_OF",
+            "source_id": "inspection:P-7:2026-03-02",
+            "target_id": "asset:P-7",
+            "type": "InspectionOfRelation",
+        }
+    ]
+    assert _query(capsysbinary, document, "--type", "Relation")["records"] == []
+    widened = _query(
+        capsysbinary, document, "--type", "Relation", "--match", "subtypes"
+    )
+    assert widened["match"] == "subtypes"
+    assert widened["records"] == exact["records"]
+
+    shop = _query(
+        capsysbinary, shop_ledger, "--type", "Relation", "--match", "subtypes"
+    )
+    assert sorted(row["key"] for row in shop["records"]) == [
+        "contains:O1:X1",
+        "relation:P1:I1",
+        "relation:P1:I2",
+    ]
+    settled = _query(
+        capsysbinary,
+        shop_ledger,
+        "--type",
+        "PaymentSettlesInvoiceRelation",
+        "--where",
+        "target_id=invoice:I2",
+    )
+    assert [row["key"] for row in settled["records"]] == ["relation:P1:I2"]
+
+    entities = _query(capsysbinary, shop_ledger, "--type", "Entity")
+    assert (entities["match"], entities["record_family"]) == ("subtypes", "nodes")
+    assert entities["returned"] == 6
+    assert (
+        _query(capsysbinary, shop_ledger, "--type", "Entity", "--match", "exact")[
+            "records"
+        ]
+        == []
+    )
+    orders = _query(
+        capsysbinary, shop_ledger, "--type", "SalesOrder", "--match", "exact"
+    )
+    assert [row["id"] for row in orders["records"]] == ["O1"]
+
+
+def test_query_help_states_the_matching_defaults(capsys) -> None:
+    with pytest.raises(SystemExit) as exit_:
+        _cli().main(["query", "--help"])
+    assert exit_.value.code == 0
+    text = " ".join(capsys.readouterr().out.split())
+    assert "default subtypes for entity, event and signal types" in text
+    assert "exact for relation types" in text
+
+
+def test_batch_trace_returns_one_status_per_record(
+    tmp_path: Path, shop_ledger: Path, capsysbinary
+) -> None:
+    head, count = _position(shop_ledger)
+    ids_file = tmp_path / "ids.json"
+    ids_file.write_bytes(_canonical(["invoice:I1", "contains:O1:X1"]))
+    batch = _emitted(
+        capsysbinary,
+        [
+            "trace",
+            "--ledger",
+            str(shop_ledger),
+            "--batch",
+            "--record-id",
+            "O1",
+            "--record-id",
+            "supplier-order-state:B:e4",
+            "--record-id",
+            "nonesuch",
+            "--record-ids-file",
+            str(ids_file),
+        ],
+    )
+    assert (batch["ledger_head"], batch["ledger_event_count"]) == (head, count)
+    assert batch["requested"] == 5
+    assert batch["traced"] == 4
+    assert [(item["record_id"], item["status"]) for item in batch["results"]] == [
+        ("O1", "TRACED"),
+        ("supplier-order-state:B:e4", "TRACED"),
+        ("nonesuch", "UNKNOWN_RECORD"),
+        ("invoice:I1", "TRACED"),
+        ("contains:O1:X1", "TRACED"),
+    ]
+    single = _emitted(
+        capsysbinary, ["trace", "--ledger", str(shop_ledger), "--record-id", "O1"]
+    )
+    assert batch["results"][0]["trace"] == {
+        key: value
+        for key, value in single.items()
+        if key not in {"ledger_head", "ledger_event_count", "status"}
+    }
+    assert single["status"] == "TRACED"
+    prior = batch["results"][1]["trace"]
+    assert prior["superseded_by"] == "supplier-order-state:B:e7"
+    unknown = batch["results"][2]
+    assert set(unknown) == {"detail", "record_id", "status"}
+    assert "nonesuch" in unknown["detail"]
+
+
+def test_batch_trace_keeps_an_unavailable_trace_apart_from_absent_evidence(
+    tmp_path: Path, capsysbinary, monkeypatch
+) -> None:
+    api = _api()
+    ledger, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    cli = _cli()
+    original = cli.trace_population_record
+
+    def unbound(replay, record_id):
+        if record_id == "asset:P-7":
+            raise api.PopulationTraceRefusal(
+                api.PopulationTraceRefusalReason.POPULATION_PLAN_NOT_BOUND,
+                "no population plan is bound to this change",
+            )
+        return original(replay, record_id)
+
+    monkeypatch.setattr(cli, "trace_population_record", unbound)
+    batch = _emitted(
+        capsysbinary,
+        [
+            "trace",
+            "--ledger",
+            str(ledger),
+            "--batch",
+            "--record-id",
+            "asset:P-7",
+            "--record-id",
+            "inspection:P-7:2026-03-02",
+        ],
+    )
+    unavailable, traced = batch["results"]
+    assert unavailable == {
+        "detail": "no population plan is bound to this change",
+        "record_id": "asset:P-7",
+        "status": "POPULATION_PLAN_NOT_BOUND",
+    }
+    assert traced["status"] == "TRACED"
+    assert traced["trace"]["sources"]
+    assert batch["traced"] == 1
+
+
+def test_trace_refuses_an_ambiguous_request(tmp_path: Path, capsysbinary) -> None:
+    ledger, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    base = ["trace", "--ledger", str(ledger)]
+    _refused(
+        capsysbinary,
+        [*base, "--record-id", "asset:P-7", "--record-id", "asset:P-7"],
+        "MALFORMED_REQUEST",
+    )
+    _refused(
+        capsysbinary,
+        [*base, "--batch", "--record-id", "asset:P-7", "--record-id", "asset:P-7"],
+        "MALFORMED_REQUEST",
+    )
+    _refused(capsysbinary, [*base, "--batch"], "MALFORMED_REQUEST")
+    for content in (b'"asset:P-7"', b"[1]", b'[""]', b"not json"):
+        ids = tmp_path / "ids.json"
+        ids.write_bytes(content)
+        _refused(
+            capsysbinary,
+            [*base, "--batch", "--record-ids-file", str(ids)],
+            "MALFORMED_REQUEST",
+        )
+    code, _, err = _run(capsysbinary, [*base, "--record-id", "nonesuch"])
+    assert code == 2
+    assert err.decode().startswith("malleus-compiler: UNKNOWN_RECORD: ")
+
+
+def _read_section() -> str:
+    text = DOCS_INDEX.read_text(encoding="utf-8")
+    assert READ_SECTION in text
+    return text.split(READ_SECTION, 1)[1].split("\n### ", 1)[0]
+
+
+def test_documented_read_flags_are_exactly_the_help_flags(capsys) -> None:
+    documented: dict[str, set[str]] = {}
+    for part in _read_section().split("\n#### ")[1:]:
+        command = part.split("`", 2)[1].removeprefix("malleus-compiler ")
+        documented[command] = set(re.findall(r"`(--[a-z][a-z-]*)", part))
+    assert set(documented) == {"replay", "query", "trace"}
+    for command, flags in documented.items():
+        with pytest.raises(SystemExit):
+            _cli().main([command, "--help"])
+        shown = set(re.findall(r"(--[a-z][a-z-]*)", capsys.readouterr().out))
+        assert flags == shown - {"--help"}, command
+
+
+def test_read_documentation_carries_no_domain_content() -> None:
+    section = _read_section()
+    for domain in (
+        "Asset",
+        "Inspection",
+        "Shop",
+        "SalesOrder",
+        "Invoice",
+        "Supplier",
+        "vibration",
+        "P-7",
+    ):
+        assert domain not in section, domain

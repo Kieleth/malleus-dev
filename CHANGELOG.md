@@ -76,6 +76,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ontology/` with no declaration. With both profiles declared for every
   schema it failed on exactly those two pairs.
 
+- `malleus-compiler replay`, `query` and `trace` are a documented read surface
+  for a reader working from a command line (decision of 2026-09-22: harden the
+  existing commands, no new reader layer). Every result names the
+  `ledger_head` and `ledger_event_count` it read, and `--expect-head` with
+  `--expect-count` refuses `STALE_BASE` through `KnowledgeHistoryProjection`
+  when the ledger has moved. `query` refuses a type, mixin or `--where` field
+  the replayed contract does not declare (`UNDECLARED_TYPE`,
+  `UNDECLARED_MIXIN`, `UNDECLARED_FIELD`), reads each filter by the field's
+  declared range, refuses a value that does not read as that range
+  (`INVALID_FILTER_VALUE`), and refuses float, datetime, multivalued, inlined
+  and identifier comparisons (`UNSUPPORTED_COMPARISON`) instead of coercing.
+  Before, `--where ordered_quantity=2` compared the text `"2"` with the stored
+  integer and returned nothing, and an undeclared type returned `[]`. `query`
+  now reads relation types, which it silently returned empty before, with
+  `--match exact` or `subtypes` stated in the result; the default keeps the
+  graph's own behaviour, subtypes for node types and exact for relation types.
+  `--limit N` reports `returned`, `matched` and `complete`. `trace --batch`
+  takes repeated `--record-id` or `--record-ids-file` and returns one entry per
+  ID, `TRACED` with the trace or the `PopulationTraceRefusalReason` with no
+  evidence fields. `docs/index.md`, "Read a governed history from the command
+  line", documents all three for a producer, and a test holds its flags equal
+  to `--help`. **Output change:** `query` now prints one object whose
+  `records` field holds what it printed before as a bare list; `replay` and
+  single-record `trace` gain fields only. No test or research program in this
+  repository parsed the old `query` list except its own CLI test, updated
+  here. Nothing in `malleus.compiler` changed.
+
 - A declared ontology gap is a trigger, not a note (ROADMAP F2). A plan or a
   capture could already declare `TYPE_ABSENT` and `RELATION_ABSENT`, and Core
   retained the gaps artifact and nothing consumed it. Those two kinds, now

@@ -62,6 +62,18 @@ derivations, and retained source and evidence bytes. It refuses changes that
 did not retain a population plan. The trace writes nothing and creates no new
 authority or artifact.
 
+The installed `malleus-compiler replay`, `query` and `trace` commands read one
+governed history. Each result names the ledger head and event count it read,
+and `--expect-head` with `--expect-count` refuses `STALE_BASE` through
+`KnowledgeHistoryProjection` when the ledger has moved. `query` refuses a type,
+mixin or filter field the replayed contract does not declare, compares a
+filter by its declared range, refuses float, datetime, multivalued, inlined and
+identifier comparisons, reads relations as well as nodes with the matching it
+states, and reports `returned`, `matched` and `complete` under `--limit`.
+`trace --batch` gives one status per record ID through
+`trace_population_record`. `docs/index.md` documents all three. They add no
+query language, inference, source resolution or persistent service.
+
 The same knowledge history can now cross one explicit additive ontology
 revision. The revision artifact embeds the next validated and partial contract,
 derives its change kinds from compiled facts, binds the exact prior history

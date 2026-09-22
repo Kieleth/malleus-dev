@@ -228,6 +228,128 @@ This is an inspection view, not another persisted artifact or authority. It
 works for changes that bind a neutral population plan and profile. Older or
 manually composed change sets fail with `POPULATION_PLAN_NOT_BOUND`.
 
+### Read a governed history from the command line
+
+`malleus-compiler replay`, `malleus-compiler query` and `malleus-compiler trace`
+read one governed history from its ledger file. Each call reopens the ledger,
+replays it from an empty graph and reads the result. None of them writes the
+ledger. Each prints one JSON object on standard output. A refusal prints
+`malleus-compiler: REASON: detail` on standard error, exits 2 and prints nothing
+on standard output.
+
+Every result carries `ledger_head` and `ledger_event_count`, the position it
+read. Two results with equal fields read the same ledger prefix. A call bound to a position with both `--expect-head` and
+`--expect-count` refuses `STALE_BASE` when the ledger has moved, before it
+writes or prints anything. A bound call reads through
+`KnowledgeHistoryProjection`, which also refuses `INCOMPLETE_ADMISSION` for a
+ledger that holds an unfinished admission. Naming only one of the two refuses
+`MALFORMED_REQUEST`. A ledger that does not replay refuses with the history's
+own reason, such as `MALFORMED_HISTORY`.
+
+The read commands' own refusal reasons are `MALFORMED_REQUEST`,
+`UNDECLARED_TYPE`, `UNDECLARED_MIXIN`, `UNDECLARED_FIELD`,
+`UNSUPPORTED_COMPARISON` and `INVALID_FILTER_VALUE`. Each names what it
+refused.
+
+#### `malleus-compiler replay`
+
+Arguments: `--ledger PATH`, `--records-out PATH` and `--receipt-out PATH`, all
+required, and the optional `--expect-head HEAD` and `--expect-count COUNT`.
+
+It writes the replayed graph's `export_records()` JSON to the records path and
+the replay receipt bytes to the receipt path, then prints `change_set_ids`,
+`graph_state_digest`, `ledger_event_count`, `ledger_head`, `receipt_identity`,
+`records_path` and `receipt_path`. The export holds every current record of
+the accepted graph and has no limit. A refusal writes neither file.
+
+#### `malleus-compiler query`
+
+Arguments: `--ledger PATH` and `--type TYPE`, required; `--mixin MIXIN`;
+`--where KEY=VALUE`, repeatable; `--match exact` or `--match subtypes`;
+`--limit N`; and `--expect-head HEAD` with `--expect-count COUNT`.
+
+Vocabulary. The type and the mixin must be declared by the contract the
+replayed history currently runs under, and every filter key must be a field
+that contract declares on the requested type. Anything else refuses
+`UNDECLARED_TYPE`, `UNDECLARED_MIXIN` or `UNDECLARED_FIELD`, naming it. A name
+is the declared local name or its full identifier; a local name that the
+contract declares more than once is refused the same way. A mixin passed as
+the type refuses `MALFORMED_REQUEST`.
+
+Record families. A type declared under `Relation` reads the graph's relations.
+Any other type reads its nodes: entities, events, signals and event
+participations. A relation row carries `key`, which is the relation ID,
+`source_id`, `target_id`, `type` and its field values. A node row carries
+`id`, `type` and its field values. The result's `record_family` is `relations`
+or `nodes`.
+
+Matching. `--match exact` returns records whose type is exactly the requested
+type. `--match subtypes` also returns records whose type is declared under it
+through `is_a`; a mixin is not a supertype. Without the flag, node types match
+subtypes and relation types match exactly, which is what the graph's own
+`query` and `query_relations` do. The result's `match` field states what was
+applied.
+
+Comparison. Every filter is an equality on one field, read by the range the
+contract declares for that field: text for a string or a record reference, a
+canonical integer such as `-7` or `12`, `true` or `false`, a `YYYY-MM-DD`
+date, or a permitted enum value. A value that does not read as its range
+refuses `INVALID_FILTER_VALUE`. A float or datetime field, a multivalued or
+inlined field, and the identifier field refuse `UNSUPPORTED_COMPARISON`,
+because how one text value compares with them is not decided, and the
+identifier is held as the record's identity, never as a field value. A record
+with no value for a filtered field does not match. All filters must hold. The
+result's `where` shows each value as it was compared.
+
+Completeness. The result carries `records`; `returned`, the number of records
+it holds; `matched`, the number of records in the graph that satisfy the
+request; `complete`, whether the two are equal; and `limit`, `type` and
+`mixin` as requested. Without `--limit` the result is complete. With
+`--limit N` it holds the first N matched records in graph order, which is the
+replay's insertion order and is fixed for one ledger position. `returned`
+counts the result, never the graph. An empty result is an empty selection of
+this graph at this position. It says nothing about any source a population was
+drawn from.
+
+#### `malleus-compiler trace`
+
+Arguments: `--ledger PATH`; `--record-id ID`, repeatable with `--batch`;
+`--record-ids-file PATH`, a JSON array of record IDs, which needs `--batch`;
+`--batch`; and `--expect-head HEAD` with `--expect-count COUNT`.
+
+Single form. Without `--batch`, exactly one `--record-id` is traced through
+`trace_population_record`. The result carries `change_set_id`,
+`contract_identity`, `derivations`, `evidence`, `history_profile`,
+`population_plan`, `record_id`, `record_type`, `sources`, `superseded_by`,
+`supersedes_record_id`, `valid_from`, `valid_to`, `status`, which is `TRACED`,
+and the position. A trace refusal exits 2 with its reason.
+
+Batch form. With `--batch`, the IDs from every `--record-id` and then from the
+file are traced in that order against one replay. The result carries
+`requested`, `traced`, the position and `results`, one entry per ID in request
+order. A traced entry is `record_id`, `status` set to `TRACED`, and `trace`
+holding the single form's fields. An unavailable entry is `record_id`, `status`
+set to the refusal reason, and `detail`. It has no `sources`, `evidence` or
+`derivations` at all, so an unavailable trace never reads as a record with no
+evidence. The command exits 0 once every ID has an entry.
+
+The statuses other than `TRACED` are the reasons of `PopulationTraceRefusal`:
+`MALFORMED_REQUEST`, `UNKNOWN_RECORD` when no accepted record has the ID at
+this position, `UNKNOWN_CHANGE_SET`, `POPULATION_PLAN_NOT_BOUND` when the
+record's change binds no neutral population plan, `AMBIGUOUS_POPULATION_PLAN`,
+`HISTORY_PROFILE_NOT_BOUND` and `TRACE_INCONSISTENT`. None of them states that
+a source lacks evidence. `POPULATION_PLAN_NOT_BOUND` in particular means the
+record exists and its provenance is not reachable through this path.
+
+The request refuses `MALFORMED_REQUEST` before the ledger is read when it names
+no ID, repeats an ID, names more than one ID or a file without `--batch`, or
+names a file that is not a JSON array of nonempty strings.
+
+Limits. Each trace recompiles and verifies its record's retained plan, so a
+batch costs one plan check per ID. A trace reports retained sources and
+evidence by record ID and digest. It does not return their bytes, fetch a
+locator, or resolve anything the retained plan does not bind.
+
 ### Grow the ontology without starting a new history
 
 A useful ontology will change. Starting a second ledger every time a project

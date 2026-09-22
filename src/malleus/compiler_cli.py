@@ -10,20 +10,26 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Mapping
+from datetime import date
+from enum import Enum
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 import sys
 from typing import Sequence
 
+from malleus._contract_pipeline.model import DATE_RANGE_ID, FACT_NAMESPACE
 from malleus.compiler import (
     STRUCTURAL_HISTORY_BUNDLE,
     DomainHistoryProfile,
     KnowledgeAnchorInput,
     KnowledgeChangeHistory,
     KnowledgeChangeSet,
+    KnowledgeHistoryProjection,
     PopulationBaseState,
     PopulationPreparation,
+    PopulationTraceRefusal,
     adapt_document_assertions,
     admit_structural_change,
     compile_linkml_contract,
@@ -50,6 +56,24 @@ def _canonical(value: object) -> bytes:
 
 def _digest(source: bytes) -> str:
     return "sha256:" + sha256(source).hexdigest()
+
+
+class ReadRefusalReason(str, Enum):
+    """Why ``replay``, ``query`` or ``trace`` refused a request."""
+
+    MALFORMED_REQUEST = "MALFORMED_REQUEST"
+    UNDECLARED_TYPE = "UNDECLARED_TYPE"
+    UNDECLARED_MIXIN = "UNDECLARED_MIXIN"
+    UNDECLARED_FIELD = "UNDECLARED_FIELD"
+    UNSUPPORTED_COMPARISON = "UNSUPPORTED_COMPARISON"
+    INVALID_FILTER_VALUE = "INVALID_FILTER_VALUE"
+
+
+class ReadRefusal(ValueError):
+    def __init__(self, reason: ReadRefusalReason, detail: str) -> None:
+        self.reason = reason
+        self.detail = detail
+        super().__init__(f"{reason.value}: {detail}")
 
 
 def _plain(value: object) -> object:
@@ -290,15 +314,42 @@ def _run_admit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def _read_position(arguments: argparse.Namespace):
+    """Replay the ledger, bound to the expected position when one is named.
+
+    A bound read goes through ``KnowledgeHistoryProjection``, whose check
+    refuses ``STALE_BASE`` when the ledger head or event count differs.
+    """
+
+    head, count = arguments.expect_head, arguments.expect_count
+    if (head is None) != (count is None):
+        raise ReadRefusal(
+            ReadRefusalReason.MALFORMED_REQUEST,
+            "--expect-head and --expect-count are named together or not at all",
+        )
+    if head is None:
+        return KnowledgeChangeHistory.reopen(arguments.ledger).replay()
+    return KnowledgeHistoryProjection.open(arguments.ledger).current(
+        expected_head_hash=head, expected_event_count=count
+    )
+
+
+def _position(replay) -> dict[str, object]:
+    return {
+        "ledger_event_count": replay.ledger_event_count,
+        "ledger_head": replay.ledger_head,
+    }
+
+
 def _run_replay(arguments: argparse.Namespace) -> int:
-    replay = KnowledgeChangeHistory.reopen(arguments.ledger).replay()
+    replay = _read_position(arguments)
     Path(arguments.records_out).write_bytes(_canonical(replay.graph.export_records()))
     Path(arguments.receipt_out).write_bytes(replay.receipt.canonical_bytes)
     _emit(
         {
+            **_position(replay),
             "change_set_ids": [change.change_set_id for change in replay.change_sets],
             "graph_state_digest": replay.graph.state_digest(),
-            "ledger_event_count": replay.ledger_event_count,
             "receipt_identity": replay.receipt.identity,
             "records_path": str(Path(arguments.records_out)),
             "receipt_path": str(Path(arguments.receipt_out)),
@@ -307,25 +358,246 @@ def _run_replay(arguments: argparse.Namespace) -> int:
     return 0
 
 
+_CANONICAL_INTEGER = re.compile(r"-?(0|[1-9][0-9]*)")
+_BOOLEANS = {"true": True, "false": False}
+
+
+def _declared(view, name: str, reason: ReadRefusalReason, label: str):
+    try:
+        return view.get_type(name)
+    except (KeyError, ValueError) as error:
+        raise ReadRefusal(
+            reason, f"the replayed contract declares no single {label} {name!r}"
+        ) from error
+
+
+def _typed_filter(view, record_type: str, key: str, text: str) -> object:
+    """Read one filter value by the range the contract declares for it.
+
+    Every branch is a declared range kind; a range with no branch refuses.
+    """
+
+    constraint = view.get_slot_constraint(record_type, key)
+    if constraint is None:
+        raise ReadRefusal(
+            ReadRefusalReason.UNDECLARED_FIELD,
+            f"the replayed contract declares no field {key!r} on {record_type!r}",
+        )
+    if constraint.identifier:
+        raise ReadRefusal(
+            ReadRefusalReason.UNSUPPORTED_COMPARISON,
+            f"{key!r} is the record identifier, held as the record's identity "
+            "and never as a field value",
+        )
+    if constraint.multivalued or constraint.inlined:
+        shape = "multivalued" if constraint.multivalued else "inlined"
+        raise ReadRefusal(
+            ReadRefusalReason.UNSUPPORTED_COMPARISON,
+            f"{key!r} is {shape}; how one text value compares to it is not decided",
+        )
+    # The view's own range resolution. It is private because a public method
+    # on ContractView would move the producer identity every compiled
+    # contract artifact carries (elaborate.py hashes view.py).
+    terminal = view._terminal(constraint.range_id)
+    if terminal == FACT_NAMESPACE + "String" or view.has_type(terminal):
+        return text
+    if terminal == FACT_NAMESPACE + "Integer":
+        if not _CANONICAL_INTEGER.fullmatch(text):
+            raise ReadRefusal(
+                ReadRefusalReason.INVALID_FILTER_VALUE,
+                f"{key!r} ranges over Integer and {text!r} is not a canonical integer",
+            )
+        return int(text)
+    if terminal == FACT_NAMESPACE + "Boolean":
+        if text not in _BOOLEANS:
+            raise ReadRefusal(
+                ReadRefusalReason.INVALID_FILTER_VALUE,
+                f"{key!r} ranges over Boolean and {text!r} is neither true nor false",
+            )
+        return _BOOLEANS[text]
+    if terminal == DATE_RANGE_ID:
+        try:
+            canonical = date.fromisoformat(text).isoformat() == text
+        except ValueError:
+            canonical = False
+        if not canonical:
+            raise ReadRefusal(
+                ReadRefusalReason.INVALID_FILTER_VALUE,
+                f"{key!r} ranges over date and {text!r} is not YYYY-MM-DD",
+            )
+        return text
+    if view.has_enum(terminal):
+        if text not in view.get_enum_values(terminal):
+            raise ReadRefusal(
+                ReadRefusalReason.INVALID_FILTER_VALUE,
+                f"{text!r} is not a permitted value of {key!r}",
+            )
+        return text
+    raise ReadRefusal(
+        ReadRefusalReason.UNSUPPORTED_COMPARISON,
+        f"{key!r} ranges over {terminal.rsplit('/', 1)[-1]}; how a text filter "
+        "compares to it is not decided",
+    )
+
+
 def _run_query(arguments: argparse.Namespace) -> int:
-    filters: dict[str, str] = {}
+    raw: dict[str, str] = {}
     for item in arguments.where or ():
         key, separator, value = item.partition("=")
         if not separator or not key:
-            raise ValueError(f"a query filter must read KEY=VALUE: {item}")
-        if key in {"entity_type", "mixin"} or key in filters:
-            raise ValueError(f"query filter key is not available: {key}")
-        filters[key] = value
-    replay = KnowledgeChangeHistory.reopen(arguments.ledger).replay()
-    _emit(replay.graph.query(arguments.type, mixin=arguments.mixin, **filters))
+            raise ReadRefusal(
+                ReadRefusalReason.MALFORMED_REQUEST,
+                f"a query filter must read KEY=VALUE: {item}",
+            )
+        if key in raw:
+            raise ReadRefusal(
+                ReadRefusalReason.MALFORMED_REQUEST,
+                f"query filter key is repeated: {key}",
+            )
+        if key in {"entity_type", "mixin"}:
+            raise ReadRefusal(
+                ReadRefusalReason.UNSUPPORTED_COMPARISON,
+                f"query filter key is not available: {key}",
+            )
+        raw[key] = value
+    if arguments.limit is not None and arguments.limit < 1:
+        raise ReadRefusal(
+            ReadRefusalReason.MALFORMED_REQUEST, "--limit must be at least 1"
+        )
+    replay = _read_position(arguments)
+    view = replay.contract_view
+    requested = _declared(view, arguments.type, ReadRefusalReason.UNDECLARED_TYPE, "type")
+    if requested.is_mixin:
+        raise ReadRefusal(
+            ReadRefusalReason.MALFORMED_REQUEST,
+            f"{arguments.type!r} is a mixin; name it with --mixin",
+        )
+    if arguments.mixin is not None and not _declared(
+        view, arguments.mixin, ReadRefusalReason.UNDECLARED_MIXIN, "mixin"
+    ).is_mixin:
+        raise ReadRefusal(
+            ReadRefusalReason.UNDECLARED_MIXIN,
+            f"{arguments.mixin!r} is declared as a type, not as a mixin",
+        )
+    filters = {
+        key: _typed_filter(view, requested.name, key, value)
+        for key, value in raw.items()
+    }
+    relations = view.is_subtype_of(requested.name, "Relation")
+    match = arguments.match or ("exact" if relations else "subtypes")
+
+    def selected(record_type: str) -> bool:
+        if match == "exact":
+            return view.get_type(record_type).name == requested.name
+        return view.is_subtype_of(record_type, requested.name)
+
+    if relations:
+        rows = [
+            row
+            for row in replay.graph.query_relations()
+            if selected(row["type"])
+            and (arguments.mixin is None or view.has_mixin(row["type"], arguments.mixin))
+            and all(row.get(key) == value for key, value in filters.items())
+        ]
+    else:
+        rows = [
+            row
+            for row in replay.graph.query(
+                arguments.type, mixin=arguments.mixin, **filters
+            )
+            if selected(row["type"])
+        ]
+    returned = rows if arguments.limit is None else rows[: arguments.limit]
+    _emit(
+        {
+            **_position(replay),
+            "complete": len(returned) == len(rows),
+            "limit": arguments.limit,
+            "match": match,
+            "matched": len(rows),
+            "mixin": arguments.mixin,
+            "record_family": "relations" if relations else "nodes",
+            "records": returned,
+            "returned": len(returned),
+            "type": arguments.type,
+            "where": filters,
+        }
+    )
     return 0
 
 
+def _record_ids(arguments: argparse.Namespace) -> list[str]:
+    record_ids = list(arguments.record_id or ())
+    if arguments.record_ids_file is not None:
+        try:
+            listed = _read_json(arguments.record_ids_file)
+        except ValueError:
+            listed = None
+        if not isinstance(listed, list) or not all(
+            isinstance(item, str) and item for item in listed
+        ):
+            raise ReadRefusal(
+                ReadRefusalReason.MALFORMED_REQUEST,
+                "--record-ids-file must hold a JSON array of nonempty record IDs",
+            )
+        record_ids.extend(listed)
+    if not record_ids:
+        raise ReadRefusal(
+            ReadRefusalReason.MALFORMED_REQUEST, "name at least one record ID"
+        )
+    repeated = sorted({item for item in record_ids if record_ids.count(item) > 1})
+    if repeated:
+        raise ReadRefusal(
+            ReadRefusalReason.MALFORMED_REQUEST,
+            f"record IDs are repeated: {', '.join(repeated)}",
+        )
+    if not arguments.batch and (
+        len(record_ids) != 1 or arguments.record_ids_file is not None
+    ):
+        raise ReadRefusal(
+            ReadRefusalReason.MALFORMED_REQUEST,
+            "several record IDs or --record-ids-file need --batch",
+        )
+    return record_ids
+
+
 def _run_trace(arguments: argparse.Namespace) -> int:
-    replay = KnowledgeChangeHistory.reopen(arguments.ledger).replay()
-    trace = trace_population_record(replay, arguments.record_id)
-    record = trace.record_history
+    record_ids = _record_ids(arguments)
+    replay = _read_position(arguments)
+    if not arguments.batch:
+        trace = trace_population_record(replay, record_ids[0])
+        _emit({**_trace_fields(trace), **_position(replay), "status": "TRACED"})
+        return 0
+    results: list[dict[str, object]] = []
+    for record_id in record_ids:
+        try:
+            trace = trace_population_record(replay, record_id)
+        except PopulationTraceRefusal as refusal:
+            results.append(
+                {
+                    "detail": refusal.detail,
+                    "record_id": record_id,
+                    "status": refusal.reason.value,
+                }
+            )
+        else:
+            results.append(
+                {"record_id": record_id, "status": "TRACED", "trace": _trace_fields(trace)}
+            )
     _emit(
+        {
+            **_position(replay),
+            "requested": len(results),
+            "results": results,
+            "traced": sum(item["status"] == "TRACED" for item in results),
+        }
+    )
+    return 0
+
+
+def _trace_fields(trace) -> dict[str, object]:
+    record = trace.record_history
+    return (
         {
             "change_set_id": trace.change_set.change_set_id,
             "contract_identity": trace.change_set.contract_identity,
@@ -361,7 +633,6 @@ def _run_trace(arguments: argparse.Namespace) -> int:
             ),
         }
     )
-    return 0
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -470,6 +741,21 @@ def _parser() -> argparse.ArgumentParser:
     )
     add_actor(admit)
 
+    def add_position(target: argparse.ArgumentParser) -> None:
+        target.add_argument(
+            "--expect-head",
+            metavar="HEAD",
+            help="refuse with STALE_BASE unless the ledger head is exactly HEAD; "
+            "named together with --expect-count",
+        )
+        target.add_argument(
+            "--expect-count",
+            type=int,
+            metavar="COUNT",
+            help="refuse with STALE_BASE unless the ledger holds exactly COUNT "
+            "events; named together with --expect-head",
+        )
+
     replay = commands.add_parser(
         "replay", help="reopen one history and write its export and receipt"
     )
@@ -480,25 +766,74 @@ def _parser() -> argparse.ArgumentParser:
     replay.add_argument(
         "--receipt-out", required=True, help="replay receipt bytes output path"
     )
+    add_position(replay)
 
     query = commands.add_parser(
-        "query", help="read the replayed graph through its public query signature"
+        "query",
+        help="select records of one declared type from the replayed graph",
+        description="Select records of one declared type from the replayed "
+        "graph. The result names the ledger position it read, the matching "
+        "applied, how many records matched and were returned, and whether the "
+        "returned set is complete.",
     )
     add_ledger(query)
-    query.add_argument("--type", required=True, help="record type to read")
-    query.add_argument("--mixin", help="mixin every returned record must carry")
+    query.add_argument(
+        "--type", required=True, help="record type the replayed contract declares"
+    )
+    query.add_argument(
+        "--mixin", help="declared mixin every returned record's type must carry"
+    )
     query.add_argument(
         "--where",
         action="append",
         metavar="KEY=VALUE",
-        help="exact property filter compared as text; repeatable",
+        help="equality filter on a field the contract declares on --type, read "
+        "by its declared range: text, canonical integer, true or false, "
+        "YYYY-MM-DD date, permitted enum value, or record reference; a float, "
+        "datetime, multivalued, inlined or identifier field is refused; "
+        "repeatable, all must hold",
     )
+    query.add_argument(
+        "--match",
+        choices=("exact", "subtypes"),
+        help="type matching: exact, or subtypes of --type as well; default "
+        "subtypes for entity, event and signal types, exact for relation "
+        "types; the result's match field states what was applied",
+    )
+    query.add_argument(
+        "--limit",
+        type=int,
+        metavar="N",
+        help="return at most N records in graph order; matched counts them "
+        "all and complete says whether every matched record was returned",
+    )
+    add_position(query)
 
     trace = commands.add_parser(
-        "trace", help="reach the retained inputs behind one accepted record"
+        "trace",
+        help="reach the retained inputs behind accepted records",
+        description="Reach the retained plan, source and evidence behind "
+        "accepted records. Without --batch, one record ID is traced and a "
+        "refusal exits 2. With --batch, every ID gets one result with its "
+        "status, TRACED or the refusal reason.",
     )
     add_ledger(trace)
-    trace.add_argument("--record-id", required=True, help="accepted record ID")
+    trace.add_argument(
+        "--record-id",
+        action="append",
+        help="accepted record ID; repeatable with --batch",
+    )
+    trace.add_argument(
+        "--record-ids-file",
+        metavar="PATH",
+        help="JSON array of accepted record IDs; needs --batch",
+    )
+    trace.add_argument(
+        "--batch",
+        action="store_true",
+        help="return one result per record ID, with its status",
+    )
+    add_position(trace)
 
     return parser
 

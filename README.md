@@ -181,8 +181,17 @@ call in `malleus.compiler` and adds no meaning of its own:
 - `malleus-compiler admit` calls `admit_structural_change`.
 - `malleus-compiler replay` reopens the ledger, replays, and writes
   `export_records()` and the receipt.
-- `malleus-compiler query` calls the graph's public `query`.
-- `malleus-compiler trace` calls `trace_population_record`.
+- `malleus-compiler query` calls the graph's public `query`, or
+  `query_relations` for a relation type, after checking the type, mixin and
+  filter fields against the replayed contract.
+- `malleus-compiler trace` calls `trace_population_record`, for one record ID
+  or, with `--batch`, for several with one status each.
+
+The three read commands print the ledger head and event count they read and
+refuse `STALE_BASE` when bound with `--expect-head` and `--expect-count` to a
+position the ledger has left. Their arguments, result shapes, matching,
+completeness and refusals are in
+[docs/index.md](docs/index.md#read-a-governed-history-from-the-command-line).
 
 The transaction time, the actor ID, the history profile, and every source,
 evidence, records, plan, and change-set file are command-line arguments.
