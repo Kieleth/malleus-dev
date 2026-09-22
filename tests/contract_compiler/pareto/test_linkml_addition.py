@@ -310,9 +310,7 @@ def test_a_fragment_that_is_not_a_mapping_refuses() -> None:
         _refusal(b"- classes\n")
         == compiler.LinkMLAdditionRefusalReason.MALFORMED_FRAGMENT
     )
-    assert (
-        _refusal(b"") == compiler.LinkMLAdditionRefusalReason.MALFORMED_FRAGMENT
-    )
+    assert _refusal(b"") == compiler.LinkMLAdditionRefusalReason.MALFORMED_FRAGMENT
     assert (
         _refusal(b"classes: {}\n")
         == compiler.LinkMLAdditionRefusalReason.MALFORMED_FRAGMENT
@@ -321,10 +319,7 @@ def test_a_fragment_that_is_not_a_mapping_refuses() -> None:
 
 def test_an_anchor_or_alias_refuses_in_either_input() -> None:
     aliased = (
-        b"classes:\n"
-        b"  CustomerObject: &base\n"
-        b"    is_a: Entity\n"
-        b"  OtherObject: *base\n"
+        b"classes:\n  CustomerObject: &base\n    is_a: Entity\n  OtherObject: *base\n"
     )
     assert _refusal(aliased) == compiler.LinkMLAdditionRefusalReason.MALFORMED_FRAGMENT
     assert (

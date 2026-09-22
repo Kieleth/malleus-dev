@@ -226,7 +226,9 @@ def test_a_recorded_revision_does_not_retain_a_source_set_by_itself(
     tmp_path,
 ) -> None:
     history = _history(tmp_path)
-    target = _generic_compilation(compiler.compose_linkml_addition(BASE, CLASS_FRAGMENT))
+    target = _generic_compilation(
+        compiler.compose_linkml_addition(BASE, CLASS_FRAGMENT)
+    )
     revision = history.compose_contract_revision(
         revision_id="revision:plain",
         target_validated_contract_bytes=target.artifact.artifact_bytes,
@@ -250,7 +252,9 @@ def test_a_retained_source_set_stops_being_current_after_a_revision(
 ) -> None:
     history = _history(tmp_path)
     _retain(history)
-    target = _generic_compilation(compiler.compose_linkml_addition(BASE, CLASS_FRAGMENT))
+    target = _generic_compilation(
+        compiler.compose_linkml_addition(BASE, CLASS_FRAGMENT)
+    )
     revision = history.compose_contract_revision(
         revision_id="revision:plain",
         target_validated_contract_bytes=target.artifact.artifact_bytes,
@@ -326,9 +330,7 @@ def test_a_source_set_naming_bytes_the_history_lacks_refuses(tmp_path) -> None:
 def test_a_source_set_record_id_that_is_not_its_digest_refuses(tmp_path) -> None:
     history = _history(tmp_path)
     _retain(history)
-    record = json.loads(
-        history.replay().ontology_source_set().canonical_bytes
-    )
+    record = json.loads(history.replay().ontology_source_set().canonical_bytes)
     content = _canonical(record)
 
     with pytest.raises(compiler.OntologySourceRefusal) as caught:
@@ -398,7 +400,9 @@ def test_a_target_composed_onto_a_stale_source_set_refuses(tmp_path) -> None:
     history = _history(tmp_path)
     replay = _retain(history)
     stale = replay.ontology_source_set()
-    target = _generic_compilation(compiler.compose_linkml_addition(BASE, CLASS_FRAGMENT))
+    target = _generic_compilation(
+        compiler.compose_linkml_addition(BASE, CLASS_FRAGMENT)
+    )
     revision = history.compose_contract_revision(
         revision_id="revision:plain",
         target_validated_contract_bytes=target.artifact.artifact_bytes,
@@ -422,9 +426,7 @@ def test_a_target_composed_onto_a_stale_source_set_refuses(tmp_path) -> None:
     before = history.path.read_bytes()
 
     with pytest.raises(compiler.OntologySourceRefusal) as caught:
-        _retain_record(
-            history, content, f"ontology-revision-target:{_digest(content)}"
-        )
+        _retain_record(history, content, f"ontology-revision-target:{_digest(content)}")
 
     assert caught.value.reason == (
         compiler.OntologySourceRefusalReason.REVISION_TARGET_SOURCE_SET_NOT_CURRENT

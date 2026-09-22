@@ -156,9 +156,7 @@ def _plan_history(tmp_path: Path, *, gap: dict[str, str] | None = None):
 def _change_set_history(tmp_path: Path, *, gap: dict[str, str] | None = None):
     """Consumer two: a change-set history that retains its own gaps artifact."""
 
-    history, _, _, _, _, _ = _anchored_history(
-        tmp_path, contract_source=BASE_SOURCE
-    )
+    history, _, _, _, _, _ = _anchored_history(tmp_path, contract_source=BASE_SOURCE)
     _retain_source(history)
     round_id = "round:change-set:1"
     declared = {"gaps": [gap or _gap()], "plan_id": round_id}
@@ -695,13 +693,12 @@ def test_core_derives_and_retains_the_target_the_proposer_did_not_supply(
     assert target.proposal_identity == _digest(proposal)
     assert target.source_set_identity == current.identity
     # The composed root is in the history, and it is the base plus the fragment.
-    composed = compiler.compose_linkml_addition(
-        BASE_SOURCE, ADDITION.encode("utf-8")
-    )
+    composed = compiler.compose_linkml_addition(BASE_SOURCE, ADDITION.encode("utf-8"))
     assert _digest(composed) == target.composed_root_sha256
-    assert replay.retained_bytes(
-        f"ontology-source:{target.composed_root_sha256}"
-    ) == composed
+    assert (
+        replay.retained_bytes(f"ontology-source:{target.composed_root_sha256}")
+        == composed
+    )
 
 
 def test_a_proposal_against_a_history_with_no_retained_source_refuses(
@@ -768,9 +765,7 @@ def test_acceptance_makes_the_composed_root_the_current_source(
 ) -> None:
     history, identity, _ = consumer(tmp_path)
     _retain_proposal(history, _proposal_bytes(answers=(identity,)))
-    composed = compiler.compose_linkml_addition(
-        BASE_SOURCE, ADDITION.encode("utf-8")
-    )
+    composed = compiler.compose_linkml_addition(BASE_SOURCE, ADDITION.encode("utf-8"))
 
     replay = history.accept_ontology_revision_proposal(
         proposal_id="proposal:customer",

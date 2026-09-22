@@ -109,9 +109,7 @@ class _PlainDumper(yaml.SafeDumper):
         return True
 
 
-def _parse(
-    source: object, reason: LinkMLAdditionRefusalReason
-) -> dict[str, object]:
+def _parse(source: object, reason: LinkMLAdditionRefusalReason) -> dict[str, object]:
     if type(source) is not bytes:
         raise _refuse(reason, "input must be exact bytes")
     try:
@@ -191,9 +189,7 @@ def _add_enums(
         if name not in existing:
             target[name] = deepcopy(definition)
             continue
-        if not isinstance(definition, dict) or set(definition) != {
-            _PERMISSIBLE_VALUES
-        }:
+        if not isinstance(definition, dict) or set(definition) != {_PERMISSIBLE_VALUES}:
             raise _refuse(
                 LinkMLAdditionRefusalReason.EXISTING_ENUM_FIELD,
                 f"enum {name} exists; only new {_PERMISSIBLE_VALUES} may be added",

@@ -891,8 +891,7 @@ class KnowledgeHistoryReplay:
                 "this history holds no LinkML source for its active contract",
             )
         by_identity = {
-            member.identity: bytes(member.content)
-            for member in self._retained.values()
+            member.identity: bytes(member.content) for member in self._retained.values()
         }
         sources: dict[str, bytes] = {}
         for module in source_set.modules:
@@ -1903,9 +1902,7 @@ class KnowledgeChangeHistory:
             root_locator=root_locator,
             sources=sources,
             compiler_execution_identity=compiled.artifact.evidence_sha256,
-            validated_contract_identity=(
-                compiled.artifact.validated_fact_set_sha256
-            ),
+            validated_contract_identity=(compiled.artifact.validated_fact_set_sha256),
         )
         if source_set.record_id in replay._retained:
             raise _refuse_ontology_source(
@@ -1980,9 +1977,7 @@ class KnowledgeChangeHistory:
                 root_locator=current.root_locator, sources=sources
             )
             partial = compose_partial_effective_contract(
-                validated_fact_set_sha256=(
-                    compiled.artifact.validated_fact_set_sha256
-                ),
+                validated_fact_set_sha256=(compiled.artifact.validated_fact_set_sha256),
                 normative_profile=replay.partial_contract.normative_profile,
             )
         except (KeyError, TypeError, ValueError) as error:
@@ -1994,9 +1989,7 @@ class KnowledgeChangeHistory:
             root_locator=current.root_locator,
             sources=sources,
             compiler_execution_identity=compiled.artifact.evidence_sha256,
-            validated_contract_identity=(
-                compiled.artifact.validated_fact_set_sha256
-            ),
+            validated_contract_identity=(compiled.artifact.validated_fact_set_sha256),
         )
         target = OntologyRevisionTarget.compose(
             proposal_identity=proposal.identity,

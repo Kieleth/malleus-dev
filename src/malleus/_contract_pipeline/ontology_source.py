@@ -209,7 +209,11 @@ class OntologySourceSet:
                 if not isinstance(entry, dict) or set(entry) != _MODULE_FIELDS:
                     raise ValueError("module fields are not closed")
                 length = entry["byte_length"]
-                if not isinstance(length, int) or isinstance(length, bool) or length < 0:
+                if (
+                    not isinstance(length, int)
+                    or isinstance(length, bool)
+                    or length < 0
+                ):
                     raise ValueError("module byte length must be a whole number")
                 modules.append(
                     OntologySourceModule(
