@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:febe29a1aeb9eaea571eff13d73347cc483c9ebf5b551641766196c66bddd57a",
+        "change": "CREATED",
+        "path": "handover/2026-09-22-probe-control-any-tree.md"
+      },
+      {
+        "after_digest": "sha256:1a77b043272786a83596215e63a4ede7cb397de22c6917a4d46c250ded64be7f",
+        "before_digest": "sha256:d4ad4a3553570c029c866bab86708b67ec1150bef858257897e4a15efa219b2a",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_ontology_source_set.py"
+      }
+    ]
+  },
+  "entry_id": "OVR-000478",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c9066026cc74e41b2998cf92ba015f77755f5cc92e5d99f32c0f42f2c99375b6",
+  "recorded_at": "2026-09-22T01:59:24Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "f02bd50fb38929107878fd1427877ad798b0f4fb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 478,
+  "subject": {
+    "id": "probe-control-any-tree-2026-09-22",
+    "type": "DOCUMENT"
+  },
+  "summary": "Fix the F2 probe control test so it fails on a wrong tree from any checkout, not only from a worktree.",
+  "why": "OVR-000477 sealed a control test whose wrong case depended on the installed package living in another tree, which is true in a worktree and false in the main checkout; the full default suite on sealed main read 1 failed on exactly that test. The wrong tree is now an empty temporary directory, so the control refuses everywhere. One governed test file changes; nothing else moves.",
+  "entry_hash": "sha256:e00255f240f24ad332d770dd7e1bca99a3be79096c011bc3237cd07f625649a8"
+}
