@@ -1,5 +1,5 @@
 {
-  "baseline_history_sha256": "sha256:0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b",
+  "baseline_history_sha256": "sha256:c32e5987c83380302ba63d6ed390a6cd8d9b64e3e907702eb4f7852ca78fffba",
   "baseline_prefix_preserved": true,
   "changes": 37,
   "checkpoints": {
@@ -27,18 +27,18 @@
       ]
     }
   },
-  "contract_identity": "sha256:58fafe287cd25375e06eaf838e4e559e4dc4365fb82e00d07a3dc27dabbb8aaf",
+  "contract_identity": "sha256:80ba49938474dfee9c8c687b60a48aea24535276b967dc409564e604d5a4f81d",
   "contract_revisions": 2,
   "duplicate_assignment_rule": "NOT_SELECTED",
   "graph_sha256": "sha256:57e3839c5836214ebee14c1271937c7c134ad51fc905c2530b316f0bca815a20",
   "historical_records": 144,
   "history_bytes": 2306219,
-  "history_head": "sha256:e6491e4ebd613487870eb39da085696d9de74f5c01f7b458ad77479789d31456",
-  "history_sha256": "sha256:099955003f3274aea590edf1578520540033321cfb3cabcf9aa6b3dff36063bb",
+  "history_head": "sha256:2cec8e052634f227ae1b2220ccc4649a8ba5f2d6d49e1d8f97c8fe69a18894db",
+  "history_sha256": "sha256:0ee1653fd2a308742c440cfc15b72dcf70837640663f17be1d59e345aaed7974",
   "id": "connected-shop-synthetic-shipments-v1",
   "kind": "SYNTHETIC_CONFORMANCE_EXTENSION",
   "protocol_events": 216,
-  "replay_receipt": "sha256:23fc1bb17db956a65511df09483ecaf8c9c8612f38e1bf2dbbb21f05e343b28c",
+  "replay_receipt": "sha256:9111066fed4526ec629a4c53721acca7f291652533f76b5541d79b3dff7f8a9b",
   "report_sha256": "sha256:df3ca88c4cc9e5221b98f4a40f7b1903c055b8e4dce6d5f8eecb9e2a4eb9e8c2",
   "sources": {
     "order": "sha256:37ec83df6379abf49afd3e9e35bc90973a4f0337313fd24c02184be3b2baf9b2",

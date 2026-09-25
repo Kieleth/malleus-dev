@@ -1,17 +1,17 @@
 {
-  "baseline_history_sha256": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3",
+  "baseline_history_sha256": "sha256:0de63c15632924c9730e58b5e0dabcc1d8f61512acab1f8fdbff7c74b0884042",
   "baseline_prefix_preserved": true,
   "changes": 34,
-  "contract_identity": "sha256:c746b60f04ee07f699e7bd18009e212b5b2ba2b311ec75c307e291f4bf38b6ee",
+  "contract_identity": "sha256:8e2820ec35bbfe964c95263d4cbbc0b2ea5a25f985f1978448afbcb3e476263f",
   "contract_revisions": 1,
   "graph_sha256": "sha256:e5f36981355616d27a3346ee228f6314b6614881162057261e5bfec242f6e5dc",
   "historical_records": 133,
   "history_bytes": 1646836,
-  "history_head": "sha256:25d8eab4b135d95cf8576fbe36a4915a7e22286521dfe11daff5e91d87621bb7",
-  "history_sha256": "sha256:0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b",
+  "history_head": "sha256:06fe09bbc84b5f8fddf4914f8b8400ee80ec8c2778299f265f70a9414304e8d4",
+  "history_sha256": "sha256:c32e5987c83380302ba63d6ed390a6cd8d9b64e3e907702eb4f7852ca78fffba",
   "id": "shop-warehouse-extension-v1",
   "protocol_events": 193,
-  "replay_receipt": "sha256:0de13200192912a0cee4374fe098ed3ae67e99ce05d9478727aeb80914a1d769",
-  "report_sha256": "sha256:6290a5c942cb6b47727070a798ae5006c50d0ea52801149e314dc0a1518396bf",
+  "replay_receipt": "sha256:3c7e0d09d4444e2bf5131a4e017d1f4bda1a6e744f6085a5f3b419fa18a09632",
+  "report_sha256": "sha256:01fa79adfcaccaf5b1786626d8a94942b32cd424b426bae5bd033e47607dc7a9",
   "warehouse_source_sha256": "sha256:136607d935df30f3beb090d73e791da906348110023edf5bd557eba60676f62b"
 }

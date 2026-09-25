@@ -1,0 +1,359 @@
+{
+  "connected_story_chain": {
+    "baseline_history_bytes": 1646836,
+    "files": {
+      "connected_story/partial_shipments/input_boundary.json": {
+        "/baseline_history_sha256": {
+          "current": "sha256:c32e5987c83380302ba63d6ed390a6cd8d9b64e3e907702eb4f7852ca78fffba",
+          "superseded": "sha256:0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b"
+        }
+      },
+      "connected_story/partial_shipments/receipt.json": {
+        "/baseline_history_sha256": {
+          "current": "sha256:c32e5987c83380302ba63d6ed390a6cd8d9b64e3e907702eb4f7852ca78fffba",
+          "superseded": "sha256:0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b"
+        },
+        "/contract_identity": {
+          "current": "sha256:80ba49938474dfee9c8c687b60a48aea24535276b967dc409564e604d5a4f81d",
+          "superseded": "sha256:58fafe287cd25375e06eaf838e4e559e4dc4365fb82e00d07a3dc27dabbb8aaf"
+        },
+        "/history_head": {
+          "current": "sha256:2cec8e052634f227ae1b2220ccc4649a8ba5f2d6d49e1d8f97c8fe69a18894db",
+          "superseded": "sha256:e6491e4ebd613487870eb39da085696d9de74f5c01f7b458ad77479789d31456"
+        },
+        "/history_sha256": {
+          "current": "sha256:0ee1653fd2a308742c440cfc15b72dcf70837640663f17be1d59e345aaed7974",
+          "superseded": "sha256:099955003f3274aea590edf1578520540033321cfb3cabcf9aa6b3dff36063bb"
+        },
+        "/replay_receipt": {
+          "current": "sha256:9111066fed4526ec629a4c53721acca7f291652533f76b5541d79b3dff7f8a9b",
+          "superseded": "sha256:23fc1bb17db956a65511df09483ecaf8c9c8612f38e1bf2dbbb21f05e343b28c"
+        }
+      },
+      "connected_story/run_receipt.json": {
+        "/ledger_head": {
+          "current": "sha256:0283c195ab457fcb0a793b3a376b9f9c3cad9fd69a406581d0143ad02c59bfb8",
+          "superseded": "sha256:9e0cff50f34fcdb8888b0f6d2d4ebbfcc832fc485876f85871bc7b633216cd4a"
+        },
+        "/ledger_sha256": {
+          "current": "sha256:0de63c15632924c9730e58b5e0dabcc1d8f61512acab1f8fdbff7c74b0884042",
+          "superseded": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3"
+        },
+        "/partial_contract": {
+          "current": "sha256:007ebaa4ac51377444d0662d45fb745ac2373e2dfbb92c7bdb3949217717ef88",
+          "superseded": "sha256:9d3d4638887e26288d35a9f47f428c5fc54b0464d15e3e1c2032e24f1ca92b3f"
+        },
+        "/replay_receipt": {
+          "current": "sha256:b7d44daefdf2e71cca51843d9623819a6b8013a870c1ff35fa72beecb6b6c924",
+          "superseded": "sha256:cf0fe19f0263e9945ffc6ad4337208df86e5c353f9263bcb054fd9c7923feee2"
+        }
+      },
+      "connected_story/shipment_explanation_receipt.json": {
+        "/history_head": {
+          "current": "sha256:0283c195ab457fcb0a793b3a376b9f9c3cad9fd69a406581d0143ad02c59bfb8",
+          "superseded": "sha256:9e0cff50f34fcdb8888b0f6d2d4ebbfcc832fc485876f85871bc7b633216cd4a"
+        },
+        "/history_receipt": {
+          "current": "sha256:b7d44daefdf2e71cca51843d9623819a6b8013a870c1ff35fa72beecb6b6c924",
+          "superseded": "sha256:cf0fe19f0263e9945ffc6ad4337208df86e5c353f9263bcb054fd9c7923feee2"
+        },
+        "/history_sha256": {
+          "current": "sha256:0de63c15632924c9730e58b5e0dabcc1d8f61512acab1f8fdbff7c74b0884042",
+          "superseded": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3"
+        },
+        "/reports/0/report_sha256": {
+          "current": "sha256:6e9970d3339bc93bdd64048b1aa79a660e1410663e0e8274a102aaee479fcbc1",
+          "superseded": "sha256:39f4bcf22febcbd6e7affd465202b0ee21509f949307c4d2c4d8a5c6a4aede7a"
+        },
+        "/reports/1/report_sha256": {
+          "current": "sha256:97a8534357564a9192532aa638ab88d374acc90de5f925ebbba2e6d7723bbcd3",
+          "superseded": "sha256:4f40b25d6df7eb4cb1c2b462e4dbb20fbe1edcfa785bb38a18667488fa7e8f7e"
+        },
+        "/reports/2/report_sha256": {
+          "current": "sha256:6b609150faa7c349bf1f756a03faaa923b8fb61423b61abf1dedd3704bb6ff37",
+          "superseded": "sha256:9bd0c8f040b35fe638ae9acb2fbe07d204f46dae6e4ad9a5f85a580a8c2f728b"
+        }
+      },
+      "connected_story/timeline_receipt.json": {
+        "/history_head": {
+          "current": "sha256:0283c195ab457fcb0a793b3a376b9f9c3cad9fd69a406581d0143ad02c59bfb8",
+          "superseded": "sha256:9e0cff50f34fcdb8888b0f6d2d4ebbfcc832fc485876f85871bc7b633216cd4a"
+        },
+        "/history_receipt": {
+          "current": "sha256:b7d44daefdf2e71cca51843d9623819a6b8013a870c1ff35fa72beecb6b6c924",
+          "superseded": "sha256:cf0fe19f0263e9945ffc6ad4337208df86e5c353f9263bcb054fd9c7923feee2"
+        },
+        "/history_sha256": {
+          "current": "sha256:0de63c15632924c9730e58b5e0dabcc1d8f61512acab1f8fdbff7c74b0884042",
+          "superseded": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3"
+        },
+        "/report_sha256": {
+          "current": "sha256:7df4118490e1df69215a612c533f00120dd9e41a7735c62ec63983300eaf25a4",
+          "superseded": "sha256:4aa0b4e7d28f7ec0ee4f49fa1cd9928aaaa8822d7c3d6af6f07cad0b5b359933"
+        }
+      },
+      "connected_story/warehouse/ordering_receipt.json": {
+        "/binding/history_head": {
+          "current": "sha256:06fe09bbc84b5f8fddf4914f8b8400ee80ec8c2778299f265f70a9414304e8d4",
+          "superseded": "sha256:25d8eab4b135d95cf8576fbe36a4915a7e22286521dfe11daff5e91d87621bb7"
+        },
+        "/binding/replay_receipt": {
+          "current": "sha256:3c7e0d09d4444e2bf5131a4e017d1f4bda1a6e744f6085a5f3b419fa18a09632",
+          "superseded": "sha256:0de13200192912a0cee4374fe098ed3ae67e99ce05d9478727aeb80914a1d769"
+        },
+        "/report_sha256": {
+          "current": "sha256:20b80ce1d6856225cfe878e3656f21269f4be8ec60b9ed9f343e14ab59bad297",
+          "superseded": "sha256:6c1a1f287b814911bd68dbf4a48e30ad755dc3ab40ea2487054ddd1f1ae0beb4"
+        }
+      },
+      "connected_story/warehouse/receipt.json": {
+        "/baseline_history_sha256": {
+          "current": "sha256:0de63c15632924c9730e58b5e0dabcc1d8f61512acab1f8fdbff7c74b0884042",
+          "superseded": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3"
+        },
+        "/contract_identity": {
+          "current": "sha256:8e2820ec35bbfe964c95263d4cbbc0b2ea5a25f985f1978448afbcb3e476263f",
+          "superseded": "sha256:c746b60f04ee07f699e7bd18009e212b5b2ba2b311ec75c307e291f4bf38b6ee"
+        },
+        "/history_head": {
+          "current": "sha256:06fe09bbc84b5f8fddf4914f8b8400ee80ec8c2778299f265f70a9414304e8d4",
+          "superseded": "sha256:25d8eab4b135d95cf8576fbe36a4915a7e22286521dfe11daff5e91d87621bb7"
+        },
+        "/history_sha256": {
+          "current": "sha256:c32e5987c83380302ba63d6ed390a6cd8d9b64e3e907702eb4f7852ca78fffba",
+          "superseded": "sha256:0f2cf039b285185df7f8fc42c9647661ea79792806e1abdbb26a526ac818f56b"
+        },
+        "/replay_receipt": {
+          "current": "sha256:3c7e0d09d4444e2bf5131a4e017d1f4bda1a6e744f6085a5f3b419fa18a09632",
+          "superseded": "sha256:0de13200192912a0cee4374fe098ed3ae67e99ce05d9478727aeb80914a1d769"
+        },
+        "/report_sha256": {
+          "current": "sha256:01fa79adfcaccaf5b1786626d8a94942b32cd424b426bae5bd033e47607dc7a9",
+          "superseded": "sha256:6290a5c942cb6b47727070a798ae5006c50d0ea52801149e314dc0a1518396bf"
+        }
+      },
+      "connected_story/warehouse/source_boundary.json": {
+        "/baseline_history_sha256": {
+          "current": "sha256:0de63c15632924c9730e58b5e0dabcc1d8f61512acab1f8fdbff7c74b0884042",
+          "superseded": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3"
+        }
+      }
+    },
+    "note": "Not an evidence scenario and not compared by assert_current_evidence. Structural builtin version 2 (route C) moved STRUCTURAL_HISTORY_BUNDLE, which is inside the partial effective contract every structural change set binds, so the connected story's ledger moved from the Table 1 baseline onward; the ADD_ENUM successor revision policy moves the warehouse revision's identity as well. Each file carries only its current value, so the superseded pair is recorded here. The exported graph, the complete record history, the three graph state digests and the reader reports are equal to a git archive of ebff70f7 at all three stages; the reports differ only in history coordinates. Paths are relative to the Small Shop directory.",
+    "table_1_history_bytes": 895097
+  },
+  "historical_outputs": {
+    "evidence_2026_09_06/correction/explanation.json": "sha256:075608296bc7f6bcc5336487e99bf12ac321b8a92793ee591bdd38602007e9e3",
+    "evidence_2026_09_06/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "evidence_2026_09_06/correction/receipt.json": "sha256:e412711612c235d565c8cc74db8b34d13effe7de4323bdf22a6dd146d5faaf5a",
+    "evidence_2026_09_06/object_event/evidence.json": "sha256:1a5f2c71ef0631b90cc9d44b6c2c4f816ed6e5b05266a4585d693710cb492131",
+    "evidence_2026_09_06/showcase/explanation.json": "sha256:39dcb763af622d11998c795f0ffa3624061e0dc34f39878e13bb711a1a35a748",
+    "evidence_2026_09_06/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+    "evidence_2026_09_06/showcase/queries.json": "sha256:5e4d3855a027340cd0ed3859c30b02134d9d1ce1020ac3d9204eba221014e6ef",
+    "evidence_2026_09_06/showcase/receipt.json": "sha256:22370f49cc952a90fe944732be0d959fd221c0fa82a836ef97ebb1eb26ee94f1",
+    "evidence_2026_09_08/correction/explanation.json": "sha256:70e0b7b8f642042ee12cc90b5a0410ca94f953e36580e86e2e5e74081e1a99f3",
+    "evidence_2026_09_08/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "evidence_2026_09_08/correction/receipt.json": "sha256:4ab3ae48f14c25553105fad6a32265c191dbd7a7dfc03a5988dc6b37bcaa3313",
+    "evidence_2026_09_08/fresh_import/evidence.json": "sha256:75585c2fe473c9ca67c04410b82e927efcf18ea4d90d38934623edb64d751541",
+    "evidence_2026_09_08/object_event/evidence.json": "sha256:bb7239d1b25ee4c1192ae24392a2dfff242e1e1c6e06c8e59de9261a41e5f120",
+    "evidence_2026_09_08/public_population/evidence.json": "sha256:e741dac87141868a96cee67acbdddcf2a98cb09ed3eaf01cd2f47ba821bc9f98",
+    "evidence_2026_09_08/showcase/explanation.json": "sha256:97f0e01f6a39f43194f4104c1e3a0800e3ed58549ce2e658485e05d01cbb4e14",
+    "evidence_2026_09_08/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+    "evidence_2026_09_08/showcase/queries.json": "sha256:c1a738807494ccc0058adf9b1880fcc0194a39ac0c1d380772d126f0db609c23",
+    "evidence_2026_09_08/showcase/receipt.json": "sha256:2b98f325ac89df0b11aa07e9a11cbf41ed4eeb1429c28c598d97798d80130715",
+    "evidence_2026_09_08_rule_check/correction/explanation.json": "sha256:c7658f2c4d668a542b4c54de89ad99562fd9eb0d2b1a154881045aff0e4f12a1",
+    "evidence_2026_09_08_rule_check/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "evidence_2026_09_08_rule_check/correction/receipt.json": "sha256:41d0086fd9df4a999503a904d2080365c1868a0985de0ec63171066b789e4832",
+    "evidence_2026_09_08_rule_check/fresh_import/evidence.json": "sha256:74201447870a845bb6f4bb7d7f948354003619d39adb37fd562a1e0d5aa4933f",
+    "evidence_2026_09_08_rule_check/object_event/evidence.json": "sha256:ac91dfba52bfdb1b64a4b3d5d080a34b130e71a8d30fb58bf708defc20e678e7",
+    "evidence_2026_09_08_rule_check/public_population/evidence.json": "sha256:abc3c4446d4bebe32d508f7a7fb2d46413708e477e678a35a3254d4fa1548987",
+    "evidence_2026_09_08_rule_check/showcase/explanation.json": "sha256:55f53637aa39303d845f005b993b72a7c5c8f0668cdde2c92cc9583cf1c8a3f9",
+    "evidence_2026_09_08_rule_check/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+    "evidence_2026_09_08_rule_check/showcase/queries.json": "sha256:033212a01dd6394ace876789cfd878f6eff80a1e00fb51e8e2d6676654951c27",
+    "evidence_2026_09_08_rule_check/showcase/receipt.json": "sha256:d7bd9f9b444a924270f8f36b243f2e31aed1105160be8ac6e6a4c650d87a8f58",
+    "evidence_2026_09_17_policy_rebinding/correction/explanation.json": "sha256:c7658f2c4d668a542b4c54de89ad99562fd9eb0d2b1a154881045aff0e4f12a1",
+    "evidence_2026_09_17_policy_rebinding/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "evidence_2026_09_17_policy_rebinding/correction/receipt.json": "sha256:41d0086fd9df4a999503a904d2080365c1868a0985de0ec63171066b789e4832",
+    "evidence_2026_09_17_policy_rebinding/fresh_import/evidence.json": "sha256:8ad251ddf61f4fb50589f2d047ce17552b22f5f9416511df73d3074925906cc5",
+    "evidence_2026_09_17_policy_rebinding/object_event/evidence.json": "sha256:ac91dfba52bfdb1b64a4b3d5d080a34b130e71a8d30fb58bf708defc20e678e7",
+    "evidence_2026_09_17_policy_rebinding/public_population/evidence.json": "sha256:795bb5c8689568f5805bb10c3295b3c1297380a719adc636d5e7469ebd70c494",
+    "evidence_2026_09_17_policy_rebinding/showcase/explanation.json": "sha256:55f53637aa39303d845f005b993b72a7c5c8f0668cdde2c92cc9583cf1c8a3f9",
+    "evidence_2026_09_17_policy_rebinding/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+    "evidence_2026_09_17_policy_rebinding/showcase/queries.json": "sha256:033212a01dd6394ace876789cfd878f6eff80a1e00fb51e8e2d6676654951c27",
+    "evidence_2026_09_17_policy_rebinding/showcase/receipt.json": "sha256:d7bd9f9b444a924270f8f36b243f2e31aed1105160be8ac6e6a4c650d87a8f58",
+    "evidence_2026_09_20_core_runs_checks/correction/explanation.json": "sha256:d4279b815fbe5b89eed7fdbf35fa45effa38b477c304f2a3f408e0b56e2fbf97",
+    "evidence_2026_09_20_core_runs_checks/correction/graph.json": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+    "evidence_2026_09_20_core_runs_checks/correction/receipt.json": "sha256:52545c3a32be5d0eb19888f48fbd6073c3577d4f0ec2022196d7ac3bb6334348",
+    "evidence_2026_09_20_core_runs_checks/fresh_import/evidence.json": "sha256:36220dd940a917414e3d54587d1ded942ee1c45b8e48f9c846dd004d6d3a7c7d",
+    "evidence_2026_09_20_core_runs_checks/object_event/evidence.json": "sha256:6743ad177b849ad694276b0b5789ce16141be288ffc9b6918ac0cad7810a959a",
+    "evidence_2026_09_20_core_runs_checks/public_population/evidence.json": "sha256:f0814b4842dc2aa9133e6912e9f915cd9ea8a24d7b6af4355a64ad84137b2cb0",
+    "evidence_2026_09_20_core_runs_checks/showcase/explanation.json": "sha256:6fefa64470adb100661b69c015865f8dcbcef58e636af7a3f2907e178c563061",
+    "evidence_2026_09_20_core_runs_checks/showcase/graph.json": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0",
+    "evidence_2026_09_20_core_runs_checks/showcase/queries.json": "sha256:ec09357a7f186ba56554efe7ad59d0f644b332acfda790aea15afdae86ecf20a",
+    "evidence_2026_09_20_core_runs_checks/showcase/receipt.json": "sha256:51470f3cdf195991e2f38e06bfa9769d8c308f283f900d0deeb022c7e084ad31",
+    "fresh_import/evidence.json": "sha256:60b510ad59a0e86951bea809152c577a1fade06e34aaf7e8485290f56b40931f",
+    "public_population/evidence.json": "sha256:634b2ff3ba7faa33d8574ebb5265ec21bdf1de07e8f96c8e1a64e04cbeeff8d5"
+  },
+  "producer_commit": "0376eae4acfca03a47d6a86a921394231d59fdfd",
+  "scenarios": {
+    "correction": {
+      "compiler_artifacts": {
+        "sha256:ec918b612c034d1b35aeaa98d9ca69496bcad98dae48a505c7d40c08c1411051": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "explanation.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/correction/explanation.json",
+          "sha256": "sha256:d4279b815fbe5b89eed7fdbf35fa45effa38b477c304f2a3f408e0b56e2fbf97"
+        },
+        "graph.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/correction/graph.json",
+          "sha256": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645"
+        },
+        "receipt.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/correction/receipt.json",
+          "sha256": "sha256:52545c3a32be5d0eb19888f48fbd6073c3577d4f0ec2022196d7ac3bb6334348"
+        }
+      }
+    },
+    "fresh_import": {
+      "compiler_artifacts": {
+        "sha256:636f4e751687b80f803ebb6cf960eed9da2cca7f466464ec6ad668b77ba50447": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        },
+        "sha256:e244c782747e3ae60649d768b636e5ce679478a5e8d6f3392bdd91a0501b6062": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "evidence.json": {
+          "changed_paths": [
+            "/ledger_head",
+            "/ledger_sha256",
+            "/receipt_identity"
+          ],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/fresh_import/evidence.json",
+          "sha256": "sha256:59848d94e5b3f821fc6545aae3edd0c68ecce88daf54758594f7765904a010fa"
+        }
+      }
+    },
+    "object_event": {
+      "compiler_artifacts": {
+        "sha256:0f1d146d4187e89727ac955ea6a293d79445814918c873da96d6d3e375d4ecdb": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "evidence.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/object_event/evidence.json",
+          "sha256": "sha256:6743ad177b849ad694276b0b5789ce16141be288ffc9b6918ac0cad7810a959a"
+        }
+      }
+    },
+    "public_population": {
+      "compiler_artifacts": {
+        "sha256:636f4e751687b80f803ebb6cf960eed9da2cca7f466464ec6ad668b77ba50447": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        },
+        "sha256:e244c782747e3ae60649d768b636e5ce679478a5e8d6f3392bdd91a0501b6062": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "evidence.json": {
+          "changed_paths": [
+            "/contract_revision/revision_identity",
+            "/history/acceptance_head",
+            "/history/ledger_head",
+            "/history/ledger_sha256",
+            "/history/materialization_head",
+            "/history/receipt_identity",
+            "/records/0/evidence/0/sha256",
+            "/records/0/evidence/1/sha256",
+            "/records/0/history_profile/sha256",
+            "/records/0/population_plan/sha256",
+            "/records/1/evidence/0/sha256",
+            "/records/1/evidence/1/sha256",
+            "/records/1/history_profile/sha256",
+            "/records/1/population_plan/sha256",
+            "/records/2/evidence/0/sha256",
+            "/records/2/evidence/1/sha256",
+            "/records/2/history_profile/sha256",
+            "/records/2/population_plan/sha256",
+            "/records/3/evidence/0/sha256",
+            "/records/3/evidence/1/sha256",
+            "/records/3/history_profile/sha256",
+            "/records/3/population_plan/sha256",
+            "/records/4/evidence/0/sha256",
+            "/records/4/evidence/1/sha256",
+            "/records/4/history_profile/sha256",
+            "/records/4/population_plan/sha256",
+            "/records/5/evidence/0/sha256",
+            "/records/5/evidence/1/sha256",
+            "/records/5/history_profile/sha256",
+            "/records/5/population_plan/sha256",
+            "/records/6/evidence/0/sha256",
+            "/records/6/evidence/1/sha256",
+            "/records/6/history_profile/sha256",
+            "/records/6/population_plan/sha256",
+            "/records/7/evidence/0/sha256",
+            "/records/7/evidence/1/sha256",
+            "/records/7/history_profile/sha256",
+            "/records/7/population_plan/sha256",
+            "/records/8/evidence/0/sha256",
+            "/records/8/evidence/1/sha256",
+            "/records/8/history_profile/sha256",
+            "/records/8/population_plan/sha256",
+            "/records/9/evidence/0/sha256",
+            "/records/9/evidence/1/sha256",
+            "/records/9/history_profile/sha256",
+            "/records/9/population_plan/sha256"
+          ],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/public_population/evidence.json",
+          "sha256": "sha256:24be9101c9bf0c0de96a113fca1be9efe227fa70467575c3812f9e840ee49eba"
+        }
+      }
+    },
+    "showcase": {
+      "compiler_artifacts": {
+        "sha256:3a72e20671dad61fd3d1087447a8ac25dabdb006aa1abecfa46d605f84c0dc12": {
+          "id": "malleus.contract-pipeline/python-private-v0",
+          "sha256": "sha256:683df284eaf8bb20d8872583bb2f73a9ea316b37d13f5282be934702e846d0da"
+        }
+      },
+      "outputs": {
+        "explanation.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/showcase/explanation.json",
+          "sha256": "sha256:6fefa64470adb100661b69c015865f8dcbcef58e636af7a3f2907e178c563061"
+        },
+        "graph.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/showcase/graph.json",
+          "sha256": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+        },
+        "queries.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/showcase/queries.json",
+          "sha256": "sha256:ec09357a7f186ba56554efe7ad59d0f644b332acfda790aea15afdae86ecf20a"
+        },
+        "receipt.json": {
+          "changed_paths": [],
+          "predecessor": "evidence_2026_09_20_core_runs_checks/showcase/receipt.json",
+          "sha256": "sha256:51470f3cdf195991e2f38e06bfa9769d8c308f283f900d0deeb022c7e084ad31"
+        }
+      }
+    }
+  }
+}

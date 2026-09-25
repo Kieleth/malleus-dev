@@ -2,15 +2,15 @@
   "purpose": "SHOP_READ_REPORT_RECEIPT_NOT_A_PROTOCOL_RECORD",
   "implementation_commit": "b28b2ffe4cef0c029707508884133ad630b774c2",
   "implementation_tree": "7083bfdc961700936fdcc151d88ba532c77a3c31",
-  "history_sha256": "sha256:dcd140c5f2456394cfa4c4ea70bf48c3d895dd42d803babed91664f4c01f9eb3",
-  "history_head": "sha256:9e0cff50f34fcdb8888b0f6d2d4ebbfcc832fc485876f85871bc7b633216cd4a",
-  "history_receipt": "sha256:cf0fe19f0263e9945ffc6ad4337208df86e5c353f9263bcb054fd9c7923feee2",
+  "history_sha256": "sha256:0de63c15632924c9730e58b5e0dabcc1d8f61512acab1f8fdbff7c74b0884042",
+  "history_head": "sha256:0283c195ab457fcb0a793b3a376b9f9c3cad9fd69a406581d0143ad02c59bfb8",
+  "history_receipt": "sha256:b7d44daefdf2e71cca51843d9623819a6b8013a870c1ff35fa72beecb6b6c924",
   "reader_sha256": "sha256:51736f97540c7f4ff97ff7e643b7991041589feb14c6f2814116f0a9f7604290",
   "spec_sha256": "sha256:267d758bb8d5dc80c0373299dee6a74cae4b8df78f5b9cb0ad11a54ff2176098",
   "reports": [
-    {"at_occurrence": "e28", "report_sha256": "sha256:39f4bcf22febcbd6e7affd465202b0ee21509f949307c4d2c4d8a5c6a4aede7a", "graph_sha256": "sha256:ecd8dcf678aaf44317138ea061420b170c41b68c435a5bec17f9ceefbef6854b"},
-    {"at_occurrence": "e30", "report_sha256": "sha256:4f40b25d6df7eb4cb1c2b462e4dbb20fbe1edcfa785bb38a18667488fa7e8f7e", "graph_sha256": "sha256:03c5e6f099764fb37e63c93916c0fdbcc6aac8179e12e4628fd01b4f4d3a10ee"},
-    {"at_occurrence": null, "report_sha256": "sha256:9bd0c8f040b35fe638ae9acb2fbe07d204f46dae6e4ad9a5f85a580a8c2f728b", "graph_sha256": "sha256:4a890bb06d4cd4a016a8949aa6ea6483d6ee9302cea0951fd9945a22cf1b5e78"}
+    {"at_occurrence": "e28", "report_sha256": "sha256:6e9970d3339bc93bdd64048b1aa79a660e1410663e0e8274a102aaee479fcbc1", "graph_sha256": "sha256:ecd8dcf678aaf44317138ea061420b170c41b68c435a5bec17f9ceefbef6854b"},
+    {"at_occurrence": "e30", "report_sha256": "sha256:97a8534357564a9192532aa638ab88d374acc90de5f925ebbba2e6d7723bbcd3", "graph_sha256": "sha256:03c5e6f099764fb37e63c93916c0fdbcc6aac8179e12e4628fd01b4f4d3a10ee"},
+    {"at_occurrence": null, "report_sha256": "sha256:6b609150faa7c349bf1f756a03faaa923b8fb61423b61abf1dedd3704bb6ff37", "graph_sha256": "sha256:4a890bb06d4cd4a016a8949aa6ea6483d6ee9302cea0951fd9945a22cf1b5e78"}
   ],
   "actual_unpaid_limit_outcome": "CANNOT_DETERMINE",
   "nonclaims": [
