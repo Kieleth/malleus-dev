@@ -35,9 +35,6 @@ from malleus._contract_pipeline.check_contract import (
     parse_check_contract,
     resolve_core_builtin,
 )
-from malleus._contract_pipeline.check_contract import (
-    _operations_apply_atomically,
-)
 from malleus._contract_pipeline.knowledge import KnowledgeChangeHistory
 
 from tests.contract_compiler.pareto.test_atomic_population_admission import (
@@ -232,7 +229,7 @@ def test_the_registry_refuses_a_builtin_id_it_does_not_know() -> None:
     assert "holds no builtin check" in str(by_name.value)
 
     with pytest.raises(CheckContractError):
-        resolve_core_builtin(OPERATIONS_APPLY_ATOMICALLY, "2")
+        resolve_core_builtin(OPERATIONS_APPLY_ATOMICALLY, "3")
 
     document = _canonical(
         {
@@ -324,7 +321,12 @@ def test_the_candidate_change_carries_every_field_the_application_reads() -> Non
 
 
 def test_the_structural_builtin_is_the_only_one_core_ships() -> None:
-    assert set(CORE_BUILTIN_CHECKS) == {(OPERATIONS_APPLY_ATOMICALLY, "1")}
+    """Two versions of one builtin: 2 applies ``supersession_kind``, 1 refuses it."""
+
+    assert set(CORE_BUILTIN_CHECKS) == {
+        (OPERATIONS_APPLY_ATOMICALLY, "1"),
+        (OPERATIONS_APPLY_ATOMICALLY, "2"),
+    }
 
 
 @swipl
@@ -375,7 +377,7 @@ def test_the_structural_builtin_reports_violated_when_the_change_cannot_apply(
         target_id=None,
         supersedes_record_id="supplier-order-state:B:absent",
     )
-    outcome = _operations_apply_atomically(
+    outcome = resolve_core_builtin(OPERATIONS_APPLY_ATOMICALLY, "1")(
         CheckRequest(
             replay=replay,
             candidate=CandidateChange(

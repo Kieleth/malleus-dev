@@ -134,6 +134,10 @@ _SUPERSESSION_KIND_FIELD = "supersession_kind"
 TRANSITION = "TRANSITION"
 REVISION = "REVISION"
 _SUPERSESSION_KINDS = frozenset({TRANSITION, REVISION})
+OPERATIONS_APPLY_ATOMICALLY = "malleus.core.operations-apply-atomically"
+"""Core's structural builtin. Version 1 refuses ``supersession_kind``; version 2
+applies it. The version a history runs is the one its own policy requires."""
+SUPERSESSION_KIND_BUILTIN_VERSION = "2"
 _ANCHOR_FIELDS = frozenset(
     {
         "machine_payload",
@@ -177,6 +181,7 @@ class KnowledgeChangeRefusalReason(Enum):
     STALE_TARGET = auto()
     TYPE_CHANGE = auto()
     VALID_TIME_EXTENT = auto()
+    SUPERSESSION_KIND_NOT_SELECTED = auto()
 
 
 class KnowledgeChangeRefusal(ValueError):
@@ -3296,6 +3301,13 @@ class KnowledgeChangeHistory:
                     projection,
                     record_history,
                     change,
+                    # Read only when the change declares a kind, so a history
+                    # that never uses one pays nothing for the lookup.
+                    supersession_kinds=any(
+                        operation.supersession_kind is not None
+                        for operation in change.operations
+                    )
+                    and _selects_supersession_kinds(active_contract, retained),
                 )
                 self._validate_transition_rules(
                     active_contract,
@@ -3529,7 +3541,25 @@ class KnowledgeChangeHistory:
         before: KnowledgeGraph,
         before_history: Mapping[str, KnowledgeRecordHistory],
         change: KnowledgeChangeSet,
+        *,
+        supersession_kinds: bool,
     ) -> tuple[KnowledgeGraph, dict[str, KnowledgeRecordHistory]]:
+        """Apply one change set. ``supersession_kinds`` is whether the history
+        selected the builtin version that understands the kind field; without
+        it, an operation declaring a kind refuses before anything is applied."""
+
+        declared = sorted(
+            operation.record_id
+            for operation in change.operations
+            if operation.supersession_kind is not None
+        )
+        if declared and not supersession_kinds:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.SUPERSESSION_KIND_NOT_SELECTED,
+                f"this history does not require {OPERATIONS_APPLY_ATOMICALLY} "
+                f"version {SUPERSESSION_KIND_BUILTIN_VERSION}, so it admits no "
+                "declared supersession kind: " + ", ".join(declared),
+            )
         history = dict(before_history)
         retired: set[str] = set()
         historical: set[str] = set()
@@ -3666,6 +3696,43 @@ class KnowledgeChangeHistory:
                     KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL, str(error)
                 ) from error
         return staged, history
+
+
+def _selects_supersession_kinds(
+    contract: PartialEffectiveContract,
+    retained: Mapping[str, KnowledgeRetainedInput],
+) -> bool:
+    """Whether this contract's policies require the structural builtin at the
+    version that understands ``supersession_kind``.
+
+    Read from the history's own retained check-contract bytes under each
+    required identity, never from Core's shipped default, so a history keeps
+    the behaviour its policy recorded. A required check whose bytes are not
+    retained selects nothing.
+    """
+
+    required = {
+        identity
+        for _, policy in contract.normative_profile.policy_programs
+        for _, identity in policy.required_checks
+    }
+    for member in retained.values():
+        if member.identity not in required:
+            continue
+        try:
+            document = json.loads(member.content)
+        except (UnicodeDecodeError, ValueError):
+            continue
+        executor = document.get("executor") if isinstance(document, dict) else None
+        if (
+            isinstance(executor, dict)
+            and document.get("grammar") == "malleus.check-contract/v1"
+            and executor.get("kind") == "CORE_BUILTIN"
+            and executor.get("builtin_id") == OPERATIONS_APPLY_ATOMICALLY
+            and executor.get("builtin_version") == SUPERSESSION_KIND_BUILTIN_VERSION
+        ):
+            return True
+    return False
 
 
 def _revision_closes_a_period(

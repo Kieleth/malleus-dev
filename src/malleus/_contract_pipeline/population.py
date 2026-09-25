@@ -44,6 +44,7 @@ __all__ = (
     "OBJECT_EVENT_PROFILE",
     "SOURCE_ASSERTION_PROFILE",
     "STATE_VERSION_PROFILE",
+    "SUPPORTED_STATE_VERSION_PROFILES",
     "compile_population_plan",
     "prepare_population_change",
 )
@@ -798,7 +799,17 @@ def _shipped_profile(name: str) -> DomainHistoryProfile:
 
 
 SOURCE_ASSERTION_PROFILE = _shipped_profile("source-assertion")
-STATE_VERSION_PROFILE = _shipped_profile("state-version")
+STATE_VERSION_PROFILE = _shipped_profile("state-version-v2")
+#: The successor maps ``correction`` to ``REVISE_STATE_VERSION`` and keeps
+#: ``transition`` at ``SUPERSEDE_STATE_VERSION``, so the profile no longer says
+#: a revision equals a transition while Core tells them apart. Only that one
+#: value moved. The predecessor keeps its exact bytes: a history or plan that
+#: bound it still names it, and a transition program may pin its identity.
+#: Nothing selects a profile implicitly; new plans bind ``STATE_VERSION_PROFILE``.
+SUPPORTED_STATE_VERSION_PROFILES = (
+    _shipped_profile("state-version"),
+    STATE_VERSION_PROFILE,
+)
 OBJECT_EVENT_PROFILE = _shipped_profile("object-event")
 
 

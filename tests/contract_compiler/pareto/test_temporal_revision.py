@@ -1,9 +1,12 @@
 """T3, the first temporal Core cut: REVISION and TRANSITION, and the impact read.
 
 The specification is design/temporal/g4/RULINGS.md (R-01 to R-08, D-04, D-08).
-A supersession operation may declare its kind in an optional operation field
-(route A, R-07): ``TRANSITION`` (the world changed) or ``REVISION`` (our account
-of the record changed). An operation without the field keeps today's meaning.
+A supersession operation may declare its kind in an optional operation field:
+``TRANSITION`` (the world changed) or ``REVISION`` (our account of the record
+changed). An operation without the field keeps today's meaning. Built under
+route A; landed under route C (R-07): only a history whose policy requires the
+structural builtin at version 2, which the shipped default now does, admits the
+field (``test_structural_builtin_v2.py``).
 
 Expected answers come from the G1 specimens and the rulings, never from Core:
 g1-01 (``design/temporal/g1/g1-01-price-history.json``) for the timed case and
@@ -322,10 +325,11 @@ def _price_ids(replay) -> set[str]:
     }
 
 
-# --- persisted identity: route A moves nothing -------------------------------
+# --- persisted identity -------------------------------------------------------
 
 # Read from Core at 837908ba, before this cut, on the legacy build below: g1-01
-# K1 and K2 with K2 an operation without the kind field.
+# K1 and K2 with K2 an operation without the kind field. Route C moved the
+# shipped default; these are the version-1 predecessors, still supported.
 LEGACY_LEDGER = (
     "sha256:703550536c24197ddeaa8436689fb9bb0b8305372861904c5c0eeab1af73ac2a",
     423819,
@@ -336,18 +340,49 @@ STRUCTURAL_CHECK = "sha256:b923c279024e7a2cf18fab86b2e9e80e8f5afecbd8e7da83be437
 STATE_VERSION = "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"
 
 
-def test_an_operation_without_the_kind_field_writes_the_same_bytes_as_before(
+def test_an_operation_without_the_kind_field_moves_identities_only(
     tmp_path, price_contract
 ):
+    """Under the version-2 default, the same inputs give the same records and
+    graph as the version-1 history; only the ledger bytes and receipt move."""
+
     build = _price_history(tmp_path, price_contract, k2_kind=None)
-    assert _ledger(build.history) == LEGACY_LEDGER
-    assert build.history.replay().receipt.identity == LEGACY_RECEIPT
-    assert api.STRUCTURAL_HISTORY_BUNDLE.identity == STRUCTURAL_BUNDLE
-    assert api.STRUCTURAL_HISTORY_BUNDLE.check_contract_identity == STRUCTURAL_CHECK
-    assert api.STATE_VERSION_PROFILE.identity == STATE_VERSION
-    # The same bytes reopen and replay under this Core.
-    reopened = api.KnowledgeChangeHistory.reopen(build.history.path).replay()
-    assert reopened.receipt.identity == LEGACY_RECEIPT
+    assert _ledger(build.history) != LEGACY_LEDGER
+    assert build.history.replay().receipt.identity != LEGACY_RECEIPT
+    assert api.STRUCTURAL_HISTORY_BUNDLE.identity != STRUCTURAL_BUNDLE
+    assert api.STRUCTURAL_HISTORY_BUNDLE.check_contract_identity != STRUCTURAL_CHECK
+    assert api.STATE_VERSION_PROFILE.identity != STATE_VERSION
+
+    (v1,) = [
+        b for b in api.SUPPORTED_STRUCTURAL_HISTORY_BUNDLES if b.identity == STRUCTURAL_BUNDLE
+    ]
+    legacy = Build.__new__(Build)
+    legacy.history = api.create_structural_history(
+        tmp_path / "legacy.jsonl",
+        compilation=price_contract,
+        transaction_time=TX,
+        actor_id=ACTOR,
+        bundle=v1,
+    )
+    legacy.positions, legacy.replays = {}, {}
+    legacy.step(
+        "K1",
+        [_entity(PRICE["product:P"]), _entity(PRICE["account:reported-price"]), _entity(PRICE["r1"])],
+        _instant("2026-05-01T00:00:00Z"),
+        sources=("src:r1",),
+    )
+    legacy.step(
+        "K2",
+        [_entity(PRICE["r2"])],
+        _instant("2026-05-12T00:00:00Z"),
+        sources=("src:r2",),
+        supersede={"r2": ("r1", None)},
+    )
+    assert _ledger(legacy.history) == LEGACY_LEDGER
+    new, old = build.history.replay(), legacy.history.replay()
+    assert new.graph.state_digest() == old.graph.state_digest()
+    assert new.graph.export_records() == old.graph.export_records()
+    assert dict(new.record_history) == dict(old.record_history)
 
 
 def test_an_operation_without_the_kind_field_keeps_todays_history(tmp_path, price_contract):
@@ -634,6 +669,7 @@ from tests.contract_compiler.pareto.test_atomic_population_admission import (  #
     swipl,
 )
 from tests.contract_compiler.pareto.test_check_contract_executor import (  # noqa: E402
+    BUILTIN_CONTRACT,
     _two_check_history,
 )
 
@@ -642,7 +678,16 @@ from tests.contract_compiler.pareto.test_check_contract_executor import (  # noq
 def test_a_revision_of_a_closed_period_refuses_under_a_rule_layer(tmp_path):
     """Custom rules read the current graph only (CHECK-SCOPE-02, R-04)."""
 
-    history, _, _ = _two_check_history(tmp_path)
+    history, _, _ = _two_check_history(
+        tmp_path,
+        check_contract_bytes=json.dumps(
+            {**json.loads(BUILTIN_CONTRACT), "executor": {
+                **json.loads(BUILTIN_CONTRACT)["executor"], "builtin_version": "2"
+            }},
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode(),
+    )
 
     def compose(change_set_id, record, valid, target=None, kind=None):
         return history.compose_change_set(

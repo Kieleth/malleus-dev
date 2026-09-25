@@ -1,0 +1,13 @@
+{
+  "check_contract_id": "malleus.structural-admission/v1",
+  "executor": {
+    "builtin_id": "malleus.core.operations-apply-atomically",
+    "builtin_version": "2",
+    "kind": "CORE_BUILTIN"
+  },
+  "grammar": "malleus.check-contract/v1",
+  "outcomes": [
+    "SATISFIED",
+    "VIOLATED"
+  ]
+}

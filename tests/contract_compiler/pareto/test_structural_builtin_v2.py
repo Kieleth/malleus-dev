@@ -26,6 +26,7 @@ import pytest
 import malleus.compiler as api
 from tests.contract_compiler.pareto.test_temporal_revision import (
     ACTOR,
+    G3_CONTRACTS,
     LEGACY_LEDGER,
     LEGACY_RECEIPT,
     PRICE,
@@ -37,12 +38,16 @@ from tests.contract_compiler.pareto.test_temporal_revision import (
     _entity,
     _instant,
     _ledger,
-    _operation,
-    price_contract,  # noqa: F401  (fixture)
+    _compile,
 )
 
 
 BUILTIN = "malleus.core.operations-apply-atomically"
+
+
+@pytest.fixture(scope="module")
+def price_contract():
+    return _compile((G3_CONTRACTS / "g1-01.yaml").read_bytes())
 
 
 def _builtin_version(bundle) -> str:
@@ -76,7 +81,11 @@ class V1Build(Build):
 def _k1(build):
     build.step(
         "K1",
-        [_entity(PRICE["product:P"]), _entity(PRICE["account:reported-price"]), _entity(PRICE["r1"])],
+        [
+            _entity(PRICE["product:P"]),
+            _entity(PRICE["account:reported-price"]),
+            _entity(PRICE["r1"]),
+        ],
         _instant("2026-05-01T00:00:00Z"),
         sources=("src:r1",),
     )
@@ -102,11 +111,16 @@ def test_the_version_1_bundle_is_kept_with_its_exact_identities():
     v1 = _v1_bundle()
     assert _builtin_version(v1) == "1"
     assert v1.check_contract_identity == STRUCTURAL_CHECK
-    assert [_builtin_version(b) for b in api.SUPPORTED_STRUCTURAL_HISTORY_BUNDLES] == ["1", "2"]
+    assert [_builtin_version(b) for b in api.SUPPORTED_STRUCTURAL_HISTORY_BUNDLES] == [
+        "1",
+        "2",
+    ]
 
 
 def test_both_builtin_versions_are_held_and_no_other():
-    assert api.resolve_core_builtin(BUILTIN, "1") is not api.resolve_core_builtin(BUILTIN, "2")
+    assert api.resolve_core_builtin(BUILTIN, "1") is not api.resolve_core_builtin(
+        BUILTIN, "2"
+    )
     assert sorted(api.CORE_BUILTIN_CHECKS) == [(BUILTIN, "1"), (BUILTIN, "2")]
     with pytest.raises(api.CheckContractError):
         api.resolve_core_builtin(BUILTIN, "3")
@@ -114,7 +128,10 @@ def test_both_builtin_versions_are_held_and_no_other():
 
 def test_a_new_structural_history_retains_the_version_2_check(tmp_path, price_contract):
     history = api.create_structural_history(
-        tmp_path / "h.jsonl", compilation=price_contract, transaction_time=TX, actor_id=ACTOR
+        tmp_path / "h.jsonl",
+        compilation=price_contract,
+        transaction_time=TX,
+        actor_id=ACTOR,
     )
     retained = history.replay().retained_bytes("malleus:structural-admission-check/v1")
     assert retained == api.STRUCTURAL_HISTORY_BUNDLE.check_contract_bytes
@@ -137,15 +154,19 @@ def test_the_state_version_successor_tells_revision_from_transition():
     old = predecessor.change_semantics
     assert old["correction"] == old["transition"]
     # Only the correction mapping moved; every other field is the predecessor's.
-    assert {k: v for k, v in api.STATE_VERSION_PROFILE.data.items() if k != "change_semantics"} == {
-        k: v for k, v in predecessor.data.items() if k != "change_semantics"
-    }
+    assert {
+        k: v
+        for k, v in api.STATE_VERSION_PROFILE.data.items()
+        if k != "change_semantics"
+    } == {k: v for k, v in predecessor.data.items() if k != "change_semantics"}
 
 
 # --- a version-1 history -------------------------------------------------------
 
 
-def test_a_version_1_history_keeps_its_exact_bytes_and_replays(tmp_path, price_contract):
+def test_a_version_1_history_keeps_its_exact_bytes_and_replays(
+    tmp_path, price_contract
+):
     build = V1Build(tmp_path / "g1-01.jsonl", price_contract)
     _k1(build)
     build.step(
@@ -162,13 +183,17 @@ def test_a_version_1_history_keeps_its_exact_bytes_and_replays(tmp_path, price_c
 
 
 @pytest.mark.parametrize("kind", ["TRANSITION", "REVISION"])
-def test_a_version_1_history_refuses_a_kind_field_at_check(tmp_path, price_contract, kind):
+def test_a_version_1_history_refuses_a_kind_field_at_check(
+    tmp_path, price_contract, kind
+):
     build = V1Build(tmp_path / "g1-01.jsonl", price_contract)
     _k1(build)
     refusal = build.refused(
         "K2",
         [_entity(PRICE["r2"])],
-        _instant("2026-05-12T00:00:00Z" if kind == "TRANSITION" else "2026-05-01T00:00:00Z"),
+        _instant(
+            "2026-05-12T00:00:00Z" if kind == "TRANSITION" else "2026-05-01T00:00:00Z"
+        ),
         sources=("src:r2",),
         supersede={"r2": ("r1", kind)},
     )
@@ -255,5 +280,7 @@ def test_a_version_2_history_admits_a_declared_transition(tmp_path, price_contra
     )
     r1 = build.history.replay().record_history["r1"]
     assert [(c.kind, c.record_id) for c in r1.closings] == [("TRANSITION", "r2")]
-    retained = build.history.replay().retained_bytes("malleus:structural-admission-check/v1")
+    retained = build.history.replay().retained_bytes(
+        "malleus:structural-admission-check/v1"
+    )
     assert json.loads(retained)["executor"]["builtin_version"] == "2"

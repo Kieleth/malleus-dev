@@ -1,0 +1,20 @@
+{
+  "grammar": "malleus.policy-program/private-v0",
+  "outcome_verdicts": {
+    "SATISFIED": "ACCEPT",
+    "UNKNOWN": "DEFER",
+    "VIOLATED": "REJECT"
+  },
+  "policy_id": "malleus.structural-admission-policy/v1",
+  "precedence": [
+    "REJECT",
+    "DEFER",
+    "ACCEPT"
+  ],
+  "required_checks": [
+    {
+      "check_contract_id": "malleus.structural-admission/v1",
+      "check_contract_identity": "sha256:9c25c6db82ad6ddc29b6123b5b5592ea4cd07096102ac2b442b681de6b2cc8ca"
+    }
+  ]
+}

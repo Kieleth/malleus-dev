@@ -34,6 +34,7 @@ downstream of them. This step is additive, so the pinned form stands.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from functools import partial
 from enum import Enum
 from hashlib import sha256
 import json
@@ -41,6 +42,7 @@ from types import MappingProxyType
 from typing import Callable, Mapping
 
 from malleus._contract_pipeline.knowledge import (
+    OPERATIONS_APPLY_ATOMICALLY,
     KnowledgeChangeHistory,
     KnowledgeChangeRefusal,
     KnowledgeHistoryReplay,
@@ -156,22 +158,27 @@ class CheckOutcome:
     logic_result: LogicCheckResult | None = None
 
 
-OPERATIONS_APPLY_ATOMICALLY = "malleus.core.operations-apply-atomically"
-"""Apply the candidate's operations to the accepted state and digest the result.
+def _operations_apply_atomically(
+    request: CheckRequest, *, supersession_kinds: bool
+) -> CheckOutcome:
+    """Apply the candidate's operations to the accepted state and digest the result.
 
-The adopters call this ``OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE`` and
-implement it by calling ``KnowledgeChangeHistory._apply_change`` and reading
-``state_digest()`` off the projection. That is Core's own primitive read
-through an adopter's function, so it is Core work already.
-"""
+    The adopters call this ``OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE`` and
+    implement it by calling ``KnowledgeChangeHistory._apply_change`` and reading
+    ``state_digest()`` off the projection. That is Core's own primitive read
+    through an adopter's function, so it is Core work already.
 
+    Version 1 refuses an operation that declares ``supersession_kind``;
+    version 2 applies it (TRANSITION, REVISION). Each version's bytes and
+    behaviour stay fixed, so a history keeps the one its policy recorded.
+    """
 
-def _operations_apply_atomically(request: CheckRequest) -> CheckOutcome:
     try:
         projected, _ = KnowledgeChangeHistory._apply_change(
             request.replay.graph,
             request.replay.record_history,
             request.candidate,
+            supersession_kinds=supersession_kinds,
         )
     except KnowledgeChangeRefusal as error:
         return CheckOutcome(
@@ -191,7 +198,12 @@ def _operations_apply_atomically(request: CheckRequest) -> CheckOutcome:
 CORE_BUILTIN_CHECKS: Mapping[tuple[str, str], Callable[[CheckRequest], CheckOutcome]] = (
     MappingProxyType(
         {
-            (OPERATIONS_APPLY_ATOMICALLY, "1"): _operations_apply_atomically,
+            (OPERATIONS_APPLY_ATOMICALLY, "1"): partial(
+                _operations_apply_atomically, supersession_kinds=False
+            ),
+            (OPERATIONS_APPLY_ATOMICALLY, "2"): partial(
+                _operations_apply_atomically, supersession_kinds=True
+            ),
         }
     )
 )

@@ -151,6 +151,7 @@ from malleus._contract_pipeline.population import (
     PopulationTraceRefusalReason,
     SOURCE_ASSERTION_PROFILE,
     STATE_VERSION_PROFILE,
+    SUPPORTED_STATE_VERSION_PROFILES,
     compile_population_plan,
     population_retention_events,
     prepare_population_change,
@@ -231,11 +232,13 @@ class StructuralHistoryBundle:
     success_outcome: str
 
 
-def _load_structural_history_bundle() -> StructuralHistoryBundle:
+def _load_structural_history_bundle(
+    check_name: str, policy_name: str
+) -> StructuralHistoryBundle:
     machine_source, _ = _profile_resource("structural-history-machine.json")
-    policy_source, _ = _profile_resource("structural-admission-policy.json")
+    policy_source, _ = _profile_resource(policy_name)
     binding_source, _ = _profile_resource("structural-history-binding.json")
-    check_source, check = _profile_resource("structural-admission-check.json")
+    check_source, check = _profile_resource(check_name)
     try:
         contract = parse_check_contract(check_source)
     except CheckContractError as error:
@@ -292,14 +295,37 @@ def _load_structural_history_bundle() -> StructuralHistoryBundle:
     )
 
 
-STRUCTURAL_HISTORY_BUNDLE = _load_structural_history_bundle()
+STRUCTURAL_HISTORY_BUNDLE = _load_structural_history_bundle(
+    "structural-admission-check-v2.json", "structural-admission-policy-v2.json"
+)
+#: Moving the structural builtin to version 2 (it applies ``supersession_kind``)
+#: moved the check contract, the policy, the normative profile and this bundle.
+#: A history names the exact bundle it was created under, and each version's
+#: behaviour is fixed, so both are kept: a version-1 history keeps its bytes,
+#: replays and admits as recorded, and refuses the kind field. Nothing selects
+#: a bundle implicitly; new histories bind ``STRUCTURAL_HISTORY_BUNDLE``.
+SUPPORTED_STRUCTURAL_HISTORY_BUNDLES = (
+    _load_structural_history_bundle(
+        "structural-admission-check.json", "structural-admission-policy.json"
+    ),
+    STRUCTURAL_HISTORY_BUNDLE,
+)
+
+
+def _supported_bundle(bundle: object) -> StructuralHistoryBundle:
+    if not any(bundle is member for member in SUPPORTED_STRUCTURAL_HISTORY_BUNDLES):
+        raise KnowledgeChangeRefusal(
+            KnowledgeChangeRefusalReason.IDENTITY_MISMATCH,
+            "bundle must be one of SUPPORTED_STRUCTURAL_HISTORY_BUNDLES",
+        )
+    return bundle  # type: ignore[return-value]
 
 
 def _structural_normative_profile(
     program: ProtocolMachineProgram | None,
+    bundle: StructuralHistoryBundle = STRUCTURAL_HISTORY_BUNDLE,
 ) -> NormativeAdmissionProfile:
     """Permit only the explicit pure-rule extension of Core's exact machine."""
-    bundle = STRUCTURAL_HISTORY_BUNDLE
     if program is None:
         return bundle.normative_profile
     try:
@@ -414,8 +440,12 @@ def create_structural_history(
     transaction_time: str,
     actor_id: str,
     transition_program: ProtocolMachineProgram | None = None,
+    bundle: StructuralHistoryBundle = STRUCTURAL_HISTORY_BUNDLE,
 ) -> KnowledgeChangeHistory:
     """Create a history under Core's structural policy and optional pure rules.
+
+    ``bundle`` is ``STRUCTURAL_HISTORY_BUNDLE`` unless the caller names another
+    member of ``SUPPORTED_STRUCTURAL_HISTORY_BUNDLES``; it is never inferred.
 
     ``transition_program`` may select the private-v1 admission-rule section on
     the exact installed structural machine. Other machine changes refuse. Its
@@ -426,7 +456,8 @@ def create_structural_history(
 
     if not isinstance(compilation, ValidatedContractCompilation):
         raise TypeError("compilation must be a ValidatedContractCompilation")
-    normative_profile = _structural_normative_profile(transition_program)
+    bundle = _supported_bundle(bundle)
+    normative_profile = _structural_normative_profile(transition_program, bundle)
     ledger_path = Path(path)
     if ledger_path.exists() and ledger_path.stat().st_size:
         raise KnowledgeChangeRefusal(
@@ -441,7 +472,7 @@ def create_structural_history(
         ledger_path,
         partial_contract=partial,
         contract_view=compilation.view,
-        binding=STRUCTURAL_HISTORY_BUNDLE.history_binding,
+        binding=bundle.history_binding,
     )
     artifacts = (
         (
@@ -456,12 +487,12 @@ def create_structural_history(
         ),
         (
             "malleus:bootstrap:knowledge-history-binding",
-            STRUCTURAL_HISTORY_BUNDLE.history_binding.canonical_bytes,
+            bundle.history_binding.canonical_bytes,
             "KNOWLEDGE_HISTORY_BINDING",
         ),
         (
             "malleus:structural-admission-check/v1",
-            STRUCTURAL_HISTORY_BUNDLE.check_contract_bytes,
+            bundle.check_contract_bytes,
             "RETAINED_EVIDENCE",
         ),
     )
@@ -510,14 +541,21 @@ def admit_structural_change(
             PopulationPlanRefusalReason.MALFORMED_PLAN,
             "NO_DOMAIN_CHANGE has no change set to admit",
         )
-    selected = _structural_normative_profile(
-        history.partial_contract.normative_profile.protocol_machine_program
-    )
-    if (
-        history.partial_contract.normative_profile.identity != selected.identity
-        or history.binding.identity
-        != STRUCTURAL_HISTORY_BUNDLE.history_binding.identity
-    ):
+    # The history's own bundle, found by the identity it recorded; the events
+    # below name that bundle's policy and check, never the shipped default's.
+    bundle = None
+    program = history.partial_contract.normative_profile.protocol_machine_program
+    for member in SUPPORTED_STRUCTURAL_HISTORY_BUNDLES:
+        try:
+            selected = _structural_normative_profile(program, member)
+        except KnowledgeChangeRefusal:
+            continue
+        if (
+            history.partial_contract.normative_profile.identity == selected.identity
+            and history.binding.identity == member.history_binding.identity
+        ):
+            bundle = member
+    if bundle is None:
         raise KnowledgeChangeRefusal(
             KnowledgeChangeRefusalReason.IDENTITY_MISMATCH,
             "history does not use the structural admission bundle or its pure-rule extension",
@@ -528,7 +566,7 @@ def admit_structural_change(
             KnowledgeChangeRefusalReason.STALE_BASE,
             "population preparation is stale against the current history",
         )
-    policy = STRUCTURAL_HISTORY_BUNDLE.policy_program
+    policy = bundle.policy_program
     proposal_id = f"proposal:{change.change_set_id}:structural-admission"
     events = (
         _machine_event(
@@ -541,9 +579,9 @@ def admit_structural_change(
         ),
         _machine_event(
             "CHECK_RECORDED",
-            check_contract_id=STRUCTURAL_HISTORY_BUNDLE.check_contract_id,
-            check_contract_identity=STRUCTURAL_HISTORY_BUNDLE.check_contract_identity,
-            outcome=STRUCTURAL_HISTORY_BUNDLE.success_outcome,
+            check_contract_id=bundle.check_contract_id,
+            check_contract_identity=bundle.check_contract_identity,
+            outcome=bundle.success_outcome,
             policy_identity=policy.identity,
             proposal_id=proposal_id,
             receipt_id=f"receipt:{change.change_set_id}:structural-admission",
@@ -739,7 +777,9 @@ __all__ = (
     "REQUIRED_CHECK_POLICY_REFERENCE",
     "SOURCE_ASSERTION_PROFILE",
     "STATE_VERSION_PROFILE",
+    "SUPPORTED_STATE_VERSION_PROFILES",
     "STRUCTURAL_HISTORY_BUNDLE",
+    "SUPPORTED_STRUCTURAL_HISTORY_BUNDLES",
     "StructuralHistoryBundle",
     "SourceBoundaryRefusal",
     "SourceRefusalReason",

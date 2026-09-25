@@ -1498,10 +1498,13 @@ def _expected_check_result(
         projected = replay.graph_at_change(change.change_set_id)
     else:
         try:
+            # This check declares the version-1 algorithm, which admits no
+            # declared supersession kind.
             projected, _ = KnowledgeChangeHistory._apply_change(
                 replay.graph,
                 replay.record_history,
                 change,
+                supersession_kinds=False,
             )
         except KnowledgeChangeRefusal as error:
             raise _refuse(
