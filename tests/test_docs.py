@@ -2730,7 +2730,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     assert milestone_link in normalized_readme
     assert (
         "Public here means a supported import path and installed command in "
-        "Malleus 0.14.0, not a stable wire format." in normalized_readme
+        "Malleus 0.15.0, not a stable wire format." in normalized_readme
     )
     for current_readme_claim in (
         "warehouse record plus a separate inventory lookup",
