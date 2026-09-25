@@ -87,3 +87,32 @@ Why, from CORRECTION-RESEARCH-01.md (commit a608f598):
   by adding a record, never by removing one; PROV-O's wasInvalidatedBy means no
   longer usable, not false. A general correction that adds a successor and keeps
   the target in history matches that. [literature]
+
+## R-05, 2026-09-24: the first cut includes an extracted impact read
+
+Dependencies are extracted after the fact from the ontology, the ledger and the
+KG, not declared per use. The first cut includes a read-only query, "what refers
+to this exact version", over ontology-typed references (slots whose range is a
+record class) across the whole history, followed backwards transitively, which
+states what it cannot see: uses never recorded in the ledger, what a rule read,
+and query scopes. No identity moves and no kg.py change for it.
+
+Luis asked: "isn't 'what depends on this' extractable from the semantic ledger
+or even the KG itself, and not a priori?" Then: "yes".
+
+Why, from code read on 2026-09-24 (not yet probed):
+- A slot whose range is a class and is not inlined is a typed reference in the
+  compiled contract (view.py around 584); the ontology marks it once, so no use
+  needs its own declaration.
+- Such a reference is a node property, not a graph edge (kg.py create_entity and
+  create_relation, around 560 to 605); the retirement block in kg.py 169 to 184
+  applies to edges only, so a reference to r1 does not block correcting r1.
+- Correction to CORRECTION-RESEARCH-01 section D: "a historical use has to be a
+  typed relation, or the reverse read cannot find it" does not hold for typed
+  reference slots. G3 used string-ranged slots, which the ontology does not know
+  are references; that is why the dependency looked a priori.
+
+Gaps recorded for later decisions: Core does not check that a reference
+resolves (only a nonblank identifier); rule reads could be extracted by Core
+while a rule runs instead of declared (RULE_DECLARES_ITS_READS), unresearched;
+query scopes must be recorded when a use happens.
