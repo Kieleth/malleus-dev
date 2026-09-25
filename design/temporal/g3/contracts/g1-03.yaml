@@ -1,0 +1,47 @@
+# G3 contract for G1-03-COMPETING-ACCOUNTS. Periods [from, until) with a finite
+# until: from goes to Core valid time, until to stated_until (no Core field).
+id: https://example.malleus.dev/temporal-g3/g1-03
+name: temporal_g3_g1_03
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis, required: true}
+  account: {range: string}
+  evidence_refs: {range: string, multivalued: true}
+  stated_until: {range: datetime}
+  context_kind: {range: string, required: true}
+  basis_refs: {range: string, multivalued: true}
+  bindings: {range: InputBinding, multivalued: true, inlined: true, required: true}
+  parameter: {range: string, required: true}
+  assertion_ref: {range: string, required: true}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  InputBinding:
+    slots: [parameter, assertion_ref]
+  Subject:
+    is_a: Entity
+    slots: [label]
+  Account:
+    is_a: Entity
+    slots: [label]
+  Assertion:
+    is_a: Entity
+    slots: [subject, property, assertion_value, basis, account, evidence_refs, stated_until]
+  Context:
+    is_a: Entity
+    slots: [context_kind, basis_refs, bindings]

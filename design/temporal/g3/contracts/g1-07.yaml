@@ -1,0 +1,48 @@
+# G3 contract for G1-07-VALVE-PERSISTENCE. Reported openings and closings are Core
+# events (CREATE_EVENT); the persistence rule and the plan are plain records. A
+# reported event must cite evidence: `required` alone admits an empty list on the
+# compiled path, so exactly_one_of carries the refusal.
+id: https://example.malleus.dev/temporal-g3/g1-07
+name: temporal_g3_g1_07
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis, required: true}
+  evidence_refs: {range: string, multivalued: true, required: true}
+  semantics: {range: string, required: true}
+  scope_refs: {range: string, multivalued: true, required: true}
+  assumptions: {range: string, multivalued: true, required: true}
+  action: {range: string, required: true}
+  planned_for: {range: datetime, required: true}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  Subject:
+    is_a: Entity
+    slots: [label]
+  ReportedEvent:
+    is_a: Event
+    slots: [subject, property, assertion_value, basis, evidence_refs]
+    exactly_one_of:
+      - slot_conditions:
+          evidence_refs: {required: true}
+  PersistenceRule:
+    is_a: Entity
+    slots: [semantics, scope_refs, assumptions]
+  Plan:
+    is_a: Entity
+    slots: [subject, action, planned_for, evidence_refs]

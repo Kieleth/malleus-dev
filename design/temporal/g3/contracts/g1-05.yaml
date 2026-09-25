@@ -1,0 +1,65 @@
+# G3 contract for G1-05-CONDITIONAL-STATEMENT. Qualifiers are named typed-literal
+# slots; group membership is a multivalued slot on the group.
+id: https://example.malleus.dev/temporal-g3/g1-05
+name: temporal_g3_g1_05
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis}
+  evidence_refs: {range: string, multivalued: true}
+  q_role: {range: TypedLiteral, inlined: true}
+  q_approximate: {range: TypedLiteral, inlined: true}
+  q_datum: {range: TypedLiteral, inlined: true}
+  group_kind: {range: string, required: true}
+  member_refs: {range: string, multivalued: true, required: true}
+  version: {range: string, required: true}
+  implementation: {range: string, required: true}
+  formula: {range: string, required: true}
+  parameters: {range: string, multivalued: true, required: true}
+  model_ref: {range: string, required: true}
+  input_bindings: {range: InputBinding, multivalued: true, inlined: true, required: true}
+  parameter: {range: string, required: true}
+  assertion_ref: {range: string, required: true}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  InputBinding:
+    slots: [parameter, assertion_ref]
+  Subject:
+    is_a: Entity
+    slots: [label]
+  Assertion:
+    is_a: Entity
+    slots: [subject, property, assertion_value, basis, evidence_refs, q_role, q_approximate, q_datum]
+  Group:
+    is_a: Entity
+    slots: [group_kind, member_refs, evidence_refs]
+  Model:
+    is_a: Entity
+    slots: [version, implementation, formula, parameters]
+  Execution:
+    is_a: Entity
+    slots: [model_ref, input_bindings]
+  FollowsCitedModel:
+    is_a: Relation
+    slots: [basis, evidence_refs]
+  UsesModel:
+    description: An execution's model as a typed Core relation, so Core checks the model exists and is a Model.
+    is_a: Relation
+    slot_usage:
+      source_id: {range: Execution}
+      target_id: {range: Model}

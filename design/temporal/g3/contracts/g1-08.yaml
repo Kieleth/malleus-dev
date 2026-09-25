@@ -1,0 +1,73 @@
+# G3 contract for G1-08-STORAGE-CLOSURE. contract:c1 is this contract itself, which
+# Core binds at history creation. An assertion must cite evidence. `required` alone
+# does not refuse an empty list on the compiled path (view.py checks None and ""
+# only), so the exactly_one_of below is what refuses [] (it checks [] as missing).
+id: https://example.malleus.dev/temporal-g3/g1-08
+name: temporal_g3_g1_08
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  result_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis}
+  evidence_refs: {range: string, multivalued: true}
+  corrects: {range: string}
+  contract_ref: {range: string}
+  version: {range: string, required: true}
+  implementation: {range: string, required: true}
+  formula: {range: string, required: true}
+  parameters: {range: string, multivalued: true, required: true}
+  member_refs: {range: string, multivalued: true}
+  model_ref: {range: string, required: true}
+  execution_ref: {range: string, required: true}
+  input_bindings: {range: InputBinding, multivalued: true, inlined: true, required: true}
+  parameter: {range: string, required: true}
+  assertion_ref: {range: string, required: true}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  InputBinding:
+    slots: [parameter, assertion_ref]
+  Subject:
+    is_a: Entity
+    slots: [label, contract_ref]
+  Assertion:
+    is_a: Entity
+    slots: [subject, property, assertion_value, basis, evidence_refs, corrects, contract_ref]
+    slot_usage:
+      basis: {required: true}
+      evidence_refs: {required: true}
+    exactly_one_of:
+      - slot_conditions:
+          evidence_refs: {required: true}
+  Model:
+    is_a: Entity
+    slots: [version, implementation, formula, parameters, member_refs]
+  Execution:
+    is_a: Entity
+    slots: [model_ref, input_bindings]
+  Result:
+    is_a: Entity
+    slots: [execution_ref, result_value]
+  PartOf:
+    is_a: Relation
+    slots: [basis, evidence_refs, contract_ref]
+  UsesModel:
+    description: An execution's model as a typed Core relation, so Core checks the model exists and is a Model.
+    is_a: Relation
+    slot_usage:
+      source_id: {range: Execution}
+      target_id: {range: Model}

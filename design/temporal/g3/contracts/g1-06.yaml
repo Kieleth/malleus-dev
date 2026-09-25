@@ -1,0 +1,44 @@
+# G3 contract for G1-06-ALTERNATE-JUSTIFICATION. A1 is a Core relation; J1 and J2
+# name it through a string slot because a relation cannot be a relation endpoint.
+id: https://example.malleus.dev/temporal-g3/g1-06
+name: temporal_g3_g1_06
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis, required: true}
+  evidence_refs: {range: string, multivalued: true}
+  revises: {range: string}
+  q_uncertainty_value: {range: TypedLiteral, inlined: true}
+  q_uncertainty_kind: {range: TypedLiteral, inlined: true}
+  q_stated_assumption: {range: TypedLiteral, inlined: true}
+  premise_refs: {range: string, multivalued: true, required: true}
+  conclusion_ref: {range: string, required: true}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  Subject:
+    is_a: Entity
+    slots: [label]
+  Assertion:
+    is_a: Entity
+    slots: [subject, property, assertion_value, basis, evidence_refs, revises, q_uncertainty_value, q_uncertainty_kind]
+  Argument:
+    is_a: Entity
+    slots: [premise_refs, conclusion_ref]
+  ReportedApplication:
+    is_a: Relation
+    slots: [basis, evidence_refs, q_stated_assumption]

@@ -1,0 +1,69 @@
+# G3 contract for G1-02-ORDER-PREMISES. All domain time is NONE_STATED.
+id: https://example.malleus.dev/temporal-g3/g1-02
+name: temporal_g3_g1_02
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  result_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis, required: true}
+  account: {range: string}
+  evidence_refs: {range: string, multivalued: true}
+  corrects: {range: string}
+  version: {range: string, required: true}
+  implementation: {range: string, required: true}
+  formula: {range: string, required: true}
+  parameters: {range: string, multivalued: true, required: true}
+  context_kind: {range: string, required: true}
+  model_ref: {range: string, required: true}
+  context_ref: {range: string}
+  execution_ref: {range: string, required: true}
+  bindings: {range: InputBinding, multivalued: true, inlined: true, required: true}
+  input_bindings: {range: InputBinding, multivalued: true, inlined: true, required: true}
+  parameter: {range: string, required: true}
+  assertion_ref: {range: string, required: true}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  InputBinding:
+    slots: [parameter, assertion_ref]
+  Subject:
+    is_a: Entity
+    slots: [label]
+  Account:
+    is_a: Entity
+    slots: [label]
+  Assertion:
+    is_a: Entity
+    slots: [subject, property, assertion_value, basis, account, evidence_refs, corrects]
+  Model:
+    is_a: Entity
+    slots: [version, implementation, formula, parameters]
+  Context:
+    is_a: Entity
+    slots: [context_kind, model_ref, bindings]
+  Execution:
+    is_a: Entity
+    slots: [model_ref, context_ref, input_bindings]
+  Result:
+    is_a: Entity
+    slots: [execution_ref, result_value]
+  UsesModel:
+    description: An execution's model as a typed Core relation, so Core checks the model exists and is a Model.
+    is_a: Relation
+    slot_usage:
+      source_id: {range: Execution}
+      target_id: {range: Model}

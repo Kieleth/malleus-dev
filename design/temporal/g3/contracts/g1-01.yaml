@@ -1,0 +1,78 @@
+# G3 contract for G1-01-PRICE-HISTORY. Smallest carrier of the specimen's records.
+# Domain time is carried by Core's change-set valid time, not by a slot, except
+# stated_until: Core's KnowledgeValidTime has no interval end, so a finite end a
+# source states has nowhere else to go. Lexical forms are strings because the
+# compiler's trusted ranges have no decimal and float loses "5.40".
+id: https://example.malleus.dev/temporal-g3/g1-01
+name: temporal_g3_g1_01
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  result_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis, required: true}
+  account: {range: string}
+  evidence_refs: {range: string, multivalued: true}
+  corrects: {range: string}
+  stated_until: {range: datetime}
+  version: {range: string, required: true}
+  implementation: {range: string, required: true}
+  formula: {range: string, required: true}
+  parameters: {range: string, multivalued: true, required: true}
+  model_ref: {range: string, required: true}
+  execution_ref: {range: string, required: true}
+  input_bindings: {range: InputBinding, multivalued: true, inlined: true, required: true}
+  parameter: {range: string, required: true}
+  assertion_ref: {range: string, required: true}
+  selection_ledger_head: {range: string}
+  selection_ledger_event_count: {range: integer}
+  selection_valid_at: {range: datetime}
+  selection_account: {range: string}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  InputBinding:
+    slots: [parameter, assertion_ref, selection_ledger_head, selection_ledger_event_count, selection_valid_at, selection_account]
+  Subject:
+    is_a: Entity
+    slots: [label]
+  Account:
+    is_a: Entity
+    slots: [label]
+  Assertion:
+    is_a: Entity
+    slots: [subject, property, assertion_value, basis, account, evidence_refs, corrects, stated_until]
+  Model:
+    is_a: Entity
+    slots: [version, implementation, formula, parameters]
+  Execution:
+    is_a: Entity
+    slots: [model_ref, input_bindings]
+  Result:
+    is_a: Entity
+    slots: [execution_ref, result_value]
+  UsesInput:
+    description: Probe only. The same premise link as a typed Core relation.
+    is_a: Relation
+    slot_usage:
+      source_id: {range: Execution}
+      target_id: {range: Assertion}
+  UsesModel:
+    description: An execution's model as a typed Core relation, so Core checks the model exists and is a Model.
+    is_a: Relation
+    slot_usage:
+      source_id: {range: Execution}
+      target_id: {range: Model}

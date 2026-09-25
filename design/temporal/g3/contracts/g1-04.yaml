@@ -1,0 +1,36 @@
+# G3 contract for G1-04-UNKNOWN-TIME-DIAMETER.
+id: https://example.malleus.dev/temporal-g3/g1-04
+name: temporal_g3_g1_04
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  Basis:
+    permissible_values: {REPORTED: {}, ASSUMPTION: {}, CORRECTION: {}, INTERPRETATION: {}}
+slots:
+  label: {range: string, required: true}
+  subject: {range: string, required: true}
+  property: {range: string, required: true}
+  assertion_value: {range: TypedLiteral, inlined: true, required: true}
+  datatype: {range: string, required: true}
+  lexical: {range: string, required: true}
+  unit: {range: string}
+  basis: {range: Basis, required: true}
+  account: {range: string}
+  evidence_refs: {range: string, multivalued: true}
+  corrects: {range: string}
+classes:
+  TypedLiteral:
+    slots: [datatype, lexical, unit]
+  Subject:
+    is_a: Entity
+    slots: [label]
+  Account:
+    is_a: Entity
+    slots: [label]
+  Assertion:
+    is_a: Entity
+    slots: [subject, property, assertion_value, basis, account, evidence_refs, corrects]
