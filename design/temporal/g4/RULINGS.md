@@ -34,3 +34,21 @@ stays believed for its closed period. A correction records kind CORRECTION. The
 current graph keeps today's meaning: records not replaced.
 
 Luis: "correct, fully, indeed, next"
+
+## Direction D-04, 2026-09-24: correction is general; the narrow rule is refused as a design
+
+DECISION.md decision 4 (a correction covers exactly its target's period) is not
+accepted as the design. A correction can apply to anything that belongs to an
+entity in the KG. The design must not constrain by default what a correction
+may change. A first cut may prove a narrow case, and the more complex corrections
+go on the roadmap, but the shape is general. A correction may also need to ask
+the KG what depends on the corrected thing and re-derive that part of the graph.
+Paused for research before any ruling.
+
+Luis: "a correction can apply to 'anything' that belongs to an entity in the KG,
+therefore we should not prepare or constraint by default any application to a
+correction, if we need to start small, so be it, and narrow proof of this, and
+then we add to the roadmap other more complicated corrections, but as we design
+and build this, we need to keep in mind this is just the start, and 'correction'
+might need to query the kg for 'what things affect this specific correction
+'here' and go and recalculate/compute that part of the KG'"
