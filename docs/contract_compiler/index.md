@@ -232,7 +232,7 @@ DSL.
 
 ## Exact historical knowledge positions
 
-The unreleased `KnowledgeChangeHistory.replay_at` reads an earlier verified
+New in 0.15.0, `KnowledgeChangeHistory.replay_at` reads an earlier verified
 prefix without copying or truncating the ledger. Supply both the selected
 checkpoint and the expected checkpoint of the containing ledger:
 

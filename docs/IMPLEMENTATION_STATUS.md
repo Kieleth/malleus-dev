@@ -1,6 +1,6 @@
 # Implementation Status
 
-Malleus package version `0.14.0` implements the
+Malleus package version `0.15.0` implements the
 `stage-8c-executable-provenance-and-effect-closure` boundary.
 
 This is a capability boundary, not a claim that the research program is
@@ -40,7 +40,7 @@ instead of repeating event assembly. They do not read files, write history,
 admit knowledge or interpret sources. Existing `append_anchors` still owns
 atomic validation and persistence. Custom bindings remain unchanged.
 
-Version 0.14.0 exposes the reusable pieces through
+Version 0.15.0 exposes the reusable pieces through
 `malleus.compiler`: exact-source LinkML contract compilation, population-plan
 compilation, governed admission, reopen, replay, and the replayed graph's query
 methods. The installed `malleus-compiler contract` command covers contract
@@ -127,7 +127,7 @@ commits replace the file. Graph/index copies and canonical receipts still scale
 with state size. This is not constant-time admission, a disk checkpoint,
 multi-writer support or a second state authority.
 
-The unreleased `KnowledgeChangeHistory.replay_at` adds an exact historical
+New in 0.15.0, `KnowledgeChangeHistory.replay_at` adds an exact historical
 knowledge-position read. The caller supplies the selected head/count and the
 expected containing-ledger head/count. One snapshot is validated in full before
 the selected prefix is folded through the same executor. The result carries
@@ -138,7 +138,7 @@ refuse without writes. This is not a domain-time query, a new persisted grammar,
 same-period correction support or a claim that an arbitrary prefix was once a
 separate filesystem commit. Use checkpoints retained from completed calls.
 
-Unreleased (the T3 cut of `design/temporal/g4/RULINGS.md`, landed under route
+New in 0.15.0 (the T3 cut of `design/temporal/g4/RULINGS.md`, landed under route
 C with route D): a supersession operation may declare `supersession_kind`,
 `TRANSITION` or `REVISION`, as an optional operation field. Only a history whose
 policy requires Core's structural builtin `malleus.core.operations-apply-atomically`
@@ -947,6 +947,7 @@ ontology is `0.4.0`; the assent ontology is `0.11.0`.
 
 | Package | Boundary | Included work |
 |---|---|---|
+| `0.15.0` | `stage-8c-executable-provenance-and-effect-closure` | Same Assent stage; checks Core executes (check-contract grammar, structural builtin v1 and v2, `check_and_admit_*`, caller-supplied check events refused), declared `TRANSITION` and `REVISION` supersession, `ADD_ENUM` and check-contract re-binding in additive revision, exact historical reads, ontology-gap answers, hardened command-line reads, sdist packaging fix |
 | `0.14.0` | `stage-8c-executable-provenance-and-effect-closure` | Same Assent stage; public compiler/population/history facade, explicit profiles and packs, additive revision, maintained read projection, experimental finite-program attachment and Shop conformance evidence |
 | `0.1.0` | Initial typed graph | Root ontology, typed graph, compatibility hashing, optional domain verifier |
 | `0.2.0` | `stage-4-structural-staging` | Stages 2, 3, 7a, and 4 |

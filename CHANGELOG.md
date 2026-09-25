@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-09-25
+
+This release makes Core execute the checks a history records, and lets a
+history declare how one version replaces another. It adds transition and
+revision supersession under structural builtin version 2, `ADD_ENUM` and
+check-contract re-binding in additive revision, exact historical reads,
+recorded answers to declared ontology gaps, and a hardened command-line read
+surface. The standalone Assent stage is unchanged. Read Changed before
+upgrading: `admit` and `admit_with_anchors` now refuse caller-supplied check
+events, and new structural histories bind the version 2 identities.
+
 ### Fixed
 
 - The source distribution dropped three modules `malleus.compiler` imports.
@@ -58,6 +69,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   in 10, and reporting four further duplicate groups: the slots `claim_kind`
   and `unit`, and the classes `Claim` and `Evidence`, each re-declared by a
   pack beside an existing declaration.
+- Documented the optional `malleus.acquisition` interpretation-review coverage
+  checker in `docs/IMPLEMENTATION_STATUS.md`. It shipped with the work bound in
+  commit `25f94cbf` and was absent from the status document and from this file.
+  No stage, version or runtime behaviour changes.
+- Corrected `docs/IMPLEMENTATION_STATUS.md`, which named a Stage 8a helper
+  `source_artifact_fields_from_bytes`. The shipped name is
+  `malleus.source_artifact_fields`.
 
 ### Added
 
@@ -78,7 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   declaration, not only values of an existing one. A successor revision policy
   admits it; both earlier revision policies keep their exact identities in
   `SUPPORTED_CONTRACT_REVISION_POLICIES` and refuse it.
-- Unreleased exact historical compiler-history reads through
+- Exact historical compiler-history reads through
   `KnowledgeChangeHistory.replay_at`, binding both the selected prefix and the
   containing ledger. The result reconstructs the earlier contract, evidence,
   record history and receipt through the existing fold. It writes nothing and
@@ -418,16 +436,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CONTRACT_REVISION_POLICY.identity` moved because its declared change kinds
   now include `REBIND_CHECK_CONTRACT`. New revisions bind the new policy. No
   recorded revision needs rewriting; the superseded policy stays executable.
-
-### Fixed
-
-- Documented the optional `malleus.acquisition` interpretation-review coverage
-  checker in `docs/IMPLEMENTATION_STATUS.md`. It shipped with the work bound in
-  commit `25f94cbf` and was absent from the status document and from this file.
-  No stage, version or runtime behaviour changes.
-- Corrected `docs/IMPLEMENTATION_STATUS.md`, which named a Stage 8a helper
-  `source_artifact_fields_from_bytes`. The shipped name is
-  `malleus.source_artifact_fields`.
 
 ## [0.14.0] - 2026-09-08
 
