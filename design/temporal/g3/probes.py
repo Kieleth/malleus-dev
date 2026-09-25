@@ -187,7 +187,9 @@ def composed_record_trace(run: Run) -> dict:
 
 def shipped_profile_semantics() -> dict:
     return {
-        "state-version change_semantics": dict(api.STATE_VERSION_PROFILE.change_semantics),
+        # G3 measured Core at e7020879. The T3 landing shipped a successor
+        # state-version profile; the measured one is kept as the predecessor.
+        "state-version change_semantics": dict(api.SUPPORTED_STATE_VERSION_PROFILES[0].change_semantics),
         "object-event projection_rule_family": api.OBJECT_EVENT_PROFILE.projection_rule_family,
         "object-event change_semantics": dict(api.OBJECT_EVENT_PROFILE.change_semantics),
     }

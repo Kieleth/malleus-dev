@@ -268,6 +268,63 @@ sha256 `88c9e30a1cb9a0a0335d3437852861a92c138693fe1968fe7835d2f2445510f4`. It
 answers ROADMAP F4 and this section is its result. F1 landed on 2026-09-19; the
 open work is ROADMAP F3 and F5.
 
+## Revisions, transitions and who used a version
+
+Read this before changing supersession, record history, the structural builtin
+or the impact read. The rulings are `design/temporal/g4/RULINGS.md`, R-01 to
+R-11 (2026-09-24), with the research each rests on beside it in
+`design/temporal/`.
+
+**Two kinds of update, never merged.** A `TRANSITION` says the world changed:
+the target's valid period closes at the successor's start and the target stays
+our account of its own period. A `REVISION` says our account changed, given new
+evidence: the successor replaces the target's account over exactly the target's
+period, including a period a transition already closed. Nothing held is final
+(D-08, Luis: "we know as much as we know, and we're clear on what we do not
+know, until new evidence comes"). A revised version is "no longer the current
+account, given evidence E", never "wrong", and revising a revision is ordinary.
+Both kinds are declared on the operation, `KnowledgeOperation.supersession_kind`,
+and name their target; Core infers no target and guesses no kind for an
+undeclared closing (R-01, R-09).
+
+**Where it runs.** Only a history created under `STRUCTURAL_HISTORY_BUNDLE`,
+whose required check is the builtin `malleus.core.operations-apply-atomically`
+at version 2, admits the field. A version-1 history keeps its bytes, replays as
+recorded and refuses the field with `SUPERSESSION_KIND_NOT_SELECTED`.
+`SUPPORTED_STRUCTURAL_HISTORY_BUNDLES` holds both; nothing selects implicitly.
+A revision refuses `STALE_TARGET` (not the latest version of its line; a
+concurrency guard, not finality), `TYPE_CHANGE` and `VALID_TIME_EXTENT`, and
+`CUSTOM_POLICY_HISTORICAL_SCOPE` when it revises a closed period under a rule
+layer that cannot see history. Moving a period, withdrawal, identity merge or
+split, and ontology facts are not expressible yet: refusals by category, never
+a list of allowed fields (R-04).
+
+**Who used a version.** Dependencies are extracted from the ledger and the KG
+after the fact, not declared per use (R-05).
+`KnowledgeHistoryReplay.version_referrers` walks every version in history that
+names one exact version through a class-ranged, non-inlined slot or a relation,
+participation or signal endpoint, transitively, and returns
+`VERSION_REFERRERS_NOT_COVERED`: unrecorded uses, rule reads, query scopes and
+string-ranged slots. It reports; Core never recomputes (R-06). A rerun is a new
+execution admitted through the gate beside the old one.
+
+**Link kinds, the open work.** Today a relation is structure (it blocks
+retiring its endpoint until restated) and a class-ranged slot names an exact
+version (it does not block). That split is an accident of carrier. R-11 rules
+it a declared kind, `STRUCTURAL` or `VERSION`, inside contract identity, with
+today's carriers as the defaults, and requires amending OD-010
+(`design/contract_compiler/decisions.md`), which demands that every reference
+resolve in the current view and predates versions being records. Phase 1 (the
+amendment and resolving VERSION references against history) is the next Core
+cut; until it lands, a slot naming a record that never existed is admitted.
+Research: `HISTORICAL-USE-01.md`, `CARRIER-CONVENTION-01.md`.
+
+**A source record never carries another source's meaning** (R-10). New evidence
+about a statement refines an interpretation record that names the statement,
+not the statement's own annotation. Core does not enforce this: it admits a
+standard-deviation role written straight into a sentence annotation, and only
+the adopter's translation check stops it.
+
 ## Choose an adopter rule
 
 An adopter rule is one clause in a pinned Prolog rule file, required by the

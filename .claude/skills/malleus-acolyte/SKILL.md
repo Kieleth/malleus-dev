@@ -192,6 +192,40 @@ evidence or register reviews. If that selected capability is unavailable, report
 the missing enforcement rather than substituting a compiler pass or silently
 claiming a manually reviewed result was mechanically checked.
 
+### Recording that the world changed versus that our account changed
+
+When a later source changes what you hold, declare which it is on the
+supersession operation (`supersession_kind`), in a history created under the
+current `STRUCTURAL_HISTORY_BUNDLE`:
+
+- `TRANSITION`: the world changed. "The price became 800 on 12 May." The old
+  record stays your account of its own period.
+- `REVISION`: your account changed, given new evidence. "It was 775 from 1 to
+  12 May, not 750." Name the exact record revised and cite the evidence. The old
+  version stays readable as "no longer the current account", never "wrong", and
+  `replay_at` an earlier position still reads exactly what was held then.
+
+Always name the target; Core never infers it. A revision keeps its target's
+type and period; moving a period, withdrawing a record, merging or splitting
+identities and ontology facts refuse by category until Core supports them.
+
+Keep your reading of a source beside the source, not inside it. The annotation
+or record of what a source said stays what it said. Put your interpretation in
+its own record with a class-ranged slot naming the source record, and revise
+that record when evidence from elsewhere refines it. Worked case: the UMR
+refinement of a marine thickness estimate, `research/umr_thin_slice/REFINEMENT-SPEC-05.md`
+on the UMR branch.
+
+To find what relied on a version, call
+`KnowledgeHistoryReplay.version_referrers(record_id)`. It follows class-ranged
+slots and relation endpoints backwards through all of history and lists what it
+cannot see. Record a use of an exact version (an execution's input, an
+application of an estimate) as a record with a class-ranged slot naming that
+version: today a relation into a record blocks revising it until the relation is
+restated, and restating a use onto the new version claims a use that never
+happened. Declared link kinds (`STRUCTURAL` or `VERSION`) are ruled but not yet
+built; until then Core does not check that a slot's target exists.
+
 ## Where the knowledge lives (probe capability, never assume presence)
 
 An installed `malleus` may be current, stale (old malleus-dev releases

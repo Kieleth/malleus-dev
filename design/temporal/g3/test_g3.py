@@ -236,7 +236,9 @@ def test_builtin_version_bump_file_counts(gate):
         "normative profile": (0, 4),
         "structural history bundle": (0, 6),
     }
-    assert gate["blast"]["C"]["today's builtin registry on the bumped version"].startswith("Core holds no builtin check")
+    # At e7020879 the registry held no version 2. Route C landed it with T3
+    # (core/t3-enum-integration), so the same probe now finds it held.
+    assert gate["blast"]["C"]["today's builtin registry on the bumped version"] == "HELD"
 
 
 def test_state_version_profile_change_file_counts(gate):
