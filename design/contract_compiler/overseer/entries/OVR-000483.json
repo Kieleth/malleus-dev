@@ -4,27 +4,107 @@
   "sequence": 483,
   "entry_id": "OVR-000483",
   "entry_type": "DOCUMENT_REVISION",
-  "recorded_at": "2026-09-24T20:54:42Z",
-  "actor": {"id": "core-temporal", "type": "OVERSEER"},
-  "subject": {"id": "temporal-core-historical-read", "type": "DOCUMENT"},
-  "summary": "Record the isolated unreleased historical-position reader, its bounded documentation and temporal controls. No admission or persisted-wire semantics change.",
-  "why": "Luis authorized the temporal Core workstream with synthetic examples and TDD. T2 restores a selected prefix through the existing fold, including its old evidence and contract, while validating the containing ledger. This is a branch-local document revision, not main integration, a release, or completion of correction/domain-time semantics. The branch ledger must be reconciled with the owning ledger before integration; this number reserves no shared-main entry.",
+  "recorded_at": "2026-09-25T15:47:44Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "temporal-revision-core-2026-09-25",
+    "type": "DOCUMENT"
+  },
+  "summary": "Land temporal revisions (T3) and ADD_ENUM in Core under the structural builtin version 2, with the successor state-version profile.",
+  "why": "Luis ruled R-01 to R-11 (design/temporal/g4/RULINGS.md): a supersession declares TRANSITION or REVISION, names its target, and Core infers nothing; version_referrers extracts who used a version; Core never recomputes. R-07 required route C with route D before main: builtin malleus.core.operations-apply-atomically v2 applies supersession_kind, v1 keeps its bytes and refuses it, new histories bind STRUCTURAL_HISTORY_BUNDLE, and state-version-v2 separates REVISE from SUPERSEDE. ADD_ENUM (2026-09-23 candidate) lets a live history add a new enum under a successor revision policy. Luis: land T3 with ADD_ENUM in one pass.",
+  "previous_entry_hash": "sha256:c47a2db104bebf3cd2209868774c0a9197dcf0580793b94aa4ef7529b45aaff4",
   "references": [
-    {"relation": "DEFINES", "type": "DOCUMENT", "target": "design/temporal/CONTRACT-01.md"},
-    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"}
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "c856e75444d5494e79a0d46e50687dcc384ff362"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
   ],
   "data": {
-    "affected_ids": ["CC-R11"],
+    "affected_ids": [
+      "CC-R11"
+    ],
     "documents": [
-      {"path": ".claude/skills/malleus-dev/references/CAPABILITIES.md", "change": "MODIFIED", "before_digest": "sha256:a1e4dbde0df8e340d8a69117ebe9308a7b998b1b80a7e731cefc2f8b3940fd34", "after_digest": "sha256:8a0cb90583079362d67b35a085a88225f898d5b6a8715062a7097c922d6c5196"},
-      {"path": "CHANGELOG.md", "change": "MODIFIED", "before_digest": "sha256:8ec694ecb535553d6082cad08baa31a672866ee1ed83163ed32fd82609ae23d6", "after_digest": "sha256:ea2388ea8cfc0e11a80e94c59cdfbd5fa2126fd002b03e114fae39cf3492a83c"},
-      {"path": "docs/IMPLEMENTATION_STATUS.md", "change": "MODIFIED", "before_digest": "sha256:9af12ce6efd46ab9891059176ab464bd54f05d916b11adb5bd77122eb45f4789", "after_digest": "sha256:6c13a7a51500f56e4d9165e3496e50f2639a53977efdd2b7c53500181ce3749a"},
-      {"path": "docs/contract_compiler/index.md", "change": "MODIFIED", "before_digest": "sha256:9e0ae5a84478e414f79b5c60500e4c8f9db8cd30a31a1ffa0bf39ebb82fd6262", "after_digest": "sha256:c0e4890283ff57861f04a2930bf74b96184ebe8fd62cd0a78c5e4fb447969382"},
-      {"path": "src/malleus/_contract_pipeline/knowledge.py", "change": "MODIFIED", "before_digest": "sha256:e4bac3ccf1c2da4cff4c03c7e02eb0574bb4f7d211eab49a701b4338ed6b712c", "after_digest": "sha256:dc1e26104a920516aa6898f8a94139e958a1c81c42da700cff2a3e99ff31d9a5"},
-      {"path": "tests/contract_compiler/pareto/test_temporal_history.py", "change": "CREATED", "after_digest": "sha256:db7fed2ce785a4ab4e4e8b2532c8809de63d0cd2d5e946d8816ed91dfe836232"},
-      {"path": "tests/contract_compiler/pareto/test_historical_position.py", "change": "CREATED", "after_digest": "sha256:53b7a762a066eb4a6ba0909a662723229de7285dbfb640af3fcc8e3c065afa58"}
+      {
+        "path": "src/malleus/_contract_pipeline/admission.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:df52f876665c96923e97dd3c5dd8f2f49f51cf7659651240b31d30ba31fc1729",
+        "after_digest": "sha256:ffdca3d6577fb6bbf473efbb57bde1f9372fb5b2f05b57530bec9c2cd927014f"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/check_contract.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:9b28134f2b29340340c6371217cffce73ddef946dbe861f629648a59373059ca",
+        "after_digest": "sha256:fe7105dadf6d09c8f421dc421ae35a8a0228a65b7c761805f6e60b945d8ef7b0"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e4bac3ccf1c2da4cff4c03c7e02eb0574bb4f7d211eab49a701b4338ed6b712c",
+        "after_digest": "sha256:625de38c5420a663ae9120d5da532bc8e993be1708445920b11974538df004d1"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/population.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:5a0f32e40fe3f988a3cf6008e2a9ce32de93fd840af5da31c3699eae8a6a5b0b",
+        "after_digest": "sha256:b711010f3e8b4faf9bfd68275a96bfedbf6d41ce04ca608fe978bac450905880"
+      },
+      {
+        "path": "src/malleus/_contract_pipeline/revision.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:e3bc83a7800ef0bb7157af0941cfd0484dfce5a743db24476650ada11f6d5332",
+        "after_digest": "sha256:b2d20092bb1f9fb7fd5c3c20fc06f9aa187321bbd14a06cb04eea9f1de4ff51f"
+      },
+      {
+        "path": "src/malleus/compiler.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:1c31e27c035a050772871582d92523ea4dd3a05bd667835eee0e280a6adbedbb",
+        "after_digest": "sha256:b27aa49ab498b0d95f2778df835bc76f8b5338f317c8c1efcd9241b3f69698de"
+      },
+      {
+        "path": "src/malleus/profiles/state-version-v2.json",
+        "change": "CREATED",
+        "after_digest": "sha256:79c69dc3494f923241ac0f8fa0672b94f1a4ea1b999cda5d34a92131eb927aaf"
+      },
+      {
+        "path": "src/malleus/profiles/structural-admission-check-v2.json",
+        "change": "CREATED",
+        "after_digest": "sha256:2db9bc66aba0f8550bbae1c88f45b10d65d7d75778347197d78455170efad9c1"
+      },
+      {
+        "path": "src/malleus/profiles/structural-admission-policy-v2.json",
+        "change": "CREATED",
+        "after_digest": "sha256:959f2127759def440dc26ba6f11552668934e5f2e4575e3245246951a96e2026"
+      },
+      {
+        "path": "design/temporal/g4/RULINGS.md",
+        "change": "CREATED",
+        "after_digest": "sha256:4f7039ffad914d13d915f047ec409a9d94be438f94a68ac5ef359c4879b4e444"
+      },
+      {
+        "path": "design/temporal/README.md",
+        "change": "CREATED",
+        "after_digest": "sha256:24fde20cda0a80c6b2fe3848f9c5ce1538ae64817f7f04399a04d09cb371c58c"
+      },
+      {
+        "path": "handover/2026-09-23-core-new-enum-revision.md",
+        "change": "CREATED",
+        "after_digest": "sha256:7c329aef305d39b1c573e24d8d3696168bb6df2a186be25875ab3c571222eb11"
+      },
+      {
+        "path": "handover/2026-09-24-t3-enum-integration.md",
+        "change": "CREATED",
+        "after_digest": "sha256:71bc73da678e618347ef5b738143ad5975635376ce7ed98d88bdba92420bc500"
+      }
     ]
   },
-  "previous_entry_hash": "sha256:c47a2db104bebf3cd2209868774c0a9197dcf0580793b94aa4ef7529b45aaff4",
-  "entry_hash": "sha256:7cc8f789b170674ec763a233041c2b58453606e4eb78f7c916f55b7debf1f951"
+  "entry_hash": "sha256:5439d86d8c6654f2a1a3cf5d725972f8fc05f15ba7be48243b3147fe95072d6c"
 }

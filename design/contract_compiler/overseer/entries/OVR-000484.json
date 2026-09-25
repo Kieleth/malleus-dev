@@ -1,0 +1,111 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "ledger": "overseer",
+  "sequence": 484,
+  "entry_id": "OVR-000484",
+  "entry_type": "DOCUMENT_REVISION",
+  "recorded_at": "2026-09-25T15:47:44Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "temporal-revision-tests-2026-09-25",
+    "type": "DOCUMENT"
+  },
+  "summary": "Govern the tests that prove temporal revisions, the historical-position read, builtin v2 and ADD_ENUM, and the tests adapted to the successor artifacts.",
+  "why": "Each test was written RED before its behaviour: 19 T3 tests (17 failing first), 10 route C/D tests (9 failing first), 12 ADD_ENUM tests (7 failing first), and the T2 historical-position tests. The adapted tests follow the successor bundle and profile without weakening any assertion; the predecessor artifacts stay supported and tested for replay.",
+  "previous_entry_hash": "sha256:5439d86d8c6654f2a1a3cf5d725972f8fc05f15ba7be48243b3147fe95072d6c",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "c856e75444d5494e79a0d46e50687dcc384ff362"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "tests/contract_compiler/pareto/test_historical_position.py",
+        "change": "CREATED",
+        "after_digest": "sha256:53b7a762a066eb4a6ba0909a662723229de7285dbfb640af3fcc8e3c065afa58"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_new_enum_revision.py",
+        "change": "CREATED",
+        "after_digest": "sha256:65d797ed23c5dc652fe6453b18a7b944ad54605230a2036abae243580da7702e"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_structural_builtin_v2.py",
+        "change": "CREATED",
+        "after_digest": "sha256:336a05c46f321db6781685f400f7cf6df9cb13baa410b0b2676b94ef4921204d"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_temporal_check_scope.py",
+        "change": "CREATED",
+        "after_digest": "sha256:7a3ddb5f35d801c9b49b5fdb9cc06caa3f7721bab890831d93713e9d12f05b3f"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_temporal_history.py",
+        "change": "CREATED",
+        "after_digest": "sha256:db7fed2ce785a4ab4e4e8b2532c8809de63d0cd2d5e946d8816ed91dfe836232"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_temporal_revision.py",
+        "change": "CREATED",
+        "after_digest": "sha256:cc34965d53f78ac9ec7cb01d738ae2afaa22a8603787d60a137bcc196416125a"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_check_contract_executor.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d5c712de27dd405c7d947ca6d39607a4fed2580d505226c938c6facddeee0fb7",
+        "after_digest": "sha256:47bdcb2746778c6285b25b6919c755ae4aee7d0cf0537fcd22c23fdb96242726"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_check_contract_rebinding.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c0573d2c0ead48022a619b422f8a225ccfcb6b10bcd9f5bf1f06981ce2085ffe",
+        "after_digest": "sha256:45883769c8c02c96fb5ee90d397630a4a7c500d71dbe94a77dbd1f4c957411c9"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_contract_revision.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:63210031c87e3b6fb101904d13250019c9ec0a1a133b4a19b15723539d7ff615",
+        "after_digest": "sha256:356405664599410053bf3f7b26fecb422b871bb16ae983afffda5bfde38a767e"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_domain_history_profile.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d2c60c1049313a46be25db131f9aa7a0075b6f0f8592420b377f4729f9c4ffba",
+        "after_digest": "sha256:5c47b49b13982c3ee8a0bdac7ab2a1e79e174818a67bb8914abf169fa2fa42ba"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_governed_population.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:d71ef53f7a1f3fa3c96e0225e04cc76f4abae33c222597c02dc8cafff43a5f86",
+        "after_digest": "sha256:6f21d28d4f9b4e64956dfb0191c748caa1c59be294c841a3edca4adb3d83e45f"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_ontology_gap_answer.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:6316aa9b7f9b46ac359e9f67f4659a9b171b6ad4e71921553b1348fe0d954bc6",
+        "after_digest": "sha256:c7982a6196cffa761d9f6b94ce29c86c1decc71bd933e3ab27fe261d3b803ac9"
+      },
+      {
+        "path": "tests/contract_compiler/pareto/test_population_plan.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a3a3dbb32fef15bf6ede09eb2528c7025825b230aaf2d9969445af91436f65d3",
+        "after_digest": "sha256:25cea8e612f72047658c822971a84bf5859458e7d80da9792cf8f0e038be6958"
+      }
+    ]
+  },
+  "entry_hash": "sha256:3c6ab83cb63c6aa2a21ab16016542b8adcc078e96e881c67a35e0ffe5d699a23"
+}

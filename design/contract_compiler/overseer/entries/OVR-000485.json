@@ -1,0 +1,117 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "ledger": "overseer",
+  "sequence": 485,
+  "entry_id": "OVR-000485",
+  "entry_type": "DOCUMENT_REVISION",
+  "recorded_at": "2026-09-25T15:47:44Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "temporal-revision-adopters-docs-2026-09-25",
+    "type": "DOCUMENT"
+  },
+  "summary": "Adopters follow the successor artifacts, and the skills, capability declaration and status describe temporal revisions and the version impact read.",
+  "why": "The skill rule: a Core change adapts every adopter in the same branch. The Shop's five plans now bind state-version-v2 and a successor evidence generation was cut through its producers with graphs, record histories and state digests equal. The malleus-dev skill gains the revisions section, the acolyte the adopter how-to (Luis asked that others can understand the capability), and CAPABILITIES, IMPLEMENTATION_STATUS and the compiler docs describe what ships.",
+  "previous_entry_hash": "sha256:3c6ab83cb63c6aa2a21ab16016542b8adcc078e96e881c67a35e0ffe5d699a23",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "c856e75444d5494e79a0d46e50687dcc384ff362"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:3e4df9c4d0b2803d146293c8af0b1461baaa1a593011a754550fdf6c5b667805",
+        "after_digest": "sha256:04532e2f4f069016466f02400a034f2313786ded93c91fa6e6cc2aad2342f648"
+      },
+      {
+        "path": ".claude/skills/malleus-dev/SKILL.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:75ee7ec845c078fcf9a5df391e624ed15c1ba4f4e6ef476e32ef7910479cffbd",
+        "after_digest": "sha256:9623c708dcf75282515d6f9325e7c7109fa0f08022b9f9059132e05f104e8a90"
+      },
+      {
+        "path": ".claude/skills/malleus-dev/references/CAPABILITIES.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:a1e4dbde0df8e340d8a69117ebe9308a7b998b1b80a7e731cefc2f8b3940fd34",
+        "after_digest": "sha256:1fc2d97f3014ce3d0ec2515788260886ce12152339868c4db8e407c29ee895f2"
+      },
+      {
+        "path": "docs/IMPLEMENTATION_STATUS.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:9af12ce6efd46ab9891059176ab464bd54f05d916b11adb5bd77122eb45f4789",
+        "after_digest": "sha256:35fab0f22566dcf4a2897d386d3af0afda2b15cb06bbcdcb344255169dc9a023"
+      },
+      {
+        "path": "docs/contract_compiler/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:9e0ae5a84478e414f79b5c60500e4c8f9db8cd30a31a1ffa0bf39ebb82fd6262",
+        "after_digest": "sha256:56226347e192a38e4282e21e6203287d345aa6753a25714192f3928246e7a483"
+      },
+      {
+        "path": "docs/reference/index.md",
+        "change": "MODIFIED",
+        "before_digest": "sha256:661b47dacd62cf874a4b73835ab43e7f0888b4c4f309379401874cc8dc3c3adf",
+        "after_digest": "sha256:c9ef53f19834fe98d8b3b4f29c5e3ba3fed0e2794289aa0f7b8dabf2e79f7a48"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/evidence_assertions.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:81a690dcdc15b32465abcb676973116cf24c9ff4a7baa48f0b4c8e62d0d68726",
+        "after_digest": "sha256:f6f1b6737bcb297c013a6f9bd3eb130f3a1d09cfad8f93de5fdd974b50835311"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/invoice-base.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:25162819510ffb6ec29906131326cfdade031420597910d8ce12fb87d7ae5a8f",
+        "after_digest": "sha256:d64447306d1b2290dd82c2301f14fd900aaff7d1021f59f00bb3bc384978f32d"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/payment-e30.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:c5360838a5937ab6f3ee29f1158d2cf3449b9737e7277fdee2b19f894421fcd7",
+        "after_digest": "sha256:95dd395da805e598931834f5d7d59c73652db495c13554c92edf0b78143213ce"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/ret010.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:8d17eabd1e70750d571fb544723ef2a9757e2822ce35ad6c4b4a8e50e271f6f9",
+        "after_digest": "sha256:44f8e5bd6977e88ce8a53ec31e4384c34c5901c1a1c579768a8da438e6bc2686"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e4.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:14305547560d6ec0b48b552be85f0ac4b2bb7061d6edfcd8172ab148793afbd0",
+        "after_digest": "sha256:94a9378a26c0db37b8ed0f4ffbb31c335b3a3080c5ea84dacccd38323e5ae4ab"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:1e9bf84f703730f92eccb1734ccb954e72a040fd451022eef8cc5e19f6ba729d",
+        "after_digest": "sha256:dede449702b99c73ce6654a7bc86c147b879e3d8bb53b998fcbece796b1b2524"
+      },
+      {
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/test_current_evidence.py",
+        "change": "MODIFIED",
+        "before_digest": "sha256:83f5a3e0cd75c273013b64b8a552cc4d165c79085b1d3562f8b3f00742c22a83",
+        "after_digest": "sha256:81229a93c641d7d1bd3c6500e55ef9a84025417e6b422073b1ba1859a5f9cf16"
+      }
+    ]
+  },
+  "entry_hash": "sha256:cc4b04688f2195a401e584dc2bb552ee7f891739727f610a11c8cdbf6b44bedc"
+}
