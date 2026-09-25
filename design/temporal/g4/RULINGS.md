@@ -165,3 +165,18 @@ carries the why, and a reason field may be added when a consumer needs it.
 Wherever R-04 says CORRECTION, read REVISION.
 
 Luis: "go, agreed"
+
+## R-09, 2026-09-24: an undeclared closing is not guessed
+
+A REVISION whose target was closed by a supersession that declared no kind
+refuses as STALE_TARGET. Core does not infer whether an undeclared supersession
+was a transition or a revision. "For now": revisit if a consumer needs to revise
+histories written before the kinds existed.
+
+Luis: "refuse for now"
+
+Built in T3 (837cb7ea) and presented without objection, not separately ruled:
+undeclared supersessions record no closing; a revision of a closed period under
+a PROLOG_RULES policy refuses CUSTOM_POLICY_HISTORICAL_SCOPE; the impact read
+also follows inlined values and event-participation endpoints; its position is
+the change set id; r2 keeps supersedes_record_id r1.
