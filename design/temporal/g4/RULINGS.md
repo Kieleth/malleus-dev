@@ -153,3 +153,15 @@ Consequences proposed, pending confirmation: the kind is named for what changed,
 not for being right; a revised version is "no longer the current account given
 evidence E", never "wrong"; revising a revision is ordinary; the stale-target
 refusal is about concurrency (revise the latest version), not finality.
+
+## R-08, 2026-09-24: the kinds are REVISION and TRANSITION
+
+The kind that replaces our account of a record is named REVISION (PROV-O
+wasRevisionOf), not CORRECTION. A revised version is "no longer the current
+account, given evidence E", never "wrong". Revising a revision is ordinary; the
+stale-target refusal concerns concurrency only. TRANSITION (the world changed)
+stays a separate kind. Added detail is not a third kind now; the cited evidence
+carries the why, and a reason field may be added when a consumer needs it.
+Wherever R-04 says CORRECTION, read REVISION.
+
+Luis: "go, agreed"
