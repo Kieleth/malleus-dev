@@ -25,3 +25,12 @@ them in sync is going to be a total nightmare"
 Consequence: G2b (SQLite) stays as research evidence only. The "index under A"
 option in DECISION.md is withdrawn as an external tool; any future speed-up must
 be derived inside Core from the ledger.
+
+## R-03, 2026-09-24: what a transition records (DECISION.md decision 3)
+
+A transition closes its target's valid period at its own start, as Core does
+today, and the history records that the closing kind was TRANSITION. The target
+stays believed for its closed period. A correction records kind CORRECTION. The
+current graph keeps today's meaning: records not replaced.
+
+Luis: "correct, fully, indeed, next"
