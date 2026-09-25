@@ -1119,7 +1119,7 @@ The plan the adapter emits for it:
   "grammar": "malleus.population-plan/private-v0",
   "history_profile": {
     "profile_id": "state-version",
-    "sha256": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"
+    "sha256": "sha256:5f6bd9ebab38f7a0ee1070ef9718b7b9b99124e34e9c42fa00b7fd30cd450d51"
   },
   "plan_id": "plan:project:orders:1",
   "records": {

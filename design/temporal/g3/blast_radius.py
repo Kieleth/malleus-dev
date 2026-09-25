@@ -41,9 +41,25 @@ def profile_json(name: str) -> dict:
     return json.loads(files("malleus").joinpath("profiles", name).read_bytes())
 
 
+# G3 measured from the bundle shipped at BASE. Since route C landed, that is the
+# version-1 predecessor, which Core keeps in SUPPORTED_STRUCTURAL_HISTORY_BUNDLES
+# with its exact identity; the default moved to version 2. Select it by its
+# builtin version, never by position or a typed digest.
+BASE_BUNDLE = next(
+    bundle
+    for bundle in api.SUPPORTED_STRUCTURAL_HISTORY_BUNDLES
+    if json.loads(bundle.check_contract_bytes)["executor"]["builtin_version"] == "1"
+)
+BASE_STATE_VERSION = next(
+    profile
+    for profile in api.SUPPORTED_STATE_VERSION_PROFILES
+    if profile.change_semantics["correction"] == profile.change_semantics["transition"]
+)
+
+
 def bundle_identity(check: dict, policy_bytes: bytes) -> dict:
     """The structural bundle's identity chain, composed the way compiler.py composes it."""
-    bundle = api.STRUCTURAL_HISTORY_BUNDLE
+    bundle = BASE_BUNDLE
     check_bytes = canonical(check)
     policy = api.PolicyProgram.from_bytes(policy_bytes)
     normative = api.compose_normative_profile(
@@ -72,7 +88,7 @@ def bundle_identity(check: dict, policy_bytes: bytes) -> dict:
 
 
 def shipped() -> dict:
-    bundle = api.STRUCTURAL_HISTORY_BUNDLE
+    bundle = BASE_BUNDLE
     return {
         "check contract": bundle.check_contract_identity,
         "structural admission policy": bundle.policy_program.identity,
@@ -80,7 +96,7 @@ def shipped() -> dict:
         "structural history bundle": bundle.identity,
         "protocol machine": bundle.protocol_machine_program.identity,
         "history binding": bundle.history_binding.identity,
-        "state-version profile": api.STATE_VERSION_PROFILE.identity,
+        "state-version profile": BASE_STATE_VERSION.identity,
         "source-assertion profile": api.SOURCE_ASSERTION_PROFILE.identity,
         "object-event profile": api.OBJECT_EVENT_PROFILE.identity,
         "contract revision policy": api.CONTRACT_REVISION_POLICY.identity,
@@ -120,7 +136,7 @@ def scenarios(change_set) -> dict:
     grammar = change_set.data["grammar"]
 
     # A. One optional operation field, same grammar string, same builtin version.
-    bundle_bytes = api.STRUCTURAL_HISTORY_BUNDLE.canonical_bytes
+    bundle_bytes = BASE_BUNDLE.canonical_bytes
     out["A"] = {
         "change": "an optional operation field (for example a declared correction link), emitted only when set; grammar string and builtin version unchanged",
         "moved": [],
@@ -170,7 +186,7 @@ def scenarios(change_set) -> dict:
     compilation = compile_contract("g1-01")
     partial_before = api.compose_partial_effective_contract(
         validated_fact_set_sha256=compilation.artifact.validated_fact_set_sha256,
-        normative_profile=api.STRUCTURAL_HISTORY_BUNDLE.normative_profile,
+        normative_profile=BASE_BUNDLE.normative_profile,
     ).identity
     partial_after = api.compose_partial_effective_contract(
         validated_fact_set_sha256=compilation.artifact.validated_fact_set_sha256,
@@ -193,7 +209,7 @@ def scenarios(change_set) -> dict:
     }
 
     # D. The state-version profile distinguishes correction from transition.
-    profile = json.loads(api.STATE_VERSION_PROFILE.canonical_bytes)
+    profile = json.loads(BASE_STATE_VERSION.canonical_bytes)
     profile["change_semantics"]["correction"] = "CORRECT_STATE_VERSION"
     moved_profile = api.DomainHistoryProfile.from_data(profile).identity
     out["D"] = {

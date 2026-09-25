@@ -3542,11 +3542,14 @@ class KnowledgeChangeHistory:
         before_history: Mapping[str, KnowledgeRecordHistory],
         change: KnowledgeChangeSet,
         *,
-        supersession_kinds: bool,
+        supersession_kinds: bool = False,
     ) -> tuple[KnowledgeGraph, dict[str, KnowledgeRecordHistory]]:
         """Apply one change set. ``supersession_kinds`` is whether the history
         selected the builtin version that understands the kind field; without
-        it, an operation declaring a kind refuses before anything is applied."""
+        it, an operation declaring a kind refuses before anything is applied.
+        It defaults to the version-1 behaviour, the one that admits nothing
+        new, so a caller that does not say so (the research correction runner
+        implements the version-1 algorithm this way) cannot admit a kind."""
 
         declared = sorted(
             operation.record_id

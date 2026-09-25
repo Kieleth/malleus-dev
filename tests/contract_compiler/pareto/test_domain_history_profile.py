@@ -78,7 +78,7 @@ SOURCE_ASSERTION_PROFILE_DATA = {
 STATE_VERSION_PROFILE_DATA = {
     "change_semantics": {
         "addition": "ADD_STATE_VERSION",
-        "correction": "SUPERSEDE_STATE_VERSION",
+        "correction": "REVISE_STATE_VERSION",
         "retraction": "NOT_ADMITTED",
         "transition": "SUPERSEDE_STATE_VERSION",
     },
@@ -187,7 +187,12 @@ def test_three_full_profiles_are_public_canonical_and_explicit(
         role: tuple(types) for role, types in data["ontology_roles"].items()
     }
     assert profile.projection_rule_family == data["projection_rule_family"]
-    artifact = ROOT / "src/malleus/profiles" / f"{profile.profile_id}.json"
+    # The state-version default is a successor file; the predecessor keeps the
+    # plain name and its bytes (SUPPORTED_STATE_VERSION_PROFILES).
+    name = (
+        "state-version-v2" if symbol == "STATE_VERSION_PROFILE" else profile.profile_id
+    )
+    artifact = ROOT / "src/malleus/profiles" / f"{name}.json"
     assert json.loads(artifact.read_bytes()) == data
     with pytest.raises(TypeError):
         profile.time_semantics["domain_time"] = "changed"
@@ -218,11 +223,18 @@ def test_state_version_profile_names_the_small_shop_history_rules() -> None:
     assert profile.semantic_unit == "STATE_VERSION"
     assert profile.change_semantics == {
         "addition": "ADD_STATE_VERSION",
-        "correction": "SUPERSEDE_STATE_VERSION",
+        "correction": "REVISE_STATE_VERSION",
         "retraction": "NOT_ADMITTED",
         "transition": "SUPERSEDE_STATE_VERSION",
     }
     assert profile.projection_rule_family == "CURRENT_NON_SUPERSEDED_RECORDS"
+    # The predecessor, which equated the two, is kept with its exact bytes.
+    predecessor = deepcopy(STATE_VERSION_PROFILE_DATA)
+    predecessor["change_semantics"]["correction"] = "SUPERSEDE_STATE_VERSION"
+    assert [p.canonical_bytes for p in _api().SUPPORTED_STATE_VERSION_PROFILES] == [
+        _canonical(predecessor),
+        profile.canonical_bytes,
+    ]
 
 
 def test_object_event_profile_is_declared_without_claiming_event_admission() -> None:

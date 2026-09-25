@@ -52,7 +52,7 @@ from tests.contract_compiler.pareto.test_validated_contract import (
 
 PROFILE_IDENTITIES = {
     "source-assertion": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
-    "state-version": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3",
+    "state-version": "sha256:5f6bd9ebab38f7a0ee1070ef9718b7b9b99124e34e9c42fa00b7fd30cd450d51",
 }
 NEUTRAL_PROFILE_DATA = json.loads(PROFILE_BYTES)
 MULTIVALUED_CONTRACT = b"""\

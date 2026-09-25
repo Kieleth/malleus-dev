@@ -75,6 +75,7 @@ P2_SYMBOLS = frozenset(
         "PopulationPreparation",
         "SOURCE_ASSERTION_PROFILE",
         "STATE_VERSION_PROFILE",
+        "SUPPORTED_STATE_VERSION_PROFILES",
         "prepare_population_change",
     }
 )
