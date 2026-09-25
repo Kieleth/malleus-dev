@@ -235,6 +235,7 @@ def test_revision_policy_keeps_import_in_grammar_but_refuses_it() -> None:
     assert policy.grammar == "malleus.contract-revision-policy/private-v0"
     assert policy.change_kinds == (
         "ADD_CLASS",
+        "ADD_ENUM",
         "ADD_ENUM_VALUE",
         "ADD_IMPORT",
         "ADD_SLOT",
@@ -242,6 +243,7 @@ def test_revision_policy_keeps_import_in_grammar_but_refuses_it() -> None:
     )
     assert policy.admitted_change_kinds == (
         "ADD_CLASS",
+        "ADD_ENUM",
         "ADD_ENUM_VALUE",
         "ADD_SLOT",
         "REBIND_CHECK_CONTRACT",
@@ -349,7 +351,8 @@ def test_one_history_replays_records_across_one_contract_revision(
                 depends_on=(),
             ),
         ),
-        order="event:1",    )
+        order="event:1",
+    )
     revision, revised, revised_partial = _compose_revision(history, REVISED_SOURCE)
 
     after_revision = history.record_contract_revision(
@@ -382,7 +385,8 @@ def test_one_history_replays_records_across_one_contract_revision(
             ),
         ),
         order="event:2",
-        supersedes=(first.change_set_id,),    )
+        supersedes=(first.change_set_id,),
+    )
     reopened = KnowledgeChangeHistory.reopen(history.path).replay()
 
     assert isinstance(revision, revision_type)

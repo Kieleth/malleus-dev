@@ -854,6 +854,7 @@ def test_a_re_pin_without_an_ontology_change_cannot_be_expressed(
 def test_the_revision_policy_declares_the_new_change_kind() -> None:
     assert compiler.CONTRACT_REVISION_POLICY.change_kinds == (
         "ADD_CLASS",
+        "ADD_ENUM",
         "ADD_ENUM_VALUE",
         "ADD_IMPORT",
         "ADD_SLOT",
@@ -861,13 +862,14 @@ def test_the_revision_policy_declares_the_new_change_kind() -> None:
     )
     assert compiler.CONTRACT_REVISION_POLICY.admitted_change_kinds == (
         "ADD_CLASS",
+        "ADD_ENUM",
         "ADD_ENUM_VALUE",
         "ADD_SLOT",
         "REBIND_CHECK_CONTRACT",
     )
 
 
-def test_both_revision_policies_stay_supported_so_recorded_revisions_replay(
+def test_original_revision_policy_stays_supported_so_recorded_revisions_replay(
     tmp_path: Path,
 ) -> None:
     """A ledger written before this change carries the superseded policy.
@@ -877,14 +879,16 @@ def test_both_revision_policies_stay_supported_so_recorded_revisions_replay(
     revision recorded under the superseded policy still replays.
     """
 
-    superseded, current = compiler.SUPPORTED_CONTRACT_REVISION_POLICIES
+    superseded = compiler.contract_revision_policy(
+        "sha256:05b6880517ae8287333973e421248e2eb803c2f50569adcea26ca114d154ce8e"
+    )
+    current = compiler.CONTRACT_REVISION_POLICY
     assert superseded.change_kinds == (
         "ADD_CLASS",
         "ADD_ENUM_VALUE",
         "ADD_IMPORT",
         "ADD_SLOT",
     )
-    assert current is compiler.CONTRACT_REVISION_POLICY
     assert superseded.identity != current.identity
 
     history, _, partial, policy, _, _ = _history(tmp_path)
@@ -925,7 +929,9 @@ def test_both_revision_policies_stay_supported_so_recorded_revisions_replay(
 
 
 def test_the_superseded_policy_cannot_carry_a_re_binding(tmp_path: Path) -> None:
-    superseded, _ = compiler.SUPPORTED_CONTRACT_REVISION_POLICIES
+    superseded = compiler.contract_revision_policy(
+        "sha256:05b6880517ae8287333973e421248e2eb803c2f50569adcea26ca114d154ce8e"
+    )
     history, _, partial, _, logic, _ = _history(tmp_path)
     target, repinned = _target(tmp_path)
     target_partial = compiler.compose_partial_effective_contract(

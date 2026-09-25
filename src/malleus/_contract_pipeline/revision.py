@@ -25,8 +25,9 @@ from malleus.migration import MigrationError, MigrationReceipt, TOTAL
 _POLICY_GRAMMAR = "malleus.contract-revision-policy/private-v0"
 _REVISION_GRAMMAR = "malleus.contract-revision/private-v0"
 _REBIND = "REBIND_CHECK_CONTRACT"
-_KINDS = ("ADD_CLASS", "ADD_ENUM_VALUE", "ADD_IMPORT", "ADD_SLOT", _REBIND)
+_KINDS = ("ADD_CLASS", "ADD_ENUM", "ADD_ENUM_VALUE", "ADD_IMPORT", "ADD_SLOT", _REBIND)
 _CLASS = FACT_NAMESPACE + "Class"
+_ENUM = FACT_NAMESPACE + "Enum"
 _SLOT = FACT_NAMESPACE + "Slot"
 _SLOT_USE = FACT_NAMESPACE + "SlotUse"
 _ENUM_VALUE = FACT_NAMESPACE + "enumValue"
@@ -176,7 +177,8 @@ _SUPERSEDED_POLICY_DECISIONS = (
     ("ADD_IMPORT", "REFUSE"),
     ("ADD_SLOT", "ADMIT"),
 )
-_POLICY_DECISIONS = _SUPERSEDED_POLICY_DECISIONS + ((_REBIND, "ADMIT"),)
+_REBIND_POLICY_DECISIONS = _SUPERSEDED_POLICY_DECISIONS + ((_REBIND, "ADMIT"),)
+_POLICY_DECISIONS = tuple(sorted(_REBIND_POLICY_DECISIONS + (("ADD_ENUM", "ADMIT"),)))
 
 
 def _revision_policy(
@@ -195,12 +197,13 @@ def _revision_policy(
 
 CONTRACT_REVISION_POLICY = _revision_policy(_POLICY_DECISIONS)
 #: Declaring a new change kind moves the revision policy's own digest, and a
-#: recorded revision names the exact policy it was compiled under. Both are
+#: recorded revision names the exact policy it was compiled under. All are
 #: therefore executable: a revision declares one, and Core runs that one for it.
 #: Nothing selects a policy implicitly; new revisions bind
 #: ``CONTRACT_REVISION_POLICY``.
 SUPPORTED_CONTRACT_REVISION_POLICIES = (
     _revision_policy(_SUPERSEDED_POLICY_DECISIONS),
+    _revision_policy(_REBIND_POLICY_DECISIONS),
     CONTRACT_REVISION_POLICY,
 )
 
@@ -874,11 +877,13 @@ def _derive_changes(
         if item.get("predicate") == RDF_TYPE
     }
     new_classes = _new_kind(added_keys, kinds, _CLASS)
+    new_enums = _new_kind(added_keys, kinds, _ENUM)
     new_slots = _new_kind(added_keys, kinds, _SLOT)
     new_slot_uses = _new_kind(added_keys, kinds, _SLOT_USE)
     values = _fact_values(after.values())
     changes = {
         *(ContractRevisionChange("ADD_CLASS", item, None) for item in new_classes),
+        *(ContractRevisionChange("ADD_ENUM", item, None) for item in new_enums),
         *(ContractRevisionChange("ADD_SLOT", item, None) for item in new_slots),
         *(
             ContractRevisionChange(
@@ -895,7 +900,7 @@ def _derive_changes(
         slot = _required_text(values[slot_use].get(_USES_SLOT), "slot-use slot")
         if owner not in new_classes and slot not in new_slots:
             changes.add(ContractRevisionChange("ADD_SLOT", owner, slot))
-    covered = new_classes | new_slots | new_slot_uses
+    covered = new_classes | new_enums | new_slots | new_slot_uses
     if any(
         item["subject"] not in covered and item["predicate"] != _ENUM_VALUE
         for item in added
