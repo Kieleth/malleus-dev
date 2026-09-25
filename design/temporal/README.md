@@ -1,5 +1,11 @@
 # Temporal Core workstream
 
+Forward note, 2026-09-24: gate G4 is written. [g4/DECISION.md](g4/DECISION.md) is
+the memo for the author's choice of representation and first Core cut;
+[g4/COMPARISON.md](g4/COMPARISON.md) holds the cross-witness table, the paper
+assessment of a native temporal store, specimen defects and triaged open choices.
+Nothing is selected until the author decides.
+
 Status: implementation paused for bitemporal design research, 2026-09-24.
 Isolated development; no integration or release claim.
 
