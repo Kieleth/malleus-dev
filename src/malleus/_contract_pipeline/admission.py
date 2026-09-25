@@ -73,6 +73,7 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeHistoryReplay,
     KnowledgeOperation,
     KnowledgeValidTime,
+    _revision_closes_a_period,
     _staged_properties,
 )
 from malleus._contract_pipeline.machine import execute_event
@@ -576,6 +577,28 @@ def _check_stage(
         for event_type in ("CHANGE_PROPOSED", "CHECK_RECORDED", "VERDICT_RECORDED")
     }
     provenance = _provenance(contracts, plan, retained_source_texts)
+    historical = {
+        operation.record_id
+        for operation in operations
+        if _revision_closes_a_period(operation, replay.record_history)
+    }
+    if historical and any(
+        contract.executor_kind is CheckExecutorKind.PROLOG_RULES
+        for contract in contracts
+    ):
+        # A revision of a closed period never enters the current graph, and an
+        # adopter's rules read the current graph only (CHECK-SCOPE-02). Core
+        # cannot yet say what such a rule means over a closed period, so it
+        # refuses rather than admit a version no rule has read (R-04). The
+        # staged candidate graph below is read by rule layers only, so no
+        # rule ever sees a historical successor as current.
+        raise _refuse(
+            PopulationAdmissionStage.CHECK,
+            "CUSTOM_POLICY_HISTORICAL_SCOPE",
+            "a revision of a closed period cannot be checked by a rule layer that "
+            "reads the current graph: " + ", ".join(sorted(historical)),
+            unchanged=True,
+        )
     request = CheckRequest(
         replay=replay,
         candidate=CandidateChange(

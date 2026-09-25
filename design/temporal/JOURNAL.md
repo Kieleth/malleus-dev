@@ -410,3 +410,66 @@ consumer edit. All 12 file digests and two block digests match the inspected
 inputs. Local document links and whitespace checks pass; T2 runtime digest is
 unchanged. No full Core or consumer suite was rerun, commit made, branch moved,
 integration performed or release claimed.
+
+## TEMP-012: T3 cut, REVISION and TRANSITION kinds and the impact read, 2026-09-24
+
+Built on `codex/core-temporal` from 837908ba under route A (R-07), RED then
+GREEN. Specification: `g4/RULINGS.md` R-01 to R-08. Protocol role:
+OPTIONAL_PROFILE semantic-history; the impact read is a
+REFERENCE_IMPLEMENTATION under it. Histories without the kind field keep their
+meaning, so the lowest affected profile omits nothing for them.
+
+Commands, from the worktree:
+
+    export PYTHONPATH=$PWD/src:$PWD
+    python -m pytest tests/contract_compiler/pareto/test_temporal_revision.py -q
+    python -m pytest design/temporal/g3/test_g3.py design/temporal/g1 -q
+    python -m pytest tests/contract_compiler -q
+    python -m pytest -q
+
+RED, Core untouched: 19 tests, 17 failed and 2 passed. The 2 passes are
+today's behaviour kept as guards: an operation without the kind field writes
+the g1-01 K1 and K2 ledger at pinned bytes (sha256 7035505…, 423819 bytes) with
+the structural bundle, check contract and state-version profile at pinned
+identities; and the R-05 probe, a class-ranged slot naming r1, did not block
+superseding r1. 16 failures stopped at the missing `supersession_kind`
+constructor argument and 1 at the missing `closings` field, so no RED test
+reached Core behaviour. One expectation was corrected after RED: the transitive
+impact case missed that relations c1 and c2 name u1 as their source, which the
+R-05 definition (relation endpoints, followed backwards) includes.
+
+GREEN: the 19 pass. g3 and g1: 222 passed, so no pinned "today" row in
+`g3/expected_today.py` changed, because the G3 driver sends no kind. The
+temporal suites (valid time, temporal history, check scope, historical
+position, unstated valid time, this file): 90 passed. `tests/contract_compiler`:
+1455 passed. Full `pytest -q`: 3793 passed, 3 skipped, 24 failed. All 24 fail on
+one cause: OVR-000483 governs `docs/IMPLEMENTATION_STATUS.md`,
+`CAPABILITIES.md` and `knowledge.py`, and this cut moves all three. The
+validator stops at the first, the status document. 7 are in
+`test_contract_compiler_ledger.py`, 14 in `test_contract_compiler_integration.py`
+and 3 Sphinx builds in `test_docs.py` whose manifest directive validates the same
+ledger. Expected before sealing; not sealed here.
+
+What was built. `KnowledgeOperation.supersession_kind`, persisted only when
+declared. `KnowledgeRecordClosing` and `KnowledgeRecordHistory.closings`. A
+REVISION of a record a transition closed covers that closed period, inherits
+its successor link and never enters the current graph; on g1-01 at K3, r3
+covers 1 May to 12 May, followed by r2, and r2 is the only current price. Three
+new `KnowledgeChangeRefusalReason` members, appended: `STALE_TARGET`,
+`TYPE_CHANGE`, `VALID_TIME_EXTENT`. No code enumerates that enum and no
+persisted artifact names its members. A string reason at CHECK,
+`CUSTOM_POLICY_HISTORICAL_SCOPE`. `KnowledgeHistoryReplay.version_referrers`.
+
+Choices the rulings did not cover, each open for Luis: an undeclared closing
+refuses a revision as `STALE_TARGET`, because it may have been a revision;
+closings are recorded only for declared kinds, so undeclared histories compare
+equal to before; the impact read descends into inlined values and follows event
+participation endpoints; a revision of a closed period refuses under any rule
+layer, since R-04 lists that category and rules read only the current graph.
+
+Limits. Two specimens, both synthetic; no second consumer. The impact read uses
+the head contract view for every version, sound only while revisions stay
+additive. RF-OVERLAP stays unobservable, because an interval end lives in an
+adopter slot Core cannot read. A reference to a closed record is admitted
+without resolution. Nothing here measures size or speed. Merging needs route C
+with route D and regenerated evidence.

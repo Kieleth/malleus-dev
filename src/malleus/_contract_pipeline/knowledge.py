@@ -130,6 +130,10 @@ _RELATION_OPERATION_FIELDS = _ENTITY_OPERATION_FIELDS | frozenset(
     {"source_id", "target_id"}
 )
 _SUPERSESSION_FIELD = "supersedes_record_id"
+_SUPERSESSION_KIND_FIELD = "supersession_kind"
+TRANSITION = "TRANSITION"
+REVISION = "REVISION"
+_SUPERSESSION_KINDS = frozenset({TRANSITION, REVISION})
 _ANCHOR_FIELDS = frozenset(
     {
         "machine_payload",
@@ -170,6 +174,9 @@ class KnowledgeChangeRefusalReason(Enum):
     STRUCTURAL_REFUSAL = auto()
     TRANSITION_BINDING_REFUSAL = auto()
     TRANSITION_RULE_REFUSAL = auto()
+    STALE_TARGET = auto()
+    TYPE_CHANGE = auto()
+    VALID_TIME_EXTENT = auto()
 
 
 class KnowledgeChangeRefusal(ValueError):
@@ -369,6 +376,12 @@ class KnowledgeOperation:
     source_id: str | None = None
     target_id: str | None = None
     supersedes_record_id: str | None = None
+    supersession_kind: str | None = None
+    """``TRANSITION`` or ``REVISION``, declared only with a target.
+
+    Absent, the supersession keeps its meaning before the kinds existed: it
+    closes the target's valid period at its own start and records no kind.
+    """
 
 
 def _closures(
@@ -408,6 +421,7 @@ def _operation(raw: object, expected_ordinal: int) -> KnowledgeOperation:
     if set(value) not in (
         required_fields,
         required_fields | frozenset({_SUPERSESSION_FIELD}),
+        required_fields | frozenset({_SUPERSESSION_FIELD, _SUPERSESSION_KIND_FIELD}),
     ):
         raise ValueError("operation fields are not closed")
     ordinal = value["ordinal"]
@@ -434,6 +448,13 @@ def _operation(raw: object, expected_ordinal: int) -> KnowledgeOperation:
         if _SUPERSESSION_FIELD in value
         else None
     )
+    supersession_kind = None
+    if _SUPERSESSION_KIND_FIELD in value:
+        supersession_kind = _text(
+            value[_SUPERSESSION_KIND_FIELD], "supersession kind is required"
+        )
+        if supersession_kind not in _SUPERSESSION_KINDS:
+            raise ValueError(f"unsupported supersession kind: {supersession_kind}")
     return KnowledgeOperation(
         ordinal=ordinal,
         operation_id=_text(value["operation_id"], "operation ID is required"),
@@ -445,6 +466,7 @@ def _operation(raw: object, expected_ordinal: int) -> KnowledgeOperation:
         source_id=source_id,
         target_id=target_id,
         supersedes_record_id=supersedes_record_id,
+        supersession_kind=supersession_kind,
     )
 
 
@@ -593,6 +615,22 @@ class KnowledgeChangeSet:
 
 
 @dataclass(frozen=True, slots=True)
+class KnowledgeRecordClosing:
+    """One declared supersession that closed a record version.
+
+    ``kind`` is ``TRANSITION``: the world changed at the successor's start, and
+    the version stays believed for its closed valid period. Or ``REVISION``:
+    the version is no longer the current account, given the successor's cited
+    evidence; it is kept, never deleted. ``change_set_id`` is the ledger
+    position at which the version was closed.
+    """
+
+    kind: str
+    record_id: str
+    change_set_id: str
+
+
+@dataclass(frozen=True, slots=True)
 class KnowledgeRecordHistory:
     operation: KnowledgeOperation
     change_set_id: str
@@ -600,6 +638,78 @@ class KnowledgeRecordHistory:
     valid_to: KnowledgeValidTime | None
     supersedes_record_id: str | None
     superseded_by: str | None
+    closings: tuple[KnowledgeRecordClosing, ...] = ()
+    """Every declared closing, in ledger order. An undeclared supersession
+    records none, as before the kinds existed."""
+
+
+VERSION_REFERRERS_NOT_COVERED = (
+    "UNRECORDED_USES",
+    "RULE_READS",
+    "QUERY_SCOPES",
+    "STRING_RANGED_SLOTS",
+)
+"""What ``KnowledgeHistoryReplay.version_referrers`` cannot see, stated in every
+result. A use never recorded in the ledger; what a rule read while it ran; the
+selection or query scope a use ran over; and a reference held in a slot whose
+range is not a record class, which the ontology does not know is a reference.
+An empty result therefore reads "none found", never "none exist"."""
+
+
+@dataclass(frozen=True, slots=True)
+class KnowledgeVersionReference:
+    """One version in history that names another through an ontology-typed link.
+
+    ``record_id`` is the referring version and ``change_set_id`` the ledger
+    position that admitted it; ``current`` says whether it is in the current
+    graph. ``via`` is the slot (a dotted path inside an inlined value) or the
+    Core endpoint (``source_id``, ``target_id``, ``event_id``, ``entity_id``).
+    ``depth`` is 1 for a direct use of the queried version and grows by one
+    for each step followed backwards.
+    """
+
+    record_id: str
+    record_type: str
+    change_set_id: str
+    current: bool
+    via: str
+    refers_to: str
+    depth: int
+
+
+@dataclass(frozen=True, slots=True)
+class KnowledgeVersionReferrers:
+    """The read-only answer to "what refers to this exact version"."""
+
+    record_id: str
+    ledger_head: str
+    ledger_event_count: int
+    references: tuple[KnowledgeVersionReference, ...]
+    not_covered: tuple[str, ...] = VERSION_REFERRERS_NOT_COVERED
+
+
+def _typed_references(
+    view: ContractView, record_type: str, properties: Mapping[str, object], prefix: str
+) -> list[tuple[str, str]]:
+    """(path, referenced ID) for every class-ranged, non-inlined slot value,
+    descending into inlined class values. String-ranged slots are not read."""
+
+    found: list[tuple[str, str]] = []
+    for name, value in properties.items():
+        constraint = view.get_slot_constraint(record_type, name)
+        if constraint is None or not view.has_type(constraint.range_id):
+            continue
+        values = value if isinstance(value, (list, tuple)) else (value,)
+        path = f"{prefix}{name}"
+        for item in values:
+            if constraint.inlined:
+                if isinstance(item, Mapping):
+                    found.extend(
+                        _typed_references(view, constraint.range_id, item, f"{path}.")
+                    )
+            elif isinstance(item, str):
+                found.append((path, item))
+    return found
 
 
 @dataclass(frozen=True, slots=True)
@@ -942,6 +1052,82 @@ class KnowledgeHistoryReplay:
     @property
     def record_history(self) -> Mapping[str, KnowledgeRecordHistory]:
         return MappingProxyType(dict(self._record_history))
+
+    def version_referrers(self, record_id: str) -> KnowledgeVersionReferrers:
+        """What refers to this exact version, across every version in history.
+
+        Follows ontology-typed references backwards, transitively: slots whose
+        range is a record class and that are not inlined, single or
+        multivalued, including those inside inlined values, and Core's own
+        endpoints (a relation's source and target, an event participation's
+        event and entity). Current and replaced versions are both read, each
+        under this replay's contract view. Pure: it writes nothing and
+        recomputes nothing. ``not_covered`` states what it cannot see.
+        """
+
+        if record_id not in self._record_history:
+            raise KeyError(f"unknown record version: {record_id}")
+        view = self.contract_view
+        incoming: dict[str, list[tuple[str, str]]] = {}
+        for referrer, member in self._record_history.items():
+            operation = member.operation
+            links = _typed_references(
+                view, operation.record_type, _thaw(operation.properties), ""
+            )
+            if operation.operation_type == "CREATE_RELATION":
+                links += [
+                    ("source_id", operation.source_id),
+                    ("target_id", operation.target_id),
+                ]
+            elif operation.operation_type == "CREATE_EVENT_PARTICIPATION":
+                links += [
+                    (name, operation.properties[name])
+                    for name in ("event_id", "entity_id")
+                    if isinstance(operation.properties.get(name), str)
+                ]
+            for via, target in links:
+                incoming.setdefault(target, []).append((referrer, via))
+        order = {change.change_set_id: index for index, change in enumerate(self.change_sets)}
+        references: list[KnowledgeVersionReference] = []
+        seen = {record_id}
+        frontier = [record_id]
+        depth = 0
+        while frontier:
+            depth += 1
+            following: list[str] = []
+            for target in frontier:
+                for referrer, via in sorted(incoming.get(target, ())):
+                    member = self._record_history[referrer]
+                    references.append(
+                        KnowledgeVersionReference(
+                            record_id=referrer,
+                            record_type=member.operation.record_type,
+                            change_set_id=member.change_set_id,
+                            current=member.superseded_by is None,
+                            via=via,
+                            refers_to=target,
+                            depth=depth,
+                        )
+                    )
+                    if referrer not in seen:
+                        seen.add(referrer)
+                        following.append(referrer)
+            frontier = following
+        references.sort(
+            key=lambda ref: (
+                ref.depth,
+                order.get(ref.change_set_id, -1),
+                ref.record_id,
+                ref.via,
+                ref.refers_to,
+            )
+        )
+        return KnowledgeVersionReferrers(
+            record_id=record_id,
+            ledger_head=self.ledger_head,
+            ledger_event_count=self.ledger_event_count,
+            references=tuple(references),
+        )
 
     def graph_at_change(self, change_set_id: str) -> KnowledgeGraph:
         try:
@@ -1324,6 +1510,8 @@ def compose_change_set(
             payload["target_id"] = operation.target_id
         if operation.supersedes_record_id is not None:
             payload[_SUPERSESSION_FIELD] = operation.supersedes_record_id
+        if operation.supersession_kind is not None:
+            payload[_SUPERSESSION_KIND_FIELD] = operation.supersession_kind
         operation_payloads.append(payload)
 
     return KnowledgeChangeSet.from_bytes(
@@ -3343,6 +3531,8 @@ class KnowledgeChangeHistory:
         change: KnowledgeChangeSet,
     ) -> tuple[KnowledgeGraph, dict[str, KnowledgeRecordHistory]]:
         history = dict(before_history)
+        retired: set[str] = set()
+        historical: set[str] = set()
         for operation in change.operations:
             if operation.record_id in history:
                 raise _refuse(
@@ -3355,12 +3545,22 @@ class KnowledgeChangeHistory:
                     KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
                     f"record {operation.record_id} cannot supersede itself",
                 )
+            if prior_id is not None and prior_id not in before_history:
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.UNKNOWN_SUPERSESSION,
+                    f"unknown superseded record: {prior_id}",
+                )
+            if operation.supersession_kind == REVISION:
+                prior = history[prior_id]
+                history[prior_id], history[operation.record_id] = _revise(
+                    prior, operation, change
+                )
+                if prior.superseded_by is None:
+                    retired.add(prior_id)
+                else:
+                    historical.add(operation.record_id)
+                continue
             if prior_id is not None:
-                if prior_id not in before_history:
-                    raise _refuse(
-                        KnowledgeChangeRefusalReason.UNKNOWN_SUPERSESSION,
-                        f"unknown superseded record: {prior_id}",
-                    )
                 prior = history[prior_id]
                 if prior.superseded_by is not None:
                     raise _refuse(
@@ -3387,11 +3587,22 @@ class KnowledgeChangeHistory:
                         KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
                         f"record replacement contradicts prior valid time: {prior_id}",
                     )
+                closings = prior.closings
+                if operation.supersession_kind is not None:
+                    closings += (
+                        KnowledgeRecordClosing(
+                            operation.supersession_kind,
+                            operation.record_id,
+                            change.change_set_id,
+                        ),
+                    )
                 history[prior_id] = replace(
                     prior,
                     valid_to=change.valid_time,
                     superseded_by=operation.record_id,
+                    closings=closings,
                 )
+                retired.add(prior_id)
             history[operation.record_id] = KnowledgeRecordHistory(
                 operation=operation,
                 change_set_id=change.change_set_id,
@@ -3402,13 +3613,7 @@ class KnowledgeChangeHistory:
             )
 
         try:
-            staged = before._without_records(
-                {
-                    operation.supersedes_record_id
-                    for operation in change.operations
-                    if operation.supersedes_record_id is not None
-                }
-            )
+            staged = before._without_records(retired)
         except ValueError as error:
             raise _refuse(
                 KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL, str(error)
@@ -3451,7 +3656,85 @@ class KnowledgeChangeHistory:
                     KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
                     result.rejection_reason or "structural operation refused",
                 )
+        if historical:
+            # A revision of a closed period is validated like any write, then
+            # kept out of the current graph: its period is already closed.
+            try:
+                staged = staged._without_records(historical)
+            except ValueError as error:
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL, str(error)
+                ) from error
         return staged, history
+
+
+def _revision_closes_a_period(
+    operation: KnowledgeOperation, history: Mapping[str, KnowledgeRecordHistory]
+) -> bool:
+    """Whether this revision's target was already closed, so its successor is
+    historical and never enters the current graph."""
+
+    return (
+        operation.supersession_kind == REVISION
+        and operation.supersedes_record_id in history
+        and history[operation.supersedes_record_id].superseded_by is not None
+    )
+
+
+def _revise(
+    prior: KnowledgeRecordHistory,
+    operation: KnowledgeOperation,
+    change: KnowledgeChangeSet,
+) -> tuple[KnowledgeRecordHistory, KnowledgeRecordHistory]:
+    """A REVISION of ``prior`` (R-04, R-08), or its typed refusal.
+
+    The successor replaces the account of the target over exactly the target's
+    current period: same valid start, the same valid end if a transition
+    already closed it, and the target's successor link, so a revision of a
+    closed period does not touch the current graph. Only the first cut's
+    valid-time outcome is supported; anything else refuses, it is not ruled out.
+    """
+
+    prior_id = operation.supersedes_record_id
+    if any(closing.kind == REVISION for closing in prior.closings):
+        raise _refuse(
+            KnowledgeChangeRefusalReason.STALE_TARGET,
+            f"revision target is not the latest version of its line: {prior_id}",
+        )
+    if prior.superseded_by is not None and not prior.closings:
+        raise _refuse(
+            KnowledgeChangeRefusalReason.STALE_TARGET,
+            f"revision target was closed by a supersession that declares no kind: {prior_id}",
+        )
+    if (
+        prior.operation.operation_type != operation.operation_type
+        or prior.operation.record_type != operation.record_type
+    ):
+        raise _refuse(
+            KnowledgeChangeRefusalReason.TYPE_CHANGE,
+            f"revision changes the record type of {prior_id}",
+        )
+    if change.valid_time != prior.valid_from:
+        raise _refuse(
+            KnowledgeChangeRefusalReason.VALID_TIME_EXTENT,
+            f"revision valid time differs from the period of {prior_id}",
+        )
+    closed = replace(
+        prior,
+        superseded_by=operation.record_id,
+        closings=prior.closings
+        + (KnowledgeRecordClosing(REVISION, operation.record_id, change.change_set_id),),
+    )
+    successor = KnowledgeRecordHistory(
+        operation=operation,
+        change_set_id=change.change_set_id,
+        valid_from=prior.valid_from,
+        valid_to=prior.valid_to,
+        supersedes_record_id=prior_id,
+        superseded_by=prior.superseded_by,
+        closings=prior.closings,
+    )
+    return closed, successor
 
 
 class KnowledgeHistoryProjection:
@@ -3556,7 +3839,11 @@ __all__ = [
     "KnowledgeHistoryReplay",
     "KnowledgeHistoryProjection",
     "KnowledgeOperation",
+    "KnowledgeRecordClosing",
     "KnowledgeRecordHistory",
     "KnowledgeRetainedInput",
     "KnowledgeValidTime",
+    "KnowledgeVersionReference",
+    "KnowledgeVersionReferrers",
+    "VERSION_REFERRERS_NOT_COVERED",
 ]

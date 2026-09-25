@@ -762,7 +762,10 @@ def test_the_impact_read_reports_every_typed_use_of_the_revised_version(
         ("u1", "premises", "r1", 1, "change:K1", True),
         ("u1", "bindings.bound", "r1", 1, "change:K1", True),
         ("c1", "target_id", "r1", 1, "change:K1", False),
+        # Followed backwards from u1: every version naming u1.
         ("u2", "basis_use", "u1", 2, "change:K1", True),
+        ("c1", "source_id", "u1", 2, "change:K1", False),
+        ("c2", "source_id", "u1", 2, "change:K2", True),
     }
     # The string-ranged slot is not followed, and the result says so.
     assert "n1" not in {ref.record_id for ref in result.references}

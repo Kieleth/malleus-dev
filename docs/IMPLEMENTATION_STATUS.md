@@ -127,6 +127,30 @@ refuse without writes. This is not a domain-time query, a new persisted grammar,
 same-period correction support or a claim that an arbitrary prefix was once a
 separate filesystem commit. Use checkpoints retained from completed calls.
 
+Unreleased and branch-local (`codex/core-temporal`, the T3 cut of
+`design/temporal/g4/RULINGS.md`): a supersession operation may declare
+`supersession_kind`, `TRANSITION` or `REVISION`, as an optional operation
+field. An operation without it keeps its earlier meaning and bytes; the pinned
+g1-01 ledger, the structural bundle and the state-version profile identities
+are unchanged. A transition closes its target's valid period as before and the
+target's `KnowledgeRecordHistory.closings` records the kind and the change set.
+A revision names a same-type target and keeps the target's period: on a target
+a transition already closed, its successor covers that closed period, inherits
+the successor link and stays out of the current graph; on an untimed target it
+keeps `NONE_STATED`. Revising a revision is ordinary. A revision refuses
+`STALE_TARGET` when its target was already revised or was closed by a
+supersession that declares no kind, `TYPE_CHANGE` when the record type
+differs, and `VALID_TIME_EXTENT` when its valid time differs from the target's.
+Under a policy with a rule layer, a revision of a closed period refuses at
+`CHECK` with `CUSTOM_POLICY_HISTORICAL_SCOPE`, because rules read the current
+graph only. `KnowledgeHistoryReplay.version_referrers` is a read-only impact
+read: every version in history that names the queried version through a
+class-ranged, non-inlined slot or a Core endpoint, followed backwards
+transitively. Each result lists what it cannot see
+(`VERSION_REFERRERS_NOT_COVERED`). It writes and recomputes nothing. Merging
+needs route C with route D (R-07); withdrawal, identity merge or split,
+historical-use endpoints and ontology-fact revision are not expressible yet.
+
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one
