@@ -116,3 +116,16 @@ Gaps recorded for later decisions: Core does not check that a reference
 resolves (only a nonblank identifier); rule reads could be extracted by Core
 while a rule runs instead of declared (RULE_DECLARES_ITS_READS), unresearched;
 query scopes must be recorded when a use happens.
+
+## R-06, 2026-09-24: Core finds and reports; it never recomputes on its own
+
+When the impact read finds a use of a corrected version, the use stays bound to
+the version it used and is reported as affected, which is not false. A rerun is
+a separate execution whose result enters as an ordinary change set through the
+normal gate, beside the old one. Core writes nothing on its own. A Core-prepared
+rerun proposal for calculations whose inputs and model are declared in the KG is
+roadmap, waiting for a second calculation consumer (promotion gate). Automatic
+rerun and admit is excluded (architectural laws 5 and 13). The README decision
+"this work does not automatically recompute" stands.
+
+Luis: "a)"
