@@ -991,10 +991,13 @@ def test_population_gap_kinds_are_untouched() -> None:
     )
 
 
-def test_the_contract_revision_policy_identity_is_unmoved() -> None:
-    """F2 adds no change kind, so the content-addressed policy cannot move."""
+def test_the_original_gap_answer_policy_remains_available() -> None:
+    """F2's policy remains exact even when a successor admits new enum declarations."""
 
-    assert compiler.CONTRACT_REVISION_POLICY.change_kinds == (
+    policy = compiler.contract_revision_policy(
+        "sha256:e129b6e87bd06abc8d23b22bdefee2142c07574237b273a068040fc14d09db59"
+    )
+    assert policy.change_kinds == (
         "ADD_CLASS",
         "ADD_ENUM_VALUE",
         "ADD_IMPORT",

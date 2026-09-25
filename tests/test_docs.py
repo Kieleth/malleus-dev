@@ -291,7 +291,7 @@ APPROVED_REFERENCE_SOURCE = (
     "\n"
     "`KnowledgeChangeHistory.compose_contract_revision` derives an additive\n"
     "contract revision from two compiled contracts. The current policy admits added\n"
-    "classes, slots, and enum values and refuses added imports.\n"
+    "classes, slots, new enum declarations, and enum values and refuses added imports.\n"
     "\n"
     "`validate_pack_grounding` checks the closed provenance annotation on an\n"
     "optional knowledge pack or project ontology. It checks citation structure, not\n"

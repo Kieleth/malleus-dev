@@ -78,10 +78,21 @@ The same knowledge history can now cross one explicit additive ontology
 revision. The revision artifact embeds the next validated and partial contract,
 derives its change kinds from compiled facts, binds the exact prior history
 coordinates, and carries a migration receipt. The shipped policy admits added
-classes, slots, and enum values. It refuses an added import while retaining
-`ADD_IMPORT` in the policy grammar. Replay rebuilds the current graph under the
-new contract and later change sets bind the new contract identity; earlier
+classes, slots, new enum declarations, and enum values. It refuses an added
+import while retaining `ADD_IMPORT` in the policy grammar. Replay rebuilds the
+current graph under the new contract and later change sets bind the new contract identity; earlier
 records and change sets remain in the same ledger.
+
+A new enum is a separate `ADD_ENUM` change; its members remain
+`ADD_ENUM_VALUE` changes. A new class and slot can therefore introduce a closed
+vocabulary without predeclaring it at genesis. The successor revision policy
+authorizes this addition. Both earlier policy identities remain executable for
+historical replay and cannot authorize `ADD_ENUM`. Existing revision bytes and
+migration receipts are not rewritten. New revisions bind the successor policy
+and therefore have different identities even when their domain result matches
+an older run. This does not change an adopter's admission policy, add imports,
+or allow narrowing an existing range. Retaining a gap-answer proposal alone
+does not activate its new vocabulary; acceptance records the revision first.
 
 A synthetic partial-shipment Shop conformance extension reuses this path. It
 admits a two-unit order, adds Shipment and its order/unit relations through an
@@ -197,7 +208,7 @@ moved. Earlier change sets and their check receipts keep the identities they
 were recorded under; later change sets bind the new profile.
 `KnowledgeHistoryReplay.required_checks` is what a runner reads to load the
 current check contract instead of an identifier it chose once. Declaring the
-new kind moves the revision policy's own digest, so both policies stay
+new kind moves the revision policy's own digest, so historical policies stay
 executable by declaration in `SUPPORTED_CONTRACT_REVISION_POLICIES`: a revision
 names the policy it was compiled under and Core runs that exact one, which is
 how a ledger written earlier keeps replaying. **This is still not policy

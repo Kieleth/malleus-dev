@@ -380,12 +380,34 @@ to decide which contract to load, rather than an identifier it chose once.
 
 Declaring a change kind moves the revision policy's own digest, and a recorded
 revision names the policy it was compiled under.
-`SUPPORTED_CONTRACT_REVISION_POLICIES` therefore holds both, and Core executes
-the exact one a revision declares, so a revision recorded before this change
+`SUPPORTED_CONTRACT_REVISION_POLICIES` therefore retains the historical policies,
+and Core executes the exact one a revision declares, so a revision recorded before this change
 replays unchanged. New revisions bind `CONTRACT_REVISION_POLICY`, and a revision
-that declares the superseded policy while carrying a re-binding refuses as an
+that declares the original pre-rebinding policy while carrying a re-binding refuses as an
 unknown change kind. This is not policy migration: Core runs no rule and
 produces no check outcome.
+
+### Introducing a new closed vocabulary
+
+A live revision can add an enum declaration (`ADD_ENUM`) and its permitted
+values (`ADD_ENUM_VALUE`), together with a new class and slot using that enum.
+The adopter chooses the names and meanings. Core derives these changes from
+the compiled facts; it does not invent vocabulary or populate records during
+revision. The existing `compose_contract_revision` and gap-proposal paths apply.
+
+The successor `CONTRACT_REVISION_POLICY` permits the new declaration. The two
+earlier policies retain their exact identities and do not gain this permission.
+Replay selects the policy named by each recorded revision. Its prior ledger
+prefix and migration receipts remain unchanged; newly composed revisions bind
+the successor identity. Proposal retention still checks additivity with the
+current default policy, not a separately persisted historical proposal policy.
+Acceptance records the exact revision policy in the revision artifact.
+
+Removing enum members, changing an existing slot's range, narrowing existing
+constraints, and changing imports remain refused. Closed-value validation still
+rejects undeclared values after the revision. This is an extension of the
+optional compiler-enabled semantic-history profile, not general migration or
+automatic evidence interpretation.
 
 ## A declared gap is a trigger, not a note
 

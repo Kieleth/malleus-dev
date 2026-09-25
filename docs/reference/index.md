@@ -27,7 +27,7 @@ read-only and refuses to guess when a plan is absent or inconsistent.
 
 `KnowledgeChangeHistory.compose_contract_revision` derives an additive
 contract revision from two compiled contracts. The current policy admits added
-classes, slots, and enum values and refuses added imports.
+classes, slots, new enum declarations, and enum values and refuses added imports.
 
 `validate_pack_grounding` checks the closed provenance annotation on an
 optional knowledge pack or project ontology. It checks citation structure, not

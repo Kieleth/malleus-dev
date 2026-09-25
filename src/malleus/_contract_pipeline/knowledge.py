@@ -2704,8 +2704,8 @@ class KnowledgeChangeHistory:
 
         This is the additive check, and it is the same mechanism acceptance
         uses: ``compile_contract_revision`` under ``CONTRACT_REVISION_POLICY``,
-        which admits only ``ADD_CLASS``, ``ADD_ENUM_VALUE``, ``ADD_SLOT`` and
-        ``REBIND_CHECK_CONTRACT`` and refuses a removal or a narrowing. The
+        which admits ``ADD_CLASS``, ``ADD_ENUM``, ``ADD_ENUM_VALUE``, ``ADD_SLOT``
+        and ``REBIND_CHECK_CONTRACT`` and refuses a removal or a narrowing. The
         composed value is discarded at retention: the base coordinates move
         with every append, so the revision acceptance records is composed then,
         against the history as it stands then.
