@@ -1,0 +1,114 @@
+{
+  "schema": "malleus.temporal-g1-specimen/draft-1",
+  "specimen_id": "G1-05-CONDITIONAL-STATEMENT",
+  "obligation": ["COHERENT_CONDITIONS"],
+  "origin": {
+    "flows": ["GE-02"],
+    "basis": "SYNTHETIC",
+    "note": "Shaped after the conditional saturation statement in reading block page:5:block:006, whose bytes were not read for this specimen. Every value, text and model here is synthetic and says nothing about that article.",
+    "pointers": [
+      {"path": "design/temporal/flow-evidence-01.json", "locator": "reading_blocks page:5:block:006", "sha256": "72ae89060c899875e71a0d6125b3f9a3462494374af99e13bd1ec6cd47996a06"}
+    ]
+  },
+  "objects": [
+    {"id": "melt:X", "type": "SUBJECT", "label": "Synthetic melt X"},
+    {"id": "melt:Y", "type": "SUBJECT", "label": "Synthetic melt Y"},
+    {"id": "work:SM", "type": "SUBJECT", "label": "Cited solubility model SM (a citation, not an executable model)"},
+    {"id": "src:stmt-1", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT",
+     "text": "For melt X with 0.5 wt% H2O, at 200 MPa and 1150 degC, the melt reaches saturation at roughly 7 km below the seafloor, following model SM."},
+    {"id": "p1-h2o", "type": "ASSERTION", "subject_ref": "melt:X", "property": "h2o_content",
+     "value": {"datatype": "xsd:decimal", "lexical": "0.5", "unit": "wt_percent"}, "basis": "REPORTED",
+     "qualifiers": {"role": {"datatype": "enum", "lexical": "CONDITION"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:stmt-1"]},
+    {"id": "p1-press", "type": "ASSERTION", "subject_ref": "melt:X", "property": "pressure",
+     "value": {"datatype": "xsd:integer", "lexical": "200", "unit": "MPa"}, "basis": "REPORTED",
+     "qualifiers": {"role": {"datatype": "enum", "lexical": "CONDITION"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:stmt-1"]},
+    {"id": "p1-temp", "type": "ASSERTION", "subject_ref": "melt:X", "property": "temperature",
+     "value": {"datatype": "xsd:integer", "lexical": "1150", "unit": "degC"}, "basis": "REPORTED",
+     "qualifiers": {"role": {"datatype": "enum", "lexical": "CONDITION"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:stmt-1"]},
+    {"id": "p1-depth", "type": "ASSERTION", "subject_ref": "melt:X", "property": "saturation_depth",
+     "value": {"datatype": "xsd:integer", "lexical": "7", "unit": "km"}, "basis": "REPORTED",
+     "qualifiers": {"role": {"datatype": "enum", "lexical": "CONSEQUENT"}, "approximate": {"datatype": "xsd:boolean", "lexical": "true"}, "datum": {"datatype": "enum", "lexical": "BELOW_SEAFLOOR"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:stmt-1"]},
+    {"id": "rel:p1-cites-SM", "type": "RELATION", "relation_type": "FOLLOWS_CITED_MODEL", "from_ref": "grp:P1", "to_ref": "work:SM",
+     "basis": "REPORTED", "evidence_refs": ["src:stmt-1"]},
+    {"id": "grp:P1", "type": "GROUP", "group_kind": "CONDITIONAL_PROPOSITION",
+     "member_refs": ["p1-h2o", "p1-press", "p1-temp", "p1-depth"], "evidence_refs": ["src:stmt-1"]},
+    {"id": "src:stmt-2", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT",
+     "text": "For melt Y at 300 MPa and 1200 degC, saturation is reached at about 9 km below sea level."},
+    {"id": "p2-press", "type": "ASSERTION", "subject_ref": "melt:Y", "property": "pressure",
+     "value": {"datatype": "xsd:integer", "lexical": "300", "unit": "MPa"}, "basis": "REPORTED",
+     "qualifiers": {"role": {"datatype": "enum", "lexical": "CONDITION"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:stmt-2"]},
+    {"id": "p2-temp", "type": "ASSERTION", "subject_ref": "melt:Y", "property": "temperature",
+     "value": {"datatype": "xsd:integer", "lexical": "1200", "unit": "degC"}, "basis": "REPORTED",
+     "qualifiers": {"role": {"datatype": "enum", "lexical": "CONDITION"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:stmt-2"]},
+    {"id": "p2-depth", "type": "ASSERTION", "subject_ref": "melt:Y", "property": "saturation_depth",
+     "value": {"datatype": "xsd:integer", "lexical": "9", "unit": "km"}, "basis": "REPORTED",
+     "qualifiers": {"role": {"datatype": "enum", "lexical": "CONSEQUENT"}, "approximate": {"datatype": "xsd:boolean", "lexical": "true"}, "datum": {"datatype": "enum", "lexical": "BELOW_SEA_LEVEL"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:stmt-2"]},
+    {"id": "grp:P2", "type": "GROUP", "group_kind": "CONDITIONAL_PROPOSITION",
+     "member_refs": ["p2-press", "p2-temp", "p2-depth"], "evidence_refs": ["src:stmt-2"]},
+    {"id": "model:sat-exec", "type": "MODEL", "version": "1", "implementation": "synthetic-saturation-impl@1",
+     "formula": "synthetic saturation pressure from H2O content and temperature; not model SM",
+     "parameters": ["h2o_wt_percent", "temperature_degC", "pressure_MPa"]}
+  ],
+  "changes": [
+    {"position": "G0", "kind": "GENESIS", "adds_refs": []},
+    {"position": "G1", "kind": "REPORT", "adds_refs": ["melt:X", "work:SM", "src:stmt-1", "p1-h2o", "p1-press", "p1-temp", "p1-depth", "grp:P1", "rel:p1-cites-SM"]},
+    {"position": "G2", "kind": "REPORT", "adds_refs": ["melt:Y", "src:stmt-2", "p2-press", "p2-temp", "p2-depth", "grp:P2"]},
+    {"position": "G3", "kind": "MODEL_DEFINITION", "adds_refs": ["model:sat-exec"]}
+  ],
+  "queries": [
+    {"id": "CC01", "kind": "EXACT_LOOKUP", "note": "What does the statement propose: the whole conditional account.",
+     "inputs": {"at": "G2", "target_ref": "grp:P1"},
+     "expected": {"state": "EXACT_OBJECT", "visible_refs": ["p1-h2o", "p1-press", "p1-temp", "p1-depth", "rel:p1-cites-SM"],
+                  "metadata": [{"ref": "p1-depth", "approximate": "true", "datum": "BELOW_SEAFLOOR", "role": "CONSEQUENT"}]}},
+    {"id": "CC02", "kind": "EXACT_LOOKUP", "inputs": {"at": "G2", "target_ref": "p1-press"},
+     "expected": {"state": "EXACT_OBJECT", "value": {"datatype": "xsd:integer", "lexical": "200", "unit": "MPa"},
+                  "metadata": [{"ref": "p1-press", "member_of": "grp:P1", "role": "CONDITION"}]}},
+    {"id": "CC03", "kind": "RESULT_FOR_SELECTION", "note": "Saturation for new inputs, when only a cited model name exists.",
+     "inputs": {"at": "G2", "subject_ref": "melt:X", "property": "saturation_pressure", "model_ref": null},
+     "expected": {"state": "NOT_COMPUTED"}},
+    {"id": "CC04", "kind": "RESULT_FOR_SELECTION", "note": "The executable model is stored but nothing executed or admitted.",
+     "inputs": {"at": "G3", "subject_ref": "melt:X", "property": "saturation_pressure", "model_ref": "model:sat-exec"},
+     "expected": {"state": "NOT_COMPUTED"}},
+    {"id": "CC05", "kind": "PREPARE_INPUTS", "note": "Temperature from statement 1 with pressure from statement 2.",
+     "inputs": {"at": "G3", "model_ref": "model:sat-exec", "premise_refs": ["p1-h2o", "p1-temp", "p2-press"]},
+     "expected": {"state": "INCOMPATIBLE_CONTEXTS", "conflict_refs": ["grp:P1", "grp:P2"]}},
+    {"id": "CC06", "kind": "PREPARE_INPUTS", "inputs": {"at": "G3", "model_ref": "model:sat-exec", "premise_refs": ["p1-h2o", "p1-temp", "p1-press"]},
+     "expected": {"state": "INPUTS_READY"}},
+    {"id": "CC07", "kind": "PREPARE_INPUTS", "note": "A depth difference over two depths with different datums.",
+     "inputs": {"at": "G2", "premise_refs": ["p1-depth", "p2-depth"]},
+     "expected": {"state": "INCOMPATIBLE_CONTEXTS", "conflict_refs": ["p1-depth", "p2-depth"]}}
+  ],
+  "rejected_objects": [
+    {"id": "exec:cited-only", "type": "EXECUTION", "model_ref": "work:SM",
+     "input_bindings": [{"parameter": "h2o_wt_percent", "assertion_ref": "p1-h2o"}, {"parameter": "temperature_degC", "assertion_ref": "p1-temp"}]}
+  ],
+  "refusals": [
+    {"id": "RF-CITED-MODEL", "head": "G2", "base": "G2", "category": "MISSING_MODEL", "head_after": "G2",
+     "operation": "Record an execution whose model is the cited name SM, which is a subject, not an executable model.",
+     "would_add_refs": ["exec:cited-only"]}
+  ],
+  "forbidden": [
+    {"query_ref": "CC01", "answer": {"visible_refs": ["p1-press"]}, "why": "A condition returned alone reads as an independent measurement."},
+    {"query_ref": "CC01", "answer": {"metadata": [{"ref": "p1-depth", "approximate": "false"}]}, "why": "Roughly 7 km is not an exact depth or a pressure-to-depth law."},
+    {"query_ref": "CC01", "answer": {"metadata": [{"ref": "p1-depth", "datum": null}]}, "why": "A depth without its datum cannot be compared with any other depth."},
+    {"query_ref": "CC03", "answer": {"state": "COMPUTED"}, "why": "A cited model name is not an execution contract."},
+    {"query_ref": "CC04", "answer": {"state": "COMPUTED"}, "why": "Storing a model neither selects nor executes it."},
+    {"query_ref": "CC05", "answer": {"state": "INPUTS_READY"}, "why": "Mixes conditions from two different conditional statements."},
+    {"query_ref": "CC07", "answer": {"state": "INPUTS_READY"}, "why": "Subtracts depths measured from different datums."}
+  ],
+  "open_choices": [
+    {"id": "OC-05-GROUP-OR-MEMBER", "question": "Should a request for one member (CC02) return its group membership by default, or only on request?",
+     "affects_query_refs": [],
+     "branches": [
+       {"label": "Membership always returned", "expected": null, "note": "CC02 as written."},
+       {"label": "Membership returned on request", "expected": null, "note": "CC02 needs an explicit include-groups input; the answer is unchanged when it is set."}
+     ]}
+  ]
+}

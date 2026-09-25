@@ -1,0 +1,68 @@
+{
+  "schema": "malleus.temporal-g1-specimen/draft-1",
+  "specimen_id": "G1-04-UNKNOWN-TIME-DIAMETER",
+  "obligation": ["UNKNOWN_APPLICABILITY"],
+  "origin": {
+    "flows": ["GE-06"],
+    "basis": "SYNTHETIC",
+    "note": "The scientific control of NEXT-STAGE.md. S01 to S04 and C06 are copied from expected-views-v1.json and cross-checked. The date-free account read and the exact lookup are added here. The date-free quote calculation is in G1-02 (OQ08, OQ09)."
+  },
+  "reused_files": [
+    {"path": "../expected-views-v1.json", "sha256": "da0674cd7bbb414607147bfd3e3a84573b6b2cbd5ea304853f45dfa7ff2743ae"}
+  ],
+  "objects": [
+    {"id": "pipe:Q", "type": "SUBJECT", "label": "Pipe Q"},
+    {"id": "account:diameter-report", "type": "ACCOUNT", "label": "Inspection report of pipe Q diameter"},
+    {"id": "src:m1", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Inspection report: the diameter of pipe Q is 12000 micrometres."},
+    {"id": "m1", "type": "ASSERTION", "subject_ref": "pipe:Q", "property": "diameter",
+     "value": {"datatype": "xsd:integer", "lexical": "12000", "unit": "um"}, "basis": "REPORTED", "account_ref": "account:diameter-report",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:m1"]},
+    {"id": "src:m2", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Corrigendum to the inspection report: the diameter of pipe Q is 12200 micrometres, not 12000."},
+    {"id": "m2", "type": "ASSERTION", "subject_ref": "pipe:Q", "property": "diameter",
+     "value": {"datatype": "xsd:integer", "lexical": "12200", "unit": "um"}, "basis": "CORRECTION", "corrects_ref": "m1", "account_ref": "account:diameter-report",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:m2"]}
+  ],
+  "changes": [
+    {"position": "M0", "kind": "GENESIS", "adds_refs": []},
+    {"position": "M1", "kind": "REPORT", "adds_refs": ["pipe:Q", "account:diameter-report", "src:m1", "m1"]},
+    {"position": "M2", "kind": "CORRECTION", "adds_refs": ["src:m2", "m2"], "target_refs": ["m1"]}
+  ],
+  "queries": [
+    {"id": "S01", "kind": "SELECT_APPLICABLE", "expected_from": "../expected-views-v1.json#/science/queries/0",
+     "inputs": {"at": "M0", "valid_at": "2026-05-05T12:00:00Z", "subject_ref": "pipe:Q", "property": "diameter", "account_ref": "account:diameter-report"},
+     "expected": {"state": "NO_ACCEPTED_ACCOUNT", "selected_refs": [], "unresolved_refs": []}},
+    {"id": "S02", "kind": "SELECT_APPLICABLE", "expected_from": "../expected-views-v1.json#/science/queries/1",
+     "inputs": {"at": "M1", "valid_at": "2026-05-05T12:00:00Z", "subject_ref": "pipe:Q", "property": "diameter", "account_ref": "account:diameter-report"},
+     "expected": {"state": "UNRESOLVED_APPLICABILITY", "selected_refs": [], "unresolved_refs": ["m1"]}},
+    {"id": "S03", "kind": "SELECT_APPLICABLE", "expected_from": "../expected-views-v1.json#/science/queries/2",
+     "inputs": {"at": "M2", "valid_at": "2026-05-05T12:00:00Z", "subject_ref": "pipe:Q", "property": "diameter", "account_ref": "account:diameter-report"},
+     "expected": {"state": "UNRESOLVED_APPLICABILITY", "selected_refs": [], "unresolved_refs": ["m2"]}},
+    {"id": "S04", "kind": "INSPECT_HISTORY", "expected_from": "../expected-views-v1.json#/science/queries/3",
+     "inputs": {"at": "M2", "subject_ref": "pipe:Q", "property": "diameter"},
+     "expected": {"state": "QUALIFIED_HISTORY", "visible_refs": ["m1", "m2"], "domain_time": "NONE_STATED"}},
+    {"id": "SQ-ACCOUNT-M2", "kind": "SELECT_ACCOUNT",
+     "note": "Authored here. The current accepted account can be read without a domain date.",
+     "inputs": {"at": "M2", "subject_ref": "pipe:Q", "property": "diameter", "account_ref": "account:diameter-report"},
+     "expected": {"state": "SELECTED", "selected_refs": ["m2"], "value": {"datatype": "xsd:integer", "lexical": "12200", "unit": "um"},
+                  "applicability": {"kind": "NONE_STATED"}}},
+    {"id": "SQ-ACCOUNT-M1", "kind": "SELECT_ACCOUNT",
+     "inputs": {"at": "M1", "subject_ref": "pipe:Q", "property": "diameter", "account_ref": "account:diameter-report"},
+     "expected": {"state": "SELECTED", "selected_refs": ["m1"], "value": {"datatype": "xsd:integer", "lexical": "12000", "unit": "um"},
+                  "applicability": {"kind": "NONE_STATED"}}},
+    {"id": "SQ-EXACT-m1", "kind": "EXACT_LOOKUP", "inputs": {"at": "M2", "target_ref": "m1"},
+     "expected": {"state": "EXACT_OBJECT", "value": {"datatype": "xsd:integer", "lexical": "12000", "unit": "um"},
+                  "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:m1"]}},
+    {"id": "C06", "kind": "PREPARE_INPUTS", "expected_from": "../expected-views-v1.json#/consumer_expectations/5",
+     "inputs": {"at": "M2", "premise_refs": ["m2"], "valid_at": "2026-05-05T12:00:00Z"},
+     "expected": {"state": "UNRESOLVED_REQUIRED_PREMISE", "unresolved_refs": ["m2"]}}
+  ],
+  "refusals": [],
+  "forbidden": [
+    {"query_ref": "S03", "answer": {"state": "SELECTED", "selected_refs": ["m2"]}, "why": "NONE_STATED is not forever."},
+    {"query_ref": "S03", "answer": {"state": "NO_APPLICABLE_ACCOUNT"}, "why": "Unknown time is not absence; the account exists."},
+    {"query_ref": "S04", "answer": {"domain_time": "2026-05-05T12:00:00Z"}, "why": "Acceptance or query time is not domain time."},
+    {"query_ref": "SQ-ACCOUNT-M2", "answer": {"state": "UNRESOLVED_APPLICABILITY"}, "why": "A date-free read must not be blocked by the missing date."},
+    {"query_ref": "C06", "answer": {"state": "INPUTS_READY"}, "why": "A date-specific calculation cannot borrow acceptance time for its premise."}
+  ],
+  "open_choices": []
+}

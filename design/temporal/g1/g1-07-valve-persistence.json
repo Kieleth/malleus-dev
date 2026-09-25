@@ -1,0 +1,118 @@
+{
+  "schema": "malleus.temporal-g1-specimen/draft-1",
+  "specimen_id": "G1-07-VALVE-PERSISTENCE",
+  "obligation": ["DECLARED_PERSISTENCE"],
+  "origin": {
+    "flows": ["GE-07"],
+    "basis": "SYNTHETIC",
+    "note": "The three valve controls of GE-07: event only, declared state rule, planned action. situations.json T-LATE-REPORT and T-UNCERTAIN-TRANSITION stay unchanged; their persistence premise is made an explicit input here. Uncertain transition windows are not covered."
+  },
+  "objects": [
+    {"id": "valve:V", "type": "SUBJECT", "label": "Valve V"},
+    {"id": "valve:W", "type": "SUBJECT", "label": "Valve W"},
+    {"id": "src:log-open", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Maintenance log, received 10 June: valve V was opened at 2026-06-03T09:00:00Z."},
+    {"id": "ev-open", "type": "ASSERTION", "subject_ref": "valve:V", "property": "event",
+     "value": {"datatype": "enum", "lexical": "OPENED"}, "basis": "REPORTED",
+     "applicability": {"kind": "INSTANT", "instant": "2026-06-03T09:00:00Z"}, "evidence_refs": ["src:log-open"]},
+    {"id": "rule:valve-persistence", "type": "RULE",
+     "semantics": "For the valves in scope, an OPENED event starts an OPEN interval at its instant and a CLOSED event starts a CLOSED interval at its instant. Each interval lasts until the next recorded event for that valve. Before the first recorded event the state is not given by this rule.",
+     "scope_refs": ["valve:V"],
+     "assumptions": ["Completeness: every opening and closing of the valves in scope is eventually reported.", "Absence of a recorded closing does not prove that none occurred in reality."]},
+    {"id": "src:log-close", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Late entry: valve V was closed at 2026-06-05T12:00:00Z."},
+    {"id": "ev-close", "type": "ASSERTION", "subject_ref": "valve:V", "property": "event",
+     "value": {"datatype": "enum", "lexical": "CLOSED"}, "basis": "REPORTED",
+     "applicability": {"kind": "INSTANT", "instant": "2026-06-05T12:00:00Z"}, "evidence_refs": ["src:log-close"]},
+    {"id": "src:work-order", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Work order: open valve W at 2026-06-07T08:00:00Z."},
+    {"id": "plan:open-W", "type": "PLAN", "subject_ref": "valve:W", "action": "OPEN", "planned_for": "2026-06-07T08:00:00Z", "evidence_refs": ["src:work-order"]}
+  ],
+  "changes": [
+    {"position": "V0", "kind": "GENESIS", "adds_refs": []},
+    {"position": "V1", "kind": "REPORT", "adds_refs": ["valve:V", "src:log-open", "ev-open"]},
+    {"position": "V2", "kind": "RULE_DECLARATION", "adds_refs": ["rule:valve-persistence"]},
+    {"position": "V3", "kind": "REPORT", "adds_refs": ["src:log-close", "ev-close"]},
+    {"position": "V4", "kind": "PLAN", "adds_refs": ["valve:W", "src:work-order", "plan:open-W"]}
+  ],
+  "queries": [
+    {"id": "VQ01", "kind": "SELECT_APPLICABLE", "inputs": {"at": "V0", "valid_at": "2026-06-04T00:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": null},
+     "expected": {"state": "NO_ACCEPTED_ACCOUNT"}},
+    {"id": "VQ02", "kind": "INSPECT_HISTORY", "inputs": {"at": "V1", "subject_ref": "valve:V", "property": "event"},
+     "expected": {"state": "QUALIFIED_HISTORY", "visible_refs": ["ev-open"],
+                  "metadata": [{"ref": "ev-open", "instant": "2026-06-03T09:00:00Z"}]}},
+    {"id": "VQ03", "kind": "SELECT_APPLICABLE", "note": "Event only, no persistence rule.",
+     "inputs": {"at": "V1", "valid_at": "2026-06-04T00:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": null},
+     "expected": {"state": "UNRESOLVED_APPLICABILITY", "unresolved_refs": ["ev-open"]}},
+    {"id": "VQ04", "kind": "SELECT_APPLICABLE", "note": "Rule accepted, but not named by the caller.",
+     "open_choice_ref": "OC-07-RULE-SELECTION",
+     "inputs": {"at": "V2", "valid_at": "2026-06-04T00:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": null},
+     "expected": null},
+    {"id": "VQ05", "kind": "SELECT_APPLICABLE",
+     "inputs": {"at": "V2", "valid_at": "2026-06-04T00:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": "rule:valve-persistence"},
+     "expected": {"state": "SELECTED", "derived_from_refs": ["ev-open", "rule:valve-persistence"], "value": {"datatype": "enum", "lexical": "OPEN"}}},
+    {"id": "VQ06", "kind": "SELECT_APPLICABLE", "note": "The then-open account at V2.",
+     "inputs": {"at": "V2", "valid_at": "2026-06-06T00:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": "rule:valve-persistence"},
+     "expected": {"state": "SELECTED", "derived_from_refs": ["ev-open", "rule:valve-persistence"], "value": {"datatype": "enum", "lexical": "OPEN"}}},
+    {"id": "VQ07", "kind": "SELECT_APPLICABLE", "note": "After the late closing report.",
+     "inputs": {"at": "V3", "valid_at": "2026-06-06T00:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": "rule:valve-persistence"},
+     "expected": {"state": "SELECTED", "derived_from_refs": ["ev-close", "rule:valve-persistence"], "value": {"datatype": "enum", "lexical": "CLOSED"}}},
+    {"id": "VQ08", "kind": "SELECT_APPLICABLE",
+     "inputs": {"at": "V3", "valid_at": "2026-06-04T00:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": "rule:valve-persistence"},
+     "expected": {"state": "SELECTED", "derived_from_refs": ["ev-open", "rule:valve-persistence"], "value": {"datatype": "enum", "lexical": "OPEN"}}},
+    {"id": "VQ09", "kind": "SELECT_APPLICABLE", "note": "Before the first recorded event.",
+     "inputs": {"at": "V3", "valid_at": "2026-06-03T08:59:59Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": "rule:valve-persistence"},
+     "expected": {"state": "NO_APPLICABLE_ACCOUNT"}},
+    {"id": "VQ10", "kind": "SELECT_APPLICABLE", "note": "Boundary: the opening instant is included.",
+     "inputs": {"at": "V3", "valid_at": "2026-06-03T09:00:00Z", "subject_ref": "valve:V", "property": "state", "persistence_rule_ref": "rule:valve-persistence"},
+     "expected": {"state": "SELECTED", "derived_from_refs": ["ev-open", "rule:valve-persistence"], "value": {"datatype": "enum", "lexical": "OPEN"}}},
+    {"id": "VQ11", "kind": "SELECT_APPLICABLE", "note": "A plan is not an observation.",
+     "inputs": {"at": "V4", "valid_at": "2026-06-08T00:00:00Z", "subject_ref": "valve:W", "property": "state", "persistence_rule_ref": null},
+     "expected": {"state": "NO_ACCEPTED_ACCOUNT"}},
+    {"id": "VQ12", "kind": "INSPECT_HISTORY", "inputs": {"at": "V4", "subject_ref": "valve:W", "property": "event"},
+     "expected": {"state": "QUALIFIED_HISTORY", "visible_refs": []}},
+    {"id": "VQ13", "kind": "INSPECT_HISTORY", "inputs": {"at": "V4", "subject_ref": "valve:W", "property": "plan"},
+     "expected": {"state": "QUALIFIED_HISTORY", "visible_refs": ["plan:open-W"]}}
+  ],
+  "rejected_objects": [
+    {"id": "ev-undocumented", "type": "ASSERTION", "subject_ref": "valve:V", "property": "event",
+     "value": {"datatype": "enum", "lexical": "OPENED"}, "basis": "REPORTED",
+     "applicability": {"kind": "INSTANT", "instant": "2026-06-06T09:00:00Z"}, "evidence_refs": []}
+  ],
+  "refusals": [
+    {"id": "RF-NO-EVIDENCE", "head": "V3", "base": "V3", "category": "MISSING_EVIDENCE", "head_after": "V3",
+     "operation": "A reported opening event with no retained source.",
+     "would_add_refs": ["ev-undocumented"]}
+  ],
+  "forbidden": [
+    {"query_ref": "VQ02", "answer": {"metadata": [{"ref": "ev-open", "instant": "2026-06-10T00:00:00Z"}]}, "why": "Moves the event to the day the report arrived."},
+    {"query_ref": "VQ03", "answer": {"state": "SELECTED", "value": {"datatype": "enum", "lexical": "OPEN"}}, "why": "Assumes persistence nobody declared."},
+    {"query_ref": "VQ06", "answer": {"state": "SELECTED", "value": {"datatype": "enum", "lexical": "CLOSED"}}, "why": "Leaks the V3 closing report into a V2 read."},
+    {"query_ref": "VQ09", "answer": {"state": "SELECTED", "value": {"datatype": "enum", "lexical": "CLOSED"}}, "why": "No report of opening is not proof the valve was closed."},
+    {"query_ref": "VQ11", "answer": {"state": "SELECTED", "value": {"datatype": "enum", "lexical": "OPEN"}}, "why": "A command or intention does not establish that the valve opened."}
+  ],
+  "open_choices": [
+    {"id": "OC-07-RULE-SELECTION", "question": "Once a persistence rule is accepted, does it apply by default to its scope, or only when the caller names it?",
+     "affects_query_refs": ["VQ04"],
+     "branches": [
+       {"label": "Only when named by the caller", "expected": {"VQ04": {"state": "UNRESOLVED_APPLICABILITY", "unresolved_refs": ["ev-open"]}}},
+       {"label": "By default within its scope", "expected": {"VQ04": {"state": "SELECTED", "derived_from_refs": ["ev-open", "rule:valve-persistence"], "value": {"datatype": "enum", "lexical": "OPEN"}}},
+        "note": "VQ03 at V1 is the same under both branches, because the rule is not yet accepted there."}
+     ]},
+    {"id": "OC-07-RULE-ACCEPTANCE", "question": "Must a persistence rule be accepted into the ledger before use, or may a caller supply an unaccepted rule as a selection input?",
+     "affects_query_refs": [],
+     "branches": [
+       {"label": "Accepted first (as modelled: the rule enters at V2)", "expected": null, "note": "A query at V1 naming the rule would refuse; no such query is written."},
+       {"label": "Caller may supply it", "expected": null, "note": "Then a V1 query naming the rule would answer OPEN for 4 June, and the rule's identity must be bound in the answer."}
+     ]},
+    {"id": "OC-07-COMPLETENESS-AUTHORITY", "question": "Who may declare the completeness assumption the rule depends on, and is it bound to a period?",
+     "affects_query_refs": [],
+     "branches": [
+       {"label": "Declared with the rule, unbounded", "expected": null, "note": "Answers above as written."},
+       {"label": "Declared per period by a named decider", "expected": null, "note": "Queries outside the declared period return UNRESOLVED_APPLICABILITY; no query here tests it."}
+     ]},
+    {"id": "OC-07-INITIAL-STATE", "question": "May a persistence rule declare a state before the first recorded event?",
+     "affects_query_refs": [],
+     "branches": [
+       {"label": "No initial-state clause is allowed", "expected": null, "note": "VQ09 as written."},
+       {"label": "A rule may declare one, with its own evidence", "expected": null, "note": "The rule text above has no such clause, so VQ09 is unchanged; a different rule would need its own specimen."}
+     ]}
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "schema": "malleus.temporal-g1-specimen/draft-1",
+  "specimen_id": "G1-06-ALTERNATE-JUSTIFICATION",
+  "obligation": ["ALTERNATE_JUSTIFICATION"],
+  "origin": {
+    "flows": ["GE-03"],
+    "basis": "EXISTING_SYNTHETIC_EXAMPLE",
+    "note": "Estimate, application, assessment and network values follow the synthetic KG re-entry example (research/kg_reentry_loop RESULTS-01, inspected). Source texts here are authored paraphrases, not its retained bytes. The conclusion C1, the arguments D1 and D2 and the report E2 are new synthetic additions.",
+    "pointers": [
+      {"path": "research/kg_reentry_loop/RESULTS-01.md", "sha256": "c286062d38e92d885a1e09672d70c3b9dacba03391b9b1f14885a562737570db"}
+    ]
+  },
+  "objects": [
+    {"id": "region:west", "type": "SUBJECT", "label": "West sector"},
+    {"id": "region:RC2", "type": "SUBJECT", "label": "RC2"},
+    {"id": "network:N", "type": "SUBJECT", "label": "Seismic network N"},
+    {"id": "src:article", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT",
+     "text": "Crust in the west sector is 5.4 plus or minus 0.3 km thick. Study S uses this thickness beneath RC2, assuming uniform crust. Network N has 19 instruments."},
+    {"id": "E1", "type": "ASSERTION", "subject_ref": "region:west", "property": "crustal_thickness",
+     "value": {"datatype": "xsd:decimal", "lexical": "5.4", "unit": "km"}, "basis": "REPORTED",
+     "qualifiers": {"uncertainty_value": {"datatype": "xsd:decimal", "lexical": "0.3", "unit": "km"}, "uncertainty_kind": {"datatype": "enum", "lexical": "UNSPECIFIED"}},
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:article"]},
+    {"id": "A1", "type": "RELATION", "relation_type": "REPORTED_APPLICATION", "from_ref": "E1", "to_ref": "region:RC2",
+     "qualifiers": {"stated_assumption": {"datatype": "xsd:string", "lexical": "uniform crust"}},
+     "basis": "REPORTED", "evidence_refs": ["src:article"]},
+    {"id": "N1", "type": "ASSERTION", "subject_ref": "network:N", "property": "instrument_count",
+     "value": {"datatype": "xsd:integer", "lexical": "19"}, "basis": "REPORTED",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:article"]},
+    {"id": "J1", "type": "ASSERTION", "subject_ref": "A1", "property": "application_assessment",
+     "value": {"datatype": "enum", "lexical": "DEPENDS_ON_UNESTABLISHED_ASSUMPTION"}, "basis": "INTERPRETATION",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:article"]},
+    {"id": "src:hypocentres", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT",
+     "text": "Relocated hypocentres beneath RC2 all lie above a reflector imaged at 6 km."},
+    {"id": "E2", "type": "ASSERTION", "subject_ref": "region:RC2", "property": "hypocentres_above_reflector",
+     "value": {"datatype": "xsd:boolean", "lexical": "true"}, "basis": "REPORTED",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:hypocentres"]},
+    {"id": "C1", "type": "ASSERTION", "subject_ref": "region:RC2", "property": "earthquakes_within_crust",
+     "value": {"datatype": "xsd:boolean", "lexical": "true"}, "basis": "INTERPRETATION",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": []},
+    {"id": "D1", "type": "ARGUMENT", "premise_refs": ["E1", "A1", "J1"], "conclusion_ref": "C1"},
+    {"id": "D2", "type": "ARGUMENT", "premise_refs": ["E2"], "conclusion_ref": "C1"},
+    {"id": "src:challenge", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT",
+     "text": "A later passage reports that crust thins sharply east of the west sector, so uniform crust beneath RC2 is doubtful."},
+    {"id": "J2", "type": "ASSERTION", "subject_ref": "A1", "property": "application_assessment",
+     "value": {"datatype": "enum", "lexical": "CONTESTED"}, "basis": "INTERPRETATION", "revises_ref": "J1",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:challenge"]}
+  ],
+  "changes": [
+    {"position": "J0", "kind": "GENESIS", "adds_refs": []},
+    {"position": "J1p", "kind": "REPORT", "adds_refs": ["region:west", "region:RC2", "network:N", "src:article", "E1", "A1", "N1"]},
+    {"position": "J2p", "kind": "INTERPRETATION", "adds_refs": ["J1"]},
+    {"position": "J3p", "kind": "ARGUMENT", "adds_refs": ["src:hypocentres", "E2", "C1", "D1", "D2"]},
+    {"position": "J4p", "kind": "REASSESSMENT", "adds_refs": ["src:challenge", "J2"], "target_refs": ["J1"]}
+  ],
+  "queries": [
+    {"id": "AJ01", "kind": "EXACT_LOOKUP", "inputs": {"at": "J4p", "target_ref": "E1"},
+     "expected": {"state": "EXACT_OBJECT", "value": {"datatype": "xsd:decimal", "lexical": "5.4", "unit": "km"},
+                  "qualifiers": {"uncertainty_value": {"datatype": "xsd:decimal", "lexical": "0.3", "unit": "km"}, "uncertainty_kind": {"datatype": "enum", "lexical": "UNSPECIFIED"}},
+                  "evidence_refs": ["src:article"]}},
+    {"id": "AJ02", "kind": "EXACT_LOOKUP", "inputs": {"at": "J4p", "target_ref": "A1"},
+     "expected": {"state": "EXACT_OBJECT", "basis": "REPORTED", "evidence_refs": ["src:article"]}},
+    {"id": "AJ03", "kind": "SELECT_ACCOUNT", "inputs": {"at": "J3p", "subject_ref": "A1", "property": "application_assessment"},
+     "expected": {"state": "SELECTED", "selected_refs": ["J1"], "value": {"datatype": "enum", "lexical": "DEPENDS_ON_UNESTABLISHED_ASSUMPTION"}}},
+    {"id": "AJ04", "kind": "SELECT_ACCOUNT", "inputs": {"at": "J4p", "subject_ref": "A1", "property": "application_assessment"},
+     "expected": {"state": "SELECTED", "selected_refs": ["J2"], "value": {"datatype": "enum", "lexical": "CONTESTED"}}},
+    {"id": "AJ05", "kind": "EXACT_LOOKUP", "inputs": {"at": "J4p", "target_ref": "J1"},
+     "expected": {"state": "EXACT_OBJECT", "value": {"datatype": "enum", "lexical": "DEPENDS_ON_UNESTABLISHED_ASSUMPTION"},
+                  "metadata": [{"ref": "J1", "knowledge_until": "J4p", "revised_by_ref": "J2"}]}},
+    {"id": "AJ06", "kind": "INSPECT_HISTORY", "note": "Arguments for C1 before the challenge.",
+     "inputs": {"at": "J3p", "target_ref": "C1"},
+     "expected": {"state": "QUALIFIED_HISTORY", "visible_refs": ["D1", "D2"],
+                  "metadata": [{"ref": "D1", "reconsideration": "NOT_REQUIRED"}, {"ref": "D2", "reconsideration": "NOT_REQUIRED"}]}},
+    {"id": "AJ07", "kind": "INSPECT_HISTORY", "open_choice_ref": "OC-06-FLAG-SOURCE", "note": "Arguments for C1 after the challenge.",
+     "inputs": {"at": "J4p", "target_ref": "C1"},
+     "expected": null},
+    {"id": "AJ08", "kind": "EXACT_LOOKUP", "inputs": {"at": "J4p", "target_ref": "N1"},
+     "expected": {"state": "EXACT_OBJECT", "value": {"datatype": "xsd:integer", "lexical": "19"}, "evidence_refs": ["src:article"]}},
+    {"id": "AJ09", "kind": "SELECT_ACCOUNT", "open_choice_ref": "OC-06-SUFFICIENCY", "note": "Is C1 still supported?",
+     "inputs": {"at": "J4p", "subject_ref": "region:RC2", "property": "earthquakes_within_crust"},
+     "expected": null}
+  ],
+  "rejected_objects": [
+    {"id": "J2-stale", "type": "ASSERTION", "subject_ref": "A1", "property": "application_assessment",
+     "value": {"datatype": "enum", "lexical": "REJECTED"}, "basis": "INTERPRETATION", "revises_ref": "J1",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:challenge"]}
+  ],
+  "refusals": [
+    {"id": "RF-STALE-REVIEW", "head": "J4p", "base": "J3p", "category": "STALE_TARGET", "head_after": "J4p",
+     "operation": "A second reassessment prepared at J3p revises J1, which J2 already revised at J4p.",
+     "would_add_refs": ["J2-stale"], "target_refs": ["J1"]}
+  ],
+  "forbidden": [
+    {"query_ref": "AJ02", "answer": {"state": "EXACT_OBJECT", "basis": "INTERPRETATION"}, "why": "Challenging our assessment does not relabel what the source reported."},
+    {"query_ref": "AJ05", "answer": {"state": "NO_ACCEPTED_ACCOUNT"}, "why": "The replaced assessment must stay inspectable."},
+    {"query_ref": "AJ07", "answer": {"visible_refs": ["D2"]}, "why": "D1 is flagged for reconsideration, not deleted."},
+    {"query_ref": "AJ07", "answer": {"metadata": [{"ref": "D2", "reconsideration": "REQUIRED"}]}, "why": "D2 does not depend on J1; a delete-every-descendant sweep is wrong."},
+    {"query_ref": "AJ09", "answer": {"state": "SELECTED", "value": {"datatype": "xsd:boolean", "lexical": "false"}}, "why": "Weakening one route does not make the conclusion false."},
+    {"query_ref": "AJ08", "answer": {"value": {"datatype": "xsd:integer", "lexical": "20"}}, "why": "An unrelated record must not move."}
+  ],
+  "open_choices": [
+    {"id": "OC-06-FLAG-SOURCE", "question": "Is D1's reconsideration flag derived by the reader from declared premise links, or only present once a reviewer records it?",
+     "affects_query_refs": ["AJ07"],
+     "branches": [
+       {"label": "Derived from declared premises", "expected": {"AJ07": {"state": "QUALIFIED_HISTORY", "visible_refs": ["D1", "D2"],
+          "metadata": [{"ref": "D1", "reconsideration": "REQUIRED", "changed_premise_refs": ["J1"]}, {"ref": "D2", "reconsideration": "NOT_REQUIRED"}]}}},
+       {"label": "Recorded by a reviewer; none recorded yet", "expected": {"AJ07": {"state": "QUALIFIED_HISTORY", "visible_refs": ["D1", "D2"],
+          "metadata": [{"ref": "D1", "reconsideration": "NOT_RECORDED", "changed_premise_refs": ["J1"]}, {"ref": "D2", "reconsideration": "NOT_RECORDED"}]}},
+        "note": "The changed premise is still listed; only the flag is withheld."}
+     ]},
+    {"id": "OC-06-SUFFICIENCY", "question": "Is the remaining route D2 enough to keep C1 selected? This is an interpretive question GE-03 leaves to review.",
+     "affects_query_refs": ["AJ09"],
+     "branches": [
+       {"label": "No declared sufficiency rule", "expected": {"AJ09": {"state": "SELECTED", "selected_refs": ["C1"], "value": {"datatype": "xsd:boolean", "lexical": "true"},
+          "metadata": [{"ref": "C1", "support_sufficiency": "NOT_ASSESSED"}]}},
+        "note": "C1 remains the accepted interpretation; nobody has assessed whether D2 alone suffices."},
+       {"label": "Declared rule: any argument with no revised premise suffices", "expected": {"AJ09": {"state": "SELECTED", "selected_refs": ["C1"], "value": {"datatype": "xsd:boolean", "lexical": "true"},
+          "metadata": [{"ref": "C1", "support_sufficiency": "SUPPORTED", "supporting_refs": ["D2"]}]}}}
+     ]}
+  ]
+}

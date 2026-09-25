@@ -1,0 +1,96 @@
+{
+  "schema": "malleus.temporal-g1-specimen/draft-1",
+  "specimen_id": "G1-03-COMPETING-ACCOUNTS",
+  "obligation": ["SAME_VALUE_DIFFERENT_MEANING"],
+  "origin": {
+    "flows": ["GE-09"],
+    "basis": "SYNTHETIC",
+    "note": "Two independent reports disagree about one quantity for one subject and period. A hypothetical account matches one of them in value. C04 and C07 of expected-views-v1.json are bound as outcome checks only."
+  },
+  "reused_files": [
+    {"path": "../expected-views-v1.json", "sha256": "da0674cd7bbb414607147bfd3e3a84573b6b2cbd5ea304853f45dfa7ff2743ae"}
+  ],
+  "objects": [
+    {"id": "gauge:G", "type": "SUBJECT", "label": "River gauge G"},
+    {"id": "account:S1", "type": "ACCOUNT", "label": "Survey 1"},
+    {"id": "src:S1", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Survey 1: mean discharge at gauge G on 1 May 2026 was 40 cubic metres per second."},
+    {"id": "Q1", "type": "ASSERTION", "subject_ref": "gauge:G", "property": "mean_discharge",
+     "value": {"datatype": "xsd:integer", "lexical": "40", "unit": "m3/s"}, "basis": "REPORTED", "account_ref": "account:S1",
+     "applicability": {"kind": "INTERVAL", "from": "2026-05-01T00:00:00Z", "until": "2026-05-02T00:00:00Z"}, "evidence_refs": ["src:S1"]},
+    {"id": "account:S2", "type": "ACCOUNT", "label": "Survey 2"},
+    {"id": "src:S2", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Survey 2: mean discharge at gauge G on 1 May 2026 was 42 cubic metres per second."},
+    {"id": "Q2", "type": "ASSERTION", "subject_ref": "gauge:G", "property": "mean_discharge",
+     "value": {"datatype": "xsd:integer", "lexical": "42", "unit": "m3/s"}, "basis": "REPORTED", "account_ref": "account:S2",
+     "applicability": {"kind": "INTERVAL", "from": "2026-05-01T00:00:00Z", "until": "2026-05-02T00:00:00Z"}, "evidence_refs": ["src:S2"]},
+    {"id": "account:scenario-1", "type": "ACCOUNT", "label": "Flood scenario 1"},
+    {"id": "src:scenario-1", "type": "SOURCE", "source_kind": "RETAINED_DECLARATION", "text": "Scenario 1 assumes a mean discharge of 42 cubic metres per second at gauge G on 1 May 2026. This is not a report."},
+    {"id": "H1", "type": "ASSERTION", "subject_ref": "gauge:G", "property": "mean_discharge",
+     "value": {"datatype": "xsd:integer", "lexical": "42", "unit": "m3/s"}, "basis": "ASSUMPTION", "account_ref": "account:scenario-1",
+     "applicability": {"kind": "INTERVAL", "from": "2026-05-01T00:00:00Z", "until": "2026-05-02T00:00:00Z"}, "evidence_refs": ["src:scenario-1"]},
+    {"id": "src:assessment", "type": "SOURCE", "source_kind": "SYNTHETIC_TEXT", "text": "Review note: for the flood model input, use Survey 2, whose gauge was recalibrated. Survey 1 is not judged wrong."},
+    {"id": "J1", "type": "ASSERTION", "subject_ref": "Q2", "property": "selected_for_use",
+     "value": {"datatype": "xsd:string", "lexical": "flood-model-input"}, "basis": "INTERPRETATION",
+     "applicability": {"kind": "NONE_STATED"}, "evidence_refs": ["src:assessment"]},
+    {"id": "ctx:flood-model", "type": "CONTEXT", "context_kind": "NAMED_USE", "basis_refs": ["J1"],
+     "bindings": [{"parameter": "mean_discharge", "assertion_ref": "Q2"}]}
+  ],
+  "changes": [
+    {"position": "A0", "kind": "GENESIS", "adds_refs": []},
+    {"position": "A1", "kind": "REPORT", "adds_refs": ["gauge:G", "account:S1", "src:S1", "Q1"]},
+    {"position": "A2", "kind": "REPORT", "adds_refs": ["account:S2", "src:S2", "Q2"]},
+    {"position": "A3", "kind": "ASSUMPTION", "adds_refs": ["account:scenario-1", "src:scenario-1", "H1"]},
+    {"position": "A4", "kind": "INTERPRETATION", "adds_refs": ["src:assessment", "J1", "ctx:flood-model"]}
+  ],
+  "queries": [
+    {"id": "CA01", "kind": "SELECT_APPLICABLE", "inputs": {"at": "A2", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "account_ref": "account:S1"},
+     "expected": {"state": "SELECTED", "selected_refs": ["Q1"], "value": {"datatype": "xsd:integer", "lexical": "40", "unit": "m3/s"}}},
+    {"id": "CA02", "kind": "SELECT_APPLICABLE", "inputs": {"at": "A2", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "account_ref": "account:S2"},
+     "expected": {"state": "SELECTED", "selected_refs": ["Q2"], "value": {"datatype": "xsd:integer", "lexical": "42", "unit": "m3/s"}}},
+    {"id": "CA03", "kind": "SELECT_APPLICABLE", "expected_from": "../expected-views-v1.json#/consumer_expectations/6",
+     "inputs": {"at": "A2", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "account_ref": null},
+     "expected": {"state": "AMBIGUOUS_SELECTION", "candidate_refs": ["Q1", "Q2"]}},
+    {"id": "CA04", "kind": "SELECT_APPLICABLE", "inputs": {"at": "A3", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "account_ref": "account:scenario-1"},
+     "expected": {"state": "SELECTED", "selected_refs": ["H1"], "value": {"datatype": "xsd:integer", "lexical": "42", "unit": "m3/s"}, "basis": "ASSUMPTION"}},
+    {"id": "CA05", "kind": "SELECT_APPLICABLE", "open_choice_ref": "OC-03-ASSUMPTIONS-IN-UNSCOPED",
+     "inputs": {"at": "A3", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "account_ref": null},
+     "expected": null},
+    {"id": "CA06", "kind": "COMPARE_PREMISES", "expected_from": "../expected-views-v1.json#/consumer_expectations/3",
+     "inputs": {"at": "A3", "premise_refs": ["Q2", "H1"]},
+     "expected": {"state": "DIFFERENT_PREMISES"}},
+    {"id": "CA07", "kind": "SELECT_APPLICABLE", "inputs": {"at": "A4", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "context_ref": "ctx:flood-model"},
+     "expected": {"state": "SELECTED", "selected_refs": ["Q2"], "value": {"datatype": "xsd:integer", "lexical": "42", "unit": "m3/s"}}},
+    {"id": "CA08", "kind": "SELECT_APPLICABLE", "open_choice_ref": "OC-03-USE-SELECTION-SCOPE",
+     "inputs": {"at": "A4", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "account_ref": null},
+     "expected": null},
+    {"id": "CA09", "kind": "INSPECT_HISTORY", "inputs": {"at": "A4", "subject_ref": "gauge:G", "property": "mean_discharge"},
+     "expected": {"state": "QUALIFIED_HISTORY", "visible_refs": ["Q1", "Q2", "H1"],
+                  "metadata": [{"ref": "Q1", "basis": "REPORTED"}, {"ref": "Q2", "basis": "REPORTED"}, {"ref": "H1", "basis": "ASSUMPTION"}]}},
+    {"id": "CA10", "kind": "SELECT_APPLICABLE", "inputs": {"at": "A4", "valid_at": "2026-05-01T12:00:00Z", "subject_ref": "gauge:G", "property": "mean_discharge", "account_ref": "account:S1"},
+     "expected": {"state": "SELECTED", "selected_refs": ["Q1"], "value": {"datatype": "xsd:integer", "lexical": "40", "unit": "m3/s"}}}
+  ],
+  "refusals": [],
+  "forbidden": [
+    {"query_ref": "CA03", "answer": {"state": "SELECTED", "selected_refs": ["Q2"]}, "why": "Latest arrival is not authority."},
+    {"query_ref": "CA03", "answer": {"state": "SELECTED", "value": {"datatype": "xsd:decimal", "lexical": "41", "unit": "m3/s"}}, "why": "An average of two accounts is a new claim nobody made."},
+    {"query_ref": "CA04", "answer": {"basis": "REPORTED"}, "why": "An assumption does not become a report because a report has the same value."},
+    {"query_ref": "CA06", "answer": {"state": "SAME_PREMISES"}, "why": "Equal value and equal period with different basis and account are different premises."},
+    {"query_ref": "CA09", "answer": {"visible_refs": ["Q2", "H1"]}, "why": "Choosing Q2 for one use must not erase Q1."},
+    {"query_ref": "CA10", "answer": {"state": "SELECTED", "selected_refs": ["Q2"]}, "why": "A use selection does not override an explicitly scoped account."}
+  ],
+  "open_choices": [
+    {"id": "OC-03-ASSUMPTIONS-IN-UNSCOPED", "question": "Does an unscoped selection consider assumption accounts as candidates, or only reported and corrected accounts?",
+     "affects_query_refs": ["CA05"],
+     "branches": [
+       {"label": "Assumptions enter only when their account is named", "expected": {"CA05": {"state": "AMBIGUOUS_SELECTION", "candidate_refs": ["Q1", "Q2"]}}},
+       {"label": "Every accepted account is a candidate", "expected": {"CA05": {"state": "AMBIGUOUS_SELECTION", "candidate_refs": ["Q1", "Q2", "H1"]}}}
+     ]},
+    {"id": "OC-03-USE-SELECTION-SCOPE", "question": "Account authority: does an accepted selection for a named use also resolve unscoped requests?",
+     "affects_query_refs": ["CA08"],
+     "branches": [
+       {"label": "A use selection binds only that use", "expected": {"CA08": {"state": "AMBIGUOUS_SELECTION", "candidate_refs": ["Q1", "Q2"]}},
+        "note": "Candidate set shown under the first branch of OC-03-ASSUMPTIONS-IN-UNSCOPED; add H1 under the second."},
+       {"label": "An adopter-declared default authority resolves unscoped requests", "expected": {"CA08": {"state": "SELECTED", "selected_refs": ["Q2"], "value": {"datatype": "xsd:integer", "lexical": "42", "unit": "m3/s"}}},
+        "note": "Requires an explicit declared authority record. J1 as written is scoped to one use and is not that record."}
+     ]}
+  ]
+}
