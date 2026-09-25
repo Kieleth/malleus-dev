@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 from pathlib import Path
 import runpy
 import subprocess
@@ -278,3 +279,43 @@ def test_ci_runner_is_not_ignored() -> None:
     )
 
     assert result.returncode == 1
+
+
+def _guarded_tomllib_imports(tree):
+    guarded = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Try) and any(
+            isinstance(handler.type, ast.Name)
+            and handler.type.id in {"ModuleNotFoundError", "ImportError"}
+            and any(
+                isinstance(stmt, ast.Import) and any(alias.name == "tomli" for alias in stmt.names)
+                for stmt in handler.body
+            )
+            for handler in node.handlers
+        ):
+            guarded.update(id(stmt) for stmt in node.body)
+    return guarded
+
+
+def test_every_tracked_tomllib_import_falls_back_to_tomli() -> None:
+    # Python 3.10 has no stdlib tomllib and the release matrix runs 3.10. The
+    # fixed module list above missed a new test file on 2026-09-22 and main CI
+    # failed on 3.10 from then until 0.15.0. Every tracked file is scanned.
+    tracked = subprocess.run(
+        ["git", "ls-files", "*.py"], cwd=ROOT, capture_output=True, text=True, check=True
+    ).stdout.split()
+    unguarded = []
+    for relative in tracked:
+        source = (ROOT / relative).read_text(encoding="utf-8")
+        if "tomllib" not in source:
+            continue
+        tree = ast.parse(source)
+        guarded = _guarded_tomllib_imports(tree)
+        for node in ast.walk(tree):
+            if (
+                isinstance(node, ast.Import)
+                and any(alias.name == "tomllib" for alias in node.names)
+                and id(node) not in guarded
+            ) or (isinstance(node, ast.ImportFrom) and node.module == "tomllib"):
+                unguarded.append(f"{relative}:{node.lineno}")
+    assert unguarded == [], f"tomllib imported without a tomli fallback: {unguarded}"
