@@ -180,3 +180,18 @@ undeclared supersessions record no closing; a revision of a closed period under
 a PROLOG_RULES policy refuses CUSTOM_POLICY_HISTORICAL_SCOPE; the impact read
 also follows inlined values and event-participation endpoints; its position is
 the change set id; r2 keeps supersedes_record_id r1.
+
+## R-10, 2026-09-24: the UMR refinement is an interpretation record beside the annotation
+
+Our reading of a source statement lives in its own record, linked to the
+annotation by a class-ranged reference slot, never written into the annotation.
+That record is what a REVISION targets when new evidence refines the reading.
+The source annotation stays what the source said; cited-source facts get their
+own records; the reader's inference sits in the interpretation record. Probed
+end to end on copies of the retained main-clause-04 and Marine 02 ledgers
+(HISTORICAL-USE-01.md C4; REFINEMENT-SPEC-05.md option 2 / D2(c)). Correcting
+the annotation itself as a new artifact with the passage edge restated is
+mechanically admissible (P2j) and rejected as the design: it writes another
+source's meaning into a record that claims to be the source's wording.
+
+Luis: "record beside"
