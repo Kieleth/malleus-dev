@@ -473,3 +473,43 @@ additive. RF-OVERLAP stays unobservable, because an interval end lives in an
 adopter slot Core cannot read. A reference to a closed record is admitted
 without resolution. Nothing here measures size or speed. Merging needs route C
 with route D and regenerated evidence.
+
+## TEMP-013: probe the historical-use risk on the real UMR graphs, 2026-09-24
+
+Question from the Overlord: Core refuses to retire a record that a live
+relation names, so revising the UMR number might force the RC2 candidate-reuse
+relation onto the new version and claim a use that never happened. Probed on
+copies of the two real UMR ledgers (main-clause-04 sha256 5ca5f5e6…, Marine 02
+sha256 74e161f1…, both matching their recorded hashes) under this branch's
+Core at aadddfe8. The UMR inputs are byte-equal to `codex/umr-thin-slice`
+74ff7a42. No `src/` change. Write-up: `HISTORICAL-USE-01.md`.
+
+Observed. The block sits at CHECK in `admission.py` `_check_base` before the
+builtin runs, as well as in `_without_records`, and reports "does not exist"
+for a record that exists in history. The ± node's three incident edges are
+arcs of the same annotation; restating them is admitted. The candidate-reuse
+edge touches only the clause root. It blocks a revision of the root and a
+whole-annotation correction (46 operations refused on that edge alone), and is
+admitted when it is restated. After revising only the ± node, the untouched
+reuse edge reaches the refined node in the current graph, and
+`version_referrers` does not report it: its depth is 1 on every UMR node. A
+revised root left a current `sentence_root` slot naming the retired root, and
+Core admitted it. Any in-place change breaks the UMR bridge's translation
+check, so an honest annotation correction must be a whole new artifact. A
+live additive revision refuses a new enum type (`NON_ADDITIVE_CHANGE`). An
+interpretation record linked by class-ranged slot, then revised with the R32
+evidence, is admitted with a declared REVISION closing and leaves the
+annotation and the reuse edge untouched.
+
+Recommendation, not ruled: refine ± as a revised interpretation record beside
+the annotation; rule that relations are structure and class-ranged slots name
+exact versions; build a typed refusal and one `not_covered` entry, neither of
+which moves an identity; hold the retired-endpoint change until a consumer has
+a use that must be a relation. The UMR graphs have none and the Shop ontology
+has no Relation classes (inspected, not probed).
+
+Limits: two authored graphs of one article; stand-in bytes for the
+whole-annotation case; probe-only vocabulary typed with strings; no reader
+changed; no Prolog rule layer; paper marine graphs and `REFINEMENT-SPEC-05.md`
+not read; only the 19 T3 tests rerun. Probe scripts stay in the session
+scratchpad, hashed in the write-up.
