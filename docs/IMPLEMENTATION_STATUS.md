@@ -116,6 +116,17 @@ commits replace the file. Graph/index copies and canonical receipts still scale
 with state size. This is not constant-time admission, a disk checkpoint,
 multi-writer support or a second state authority.
 
+The unreleased `KnowledgeChangeHistory.replay_at` adds an exact historical
+knowledge-position read. The caller supplies the selected head/count and the
+expected containing-ledger head/count. One snapshot is validated in full before
+the selected prefix is folded through the same executor. The result carries
+the earlier contract, evidence, record history and canonical receipt. Later
+evidence and ontology revisions do not enter that result. Invalid checkpoints,
+incomplete bootstrap, unfinished admissions and incomplete finite transactions
+refuse without writes. This is not a domain-time query, a new persisted grammar,
+same-period correction support or a claim that an arbitrary prefix was once a
+separate filesystem commit. Use checkpoints retained from completed calls.
+
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one

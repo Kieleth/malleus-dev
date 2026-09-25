@@ -1,0 +1,52 @@
+@prefix temporal: <https://malleus.dev/design/temporal/> .
+@prefix design: <https://malleus.dev/design/> .
+
+temporal:HistoricalPositionRead
+    design:implements temporal:VerifiedKnowledgePositionSelection ;
+    design:consumes temporal:ExistingKnowledgeHistory, temporal:SelectedCheckpoint,
+        temporal:ContainingCheckpoint ;
+    design:produces temporal:KnowledgeHistoryReplay ;
+    design:governedBy temporal:OptionalSemanticHistory ;
+    design:conformsTo temporal:HistoricalReadConformance .
+
+temporal:KnowledgeHistoryReplay
+    design:derivedFrom temporal:ExistingKnowledgeHistory,
+        temporal:SelectedCheckpoint .
+
+temporal:HistoricalReadConformance
+    design:status "green-locally-integration-pending" .
+
+# Workstream fragment. It does not rewrite the historical foundation graph or
+# assert that the broader temporal extension has been implemented.
+
+# Proposed temporal boundaries. These names are design roles, not Python APIs.
+temporal:BitemporalProfileCandidate
+    design:status "proposed-not-selected" ;
+    design:role "OPTIONAL_PROFILE" .
+
+temporal:VersionGraphReplayCandidate
+    design:status "proposed-not-implemented" ;
+    design:implements temporal:QualifiedVersionRetention ;
+    design:consumes temporal:ExistingKnowledgeHistory, temporal:SelectedCheckpoint ;
+    design:produces temporal:FullVersionGraph ;
+    design:governedBy temporal:BitemporalProfileCandidate .
+
+temporal:FullVersionGraph
+    design:derivedFrom temporal:ExistingKnowledgeHistory, temporal:SelectedCheckpoint .
+
+temporal:TemporalSelectionCandidate
+    design:status "proposed-not-implemented" ;
+    design:implements temporal:ContextualApplicabilitySelection ;
+    design:consumes temporal:FullVersionGraph, temporal:DomainTimeRequest,
+        temporal:SelectionContext ;
+    design:produces temporal:QualifiedSelectedView ;
+    design:governedBy temporal:BitemporalProfileCandidate .
+
+temporal:QualifiedSelectedView
+    design:derivedFrom temporal:FullVersionGraph, temporal:DomainTimeRequest,
+        temporal:SelectionContext .
+
+temporal:BitemporalConformanceCandidate
+    design:status "authored-expectations-not-runtime-results" ;
+    design:role "CONFORMANCE_FIXTURE" ;
+    design:input "expected-views-v1.json" .

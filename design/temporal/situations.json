@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "kind": "authored-synthetic-conformance-expectations",
+  "conventions": {
+    "dates": "All explicitly timed boundaries below are UTC instants, not inferred midnights for date-only prose.",
+    "intervals": "Start included, end excluded.",
+    "acceptance": "Later information is usable only after its explicit acceptance; arrival alone does not settle competing reports.",
+    "unknown": "No stated time means no temporal applicability answer, not forever and not ingestion time."
+  },
+  "cases": [
+    {
+      "id": "T-WORLD-CHANGE",
+      "inputs": [
+        "Accepted on 2 May: price is 750 cents from 2026-05-01T00:00:00+00:00.",
+        "Accepted on 12 May: price changes to 800 cents at 2026-05-12T00:00:00+00:00."
+      ],
+      "expected": [
+        {"knowledge": "after second acceptance", "applies_at": "2026-05-05T12:00:00+00:00", "price_cents": 750},
+        {"knowledge": "after second acceptance", "applies_at": "2026-05-12T00:00:00+00:00", "price_cents": 800}
+      ],
+      "forbidden": "Changing the price for 5 May to 800."
+    },
+    {
+      "id": "T-REPORT-CORRECTION",
+      "inputs": [
+        "Accepted on 2 May: price is 750 cents from 2026-05-01T00:00:00+00:00.",
+        "Accepted on 12 May: correct that report, the price for that same period is 800 cents. No price transition is asserted."
+      ],
+      "expected": [
+        {"knowledge": "before correction acceptance", "applies_at": "2026-05-05T12:00:00+00:00", "price_cents": 750},
+        {"knowledge": "after correction acceptance", "applies_at": "2026-05-05T12:00:00+00:00", "price_cents": 800}
+      ],
+      "forbidden": "Dating a real price change to 12 May or erasing the earlier accepted report."
+    },
+    {
+      "id": "T-LATE-REPORT",
+      "inputs": [
+        "Accepted on 10 June: valve V opened at 2026-06-03T09:00:00+00:00. There was no earlier accepted report."
+      ],
+      "expected": [
+        {"knowledge": "before acceptance", "applies_at": "2026-06-04T00:00:00+00:00", "state": "NO_ACCEPTED_REPORT"},
+        {"knowledge": "after acceptance", "applies_at": "2026-06-04T00:00:00+00:00", "state": "OPEN"}
+      ],
+      "forbidden": "Moving the opening to 10 June or treating no report as proof that the valve was closed."
+    },
+    {
+      "id": "T-FUTURE-TRANSITION",
+      "inputs": [
+        "Accepted: price is 750 cents from 2026-05-01T00:00:00+00:00.",
+        "Accepted on 12 May: price changes to 800 cents at 2026-06-01T00:00:00+00:00."
+      ],
+      "expected": [
+        {"knowledge": "after second acceptance", "applies_at": "2026-05-20T12:00:00+00:00", "price_cents": 750},
+        {"knowledge": "after second acceptance", "applies_at": "2026-06-01T00:00:00+00:00", "price_cents": 800}
+      ],
+      "forbidden": "Applying the new price immediately because it is the latest admitted version."
+    },
+    {
+      "id": "T-UNCERTAIN-TRANSITION",
+      "inputs": [
+        "Valve V was closed. It opened after 09:00 UTC and no later than 10:00 UTC on 3 June. The exact instant is unknown."
+      ],
+      "expected": [
+        {"applies_at": "2026-06-03T08:59:59+00:00", "state": "CLOSED"},
+        {"applies_at": "2026-06-03T09:30:00+00:00", "state": "INDETERMINATE"},
+        {"applies_at": "2026-06-03T10:00:01+00:00", "state": "OPEN"}
+      ],
+      "forbidden": "Selecting 09:00, 09:30 or the acceptance time as an invented exact transition."
+    },
+    {
+      "id": "T-CALCULATION-PREMISES",
+      "inputs": [
+        "Calculation C used the original reported price at an identified knowledge position and domain time.",
+        "A correction for that same domain time is subsequently accepted.",
+        "A separate hypothetical calculation happens to have the corrected numerical result."
+      ],
+      "expected": [
+        {"request": "explain C under its original selection", "state": "ORIGINAL_PREMISES_RECONSTRUCTIBLE"},
+        {"request": "compare C premises to corrected selection", "state": "SELECTED_PREMISES_CHANGED"},
+        {"request": "result under corrected premises before execution", "state": "NOT_COMPUTED"}
+      ],
+      "forbidden": "Borrowing the hypothetical result, rewriting C, or automatically executing a formula."
+    }
+  ]
+}

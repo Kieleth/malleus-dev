@@ -1,0 +1,23 @@
+{
+  "kind": "research-inspection-manifest",
+  "date": "2026-09-24",
+  "meaning": "Bytes inspected for the thought-experiment design. Not a consumer runtime rebind, live-document pin, execution receipt or adoption decision.",
+  "files": [
+    {"id":"computation-contexts","path":"/Users/luis/Projects/malleus-dev/research/computational_graphs/RESULTS-03.md","sha256":"60eaf96cd62a8cbb214a56469f05fdbdf391fb6803bd973db9c80085b466a420","status":"INSPECTED_REPORT"},
+    {"id":"computation-model-change","path":"/Users/luis/Projects/malleus-dev/research/computational_graphs/RESULTS-04.md","sha256":"0707769ad13ed6f990d2912099ca243354e01d975b4ad8254fc983d6fb55fe4a","status":"INSPECTED_REPORT"},
+    {"id":"computation-acquisition","path":"/Users/luis/Projects/malleus-dev/research/computational_graphs/RESULTS-05.md","sha256":"ea082719cb89d681f17b6e1a426ee5dcfe1f02a7e788537727da7f6782a3097a","status":"INSPECTED_REPORT"},
+    {"id":"computation-checkpoints","path":"/Users/luis/Projects/malleus-dev/research/computational_graphs/results/model-change-01/checkpoints.json","sha256":"95dc8f187920db0376b4a806098d524a14111c2f2a1c5505e351f906c8bc473d","status":"INSPECTED_SAVED_OUTPUT"},
+    {"id":"reentry-result","path":"/Users/luis/Projects/malleus-dev/research/kg_reentry_loop/RESULTS-01.md","sha256":"c286062d38e92d885a1e09672d70c3b9dacba03391b9b1f14885a562737570db","status":"INSPECTED_REPORT"},
+    {"id":"reentry-coverage","path":"/Users/luis/Projects/malleus-dev/research/kg_reentry_loop/results/workflow-01/coverage.json","sha256":"a4e491aca44d6a010a45af5ca4a59948ea9b0295bfbb44084f9c89cdb3ec5e2c","status":"INSPECTED_SAVED_OUTPUT"},
+    {"id":"reentry-ledger","path":"/Users/luis/Projects/malleus-dev/research/kg_reentry_loop/results/workflow-01/history.jsonl","sha256":"ac7afad2e13a56cbe4274b8288271a8297c1e766b4c109f5b447602a758f3e1d","status":"BYTE_DIGEST_CHECKED_NOT_REPLAYED"},
+    {"id":"umr-clause","path":"/Users/luis/Projects/malleus-dev/.claude/worktrees/umr-thin-slice/research/umr_thin_slice/MAIN-CLAUSE-RESULTS-04.md","sha256":"2c93f3e2857d0094392c74f3b6c0103b5580460a2ee715333de9ff01cb6c3f13","status":"INSPECTED_REPORT"},
+    {"id":"umr-quantity","path":"/Users/luis/Projects/malleus-dev/.claude/worktrees/umr-thin-slice/research/umr_thin_slice/QUANTITY-FRAME-RESULTS-03.md","sha256":"687263ecc954b5a159c0ad058e51e75cd0c1199ed0a38007b0da15209f4d43d2","status":"INSPECTED_REPORT"},
+    {"id":"marine-reader","path":"/Users/luis/Projects/malleus-dev/paper-v4/v4.1/kg-reader/marine-transfer-01/RESULTS.md","sha256":"4b63a7305d5d660f1b009f0a26a33792d8fe7adb514e37f6ea8f5450ef583d18","status":"INSPECTED_REPORT"},
+    {"id":"marine-math-witnesses","path":"/Users/luis/Projects/malleus-dev/paper-v4/v4.1/kg-reader/marine-transfer-01/test_marine_reasoning_witnesses.py","sha256":"0bd06eb2d428b4c7bca26d85e5528109f745c7f830ac0cc7467109e80cd92938","status":"RERUN_FIVE_AUTHORED_ARITHMETIC_TESTS"},
+    {"id":"marine-reading","path":"/Users/luis/Projects/malleus-dev/private/paper-v4-text-layer/selected-reading.json","sha256":"f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17","status":"SELECTED_BLOCKS_INSPECTED"}
+  ],
+  "reading_blocks": [
+    {"id":"page:2:block:006","sha256":"95592c0705a9f638c8d89bae93fcb908c9ccd93af04f8865d7e49a58fceccb7e","use":"GE-01 estimate and application; no new scientific interpretation accepted"},
+    {"id":"page:5:block:006","sha256":"72ae89060c899875e71a0d6125b3f9a3462494374af99e13bd1ec6cd47996a06","use":"GE-02 conditional saturation statement; not an executable model"}
+  ]
+}

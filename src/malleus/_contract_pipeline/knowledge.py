@@ -962,6 +962,15 @@ class _HistoryContinuation:
     protocol: ProtocolFold
 
 
+def _require_complete_history(continuation: _HistoryContinuation) -> None:
+    if continuation.change_ids != continuation.applied_ids:
+        raise _refuse(
+            KnowledgeChangeRefusalReason.INCOMPLETE_ADMISSION,
+            "history projection requires complete knowledge admissions",
+        )
+    continuation.protocol.snapshot()  # refuses unfinished action transactions
+
+
 def _decode_b64(value: object, detail: str) -> bytes:
     if not isinstance(value, str):
         raise _refuse(KnowledgeChangeRefusalReason.MALFORMED_HISTORY, detail)
@@ -2423,6 +2432,69 @@ class KnowledgeChangeHistory:
                 "ledger replay failed",
             ) from error
 
+    def replay_at(
+        self,
+        *,
+        ledger_head: str,
+        ledger_event_count: int,
+        expected_head_hash: str,
+        expected_event_count: int,
+    ) -> KnowledgeHistoryReplay:
+        """Read one complete historical position from an exact containing ledger.
+
+        Both checkpoints are required. The full snapshot is validated before
+        the selected prefix is folded, so a valid prefix cannot conceal a
+        corrupt or removed tail. Evidence and contract revisions after the
+        selected position are absent from the result. This reads no domain-time
+        coordinate and writes nothing. No persisted format or admission changes.
+        """
+        if (
+            type(ledger_event_count) is not int
+            or type(expected_event_count) is not int
+            or not 0 < ledger_event_count <= expected_event_count
+        ):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.STALE_BASE,
+                "historical and containing counts must be positive integers in order",
+            )
+        try:
+            events = self._ledger.read()
+            if (
+                len(events) != expected_event_count
+                or events[-1]["event_hash"] != expected_head_hash
+                or events[ledger_event_count - 1]["event_hash"] != ledger_head
+            ):
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.STALE_BASE,
+                    "history does not match the selected and containing checkpoints",
+                )
+            complete = self._fold_envelopes(events)
+            _require_complete_history(complete)
+            selected = (
+                complete
+                if ledger_event_count == len(events)
+                else self._fold_envelopes(events[:ledger_event_count])
+            )
+            if selected.bootstrap_roles != _REOPEN_ROLES:
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                    "historical position lacks complete retained bootstrap artifacts",
+                )
+            _require_complete_history(selected)
+            return selected.replay
+        except (
+            ContractRevisionRefusal,
+            KnowledgeChangeRefusal,
+            OntologyGapAnswerRefusal,
+            ProtocolProgramRefusal,
+        ):
+            raise
+        except (OSError, KeyError, TypeError, ValueError, LedgerError) as error:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                "historical ledger replay failed",
+            ) from error
+
     def _validate_candidate(self, events: list[dict[str, object]]) -> None:
         self._replay_envelopes(events)
 
@@ -3401,7 +3473,7 @@ class KnowledgeHistoryProjection:
         try:
             events, cursor = history._ledger._read_suffix()
             continuation = history._fold_envelopes(events)
-            result._require_complete(continuation)
+            _require_complete_history(continuation)
         except (
             ContractRevisionRefusal,
             KnowledgeChangeRefusal,
@@ -3414,15 +3486,6 @@ class KnowledgeHistoryProjection:
             ) from error
         result._published = (continuation, cursor)
         return result
-
-    @staticmethod
-    def _require_complete(continuation: _HistoryContinuation) -> None:
-        if continuation.change_ids != continuation.applied_ids:
-            raise _refuse(
-                KnowledgeChangeRefusalReason.INCOMPLETE_ADMISSION,
-                "maintained projection requires complete knowledge admissions",
-            )
-        continuation.protocol.snapshot()  # refuses unfinished action transactions
 
     @staticmethod
     def _expected(replay, expected_head_hash, expected_event_count):
@@ -3455,7 +3518,7 @@ class KnowledgeHistoryProjection:
             continuation = (
                 self._history._fold_envelopes(events, prior) if events else prior
             )
-            self._require_complete(continuation)
+            _require_complete_history(continuation)
             self._expected(
                 continuation.replay, expected_head_hash, expected_event_count
             )

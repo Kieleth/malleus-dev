@@ -230,6 +230,35 @@ The mapping file is deliberately fixture-local. Generalizing it before another
 real consumer needs the seam would turn this bounded proof into a speculative
 DSL.
 
+## Exact historical knowledge positions
+
+The unreleased `KnowledgeChangeHistory.replay_at` reads an earlier verified
+prefix without copying or truncating the ledger. Supply both the selected
+checkpoint and the expected checkpoint of the containing ledger:
+
+```python
+earlier = history.replay_at(
+    ledger_head=saved.ledger_head,
+    ledger_event_count=saved.ledger_event_count,
+    expected_head_hash=latest.ledger_head,
+    expected_event_count=latest.ledger_event_count,
+)
+assert earlier.receipt == saved.receipt
+```
+
+Here `saved` is a replay saved after a completed earlier public call, and
+`latest` identifies the containing snapshot you intend to verify. The method
+reconstructs the earlier contract, evidence and record history, not an old graph
+interpreted through the latest contract. It checks the complete containing
+history, so a selected valid prefix cannot conceal a corrupt or truncated tail.
+Checks are relative to caller-supplied checkpoints, not an authentication service.
+
+The reader rejects incomplete bootstrap, unfinished knowledge admissions and
+incomplete finite-program transactions. The envelope does not record generic
+filesystem batch boundaries, so this is no proof that an arbitrary constructed
+prefix was separately persisted. It does not select domain time, revise earlier
+reports, infer source truth or execute calculations. It creates no files.
+
 ## Default source and evidence inputs
 
 For `STRUCTURAL_HISTORY_BUNDLE`, the public `malleus.compiler` facade provides

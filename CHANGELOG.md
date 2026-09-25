@@ -61,6 +61,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Unreleased exact historical compiler-history reads through
+  `KnowledgeChangeHistory.replay_at`, binding both the selected prefix and the
+  containing ledger. The result reconstructs the earlier contract, evidence,
+  record history and receipt through the existing fold. It writes nothing and
+  refuses stale checkpoints and unfinished semantic transactions. No persisted
+  grammar, domain-time selection or correction semantics change.
 - Every schema under `ontology/` is declared to load under named profiles, and
   a guard holds it there. `OntologyRegistry` refuses the shipped research pack,
   and any schema importing it, with "Concrete relation 'ResearchRelation' must

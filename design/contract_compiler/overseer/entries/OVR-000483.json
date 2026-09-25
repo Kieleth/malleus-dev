@@ -1,0 +1,30 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "ledger": "overseer",
+  "sequence": 483,
+  "entry_id": "OVR-000483",
+  "entry_type": "DOCUMENT_REVISION",
+  "recorded_at": "2026-09-24T20:54:42Z",
+  "actor": {"id": "core-temporal", "type": "OVERSEER"},
+  "subject": {"id": "temporal-core-historical-read", "type": "DOCUMENT"},
+  "summary": "Record the isolated unreleased historical-position reader, its bounded documentation and temporal controls. No admission or persisted-wire semantics change.",
+  "why": "Luis authorized the temporal Core workstream with synthetic examples and TDD. T2 restores a selected prefix through the existing fold, including its old evidence and contract, while validating the containing ledger. This is a branch-local document revision, not main integration, a release, or completion of correction/domain-time semantics. The branch ledger must be reconciled with the owning ledger before integration; this number reserves no shared-main entry.",
+  "references": [
+    {"relation": "DEFINES", "type": "DOCUMENT", "target": "design/temporal/CONTRACT-01.md"},
+    {"relation": "AFFECTS", "type": "WORKSTREAM", "target": "CC-R11"}
+  ],
+  "data": {
+    "affected_ids": ["CC-R11"],
+    "documents": [
+      {"path": ".claude/skills/malleus-dev/references/CAPABILITIES.md", "change": "MODIFIED", "before_digest": "sha256:a1e4dbde0df8e340d8a69117ebe9308a7b998b1b80a7e731cefc2f8b3940fd34", "after_digest": "sha256:8a0cb90583079362d67b35a085a88225f898d5b6a8715062a7097c922d6c5196"},
+      {"path": "CHANGELOG.md", "change": "MODIFIED", "before_digest": "sha256:8ec694ecb535553d6082cad08baa31a672866ee1ed83163ed32fd82609ae23d6", "after_digest": "sha256:ea2388ea8cfc0e11a80e94c59cdfbd5fa2126fd002b03e114fae39cf3492a83c"},
+      {"path": "docs/IMPLEMENTATION_STATUS.md", "change": "MODIFIED", "before_digest": "sha256:9af12ce6efd46ab9891059176ab464bd54f05d916b11adb5bd77122eb45f4789", "after_digest": "sha256:6c13a7a51500f56e4d9165e3496e50f2639a53977efdd2b7c53500181ce3749a"},
+      {"path": "docs/contract_compiler/index.md", "change": "MODIFIED", "before_digest": "sha256:9e0ae5a84478e414f79b5c60500e4c8f9db8cd30a31a1ffa0bf39ebb82fd6262", "after_digest": "sha256:c0e4890283ff57861f04a2930bf74b96184ebe8fd62cd0a78c5e4fb447969382"},
+      {"path": "src/malleus/_contract_pipeline/knowledge.py", "change": "MODIFIED", "before_digest": "sha256:e4bac3ccf1c2da4cff4c03c7e02eb0574bb4f7d211eab49a701b4338ed6b712c", "after_digest": "sha256:dc1e26104a920516aa6898f8a94139e958a1c81c42da700cff2a3e99ff31d9a5"},
+      {"path": "tests/contract_compiler/pareto/test_temporal_history.py", "change": "CREATED", "after_digest": "sha256:db7fed2ce785a4ab4e4e8b2532c8809de63d0cd2d5e946d8816ed91dfe836232"},
+      {"path": "tests/contract_compiler/pareto/test_historical_position.py", "change": "CREATED", "after_digest": "sha256:53b7a762a066eb4a6ba0909a662723229de7285dbfb640af3fcc8e3c065afa58"}
+    ]
+  },
+  "previous_entry_hash": "sha256:c47a2db104bebf3cd2209868774c0a9197dcf0580793b94aa4ef7529b45aaff4",
+  "entry_hash": "sha256:7cc8f789b170674ec763a233041c2b58453606e4eb78f7c916f55b7debf1f951"
+}

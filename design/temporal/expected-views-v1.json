@@ -1,0 +1,70 @@
+{
+  "kind": "authored-temporal-design-expectations",
+  "version": 1,
+  "status": "DRAFT_FOR_REVIEW_NOT_CORE_WIRE",
+  "conventions": {
+    "coordinates": "K/M labels stand for completed accepted ledger checkpoints, not actual head hashes. Each fixture has its own history.",
+    "intervals": "Start included, end excluded. null end means no known end in that account, never unknown start or certain eternity.",
+    "cells": "Logical applicability versions, not a choice of nodes, property storage or public identifiers.",
+    "outputs": "Hand-authored expectations, not observations. Outcome labels are draft test vocabulary, not shipped enums.",
+    "knowledge": "Every historical output, including interval metadata and evidence, is bounded by its selected prefix."
+  },
+  "price": {
+    "subject": "product:P",
+    "context": "account:reported-price",
+    "checkpoints": ["K0", "K1", "K2", "K3"],
+    "source_statements": [
+      {"id": "r1", "accepted_at": "K1", "meaning": "Original report: price is 750 cents from 2026-05-01T00:00:00Z; no end is stated."},
+      {"id": "r2", "accepted_at": "K2", "meaning": "Actual transition: price becomes 800 cents at 2026-05-12T00:00:00Z, ending the prior price period."},
+      {"id": "r3", "accepted_at": "K3", "meaning": "Correction of the ended period: price from 2026-05-01T00:00:00Z until 2026-05-12T00:00:00Z was 775 cents, not 750. No new world transition."}
+    ],
+    "cells_at_K3": [
+      {"id":"a1","assertion":"r1","value_cents":750,"valid_from":"2026-05-01T00:00:00Z","valid_until":null,"knowledge_from":"K1","knowledge_until":"K2","basis":["r1"]},
+      {"id":"a2","assertion":"r1","value_cents":750,"valid_from":"2026-05-01T00:00:00Z","valid_until":"2026-05-12T00:00:00Z","knowledge_from":"K2","knowledge_until":"K3","basis":["r1","r2"]},
+      {"id":"b","assertion":"r2","value_cents":800,"valid_from":"2026-05-12T00:00:00Z","valid_until":null,"knowledge_from":"K2","knowledge_until":null,"basis":["r2"]},
+      {"id":"c","assertion":"r3","value_cents":775,"valid_from":"2026-05-01T00:00:00Z","valid_until":"2026-05-12T00:00:00Z","knowledge_from":"K3","knowledge_until":null,"basis":["r1","r2","r3"]}
+    ],
+    "history_expectations": [
+      {"at":"K0","assertions":[],"cells":[]},
+      {"at":"K1","assertions":["r1"],"cells":["a1"],"metadata":[{"cell":"a1","valid_until":null,"knowledge_until":null}]},
+      {"at":"K2","assertions":["r1","r2"],"cells":["a1","a2","b"],"metadata":[{"cell":"a1","knowledge_until":"K2"},{"cell":"a2","knowledge_until":null},{"cell":"b","knowledge_until":null}]},
+      {"at":"K3","assertions":["r1","r2","r3"],"cells":["a1","a2","b","c"]}
+    ],
+    "queries": [
+      {"id":"P01","at":"K0","valid_at":"2026-05-05T12:00:00Z","outcome":"NO_ACCEPTED_ACCOUNT","selected":[],"unresolved":[]},
+      {"id":"P02","at":"K1","valid_at":"2026-05-05T12:00:00Z","outcome":"SELECTED","selected":["a1"],"value_cents":750,"unresolved":[]},
+      {"id":"P03","at":"K2","valid_at":"2026-05-05T12:00:00Z","outcome":"SELECTED","selected":["a2"],"value_cents":750,"unresolved":[]},
+      {"id":"P04","at":"K3","valid_at":"2026-05-05T12:00:00Z","outcome":"SELECTED","selected":["c"],"value_cents":775,"unresolved":[]},
+      {"id":"P05","at":"K3","valid_at":"2026-05-12T00:00:00Z","outcome":"SELECTED","selected":["b"],"value_cents":800,"unresolved":[]},
+      {"id":"P06","at":"K3","valid_at":"2026-05-11T23:59:59Z","outcome":"SELECTED","selected":["c"],"value_cents":775,"unresolved":[]},
+      {"id":"P07","at":"K3","valid_at":"2026-05-01T00:00:00Z","outcome":"SELECTED","selected":["c"],"value_cents":775,"unresolved":[]},
+      {"id":"P08","at":"K3","valid_at":"2026-04-30T23:59:59Z","outcome":"NO_APPLICABLE_ACCOUNT","selected":[],"unresolved":[]},
+      {"id":"P09","at":"K1","valid_at":"2026-05-15T12:00:00Z","outcome":"SELECTED","selected":["a1"],"value_cents":750,"unresolved":[]},
+      {"id":"P10","at":"K3","valid_at":"2026-05-15T12:00:00Z","outcome":"SELECTED","selected":["b"],"value_cents":800,"unresolved":[]}
+    ]
+  },
+  "science": {
+    "subject":"pipe:Q",
+    "context":"account:diameter-report",
+    "checkpoints":["M0","M1","M2"],
+    "source_statements":[
+      {"id":"m1","accepted_at":"M1","diameter_um":12000,"time_kind":"NONE_STATED","meaning":"Synthetic inspection reports diameter 12000 micrometres. Observation and applicability time are not stated."},
+      {"id":"m2","accepted_at":"M2","diameter_um":12200,"time_kind":"NONE_STATED","corrects":"m1","meaning":"Corrigendum corrects that inspection report to 12200 micrometres. It supplies no date and asserts no physical change."}
+    ],
+    "queries":[
+      {"id":"S01","at":"M0","valid_at":"2026-05-05T12:00:00Z","outcome":"NO_ACCEPTED_ACCOUNT","selected":[],"unresolved":[]},
+      {"id":"S02","at":"M1","valid_at":"2026-05-05T12:00:00Z","outcome":"UNRESOLVED_APPLICABILITY","selected":[],"unresolved":["m1"]},
+      {"id":"S03","at":"M2","valid_at":"2026-05-05T12:00:00Z","outcome":"UNRESOLVED_APPLICABILITY","selected":[],"unresolved":["m2"]},
+      {"id":"S04","at":"M2","request":"inspect complete accepted report history, without selecting a domain time","outcome":"QUALIFIED_HISTORY","assertions":["m1","m2"],"domain_time":"NONE_STATED"}
+    ]
+  },
+  "consumer_expectations":[
+    {"id":"C01","request":"explain an earlier execution using r1/a1 under K1 for 5 May, after K3","outcome":"ORIGINAL_PREMISES_PRESERVED","assertion":"r1","cell":"a1","selection_at":"K1"},
+    {"id":"C02","request":"compare that execution with the reported-price selection under K3 for the same domain date","outcome":"SELECTED_PREMISES_CHANGED","previous_assertion":"r1","new_assertion":"r3","new_cell":"c"},
+    {"id":"C03","request":"produce a reported result after correction without executing, when a what-if execution already exists","outcome":"NOT_COMPUTED","forbidden":"Reusing the hypothetical result or changing the earlier execution."},
+    {"id":"C04","request":"compare reported 800 and assumed 800 for an otherwise identical period","outcome":"DIFFERENT_PREMISES","forbidden":"Treating numerical and temporal equality as evidence of identical context."},
+    {"id":"C05","request":"prepare a same-time calculation using one input valid only before 12 May and one valid only from 12 May","outcome":"NO_COMMON_APPLICABILITY","forbidden":"Returning a ready input set without an explicit cross-time calculation meaning."},
+    {"id":"C06","request":"prepare a date-specific calculation needing the unknown-time diameter","outcome":"UNRESOLVED_REQUIRED_PREMISE","forbidden":"Borrowing acceptance time or treating NONE_STATED as applicable forever."},
+    {"id":"C07","request":"select one premise from competing qualified accounts without a declared resolving context or policy","outcome":"AMBIGUOUS_SELECTION","forbidden":"Choosing the latest arrival or silently discarding one account."}
+  ]
+}
