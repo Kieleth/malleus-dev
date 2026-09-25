@@ -26,9 +26,9 @@
       "sha256": "sha256:41c7b8066b57ef6ea86f12dd3c97ac172443eae15fbca33515856f238f0890ff"
     },
     {
-      "byte_length": 8741,
+      "byte_length": 10455,
       "path": "tests/contract_compiler/test_ci.py",
-      "sha256": "sha256:3c208bfa01dc391f2993cb0e48421881a824a1862fedbb1596031d0b4b5e0a64"
+      "sha256": "sha256:b6b9140a56464058bca03194b69b4ec7386a3d2d125e493ac6874dc3c13792b8"
     },
     {
       "byte_length": 12643,
