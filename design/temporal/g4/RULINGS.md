@@ -129,3 +129,27 @@ rerun and admit is excluded (architectural laws 5 and 13). The README decision
 "this work does not automatically recompute" stands.
 
 Luis: "a)"
+
+## R-07, 2026-09-24: persisted-format route
+
+Build RED then GREEN on the branch under route A (an optional operation field;
+no identity moves). Merging to main requires route C (structural builtin
+version 2) together with route D (the state-version profile distinguishes the
+two kinds), with the affected evidence regenerated and the moved artifacts
+counted from the regeneration, not from grep. Coordinate with the saved
+core/add-enum-revision candidate so the Shop evidence is regenerated once.
+
+Luis: "correct"
+
+## D-08, 2026-09-24: nothing we hold is final
+
+Luis: "I think a 'correction' in essence is just an 'update' to the system or in
+a way a 'change' given new evidence, correction in a way means 'definitive answer
+to get it good' but we should never get complacent on 'good' our task here is to
+capture knowledge, and as such, it's all in flux, never absolute, 'we know as much
+as we know, and we're clear on what we do not know, until new evidence comes'"
+
+Consequences proposed, pending confirmation: the kind is named for what changed,
+not for being right; a revised version is "no longer the current account given
+evidence E", never "wrong"; revising a revision is ordinary; the stale-target
+refusal is about concurrency (revise the latest version), not finality.
