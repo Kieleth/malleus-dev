@@ -1,0 +1,45 @@
+{
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "ledger": "overseer",
+  "sequence": 488,
+  "entry_id": "OVR-000488",
+  "entry_type": "DOCUMENT_REVISION",
+  "recorded_at": "2026-09-25T19:42:17Z",
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "subject": {
+    "id": "ccx01-correction-rederived-2026-09-25",
+    "type": "DOCUMENT"
+  },
+  "summary": "Re-derive the CC-X01 environment-correction evidence after OVR-000487 changed test_ci.py bytes.",
+  "why": "The correction evidence pins the bytes of eight artifacts including tests/contract_compiler/test_ci.py. OVR-000487 added the tomllib scan there and the re-pointed v0.15.0 release run failed on all four legs at test_environment_correction_replaces_only_the_availability_guarantee (8741 == 10455). Re-derived with the evidence's own producer, refresh-evidence; only artifacts[5] digest and byte length moved. Nothing was published to PyPI.",
+  "previous_entry_hash": "sha256:ae887f6d42f8d0048707d56cc7c18be95c49a3de8f200aa787dfca3356c5803e",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "type": "COMMIT",
+      "target": "e34b2edfc28ce3d8b1f9867ddc03e1c5bac4e558"
+    },
+    {
+      "relation": "AFFECTS",
+      "type": "WORKSTREAM",
+      "target": "CC-R11"
+    }
+  ],
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "path": "conformance/contract_compiler/v0/evidence/CC-X01-environment-contract-correction.json",
+        "change": "MODIFIED",
+        "before_digest": "sha256:28d9789cea4a6c3bc408f93f13d46c0b1283e8f43248a9d82bd72105e60dbfd9",
+        "after_digest": "sha256:027844a0db704a66cf21a18ba83727797b38c6b850735ef661c5cff594eb5532"
+      }
+    ]
+  },
+  "entry_hash": "sha256:38821d0799ed556b76fcd343e365cca11746ea9d3d2c6d4a297d75d40bcaba63"
+}
