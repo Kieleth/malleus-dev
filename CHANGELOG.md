@@ -61,6 +61,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Declared supersession kinds (temporal T3, `design/temporal/g4/RULINGS.md`
+  R-01 to R-09). A supersession operation may declare `supersession_kind`:
+  `TRANSITION` closes the target's valid period at its own start and records
+  the kind; `REVISION` replaces the account of a same-type target over exactly
+  its current period, including a period a transition already closed, and then
+  stays out of the current graph. `KnowledgeRecordHistory.closings` records
+  each declared closing. A revision refuses `STALE_TARGET`, `TYPE_CHANGE`,
+  `VALID_TIME_EXTENT`, or at `CHECK` `CUSTOM_POLICY_HISTORICAL_SCOPE` when it
+  revises a closed period under a rule layer. The read-only
+  `KnowledgeHistoryReplay.version_referrers` lists what names one exact version
+  through class-ranged slots and Core endpoints, transitively, and states what
+  it cannot see. Only histories whose policy requires the structural builtin at
+  version 2 admit the field (see Changed).
+- `ADD_ENUM` in additive contract revision: a live history can add a new enum
+  declaration, not only values of an existing one. A successor revision policy
+  admits it; both earlier revision policies keep their exact identities in
+  `SUPPORTED_CONTRACT_REVISION_POLICIES` and refuse it.
 - Unreleased exact historical compiler-history reads through
   `KnowledgeChangeHistory.replay_at`, binding both the selected prefix and the
   containing ledger. The result reconstructs the earlier contract, evidence,
@@ -310,6 +327,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   unchanged.
 
 ### Changed
+
+- Core's structural builtin `malleus.core.operations-apply-atomically` gains
+  version 2, which applies `supersession_kind`. Version 1 keeps its behaviour
+  and refuses the field with `SUPERSESSION_KIND_NOT_SELECTED`. Replay reads the
+  builtin version from the history's own retained check contract, so a history
+  whose policy does not require version 2 refuses the field by every door,
+  including `admit_structural_change`. The shipped default moved to version 2:
+  check contract `sha256:b923c279…` to `sha256:9c25c6db…`, structural policy
+  `sha256:c1d696f2…` to `sha256:8239b685…`, normative profile
+  `sha256:a39681c4…` to `sha256:b704e7fb…`, bundle `sha256:8a994ed0…` to
+  `sha256:5a5e0aca…`, and with them every new structural history's bytes. The
+  version-1 files keep their paths and bytes; `SUPPORTED_STRUCTURAL_HISTORY_BUNDLES`
+  holds both and `create_structural_history(bundle=...)` selects one
+  explicitly.
+- `STATE_VERSION_PROFILE` is a successor, `profiles/state-version-v2.json`,
+  that maps `correction` to `REVISE_STATE_VERSION` (transition stays
+  `SUPERSEDE_STATE_VERSION`): `sha256:b18f3129…` to `sha256:5f6bd9eb…`. The
+  predecessor is kept in `SUPPORTED_STATE_VERSION_PROFILES`. Plans built with
+  the default name the new identity.
 
 - `KnowledgeChangeHistory.admit` and `admit_with_anchors` now refuse a
   caller-supplied `CHECK_RECORDED` or `VERDICT_RECORDED` with

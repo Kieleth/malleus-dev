@@ -138,12 +138,23 @@ refuse without writes. This is not a domain-time query, a new persisted grammar,
 same-period correction support or a claim that an arbitrary prefix was once a
 separate filesystem commit. Use checkpoints retained from completed calls.
 
-Unreleased and branch-local (`codex/core-temporal`, the T3 cut of
-`design/temporal/g4/RULINGS.md`): a supersession operation may declare
-`supersession_kind`, `TRANSITION` or `REVISION`, as an optional operation
-field. An operation without it keeps its earlier meaning and bytes; the pinned
-g1-01 ledger, the structural bundle and the state-version profile identities
-are unchanged. A transition closes its target's valid period as before and the
+Unreleased (the T3 cut of `design/temporal/g4/RULINGS.md`, landed under route
+C with route D): a supersession operation may declare `supersession_kind`,
+`TRANSITION` or `REVISION`, as an optional operation field. Only a history whose
+policy requires Core's structural builtin `malleus.core.operations-apply-atomically`
+at version 2 admits the field. Version 1 keeps its behaviour and refuses it
+with `SUPERSESSION_KIND_NOT_SELECTED`, and replay applies the same rule from the
+history's own retained check contract, so no door admits the field into a
+history that did not select version 2. The shipped default
+(`STRUCTURAL_HISTORY_BUNDLE`) names version 2; the version-1 bundle keeps its
+files and identity in `SUPPORTED_STRUCTURAL_HISTORY_BUNDLES`, and a history
+created under it keeps its bytes and replays as recorded. The default
+`STATE_VERSION_PROFILE` is a successor that maps `correction` to
+`REVISE_STATE_VERSION` and `transition` to `SUPERSEDE_STATE_VERSION`; the
+predecessor stays in `SUPPORTED_STATE_VERSION_PROFILES`. Core executes no
+`change_semantics` value, so this changes identities, not behaviour. An
+operation without the kind field keeps its meaning: under the new default the
+same inputs give the same records and graph, with different ledger bytes. A transition closes its target's valid period as before and the
 target's `KnowledgeRecordHistory.closings` records the kind and the change set.
 A revision names a same-type target and keeps the target's period: on a target
 a transition already closed, its successor covers that closed period, inherits
@@ -158,9 +169,9 @@ graph only. `KnowledgeHistoryReplay.version_referrers` is a read-only impact
 read: every version in history that names the queried version through a
 class-ranged, non-inlined slot or a Core endpoint, followed backwards
 transitively. Each result lists what it cannot see
-(`VERSION_REFERRERS_NOT_COVERED`). It writes and recomputes nothing. Merging
-needs route C with route D (R-07); withdrawal, identity merge or split,
-historical-use endpoints and ontology-fact revision are not expressible yet.
+(`VERSION_REFERRERS_NOT_COVERED`). It writes and recomputes nothing. Withdrawal,
+identity merge or split, historical-use endpoints and ontology-fact revision
+are not expressible yet.
 
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.

@@ -613,11 +613,25 @@ descriptor and rules pair reproducing the required identity also resolves as a
 `PROLOG_RULES` contract, which is the form every live Prolog check is already
 pinned in.
 
-One builtin ships: `malleus.core.operations-apply-atomically` version `1`. It
-applies the candidate's operations to the accepted state through Core's own
-change application and reports `result_state_digest`. Two adopter check
-contracts declare that algorithm, `OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE`,
-and both implement it by calling that same Core primitive.
+One builtin ships in two versions: `malleus.core.operations-apply-atomically`
+version `1` and version `2`. Both apply the candidate's operations to the
+accepted state through Core's own change application and report
+`result_state_digest`. Version `2` applies a declared `supersession_kind`
+(`TRANSITION`, `REVISION`); version `1` refuses it with
+`SUPERSESSION_KIND_NOT_SELECTED`, and replay refuses it the same way in any
+history whose retained check contracts do not name version `2`. Two adopter
+check contracts declare the version-1 algorithm,
+`OPERATIONS_APPLY_ATOMICALLY_TO_ACCEPTED_STATE`, and both implement it by
+calling that same Core primitive.
+
+The shipped structural default names version `2`
+(`profiles/structural-admission-check-v2.json` and
+`structural-admission-policy-v2.json`): check contract `sha256:9c25c6db…`,
+policy `sha256:8239b685…`, normative profile `sha256:b704e7fb…`,
+`STRUCTURAL_HISTORY_BUNDLE` `sha256:5a5e0aca…`. The version-1 files below keep
+their bytes and paths, and `SUPPORTED_STRUCTURAL_HISTORY_BUNDLES` keeps their
+bundle, so a history created under it replays and admits as recorded.
+`create_structural_history(bundle=...)` selects a bundle explicitly.
 
 Core's own structural check is now inside the grammar rather than beside it.
 `profiles/structural-admission-check.json` is a `malleus.check-contract/v1`
