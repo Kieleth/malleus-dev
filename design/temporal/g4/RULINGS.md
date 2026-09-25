@@ -52,3 +52,38 @@ then we add to the roadmap other more complicated corrections, but as we design
 and build this, we need to keep in mind this is just the start, and 'correction'
 might need to query the kg for 'what things affect this specific correction
 'here' and go and recalculate/compute that part of the KG'"
+
+## R-04, 2026-09-24: one general correction, judged on its result (supersedes DECISION.md decision 4)
+
+A correction is one change of kind CORRECTION. It names every target (R-01),
+gives each a successor version in which any field may differ, records its kind
+(R-03) and cites its evidence. Core admits it only if the resulting state passes
+Core's checks. A first cut narrows by refusing results Core cannot yet reconcile,
+each with its own typed reason and roadmap item (TYPE_CHANGE, VALID_TIME_EXTENT,
+WITHDRAWAL, IDENTITY_MERGE_OR_SPLIT, HISTORICAL_USE_ENDPOINT,
+CUSTOM_POLICY_HISTORICAL_SCOPE, ONTOLOGY_FACT), never by listing allowed fields.
+A stale target (not the latest version of its line) is a permanent refusal with
+its own reason. "Covers exactly its target's period" is no longer the definition
+of a correction; it is the only valid-time outcome the first cut supports.
+
+Luis: "a) for sure, track the why from this research and next"
+
+Why, from CORRECTION-RESEARCH-01.md (commit a608f598):
+
+- Core's limits on correction today come from specific checks, not from the
+  record shape: type must match, one successor per record, valid time owned by
+  the change set and required to start strictly later for INSTANT
+  (knowledge.py 3365 to 3389), and incoming live relations block retirement
+  (kg.py 169 to 184). Each can be lifted one at a time, so a general shape with
+  per-category refusals is buildable incrementally. [code, probe]
+- A supersession already produces a whole new record version, so any property or
+  relation endpoint can already differ; the general shape extends what exists
+  rather than adding a mechanism. [code, probe P4, P5]
+- One change kind per correctable thing would move the structural builtin
+  identity with every addition, re-pinning the check contract, policy, profile,
+  bundle and every ledger head each time (the OVR-000466 blast radius, G3
+  route C), and would constrain by default, which D-04 rejects. [G3 measurement]
+- Truth maintenance (de Kleer's ATMS, section 4.9) and nanopublications retract
+  by adding a record, never by removing one; PROV-O's wasInvalidatedBy means no
+  longer usable, not false. A general correction that adds a successor and keeps
+  the target in history matches that. [literature]
