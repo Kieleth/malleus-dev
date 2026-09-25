@@ -195,3 +195,29 @@ mechanically admissible (P2j) and rejected as the design: it writes another
 source's meaning into a record that claims to be the source's wording.
 
 Luis: "record beside"
+
+## R-11, 2026-09-24: link behaviour on revision is a declared kind, not the carrier
+
+Each relation class and each class-ranged reference slot is declared either
+STRUCTURAL (part of one interpretation: restated when its target is revised,
+or Core refuses; resolves in the current view) or VERSION (names an exact
+version on purpose: resolves against record history, never blocks a revision,
+followed by the impact read). Defaults while nothing is declared are today's
+behaviour: relation STRUCTURAL, class-ranged slot VERSION. The declaration lives
+inside contract identity. OD-010 (design/contract_compiler/decisions.md,
+accepted 2026-08-27) is to be amended so a VERSION reference resolves in record
+history and is exempt from current-view closure; it predates R-02 and never
+considered a reference that names an old version on purpose. The carrier rule
+proposed before this ruling ("uses are records with typed references; relations
+are structure") is withdrawn: it contradicted OD-010, removed structural slots,
+and ruled against the Shop, computational graphs and kg_reentry_loop, which all
+mix carriers. Research: CARRIER-CONVENTION-01.md (939f7737).
+
+Luis: "declared kind of course"
+
+Phasing proposed there, not yet ruled: phase 1 the ruling, the OD-010
+amendment, slot resolution against history built RED then GREEN and taken with
+R-07's route C so evidence regenerates once, plus HISTORICAL-USE-01's typed
+refusal, its not_covered entry and bearer_id in the impact read; phase 2
+declared STRUCTURAL slots block retirement; phase 3 declared VERSION relations
+(old versions stay legal endpoints; version graph derived inside Core).
