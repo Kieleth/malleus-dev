@@ -513,3 +513,33 @@ whole-annotation case; probe-only vocabulary typed with strings; no reader
 changed; no Prolog rule layer; paper marine graphs and `REFINEMENT-SPEC-05.md`
 not read; only the 19 T3 tests rerun. Probe scripts stay in the session
 scratchpad, hashed in the write-up.
+
+## TEMP-014: research the carrier convention before a ruling, 2026-09-24
+
+Question from the Overlord for Luis: should "uses are records with typed
+references; relations are structure" become a rule, in what form, at which
+layer. Read the skills, the repository's graph-modelling record, the three
+adopters and the primary sources; probed on this branch at `4ffec259` with one
+minimal contract in the session scratchpad. No `src/` change. Write-up:
+`CARRIER-CONVENTION-01.md`.
+
+Observed. OD-010 (ACCEPTED 2026-08-27) already makes every non-inlined
+class-valued slot a strong reference that must resolve, and requires every
+temporal view to be closed for slots, endpoints and bearers alike. The
+convention works today only because that slot half is unbuilt; it predates
+R-02 and is silent on references to exact versions. The Shop's stage C
+`context.yaml` declares six relation classes, one of which, `CorrectsState`,
+names the exact state version `B:Y:e7`; HISTORICAL-USE-01 read `shop.yaml`
+only. The computational-graph research and the re-entry loop also carry uses
+on relations. The P2b rebinding does not depend on the carrier. Probe: a slot
+may name a relation, and revising the relation does not block it; a slot
+naming a nonexistent record, or a retired version written after the fact, is
+admitted; a relation to a retired version is refused.
+
+Recommendation, not ruled: rule two declared reference kinds, STRUCTURAL and
+VERSION, with today's carriers as stated defaults; amend OD-010 so a VERSION
+reference resolves in record history; build slot resolution against history
+with R-07's route C. Not the carrier convention as stated.
+
+Limits: minimal probe contract, no Prolog layer; the Shop was inspected, not
+probed; paper graphs not read; ODP sources not reached.
